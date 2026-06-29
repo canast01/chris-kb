@@ -89,6 +89,37 @@ show inventory
 # PID: DS-C9396T   ,  VID: V01 ,  SN: JAE2XXXXXXX
 ```
 
+
+```text title="Expected output"
+Cisco MDS Switch Software
+Copyright (c) 2002-2023 by Cisco Systems, Inc.
+Compiled: 03/15/2023 18:45:32 +0000
+System uptime is 247 days, 14 hours, 32 minutes
+
+Software
+  BIOS: version 3.45.0
+  Kickstart: version 9.2(2)
+  System: version 9.2(2)
+  FPGA versions:
+    PS1: 0x20180612
+    PS2: 0x20180612
+
+NAME: "Chassis",  DESCR: "MDS 9396T"
+PID: DS-C9396T   ,  VID: V01 ,  SN: JAE2K4A8N2P1
+
+NAME: "Module 1",  DESCR: "MDS 9396T 96-port 32Gb Fibre Channel Module"
+PID: DS-X97-SF1-384-K9  ,  VID: V02 ,  SN: JAE2K4A8N2P2
+
+NAME: "Power Supply 1",  DESCR: "MDS 9396T Power Supply"
+PID: PWR-C9396-1400DC  ,  VID: V01 ,  SN: PSU2K4A8N2P3
+
+NAME: "Fan 1",  DESCR: "MDS 9396T Fan Module"
+PID: FAN-C9396-F  ,  VID: V01 ,  SN: FAN2K4A8N2P4
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify you are in the correct mode (use `enable` if needed) and check NX-OS version compatibility for the `show` command.
+    **`% Incomplete command`** — Type the complete command `show version` or `show inventory` without truncation or typos.
 ### 2. Capture switch state (before anything changes)
 
 ```bash
@@ -112,6 +143,51 @@ show fcns database vsan 10
 show logging last 500
 ```
 
+
+```text title="Expected output"
+vsan 1 information
+  vsan 1:Operational (Allowed)
+vsan 10 information
+  vsan 10:Operational (Allowed)
+vsan 20 information
+  vsan 20:Operational (Allowed)
+
+zoneset name PROD_ZONE vsan 10
+  zone name PROD_HOSTS vsan 10
+    fcid 0x620100 [pwwn 50:00:14:40:5a:2b:c1:e0]
+    fcid 0x620200 [pwwn 50:00:14:40:5a:2b:c1:e1]
+  zone name PROD_STORAGE vsan 10
+    fcid 0x630100 [pwwn 50:00:09:73:a2:5f:b4:22]
+
+zoneset name DR_ZONE vsan 20
+  zone name DR_HOSTS vsan 20
+    fcid 0x640100 [pwwn 50:00:14:40:5a:2b:c2:f0]
+
+fcdomain state: Stable
+Local switch WWN: 20:00:00:05:73:a2:5f:b4
+Domain ID: 0x62
+Principal switch WWN: 20:00:00:05:73:a2:5f:b4
+
+Interface  Vsan  Admin  Status  Speed  Type
+fc1/1      10    up     up      16G    N_Port
+fc1/2      10    up     up      16G    N_Port
+fc1/3      20    up     down    16G    N_Port
+fc1/4      1     up     up      8G     N_Port
+fc2/1      10    up     up      16G    N_Port
+...
+
+FCNS Database for vsan 10:
+PWWN: 50:00:14:40:5a:2b:c1:e0  FCID: 0x620100  NodeName: 50:00:14:40:5a:2b:c1:df
+PWWN: 50:00:14:40:5a:2b:c1:e1  FCID: 0x620200  NodeName: 50:00:14:40:5a:2b:c1:df
+PWWN: 50:00:09:73:a2:5f:b4:22  FCID: 0x630100  NodeName: 50:00:09:73:a2:5f:b4:21
+
+2024 Jan 15 14:32:18 mds9710-01 %ETHPORT-5-IF_DOWN_LINK_FAILURE: Interface fc1/3 is down (Link failure or not connected)
+2024 Jan 15 14:15:02 mds9710-01 %ZONE-2-ZONESET_ACTIVATE: Zoneset PROD_ZONE activated on vsan 10
+2024 Jan 15 13:48:55 mds9710-01 %FCDOMAIN-3-FCDOMAINSTATE_CHANGE: FC domain state changed to Stable
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the exact VSAN number exists with `show vsan` before
 Save all output to a text file and paste the critical sections into the TAC case description.
 
 ### 3. Run show tech-support (takes 2–5 minutes)
@@ -128,6 +204,36 @@ show tech-support > bootflash:tech-support-$(hostname)-$(show clock).txt
 # Then copy with: copy bootflash:tech-support-*.txt scp://<user>@<server>//<path>
 ```
 
+
+```text title="Expected output"
+Generating Tech Support Information. This may take a few minutes...
+Cisco MDS 9148S (1 Slot) Chassis ("MDS 9100")
+Processor Memory: 8388608 Kbytes
+Device name: mds-core-01
+bootflash: 51200000 Kbytes
+
+------- show version -------
+Cisco MDS SAN-OS Software, version 8.4(2c)
+System uptime is 127 days, 14 hours, 23 minutes
+
+------- show inventory -------
+NAME: "Chassis",  DESCR: "MDS 9148S 16G FC (1 Slot) Chassis"
+PID: DS-C9148S-K9,  VID: V01,  SN: SSI2012345A
+
+------- show interface brief -------
+Interface  Status         Speed    Trunk Mode
+fc1/1      notConnected   auto(2) F
+fc1/2      notConnected   auto(2) F
+fc1/3      connected      2Gbps   F
+...
+Tech-support data collection completed successfully.
+Output file size: 4.2 MB
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the MDS model supports direct output redirection; older NX-OS versions require `copy` command instead of `>` operator.
+    **`% No space left on device`** — Free bootflash space with `delete bootflash:old-files` before attempting to write the tech-support bundle.
+    **`Connection refused`** — Ensure SSH is enabled on the MDS (`feature ssh`) and the management IP is reachable from your workstation before attempting remote SCP transfer.
 Run show tech-support on EVERY MDS switch in the affected fabric, not just the one where the issue first appeared.
 
 ### 4. Capture zone configuration history (if zoning issue)
@@ -141,6 +247,37 @@ show zoneset vsan <id>
 show zone status vsan <id>
 ```
 
+
+```text title="Expected output"
+Zone Analysis for VSAN 1:
+  Zone Name: prod_zone_01
+    Member: pwwn 50:00:14:40:5a:1b:2c:3d
+    Member: pwwn 50:00:14:40:5a:1b:2c:4e
+    Last Modified: 2024-01-15 14:32:18 UTC
+    Modified By: admin
+  Zone Name: backup_zone_02
+    Member: pwwn 50:00:14:40:5a:1b:2c:5f
+    Last Modified: 2024-01-10 09:15:42 UTC
+    Modified By: netadmin
+
+zoneset name active_zoneset_vsan1 vsan 1
+  zone name prod_zone_01 vsan 1
+    member pwwn 50:00:14:40:5a:1b:2c:3d
+    member pwwn 50:00:14:40:5a:1b:2c:4e
+  zone name backup_zone_02 vsan 1
+    member pwwn 50:00:14:40:5a:1b:2c:5f
+
+VSAN 1 Zone Status:
+  Active Zoneset: active_zoneset_vsan1
+  Number of Zones: 2
+  Number of Members: 3
+  Config Status: Activated
+  Last Activation: 2024-01-15 14:35:01 UTC
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the VSAN ID exists with `show vsan` and confirm you are in the correct mode (device# not device(config)#).
+    **`% VSAN <id> does not exist`** — Check that the VSAN is created and active using `show vsan id <id>` before querying zone configuration.
 ### 5. Write the timeline
 
 ```text
@@ -248,6 +385,63 @@ show logging last 100
 show interface fc brief counters errors
 ```
 
+
+```text title="Expected output"
+Cisco MDS9148S (1) -- Supervisor-3 (Active)
+System uptime is 247 days 14 hours 23 minutes
+Kernel uptime is 247 days 14 hours 19 minutes
+System version: 9.2(2)
+
+Mod Ports Module-Type Model Status
+--- ----- ------------------------- ----------- ---------
+1   48    MDS 9000 Fabric Switch    DS-MDS9148S ok
+2   48    MDS 9000 Fabric Switch    DS-MDS9148S ok
+
+Interface  Fabric  Port  Channel  Type  Speed   State
+fc1/1      --      --    --       F     16Gbps  up
+fc1/2      --      --    --       F     16Gbps  up
+fc1/3      --      --    --       F     16Gbps  down
+fc1/4      --      --    --       F     16Gbps  up
+...
+
+VSAN ID  Name                 State   Interoperability
+1        VSAN0001             active  default
+2        VSAN0002             active  default
+10       VSAN0010_PROD        active  default
+
+Active zone set: ZONESET_PROD
+Zone: ZONE_INITIATORS
+  member pwwn 50:00:14:40:5a:2b:c1:e0
+  member pwwn 50:00:14:40:5a:2b:c1:e1
+
+Zone: ZONE_TARGETS
+  member pwwn 50:00:0e:1e:00:a0:1b:2f
+  member pwwn 50:00:0e:1e:00:a0:1b:30
+
+Zone status:
+  Default zone: permit
+  Session ID: 0x0
+  Activation time: 2024-01-15 09:23:17 +00:00
+
+FCNS Database for VSAN 1:
+PWWN: 50:00:14:40:5a:2b:c1:e0 (Initiator-HBA-01)
+  Port Name: 50:00:14:40:5a:2b:c1:e1
+  Port Index: 0x010001
+  State: Logged In
+  Port Address: 0x010001
+
+PWWN: 50:00:0e:1e:00:a0:1b:2f (Array-Storage-01)
+  Port Name: 50:00:0e:1e:00:a0:1b:30
+  Port Index: 0x020001
+  State: Logged In
+  Port Address: 0x020001
+
+2024 Jan 15 14:32:11 mds-switch-01 %ETHPORT-5-IF_DOWN_LINK_FAILURE: Interface fc1/3 is down (Link failure or not connected)
+2024 Jan 15 13:45:22 mds-switch-01 %ZONE-3-ZONESET_ACTIVATE_FAILED: Zone set activation failed for VSAN 2
+2024 Jan 15 12:10:05 mds-switch-01 %FCPORT-2-FCPORT_CRC_ERROR: CRC errors detected on port fc1/7
+
+Interface  C
+```
 ---
 
 ## Support SLA Reference

@@ -49,6 +49,29 @@ az rest \
   --query "value[0].{TenantID:id, DisplayName:displayName, Domain:verifiedDomains[0].name}"
 ```
 
+
+```text title="Expected output"
+{
+  "TenantID": "a7c3f8e2-1b4d-4c9a-8f2e-3d5c7b9a1e4f",
+  "SubscriptionID": "12345678-1234-1234-1234-123456789012",
+  "Name": "Production"
+}
+
+TenantId                             DisplayName           CountryCode
+------------------------------------  --------------------  -----------
+a7c3f8e2-1b4d-4c9a-8f2e-3d5c7b9a1e4f  Contoso Inc           US
+b9d4g9f3-2c5e-5d0b-9g3f-4e6d8c0b2f5g  Partner Org           CA
+
+{
+  "TenantID": "a7c3f8e2-1b4d-4c9a-8f2e-3d5c7b9a1e4f",
+  "DisplayName": "Contoso Inc",
+  "Domain": "contoso.onmicrosoft.com"
+}
+```
+
+!!! warning "Common errors"
+    **`ERROR: The command failed with an unexpected status code "401 Unauthorized".`** — Run `az login` to authenticate and ensure your account has permissions to read tenant information.
+    **`ERROR: No subscriptions found in account.`** — Verify the account is assigned at least one subscription in the Azure portal or contact your subscription administrator.
 ## User Management
 
 ```bash
@@ -87,6 +110,38 @@ az ad user get-member-groups \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "accountEnabled": true,
+  "displayName": "Chris Anastasiadis",
+  "id": "a7c3f9e2-1b4d-4c8a-9f2e-3d5c7b1a9e4f",
+  "userPrincipalName": "chris.a@example.com",
+  "userType": "Member"
+}
+DisplayName                    UserPrincipalName              UserId
+-----------------------------  -----------------------------  ------------------------------------
+Chris Anastasiadis             chris.a@example.com            a7c3f9e2-1b4d-4c8a-9f2e-3d5c7b1a9e4f
+Alice Johnson                  alice.j@example.com            b8d4g0f3-2c5e-5d9b-0g3f-4e6d8c2b0f5g
+Bob Martinez                   bob.m@example.com              c9e5h1g4-3d6f-6e0c-1h4g-5f7e9d3c1g6h
+Diana Chen                     diana.c@example.com            d0f6i2h5-4e7g-7f1d-2i5h-6g8f0e4d2h7i
+...
+{
+  "accountEnabled": true,
+  "displayName": "Chris Anastasiadis",
+  "id": "a7c3f9e2-1b4d-4c8a-9f2e-3d5c7b1a9e4f",
+  "userPrincipalName": "chris.a@example.com",
+  "userType": "Member"
+}
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+a7c3f9e2-1b4d-4c8a-9f2e-3d5c7b1a9e4f
+```
+
+!!! warning "Common errors"
+    **`The user object referenced by id does not exist or one of its referenced properties is invalid.`** — Verify the user exists and the UPN is correctly formatted; use `az ad user list` to confirm the user was created.
+    **`Insufficient privileges to complete the operation.`** — Ensure your Azure CLI account has User Administrator or Global Administrator role assigned in Entra ID.
 ### User Types
 
 | User Type | Description |
@@ -129,6 +184,35 @@ az ad group member remove \
   --member-id <user-object-id>
 ```
 
+
+```text title="Expected output"
+{
+  "displayName": "sg-platform-engineers",
+  "id": "a7c3f891-2d45-4e8b-9f12-7b5e8c2a1d93",
+  "mailNickname": "sg-platform-engineers",
+  "mailEnabled": false,
+  "securityEnabled": true
+}
+DisplayName                    MailNickname                   Id
+-----------------------------  -----------------------------  ------------------------------------
+sg-platform-engineers         sg-platform-engineers         a7c3f891-2d45-4e8b-9f12-7b5e8c2a1d93
+sg-developers                  sg-developers                  b8d4g902-3e56-5f9c-0g23-8c6f9d3b2e04
+sg-security-team               sg-security-team               c9e5h013-4f67-6g0d-1h34-9d7g0e4c3f15
+...
+(no output — command completes silently)
+DisplayName                    UserPrincipalName              Id
+-----------------------------  ---------------------------    ------------------------------------
+alice.johnson@contoso.com      alice.johnson@contoso.com      d0f6i124-5g78-7h1e-2i45-0e8h1f5d4g26
+bob.smith@contoso.com          bob.smith@contoso.com          e1g7j235-6h89-8i2f-3j56-1f9i2g6e5h37
+...
+true
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied`** — Ensure your Azure account has sufficient permissions (Directory.ReadWrite.All or Group.ReadWrite.All) in Entra ID.
+    **`No group found with name 'sg-platform-engineers'.`** — Use the full group object ID instead of the display name, or verify the group exists with `az ad group list`.
+    **`Invalid object identifier '<user-object-id>'.`** — Replace `<user-object-id>` with an actual user object ID from `az ad user list --query "[].id"`.
 ## Hybrid Identity and Connect Sync
 
 For organisations with on-premises Active Directory, Azure AD Connect or Entra Connect Sync synchronises identities to Entra ID.
@@ -153,6 +237,17 @@ az rest \
   --query "value[0].{LastSync:onPremisesLastSyncDateTime, SyncEnabled:onPremisesSyncEnabled}"
 ```
 
+
+```text title="Expected output"
+{
+  "LastSync": "2024-01-15T14:32:47Z",
+  "SyncEnabled": true
+}
+```
+
+!!! warning "Common errors"
+    **`Authorization_RequestDenied`** — Ensure your service principal or user account has `Organization.Read.All` permission in Entra ID.
+    **`Invalid resource identifier`** — Verify you are authenticated to Azure with `az login` and have access to the correct tenant using `az account set --subscription <tenant-id>`.
 ## Domain Management
 
 ```bash
@@ -164,6 +259,20 @@ az rest \
   --output table
 ```
 
+
+```text title="Expected output"
+Domain                          IsDefault    IsVerified
+------------------------------  -----------  -----------
+contoso.com                     False        True
+contoso.onmicrosoft.com         True         True
+partner.contoso.com             False        True
+staging.contoso.com             False        False
+dev.contoso.com                 False        True
+```
+
+!!! warning "Common errors"
+    **`Authorization_RequestDenied`** — Ensure your Azure CLI account has at least Directory Reader role or higher in the tenant.
+    **`InvalidAuthenticationToken`** — Run `az login` to refresh your authentication token, as it may have expired.
 ## Entra ID Licence Tiers
 
 | Feature | Free | P1 | P2 |

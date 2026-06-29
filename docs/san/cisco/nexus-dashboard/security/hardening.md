@@ -94,6 +94,27 @@ for item in data['items']:
 kubectl get networkpolicies --all-namespaces | grep -c "NetworkPolicy"
 # Should be non-zero
 ```
+
+```text title="Expected output"
+Welcome to Nexus Dashboard
+ndadmin@nd-dc1-1.corp.example.com's password:
+Last login: Wed Jan 15 14:32:18 2025 from 10.42.18.55
+
+default	nginx-deployment-5d4c8f7b9	1000
+default	postgres-app-7c2b1d9e4	2000
+kube-system	coredns-558bd4d5c9-k8m2x	65534
+kube-system	etcd-nd-dc1-1	0
+monitoring	prometheus-operator-0	65534
+ingress-nginx	nginx-ingress-controller-abc123	101
+Privileged: ingress-nginx/nginx-ingress-controller-abc123/nginx
+Privileged: monitoring/alertmanager-0/alertmanager
+2
+```
+
+!!! warning "Common errors"
+    **`error: unable to connect to the server: dial tcp: lookup nd-dc1-1.corp.example.com on 127.0.0.1:53: no such host`** — Verify the hostname is correct and DNS is resolving; check `/etc/hosts` or corporate DNS configuration.
+    **`command not found: python3`** — Install Python 3 on the Nexus Dashboard node with `apt-get install python3` or equivalent for your OS.
+    **`error: You must be logged in to the server (Unauthorized)`** — Ensure your kubeconfig is valid and your ndadmin user has cluster-admin permissions; run `kubectl auth can-i get pods --all-namespaces` to verify.
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -109,6 +130,41 @@ acs system ntp show
 # Expected: server reachable, stratum ≤ 3, offset < 100ms
 ```
 
+
+```text title="Expected output"
+Last login: Wed Jan 15 14:32:18 2025 from 10.20.5.42
+nd-dc1-1.corp.example.com#
+
+NTP Configuration:
+  Server: 10.10.0.10 (prefer)
+    Reachable: No
+    Stratum: 16
+    Offset: 0ms
+  Server: 10.10.0.11
+    Reachable: No
+    Stratum: 16
+    Offset: 0ms
+
+NTP Server 10.10.0.10 added successfully (prefer)
+NTP Server 10.10.0.11 added successfully
+
+NTP Configuration:
+  Server: 10.10.0.10 (prefer)
+    Reachable: Yes
+    Stratum: 2
+    Offset: 12ms
+  Server: 10.10.0.11
+    Reachable: Yes
+    Stratum: 2
+    Offset: 18ms
+
+Synchronization Status: SYNCHRONIZED
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify the Nexus Dashboard IP address is correct and SSH is enabled on port 22.
+    **`NTP Server 10.10.0.10 already exists`** — Remove the existing NTP server with `acs system ntp remove --server 10.10.0.10` before re-adding it.
+    **`Synchronization Status: UNSYNCHRONIZED`** — Confirm the NTP servers are reachable from the Nexus Dashboard network and allow UDP port 123 in firewall rules.
 ---
 
 ## See also

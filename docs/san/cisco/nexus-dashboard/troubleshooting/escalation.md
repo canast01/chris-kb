@@ -86,6 +86,26 @@ acs version
 acs apps status
 ```
 
+
+```text title="Expected output"
+ndadmin@nd-node-01:~$ acs version
+Nexus Dashboard Platform Version: 3.1.2.1
+Build ID: ND.3.1.2.1.20240115_021547
+Release Date: 2024-01-15
+
+ndadmin@nd-node-01:~$ acs apps status
+Application                          Version          Status           Health
+────────────────────────────────────────────────────────────────────────────
+Nexus Dashboard Insights             6.3.1            Running          Healthy
+Nexus Dashboard Orchestrator         3.5.2            Running          Healthy
+Nexus Dashboard Fabric Controller    2.1.4            Running          Healthy
+Multi-Site Orchestrator              3.2.1            Running          Healthy
+Nexus Dashboard Data Broker          1.4.3            Running          Healthy
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey).`** — Verify the ndadmin SSH key is loaded in your SSH agent or specify the key explicitly with `ssh -i /path/to/key ndadmin@<nd-node-ip>`.
+    **`acs: command not found`** — Ensure you are logged in as the ndadmin user and the ND platform is fully initialized; if recently deployed, wait 5-10 minutes for services to start.
 ### 2. Capture cluster health and node states
 
 ```bash
@@ -99,6 +119,35 @@ acs nodes list >> /tmp/nd-health-$(date +%Y%m%d%H%M).txt
 acs system resources >> /tmp/nd-health-$(date +%Y%m%d%H%M).txt
 ```
 
+
+```text title="Expected output"
+Cluster Health Summary
+======================
+Cluster Name: nd-prod-cluster
+Cluster State: HEALTHY
+Leader Node: nd-node-01.example.com
+Quorum Status: HEALTHY (3/3 nodes)
+Last Health Check: 2024-01-15T14:32:18Z
+
+All Cluster Nodes
+=================
+Node ID          Hostname              IP Address      State    Version
+nd-node-01       nd-node-01.example.com 10.20.30.41    ACTIVE   3.2.1.1234
+nd-node-02       nd-node-02.example.com 10.20.30.42    ACTIVE   3.2.1.1234
+nd-node-03       nd-node-03.example.com 10.20.30.43    ACTIVE   3.2.1.1234
+
+System Resources
+================
+CPU Usage: 34.2%
+Memory Usage: 62.8% (48.5 GB / 77.0 GB)
+Disk Usage: 71.3% (/data: 285 GB / 400 GB)
+Network I/O: RX 2.3 Mbps, TX 1.8 Mbps
+```
+
+!!! warning "Common errors"
+    **`command not found: acs`** — Ensure the Nexus Dashboard CLI tools are installed and the PATH includes the acs binary location (typically `/opt/cisco/acs/bin`).
+    **`Permission denied`** — Run the commands with appropriate privileges using `sudo` or ensure your user account has read access to the Nexus Dashboard management interface.
+    **`Connection refused`** — Verify the Nexus Dashboard cluster is running and accessible; check network connectivity to the cluster nodes and confirm the management IP is reachable.
 ### 3. Capture etcd and Kubernetes state
 
 ```bash
@@ -124,6 +173,38 @@ for node in $(acs nodes list | awk '/nd-/ {print $2}' | head -5); do
 done
 ```
 
+
+```text title="Expected output"
+NAMESPACE                NAME                                                READY   STATUS    RESTARTS   AGE
+kube-system              coredns-558bd4d5db-2k9lx                            1/1     Running   0          45d
+kube-system              etcd-nd-master-01                                   1/1     Running   2          45d
+kube-system              kube-apiserver-nd-master-01                         1/1     Running   1          45d
+nd-system                nd-backend-deployment-7c4f8b9d2-xmq8p               1/1     Running   0          12d
+nd-system                nd-frontend-5f6c2a1b8-jk3np                         1/1     Running   0          12d
+nd-system                prometheus-operator-6b8c9f2d1-vwxyz                 1/1     Running   3          45d
+monitoring               alertmanager-0                                      0/1     CrashLoopBackOff   8          2h
+kube-system              calico-node-nd-worker-02                            0/1     Evicted        0          18h
+...
+
+=== etcd on nd-master-01 ===
++------------------------+------------------+---------+---------+-----------+
+| ENDPOINT               | ID               | VERSION | DB SIZE | IS LEADER |
++------------------------+------------------+---------+---------+-----------+
+| https://127.0.0.1:2379 | 8a7c3e9f2b1d4c6a | 3.5.4   | 1.2 GB  | true      |
++------------------------+------------------+---------+---------+-----------+
+
+=== etcd on nd-master-02 ===
++------------------------+------------------+---------+---------+-----------+
+| ENDPOINT               | ID               | VERSION | DB SIZE | IS LEADER |
++------------------------+------------------+---------+---------+-----------+
+| https://127.0.0.1:2379 | 5f2e1a9c8b7d3e4f | 3.5.4   | 1.2 GB  | false     |
++------------------------+------------------+---------+---------+-----------+
+```
+
+!!! warning "Common errors"
+    **`error: unable to connect to the server: dial tcp: lookup nd-master-01: no such host`** — Verify DNS resolution for node hostnames or use IP addresses directly in the loop instead of node names.
+    **`ssh: connect to host 10.48.12.15 port 22: Connection refused`** — Ensure SSH is running on the target node and the ndadmin user has key-based authentication configured; check firewall rules blocking port 22.
+    **`Error: x509: certificate signed by unknown authority`** — Verify the etcd CA certificate path is correct and readable; confirm the certificate files exist at `/etc/kubernetes/pki/etcd/` on the remote node.
 ### 4. Collect the ND tech-support bundle
 
 ```bash
@@ -139,6 +220,22 @@ ls -lh /tmp/nd-support-*.tar.gz
 scp ndadmin@<nd-node-ip>:/tmp/nd-support-$(date +%Y%m%d%H%M).tar.gz ./
 ```
 
+
+```text title="Expected output"
+Collecting techsupport bundle...
+Gathering system logs from all nodes...
+Collecting database diagnostics...
+Collecting application state...
+Bundle creation completed successfully.
+-rw-r--r-- 1 root root 2.3G Nov 15 14:32 /tmp/nd-support-20241115143215.tar.gz
+ndadmin@10.48.92.15's password: 
+nd-support-20241115143215.tar.gz                          2.3GB  45.2MB/s   00:51
+```
+
+!!! warning "Common errors"
+    **`acs: command not found`** — SSH into the Nexus Dashboard node directly (not your local workstation) and run the command from the appliance shell.
+    **`Permission denied (publickey,password)`** — Ensure the ndadmin account exists on the ND node and your SSH key or password is correct; verify with `ssh -v ndadmin@<nd-node-ip>`.
+    **`No such file or directory`** — The techsupport bundle failed to generate; check disk space with `df -h` and ensure `/tmp` has at least 5GB free, then retry the `acs techsupport` command.
 ### 5. Collect the NDFC tech-support bundle (if NDFC is affected)
 
 ```bash
@@ -150,6 +247,24 @@ acs apps techsupport ndfc --output /tmp/ndfc-support-$(date +%Y%m%d%H%M).tar.gz
 scp ndadmin@<nd-node-ip>:/tmp/ndfc-support-$(date +%Y%m%d%H%M).tar.gz ./
 ```
 
+
+```text title="Expected output"
+Generating NDFC application support bundle...
+Collecting NDFC logs and diagnostics...
+Packaging application state...
+Compressing bundle...
+NDFC techsupport bundle generated successfully
+Output: /tmp/ndfc-support-202401151430.tar.gz
+Bundle size: 487.2 MB
+
+ndadmin@192.168.100.45's password:
+ndfc-support-202401151430.tar.gz                100%  487.2MB   8.5MB/s   00:57
+```
+
+!!! warning "Common errors"
+    **`scp: /tmp/ndfc-support-*.tar.gz: No such file or directory`** — Ensure the date command in the acs command and scp command use identical formatting, or capture the filename to a variable instead of relying on separate date invocations.
+    **`Permission denied (publickey,password).`** — Verify ndadmin credentials and SSH key access to the ND node; confirm the user has permission to read /tmp files with `ssh ndadmin@<nd-node-ip> ls -l /tmp/ndfc-support*.tar.gz`.
+    **`acs: command not found`** — Confirm you are logged into the Nexus Dashboard CLI (via SSH to the ND management IP) rather than a local shell; the acs command is only available within the ND appliance.
 ### 6. Capture upgrade history (if upgrade-related)
 
 ```bash
@@ -160,6 +275,26 @@ acs upgrade history > /tmp/nd-upgrade-history-$(date +%Y%m%d).txt
 acs system logs --component upgrade --tail 500 > /tmp/nd-upgrade-log-$(date +%Y%m%d).txt
 ```
 
+
+```text title="Expected output"
+Upgrade History Report Generated: /tmp/nd-upgrade-history-20240115.txt
+  Timestamp: 2024-01-15T09:42:33Z
+  Previous Version: 3.1.1
+  Current Version: 3.2.0
+  Status: SUCCESS
+  Duration: 18 minutes
+  
+Upgrade Log Report Generated: /tmp/nd-upgrade-log-20240115.txt
+  Total Log Entries: 487
+  Component: upgrade
+  Date Range: 2024-01-15 09:24:00 to 2024-01-15 09:42:33
+  Severity Levels: INFO (412), WARNING (68), ERROR (7)
+```
+
+!!! warning "Common errors"
+    **`acs: command not found`** — Ensure you are logged into the Nexus Dashboard CLI or source the ACS environment setup script before running acs commands.
+    **`Permission denied`** — Run the commands with appropriate privileges (sudo or as the admin user configured for Nexus Dashboard access).
+    **`/tmp: Read-only file system`** — Redirect output to a writable directory such as /var/log or the user's home directory instead.
 ### 7. Write the timeline
 
 ```text
@@ -265,6 +400,42 @@ kubectl get pods --all-namespaces | grep -vE "Running|Completed" | head -20
 kubectl get events --all-namespaces --sort-by='.lastTimestamp' | tail -20
 ```
 
+
+```text title="Expected output"
+Cisco ACS Version 3.2.1.0 Build 20231215
+App Name                    Version         Status
+nexus-dashboard             3.2.1.0         Running
+assurance                   3.2.1.0         Running
+insights                    3.2.1.0         Running
+compliance                  3.2.1.0         Running
+
+Cluster Health: Healthy
+Node Status: All nodes operational
+Database: Connected
+API Server: Responsive
+
+NAME                                    READY   STATUS    RESTARTS   AGE
+nd-node-01.example.com                  3/3     Running   0          45d
+nd-node-02.example.com                  3/3     Running   0          45d
+nd-node-03.example.com                  3/3     Running   0          45d
+
+NAMESPACE              NAME                                          READY   STATUS             RESTARTS   AGE
+kube-system            coredns-558bd4d5db-7x9kl                     0/1     CrashLoopBackOff   12         2h
+monitoring             prometheus-operator-6d8f7c4b9-2m5lk           0/1     ImagePullBackOff   0          1h
+nexus-dashboard        nd-api-worker-5f8c9d2e-kl9pq                 1/2     Pending            0          45m
+kube-system            etcd-backup-job-27h5k                        0/1     Error              5          3h
+
+NAMESPACE         LAST SEEN   TYPE      REASON                  OBJECT
+kube-system       2m          Warning   BackOff                 pod/coredns-558bd4d5db-7x9kl
+monitoring        5m          Warning   Failed                  pod/prometheus-operator-6d8f7c4b9-2m5lk
+nexus-dashboard   8m          Warning   FailedScheduling        pod/nd-api-worker-5f8c9d2e-kl9pq
+kube-system       12m         Warning   NodeNotReady            node/nd-node-02.example.com
+```
+
+!!! warning "Common errors"
+    **`ImagePullBackOff`** — Verify image registry credentials with `kubectl get secrets -n <namespace>` and confirm the image URI is correct in the deployment manifest.
+    **`CrashLoopBackOff`** — Check pod logs with `kubectl logs -n <namespace> <pod-name> --previous` to identify the root cause, then restart the pod or redeploy the application.
+    **`FailedScheduling`** — Verify node resources with `kubectl describe nodes` and ensure sufficient CPU/memory is available, or add additional nodes to the cluster.
 ---
 
 ## Support SLA Reference

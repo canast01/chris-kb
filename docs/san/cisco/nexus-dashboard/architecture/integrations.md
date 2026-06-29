@@ -17,6 +17,27 @@ acs system syslog add --server 10.10.3.50 --port 514 --protocol udp
 acs system syslog show
 ```
 
+
+```text title="Expected output"
+ndadmin@nd-node1.corp.example.com's password: 
+Last login: Wed Jan 15 14:32:18 2025 from 192.168.1.105
+Nexus Dashboard CLI v2.3.1.1a
+nd-node1# acs system syslog add --server 10.10.3.50 --port 514 --protocol udp
+Syslog server 10.10.3.50:514 added successfully
+nd-node1# acs system syslog show
+Syslog Servers:
+  Server: 10.10.3.50
+  Port: 514
+  Protocol: udp
+  Status: active
+  Last Updated: 2025-01-15 14:33:42 UTC
+nd-node1#
+```
+
+!!! warning "Common errors"
+    **`Error: Syslog server 10.10.3.50 already exists`** — Remove the existing entry with `acs system syslog remove --server 10.10.3.50` before re-adding it.
+    **`Error: Connection refused to syslog server 10.10.3.50:514`** — Verify the syslog server is reachable and listening on port 514 by running `nc -zv 10.10.3.50 514` from the ND node.
+    **`Error: Invalid protocol 'udp'. Allowed values: udp, tcp`** — Ensure the protocol parameter matches exactly (lowercase) and is either `udp` or `tcp`.
 ## Overview
 
 Nexus Dashboard integrates with Cisco ACI and NX-OS fabric infrastructure as its core data sources, and extends to ITSM, SIEM, notification, and AAA platforms for operational workflows.

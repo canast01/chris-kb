@@ -59,6 +59,48 @@ curl -sk -X POST \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "imdata": [
+    {
+      "flowRecord": {
+        "attributes": {
+          "src_ip": "10.0.10.100",
+          "dst_ip": "10.0.20.50",
+          "src_port": 443,
+          "dst_port": 8080,
+          "protocol": "tcp",
+          "drop_count": 1247,
+          "drop_reason": "Policy Denied",
+          "last_seen": "2024-01-15T14:32:18+00:00",
+          "flow_id": "a7f3c9e2-1b4d-47e8-9f2c-5d8e1a6b3c4f"
+        }
+      }
+    },
+    {
+      "flowRecord": {
+        "attributes": {
+          "src_ip": "10.0.10.100",
+          "dst_ip": "10.0.20.50",
+          "src_port": 22,
+          "dst_port": 22,
+          "protocol": "tcp",
+          "drop_count": 342,
+          "drop_reason": "ACL Denied",
+          "last_seen": "2024-01-15T14:31:05+00:00",
+          "flow_id": "b2e8d4f1-3a5c-48f9-8e3d-6c9f2b7a4d5e"
+        }
+      }
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; ensure it's not removed in production use).
+    **`{"error": "Invalid token or token expired"}`** — Regenerate the bearer token from Nexus Dashboard admin panel and update the Authorization header.
+    **`{"error": "Invalid filter parameter: drop_count_gt"}`** — Use the correct filter syntax `"drop_count": {"$gt": 0}` instead of `drop_count_gt`.
 ## Common Fabric Health Issues
 
 | Issue | Likely Cause | Fix |

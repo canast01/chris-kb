@@ -266,3 +266,24 @@ az rest \
   --query "value[].{Date:createdDateTime, User:userPrincipalName, Status:status.errorCode, IP:ipAddress}" \
   --output table
 ```
+
+
+```text title="Expected output"
+Date                          Operation                    Status  Actor
+------------------------------  ---------------------------  ------  --------------------------------
+2024-01-15T14:32:18.5432109Z  Add owner to application    Success  admin@contoso.onmicrosoft.com
+2024-01-14T09:17:45.2156789Z  Update application          Success  devops@contoso.onmicrosoft.com
+2024-01-13T16:48:22.8901234Z  Remove user assignment      Success  admin@contoso.onmicrosoft.com
+2024-01-12T11:05:33.4567890Z  Grant admin consent         Success  approver@contoso.onmicrosoft.com
+
+Date                          User                        Status  IP
+------------------------------  ---------------------------  ------  ----------------
+2024-01-15T14:28:12.1234567Z  john.doe@contoso.com        0       203.0.113.45
+2024-01-15T13:45:09.9876543Z  jane.smith@contoso.com      0       198.51.100.78
+2024-01-15T12:19:44.5432109Z  bob.wilson@contoso.com      0       192.0.2.156
+2024-01-15T11:33:27.2109876Z  alice.johnson@contoso.com   50058   203.0.113.89
+```
+
+!!! warning "Common errors"
+    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure your Azure account has the Directory.Read.All or AuditLog.Read.All permission in Microsoft Graph.
+    **`Invalid filter clause syntax: Invalid expression`** — Replace `<sp-object-id>` and `<app-id>` with actual values and verify the filter syntax matches Microsoft Graph API documentation.

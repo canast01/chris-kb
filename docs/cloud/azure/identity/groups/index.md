@@ -60,6 +60,15 @@ Dynamic groups evaluate rules against user attributes and update membership auto
 (user.userType -eq "Guest")
 ```
 
+
+```text title="Expected output"
+(no output — these are Azure AD dynamic group membership rule expressions, not executable commands)
+```
+
+!!! warning "Common errors"
+    **`Syntax error: unexpected token 'eq'`** — Ensure the rule is entered in the Azure Portal's "Dynamic membership rules" editor or via Microsoft Graph API, not executed as a bash command.
+    **`Property 'jobTitle' is not a valid user property`** — Verify the attribute name exists in your Azure AD schema; use `user.jobTitle` (camelCase) rather than `user.job_title` or other variations.
+    **`The rule contains an unsupported operator or property`** — Confirm you are using supported operators (`-eq`, `-ne`, `-contains`, `-notContains`, `-startsWith`, `-notStartsWith`) and valid user object properties documented in Azure AD.
 ```bash
 # Create dynamic group
 az ad group create \
@@ -70,6 +79,27 @@ az ad group create \
   --membership-rule-processing-state "On"
 ```
 
+
+```text title="Expected output"
+{
+  "displayName": "dynamic-engineers",
+  "id": "a7c2f891-4e3a-4b9c-8d1f-2e5a9c3b7f4a",
+  "mailNickname": "dynamic-engineers",
+  "mailEnabled": false,
+  "securityEnabled": true,
+  "groupTypes": [
+    "DynamicMembership"
+  ],
+  "membershipRule": "(user.department -eq \"Engineering\")",
+  "membershipRuleProcessingState": "On",
+  "createdDateTime": "2024-01-15T10:32:47.123Z"
+}
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid membership rule syntax`** — Verify the membership rule uses correct Azure AD query syntax (e.g., property names are case-sensitive and must match Azure AD schema).
+    **`Error: Insufficient privileges to create groups`** — Ensure your Azure AD account has the Directory.ReadWrite.All permission or Group.Create permission in the target tenant.
+    **`Error: Mail nickname 'dynamic-engineers' is already in use`** — Choose a unique mail-nickname value that doesn't conflict with existing groups or distribution lists.
 Dynamic group updates can take up to 24 hours after a rule or attribute change.
 
 ## Nested Groups
@@ -83,6 +113,14 @@ az ad group member add \
   --member-id <group-B-object-id>
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: The following arguments are required: --group, --member-id`** — Ensure both `<group-A-object-id>` and `<group-B-object-id>` are replaced with actual Azure AD object IDs (run `az ad group list --query "[].{name:displayName, id:objectId}"` to retrieve them).
+    **`Error: Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Verify your Azure CLI account has the "Groups Administrator" or "Directory Administrator" role in the target Azure AD tenant.
 ## Common Issues
 
 | Symptom | Cause | Resolution |
