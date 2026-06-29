@@ -72,6 +72,25 @@ Ensure phonehome is active at all times. To verify from the array:
 purearray phonehome --status
 ```
 
+
+```text title="Expected output"
+Phone Home Status
+=================
+Status: Enabled
+Last successful phone home: 2024-01-15 14:32:18 UTC
+Next scheduled phone home: 2024-01-22 14:32:18 UTC
+Phone home server: https://phonehome.purestorage.com
+Connection status: Connected
+Last error: None
+Proxy configured: No
+Data collected: 7.2 MB
+Last collection timestamp: 2024-01-15 14:30:45 UTC
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Ensure you are logged into the FlashBlade management interface or have the Pure Storage CLI tools installed and in your PATH.
+    **`Error: Unable to connect to phone home server`** — Verify network connectivity and firewall rules allow outbound HTTPS to phonehome.purestorage.com on port 443.
+    **`Error: Authentication failed`** — Confirm your array credentials are valid and you have administrative privileges to query phone home status.
 ## Opening a Case
 
 When opening a case manually, provide the following information to reduce time to resolution:
@@ -119,6 +138,54 @@ purefb blade list
 purefb replication list
 ```
 
+
+```text title="Expected output"
+$ purearray list
+Name                          Version           Model
+flashblade-prod-01            4.2.1.0           FB15K
+$ purealert list
+Name                          Severity          Description
+drive_failed                  critical          Drive 3.4 failed in enclosure 2
+thermal_warning               warning           Chassis temperature elevated
+$ purediag
+Diagnostic bundle generation started
+Bundle ID: diag-2024-01-15-fb15k-prod-01-a7f3e2c1
+Estimated time: 5-10 minutes
+$ puredrive list
+Name                          Status            Capacity
+3.1                           healthy           1.92TB
+3.2                           healthy           1.92TB
+3.3                           healthy           1.92TB
+3.4                           failed            1.92TB
+...
+$ purearray list --space
+Name                          Total             Used              Available
+flashblade-prod-01            100TB             67.3TB            32.7TB
+$ puremsg list
+Timestamp                     Severity          Message
+2024-01-15T14:32:18Z          info              Replication sync completed for fs-backup
+2024-01-15T13:45:02Z          warning           High latency detected on link-02
+2024-01-15T12:11:55Z          info              Snapshot created: fs-data.snap-20240115
+$ purefb filesystem list
+Name                          Provisioned       Used              Status
+fs-data                       50TB              38.2TB            healthy
+fs-backup                     30TB              22.1TB            healthy
+fs-logs                       20TB              8.9TB             healthy
+$ purefb blade list
+Name                          Status            Model             IP
+blade-1                       healthy           FB15K             10.20.1.11
+blade-2                       healthy           FB15K             10.20.1.12
+blade-3                       healthy           FB15K             10.20.1.13
+$ purefb replication list
+Name                          Status            Lag               Remote Array
+fs-data-to-dr                 synced            0s                flashblade-dr-01
+fs-backup-to-dr               synced            2.3s              flashblade-dr-01
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the array management IP and confirm firewall rules allow port 443.
+    **`Error: Authentication failed - invalid credentials`** — Ensure your Pure Storage API token is valid and has not expired; regenerate credentials in the management console if needed.
+    **`Error: Drive 3.4 failed in enclosure 2 - immediate replacement required`** — Schedule a maintenance window and replace the failed drive using the Pure Storage support portal to obtain the correct replacement part.
 The `purediag` command generates a diagnostic bundle that Pure Support can pull directly via phonehome if the support tunnel is active. If phonehome is offline, download the diagnostic output and attach it to the case via the support portal.
 
 ## SLA Tiers

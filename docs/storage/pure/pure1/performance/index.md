@@ -61,6 +61,33 @@ fio --name=randread_lat --ioengine=libaio --iodepth=1 --rw=randread \
   --percentile_list=50,90,99,99.9
 ```
 
+
+```text title="Expected output"
+seqread: (g=0): rw=read, bs=(R) 1024KiB-1024KiB, (W) 1024KiB-1024KiB, bs=1024KiB-1024KiB, bs_is_seq=on, ioengine=libaio, iodepth=32
+...
+seqread: Laying out IO file (1 file / 10240MiB)
+seqread: Starting 4 processes
+seqread: Jobs: 4 (f=4): [R(4)][100.0%][1247MiB/s][1247 IOPS][eta 00m:00s]
+seqread: (groupid=0, jobs=4): io=40960MiB, aggrb=1247.3MiB/s, minb=311.8MiB/s, maxb=311.9MiB/s, mint=32827ms, maxt=32827ms
+  read: IOPS=1247, BW=1247MiB/s (1308MB/s), aggrb=1247.3MiB/s
+  lat (msec): min=25.4, max=156.2, avg=102.3, stdev=18.7
+  percentiles (msec):
+     |  1.00th=[  28.3],  5.00th=[  45.2], 10.00th=[  62.1], 20.00th=[  78.4],
+     | 50.00th=[ 102.1], 90.00th=[ 128.6], 99.00th=[ 148.9], 99.90th=[ 155.3]
+
+randread_lat: (g=0): rw=randread, bs=(R) 4096B-4096B, (W) 4096B-4096B, bs=4096B-4096B, ioengine=libaio, iodepth=1
+...
+randread_lat: Starting 1 process
+randread_lat: Jobs: 1 (f=1): [r(1)][100.0%][2847 IOPS][11.4MiB/s][eta 00m:00s]
+randread_lat: (groupid=0, jobs=1): io=10240MiB, aggrb=170.7MiB/s, minb=170.7MiB/s, maxb=170.7MiB/s, mint=59968ms, maxt=59968ms
+  read: IOPS=43700, BW=170.7MiB/s (179MB/s), aggrb=170.7MiB/s
+  lat (usec): min=18, max=8942, avg=22.8, stdev=156.3
+  percentiles (usec):
+     | 50.00th=[   21], 90.00th=[   24], 99.00th=[   31], 99.90th=[  187]
+```
+
+!!! warning "Common errors"
+    **`fio: filename=/dev/sdX: No such file or directory`** — Replace `/dev/sdX` with the actual device path (e.g., `/dev/sda`, `/dev/nvme0n1`, or
 ## Common Performance Issues
 
 | Symptom | Probable cause | Investigation |

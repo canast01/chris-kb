@@ -58,6 +58,38 @@ purecli support diagnostics
 purefb support info
 ```
 
+
+```text title="Expected output"
+=== FlashArray Support Information ===
+Support Status: Enabled
+Phone Home: Active
+Last Phone Home: 2024-01-15 14:32:18 UTC
+Support Contract ID: ABC-123456-XYZ
+Entitlement: Premium Support Plus
+Array Serial: FA-m70-123456
+Array Model: FlashArray//m70
+Purity Version: 6.4.2
+=== Generating Diagnostic Bundle ===
+Diagnostic bundle creation started
+Bundle ID: diag-20240115-143245-fa-m70-123456
+Estimated size: 2.3 GB
+Estimated time: 8-12 minutes
+Status: In Progress (45%)
+=== FlashBlade Support Information ===
+Support Status: Enabled
+Phone Home: Active
+Last Phone Home: 2024-01-15 14:31:52 UTC
+Support Contract ID: DEF-789012-UVW
+Entitlement: Standard Support
+Blade Serial: FB-e220-654321
+Blade Model: FlashBlade//e220
+Purity Version: 4.2.1
+```
+
+!!! warning "Common errors"
+    **`purecli: command not found`** — Install the Pure CLI tools or add the installation directory to your PATH environment variable.
+    **`Error: Unable to connect to array management IP`** — Verify network connectivity to the array's management interface and confirm the array hostname/IP is configured in your purecli credentials.
+    **`Error: Authentication failed - invalid credentials`** — Re-authenticate using `purecli login` or verify your API token has not expired.
 Pure Support can also pull diagnostics directly via Pure1 phone-home.
 
 ## What to Include in a Case

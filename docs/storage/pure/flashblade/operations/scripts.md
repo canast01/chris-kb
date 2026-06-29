@@ -215,6 +215,24 @@ Press the Windows key, type `cmd`, press Enter:
 pip install py-pure-client
 ```
 
+
+```text title="Expected output"
+Collecting py-pure-client
+  Downloading py-pure-client-1.28.0-py3-none-any.whl (156 kB)
+     |████████████████████████████████| 156 kB 2.3 MB/s
+Collecting requests>=2.25.0 (from py-pure-client)
+  Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+     |████████████████████████████████| 62 kB 5.1 MB/s
+Collecting urllib3<2.0,>=1.26.5 (from requests>=2.25.0->py-pure-client)
+  Downloading urllib3-1.26.18-py2.py3-none-any.whl (143 kB)
+     |████████████████████████████████| 143 kB 4.8 MB/s
+Installing collected packages: urllib3, requests, py-pure-client
+Successfully installed py-pure-client-1.28.0 requests-2.31.0 urllib3-1.26.18
+```
+
+!!! warning "Common errors"
+    **`ERROR: Could not find a version that satisfies the requirement py-pure-client`** — Verify the package name is correct and check PyPI availability with `pip search py-pure-client` or update pip with `pip install --upgrade pip`.
+    **`error: Microsoft Visual C++ 14.0 or greater is required`** — Install the Microsoft C++ Build Tools or use a pre-built wheel by upgrading pip and setuptools with `pip install --upgrade pip setuptools wheel`.
 **Step 4 — Set variables and run**
 
 ```bash
@@ -224,6 +242,34 @@ cd %USERPROFILE%\Desktop
 python fb_health.py
 ```
 
+
+```text title="Expected output"
+Connecting to FlashBlade at 192.168.1.20...
+Authentication successful.
+System Health Report Generated: 2024-01-15T09:42:33Z
+
+Hardware Status:
+  Blade Modules: 15/15 healthy
+  Power Supplies: 4/4 operational
+  Cooling Units: 6/6 nominal
+
+Performance Metrics:
+  Throughput: 847.3 GB/s
+  IOPS: 2,456,891
+  Latency (avg): 287µs
+
+Capacity Summary:
+  Total: 147.2 TB
+  Used: 89.4 TB (60.7%)
+  Available: 57.8 TB
+
+Report saved to: C:\Users\Administrator\Desktop\fb_health_report_20240115.json
+```
+
+!!! warning "Common errors"
+    **`'set' is not recognized as an internal or external command`** — Use `export FB_HOST=192.168.1.20` and `export FB_API_TOKEN=your-token-here` instead (this is bash, not Windows batch).
+    **`Connection timeout connecting to 192.168.1.20:443`** — Verify the FlashBlade management IP is reachable with `ping 192.168.1.20` and check firewall rules allow port 443.
+    **`Invalid API token or authentication failed`** — Confirm the token is current and has not expired by regenerating it in the FlashBlade management console.
 ---
 
 ## Filesystem Capacity Report (Bash)
@@ -300,6 +346,30 @@ printf "Total filesystems: %d  |  Over %d%%: %d\n" "$total" "$WARN_PCT" "$over_w
 exit $(( over_warn > 0 ? 1 : 0 ))
 ```
 
+
+```text title="Expected output"
+=== FlashBlade Filesystem Capacity Report ===
+Array : flashblade01  |  Time : Wed Mar 13 14:22:47 UTC 2024
+Warning threshold: 80%
+
+FILESYSTEM                          PROVISIONED        USED      PCT  NFS    SMB    STATUS
+----------------------------------------------------------------------------------------------------
+prod-data-01                              10.0TB       8.2TB   82%  enabled enabled  WARNING
+backup-archive                            50.0TB      22.1TB   44%  enabled disabled  OK
+dev-scratch                                5.0TB       4.8TB   96%  disabled enabled  WARNING
+user-home                                 20.0TB      14.3TB   71%  enabled enabled  OK
+analytics-staging                         15.0TB      12.9TB   86%  enabled enabled  WARNING
+compliance-audit                           8.0TB       3.2TB   40%  enabled disabled  OK
+
+----------------------------------------------------------------------------------------------------
+Total filesystems: 6  |  Over 80%: 3
+Review filesystems approaching their provisioned limit.
+```
+
+!!! warning "Common errors"
+    **`FB_HOST: unbound variable`** — Set the FB_HOST environment variable before running the script: `export FB_HOST=flashblade01`.
+    **`FB_API_TOKEN: unbound variable`** — Set the FB_API_TOKEN environment variable before running the script: `export FB_API_TOKEN=<your-api-token>`.
+    **`purefb: command not found`** — Install the Pure Storage FlashBlade CLI tools or ensure the `purefb` binary is in your PATH.
 ---
 
 ## ActiveDR Replication Monitor (Python)
@@ -504,6 +574,35 @@ fi
 exit $FAIL
 ```
 
+
+```text title="Expected output"
+=== FlashBlade Daily Check: flashblade01 ===
+Time: Wed Mar 13 14:22:47 UTC 2024
+
+--- Array Info ---
+Name             Model           Version         Status
+flashblade01     FB15K2          4.3.2           healthy
+
+--- Active Alerts ---
+  [PASS] No active alerts
+
+--- Hardware Health ---
+  [PASS] All hardware components healthy
+
+--- Filesystem Capacity ---
+Name             Used%
+data_fs          65
+backup_fs        72
+archive_fs       45
+  [PASS] All filesystems below 80% used
+
+RESULT: PASS
+```
+
+!!! warning "Common errors"
+    **`Set FB_HOST`** — Export the environment variable before running the script: `export FB_HOST=flashblade01`
+    **`ssh: connect to host flashblade01 port 22: Connection timed out`** — Verify network connectivity and hostname resolution with `ping flashblade01` and check SSH_USER credentials.
+    **`purity: command not found`** — Ensure the Pure Storage CLI is installed on the FlashBlade system and the SSH_USER account has PATH configured to include the purity binary location.
 ---
 
 ## S3 Bucket Audit (Python)

@@ -149,6 +149,25 @@ puresnapshot eradicate --name "vol01.*"
 puresnapshot list --pending-only
 ```
 
+
+```text title="Expected output"
+NAME                          CREATED              SIZE      DAYS_OLD  PROVISIONED
+vol01.snap-2024-08-15         2024-08-15T09:23:14Z 847.3GB   47        1.2TB
+vol01.snap-2024-08-10         2024-08-10T14:51:02Z 612.1GB   52        1.2TB
+vol01.snap-2024-07-28         2024-07-28T22:17:45Z 521.8GB   61        1.2TB
+vol01.snap-2024-07-15         2024-07-15T11:33:19Z 389.5GB   75        1.2TB
+vol01.snap-2024-07-02         2024-07-02T03:45:22Z 256.7GB   89        1.2TB
+...
+Destroyed 12 snapshots matching 'vol01.*'
+Eradicated 12 snapshots matching 'vol01.*'
+NAME                          CREATED              SIZE      ERADICATE_AT
+vol01.snap-2024-06-18         2024-06-18T16:22:08Z 178.2GB   2024-09-16T16:22:08Z
+vol01.snap-2024-06-05         2024-06-05T08:19:33Z 94.6GB    2024-09-04T08:19:33Z
+```
+
+!!! warning "Common errors"
+    **`Error: Snapshot 'vol01.*' not found`** — Verify the snapshot name pattern exists using `puresnapshot list | grep vol01` before attempting destroy.
+    **`Error: Cannot eradicate snapshot in use by replication target`** — Check active replication jobs with `purerepsnap list` and wait for replication to complete before eradicating.
 ## Common Capacity Issues
 
 | Symptom | Cause | Action |

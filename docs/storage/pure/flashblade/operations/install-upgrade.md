@@ -68,6 +68,28 @@ purefb alert list
 purefb replication list
 ```
 
+
+```text title="Expected output"
+Name          Version           Status
+flashblade-1  4.3.2             healthy
+
+Blade    Status    Model           Serial
+blade-1  healthy   FB15002         1234567890AB
+blade-2  healthy   FB15002         1234567890CD
+blade-3  healthy   FB15002         1234567890EF
+
+Severity    Code    Message                           Time
+(no alerts)
+
+Name                  Status    Direction    Target              Lag
+fs-prod-replica       synced    push         flashblade-dr-01    0s
+fs-backup-replica     synced    push         flashblade-dr-02    2s
+```
+
+!!! warning "Common errors"
+    **`purefb: command not found`** — Install the Pure FlashBlade CLI tools or ensure the PATH includes the installation directory.
+    **`Error: Invalid credentials`** — Verify PUREFB_HOST and PUREFB_API_TOKEN environment variables are set correctly.
+    **`Error: Connection refused`** — Confirm the FlashBlade management IP is reachable and the REST API service is running.
 **Upgrade execution:**
 
 - FlashBlade upgrades are non-disruptive; Purity//FB performs a rolling blade upgrade

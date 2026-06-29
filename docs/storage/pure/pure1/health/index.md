@@ -37,6 +37,25 @@ puresupport proxy list
 puresupport proxy set --host <proxy-ip> --port 8080
 ```
 
+
+```text title="Expected output"
+Name                          NtpServer1                NtpServer2                NtpServer3
+Enabled                       True                      True                      True
+Status                        synced                    synced                    synced
+Stratum                       2                         2                         2
+
+Name,Model,Version,Phone_Home_Enabled,Phone_Home_Last_Contact
+pure1-array-01,FlashArray//X,6.4.2,true,2024-01-15T09:47:32Z
+pure1-array-02,FlashArray//X,6.4.2,true,2024-01-15T09:48:15Z
+
+Name          Host              Port    Enabled
+support-proxy 192.168.100.50    8080    true
+```
+
+!!! warning "Common errors"
+    **`Error: NTP server unreachable`** — Verify NTP server IP is correct and firewall allows UDP port 123 outbound from the array.
+    **`Error: Phone home disabled or no contact in 30+ days`** — Enable phone home with `purearray set --phone-home=true` and verify outbound HTTPS (port 443) connectivity to Pure's cloud.
+    **`Error: proxy set: invalid host address`** — Ensure the proxy IP is valid and reachable; use `ping <proxy-ip>` to test connectivity first.
 ## Health Monitoring Integration
 
 Pure1 can send health events to external systems:

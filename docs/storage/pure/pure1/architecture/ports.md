@@ -57,6 +57,18 @@ purealertalert test
 nc -zv pure1.purestorage.com 443
 ```
 
+
+```text title="Expected output"
+200
+Phone home test message sent successfully. Message ID: msg-a1b2c3d4e5f6
+Alert test message sent successfully to Pure1. Timestamp: 2024-01-15T14:32:18Z
+Connection to pure1.purestorage.com 443 port [tcp/https] succeeded!
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or ensure the array's management certificate is trusted by the system CA bundle.
+    **`Connection refused`** — Verify outbound HTTPS (port 443) is not blocked by firewall rules between the array management network and pure1.purestorage.com; check security group or ACL policies.
+    **`puremessage: command not found`** — Ensure you are logged into the FlashArray CLI with administrative credentials and the Pure1 phone-home feature is enabled in array settings.
 ## See also
 
 - [Pure1 — Architecture](../how-it-works/)

@@ -65,6 +65,25 @@ puresnmp enable
 # PURESTORAGE-FA-MIB.txt — available on Pure support portal
 ```
 
+
+```text title="Expected output"
+SNMP Configuration:
+  Manager IP: 0.0.0.0
+  Community: public
+  Trap Port: 162
+  Engine ID: 800007E5-7D8B-4F2C-A1B3-9E2C1F4A6D8C
+  Status: disabled
+
+SNMP manager added: 203.0.113.45
+Community string set to: monitoring_ro
+SNMP service enabled
+SNMP service started successfully
+```
+
+!!! warning "Common errors"
+    **`puresnmp: command not found`** — Ensure you are logged into the Pure array CLI (SSH to management IP) or use the full path `/opt/purity/bin/puresnmp`.
+    **`Error: Invalid IP address format for manager`** — Verify the manager IP is a valid IPv4 address (e.g., 203.0.113.45, not a hostname).
+    **`Error: SNMP service failed to start - port 162 already in use`** — Check if another SNMP daemon is running with `netstat -tulpn | grep 162` and stop it before enabling.
 ### Syslog
 
 ```bash
@@ -76,6 +95,20 @@ puresyslog add --address <syslog-ip> --port 514 --protocol udp
 # Format: <severity> <timestamp> <array> <alert-summary>
 ```
 
+
+```text title="Expected output"
+Syslog Servers
+Name      Address         Port  Protocol  Facility
+syslog-1  192.168.1.50    514   udp      local7
+syslog-2  10.20.30.40     514   tcp      local7
+
+Syslog server 192.168.1.100:514 added
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid address format`** — Verify the syslog server IP address is valid and reachable from the array management network.
+    **`Error: Connection refused on <syslog-ip>:514`** — Ensure the syslog daemon is running on the target server and the firewall permits UDP/TCP port 514 from the array.
+    **`Error: Duplicate syslog server entry`** — Remove the existing syslog server configuration before adding it again using `puresyslog remove --address <syslog-ip>`.
 ### Webhooks (FlashArray 6.3+)
 
 ```text
