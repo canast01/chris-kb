@@ -7716,46 +7716,6 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </ul>
 <hr />
 <h2 id="health-check-overview">Health Check Overview<a class="headerlink" href="#health-check-overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    START([Start Daily Health Check]) --&gt; SVC[Check Service Status]
-
-    SVC --&gt; SVC_OK{All nodes\nrunning?}
-    SVC_OK -- No --&gt; RESTART[Investigate &amp; restart\nfailed node]
-    RESTART --&gt; ALERT_NODE[Alert: Node down]
-    SVC_OK -- Yes --&gt; LOGS[Review Application Logs]
-
-    LOGS --&gt; LOG_ERR{Errors or\nOOM in logs?}
-    LOG_ERR -- Yes --&gt; INVESTIGATE[Investigate stack traces\ncheck heap usage]
-    INVESTIGATE --&gt; ALERT_LOG[Alert: Log anomalies]
-    LOG_ERR -- No --&gt; DISK[Check Disk Space]
-
-    DISK --&gt; DISK_OK{Shared home &amp;\nDB &lt; 80% full?}
-    DISK_OK -- No --&gt; ALERT_DISK[Alert: Disk capacity]
-    DISK_OK -- Yes --&gt; DB[Check DB Connectivity]
-
-    DB --&gt; DB_OK{DB reachable\n&amp; responsive?}
-    DB_OK -- No --&gt; ALERT_DB[Alert: DB issue]
-    DB_OK -- Yes --&gt; SEARCH[Check Search Index]
-
-    SEARCH --&gt; SEARCH_OK{Index\ncurrent?}
-    SEARCH_OK -- No --&gt; REINDEX[Trigger reindex]
-    SEARCH_OK -- Yes --&gt; CLUSTER[Check Cluster Nodes]
-
-    CLUSTER --&gt; CLUSTER_OK{All nodes\nregistered?}
-    CLUSTER_OK -- No --&gt; ALERT_CLUSTER[Alert: Node missing\nfrom cluster]
-    CLUSTER_OK -- Yes --&gt; PERF[Check Response Time]
-
-    PERF --&gt; PERF_OK{P95 &lt; 3s?}
-    PERF_OK -- No --&gt; ALERT_PERF[Alert: Performance\ndegradation]
-    PERF_OK -- Yes --&gt; DONE([Health Check Passed])
-
-    style DONE fill:#2d8a4e,color:#fff
-    style ALERT_NODE fill:#c0392b,color:#fff
-    style ALERT_LOG fill:#c0392b,color:#fff
-    style ALERT_DISK fill:#e67e22,color:#fff
-    style ALERT_DB fill:#c0392b,color:#fff
-    style ALERT_CLUSTER fill:#c0392b,color:#fff
-    style ALERT_PERF fill:#e67e22,color:#fff</code></pre>
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Jira service status</strong> — Run <code>systemctl status jira</code> on the app server; confirm the service is <code>active (running)</code>; if not, check the process list with <code>ps aux | grep jira</code> and review <code>catalina.out</code> for the last recorded error before attempting a restart.</li>
@@ -8215,7 +8175,7 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

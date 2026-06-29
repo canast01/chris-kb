@@ -8122,16 +8122,7 @@ Encryption reference covering AD Protocol Encryption Overview, Enforcing LDAP Si
 </ul>
 <hr />
 <h2 id="ad-protocol-encryption-overview">AD Protocol Encryption Overview<a class="headerlink" href="#ad-protocol-encryption-overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    clients["AD Clients\n(computers / apps)"]
-    clients --&gt;|"LDAPS port 636\n(TLS 1.2+ required)"| dc["Domain Controller\n(LDAP with Signing + Channel Binding)"]
-    clients --&gt;|"Kerberos port 88\n(AES-256 — RC4 disabled)"| kdc["KDC\n(on DC)"]
-    clients --&gt;|"SMB port 445\n(SMB signing required)"| sysvol["SYSVOL / DFSR"]
-    dc --&gt; ntds["NTDS.DIT\n(AD database — AES encrypted at rest)"]
-    kdc --&gt; ntds
-
-    ldapPolicy["GPO: LDAP signing = Require\nChannel Binding = Always"] -. "enforced on" .-&gt; dc
-    kerbPolicy["GPO: Kerberos enc = AES128 + AES256 only\n(DES + RC4 disabled)"] -. "enforced on" .-&gt; kdc</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptkEFLAzEQhe_7K4aeCqK99yCsiYXS0oopguAlJsNuaDoJyagUEfwR_kJ_ibMWRWFveeG9j_fGh4KOQ6I5lND13DQuBiSuc5i0GtRJPNDUpUN-YiwVZmBzrhN4rb3NKDkBWOoivjXeSUyngw0EKhGXFCMWSa91ewMvgXswoaNAHZyB6i0RRrgK5OVnFLj_Jq60EkYi0GrUVY_1OUUxmntzt11LQ70wt6NWYj9M2-y0udDLnWBlpbdsH21F-Hz_gPbaAJIrx8zowbKkK4-yfk4F55fg3V-1_y9P_eQ6gxgaDLt-31_PhIMg?" /></p>
 <h2 id="enforcing-ldap-signing-and-channel-binding">Enforcing LDAP Signing and Channel Binding<a class="headerlink" href="#enforcing-ldap-signing-and-channel-binding" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify current LDAP signing requirement via registry on DC</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\System\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">|</span>
@@ -8184,7 +8175,7 @@ Encryption reference covering AD Protocol Encryption Overview, Enforcing LDAP Si
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

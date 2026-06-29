@@ -8808,40 +8808,7 @@ Common Issues reference covering Common Issues, Incident Triage.
 <p><img alt="PowerMax — Common Issues" src="../../../../../assets/storage-dell-powermax-troubleshooting-common-issues.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kU0PgjAMhu_8ioa7f4CDFz8Srmq8kmVUbDJWsw2MMfx3CxrEgbf27fusHyvJoQ7ENoOS7zZJ_KO-Ba4zyEu0gS4POL4VePqruqH4SNVsyy6RoLLsA-niYvieQbodFdiLko5M30TZymCXaK4FL8j7Br0wmyGHfMgXCbKa-mGK4OR9qaX5R4HToCxSLTqZvnDo2TTvDdPzoMFXWySnyKGPWwR2sPNaGRVwRLhVphsvBqs1zC5CtkVJK8GmvugGf1yzvf_4FjadOqOheuJr_f2OqBYNEFVnbaP6CxNG4Os=?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{Host connectivity\nlost?}
-    S --&gt; B2{SRDF link\ndegraded?}
-    S --&gt; B3{TimeFinder clone\nsplit failed?}
-    S --&gt; B4{Performance alert\nresponse time spike?}
-    S --&gt; B5{Masking view\nmismatch?}
-
-    B1 --&gt;|Check FA port state| D1{Director or\nport faulted?}
-    D1 --&gt;|Yes| R1[See Common Issues —\nDirector port I/O errors]
-    D1 --&gt;|No| R2[See Common Issues —\nHost cannot see LUN]
-
-    B2 --&gt;|Check RDF group state| D2{Pair state\nSuspended / R1 Updated?}
-    D2 --&gt;|Yes| R3[See Common Issues —\nSRDF pair in Suspended state]
-    D2 --&gt;|Link down| R4[See Incident Triage —\nSRDF link check]
-
-    B3 --&gt;|Check SnapVX session count| D3{Session count\nat 256 limit?}
-    D3 --&gt;|Yes| R5[See Common Issues —\nSnapVX session count at 256]
-    D3 --&gt;|No| R6[See Incident Triage —\nEscalate to Dell TAC]
-
-    B4 --&gt;|Check FAST VP tier placement| D4{SLO violation\n&gt;2ms latency?}
-    D4 --&gt;|Yes| R7[See Common Issues —\nPerformance SLO violations]
-    D4 --&gt;|Cache WP high| R8[See Incident Triage —\nPerformance path]
-
-    B5 --&gt;|Verify initiator group| D5{WWN in\ninitiator group?}
-    D5 --&gt;|No| R9[See Common Issues —\nHost cannot see LUN after MV creation]
-    D5 --&gt;|Zone missing| R10[See Incident Triage —\nFabric zone check]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVlMtOwzAQRff5ilH3CPpIgS5AuKaiEi81vBZsjDttrCZ2ZLtIgJD4CL6QL8GOiNTFJBK7K2d0fD1zJ0tlUXpl9ASsWuc-SXh_Aj3e78GHy0WF4TwUCL0u8DNZxG8ZIkxNWRoNc-e26ODn6_tZ85pkLFTGepjv3wBaa6yjQYN20IVxHqTQ2nhwoeTy_ppk8MjgA5o_bOdnCz6DSigLSkO2dRXqJS7BeeGRho3-YHMt1RK1hzurxBp3cIXSG5A5yg1tNdrhQ5qedljVonp4Cl1wLowIpNmGy4WHQTqmWeMup-dOiiI8ErwBjkUBd2dT2m58MB_RVxy2271FuzK2FFoiZJc38KpMuC84bwnBUZfbXVglfE47jc3jKY0__lfGQKw8Wrh6AGmxdt2yAgddrmfixSoJ70ZjRx6ygHjMwyCVA58juLey8qY8JYtZXDpGLySLO8DoHWAxdIwOHYsTZvSEWewpo3sa_g6wdwKLfiMGYQ1rMWzEKKS9FmkjxiFQtThsxFEYXC2OG9E_SH4BQo-DZg==?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8906,32 +8873,7 @@ Common Issues reference covering Common Issues, Incident Triage.
 </table>
 <h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
 <p>When a host reports I/O errors, latency, or a LUN is inaccessible, work through this sequence before escalating.</p>
-<pre class="mermaid"><code>flowchart TD
-    SYMPTOM([Host reports I/O error\nor LUN inaccessible]) --&gt; UNI_ALERT{"Unisphere alerts\nin last 30 min?"}
-    UNI_ALERT --&gt;|"Critical alert"| TRIAGE_ALERT["Note component and severity\nProceed to relevant check below"]
-    UNI_ALERT --&gt;|"No alert"| DIR_CHK{"symcfg show\nAll directors healthy?"}
-    TRIAGE_ALERT --&gt; DIR_CHK
-    DIR_CHK --&gt;|"Director faulted"| RAISE_P1["Raise P1 Dell case\nCapture symcfg show\nCheck hardware LEDs"]
-    DIR_CHK --&gt;|"OK"| SRDF_CHK{"symrdf list\nSRDF state normal?"}
-    SRDF_CHK --&gt;|"Suspended / R1 Updated"| SRDF_FIX["Check WAN link\nResume SRDF if safe\nMonitor resync"]
-    SRDF_CHK --&gt;|"OK"| DRIVE_CHK{"sympd list -failed\nFailed drive?"}
-    DRIVE_CHK --&gt;|"Drive failed"| DRIVE_FIX["Check RAID parity\nCapture drive state\nRaise Dell hardware case"]
-    DRIVE_CHK --&gt;|"OK"| PATH_CHK{"powermt display dev=all\nDead paths on host?"}
-    PATH_CHK --&gt;|"Dead paths"| PATH_FIX["Check SAN fabric port\nCheck HBA / cable\nCheck port group config"]
-    PATH_CHK --&gt;|"OK"| PERF_CHK{"symstat -type r2\nLatency spike?"}
-    PERF_CHK --&gt;|"High latency"| PERF_FIX["Check cache WP%\nIdentify hot SGs\nReview FAST VP tier"]
-    PERF_CHK --&gt;|"OK"| MASK_CHK{"symmask list logins\nHost sees LUN in MV?"}
-    MASK_CHK --&gt;|"LUN not visible"| MASK_FIX["Verify masking view\nCheck initiator WWN\nCheck fabric zone active"]
-    MASK_CHK --&gt;|"Yes"| ESCALATE["Collect diagnostics bundle\nOpen Dell TAC case\nP1 if production impacted"]
-
-    classDef start fill:#15803d,stroke:#166534,color:#fff
-    classDef decision fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef action fill:#b45309,stroke:#92400e,color:#fff
-    classDef critical fill:#be123c,stroke:#9f1239,color:#fff
-    class SYMPTOM start
-    class UNI_ALERT,DIR_CHK,SRDF_CHK,DRIVE_CHK,PATH_CHK,PERF_CHK,MASK_CHK decision
-    class SRDF_FIX,DRIVE_FIX,PATH_FIX,PERF_FIX,MASK_FIX action
-    class RAISE_P1,TRIAGE_ALERT,ESCALATE critical</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9VF2L2zAQfL9fsRz08bhe-3bQBjcfF3NJLti5pAXDodhrW0SWjKQkuKX_vSsndhxw-mQYS7Oj2d1JuMbYciWfQfMst3d34a_5cvU2f4b7qTIWNJZKWwP-4xug1kpHUmmYvS-ASxbHaAzfCryHPyZnJRIL0TGZCfx7977wP7zZOFgR17vkpsxRIzCBxBdJLkEwKvD1MxRcDnoZVoHvvYxbkoWyCLEqSiVRWmAyAYMH1NxWkVxqFSMmYBUxCDwwOhHnGO9gi0Ide_lHfvAxnL4StamKOM3A5OoYSU8ISGpjlDaQIxM2r_oVBp4fjj-WT0QRMG4Qlk8wQrofM4ORHLLS7unRV_TDWlXOdHJk9G82Hple7jAYTS7ydJKC4MZG0uFgLCMzqBcFE4Pb1yf-T7p-qrjxFsQgd5EM0OwLhJqIp2BYSlrnSnJ6MFGYSsb9fgX-enyRVCa1InhIGReYRHJSfyHR_ICD_zB0VZGDIyjZqYmNXzXD6Y2ktja2drU1zdnbW2DpraZnhaU6oi4stdKUglWQ4OEbEyKSI2QJlbS5ASUhpzEf3Obqag3JwZRtNY_BbUXTyukPDx5JEi1CA7nfkGm1L2lgZcqz_gLjoNNh91x4sFWJoL9EckaPl3EFpuS7G27W97sCY0YjD5vlp0j6Ce0ITyt6n4XwxbiuHzgeYeKFK1gvwXLUvaxzL3y9qCqY2Z3aLFTGJfHUuWAQzTkGYL4e3CY6yVvTlpIWR8ZlBk5IYxWnsePMTd5ms2jAs8u_adOBUUAd-rs9DofezFuNnQFKCPpB3WaZJIU8NrDdy8T15K1EeRqglTc8ryYtKo1-qVWyrwMQeFFSJUx6CzWxCA_foc21S8I5uBtW13_OMXMVZ138_HVQkyddrMmBNhBakLy9Atv9vGzqBXaHr-BmVdqdaUF39Ao8z2k7sC1Yn-yAzey0Q9SC7mQXbFp39w9DiicP?" /></p>
 <ul>
 <li>[ ] Check Unisphere Dashboard immediately for any active alerts flagged in the last 30 minutes — note alert severity and affected component</li>
 <li>[ ] Run <code>symcfg -sid XXXX show</code> to confirm array directors and ports are all healthy; look for any director in a degraded or faulted state</li>
@@ -9008,7 +8950,7 @@ Common Issues reference covering Common Issues, Incident Triage.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -8133,22 +8133,7 @@
 <a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>visudo<span class="w"> </span>-c<span class="w">   </span><span class="c1"># validate sudoers file</span>
 <a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>ls<span class="w"> </span>-la<span class="w"> </span>/etc/sudoers.d/
 </code></pre></div>
-<pre class="mermaid"><code>flowchart TD
-    hardwareInit["hardware.target\ndevice enumeration"]
-    networkOnline["network-online.target\ninterfaces configured"]
-    sysInit["sysinit.target\nfsck · mount · sysctl"]
-    basic["basic.target\ntimers · sockets · paths"]
-    multiUser["multi-user.target\nall services ready"]
-    sshd["sshd.service"]
-    chronyd["chronyd.service"]
-    rsyslog["rsyslog.service"]
-    auditd["auditd.service"]
-
-    hardwareInit --&gt; sysInit --&gt; basic --&gt; networkOnline --&gt; multiUser
-    basic --&gt; sshd
-    basic --&gt; chronyd
-    networkOnline --&gt; rsyslog
-    basic --&gt; auditd</code></pre>
+<img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kjFuxCAQRXufArn3HmCL9KlSpUtDYGxGxrCCIStrlXOlz8kyYNaWFcsVf-DPw_yxxgCK0LurCDgYahojg77LAK8O6SraZ3khGQagD6fhCxUIcGmCIHNrKx7RyBswglnSDRa-mzjHSmCFrFZAH9Uofn_E5JOjLNigyB5SPmVExYyyrgRCvjqWVq9GoCJvkkw8hDiguw_jm7Po-KStdefLxkpFRxB6qSAK5V2PQwqgD4FTsoTvEQLDiu4SFytIWiu4zjFFbpN6Pk4oGp3j4eVS7Yc-ZYJ3c7ZWdeoOnKb1A7urOnXLpJEyehGn3t2fIboXUUf8HHXeKnNappbLXfL7OeTjNcetI6exVfXB_zvr2zbn8v3NH2PQCV0=?" />
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all running services</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span>--state<span class="o">=</span>running
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
@@ -8251,20 +8236,7 @@
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># 5. Test ExecStart command manually as the service user</span>
 <a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>sudo<span class="w"> </span>-u<span class="w"> </span>&lt;service-user&gt;<span class="w"> </span>/path/to/binary<span class="w"> </span>--args
 </code></pre></div>
-<pre class="mermaid"><code>flowchart TD
-    preCheck["Pre-patch checks\nuptime · systemctl --failed · df -h"]
-    captureState["Capture state\npackage list · running kernel"]
-    checkUpdates["Check available updates\ndnf check-update / apt list --upgradable"]
-    apply["Apply patches\ndnf update -y / apt upgrade -y"]
-    rebootNeeded{"Reboot\nrequired?"}
-    reboot["Reboot\nnew kernel"]
-    postValidate["Post-patch validation\nservices · kernel · diff package list"]
-    done["Complete\nClose change record"]
-
-    preCheck --&gt; captureState --&gt; checkUpdates --&gt; apply --&gt; rebootNeeded
-    rebootNeeded -- Yes --&gt; reboot --&gt; postValidate
-    rebootNeeded -- No --&gt; postValidate
-    postValidate --&gt; done</code></pre>
+<img alt="Kroki" src="https://kroki.io/d2/svg/eNp9krFqwzAQhnc_xZFddM9QKNlLaGknL4p0tkWUk5Bkl1D6XN37ZL2z3OKAyWTff9J30v_LuoSmuEB7SK4fStPEhIcBzXkPu2NCFXUxAxhRcktjLO6C8PMN-ZoLXkzxoFSnnUcrqu1ADTv4zIOOyEhma-o9fjVGxzImfC26cGN3qCVkqVuK2px1j-BdLsJJI5GjHs6YCP02UI70Fi3vzwKUEvTER9EnjzDWTkuWunp8VSV4AJ5dJynW-qSt7NgcomP0V6Y_yRdmL_6YC01dF2AlibBJSngKoTwjWrQMXJd31vPKl_mnJcKPe3bEkMu79s5Wf49cLtlNVeWMW8qYJmcwi8cVNqfmug7WEWxOsIHm5MIlepTQDj5kZG-5j7IwpO2r_D8pUI-wfgc3j2JurjK9CViacxY1ESnXDi5uibz24cYUacoVml9gvhLa?" />
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># 1. Confirm system is healthy before patching</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>uptime
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>systemctl<span class="w"> </span>--failed
@@ -8663,7 +8635,7 @@ The <code>_netdev</code> option tells systemd to wait for the network before mou
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

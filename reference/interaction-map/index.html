@@ -7025,128 +7025,7 @@ Aria Suite, Tanzu, and Horizon — how each product consumes the vSphere and NSX
 </ul>
 <h2 id="full-stack-interaction-map">Full Stack Interaction Map<a class="headerlink" href="#full-stack-interaction-map" title="Permanent link">&para;</a></h2>
 <p>The diagram below covers all major platform categories — VMware, storage arrays, SAN fabric, backup/DR, automation, security, identity, and cloud — and the integration paths between them.</p>
-<pre class="mermaid"><code>graph LR
-    %% ── Compute ─────────────────────────────────────────────
-    ESXi["ESXi Hosts"]
-    vCenter["vCenter Server"]
-    NSX["NSX-T Manager"]
-
-    %% ── Storage ─────────────────────────────────────────────
-    vSAN["vSAN"]
-    ONTAP["NetApp ONTAP"]
-    PowerStore["Dell PowerStore"]
-    FlashArray["Pure FlashArray"]
-
-    %% ── SAN / Network ───────────────────────────────────────
-    MDS["Cisco MDS (FC)"]
-    Brocade["Brocade FOS (FC)"]
-    vDS["vSphere vDS"]
-
-    %% ── Backup ──────────────────────────────────────────────
-    Veeam["Veeam B&amp;R"]
-    CommVault["CommVault"]
-    NetBackup["Veritas NetBackup"]
-
-    %% ── DR ──────────────────────────────────────────────────
-    SRM["VMware SRM"]
-    SnapMirror["SnapMirror"]
-    RecoverPoint["RecoverPoint"]
-
-    %% ── Automation ──────────────────────────────────────────
-    Ansible["Ansible"]
-    Terraform["Terraform"]
-    PowerCLI["PowerCLI"]
-
-    %% ── Management ──────────────────────────────────────────
-    VCF["VCF / SDDC Mgr"]
-    AriaOps["Aria Operations"]
-    AriaAuto["Aria Automation"]
-
-    %% ── Security / Identity ─────────────────────────────────
-    AD["Active Directory"]
-    CyberArk["CyberArk PAM"]
-    Venafi["Venafi TLS"]
-
-    %% ── Cloud ───────────────────────────────────────────────
-    AWS["AWS"]
-    Azure["Azure"]
-
-    %% ── Compute ↔ Compute internals ────────────────────────
-    vCenter --&gt;|"vSphere API / VPXA"| ESXi
-    ESXi --&gt;|"DPU / kernel modules"| vSAN
-    NSX --&gt;|"GENEVE overlay / DFW"| ESXi
-
-    %% ── Compute ↔ Storage ───────────────────────────────────
-    ESXi --&gt;|"NFS / iSCSI / VMFS"| ONTAP
-    ESXi --&gt;|"iSCSI / NVMe-oF"| PowerStore
-    ESXi --&gt;|"iSCSI / NVMe-oF"| FlashArray
-    vCenter --&gt;|"VASA / SPBM"| vSAN
-
-    %% ── Compute ↔ SAN ───────────────────────────────────────
-    ESXi --&gt;|"FC HBA / zoning"| MDS
-    ESXi --&gt;|"FC HBA / zoning"| Brocade
-    vCenter --&gt;|"vDS port groups"| vDS
-
-    %% ── Storage ↔ Backup ────────────────────────────────────
-    ONTAP --&gt;|"NDMP / Snapshot"| Veeam
-    PowerStore --&gt;|"API snapshots"| CommVault
-    FlashArray --&gt;|"API snapshots"| NetBackup
-    vSAN --&gt;|"changed-block API"| Veeam
-
-    %% ── Backup ↔ DR ─────────────────────────────────────────
-    SRM --&gt;|"replication policy"| Veeam
-    ONTAP --&gt;|"async replication"| SnapMirror
-    PowerStore --&gt;|"async replication"| RecoverPoint
-    SRM --&gt;|"orchestrates failover"| vCenter
-
-    %% ── Automation ↔ Compute ────────────────────────────────
-    Ansible --&gt;|"VMware modules"| vCenter
-    Terraform --&gt;|"vsphere provider"| vCenter
-    PowerCLI --&gt;|"PowerShell SDK"| vCenter
-    AriaAuto --&gt;|"IaaS blueprint"| vCenter
-
-    %% ── Management orchestration ────────────────────────────
-    VCF --&gt;|"lifecycle API"| vCenter
-    VCF --&gt;|"lifecycle API"| NSX
-    VCF --&gt;|"lifecycle API"| vSAN
-    AriaOps --&gt;|"metrics / health"| ESXi
-    AriaOps --&gt;|"metrics / health"| ONTAP
-    AriaOps --&gt;|"metrics / health"| NSX
-
-    %% ── Identity everywhere ──────────────────────────────────
-    AD --&gt;|"SAML / LDAP"| vCenter
-    AD --&gt;|"LDAP"| AriaOps
-    AD --&gt;|"LDAP"| Veeam
-    CyberArk --&gt;|"privileged sessions"| ESXi
-    CyberArk --&gt;|"privileged sessions"| ONTAP
-    Venafi --&gt;|"cert lifecycle"| NSX
-    Venafi --&gt;|"cert lifecycle"| vCenter
-
-    %% ── Cloud connectivity ───────────────────────────────────
-    AWS --&gt;|"VMware Cloud on AWS"| vCenter
-    Azure --&gt;|"AVS / ExpressRoute"| vCenter
-    SnapMirror --&gt;|"Cloud Sync"| AWS
-
-    %% ── Class definitions ───────────────────────────────────
-    classDef compute fill:#1565C0,color:#fff,stroke:#0D47A1
-    classDef storage fill:#2E7D32,color:#fff,stroke:#1B5E20
-    classDef san    fill:#E65100,color:#fff,stroke:#BF360C
-    classDef backup fill:#6A1B9A,color:#fff,stroke:#4A148C
-    classDef dr     fill:#7B1FA2,color:#fff,stroke:#4A148C
-    classDef auto   fill:#00695C,color:#fff,stroke:#004D40
-    classDef mgmt   fill:#546E7A,color:#fff,stroke:#37474F
-    classDef sec    fill:#B71C1C,color:#fff,stroke:#7F0000
-    classDef cloud  fill:#455A64,color:#fff,stroke:#263238
-
-    class ESXi,vCenter,NSX compute
-    class vSAN,ONTAP,PowerStore,FlashArray storage
-    class MDS,Brocade,vDS san
-    class Veeam,CommVault,NetBackup backup
-    class SRM,SnapMirror,RecoverPoint dr
-    class Ansible,Terraform,PowerCLI,AriaAuto auto
-    class VCF,AriaOps mgmt
-    class AD,CyberArk,Venafi sec
-    class AWS,Azure cloud</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1VE1v2zAMvedXEDkMuxS79zBAsRdsQJ0YUdD0qqZqItSxDPmj6Ib995GKLCsrfbFJ6pEiqPf4Ypw-dsbW9-DM6dwtFkOm6067e1gGC6R2g3ZL-NOeVaMRiBmqPlX67-KHfDKIpB_8tG3XsqhBig3Vwx97vpFPeIzfuz0Uqlanmdu2m70oCak70TTgXRZY2nftZGcdhpe5riqYImzCulLtWTinPjCh7J2GKcImFLlEZGbaowW04es6Y3ErZ4_qhdoIFqy38-jBVx1kc9bYAnos6lFrdUGc_8Pqy45FZfZyeVR91VGfo82PX3crdXzrG1_TmU61EGNshtwVhC3eFbaJDg-qVVMY5yxxaXJY7E4fLXKstKamflOXxYu6Nc8VjTVYLGqv8f1eraNhRXueMNnDL3r9YPL3OqNE31m6GE0g-6JIP_xLZWuaU7aGbyDzPIPi5Gbrbpt2LLtttPNVeT2JnIAo20FD7gVsHU_T7ONZO-HeiAPBhFIUM7Sq1avxHCAD9g88_cSBSIpf_vR371Xn_yxi3DBw9x1ocfglQg7tB9oFnw680KM3STmGJrGmxX29EYIijXaQ4g0Wj_015HhhJUuEYlFCya6geBSK33JTNqpicmLlSQb_lU8ZP-aG9kayp6HI5jQ4MvcmNxA2jREfP7s4-HhCgwuUjI-R-Nf3SAKUK_Kbe70XIMG7ziLycCycBq6VAwHHpqIXix_kjUtUSwPTlH0TB7n4Byn1Rqo=?" /></p>
 <h2 id="integration-points-by-layer">Integration Points by Layer<a class="headerlink" href="#integration-points-by-layer" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7228,7 +7107,7 @@ Aria Suite, Tanzu, and Horizon — how each product consumes the vSphere and NSX
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

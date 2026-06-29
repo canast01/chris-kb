@@ -8792,40 +8792,7 @@
 </code></pre></div></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{Journal full\nreplication paused?}
-    S --&gt; B2{RPA cluster\ndegraded?}
-    S --&gt; B3{Consistency group\nsuspended?}
-    S --&gt; B4{Failover test\nfailed?}
-    S --&gt; B5{Link bandwidth\nsaturated?}
-
-    B1 --&gt;|Check journal capacity| D1{Journal volume\nabove 80 percent?}
-    D1 --&gt;|Yes| R1[See Symptom Table —\nCG suspended: expand journal volume]
-    D1 --&gt;|Splitter offline| R2[See Symptom Table —\nSplitter offline: re-register splitter]
-
-    B2 --&gt;|Check boxmgmt system status| D2{RPA in\nfault state?}
-    D2 --&gt;|Yes| R3[See Symptom Table —\nHigh lag: check RPA performance and WAN]
-    D2 --&gt;|VM not running| R4[See Physical Infrastructure —\nRPA virtual appliance: check ESXi host]
-
-    B3 --&gt;|Check CG state with boxmgmt| D3{CG suspended\nor in error?}
-    D3 --&gt;|Image stuck| R5[See Symptom Table —\nImage stuck: force release image access]
-    D3 --&gt;|Journal full| R6[See Symptom Table —\nExpand journal volume before resuming]
-
-    B4 --&gt;|Verify image access enabled| D4{Image accessible\nfor test copy?}
-    D4 --&gt;|No| R7[See Commands —\nEnable image access via boxmgmt]
-    D4 --&gt;|CG not consistent| R8[See Symptom Table —\nCG suspended: resolve before testing]
-
-    B5 --&gt;|Check WAN utilisation| D5{Replication lag\ngrowing?}
-    D5 --&gt;|WAN saturated| R9[See Symptom Table —\nHigh lag: throttle or upgrade WAN link]
-    D5 --&gt;|Compression off| R10[See Commands —\nGet compression stats and enable compression]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNVMtO5DAQvM9XtLgjMS8eOewKEwRcVmiCBIe9eJyexExsR7YzAq2Q-Ij9wv0S2iFZcehI3Epup6q7XJ1Se1RRO5uB11UdZ7N8nsFRPj-CP6GWLdI5XZC2avBttkm1AhGKV9NGZ-BBbhuEf-9_f9urGwhdaNGWWGaAL620JTy7zlvZwME1nUGeczHNWbSNjhE9uN2u0bb_8NhjpUM6DEOVpc0Tbb7gJZfTkrfkAjSyykDVqPawub-EFv3OeSOtQkhTPV7-4nlXA-99_Rq0ornv7M7LEH2nYucHhcR40D52VJctzZB4R7nr4klD7ULkh0qN50tefD091J2RFUKIndpnQKPQHB4blAFB9yWpFIbA855O815zrwxbJImkEDqjbcVPkqzKV7zi2aB45QyZXoZBzPbCXxsmHyVs3YupDG_Y5vy7gaVuXXP433zEECd7T07na17w4jvRirV3MdK589C1lZclplABZXw_sXgnrCc3GEE501L3gZaYnljG0GcUP936UmSJC6J9rGUEHagryshn2z_ZyyKtv-B_DSLtm-D3TaTYCj62IgVB8EEQyWjBG03_KTj-AZv5CBa08j1YjmBF-9KD9QhOKXc9OBvBOb1mDy5GMD-ZfQAe67m8?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8872,7 +8839,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

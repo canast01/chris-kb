@@ -8176,31 +8176,7 @@ SnapMirror troubleshooting: `snapmirror show -fields status,health` for broken r
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kMsKgzAQRfd-xeC-P-Cimz7ArYVuJcTRBmJGkqhI8d87KlXxsZvce0_mkSmL0isyEWTUmiBwXVl5KiOIMzRe5R28JgW-7iMq5JwSJZmsD7goDDmvZJpraiMI77MCT1bCmRmaCFNo7ANJJeOpcq5Gl1rM0aKRnAlvowPx6EDydw5_adDybIw70vU0f_geNVi0Q3KNJEPdIJCFh5NCC48zQo3Q_XwPuFxht68yDfKzYGydO93wJH-wyzq5aTsQS_TsnJvUrsXG_wHn98Lr?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A[Relationship in broken-off state]
-    S --&gt; B[Lag time exceeding RPO]
-    S --&gt; C[Transfer stuck in progress]
-    S --&gt; D[Destination volume full]
-    S --&gt; E[SnapMirror Sync out of sync]
-    A --&gt; A1{Was a failover or DR test run?}
-    A1 --&gt;|Yes| A2[Resync after confirming data direction — see Common Issues Reference]
-    A1 --&gt;|No| A3[Check for manual quiesce and break commands in audit log]
-    B --&gt; B1{Network or schedule issue?}
-    B1 --&gt;|Network| B2[Check intercluster LIF and WAN bandwidth — see Common Issues Reference]
-    B1 --&gt;|Schedule| B3[Increase transfer frequency or adjust throttle]
-    C --&gt; C1{Source snapshot still present?}
-    C1 --&gt;|No| C2[Abort and restart transfer — see Common Issues Reference]
-    C1 --&gt;|Yes| C3[Check network interruption and resume transfer]
-    D --&gt; D1{Retention policy correct?}
-    D1 --&gt;|No| D2[Update SnapVault retention and delete excess snapshots]
-    D1 --&gt;|Yes| D3[Expand destination volume size — see Common Issues Reference]
-    E --&gt; E1[Check intercluster latency; relationship auto-resyncs on restore — see Common Issues Reference]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E1 section
-    class A1,B1,C1,D1 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdVE2P0zAQvedXjPbeQ9PbIoHStEiVlg-1wJ7dZJKYJnbWM2a3ICR-BL-QX8LY2RQkzKUnT-Q3896bGafWDivW1tyC023HWXa4hZv7TjFoAu4Q6DyMbIdXN_CNOjWiACVDmbbH71kh4D32KlSgTo-gDRydPaFZ2KYBYsWYTFxL4p1qgfWAgE8VYq1NC_v375LwUuAfnDLUoJOqvjoFptHZ1iFRMmUjKRsk1iaqgy-298LV-L5P4reCPxg1vtHOWQeHs6nAegYrNiRO219KUrFM3-WxNyEXVMOiu7Km0W4IPmvFCuq59_Drx08gRCjtMMjnjsgjwR7FLZoq3cFiJfXLDqUVjegdlPGqhwevkSoEZWoZBKqTsA5yV1NomPK1Zuhtm55JcLNOu1nnFzZtxEzVewqe7navI9d98RaOEjzqmrur_KyDn52pRDQh8DzsxuGDl6QziElVfxZaWUtnmft0nTK4KNMuyuCiOFrHUbTsDiuJL2TX6C7_zMEgP1r33CHnxzjbZ6KwezNPel-D7k1a9ybo_jjK1iCEHf2kfM8CYDQXjhp7-Y5viQhIUNRZ_s_bCJq3T-OU988bIf0Vr-rFdpneEvlBhBG-EOxf_wrl2S5cfCEEQhHGYd11zNkBFi-hmI71dJTTsZmOrbzWiMnnYCUbH-H5HKxke2JmPgcrmUssks_BKtvGcsvsNypgyGA=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8299,7 +8275,7 @@ SnapMirror troubleshooting: `snapmirror show -fields status,health` for broken r
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

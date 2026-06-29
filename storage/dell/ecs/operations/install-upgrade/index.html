@@ -8958,25 +8958,7 @@ Install & Upgrade reference covering Version and Release Matrix, Pre-Upgrade Che
 </code></pre></div>
 <h2 id="upgrade-and-update-paths">Upgrade and Update Paths<a class="headerlink" href="#upgrade-and-update-paths" title="Permanent link">&para;</a></h2>
 <p>ECS upgrades are rolling — the cluster remains online throughout. The ECS Portal handles upgrade orchestration; each node is upgraded sequentially with automatic health validation between each node.</p>
-<pre class="mermaid"><code>graph TD
-  PRE([Pre-upgrade checks pass]) --&gt; UPLOAD["Upload bundle to\nECS Portal → Software Update"]
-  UPLOAD --&gt; START["Start Upgrade\n(portal orchestrates)"]
-  START --&gt; NODE1["Upgrade Node 1\n(~15–30 min reboot)"]
-  NODE1 --&gt; CHK1{Node 1\nback GOOD?}
-  CHK1 --&gt;|No| HALT["STOP — do not\ncontinue; investigate\ncall Dell support"]
-  CHK1 --&gt;|Yes| NEXT["Upgrade next node\n(repeat per node)"]
-  NEXT --&gt; ALLDONE{All nodes\nupgraded?}
-  ALLDONE --&gt;|No| NEXT
-  ALLDONE --&gt;|Yes| POSTVAL["Post-upgrade validation:\nGET /vdc/nodes · /vdc/version\ngeo-rep lag at zero\nS3 functional test"]
-  POSTVAL --&gt; DONE([Change record closed])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class CHK1,ALLDONE decision
-  class UPLOAD,START,NODE1,NEXT,POSTVAL action
-  class HALT warn
-  class PRE,DONE term</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptkrFOwzAQhvc-xYmJpYIKsRQJKWojkIiaqEkRQxYTH2mEsS3bKQgEYuIBgHdh51H6JJydghi8JLnz3eXz_T_vDDauU3IKpmvXbjQqlukU9gqD4163hnGEZo3NrQXNrN2DJ7tmGqma2phsBT6PVkWWJ3NqWmmhGIfrXnKB4FQt01kJhTKOCdi-vUOpbtw9MwgrzZnD6LSySpYVDSsdM44KA0Mt9_UwRhnCsc5Qe5xmkc_TSYAZ6BeKHhMa8DI53r5-HB3CXSep4VopFx0wO7_w_f4VPT9PssBX5QVsXz-BK5DK1bJR0nWyxxPo5IYQu5YYKc2EgDnSw_baXyJOnV5V_6AlPjiaGi5uUCNzoNGETLQ9ybJ5vvDC7b6iVUVeVpdJ5uVV1v3pu2GiIzm8CWp5llZwsOHNgf-Xhe-vIdqgsVRQyxbVmIhAsBaI6hENyVwewU0vg49IIlImfskd4mxNMfoDZTg0Qlnk0XrvRRifwmCwnc98InhkcIoPg-RBNx95ff4Cv9ff7cTi3Up-V-NT_mj0A-AqCL4=?" /></p>
 <p><strong>Upgrade procedure:</strong></p>
 <ol>
 <li>Confirm all pre-upgrade checks pass (see above)</li>
@@ -9062,24 +9044,7 @@ Install & Upgrade reference covering Version and Release Matrix, Pre-Upgrade Che
 </table>
 <h2 id="disk-replacement">Disk Replacement<a class="headerlink" href="#disk-replacement" title="Permanent link">&para;</a></h2>
 <p>When a disk fails, ECS marks it as <code>FAILED</code> and begins automatic rebuild. The disk should be physically replaced promptly to restore full redundancy.</p>
-<pre class="mermaid"><code>graph TD
-  DISK_FAIL(["Disk shows FAILED\nin ECS Portal"]) --&gt; IDENT["Portal → Hardware → Disks\nNote: node + slot + LED indicator"]
-  IDENT --&gt; BEGIN["Begin Replacement\n(portal guided procedure)"]
-  BEGIN --&gt; SWAP["Hot-swap disk\n(supported hardware)"]
-  SWAP --&gt; AUTO["ECS auto-detects new disk\nRebuild begins: REBUILDING"]
-  AUTO --&gt; PROG["Monitor progress:\nPortal → Hardware → Disks"]
-  PROG --&gt; REBUILT{Status =\nGOOD?}
-  REBUILT --&gt;|No| WAIT["Continue monitoring\nDo not replace additional\ndisks during rebuild"]
-  WAIT --&gt; PROG
-  REBUILT --&gt;|Yes| CLEAR(["Redundancy restored"])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class REBUILT decision
-  class IDENT,BEGIN,SWAP,AUTO,PROG action
-  class WAIT warn
-  class DISK_FAIL,CLEAR term</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UsFOwzAMve8rLE5IaD-wA1K3llExtqnbtEslFBqriyhOlaSaEOLKB_CJfAl2OsQl4tQ6fn5-9rM2DptgLM3AmfYUJpO83D083WXlagZXufEv4E_27EFeirwmQ1AsdrC1LqjuCt79SfXIxcyiqO3wY1LmxXrPxSMEvj-_4F45fVYOYyCkvqa1DVxHViPcgO9s4A93AEPaNCpYlySfF8tyzeRzbFlJhX2nGnxFCjVd92PDdjAaNfTONqgHh0me3THbMs29DVN_Vj1oFsUUfuiFhctPF8nJ6uyw33C1LEINwU41Bk56IDxfmCp8Hkyn4Vl0-hlUxfxQrvJyvUwSbqvNkgkfLRmeXLS3Dr2f1fTvFpNcYytx4PKXRB2zUiALS8HQgPA6tjbU1pRb9iUwOm4XlNZGTkR1Ncl0HnitDGRAHDLJv1gVWSUa2APSipo3znrugGn8393B9BbiDY2XJGF0ffReQjEvOiiBeBENkUD2-LsAiWXKOGoqGSVOfgBuMAKx?" /></p>
 <p><strong>Procedure:</strong></p>
 <ol>
 <li>Identify the failed disk in ECS Portal → Hardware → Disks — note the node and slot position</li>
@@ -9197,7 +9162,7 @@ Install & Upgrade reference covering Version and Release Matrix, Pre-Upgrade Che
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

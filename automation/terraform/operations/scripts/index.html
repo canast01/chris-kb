@@ -7717,42 +7717,7 @@ Scripts reference covering Purpose, Multi-Workspace Deploy Pipeline, Windows: Te
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
 <p>Use this page for practical Terraform scripts, field-tested commands, known issues, and operational notes.</p>
 <h2 id="multi-workspace-deploy-pipeline">Multi-Workspace Deploy Pipeline<a class="headerlink" href="#multi-workspace-deploy-pipeline" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    trigger["Trigger\n(TF_DIR + workspaces)"]
-    selectDev["Select workspace:\ndev"]
-    initDev["terraform init\n-reconfigure"]
-    planDev["terraform plan\n-detailed-exitcode"]
-    approvalDev{"Auto-approve\ndev?"}
-    applyDev["terraform apply"]
-    selectStaging["Select workspace:\nstaging"]
-    planStaging["terraform plan"]
-    approvalStaging{"Operator\napproval?"}
-    applyStaging["terraform apply"]
-    selectProd["Select workspace:\nprod"]
-    planProd["terraform plan"]
-    approvalProd{"Operator\napproval?"}
-    applyProd["terraform apply"]
-    done["All workspaces\ndeployed"]
-    abort["ABORT:\nAlert + stop"]
-
-    trigger --&gt; selectDev
-    selectDev --&gt; initDev
-    initDev --&gt; planDev
-    planDev --&gt; approvalDev
-    approvalDev --&gt;|Yes| applyDev
-    approvalDev --&gt;|No| approvalDev
-    applyDev --&gt;|OK| selectStaging
-    applyDev --&gt;|Fail| abort
-    selectStaging --&gt; planStaging
-    planStaging --&gt; approvalStaging
-    approvalStaging --&gt;|yes| applyStaging
-    applyStaging --&gt;|OK| selectProd
-    applyStaging --&gt;|Fail| abort
-    selectProd --&gt; planProd
-    planProd --&gt; approvalProd
-    approvalProd --&gt;|yes| applyProd
-    applyProd --&gt;|OK| done
-    applyProd --&gt;|Fail| abort</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVU8FuwyAMvecrUE-TpvxADpM6VZN22tT2WGliwU3RGCDCslXT_n2QQHBS0mkn4NnPzzY24wZqy5WsiOHNyRaFdWcDpiKr_XA7yJv9w8vmcUtuyacyb62mNbQr8t2eqAbHcwGobAT8FC0I99hA59i7_p4Y1UEy6LI0LnkgWTCGHpV5Jx47yNJ5KXnkzYeBLFULKudUjzkqA0u5AFbCF7e1YvkAVGujOiqGIOi15C3Oc70evNKPnaUNl02-J-1gzKu9KmMdbX3_tN0737UAY90vtFbpxW4ktWlHrlafSDNkuQs5nb868WwUy7fBibLFkgLtH_UEBn4uV3IRfrkMpiT4DxECrYIfbC3UGfIacaNIeUfGBUmr4uGwAHERPBQGOw64h9Bw4rENpn4uMzim9D4pj_CFE0s_c9PBjelEd3THGigafo_pTdSQMY3GhQkn4x1iJr1zvOAcYpTxMaqn-BH2fzlFBrlfjpbVug==?" /></p>
 <p><strong>What you should see</strong></p>
 <p>The script works through each workspace (dev, staging, prod) in order. For each workspace it prints a header, runs init and plan, then prompts <code>Apply changes for workspace '&lt;name&gt;'? [yes/no]:</code>. Type <code>yes</code> and press Enter to apply. If any workspace fails the script stops immediately and prints an alert with remediation instructions. A timestamped log file is written to <code>/var/log/</code> throughout.</p>
 <hr />
@@ -8026,7 +7991,7 @@ Scripts reference covering Purpose, Multi-Workspace Deploy Pipeline, Windows: Te
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

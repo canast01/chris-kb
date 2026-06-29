@@ -8181,24 +8181,7 @@ AD failures typically trace back to replication, DNS, time sync, or Kerberos. Th
 <p><img alt="Active Directory — Common Issues" src="../../../../../assets/compute-windows-server-active-directory-troubleshooting-comm.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUkFuwyAQvPsVq9z7AR8qVXEiVb2luSMKawcVgwXEUVT57wVcuy7G6Q1mZ8bMrLkwyJzQqgSub6oo7L3tnG5LeOWonKjv8D4i8GUvtEPPE7TVig-FPzRKWycYqaW-lbCrZgSOHtnNmvARqhqJQ0E5qamQV4PEGc_HKGYXapx3eKngOE7hHKfRKE6zbgY7KRgNCQgao431JqdfEA4RzGqZbn0QsrIgTHMMPvtIgJUd7AMh68lZaIU4tC44VPEK53DN8j_RfKDRduokiN5-sKkJu5HcankdV3cK5x7BP-1gGZXU4SzRPZXDvFd4eobV3oTq_QNF42VL3sNNbWhy-9ig_lf_huxvwxukTK1LZtLA-PCpzkd_aMJcp00IjzMm5GWyZLTKk8y_AQIXamA=?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; D1{DC replication\nfailing / USN rollback?}
-    S --&gt; D2{User cannot\nlog in / Kerberos error?}
-    S --&gt; D3{SYSVOL not\nsyncing?}
-    S --&gt; D4{DNS resolution\nfailing?}
-    S --&gt; D5{Domain join\nfailing?}
-    D1 --&gt; R1[Replication Errors]
-    D2 --&gt; R2[Kerberos Failures]
-    D3 --&gt; R3[Time Sync Issues]
-    D4 --&gt; R4[Dcdiag Tests]
-    D5 --&gt; R5[Event Log References]
-    R1 --&gt; R6[Common Replication Error Codes]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kb1uAjEQhPt7ihU9xf1RUCQFBxKCyiBRO77NnaWzfbJNJBTl3bPrFrsbeWY_eWdH7VFF7ewevJ7mWFVDvYfNUG_gN8xyRXqngLTTgn-VYE_gumgleQiO3jsfstmhYU6T57B3Qf-F3gU4Sb08PRYwLWPaPIa9uzYIt5dVcA7hWaJ0TOnylOSpUcsJ7hhigdBzqs8T2Dv-oI1wdRMI_EaPVhX-InaUPjhjqL-3LuHgxsLcjcYes4ygA8QZIbzMGp35zIbpjLD9AFHTHZJoqMkkWiojiY52SqKnuyaxq_4Bmx2pNw==?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8210,22 +8193,7 @@ AD failures typically trace back to replication, DNS, time sync, or Kerberos. Th
 </ul>
 <hr />
 <h2 id="ad-failure-triage-flowchart">AD Failure Triage Flowchart<a class="headerlink" href="#ad-failure-triage-flowchart" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    symptom["AD / authentication failure reported"]
-    symptom --&gt; dnsCheck{"DNS resolving\nDC names correctly?"}
-    dnsCheck --&gt;|"no"| fixDNS["Fix DNS:\nnltest /dsregdns\nipconfig /flushdns\ndcdiag /test:dns"]
-    dnsCheck --&gt;|"yes"| timeCheck{"Time skew &gt; 5 min\nbetween client and DC?"}
-    timeCheck --&gt;|"yes"| fixTime["Fix time:\nw32tm /resync /force\nCheck PDC Emulator NTP source"]
-    timeCheck --&gt;|"no"| kerbCheck{"Kerberos errors\n4768 / 4769 / 4771?"}
-    kerbCheck --&gt;|"yes"| kerbTriage["Check SPNs: setspn -X -F\nPurge tickets: klist purge\nVerify Kerberos enc policy"]
-    kerbCheck --&gt;|"no"| replCheck{"Replication errors\nin dcdiag / repadmin?"}
-    replCheck --&gt;|"yes"| replTriage["repadmin /showrepl\nrepadmin /replsummary\nSee replication error codes"]
-    replCheck --&gt;|"no"| servicesCheck["Check DC services:\nNTDS / Netlogon / DNS / W32Time"]
-    fixDNS --&gt; validate["Validate — retest authentication"]
-    fixTime --&gt; validate
-    kerbTriage --&gt; validate
-    replTriage --&gt; validate
-    servicesCheck --&gt; validate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U8Fu2zAMvecriN4DY-22bjk0GJL1MiAIlqDbwRdVZmwhMmVIclJjGLCP2BfuS0Yllg0BziVWnqjHR_KxUBalV4YWYFVZ-dnMdXXjTb2Auy9ryEC0vkLySooQBQehdGsRLDbGeizu4JerRIP8nHkElRp_zwpyqwrlkTnWmx3fOKNPisqc1isgUaMDaWx4oLvlJMNBvfFLfv-s3iCcciLt0XnICmex5Aw5qUYaOqgSsoNuXXXBClkowUiIXTAyye5VjVHgns_gjniGJ_gAtaKcXtGfEQmkVlw5CCpgvbqpMxD0QgMvKz0_3PsaMi67I8nijJWY0yUhbLkDX-tWC28sbPZbcKbl60nyI9rXKPMbn9EaB2itsVzo-8ePn3g8_Pl8-Ty-W94k2VvuSRB51bDbbtwCHHrXEMx_wvw5p21rS-QC5JHhBRy14l43AczpBa06dDBK4Koao5XsJjOyNXSU_Z3P0TpRuSKIUwo2EgU3fXmTadAeQyFzlTmHq5xGLPx3bV0L2-W0w4tB08xsuQKn_eDQnpTEwbTXNvGk4gUPdbNf71jwBr02JXNmwZb8--PhPjhgkvcktCqED-pf-iP8-_OXQy5WTldrkiFuI8yfIG7VsF4BvC5KAg3uHn3eRwahKThYbDRbhK-NT_FhtOOQI9yHJ3jS136nAx77EtcnwcbcCTzmSOAkRXLzHyAbtIk=?" /></p>
 <h2 id="replication-errors">Replication Errors<a class="headerlink" href="#replication-errors" title="Permanent link">&para;</a></h2>
 <p>AD replication failures cause inconsistent directory state across DCs. Start with <code>repadmin</code> to identify the scope.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Show replication status for all partners
@@ -8374,7 +8342,7 @@ AD failures typically trace back to replication, DNS, time sync, or Kerberos. Th
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

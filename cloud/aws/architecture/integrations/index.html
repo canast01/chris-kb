@@ -8360,14 +8360,7 @@ AWS integration patterns: Active Directory Connector, VPC peering and PrivateLin
 
 <hr />
 <h2 id="s3-object-lifecycle">S3 Object Lifecycle<a class="headerlink" href="#s3-object-lifecycle" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    upload["Object Upload\nS3 Standard"]
-    ia["S3 Standard-IA\nafter 30 days"]
-    glacier["S3 Glacier\nafter 90 days"]
-    deepArchive["S3 Glacier Deep Archive\nafter 180 days (optional)"]
-    expire["Expiration\ndelete after retention period"]
-
-    upload --&gt;|"Lifecycle rule"| ia --&gt;|"Lifecycle rule"| glacier --&gt;|"Lifecycle rule"| deepArchive --&gt;|"Lifecycle rule"| expire</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kDELwjAQhff-isPJpaB00Q5CQREnh-LW5WzONhKSkEZRxP_uxbRQobjd5d33yHtCOqq9NDoHJ5vWJ8nNKoMih9nxfGUJTt-90mUGpUct0IkZvLoWLTHDF6gbRe9EIjOjo_RQVBovnhxkCxD47CaxRmEtyUV2H5eBW__hBJEtXN3KO_2wsGUBemUwWq6iE8yNDWFRTXrSw3IdbLcLA4bLSgtS5AmikeNRh3ew5KSZbqKvENINSORewtDHHOKGp1GCcZogxY8kHyRqj58=?" /></p>
 <p><strong>AD Connector</strong> (proxy authentication to on-premises AD without replication):
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>aws<span class="w"> </span>ds<span class="w"> </span>create-ad-connector<span class="w"> </span>--name<span class="w"> </span>corp.local<span class="w"> </span>--password<span class="w"> </span>&lt;svc-account-pwd&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>--connect-settings<span class="w"> </span><span class="nv">VpcId</span><span class="o">=</span>&lt;vpc&gt;,SubnetIds<span class="o">=</span>&lt;sub1&gt;,&lt;sub2&gt;,CustomerDnsIps<span class="o">=</span>&lt;dc1-ip&gt;,&lt;dc2-ip&gt;,CustomerUserName<span class="o">=</span>svc_aws_connector
@@ -8411,20 +8404,7 @@ AWS integration patterns: Active Directory Connector, VPC peering and PrivateLin
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>aws<span class="w"> </span>backup<span class="w"> </span>put-backup-vault-access-policy<span class="w"> </span>--backup-vault-name<span class="w"> </span>prod-vault<span class="w"> </span>--policy<span class="w"> </span>file://vault-policy.json
 </code></pre></div>
 <h2 id="cloudformation-stack-lifecycle">CloudFormation Stack Lifecycle<a class="headerlink" href="#cloudformation-stack-lifecycle" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    template["Template\nJSON / YAML"]
-    validate["Validate\naws cloudformation validate-template"]
-    createStack["CREATE_IN_PROGRESS\nresource provisioning"]
-    complete["CREATE_COMPLETE\nstack outputs available"]
-    update["UPDATE_IN_PROGRESS\nchange set execution"]
-    rollback["ROLLBACK_IN_PROGRESS\nfailure detected"]
-    deleteStack["DELETE_IN_PROGRESS\nresource teardown"]
-
-    template --&gt; validate --&gt; createStack --&gt; complete
-    complete --&gt; update --&gt; complete
-    createStack --&gt;|"error"| rollback
-    update --&gt;|"error"| rollback
-    complete --&gt; deleteStack</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1UclqwzAQvfsrhtxD7zkU3MSUtk4cbLdQMARFmjiiimS0JIXSf68ULzjEvQ2zvHkL4xqp5UouQPP6aKPI4qkRxOICZmVXVvK1yDbwAJ_xOp3BjzmSxs_DJZG1wN_oTARn7dFHV1aSXAxQoRw7KH0i4Qn0e_P-yyQa1ehHhSX0ywMu8yQuk93LZrfNs-c8KYpKajTKaYrQaHXmxkNzWU9jKf8Ir8w6oGW23qZJmVTShA-gnG2cNUDOhAuyF9OcXNPpe9-u7ujQo99CMGgBv5G6oHUSRSsh9q2sPEvTp3j5dot08BycRmCeMrXIJlEYBkW9P6skqPnHH4tEM3WZZjNkDfPHIZohy9AcJTFO5TrqjB0cDs3Wpc6s263b696I0erQGgOOpEZ_ZU3xsQ==?" /></p>
 <h2 id="github-actions-oidc">GitHub Actions + OIDC<a class="headerlink" href="#github-actions-oidc" title="Permanent link">&para;</a></h2>
 <p>No static access keys — use OIDC federation:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># .github/workflows/deploy.yml</span>
@@ -8482,7 +8462,7 @@ AWS integration patterns: Active Directory Connector, VPC peering and PrivateLin
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -9112,40 +9112,7 @@ SRDF/A procedures: establishing SRDF/A groups, cycle time tuning, DSE (Delta Set
 <p>Planned failover (site still accessible) uses <code>-establish</code> to immediately reverse replication after the split. Unplanned failover (primary site down) uses the standard <code>failover</code> command and requires a separate restore+establish sequence to recover replication.</p>
 <h3 id="failover-decision-flow">Failover Decision Flow<a class="headerlink" href="#failover-decision-flow" title="Permanent link">&para;</a></h3>
 <p><img alt="Failover Decision Flow" src="../../../../../assets/srdf-a-proc-failover-decision-flow.svg" /></p>
-<pre class="mermaid"><code>flowchart TD
-    incident["Incident: Primary Site Issue Reported"]
-    primaryReachable{"Primary Site\nReachable?"}
-    checkCycleState["Check Cycle State and Lag\nsymrdf -g 20 -type A query -detail"]
-    r2Consistent{"R2 in Consistent\nor Transmitting State?"}
-    stakeholderBriefing["Brief Stakeholders on RPO\n(lag = data exposure window)"]
-    managementAuth{"Management\nAuthorisation\nGranted?"}
-    plannedFO["Planned Failover\nsymrdf -g 20 -type A failover -establish -noprompt"]
-    unplannedFO["Unplanned Failover\nsymrdf -g 20 -type A failover -noprompt"]
-    presentR2["Present R2 Volumes\nto DR Hosts"]
-    validateApp["Validate Application\nat DR Site"]
-    failback["When Primary Recovers:\nRestore + Establish\nsymrdf restore → establish"]
-    waitSite["Continue Monitoring\nWait for Site Recovery"]
-
-    incident --&gt; primaryReachable
-    primaryReachable --&gt;|"Yes — planned"| checkCycleState
-    primaryReachable --&gt;|"No — unplanned"| stakeholderBriefing
-    checkCycleState --&gt; r2Consistent
-    r2Consistent --&gt;|"Yes"| stakeholderBriefing
-    r2Consistent --&gt;|"No — Inconsistent"| stakeholderBriefing
-    stakeholderBriefing --&gt; managementAuth
-    managementAuth --&gt;|"Approved — planned"| plannedFO
-    managementAuth --&gt;|"Approved — unplanned"| unplannedFO
-    managementAuth --&gt;|"Not approved"| waitSite
-    plannedFO --&gt; presentR2
-    unplannedFO --&gt; presentR2
-    presentR2 --&gt; validateApp
-    validateApp --&gt; failback
-
-    style incident fill:#be123c,color:#fff
-    style plannedFO fill:#2563eb,color:#fff
-    style unplannedFO fill:#7c3aed,color:#fff
-    style validateApp fill:#15803d,color:#fff
-    style waitSite fill:#6b7280,color:#fff</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNU82O0zAQvvcpRj0hoUiox0oglcJqVwJtlRW7l1ym8TSx6oyD7WyJEFcegEfkSbCbH9Lgor2N55s_z3yfkIZyJzWvwciidIuF5FwKYreG5d1o7oys0LTwIB3BnbUNQUq1No7EEr7bEmvyBXwl5ELRj0XdxaeEeYl75cHl3BXNy0vKj9s2V_Tg0IW0bfDA2QVnHyAL-IRFxratjDhAUsDqDSSurQk28LUhP2ciyKFU0R7W4ZFKrQSZ90bSQXLh-5zN0GHALGiGdHef8SuFBbwFgQ6BvtXaNobgJFnoU7SBWW01W2ldt8XpMxpfIWNBlYc3jSt9xqUjvmCFzCRu7n34rrPhxv9YP5O5splDD0NCfgV7JW0JCeva6KqOD9bwtM2X4fXyRv-tfkLpAp_CkTU7yZ5UnzVLp40_ScZPHoeDNh3pUspDzfYK3cj6baWrsI3OhnQFj1o1FdmMnYYPKdxq62w0_xmV9OelTV37Co_9C_xTyRyDPDJGF2qEWaIlwqf3mB99_lNJPCqmn9uuM0793rWnzmv4OBxg3KDpsd8_f8F4nmijUaCQvIO5qP4RXgiaiSoaExHFXIwhbMrlC55fqxHxhdBLhs8UcP7YQLwINqFlBB1o9Vci3aJ6hkxJfQmMVnBPGDFlR4CGSy_-AEZd4lI=?" /></p>
 <table>
 <thead>
 <tr>
@@ -9190,25 +9157,7 @@ SRDF/A procedures: establishing SRDF/A groups, cycle time tuning, DSE (Delta Set
 </code></pre></div>
 <h3 id="failback-and-replication-restoration">Failback and Replication Restoration<a class="headerlink" href="#failback-and-replication-restoration" title="Permanent link">&para;</a></h3>
 <p><img alt="Failback and Replication Restoration" src="../../../../../assets/srdf-a-proc-failback-and-replication-restoration.svg" /></p>
-<pre class="mermaid"><code>flowchart TD
-    primaryRestored["Primary Site Restored"]
-    restoreR1["Restore R1 from R2\nsymrdf -g 20 -type A restore -noprompt"]
-    waitRestore["Wait for Restore Complete\nMonitor: symrdf -g 20 -type A query -detail"]
-    establishAsync["Re-establish SRDF/A Replication\nsymrdf -g 20 -type A establish -noprompt"]
-    verifyConsistent["Verify Consistent State\nsymrdf -g 20 -type A query"]
-    drHostsOff["Quiesce DR Applications\nUnmount R2 Volumes from DR Hosts"]
-    done["SRDF/A Replication Restored\nRPO Protection Active"]
-
-    primaryRestored --&gt; drHostsOff
-    drHostsOff --&gt; restoreR1
-    restoreR1 --&gt; waitRestore
-    waitRestore --&gt; establishAsync
-    establishAsync --&gt; verifyConsistent
-    verifyConsistent --&gt; done
-
-    style primaryRestored fill:#2563eb,color:#fff
-    style done fill:#15803d,color:#fff
-    style drHostsOff fill:#b45309,color:#fff</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UkFuwjAQvOcVK-5RC0cOlSJQ1UsFNSq95OImG7CU2K69oYqq_r3rBBIKgVOUsWfWMzu5cpiRMnoOTu32FEXWqUq6RqAn4zCfw2TdIbBRhHDCJ_Dj99Ii81hA6l2Jv1HuXownvyoKpr3VCn2GsBSQWFuqTIY5PtXvujK1JhAz2JqyrtBD4UwVLrb0UWnXzRVTVj6-AcS0I4pZqn1TubyAeAezR4ipsQgJHEkQa2P5oqVR6W-p6CjJ4h_8B4VxJ6ewYGKJhKl-NVoxNIfRYV81ckhxjiRVOTqIBeVnqfw-8Y3OWiNxj8FGLJ8fEh7bZ3XD1UC57-uAThXNgjNXnlATD9y2EAwYbEgGa7cdjS_a6JDV9ZP7fqRarFewdoa6fkHCnwOOql12DuInGKp01qpw0BdhqESAz5Z4vtBw9D_2iy2EC5dBXSXXPogtR3_M8yLq?" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># After primary site recovery: restore R1 from R2</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>restore<span class="w"> </span>-noprompt
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
@@ -9364,7 +9313,7 @@ SRDF/A procedures: establishing SRDF/A groups, cycle time tuning, DSE (Delta Set
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

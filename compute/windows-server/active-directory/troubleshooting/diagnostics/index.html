@@ -8186,40 +8186,7 @@ Active Directory diagnostic commands: run dcdiag tests on domain controllers, ch
 *Applies to: Windows Server 2019 / 2022 AD DS*
 </div>
 <p><img alt="Active Directory — Diagnostics" src="../../../../../assets/compute-windows-server-active-directory-troubleshooting-diag.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([AD Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Auth failure / users can't log in| C[nltest /sc_query domain\nTest-ComputerSecureChannel -Server DC]
-    B --&gt;|Replication errors or stale data| D[repadmin /replsummary\nrepadmin /showrepl]
-    B --&gt;|DC health failing / dcdiag errors| E[dcdiag /test:all /v /s:dc-fqdn\ndcdiag /test:dns]
-    B --&gt;|Kerberos errors / ticket failures| F[klist on client\nEvent ID 4771 in Security log on DC]
-    B --&gt;|Group Policy not applying| G[gpresult /h gp.html\nDFSR replication state for SYSVOL]
-    B --&gt;|DNS resolution failures| H[nslookup _ldap._tcp.dc._msdcs.domain\nnltest /dsregdns to re-register]
-    C --&gt; I{Secure channel state?}
-    I --&gt;|Broken| J[Test-ComputerSecureChannel -Repair\nnetdom resetpwd /s:DC /ud:domain\admin /pd:*]
-    I --&gt;|OK but auth still fails| K[Event 4625 in Security log on DC\nGet-ADUser to check lockout or disabled]
-    D --&gt; L{Failure count?}
-    L --&gt;|Greater than 0| M[repadmin /failcache\nrepadmin /syncall /AdeP to force sync]
-    L --&gt;|Zero but data stale| N[Check tombstone lifetime\nrepadmin /showvector /latency]
-    E --&gt; O[Review FAILED lines in dcdiag output\nFocus on: replications, services, netlogons, dns]
-    F --&gt; P[Check KDC on DCs: Get-Service kdc\nVerify DC time sync: w32tm /query /status]
-    G --&gt; Q[gpresult /scope computer /v\nCheck SYSVOL: dfsrdiag ReplicationState]
-    H --&gt; R[Verify SRV records exist and resolve\nRun ipconfig /registerdns on the DC]
-    J --&gt; S[Collect netlogon.log + dcdiag + repadmin output\nOpen Microsoft support case]
-    K --&gt; S
-    M --&gt; S
-    N --&gt; S
-    O --&gt; S
-    P --&gt; S
-    Q --&gt; S
-    R --&gt; S
-    S --&gt; T[Provide: dcdiag output, repadmin /replsummary\nDirectory Services event log, netlogon.log]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
-    class S,T escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9VF1vGjEQfL9fscpjE0BN00a6h0qEA0K-IHdppEpI6GIvYOGzL7aPFFX9712fSSIqp09zePHs7syuuTDInNAqBSNWa5ckFykcXRzBb7sua6RTCpdqJfFPMqCIkg6tg55li-cGzQ64rkqh5uqBjjsDXdWNQ1MgawwO1qVSKKFToNmigWwQpc2I1mBd8koo6NGXtE1VlWY3V-_Hdq1ffCjKMCQGzrgoV9Dz5aWllNDb0q2Us87ymVN9B3GubJRoREQbKahBrYBJgcrN1XBLAJMMzs7PPwMV03Yn3A6kXvk_ftDXmMhWtUHbSBJsDau6u3aVnKtsVOTgmxGs9NKDdaVDWGoDxc_icXoTpbv06lup9aapYSF5WXcXjtVdzrqLynJmu69WvHrErcEVtQpOE1GHflBnaKLsE2KfRCNXFPmfuTl5JAxlRUcF0E2Lrn7hXvxsAL2Gp_u69k7WPP0UTXRNiYLWZ99Ov8aFnqsxuk4_-2Fpnqgttka2oTDb6IZMM8CFLZ8k8miGG8oQF_f2YAaXpZCsJO6DCdwp1s5Vn-PM5ya_GII_jlLeEeWgLc_p6sk6rRCkWKITFf472Vu6RsX3JM2BYrso35T4ctwKfIFRf3IzzIhNofU67WebJCCD5mqkWWOhXen3IbMnQJptBUP6Iq9I0vbwo1WYvZV_TTa24tsUvPpFoIENZ3P1iEYsdxQE31erRgovX05dBb3wQPT8dDfxJPcHK2KZrhHYfsxogecqVBC2IgW-tKbtNH_vq_C7EyXPiXxfXpE_-og23AL-8vtdKu5HVcstmZE3CkTNtFqKlX-Bwp74zaG-3Ro_2vDCa6SlpJM3Sbt-Vo9fLTmGN6Nf3ZnWqOBWMKOtXjqwTV1r44CVNt7GAyWZGb0VnM4PnD6BD57NrH3UNYm_94q6bheLajs5qDSasU8Z-xlMrG3iJSUX0PkOgwBZgGGAUYBxgMtk4uEqwHVy4-E2wF0y9DBNRh5mydjDfXLpIU-uPBTJdYDbAHcBpgFmAe4D5AEKDw_JXw5DTuc=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk89O3DAQh-_7FCPuPfD3sIde2IKqFqg2FVJPlhtPEguvJ7Ido6hC6kP0CfsktZ1ku0CIuUXW95vPnpkIabB0kvQaBD3q1cr2u9bRbg2fBWonqx6K4QR-2Ya3GDjJd6TF08o6bNkxM51mogynNSPNXIOMV1UoiiIcr-GoCBgcw9_ff2DbaRhQIA0BhQmFzeXR3hCvxHWtcHScsLLB8oEZbJUsebwua5Ar10zlT1L5y0jBAQUD9XblU1ZJLVhld8QMKWQNKYHGMh5OPU7lT1P5q4DCVXFzBxGFEYWAgkcTW7W5LaDY3kcNGWHf9p4xh9Yxi2VnMLyOa40qSR_Q_Nx7z5L3e0BhQGFEk_RLRA0taM5Dy7zERybSmMn0QWm8LDG9cNKcD8NJKGwmFIoRTbIi-qXrAX3YC1BUL3gvxoHVhrqWtRTm0afX2d56UpP34mBq1xGFbwkdhD-K-7uvh9Oc9Rm0pLphg7fx2yOQgU-25Io73EfIc_W0X2_48BHet75S-9B-WYdar8JLe7mUy27dUji7Okvh7EIshbNTfRZ-R3dj5f_zy_3rc3Smk3ORTP_mIpmuzUUyvXoR-QeZ8hQV?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8552,7 +8519,7 @@ Active Directory diagnostic commands: run dcdiag tests on domain controllers, ch
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

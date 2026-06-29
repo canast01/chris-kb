@@ -9505,36 +9505,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFU0tOwzAQ3ecUo67aBRfoAqkQKrqoiBpga7mxk1hyPJbtpopQJQ7BCTkJdguhConZOfM-zryXMGF44QSqJTA8qiSxXaMdNkvYMK6cKDvILxN4szXV3PMEbVCxU-IPlULrREFKicclzNJ-Ams_mfWacAlVleSnhEpJNHW1JeFCQjUj1qGhlafNVlJCFkBIPQjzVZYu4PP9A_ILZdSxFlVNCn0ghlPWESeaYPXop3CfvcAuTOHZT6fVDW_QdGTvXw5RCVURNMQeqdb-_GO2PZPgricBGsi_SaPe2iIj-mC05MQWhnNFsCSM-w29aZY_pTDPzjDkZxiwhDTAi1G_til9bNTRkBgnQtGi4NaKvQwbv27XOaQ_KGyu0FE3wy3Kw6X8XTi3PGz0YAsqqeO9BFsqT_2XATe38Kd5oVruHysvu-bFup6QjJYZ4_5T3YQ02syEJpr-tWYQT9D-Zh35AQbEkSjGGNEABoLI2gNmZNkB8wuVRphw?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A[Host shows PSOD]
-    S --&gt; B[Host disconnected in vCenter]
-    S --&gt; C[VM slow / high latency]
-    S --&gt; D[Storage inaccessible / APD]
-    S --&gt; E[Auth / certificate failure]
-
-    A --&gt; A1[Collect vmkernel.log + crash dump\nfrom DCUI or iDRAC]
-    A1 --&gt; A2{Kernel module in\nstack trace?}
-    A2 --&gt;|Yes — driver/plugin| A3[Update driver or firmware\n→ PSOD section]
-    A2 --&gt;|No| A4[Escalate to VMware GSS\nwith vm-support bundle]
-
-    B --&gt; B1{vpxa agent\nrunning on host?}
-    B1 --&gt;|No| B2[Restart management agents\n→ Host Disconnected section]
-    B1 --&gt;|Yes| B3[Check network / DNS / NTP\n→ Host Disconnected section]
-
-    C --&gt; C1{esxtop — which\nresource is hot?}
-    C1 --&gt;|CPU Ready &gt; 10%| C2[→ High CPU Ready section]
-    C1 --&gt;|Memory balloon/swap| C3[→ Memory Ballooning section]
-    C1 --&gt;|Storage latency &gt; 20ms| C4[→ VMFS Inaccessible section]
-
-    D --&gt; D1[→ All Paths Down section]
-    E --&gt; E1[→ Certificate Thumbprint section]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A3,A4,B2,B3,C2,C3,C4,D1,E1 section
-    class A2,B1,C1 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdUruO2zAQ7PUVi2uDSyDb1RUJJMpJrvDFsO6cxg0trU3CfAgkZcEI0uYD8on5kqwkO3BBqEijJbgzo1nO1tJhFaQ1T-DkUYQkKZ_g4bvgAaSHIBD8RTfB6k8P8MML3iABicHNUeHPJCPwV-sDeGE7D-vyWxHF5TdcLX1ljaEO1iANnBmagC5KYkTarsAr28EHEGQPFA9oqksUXhC8DNbxI5Iyryr0Xu4VEjdbx20tiZK1QRCkQhfkQVb0AzhwqVqH8YlT4jCrFF3BWZ_QGVTvlT3CO6gc9wLqVjc7c3BWQ8HensE6kMUmY3G5WW9hFu_NqffW1L2l2skzul7rIJ3uuMOd-fPr9_Di4McI4yILEln6ivdPB8HCdtWz4UtZ7kwnafazfvRt01gXYN-aWsXnzvu58zTe64fYoA-cNDQ3lICmWIGqCX40OqRf3Kc_5TrvR2cCqxMYDJ11J4qoeCnp-_K6_h9FNuQW9896_4Nkv2Ns_QYb5PVlWm9-5axQW3eBnCtlrZHmOE1bXGnb1ecSnu_XdIpWpFdaphSseRAeCtuZSc7yxmF3q_0qWr1vnKR0prhJCY8fIRtLPhY2lmIsyyQbICmt8HCY3w4L2pWBNrsd5vT6g8Lsdvh3s0iKQTRNloNqmvwFc7-EWA==?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9889,7 +9860,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

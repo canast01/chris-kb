@@ -9265,36 +9265,7 @@ Solutions for the most frequent PowerCLI problems: certificate errors, connectio
 <p><img alt="PowerCLI — Common Issues" src="../../../../../assets/virtualization-vmware-powercli-troubleshooting-common-issues.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUj1vwjAQ3fMrTt2r7gxdKEgMrSroblnxhVqyfZHtQFHFf-8ZQ6AmCZt978P37qy0xzpqcjNQtHdVFQ62jWRnsFLoom4OsMkV-A3fskXmaWnJqWPFh62jEHUtGkP7GTy99RVYcuWp16RHpNsaPFY1erbVtYwo0HvygpyoyTmmsMX8CsMiwUAO5hke9LOkOoPCURQNdU6xx_upBB8UYZlKw31kT44uPDZdQCWitkjdqYsehHUG4QW-MjzoFjCEZIU_LU9UCe120mglznW23OQTLDKD_VaZA2dkuEurDEbRSi8tRvT_cs5PIHxewAeJPQYyXV72Op13CDzfRailSeO-SIjbOvY_AZ5f4W7THA_5umXZLW96tyOi-wWOuU9sbETycC1jT02M_VZSDCZJr1Oe_OoFtRxC6TQavSA-CFzajsYsiH-hBpDO?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; B1[Connect-VIServer fails with SSL error]
-    S --&gt; B2[Module not found]
-    S --&gt; B3[Connection refused or timeout]
-    S --&gt; B4[Session expired or invalid]
-    S --&gt; B5[Cmdlet parameter not found]
-    S --&gt; B6[Multiple module version conflict]
-
-    B1 --&gt; D1{Lab or\nproduction?}
-    D1 --&gt;|Lab| R1[Set InvalidCertificateAction Ignore\n→ Certificate Error on Connect]
-    D1 --&gt;|Production| R2[Import vCenter CA to OS Trust Store\n→ Certificate Error on Connect]
-
-    B2 --&gt; R3[Install-Module VMware.PowerCLI · Check PSModulePath\n→ Module Not Found]
-
-    B3 --&gt; D2{Network\nreachable?}
-    D2 --&gt;|No| R4[Test-NetConnection Port 443 · Check DNS\n→ Connection Refused / Timeout]
-    D2 --&gt;|Yes| R5[Check Existing Sessions · Disconnect and Retry\n→ Connection Refused / Timeout]
-
-    B4 --&gt; R6[Check IsConnected · Reconnect · Extend SSO Token Lifetime\n→ Session Expired / Invalid Session]
-
-    B5 --&gt; R7[Check PowerCLI vs vCenter API Compatibility\n→ Cmdlet Parameter Not Found]
-
-    B6 --&gt; R8[Uninstall Old Module Versions · Keep Latest Only\n→ Multiple Module Versions Conflict]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class D1,D2 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqlVEtu2zAQ3fsUg-zdwN8EWbRwZBcQ6tiG5bqbblhpbBGRSIEcf4Ki2x4gl-m-R-lJOpQoOygUF2hXHInz5vEN3zCRBmOSWt2BkduUWq3oDq4-pYJAWqAUwT7lBen83RV8takokBMZIdQ2w2-t-w5nB1op_tVehxGaPRrYCJlZOEhKIYqmgMZo0wzvMvxBJ7sMQWmCjd6ppDmzdybi0_LWZmcxAW2AZI56R82wPsMitNZh8Fiw2hIj1V5k8hWqgaPKkwwJCmFEjsSa_nK8oROyy0gWLCWvFHErSt5Yq00m4-YTjl0Hx53GvWWnPD1BWB03QENyI2NBOKraEG6VNvhZ_fr-DC92YeJaDpzgW9Zc3nU_zAttCPYBKiczGAFpmEewMjtLENF_lHdXFipLIsva_pLXDwdh8M1CH9AE0xB-_oAgxfgRFlGVsRCUVnweMeO-v3-172MnYdxt5nd3v0JL7RnSC-ssnN5-v3cmH88ir_GctfQGu4bVBX8tS6-URSZHaUmqLXi7WVd_LG1c1QShEi5K5ulfqYYnqtB6NIOYZIk1B39MjoTMFEVzWOlHVDCVG3QjUtHWszDxs3Bde6veaea-OXGfrm5vT6YZLULWkxeC5BeZSaolVjO0OM3Q5btc3jLJRyUrx8A8S2oPrKtBKjv6AbGAKZuQ3TlXmac6jd6fiODS7LUiaL-F-45fu37t-bXv14FfhzysLlh26qDLL1gZ9NiJZdCvgwG_PWUw5AelDG74lSiD29ZvVqHgbg==?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9439,7 +9410,7 @@ Solutions for the most frequent PowerCLI problems: certificate errors, connectio
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

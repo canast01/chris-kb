@@ -8849,40 +8849,7 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <p><img alt="PowerPath — Common Issues" src="../../../../../assets/storage-dell-powerpath-troubleshooting-common-issues.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkttqwzAMhu_zFCL3e4FeDMoOUBildIdb4yVuanClYKspZfTdJ8cs61Jn7Z386_ulSEptvanYEs6gpgMWRTjuWqbdDBa1QbabI7wmBb7CVrdGOKt3hPWpkKBBCmwrtXF0mEH5OCjwLEo5eGITjY0z4jK6Vq3mrWIvuBm8osNKdHjr9RsqhHNbyLLauYSq3sWktESdrQQr584lK_RVmEBLFJMTfWNKIbHqbLCfzii9YeOV26NqPUWx_6KIwZIYPhIG84jBy_sSVgkjtNhkm1isyMd32lFFe2QpuviR04oeopz1exPI7dNF1zHuDJCHp1Bpp9kMFuq0Ow3nhrt7uDinxc7IsxHbHy5_wGt0mET-u9Fk1VtOMWHOr_gcHq0imn73mv-Dp5gwSkwPe1Hh-ogjS26wEfINUit3Ag==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{Path not\ndetected - emcpowern missing?}
-    S --&gt; B2{Dead paths\non LUN?}
-    S --&gt; B3{powermt check\nshows degraded?}
-    S --&gt; B4{Multipath policy\nmismatch?}
-    S --&gt; B5{Host reboot needed\nafter upgrade?}
-
-    B1 --&gt;|Rescan SCSI bus| D1{Device visible\nafter rescan?}
-    D1 --&gt;|No| R1[See Device Not Visible —\nVerify LUN masking and host group]
-    D1 --&gt;|Still missing| R2[See PowerPath Not Starting —\nCheck kernel module and DKMS]
-
-    B2 --&gt;|Run powermt restore| D2{Paths recovered\nafter restore?}
-    D2 --&gt;|No| R3[See Dead Paths —\nCheck HBA port state and fabric switch]
-    D2 --&gt;|All paths dead| R4[See All Paths Dead —\nVerify masking and issue LIP on HBA]
-
-    B3 --&gt;|Check path count vs baseline| D3{Fewer paths\nthan expected?}
-    D3 --&gt;|Yes| R5[See Incorrect Path Count —\nTrace missing path from HBA to array]
-    D3 --&gt;|Flapping| R6[See Path Flapping —\nReplace marginal SFP or cable]
-
-    B4 --&gt;|Check powermt display options| D4{Policy is\nRoundRobin or BasicFailover?}
-    D4 --&gt;|Yes| R7[See Wrong Load Balance Policy —\nSet CLAROpt and powermt save]
-    D4 --&gt;|DM-Multipath conflict| R8[See DM-Multipath Conflict —\nBlacklist Dell devices in multipath.conf]
-
-    B5 --&gt;|Check PowerPath service| D5{powermt daemon\nconnectable?}
-    D5 --&gt;|No| R9[See PowerPath Not Starting —\nmodprobe emcp and start service]
-    D5 --&gt;|Config lost| R10[See Configuration Not Persisting —\nRun powermt save after every change]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNlE1u2zAQhfc-xSD7FPFf_hYtTAtBg9qpYbXJphuaHkuEKZIgqQRGUaCHyAl7kg5pKXUBFuhuIIrv47x55FY6FEEafQtOVnUYDIrhLZwVwzP47mtukb7TD1xXCn8M1nGtRIQCn6VAeDABHqWXG4Xw6-frN_2ITu4OsPj6AA33e6kr4HoLtfEBKmdam5cddbIr84JuxUOdlMvAXYgSSXpeo9jDHp1GBY3ZtsSM2sWnZZlVLaJqMcoTx2-N8C1Eoj-lfGQzsMYF8IGHI2bHN04K8C8yiDqvOek0Z0p1kkn91JhTU6T3LcLifgVGR2K-iXjQYpwHTjvgvRbGxYWEhblpdThivzhOY2oIFak2ru6caVKDwQB3jh_y2pf9SOKeO8WtfZvEGq1KstxVUnMF5R314EBwykG-i2hNMcmTrjrSkzNEWBiyjHHFtYh5UFIcjtQSA8wXs_VnG5J9NmaloRHx5zx0fd3PeHm-bFWQ9miO3pFo5w-jRvZKUjoLpKltU6w9SA1Nv-OdoB35rqL_xTQPv_mPSFOKrTMbBGyETU35uA4eXTzHP67gRaccO5FV63i8vkl9hc5TL38G1eq_bAK-C-gAn9EdQNSkmGeURHiqeaCIQqgR_KGxwTQfsj-z-Caw_HvB4hVk-SvIYrJZPtks5oXl88Ki6yzvOj1ecP4e1sO-GNErkIpxX0zoSqVi2heXFM9UXPXFNY02FTd9MbwY_AYuQ7yO?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8894,19 +8861,7 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </ul>
 <hr />
 <h2 id="dead-path-triage-flow">Dead Path Triage Flow<a class="headerlink" href="#dead-path-triage-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    A([Dead path detected]) --&gt; B["powermt restore\nForce immediate path retry"]
-    B --&gt; C{"Paths recovered?"}
-    C --&gt;|Yes| D["powermt save\nMonitor for flapping"]
-    C --&gt;|No| E{"HBA port\nOnline?"}
-    E --&gt;|No| F["Check cable / SFP\nCheck HBA driver"]
-    E --&gt;|Yes| G{"Fabric switch port\nOnline?"}
-    G --&gt;|No| H["portshow / show interface\nCheck SFP, cable, BBCR"]
-    G --&gt;|Yes| I{"Array FA port\nonline &amp; zoned?"}
-    I --&gt;|No| J["Restore zoning\nCheck array port state"]
-    I --&gt;|Yes| K["Verify LUN masking\nCheck host group on array"]
-    F &amp; H &amp; J &amp; K --&gt; L(["Open support case if\npath does not recover"])
-    D --&gt; Z([Resolved])</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUstuwjAQvPsrVpypeufQigRCeLQgqvaAuJhkSSyCba0NiFb9966xkHpwpR6iUWZ3Ztb21oqw8sroAZBqWi_EcAC9EcoarPQt1Oi5jnUPvlwrLXIb_0vddPgtMm615oJ09Ew7bwi3ujBUIajjEWslPUYbQk_XpEfOHitucYE0ZySsn5ONo19hTp456cVoxZmwD18nrVW6SUrHLC2zIVhDfquXulMa0yEFd-YtVgeo5K5DeIS3YrXVkQoWNSmeMamdsLaQO1IVuIvyVfuPvPJ2KPKuNRcOu4HSHmkvK7zn8gj9OE8fsixfJ52m7DRNVmZcWcfXgU--Mt3cjSWRvN6mBOf5rZLyOcs_kNT-Cov3VzhKd_hl0RrnoSFzsmB0NEy6LNhlaVGDO9lbYCUdb8l-q-OaGXSgjb8vQdJjEw9iuvMf-yiG8PAEmcgC5CIPMIowFuMARYSJmAQoxTTALMJcFJEsIzmL5DzAQowCbMQPbqMNCw==?" /></p>
 <h2 id="dead-paths">Dead Paths<a class="headerlink" href="#dead-paths" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> <code>powermt display dev=all</code> shows one or more paths in <code>dead</code> state for a pseudo device.</p>
 <p><strong>Impact:</strong> Reduced path redundancy. I/O continues on surviving <code>alive</code> paths, but failover capacity is reduced. If all paths to a device go dead, I/O to that device will fail.</p>
@@ -9295,7 +9250,7 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -7789,30 +7789,7 @@ FabricOS troubleshooting: `porterrshow`, `portlogdump`, `errshow`, ISL link boun
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkz1vgzAQhnd-xYmpHaruGSpV-VAiVVVVmtlyzQGWjI1skzSq8t97hpREFAqbffe892mn0qLw0ugFpOaoo8idysqbcgG7FLWX2QmS1gLfruAVEid5aXR6juiQa-O8FCxT5riAeNVZYEOWuNOEJFznCs-R1EKG0MxbopGlKKSjAuiORMa7ix8-Gj-sLn66Iw5GLCgjE1xr45lDZM4bGyKrWjMuBDrHMgq8JQyWDQYJIiQtBncv-1d4bjjYcKlqi_eDeSpjPXXKq0rqnBUyLxhaaywTptbeUYo3IqjzloBH2BID68DAsmEG42b809IMHeYl9c3bbcSbxkqVXq3DVdkw0Yor5o7Si4KJgjyYslrjV0UcpiqU9otB0mCwbDHYX7HTYAKLzqi6reo9nA8I1NDaCa64x05iDlyduwcED0_w54FIfUC65iS75SaexIhq3tpHxJO7HNEN7mosx6zN3Ip7AwtBrtP__-f02DnD6UkmRtKjBwbRjzej_Z7kB1cMt9s=?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A{ISL down or\nfabric split?}
-    S --&gt; B{Port in faulty\nor disabled state?}
-    S --&gt; C{Host cannot\nsee LUNs?}
-    S --&gt; D{MAPS alert\nfiring?}
-    S --&gt; E{Slow drain /\nhigh latency?}
-    A --&gt;|Yes| A1[Check fabricshow · islshow\nVerify domain ID conflict\nCheck SFP and cable]
-    A1 --&gt; A2[Fabric Segmentation]
-    B --&gt;|Yes| B1[porttest suspect port\nCheck sfpshow Rx/Tx power\nRe-seat SFP and cable]
-    B1 --&gt; B2[Port Flapping / High Error Counts]
-    C --&gt;|Yes| C1{WWPN in nsshow?}
-    C1 --&gt;|No| C2[Check HBA login · portlogshow\nVerify cable and SFP]
-    C1 --&gt;|Yes| C3[zoneshow · cfgshow\nVerify zone and alias WWPN]
-    C3 --&gt; C4[Host Cannot See Storage]
-    D --&gt;|Yes| D1[mapsdb --show\nIdentify rule: CRC · ITW · BB zero]
-    D1 --&gt; D2[MAPS Alert Firing]
-    E --&gt;|Yes| E1[bottleneckmon --show\nporterrshow disc_c3\nIdentify slow-drain port]
-    E1 --&gt; E2[Slow Drain Device Detection]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A2,B2,C4,D2,E2 section
-    class A,B,C,C1,D,E decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNU8tu2zAQvOsrFrkLgeSccmihl2EfWhhWUF8MFLS0kohSpEDSdZKi39V7v6y7NGIkAA897UozHI1ml7202Hlp9CNYOU4-SYpHuCvu4JebxIL0lmChR4W_kyIjqJqw-wGDOFnZuclc4O8fkE5xe9Tf0MrhBXozC6lhW0Nn9KBk54_6eq5d70DoHjpxUhj_SE4fWQd5aHGcUXvB_qLkkrhlHGGvi7Heo_Pgzm4hDPjFmxU3LMH__vn-6ZmQC9qj3mPqUPj_8Fmyzx3pwVqJZZF6hHvYUITQWGssVOasvYserUKOWRzLbxlvygKUGSlIipid08OHmIO5YJPsxtVWpPZqNL5Nqhs-SjAWFISSwsHhsPsaF3ogoY2hKCuhtaGAEKH1xooxHk9N_DqO8N_PYnH9CdL06mbb05jZjz0rYlf7is1unw5cyhJe0Zq4GMf1pdi1UCjkWUhLk4hSG2I2cYQdnYz3CjUFPxt9M8axo7Uhvl667nu3eufWKXNJe8u7zsS4ODtsiQh1INb4U3ZIxV_vXfRQS2cOE-2hdOAnBPcyL97Mn-Oz4Y2JIkkB6ScoMrq5ocmTkmuZ0fUITU67yE11a1a0M6F5SGqudUYDC02eNFybjPIKTZ78A9RNaMc=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7824,23 +7801,7 @@ FabricOS troubleshooting: `porterrshow`, `portlogdump`, `errshow`, ISL link boun
 </ul>
 <hr />
 <h2 id="incident-triage-decision-tree">Incident Triage Decision Tree<a class="headerlink" href="#incident-triage-decision-tree" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    incident([Incident Reported]) --&gt; baseline["Fast baseline:\nswitchstatusshow · switchshow\nfabricshow · islshow · porterrshow"]
-    baseline --&gt; healthy{"switchstatusshow\nHEALTHY?"}
-    healthy --&gt;|No| hwCheck["sensorshow · fanshow · psshow\nEnvironmental failure?"]
-    hwCheck --&gt;|Yes| hwAction["Replace fan / PSU\nEscalate to Broadcom TAC"]
-    hwCheck --&gt;|No| portFaulty["porttest suspect port\nHW fault?"]
-    healthy --&gt;|Yes| hostSee{"Host sees storage?"}
-    hostSee --&gt;|No| nsCheck["nsshow — HBA in name server?"]
-    nsCheck --&gt;|No| flogiCheck["portlogshow — FLOGI events?\nCheck cable · SFP · HBA driver"]
-    nsCheck --&gt;|Yes| zoneCheck["zoneshow — WWPN in active zone?"]
-    zoneCheck --&gt;|No| addZone["Create/fix zone\ncfgenable · cfgsave"]
-    zoneCheck --&gt;|Yes| arrayMask["Check array-side LUN masking\n(Pure / PowerMax / ONTAP)"]
-    hostSee --&gt;|Yes| errCheck{"porterrshow\nHigh error counters?"}
-    errCheck --&gt;|Yes| sfpCheck["sfpshow — SFP optical levels\nReplace SFP first"]
-    errCheck --&gt;|No| maps["mapsdb --show\nActive MAPS alerts?"]
-    maps --&gt;|"BB credit zero"| slowDrain["bottleneckmon --show\nDisable slow drain port"]
-    maps --&gt;|"ISL util high"| islAdd["Add ISL capacity\ncheck trunk group"]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1VM1u2zAMvucpiJx2CXrvYYX7k6ZA2gZLi2KDL4pN20IVypDkpN0wYA-xd9l9j7InGWlbblo4F1uiqI_Ux4_MtcMsaEun4HRZhclEU6ZzpHAK05t-CV-wti5gPoUfvlI1sjPfUlQa_DnZKI9GExunc-UDDPuU_F6HrPJBhcb7yu7h7x_obbxLqVAbp7N4or2Jyzacc7IdjVmhMqF65ZAfQ6S0uEqWD4uvZ-MX9xcVZs9yEclbFwMWiobYPc4V7bSztGUClGEHbRqHx1CTnsQpU2VUhgIIJ7BaPzKQz5RRASFYOHdW5ZndwkNyMQolL5-rxgR5nGwCMqe-8TX7tLzwC58Ynl2OJGN9WKOUY2HlKqIHH6xT5ZHsyUdOqKvSv1-_YXGegCYgtUWGcDt045cLY0sd70t6vB9A5sv76xvAHVPoz1Jq3SBTG4NC9Hq-kp9Eyp3mCKMBvlvCiC_rAfzpaXUnKSqmfocgZ-Mpqjz_Zlt9XjjkOpwU-qV1TykrSqSYD2-82uE4hnPq9VZ5yaJ7RmuZeW4QWD7ewZbPNJUpfVqxTKT0do_uVr3w8v7uIVmNwrLGD7nrJc8V5l4E3lkHmW2ID_z423xRD4Iu6oEbodbWQbPwwDD_xqcUlSlnhXY-jAJuVe0ZTH75BmazLp-k4_g2Wa1BGXThWDrG7i-d0tIJGxuCQeLktpYGpEvtW77Fk8vOrq2oR9F4ICR5zlD8hZv1kqVTq0yHVy5cW4PgGnqG0tmmHgUYhhnMPg9zaRhYYuwHSRworakbEXFUdKauvw9tb4367nLXfLEJxdS3V2wzMb01zaF1UPqb5sXcy_eDMerxMFJU0yArMUaFvDNKedtStx6xaIOlI37yH43LNEE=?" /></p>
 <p><strong>Resolution steps:</strong></p>
 <ol>
 <li>Confirm SFP is fully seated — remove and re-seat if in doubt.</li>
@@ -8216,7 +8177,7 @@ FabricOS troubleshooting: `porterrshow`, `portlogdump`, `errshow`, ISL link boun
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

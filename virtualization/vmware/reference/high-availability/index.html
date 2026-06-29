@@ -9371,29 +9371,7 @@
 <hr />
 <h2 id="failure-domain-design">Failure Domain Design<a class="headerlink" href="#failure-domain-design" title="Permanent link">&para;</a></h2>
 <p>A failure domain is the set of components that share a single point of failure. HA design means distributing workloads across independent failure domains so that no single event takes down a complete service.</p>
-<p><pre class="mermaid"><code>graph TD
-    Site["Site Failure Domain"]
-    PDU_A["PDU A"]
-    PDU_B["PDU B"]
-    Rack_A["Rack A"]
-    Rack_B["Rack B"]
-    Rack_C["Rack C (different PDU)"]
-    SW_ToR_A["ToR Switch A"]
-    SW_ToR_B["ToR Switch B"]
-    Host1["ESXi Host 1"]
-    Host2["ESXi Host 2"]
-    Host3["ESXi Host 3"]
-
-    Site --&gt; PDU_A
-    Site --&gt; PDU_B
-    PDU_A --&gt; Rack_A
-    PDU_A --&gt; Rack_B
-    PDU_B --&gt; Rack_C
-    Rack_A --&gt; SW_ToR_A
-    Rack_B --&gt; SW_ToR_B
-    SW_ToR_A --&gt; Host1
-    SW_ToR_A --&gt; Host2
-    SW_ToR_B --&gt; Host3</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kTEPgjAQhXd-xcXJxQHYGEwoaBwNaHQjDRS4iGCgxsH4321LIaLU6fpev17bexm2LOXY1B60WJTcsmLkzIOFLLClWN1bBmFzpVgv4NmV9CZ25RlaFxV7WfvwmPiCFxV8I0E0QWaJiKYX1UQuDF0UQwbmT59gYAJYZpjnrGU1B3H57JH4lByaSF0uKsQP5GlpeIJmyZSdf8qu6bgtwE18RpACbCPnTDjHyLkTzp3lVHywWoPKZaJIn5WU_cC_dL9PRh3oXKQxjEnH8GGRcYTSVN_-cZxxdIPjWm9u18k2?" />
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────── Architecture — High Availability Design ───────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -9477,25 +9455,7 @@
 </tbody>
 </table>
 <h3 id="dual-top-of-rack-topology">Dual Top-of-Rack Topology<a class="headerlink" href="#dual-top-of-rack-topology" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>graph TD
-    Core_A["Core Switch A\n(Cisco Nexus 9504)"]
-    Core_B["Core Switch B\n(Cisco Nexus 9504)"]
-    ToR_A["ToR Switch A\n(Nexus 93180YC-FX)"]
-    ToR_B["ToR Switch B\n(Nexus 93180YC-FX)"]
-    H1["ESXi Host 1\n2×25GbE"]
-    H2["ESXi Host 2\n2×25GbE"]
-    H3["ESXi Host 3\n2×25GbE"]
-
-    Core_A &lt;--&gt;|"vPC peer-link\n2×100GbE"| Core_B
-    Core_A --&gt; ToR_A &amp; ToR_B
-    Core_B --&gt; ToR_A &amp; ToR_B
-    ToR_A &lt;--&gt;|"vPC"| ToR_B
-    H1 --&gt;|"NIC 1"| ToR_A
-    H1 --&gt;|"NIC 2"| ToR_B
-    H2 --&gt;|"NIC 1"| ToR_A
-    H2 --&gt;|"NIC 2"| ToR_B
-    H3 --&gt;|"NIC 1"| ToR_A
-    H3 --&gt;|"NIC 2"| ToR_B</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUijKTM8o4eJyzi9KjXe0UlACMRSCyzNLkjMUHGPyNJwzi5PzFfxSK0qLFSxNDUyUFKqLMxILUoE6gUYk5qXnpNZyheQHgTUDaWS9UF3GhhYGkc66bhE49Tqh6nUiVi_Y1U5ornYi1tUehkCdrsERmQoe-cUlCoYxeUaHpxuZuie5YlduhKLciJByYxTlxgSUQ2NAQddOARyakDCFcZ2gXkVIexhiYzsBXYkkboQkbowkbowQBwBZ-qK-?" /></p>
 <p>Cisco vPC (Virtual Port Channel) enables both ToR switches to present a single logical port channel to each host, eliminating Spanning Tree blocking. Both uplinks carry traffic simultaneously.</p>
 <h3 id="ecmp-for-layer-3-redundancy">ECMP for Layer 3 Redundancy<a class="headerlink" href="#ecmp-for-layer-3-redundancy" title="Permanent link">&para;</a></h3>
 <p>For environments using routed access (no Layer 2 between hosts), configure ECMP (Equal Cost Multi-Path) at the distribution and core layers. NSX-T with BGP edge uplinks supports ECMP across 8 paths. This provides both redundancy and horizontal bandwidth scaling.</p>
@@ -9704,7 +9664,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -9132,21 +9132,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 <hr />
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <p>Verify these items before performing any VPLEX change — GeoSynchrony upgrades, director replacements, back-end storage changes, or storage view modifications.</p>
-<pre class="mermaid"><code>flowchart TD
-    startChange(["Maintenance window requested"])
-    ddCheck["ll /distributed-storage/distributed-devices/*/health-indications/\nAll devices health-state: ok?"]
-    witnessChk["ll /metro-node/*/witness/\nWitness connected from both clusters?"]
-    cgChk["ll /distributed-storage/consistency-groups/\nAll CGs operational-status: ok?"]
-    hostPathChk["powermt display dev=all\nmultipath -ll\nHost path counts match baseline?"]
-    arrayChk["Back-end array health check\nPowerMax / Unity"]
-    vmsBackup["VMS VM backup\ncurrent snapshot taken?"]
-    proceed{All checks pass?}
-    holdChange["Do not proceed\nResolve issues first"]
-    doChange(["Execute maintenance\nprocedure"])
-
-    startChange --&gt; ddCheck --&gt; witnessChk --&gt; cgChk --&gt; hostPathChk --&gt; arrayChk --&gt; vmsBackup --&gt; proceed
-    proceed --&gt;|No| holdChange
-    proceed --&gt;|Yes| doChange</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U01v2zAMvedXED0WMHwvsA5bNnSXAMWGdRdfFIm1hMiUJ9JJg2H_fZQ_kgxwbxJFvkc-PrmQ0UpI9AA5tF42GxaTZesNtfgAdzsTSJAMWYRTIJdOkPH3gCzo7uAPe9NrWsHQgoh_N85tPdqDlsYItQssOewHza5YUjYt_hdzeAwWub6vPZoovlKKYE1piOuGPinGnAJzgrYnypgOH1fpT0EImbd-6aBDyami5FBJ5ldF_jWdwCYirUYHrzl1sE_iwcZBx8u8zmDbK_jaeIrIGkay56rNaeiXQbZPDKnHPE5n4jjJwO-P4hPLsxE_0fXphLkTUMo-mnOR5YOJsaFuiBJ6zYOqXL9pFYxXmwYShs6I9bA3jDEQrlOZnM154vls7KFCcjDGZtXBlp029Fya2Jk3qOEnBTmvgh07LiBDr2gvux_wslP2cm_IDjkjCTCZnn0SEHNAWu-pz8kiujL6dHpHpOguZv2SgBR0zm_oO3KKR4TArI6F15BZ1k2bLhhf39DqPlW2i_EbGhHdkHG1-vbLQPUI8xdYvkIJXW1549DyMLpp8lS53uz8dv_ladnRZVkleNH6qnoJzwosGk7Ii1C30WXwzT8QVXQh?" /></p>
 <ul>
 <li>[ ] <code>ll /distributed-storage/distributed-devices/*/health-indications/</code> — all distributed devices show <code>health-state: ok</code>; do not start a change with any device out-of-sync</li>
 <li>[ ] Witness is reachable from both Metro clusters: <code>ll /metro-node/*/witness/</code> — loss of Witness during a change that takes a cluster offline will suspend I/O on consistency group volumes</li>
@@ -9281,26 +9267,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 <li><strong>Distributed Devices</strong> — virtual volumes that span both clusters</li>
 <li><strong>Witness</strong> — third-party tiebreaker for split-brain scenarios</li>
 </ul>
-<pre class="mermaid"><code>flowchart TD
-    iclFails(["ICL failure detected"])
-    witnessChk["Does Witness contact\nboth clusters?"]
-    witnessGrants["Witness grants quorum\nto first requesting cluster"]
-    survivorIo["Surviving cluster\ncontinues I/O normally"]
-    otherSuspend["Other cluster distributed\ndevice legs suspended"]
-    iclRestore["ICL restored"]
-    autoResync["VPLEX auto-resync\nrebuild-progress → 100%"]
-    inSync(["Distributed device\nin-sync — Metro restored"])
-    noWitness["Both clusters unsure\nof each other's state"]
-    ioSuspend["I/O suspended on\nall CG volumes"]
-    manualRecover["Manual recovery\nidentify active leg\ndevice resume"]
-
-    iclFails --&gt; witnessChk
-    witnessChk --&gt;|"Witness reachable"| witnessGrants
-    witnessGrants --&gt; survivorIo
-    witnessGrants --&gt; otherSuspend
-    survivorIo --&gt; iclRestore --&gt; autoResync --&gt; inSync
-    witnessChk --&gt;|"Witness also unreachable"| noWitness
-    noWitness --&gt; ioSuspend --&gt; manualRecover</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9U01v00AQvedXjCpVnCLaaw8gkdIqUqsiIgEHXzbrib1iM5PO7hpFCIkTPwDxC_tLmF03sUtNb56vtzPvPddO0EbHdAHimjbOZs76K-N8uICT5eIGNvqdBKHGqI1Yn8D30Jodar_GhhqPP2bfXCQMYdF-1alLxgCf-wxYpmhsrGjNsQXrU4go4e1LKNdiKObnDxhNScB9YknbiiLDxkmIOnqfMERHzQF4EjYk6VzHsmTFXJVgNFJRXtGRIsHy9R0Qy9Z4v5-E0htQVinskGoFu8vhAQhqF6K4dVKSKqqxcxbBYxMg9AP_4U75_qhXsOAj49JH090mRdb2PVnt_vTh5v0XyKm5lFxFguvkfD3fCTeSyXv49RvOz85Op9-mVY90OewO_eoVOZpnTHj4-QduMQq_vBnxo14K924sNiRSCRSQN4DGtlBYfKW8RBNxei8eSM6iHBkEpopUHlhcQ8c-bTFMAmwNJaO8Wu5QFOS2xLkjJ_Z6XI2q-mYPak7XFaGOoumZCjyJe_w7YP4GBtePfoBRoTfyU1vn8mDI57Wxw0bOzaXBKCPP5MLgiZE9ykSR95_ljjoNipXeA-UD-Tn9hMjZXx3HiaQ=?" /></p>
 <h3 id="check-distributed-device-status">Check Distributed Device Status<a class="headerlink" href="#check-distributed-device-status" title="Permanent link">&para;</a></h3>
 <p><img alt="Check Distributed Device Status" src="../../../../../assets/vplex-proc-check-distributed-device-status.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/
@@ -9482,7 +9449,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

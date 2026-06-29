@@ -7498,30 +7498,7 @@ Known issues and resolution steps for frequent Venafi problems.
 </table>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kD0OgzAMhfecwmLvBRg6tZVQt1bqiiJiaNQQIxKCUMXdm4DEfzf7-X2xX4SsMbOSdAyCWs2Y6crKUhlDIlBbmXfwHBX4mjev0PskL0mLnvmi0GSszNJcURtDdJkUuHklmpiwhOtCYc8-2u9JpTENGo_cQwvJ0B76Hdb-irRGQ6oZL41egwazdkgukUeoHQLVcDUZV9zihJDjqp-Sw-kMu2RSO_Rt4bGlb53lj-kgwNK52RWI2br6rc1o9-5m_gNfZrGi?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A{Certificate discovery\nnot finding endpoints?}
-    S --&gt; B{Policy violation\nblocking issuance?}
-    S --&gt; C{CA connection\nerror?}
-    S --&gt; D{Workflow approval\nstuck?}
-    S --&gt; E{TPP service\ncrash?}
-    A --&gt;|Yes| A1[Check Edge Proxy registration\nVerify scan range and port list\nCheck firewall from Edge to targets]
-    A1 --&gt; A2[Known Issues]
-    B --&gt;|Yes| B1[Review policy folder in TPP\nIdentify violated rule: CN · SAN · key size\nAdjust CSR or update policy]
-    B1 --&gt; B2[Known Issues]
-    C --&gt;|Yes| C1{CA type: ADCS\nor external?}
-    C1 --&gt;|ADCS| C2[Verify DCOM/RPC to CA\nCheck CA template permissions\nReview VdcLogFile for error]
-    C1 --&gt;|External| C3[Check CA API endpoint reachable\nVerify credential / API key\nCheck TPP CA connector config]
-    C3 --&gt; C4[Known Issues]
-    D --&gt;|Yes| D1[Check workflow approver mailbox\nVerify workflow policy config\nManually advance or escalate]
-    D1 --&gt; D2[Known Issues]
-    E --&gt;|Yes| E1[Verify IIS app pool running\nCheck SQL connectivity\nReview VdcLogFile for exception]
-    E1 --&gt; E2[Known Issues]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A2,B2,C4,D2,E2 section
-    class A,B,C,C1,D,E decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNVE1v2zAMvftXEL0PhdOeetjgOBkQrO28ZOguvqgWbauRKUNSPrxhv2v3_bJRTuJeNCAnEeYT-fgeZaksVl4ZegCrmtYnSfYAN9kN_HKt6JG_clpQo_F3kqWcylustrCUDUJhzXFgQKOctyIUKekFraoHcJUgsHwPQZCE3lgPmmElne7X3PYgtIbamu5UzRvwwjboXbz5jJt_IXMgWDm3wzhqzqB5PBPIr3Gv8MB0tKoGqI2WaEERfC-KklYSyQfye2W08CjB7jQXyZ_h7x_YZOOxRR5O_cSSMvm2cx7yzRqMhV0v-cq5cpzAVQPko8ZpPBcqnAVe5F-fbtdFHmTLs4useQYeu16PVNB2yjl2xZV0HvxFVo-m-aw08vAW0Fpj463uJqu5ZlasAEn2RpFnlKha8apxMruyOEonNNyOWBbpwoiVDRUqQ8TVuSdHtWriTe-vUWjBoEU8876fB2O3tTYHEH1vzZ5d7oTSr-Y4kZ4Q52U48SrpSdCOF3MAIfeCKgzmIq9z0DTe9SpflwxaxjPpu6ur1SYwZk5G8_YRKWouSm6-PV5kVHvlh_-aeqywD48x3u0qthsG_WiFB-XAtwhu6Hpvuk9x24Lq0UySwYePkKX85xiDWTIP5zzl1zgGM973EORTcMerNwb3ySKci5RtHYNZsgznMmXFxmCW_AMMq5cn?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7569,7 +7546,7 @@ Known issues and resolution steps for frequent Venafi problems.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

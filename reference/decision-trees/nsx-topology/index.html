@@ -7020,35 +7020,7 @@
 Design your NSX topology: overlay vs VLAN transport, T0/T1 gateway placement, Edge cluster sizing, HA model, and north-south routing type.
 </div>
 
-<pre class="mermaid"><code>flowchart TD
-    A([Start: Design NSX Topology]) --&gt; B{Deployment model?}
-
-    B --&gt;|Multi-tenant\ndifferent teams or BUs| C{Isolation requirement?}
-    B --&gt;|Single tenant\none org / one team| D[Single T0 gateway\nMultiple T1s per workload zone]
-
-    C --&gt;|Shared infra\nlogical separation OK| E[VRF-Lite on shared T0\nOne routing table per VRF]
-    C --&gt;|Strict isolation\nseparate Edge required| F[Dedicated T0 per tenant\nSeparate Edge cluster per tenant]
-
-    D --&gt; G{North-south routing?}
-    E --&gt; G
-    F --&gt; G
-
-    G --&gt;|Lab or simple| H[Static routes on T0\nNo BGP · manual route config]
-    G --&gt;|Production| I[eBGP on T0 uplinks\nPeer with ToR switches\nBFD for fast failover]
-
-    H --&gt; J{Edge throughput?}
-    I --&gt; J
-
-    J --&gt;|Less than 10 Gbps| K[Edge VM — Small\n2 vCPU · 4 GB RAM]
-    J --&gt;|10 to 25 Gbps| L[Edge VM — Large\n8 vCPU · 32 GB RAM]
-    J --&gt;|More than 25 Gbps| M[Bare-metal Edge node\nDPDK · SR-IOV NIC required]
-
-    K --&gt; N{T0 HA model?}
-    L --&gt; N
-    M --&gt; N
-
-    N --&gt;|Simpler — active/standby| O([Active/Standby T0\nOne active Edge at a time\nFast failover via BFD])
-    N --&gt;|Higher throughput| P([ECMP Active/Active\n2–8 equal-cost paths\nRequires BGP · stateless DFW])</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9Uk2P0zAQvftXjPZeAQuHVQ9ITdJk-5E0apfCIRdvMk2tde0QO10tCGn_A_wX7vyU_SWMY1gQsrjkRfP83ozHrxE91lZoNYVetEfLWDSFi-gCPpsj75CqRHPVSvzCEmJ2wv3DzUtoucV7_lCpfJBWdK74ykCHPdzr_k5q3sAnrTDoFJNTHGTmxOy36WQtLIJWQCd6bKhfpTYKodeDpQnA8ltq6JrR4aBRSkYJNqKmMZ1-PGxRcWUrtcOO90TAvGkRajkYS-yfE0HHjByzIHPtFmO5FfU4IBo3uRu50BBlJfz4DieuBi49DbVWB9EGrRZkhU4zOsDQSaHuTKVKdIsV9gg3eguG_uojUj1KEzjoHg7cWPoIqc_YB52X5LwMMitixkXsc3h6_Aa7E5eyUpdwjst3bvg3kEWwneVB9fof9Zr3LVbq6ln9-vJ_8tzFjd54ckJLCxqdlG7IISmTldPvtpPFZg_FIibdx4EC2wSdCnIqgsyGmBml_Iwv6JlUc_vwHCg-ln1bboGDFSfqnf69TjgLDrTooHfprh_nJfxq4IG29_T49QpoXi4ntSa3jtsjPdjWX8H8Doah3KBEYyBJ3wc7zHy6ejuFBI1oFRS7DxSDTkvdPgQlLILJW0hY7GDuIWVzBxlLPWQOrj0s2MLBki0drDysPeRs7aBguYfCwcZDyX4ClL9k8g==?" /></p>
 <h2 id="key-design-decisions">Key design decisions<a class="headerlink" href="#key-design-decisions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -7123,7 +7095,7 @@ Design your NSX topology: overlay vs VLAN transport, T0/T1 gateway placement, Ed
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

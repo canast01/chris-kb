@@ -7742,40 +7742,7 @@ SANnav diagnostic commands: check service health with sannav-admin and journalct
 *Applies to: Brocade SANnav 2.x*
 </div>
 <p><img alt="Brocade SANnav — Diagnostics" src="../../../../../assets/san-brocade-sannav-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([SANnav Issue]) --&gt; B{What type of problem?}
-    B --&gt;|UI unavailable or slow| C[sannav-admin status\ncurl /api/v1/health]
-    B --&gt;|Switch not discovered| D[grep switch-ip /opt/sannav/logs/discovery.log\ncurl -sk switch-ip/rest/loginresult]
-    B --&gt;|Performance data missing| E[curl localhost:8086/health\nCheck InfluxDB disk usage]
-    B --&gt;|Alerts not appearing| F[tcpdump -i eth0 udp port 162\nCheck SNMP trap reception]
-    B --&gt;|No data or stale topology| G[sannav-admin db-status\nCheck PostgreSQL health]
-    C --&gt; H{Services healthy?}
-    H --&gt;|No| I[journalctl -u sannav --since 1h\nFind failing service]
-    H --&gt;|Yes but slow| J[top + free -h\nCheck CPU and RAM]
-    D --&gt; K[Test HTTPS to switch\ncurl -sk switch-ip/rest/loginresult]
-    K --&gt; L{HTTP 200 or 401?}
-    L --&gt;|Yes| M[Check switch credentials\nin SANnav Discover menu]
-    L --&gt;|No| N[Check network and firewall\nto switch management IP on HTTPS]
-    E --&gt; O[df -h /opt/sannav/data\ndu -sh influxdb/ vs total]
-    O --&gt; P[Reduce retention policy\nAdmin → System → Data Retention]
-    F --&gt; Q{Traps arriving?}
-    Q --&gt;|No| R[Check switch SNMP config\nsnmpconfig --show snmpv3]
-    Q --&gt;|Yes but missing in SANnav| S[Check trap source IP\nmust match discovered switch IP]
-    G --&gt; I
-    I --&gt; T[Collect support bundle\nSANnav GUI → Admin → Export Logs]
-    J --&gt; T
-    M --&gt; T
-    N --&gt; T
-    P --&gt; T
-    R --&gt; T
-    S --&gt; T
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H,L,Q dark
-    class C,D,E,F,G,I,J,K,M,N,O,P,R,S action
-    class T escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdlE1u2zAQhfc6xSDbQlXSAkGQRQH_xVZiO7Ll7LxhRNpiTZGESNoJim5zgB6xJ-lQtB00ILro6kkazjecx6Eob1lluZK30PJtbZOkfwsX_Qv4YWqiGX7FMJFbwX4mA4wYIiXZp4Q2XIKxxDqzlpVrBWRE82x_ldWMCFtHAUMEbFumwRy4reqUa8iUtlmAZkJtTUa5qdSeta-f8fWITs3uPSVrmbF-LZf45ISNlhphqS5XqIqIWhl7e3N5c33c3VoOalbtIJcb4V6GfcCqO3CGbFmUdoc0W2nqGg0pB2brS3BUg1athavrLydeOZ8VYFuifTLT3tcob_zRSfqcnswMpAJ3jFaViyn8w9AJcibRSI6R78q1kojKooMOQj1IU8NlxeAKTbjjksKGcMHlFgxr97yK93_v-1caPsGmZQzSs4GD4gkIQpa9WTTxARNXeF4wWa2KEqw6nuP_H-wUidNoZIaRsKuAhKpllEnLiUBb0eSyN_cODI8TBg2TLkqan0mS2YNqd12PG7wqByLEWp7bgIZInBkEWcgLUDL0GYU-IpRu0Lu_Zp4SS9aSOrSiBt6NI33OYG_QK0tElFQgacmow1NsmfUdYmGtBK9e17LXzdPvt19QvhrLmu5xiFVgeVobhS4QuohGlh997aa8UnLD8YIa2ejw7EerVgfwX_Zfo6jyjOouicEBxSbyYi0bh0PSEI8__QEYPRXMiyht5WlKCPwCxunuMj47SQVby-NZj5_yzoB3V0Yv3bop_mui0B5Cj8m5MS5-H5I-pN9gEGQYZBTkLsg4mXjJg9wnQy8PydTLLMg8GXl5TB69FMnCyzJImYxDeu5lldwHmQWZBymCLIOUQf4AlF7zCg==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk71OwzAUhfc-xVV3hra0QwekUhgYqBBlt1zntrFwbMt2UlWoEg_BE_IkODgJ_UlitsT5zjnJuTcJN8gcV3IOidrLwcAeMu1UNoenBKXj2wOswwl82JRq9BynmZLJcWAdajIiLEX2TiyVkhbEoik4Q5IiFS6dw3DtIRjB9-cXLEsQ1ouVB6ECIYDDxr18HSp3Aiv_ceWfUEc31F46j0-cayTqOSH-G3ZSeTe7546l_t4yVaA5kC3ltffk1_uhQiGg0KDgUZEbtN1Bt3U5MtPEGaqJJ1CHvkPI7Wk1q-cXKDFosG7v6XnxqbKO2IN_lBGNZlv7T6-rL1EIKJSoMhmVDLujZoQpIfwhsbnWyjiyyWUikHgp2Zg6ahaiAgoVCgEFj8K9UTRhfpXeFsvWNF-mEnmo57W8LhC87tEyKqjDRqIKKo7NrsLNHfxnF7ks0Dq-805X0s416xNF96hP3LsbfcLo4PvE0VGeiaOllr5_Q-v9Y9vQSIFtkp7a2vBIWW2SSEUXkh-RG_v4?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7999,7 +7966,7 @@ SANnav diagnostic commands: check service health with sannav-admin and journalct
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -7526,37 +7526,7 @@ NetBackup diagnostic commands: query failed jobs with bpdbjobs, check storage un
 *Applies to: NetBackup 10.x on Linux master/media servers*
 </div>
 
-<pre class="mermaid"><code>graph TD
-    A([NetBackup Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Backup job failed| C[bpdbjobs -jobid id -report\nRead exit code and error text]
-    B --&gt;|No media available| D[bpstulist -U\nnbdevquery -listdp -stype PureDisk]
-    B --&gt;|Client not backing up| E[Check policy client list\nbppllist policyname -L]
-    B --&gt;|Catalog error| F[bpdbm -consistency -verbose\nCheck PostgreSQL on master]
-    B --&gt;|Restore fails| G[bplist -C client -t 0 -l\nVerify image exists and not expired]
-    C --&gt; H{Exit code?}
-    H --&gt;|196 — network| I[ping media-server\nnetstat -an | grep 1556]
-    H --&gt;|58 — media server| J[Check media server status\nnbemmcmd -listhosts -machinetype media]
-    H --&gt;|13 — client| K[Check bpcd on client\nTest client-server connectivity]
-    H --&gt;|Other| L[vxlogview -o 118 -d 24h\nCheck nbjm log for detail]
-    D --&gt; M[Check MSDP health\ncacontrol --dsstat]
-    E --&gt; N[bpplschedrep policyname\nVerify schedule and backup window]
-    F --&gt; O[Check master disk and PostgreSQL\ndu -sh /usr/openv/netbackup/db]
-    G --&gt; P[Adjust retention or rerun\nbpexpdate to extend if needed]
-    I --&gt; Q[Collect nbsupport bundle\nfor Veritas SR]
-    J --&gt; Q
-    K --&gt; Q
-    L --&gt; Q
-    M --&gt; Q
-    N --&gt; Q
-    O --&gt; Q
-    P --&gt; Q
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H dark
-    class C,D,E,F,G,I,J,K,L,M,N,O,P action
-    class Q escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1lE1PGzEQhu_7K0bcrZSqVBWHSiQhEEhCIG1Pe_GuJ1mD13b9EYhK_3vHawgXV4ryyh778fid8QrpsA3S6HNwcteFqhqfw8n4BP74jlukWQpzvVP4t5pQpLGieTSNB0b_UgD9mENrXKj1A3IB-CIDtEYgcE0j54yDgC-hSJwORB-ikj4A-1lr3Qjc_47oDsDSpLDAfDhYhHV0OJX-qQi6JNCkw_YJrFGyPUCrJOoACVHrxlo1nJCDmvcIbFEEzd7u2ANrjfa0CTXh2B5dYzzWOp-yNj7sHG7uF2A09JyWuSLvauDl603es2IBPtH1av0LndweQPZ8h8k5H_xgmzaBhpZqI4rUa6JeFyNzilipd9CjkJx5dJQ52YrBB04ncw2vQJlbOD07-1pE3By9HBiQGZD2R58qhH3f9iLXpzMpZ9bztpN0SCrUsKtIvj2SG9uK5Fw2pNY_kAzKg7ecqYcoa2rNvQyHIm1BtP2LMru9xGdgBk5PvwET8PlL914m3Tz2QCtgS10oMHCpiqjlMbHlZrqGDrkKBGk5JRGcUcCY8MmA4u7VUGOrfNuhSNZ-tNmxxEMsqvwqGt4-RQvPUgvzXETefdRg6C0Q1PnD3o_Oq7WI9Dg6GEXvRsai3o-oBBk-Ek0RvCbwhXiMZLdD6u309IHMceiiTi-F2k7wgBAMdSAtoCe-BY0o_tOK9ylToxTNkN0-2vQtgCZqoej2yffkQOAeNg9FwAUBVhjG2ZO59xGL66oxsO8wyTLNcpllluWquk4yz3KT5TbLopomWVaXSVbVLMlddZVkXc2T3Fc3WW6zLLIss6yy3GVZZ_kHOrDCEw==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk01OwzAQhfc9xah7Fv1ddMEGsajEqhVsLdeZpgbHjmwnNEKVOAQn5CTYsVNKmx9WiTLfe8-emSRcI7NcyRUk6l2ORqbKcquyFawTlJbvK9iGL_BhDjRHx3GaKZmcRsZiTiaEHZC9kT3lAhPyqnZmBeOtK8EEvj-_4MGXIZTBl8dnJx9NZSowek2jl7FK0xRJIbklVCYkV0oQ1vhOL3wjCh4Fh4JHgdGcMm6r7qhZjMqV4KyqQ5jg7saEKbnnTdTsIiqgdUhAoUbTQlPfwO6seczK0LWOGNQlandHagvjg5us-UVWjUJAIaAhmFoqVNqdtSAaaULKYyGIA8-zWNTmG1eDl-PzE_hat8uScMmckUHiDrBT7ukEKZcpsZjljemyNl1HFCIKEQWPuuloLtoHodEoUYTl2_j3EkFpeDSMCmrxLFElFafzZsLdPXRvHpclGstTp78RDK5Xn3hwYfrEgxvQJ74daR89OLo_4o4-erff6fzr52yTDPSsTTLQqTbJdX_amIGuXEl-AGq16bM=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7800,7 +7770,7 @@ NetBackup diagnostic commands: query failed jobs with bpdbjobs, check storage un
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

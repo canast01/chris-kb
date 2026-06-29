@@ -9240,36 +9240,7 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk8FuwjAQRO98xYp7f4BDpQqKQIK2KlKvlmtvsIXjTW0HhCr-veuk0DZNBLfIfjNjzW60DaiSJT8BTQc_GsVjWSUqJ7DU6JMtjrBpT-AzGlkhc1aW5PVpxB9bTzFZJQpHhwmMZ5cTmPPJ-KLJIdJvHZ5GvoiipNon4ZgUug7WbwVVGGT7jvHTfAPrTMCKCZg1BDyfiV5XR2qHQSgM_GarZEJhy4pCEoW0LrLrqiFg-kPAsiFgnole173VpZB1MrkK1aQ3fnVAIYvEgZVk67flbA0Pf7DGlDF4yBi8yBgPFDRMDVtjb1gVSNcqiWjoEEVALQxKl4ywXjhVCi2j4bCXFoNNxuAVNSwaDKyH1XQNM8beSQbdG6IMql0uPOBHjdy_sTFROLLx9PuKPZsrWLRXvT4BI7m6Hdhr_t4jUIDHqKTL1Z4ltJfudNkquLuHf1tj_Z7T7JZlv7mrezKgu7oJA7rbZj0gvm12A-LhmfwWdHrLwp8hXPurOvSVjjr0Lc10JLf00ZEMtdDBvgAQQsb6?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; B1[Product upgrade failed mid-way]
-    S --&gt; B2[Certificate sync error]
-    S --&gt; B3[Environment health check red]
-    S --&gt; B4[Locker credential or cert import fails]
-    S --&gt; B5[NFS mount lost during operation]
-    S --&gt; B6[vIDM authentication failure]
-
-    B1 --&gt; D1{Log activity\nin last 30 min?}
-    D1 --&gt;|No| R1[Open Broadcom SR with LCM Log Bundle\n→ Product Shows Red Health in LCM Dashboard]
-    D1 --&gt;|Yes| R2[Review installer.log · Use Retry if Offered\n→ Product Shows Red Health in LCM Dashboard]
-
-    B2 --&gt; D2{Cert SAN matches\nproduct FQDN?}
-    D2 --&gt;|No| R3[Re-import Correct Cert · Run Replace Cert Action in LCM\n→ Locker Certificate Import Fails]
-    D2 --&gt;|Yes| R4[Check Product Cert Trust Chain · Verify openssl verify\n→ Locker Certificate Import Fails]
-
-    B3 --&gt; R5[Click Red Card · Check Service Status · Run Health Check\n→ Product Shows Red Health in LCM Dashboard]
-
-    B4 --&gt; R6[Verify Key Matches Cert · Confirm No Passphrase on Key\n→ Locker Certificate Import Fails]
-
-    B5 --&gt; R7[Remount NFS · Verify Write Access · Remap Binary Mapping\n→ NFS Mount Lost During Operation]
-
-    B6 --&gt; R8[Re-register vIDM in LCM Settings · Update Credentials\n→ VIDM Authentication Failure After Password Change]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class D1,D2 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqtVM1u2zAMvucpiN4zIL8tetiQ2AtWLGkLe20vu2gybQu1JYOSEwTDrnuAvczue5Q9ySjZ6TbA26U9ibZIfuTHj8oUoXTK6EsgVZRuNEov4eyhFA6UBVci2GPdOFO_OYPPthQNsiNHCF1U-GW0nrD3LZmslQ7apiCRIeRCVZhBrbLxQRyH46YcFyE5lSspnEfREpDI0LD_jP3f6r0io2vUDkoUlStBligf2TEbjppz1NbIRySQ7MSBSlRg-IuhQdWN4cOXa4fjFxx_vUmhNi1jVsY6yFpSugDTIAnP23DgkgP3V_EORMscMqwMzgGrJRwMij2X8WTwLvF3Nw1qWJMRmTQ1pAkcFFOwjXawNQWsW51V-FH__PoNThNJS3OwkPAw3nV8KR38Y2HLT0bQMG2JH06Ce4UHDrBOVBXSq4oxfnyHO4uc0NERVA43eY7M60uAxh40ng4XNAsFjfuBRYb8JXj9-JKSVjNcUwmJ3b9VUHSP2xXXq-BPyV112Tb_HH_i5RMFhZ16C-k_UMtCiErBAAx_j6Tyo1eEtraCffh8BqoXXVQpRvUcRkyYR-nqSJH2ittMnXCtPTXf8xxcXkQAXr59W-_xCDvheNHsE-GR0bmiGq4N3Aprm5IEq4IZZ-dnNH4eptztmt-639w-kOIMKynRdk1jLRpYKy3IV9c0vJIdsI_bhQxbv61xt603_93W5KKTF2GhrOOyw-b2TKXoHKcIsHdN5juJnp4S24Hee__V35u-6TYdVrnP6Gk6GJ4kq0YXw_s_SmH8GtaT_pz256w_5_256M8lPxjeSCYnY8pLFIzZyZjzwxmMBb-FwVjyoxaMc36kgnEx-gVDUxEc?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9393,7 +9364,7 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

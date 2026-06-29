@@ -8592,33 +8592,7 @@ Detailed resolution procedures for the most frequently encountered FlashArray is
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNU81uwjAMvvMUFid24AU4TELbEJM2gUDbjlFoXBopjaskLaom3n1OO9gG7cqlSuLvJ_nsKu0wCZrsDBQd7Gjk67wIlM_gWaENOq1h257Ap89kgYzTMierjiNe7C35oBORGjrMYPx4PoEFn4zPnGgi7d4gs5yuUKRSm9KhkFYJh7tSGxX5sQaLtgZcg01b61TK2EkY8uiFNEYUMmReBBIVmTJHz3pLRsBLRMDcGFhHBASC9xbRr5pJL8iamj98Rw6Irxz1hdcRdZJeSg8rhvEHYd7AGhOYbBvctNl8SGd5e9dp14onpvQBnShIiRw52EBOlNahTDK5Y7tW_KGFwZoUvH7D4O0EM3ijA5VBUCp8bRN-VelRdTqsygCUcv9tApN1g4PGL0NpQlZ3P8ih53TbkdrENWfCrCefSCMDnilUSXM8zxtM7-FqnrStkLd7pv3B9U9QD2NwUv7jDc5CD_m2zt5M7mrab_JFelHkpxX9f90FbiCpLvRAPheUW1IZpFxncUH5Ahaz1E8=?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A[Host volume not visible]
-    S --&gt; B[Drive failure / RAID rebuilding]
-    S --&gt; C[Replication session behind]
-    S --&gt; D[Alert storm from phone-home]
-    S --&gt; E[Purity upgrade failed or hung]
-    A --&gt; A1{Volume connected to host?}
-    A1 --&gt;|No| A2[Connect volume to host group — see Volume Not Visible on Host After Provisioning]
-    A1 --&gt;|Yes| A3[Check initiator registration and rescan HBA on host]
-    B --&gt; B1{Multiple drives failed?}
-    B1 --&gt;|Yes| B2[P1 case immediately — do not pull drives — see Drive Failure and Rebuild]
-    B1 --&gt;|No| B3[Single drive — open P2 case; monitor rebuild with puredrive list]
-    C --&gt; C1{Replication link up?}
-    C1 --&gt;|No| C2[Restore network path; pod resyncs automatically — see ActiveCluster Pod Out of Sync]
-    C1 --&gt;|Yes| C3[Check mediator reachability and bandwidth saturation]
-    D --&gt; D1{Critical alerts present?}
-    D1 --&gt;|Yes| D2[Address hardware or capacity alerts — see Array Reporting High Latency]
-    D1 --&gt;|No| D3[Check Pure1 cloud connectivity and phone-home proxy settings]
-    E --&gt; E1{Upgrade pre-check failed?}
-    E1 --&gt;|Yes| E2[Run purearray upgrade --check and resolve blockers — see Purity Upgrade Hangs or Fails]
-    E1 --&gt;|No| E3[Contact Pure Support if no progress after 30 minutes]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E2,E3 section
-    class A1,B1,C1,D1,E1 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1lM2O0zAQx-99itHeK9jktiuB0rRokRBUW7GcXceNrXVsyx8tFULiIXhCnoQZu9le3EvtJvP1-89MBuUFj8qaB_BqlHGx2D3A3Q_JIqgAUQoI58lFO328g19BMifQED2YGbX4vejQ-MmGCEer0yTAWLyqoPZaVO1XaL_26ijgwJROXsA7eO4-r9Fmn5QelBmrfj36PQunFWdULAQRAp17IZUZqi5rdOm08BFCtH6Cg7cTOGmNWEo71cvboM82eRXPkNzo2VDqFANYDzLdKK67p1T39XcNvuutMfhoFilakKTZ6G1y8O_PX8QR8FJefkUFX4qCgIBZ3O4QhYettyStNbdE6lrKJQV_BWVUVAy58f2oQvRFNmYGfBA4w8CrjuJTIfVOEdSqDrUiqO09cBYEqGkSA-YS-pxZBpunwCWtYaBWhzfE0vlPl85TMc-l7fUshLNT9KcEynGsEwa2Tc79CBOqUShzHDipKDG1F8VBqxt0PdH1dbq-ycNGU4MDLeLJ-ldwLMpHcDbrdzY8AEu4FSgrZ_pCTogdLtNR9DqF3DK0_5Yi2APs0Kme7tq1ImTGYVyyvdI0iaTTHn9OakC4wGIq3axPPYGt62BrAuuGAQkCSOaHE0NCTMeZYzynon259qvznp2xR876iH2AJ_xCwBdsteHneoYrC66RwAnRNg3Ay_yr44xzXUNw3v48Y7ZIGUJ9K4lpU2fa5GYlk5vOcr3z5i6XPFdyGXqrcSD22vJX4a-Il23_fvF5wrCBJKEhvVFNWzY6MtxoooRdcqQQqANOPgGNWWGWt7Z9D5MyKYp6tMUOlh-gK8eqHH051uXY4Pcl2zTzpcXlzObNfGlxoLNnM19anIQcpJkvLeqY4zXzpV38B8ICCNU=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8635,27 +8609,7 @@ Detailed resolution procedures for the most frequently encountered FlashArray is
 <li><code>purealert list</code> shows a drive failure alert with severity <code>error</code></li>
 <li><code>puredrive list</code> shows a drive in <code>failed</code>, <code>recovering</code>, or <code>unhealthy</code> state</li>
 </ul>
-<pre class="mermaid"><code>flowchart TD
-  A["purealert list shows\ndrive error alert"] --&gt; B["puredrive list\n(identify bay and state)"]
-  B --&gt; C{"Drive state?"}
-  C --&gt;|"recovering"| D["Automatic rebuild in progress\nDo NOT pull the drive\nMonitor: puredrive list --progress"]
-  C --&gt;|"failed"| E{"Second drive\nalso failed?"}
-  E --&gt;|"Yes"| F["P1 case immediately\nDo NOT pull any drive\nAwait Pure Support guidance"]
-  E --&gt;|"No"| G["Open P2 case\nSchedule drive replacement\nArray degraded but protected"]
-  C --&gt;|"unhealthy"| H["Open P2 case — drive may fail soon\nMonitor closely\nPurity may proactively evict"]
-  C --&gt;|"missing"| I["Check physical seating\nOpen support case if drive present\nbut not detected"]
-  D --&gt; J{"Rebuild complete\n(state = healthy)?"}
-  J --&gt;|"Yes"| K["Array back to full redundancy\nOpen case to schedule physical replacement"]
-  J --&gt;|"Stalled &gt; 1 hour"| L["Open support case\nDo not manually intervene"]
-
-  classDef decision fill:#b45309,stroke:#92400e,color:#fff
-  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
-  classDef good fill:#15803d,stroke:#166534,color:#fff
-  classDef info fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  class C,E,J decision
-  class F,L warn
-  class K good
-  class D,G,H,I info</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9Ustu2zAQvPMrFjn14kN7NNAWtuU8nLQx6h51ocm1RJRaEiTlQCgK9CP6hf2SLik5SAKhpwXI3dmZ2dEmoErG0RKCadokxGoJV74PKC2GBNbEBLF1T7EmHcwZAUNwAcrvFfyMrfTIswwiqbH4S6yn-bE7z9f0zmikZE4DHOUAkjTEJBPOzm94viqzpefzbFPFTas-uU4mo_jj2BurwRD44JqAkdlWDr4-fgffWwupRSh8avriyCQXlvCaIywWl9HZhVteeEDlmPoEJG10cJLGop7neM0j-_egZEQwXYfasBw7vGYmabgArp6kSbBnWnDovXfsftMbLUnNG3XD-I8eCfYfypKaDqpF3dtJK_d6KxV2bD2jh8DWa2yC1Kjh2KfsVWI41LPwt2_g4e_vPxNwx0hZOUTn6NlSUNbFIpA1mDSUNt4hOV9nfgc8GzWfmTvetWlR_QDfDtEoydDIp6WmpsIhToaMZp4mHp7PVcRlNeQSy_uPoB0v-TYlRbnOW27maJaUwUdoOfGpHWZH73PcioFHySQTHz4fjwPUUz7QMNEs9Pg3Xg7xLOfFLWY3PFzcfqm0RCXr6iT10rKFhhKGM9J8IsQKFp9gLda5bMQml2osW7HN5XosN-Pj7VjuRJXLTuxyuR_Lg_gHyP1tvg==?" /></p>
 <h3 id="diagnosis">Diagnosis<a class="headerlink" href="#diagnosis" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Identify the failed drive and its bay location</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>puredrive<span class="w"> </span>list
@@ -8870,25 +8824,7 @@ Detailed resolution procedures for the most frequently encountered FlashArray is
 <li><code>purealert list</code> shows replication error alert</li>
 <li>Hosts at one site may be serving I/O on stale data</li>
 </ul>
-<pre class="mermaid"><code>flowchart TD
-  A["purepod list shows\npod paused / unhealthy"] --&gt; B["Check inter-array\nreplication link\npurenetwork list"]
-  B --&gt; C{"Replication\nlink up?"}
-  C --&gt;|"No"| D["Restore network path\n(routing / VLAN / firewall)\nPod resyncs automatically"]
-  C --&gt;|"Yes"| E["Check mediator\npurepod list --mediator"]
-  E --&gt; F{"Mediator\nreachable?"}
-  F --&gt;|"No"| G["Verify HTTPS outbound port 443\nto mediator IP from both arrays\nCheck proxy: purearray list --proxy"]
-  G --&gt; H["Note: replication continues\nwithout mediator if inter-array\nlink is healthy"]
-  F --&gt;|"Yes"| I{"Pod paused\non both arrays?"}
-  I --&gt;|"Yes — split-brain"| J["Do NOT force-promote\nwithout Pure Support\nContact Pure Support P1"]
-  I --&gt;|"No"| K["Check replica-link state\npurepod replica-link list"]
-  K --&gt; L["Resume if manually paused\npurepod replica-link resume\n--remote array --remote-pod pod"]
-
-  classDef decision fill:#b45309,stroke:#92400e,color:#fff
-  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
-  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  class C,F,I decision
-  class J warn
-  class D,G,H,K,L fix</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9U8tu2zAQvPMrFjn1IgRFc_Khhd927DpCY-SkCy2tTMISKVAkXKHov3dJVXIMMDkNKHJnZmdXhTSYW6nVBIw8C8vYdAIPjTPY6AIq2Vpohb62mfLnhrsWC3gEpwTyyoruAf60gjdI5cTD1bnCv2xGFHOB-QWksmgSbgzvMkWclcy5VyNmdSFO0lFor9pcglaUbU5sv26lmfK14Jof0deL8Lq12iAM1A23IlNfjHZWqjPZf9tPDwQlNX_lVRUlWo5N1FhIToS93zGXJBkuovUrqv85VhrkueCnCuOu1_T4DY0sO9gcj-krkNWTdooi18bC09O3TFk9OoFtCqXRNZy0FRDipQn1bhujf3cT8FbDxWA2fI-Kb0j8oG34eJtQrhWl5ZCIr9IKMnSTl-X9ZMNEZAufLcWWVNJxhzJFEu_cx2N5ppqFhsPLEUptcvRN1OT0ZimlNuHVNT4mSoA88_z-K6Rfo9y7cb7_u05CF63lnn-Y9N3dhyu675fO1eijqblytFXd2GqUzIT3mUoSg76nPggYjkn433QR1WNTSL7DjM08zNncw6KHJVt6WLGVhzVbe9j0py3benjuYcd2HvbsH2aPZKE=?" /></p>
 <h3 id="diagnosis_4">Diagnosis<a class="headerlink" href="#diagnosis_4" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check pod status and member arrays</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purepod<span class="w"> </span>list<span class="w"> </span>oracle-pod
@@ -9212,7 +9148,7 @@ Detailed resolution procedures for the most frequently encountered FlashArray is
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

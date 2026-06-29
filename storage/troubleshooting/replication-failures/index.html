@@ -7064,33 +7064,7 @@ Replication Failures Troubleshooting reference covering Overview, Replication Te
 </table>
 <hr />
 <h2 id="diagnostic-flowchart">Diagnostic Flowchart<a class="headerlink" href="#diagnostic-flowchart" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    A[Replication Failure / Lag Alert] --&gt; B{Technology?}
-    B -- SRDF --&gt; C[symrdf -g RDF_GRP query\nCheck PAIR STATE]
-    C --&gt; D{Link state?}
-    D -- Suspended --&gt; E[Check link errors\nsymrdf -g RDF_GRP verify]
-    E --&gt; F{Network issue?}
-    F -- Yes --&gt; G[Engage network team\nCheck SRDF port stats: symrdf -g RDF_GRP -type RDFA list]
-    F -- No --&gt; H[Check RDF group config\nresume if safe: symrdf -g RDF_GRP resume -nop]
-    D -- Split --&gt; I[CRITICAL: failover state\nDo NOT resume without DR assessment]
-    D -- Consistent --&gt; J[Check lag: symrdf -g RDF_GRP query\nRW state = consistent but R1 writing]
-    B -- SnapMirror --&gt; K[snapmirror show -fields lag-time,health]
-    K --&gt; L{Health = false?}
-    L -- Yes --&gt; M[snapmirror show -instance\nReview last-transfer-error]
-    M --&gt; N{Error type?}
-    N -- Network --&gt; O[ping -c4 intercluster-LIF\nCheck intercluster routes]
-    N -- Snapshot conflict --&gt; P[snapmirror abort\nsnapmirror resync]
-    N -- Quota/space --&gt; Q[Check destination volume space\ndf -A]
-    L -- No but lag high --&gt; R[snapmirror show -fields last-transfer-duration\nCheck bandwidth utilisation]
-    B -- RecoverPoint --&gt; S[get_group_status\nCheck journal fullness]
-    S --&gt; T{Journal full?}
-    T -- Yes --&gt; U[Identify cause of high write rate\nExpand journal or reduce retention]
-    T -- No --&gt; V[Check link status\nrpa_mgmt_cli: get_system_status]
-    B -- vSphere Rep --&gt; W[vCenter: Monitor → vSphere Replication\nCheck VM replication status]
-    W --&gt; X{Error shown?}
-    X -- Yes --&gt; Y[Reconfigure replication\nCheck VR appliance health]
-    B -- Veeam Rep --&gt; Z[Get-VBRJob type Replica\nCheck last session result]
-    Z --&gt; AA[Review session log\nCheck network path to replica host]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9lNtu00AQhu_zFKNeYyEkriKBZHIipaXFCa2oKkUbe2wvXe8ue0iIELc8AI_IkzC7idNW3fZ27fnmn5l_puIGS8eVHILhTesGg5shnMzQZVcfilO1BrfTCAVqwUt2K0ctlncgmHVg0VqKA4PWC3cCv2zLNBKGeEw2An8P8pxYBW44bo-_C9X0GIluq8wdaOZacIoiYxZolX2GF3HxpyAZpowLbxBewxlrIBdo0nEjirO7zlQ1ZA0U4-lqVlzCD49m12u5zOcFLJb5cpIkTIhwqJ3LO0BjlLG38il0g4bXuyRjRoyJbFiDx8odsq5XsCAEaGWos445O4Sn8Gw_jPE0JxnP9OjjUWngNUZ5DaWSNae2h1F1CLwGy2pMZTj8kUmlk_R5oBfz5XyUnw2hpv4rqjgqxls5VvD5YtlDtty1yjsYF8BsGH-HMq359L67rEnJOoyquN5ngnehJEstICKsKUfxBraGOy6bZIJPwQCS6Y6HwYFt1RaymqOobEiZOd7hqxaZcG0y_jwVzyWJkSXVfbB4WIvMGSZtjSaLHknSLoimSSpk5Vvg0qEphadaTHY2n_Z2ePgONEWHNgm7fCyNrclBZMz7F5rGTpbJ2C_HvldoqXn7rdooEcZnNQu1hUHkyejixaY-bEXlTUT3ta2ZrLa8oq33jpOT48dkjgXlaNCtoo9XYfje9pTvyhvJBNReCEn2SgK-EmBekU1oK6Fk3iKoGlo6ddEwCCY6d_JTk6YjMrat8iV9xuCx5-RdPT4LvT6j2aprOrcqBR9C0G93NMfuUEASdU2ozQjD1IdwriR3JOLfn7-wWegWzfEGP-zj1Xl_M-PgXqB_i5dzfwfCxTQJGK2pptdgaXhhFwY3kL2HPB_8B2noN_k=?" /></p>
 <h3 id="srdf-error-codes">SRDF Error Codes<a class="headerlink" href="#srdf-error-codes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7392,7 +7366,7 @@ Replication Failures Troubleshooting reference covering Overview, Replication Te
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

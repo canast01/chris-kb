@@ -7777,23 +7777,7 @@ Procedures reference covering Certificate Renewal and Revocation Workflow, Renew
 </ul>
 <hr />
 <h2 id="certificate-renewal-and-revocation-workflow">Certificate Renewal and Revocation Workflow<a class="headerlink" href="#certificate-renewal-and-revocation-workflow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    renewTrigger["Renewal trigger\n(80% validity elapsed or expiry alert)"]
-    renewTrigger --&gt; checkAuto{"Automated\nrenewal?"}
-    checkAuto --&gt;|"Venafi / ACME / cert-manager"| autoRenew["Automated renewal flow\nNew CSR generated and submitted"]
-    checkAuto --&gt;|"manual"| manualRenew["Generate new key pair + CSR\non target host"]
-    autoRenew --&gt; caIssue["CA issues new certificate"]
-    manualRenew --&gt; submitCA["Submit CSR via Venafi / ADCS portal"]
-    submitCA --&gt; caIssue
-    caIssue --&gt; install["Install on target service\n(verify key matches cert)"]
-    install --&gt; tlsTest["TLS validation:\nopenssl s_client + openssl verify"]
-    tlsTest --&gt; done["Renewal complete\nUpdate inventory"]
-
-    revokeTrigger["Revocation trigger\n(key compromise / decommission)"] --&gt; revokeCA["Revoke via ADCS:\ncertutil -revoke serial 1"]
-    revokeCA --&gt; publishCRL["Publish updated CRL:\ncertutil -CRL"]
-    publishCRL --&gt; ocspUpdate["OCSP responder updated\n(auto from CA database)"]
-    ocspUpdate --&gt; replaceCert["Generate new key + cert\non clean host"]
-    replaceCert --&gt; auditDoc["Document incident\nand root cause"]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9VMFqGzEQvfsrBkOgEELTW8mhxWygBEIbbLcnQxlrx_ZgrSQk7bqm9N87krz2Gta52Jon6e3Mmzeq2ZOKbM0TeN7u4mTiydBhKcGW_BNM5ylEDbEgK_Ph8-MddKi55ngE0ugC1WA90B_H_gioyccp_A07dCSsQo9mq-nfRO1I7WdttEKb_hqMVK-ML1_4OnoH5VxOYXgHTldgo-1hZb7TAarFHLaC-ryPpobQrhuOEo3yNmha1D3zt9NNkBD2dASH7OE-sa6MNRDRbynCzoYbleFLCK1g02oGnJYhUymRgjeshHr0XsmxmsnFRV7mOjpG-EUGNwwfYfZcLcBZH1GPUrAJsqWF4aWs4JJvIN-xIulZR543x1yaKCiNCDm3Ucaow5JCFMbl66J0GrNDRApHJgQN4bfSTCaKRD1UvjBKWFtDAycp2zhNUdL66eokOptOuKwfv-2ps3saGrKzKic08GQqLPF623Agka0mCWUd5Nw7tFn6eV5m2ZPaUmfSpo2s4aEcS0qypP5plMq1a81hV81fheytBNDm2mpI6JBQ4lESq4IregjJj2rxJpvBWVOT77mkzjQOsJEqQYwmIK4x0I36nEZFlXx4zOD3uf_Z3EoTmtvexlYG_dkqYZHftkltZ6O4lsXKpEnz1kZQ2N7I5OpFgYcvcH4HLi9Cgs-jfg0PJvXyGmSaMnTDUU5wP1Pn4RqePf0n6DQ4_QAl6OT8fgISlLx7bcGE9uY5uyiBFxsMHJE2Lq0ddLnQnHs07FcRo6g--Q-HogJT?" /></p>
 <hr />
 <h2 id="renewal">Renewal<a class="headerlink" href="#renewal" title="Permanent link">&para;</a></h2>
 <p>Certificate renewal should be initiated at 80% of the certificate's validity period (e.g., for a 2-year certificate, renew after ~20 months).</p>
@@ -8249,7 +8233,7 @@ Procedures reference covering Certificate Renewal and Revocation Workflow, Renew
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

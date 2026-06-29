@@ -7528,33 +7528,7 @@ Known issues and resolution steps for frequent CyberArk problems, covering the V
 
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkk9rhDAQxe9-imHvS-8eCsX-YQ-FpQu7Rwlx1gZiJjhRWRa_e2OlGtNqb5l5v5dkXlKoGqVTZFIoqDNJwrfKOqpSOBRonLre4DR24M6fwqLnlKjIFH3iF6UhdkrmV01dCrvnqQOvvrObPMMhwpQa-6QVjXa5Ym6QveU8lHD4Lv_kbduJGT-eL0-bNFcBfHrfYqUN2Oy4yZZosBY6lzUxS6osGR_PbH8bdXiAbCD22Q-ytWmNTLoZ0_8Y1i0C1fDCUmjhcLJQK3Q_PQ3sH-FX9Mq06MvS20JuGfYKtEh4jQlyXUHCOFeQf1IMXdGEg3uOa_GJIimYJlamGSJhvnkkbN43Yr8A1xQ4-Q==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A{PSM session\nwon't connect?}
-    S --&gt; B{Password change\nfailed - CPM error?}
-    S --&gt; C{PVWA safe\naccess error?}
-    S --&gt; D{Vault unreachable\nor DR failover?}
-    S --&gt; E{Audit log\ngap detected?}
-    A --&gt;|Yes| A1{RDP reaches\nPSM host?}
-    A1 --&gt;|No| A2[Verify firewall TCP 3389\nCheck PSM service status\nVerify concurrent session limit]
-    A1 --&gt;|Yes| A3[Check PSM recordings Safe perms\nVerify RDS CAL activated\nReview PSM.ini RecordingsPath]
-    A3 --&gt; A4[PSM Issues]
-    B --&gt;|Yes| B1[Check APPAP007E in vault.log\nVerify CPM network to target\nConfirm AD Reset Password right]
-    B1 --&gt; B2[CPM Issues]
-    C --&gt;|Yes| C1{Vault TCP 1858\nreachable from PVWA?}
-    C1 --&gt;|No| C2[Fix firewall\nCheck Vault service]
-    C2 --&gt; C3[Vault Issues]
-    C1 --&gt;|Yes| C4[Restart CyberArk IIS app pool\nCheck WebApplication.log]
-    C4 --&gt; C5[PVWA Issues]
-    D --&gt;|Yes| D1[Check PADR.log on DR host\nVerify DR replication service\nConfirm DR user password matches]
-    D1 --&gt; D2[Vault Issues]
-    E --&gt;|Yes| E1[Check vault.ini SYSLOG section\nVerify SIEM IP and port\nRestart Vault to apply syslog config]
-    E1 --&gt; E2[General and Cross-Component Issues]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A4,B2,C3,C5,D2,E2 section
-    class A,A1,B,C,C1,D,E decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNVE1vm0AQvfMrRrknCuCobQ6tMNDIUqIiE9mq5MsGj80qsIt213atqv-9MxDwZWv1tAPz9ea92d1Kg5WTWj2CkfvaBUH5CDfrWjiQFlyNYM9t53T77QZ-21p0SIGUIdS-wT9BQsFF-QIWraUiG3XSyh8YUmQS-n0R-VZo5O4MO8JzEk0Dr2kBcfz5y0alNVbvMHQxR1kRJCfcwW7UR06lVXUwBpUbcUAjW-n8zWJqdilJHm22Uu0tlGKH0KFpL5WXWQlp8gyCKDoKh9uNWuJR4olz76SSsJzyC-Fqf8fZB0kLaw9ovTFzCpn7PeGENymKpLi__5SDVHAUh8bdNXo_gU2LF1DoTtq8g9PghNmjI_q0IlJbSDICa9FBIayloO0guL8pK8L1rkBOe2B-RVPO_y5_TXKOKq4Y9aijP5X1GcKuNWdOaRwa0kF6fkOT0NSLRQmi66DTeuq4xrek6xpZCd5yJsxf8IFFWq2Ta10zisn8notKRZItuQ3QGmZLqLV1k0T0bXACM_Jw0Yj8B_oJ3ShRK1xV_wtN9D9M5RSU-z0XzMMy8T6XP8vnH0-ErH8UJuDlIqdlKECoLbFrHN-DgfwBAO0bEd-c6bWwPHvFA_mZzhn2Eyo0ounrpUZbe5vqttOK7_A12Rmx1xOUcPsVEnpn-jMajZgufG_Mgjmf85BuVG9EtMFspGREvRGPf2a0X73xEGR8ZiEJ3BtRkPOZh8Reb0TBX4TGu7w=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7775,7 +7749,7 @@ Known issues and resolution steps for frequent CyberArk problems, covering the V
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

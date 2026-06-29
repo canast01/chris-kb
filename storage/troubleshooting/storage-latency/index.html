@@ -7087,29 +7087,7 @@ Storage Latency Troubleshooting reference covering Overview, Latency Threshold R
 </table>
 <hr />
 <h2 id="diagnostic-flowchart">Diagnostic Flowchart<a class="headerlink" href="#diagnostic-flowchart" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    A[Storage Latency Alert] --&gt; B{Host platform?}
-    B -- Linux --&gt; C[iostat -x 5 3\nCheck await and %util]
-    C --&gt; D{await &gt; threshold?}
-    D -- Yes --&gt; E[Check %util\nIs device saturated?]
-    E -- %util &gt; 80% --&gt; F[Storage device overloaded\nCheck multipath: multipathd show paths]
-    E -- %util low --&gt; G[Queue depth issue or controller latency\nCheck array-side: symstat or Unisphere]
-    D -- No --&gt; H[Latency within range\nCheck application layer]
-    B -- VMware --&gt; I[esxtop → press 'u' for storage\nCheck DAVG KAVG GAVG QAVG]
-    I --&gt; J{DAVG &gt; 20ms?}
-    J -- Yes --&gt; K[Array-side latency\nCheck PowerMax / Unisphere]
-    J -- No --&gt; L{KAVG &gt; 2ms?}
-    L -- Yes --&gt; M[VMkernel overhead\nCheck ESXi storage path / HBA driver]
-    L -- No --&gt; N{QAVG &gt; 0?}
-    N -- Yes --&gt; O[VM queue depth exceeded\nReduce I/O or increase queue depth]
-    N -- No --&gt; P[Latency within ESXi thresholds\nCheck guest OS metrics]
-    K --&gt; Q[Check multipath: dead paths?\nmultipathd show paths]
-    Q --&gt; R{Dead paths?}
-    R -- Yes --&gt; S[Restore dead paths\nCheck SAN zoning / HBA port]
-    R -- No --&gt; T[Check array controller CPU and cache\nUnisphere → Performance Dashboard]
-    T --&gt; U{Cache hit rate &lt; 90%?}
-    U -- Yes --&gt; V[Working set exceeds cache\nTiering or capacity expansion needed]
-    U -- No --&gt; W[Check for snapshot/replication I/O\nSchedule during maintenance window]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNU8uO00AQvOcrWitxjHJAXHJgFcLCRktIst4Hh1yamSYzijNjesZxAuLKB_CJfAntSWws8CJult1dVV1V1pZJRevdGNhuTBwMbsZwMWHG4zBYTZBjJKeOazc1pLaw9BXxHA8wgntnQ2GI6QK-BoMFCYRgodvk9G2wEpjTyq7Moy0wmjFoQg31Y7hcu_a9hmB8dXrfizURrCx6xg3Bu5MemOTEsXd6KtPWh4gRhgd4Ac8b7VihjYBOw7My2rx3-aqVnWbWbhZE9d4qgoCxZGHXl72bbzoizxt-T5x71KQbCR0v_v_8t4K8KqmscYtowIYgz55BeRfZ5-LEnzFhG-AYwnGXzJCFf0d2LTyNvZWNxjpg-UQtaFHkVmHdFuE7EveizASFwiH6An5-_wEFU-g_ay6DD_MtsaM8WWWkHQ3XVfbBQjjbWVsjhbt-NQHNdv8E8SLhweeOU3RQRMn-W9KlJDIbLWofrFNMGKg73Iu5_NuSpCwaOcv4XIdG8KakEGGRwY4iW9V_ciZwt1SfRZ1_oYHIJu_hi3fWbc7HFv6Jit-1LU1Bd4swXd6niitURpJrE09hLIk_ed6hEyteYzAfPbLuZXgQhkfP21pMoHh2MjSwd5a4_lSXEAtUNh5lpEAX6nK4ZHov7mOrXIRAcFiIjXHE9LtaktHaZUKjy1xsKhPRDq2TGJLyyjrtq174wQ0MX8Jq8AtdOrnU?" /></p>
 <h3 id="esxtop-storage-threshold-summary">esxtop Storage Threshold Summary<a class="headerlink" href="#esxtop-storage-threshold-summary" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7421,7 +7399,7 @@ Storage Latency Troubleshooting reference covering Overview, Latency Threshold R
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

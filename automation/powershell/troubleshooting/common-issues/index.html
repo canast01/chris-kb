@@ -7529,29 +7529,7 @@ PowerShell troubleshooting: execution policy blocks, module import failures, rem
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkkFugzAQRfecYsS-F2DRTZNK3VVJ1a1F7MFYMh5kG1BUcffaoSEUjJSd-fO-Z-YboSxyr8gUIGgwWeauTeupKeBDoPGqusJ5UuDH1WWLgVNlQ0aMWThIQ84rzipNQwH5YVbgPSj57IlNSiM1jllLA1pXo9bMW-ouGl1N5JWRTCBXLszCwlWfETtHDL7-Y3D4w_Z7CLx0UsYrHbeq9S7OdtfgPGlJJ6cmLMfQWrLMYoUWDQ9I_nYrwDEW4HQvJO_o0YbcgtuR7qZs8--bBg8t6VxaTvHcI4R2R8dLXXqcLdSXepzfCl5eYfMWyvQYPmWwLbnn0t8xJ2LdIfdi3METiS3J1XLR8UCf-qFWls0iq3p6_BW0GXpV_wVZvkUi?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; B1{Execution policy\nblocked?}
-    S --&gt; B2{Module not\ninstalled or found?}
-    S --&gt; B3{Credential prompt\nloop?}
-    S --&gt; B4{PSRemoting\nconnection refused?}
-    S --&gt; B5{RemoteSigned or\nRestricted policy error?}
-    B1 --&gt;|Yes| D1{Scope of\npolicy block?}
-    D1 --&gt;|CurrentUser| R1[Common Error Reference\n— Set-ExecutionPolicy RemoteSigned -Scope CurrentUser]
-    D1 --&gt;|Machine| R2[Common Error Reference\n— Set-ExecutionPolicy -Scope Process for bypass]
-    B2 --&gt;|Yes| D2{PSModulePath\ncorrect?}
-    D2 --&gt;|No| R3[Common Error Reference\n— add module dir to PSModulePath]
-    D2 --&gt;|Yes| R4[Common Error Reference\n— Install-Module -Force -AllowClobber]
-    B3 --&gt;|Yes| D3{Saved credential\nstale?}
-    D3 --&gt;|Yes| R5[Debugging Scripts\n— Get-Credential again or Import-Clixml]
-    D3 --&gt;|No| R6[Debugging Scripts\n— inspect $Error[0] for root cause]
-    B4 --&gt;|Yes| R7[Common Error Reference\n— Enable-PSRemoting -Force on target]
-    B5 --&gt;|Yes| R8[Common Error Reference\n— Set-ExecutionPolicy RemoteSigned]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class B1,B2,B3,B4,B5,D1,D2,D3 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqlU01Lw0AQvfdXDMVrwH4XD4pJqvQghAbxoJfNZposbHbD7gZbRPBH-Av9Jc6m7W1LQU95ycy8N3kzUwqD3AmtbsCIqnaDQTq6gWE6GsKHrVmL9J0SmKokfg42PpboptEKVsZoAxvcokHF8U39fH1Dji5a7ZB3njLTUvA9pTTaYS4qhSVEOdctQtIZqnLPFk1YaPwHoSN3ZjRHa2FLVcW-ZdYGJVIvkY7D8pML8qwsodFlJxFKYcBpyPKn_j1jrg5zTi9wrpV1TMrowAPRgzacHvdS6vdE6qI441Xqm00nYdGZj2HRVZVQFeTciNbZg94jWZgYLGkOgklgFRMKqK1102pDISl2jQyzzs-zCmVbyoSr_h9fr4MEsfcinobJFxd8WilWSIyyvF8s38DRKipwzFTowpreingW1lz-c6-DrDmRvtTMgbDgagS7b1qnm7twe_604vDZxX5V4_Cqxn76cXj6dMsQ3cJmdAJj2voeTE5gSuvTg9kJzGk6PViQZT1YDn4BerVqkA==?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7563,20 +7541,7 @@ PowerShell troubleshooting: execution policy blocks, module import failures, rem
 </ul>
 <hr />
 <h2 id="powershell-troubleshooting-decision-flow">PowerShell Troubleshooting Decision Flow<a class="headerlink" href="#powershell-troubleshooting-decision-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    failure["Script Error\nor Unexpected Behaviour"]
-    failure --&gt; errType{"Error type?"}
-    errType --&gt;|Execution policy\nblocked| checkPolicy["Get-ExecutionPolicy -List\ncheck all scopes"]
-    checkPolicy --&gt; setPolicy["Set-ExecutionPolicy RemoteSigned\n-Scope CurrentUser"]
-    errType --&gt;|Module not found| checkModPath["$env:PSModulePath\nmodule path correct?"]
-    checkModPath --&gt;|No| addPath["Add module directory\nto PSModulePath"]
-    checkModPath --&gt;|Yes| reinstallMod["Install-Module -Force\n-AllowClobber"]
-    errType --&gt;|WinRM /\nRemoting failure| testWSMan["Test-WSMan -ComputerName host\nTest-NetConnection port 5985"]
-    testWSMan --&gt;|No response| enableRemoting["Enable-PSRemoting -Force\non target (as admin)"]
-    errType --&gt;|Credential /\nauth failure| checkCred["$Error[0] | Format-List *\ninspect exception"]
-    checkCred --&gt; refreshCred["Get-Credential again\nor Import-Clixml new file"]
-    errType --&gt;|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
-    strictMode --&gt; stepDebug["Set-PSBreakpoint\nstep through execution"]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U8Fu2zAMvecriKCHXgzsUmDLYUPrdUOBtgjmdjvUF8VmbKEyZVB0m2DYv0-SHcdFnJtEPj6JfI-lZixEW1oB66qWxWKrtOkYV7DMCtatwC2z5ZwswzPhrvVwLOEGa_WmbcdL-Otq1Xp8IFJUGfy3QOanfYgtYzGIv3ybRRY1Fq9ra3Sx9-ifKMntDosu_KiPQnKvneQUgaCMAVfYFt0sm0MZubIZrl_YWMFMV4RlTkkWmCDtmJHk2SGf_-KDLddKas97gfS2Wmc-0BkMsZyaeIbWX6CwHGrnu1XlgeW6LGEoK6MElvc5iYUp8ywHoyYnfhAe54nu-kvSV0Hyw3KBvrdrY-x7auxmc6YtQSd_sgfllV8--XMSL5Cktmk7QX5UDUJtw-xj-hEltUS9W6C1LHD15fPVvP6kNgbjtDVVwQYxkKyzQ2z8qOcSxRUKXCoHqmw0nVchZQw9X0RXvXw6M58to6sHaHBUOHqBtTKgKqUpevmuCS0kqdG7xgDhO2y1wXlXCetC_IBxsFU2BiD5jezCQO5VGGhOXmLYMKrX1mqSyzOE2H7HTVcNfOvsZqzIKWRBarZdVQMeHDxLdFhWSL7CsHOH3QuhyXJNFy2kxk05wQ9O_2D7kBy8exKf-nFKNvrr6LT4zQ_WOHk9aHXUuucf9Zyij6JM9OkTw3AX_wFTPL5X?" /></p>
 <h2 id="debugging-scripts">Debugging Scripts<a class="headerlink" href="#debugging-scripts" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Set strict mode to catch undefined variables and functions</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Set-StrictMode</span> <span class="n">-Version</span> <span class="n">Latest</span>
@@ -7655,7 +7620,7 @@ PowerShell troubleshooting: execution policy blocks, module import failures, rem
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

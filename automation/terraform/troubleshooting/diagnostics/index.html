@@ -7526,33 +7526,7 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 *Applies to: Terraform 1.x / OpenTofu 1.x*
 </div>
 
-<pre class="mermaid"><code>graph TD
-    A([Terraform Error]) --&gt; B[terraform validate\nSyntax check]
-    B --&gt; C{Validate OK?}
-    C --&gt;|No| D[Fix HCL syntax\nterraform fmt -recursive]
-    C --&gt;|Yes| E[TF_LOG=DEBUG tf plan\nCapture full trace]
-    E --&gt; F{Error type?}
-    F --&gt;|Provider auth| G[Check env vars\nterraform providers]
-    F --&gt;|State error| H[terraform state list\nInspect state]
-    F --&gt;|Backend error| I[terraform init -reconfigure\nRe-init backend]
-    F --&gt;|Resource drift| J[terraform refresh\nResync state to reality]
-    G --&gt; K{Auth method?}
-    K --&gt;|Env var| L[Check: AWS_ACCESS_KEY_ID\nAZURE_CLIENT_SECRET etc]
-    K --&gt;|File / profile| M[Check: ~/.aws/credentials\nor tf login status]
-    H --&gt; N[terraform state show\ncompare to cloud console]
-    D --&gt; O[Re-run terraform plan]
-    I --&gt; O
-    J --&gt; O
-    L --&gt; O
-    M --&gt; O
-    N --&gt; O
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef ok fill:#15803d,color:#fff
-    class A,C,F,K dark
-    class B,D,E,G,H,I,J,L,M,N action
-    class O ok</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptkkGL2zAQhe_6FcPe070HWnBsJXHiJBBnKS0Go8pyLFaRzEjO7lLa314parsb0OkDzZvnmTfuJArupNFzQHkeHCHZHB5OApH1Bi9AEQ0-wE87sFF4jRczfVbiF1l4nfuvuzIlO-ZEo-s37dgr8EHw52Rj7hvzZKXwlaV8hXVegb3ZNPr9E_3FwcyrJ7TyKpIGNMy-bKvD6nNBF08rcD2MiulG52x0EwroJ6XAIeNpg2WYIFlZhanDTiD01a-L9uNsI5qr7ATaZO_6LirrfE6gpHWNLrUdvS6-JXvLu16pZQzB6F6e_UKNPorZ7fUH489Cd0mTzZ0Jih6FHUKrT5n_HcgZX_BXdG9Ji6232CYr1b9k5pB9rdssz2ldt1v6rS2LRmffn460zauS7k9tTfMjPYFwPOm0e3f6_fiJvdhHjqIT2kmmfNwGwz2VOUt9m3lKp71PpG0H89Jobi4jw9uqXJmpAx-jNSod_MHb-Gxx0vDhzv5nSqpJBrMvsCB5QBFByTJgFbGOKCM2ZBtQRezIOmBPioADKSM2EVXELmIf8Qf8tjxh?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFk79uwyAQxvc8xSlTO3TI3yFDp2bIWktdEYGLg2KDZYgrq4rUh-gT9kkKGKdJa_Bmwe_7jvvuzEWNzAglN8DVu5xMdFtWRpUb2HGURhxayLoT-NBHWqHlBC2V5JeJNliRGWloITg1SKjk5KDqkpoNTDN7CTP4_vyCtwCABaADplc3V57KvMDgNyco6b5AwnF_zkmh8lzIvDece8OtJ8ATEIi44yJYVbVqBMea0LM5ut4Y7RrvrBfe-sV79ijco_EaSyKkruyhD4GeuTBEG9tz77707rsO8kF4CDwU910Rm3YulUayp-yE1pwpKd3IGmHa3n3VvT2gEFC4ReM11t1LbdTsROylarBuCbOt36Sz9hUyB4IDoQfhIZCPgxVq1KoITq_uu0FQNWw1o4Xz6iXKbtHlun3w9Ayp7RKyQW1Ebs__SWILlNKMrkhKnJh9SjY62pR4ZGZ30miOzu13Pqnfb4gcyWxIEk1qCB7JZ0iSTOWP4AfiCeEh?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7766,7 +7740,7 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

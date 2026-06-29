@@ -7531,31 +7531,7 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 <p>The first step for any failure is to open the job statistics view in the console — the task-level error message and reason field usually point to the root cause without needing to open log files.</p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk81Og0AQx-99iknvxnsPHtpqUhNrAk2vm2UZcBV2yO5CQ0wTH8In9EkcCmKDYHubj99_hplZYm1ReU1mATEdzGzm6rzwlC9gE6PxOqkhbCPw7l5kgcxpmZOJjzM2UkPOayWSjA4LmK_7CDxwZN5rmibSpBkeZ94yhCJGpR33Fd4iA_PdKQzrLgw7Do_qLRbktCdbCyq9oES4QqqmRNBn4Ln0QAmETWa0ijaOTS-qXHCUKuRybBvyghPWa5NyxU1Lwf4Jgo6Cr4_Pxt-Sh7AjRztUkRUObaUVCmWlexGnnpHOtK-59n4ZQNjmYdXk4RY2v8RozUiqt7IQiopavFIkDPInsZsXGXp0XHV5ImDFBDxSBNuGYLcjJjbqKCvbRxA0doVAFu6dkpn02EuoktmxfyFwcwd_XoA2FbKbsuycG7_5BDx54An-qlNOaC8caUJ18QznusGO2gl_Fj76NwyQiX0MqCu2MFD8O_uAvTDxgP4G2byjlQ==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A[Backup job failed — cannot connect to guest]
-    S --&gt; B[Repository full]
-    S --&gt; C[Restore fails — no valid restore point]
-    S --&gt; D[Tape job error]
-    S --&gt; E[Veeam B&amp;R service crashed]
-    A --&gt; A1{Proxy reachable?}
-    A1 --&gt;|No| A2[Check proxy TCP 2500-3300 and VMware Tools — see Triage Decision Tree]
-    A1 --&gt;|Yes| A3[Check VSS writer state and quiesce settings on guest]
-    B --&gt; B1{SOBR offload configured?}
-    B1 --&gt;|Yes| B2[Trigger capacity tier offload manually — see Repository Out of Space]
-    B1 --&gt;|No| B3[Reduce retention or delete orphaned backup files]
-    C --&gt; C1{Restore point visible in console?}
-    C1 --&gt;|No| C2[Check retention policy and catalog — restore point may be expired]
-    C1 --&gt;|Yes| C3[Check vPower NFS service and mount server access — see Instant VM Recovery]
-    D --&gt; D1{Tape library online?}
-    D1 --&gt;|No| D2[Check media manager and tape library connectivity]
-    D1 --&gt;|Yes| D3[Check media expiry and tape slot inventory]
-    E --&gt; E1[Restart VBR service and check Windows Event Log — see VBR Service Crash / Instability]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E1 section
-    class A1,B1,C1,D1 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9U8Fu2zAMvecriN6LJTZ26WFD7GTAgHUr6iA9MzJja1UkT5KTGsOAfcS-cF8ySk7qdVB3EiU-kXx8ZC0tCS-NvgErm9bPZtUNXD206EE68C2BGw6dN4f3V_DdtdgRA_kH6kbRj9mSwQWKx76Dr2YHe5SKavj98xcI1Np4EEZrhoM30PTkfDJKwVHuqTNOemMH2PdKJXFlxDkGUUzlYiZt4IhK1owcXZ2ROp1oxQE2_BiLJWuNTbNaMG65SPsy9pUtiUforHkaYFPeQfZ2Pr_O8_kcUNewvT0hl7Ex5lyhI75ZiQ3BioR03G6-E6UT5M8JtlUFJys9WXAePcXo33pJTrAu5L3UjQMO9p_WBipFmkoRqHBdTcMJBHYopB_AS76Z_V4ZrOGAukelhmcaf8n0pfeMg4r_pZkUedSr7rlaS550mDMwFmpSfGWra1HzvOzGCdrz8Li08IFFmWZRToJMSTqjpBhivwR6VKaJDF5MCJMbYEdATx0vQZ0OPolxvDMn7sznDxU3wh6lGOU4mJ5DhRd2ohDkJs0_apaNvdtb7pswjBjSYxnordL0VhO9A9USgyQYBAvJfZhlJXcWWY_zqskjq5gOlf8TKjIfpkhO8cZKfeQmmldKXXOIddqzOG8nWmZc3L_okohZH6SuzcnBOmSAT2dRQqcCvjrjS4uuhTdj93ZSvUZnVsH1O1iORzEe5XiseIWjM7sYOW9CxGUXI-epil-yi5GzEPF3djHy2Tqc68XsDwEavGg=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7567,28 +7543,7 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 </ul>
 <hr />
 <h2 id="triage-decision-tree">Triage Decision Tree<a class="headerlink" href="#triage-decision-tree" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    fail(["Job failure or warning\ndetected"])
-    fail --&gt; openStats["Open Job Statistics\nExpand failed task\nRead Reason field"]
-    openStats --&gt; q1{Error category}
-
-    q1 --&gt;|"Snapshot / VSS\nerror"| snapQ{"Creating or\ncommitting?"}
-    q1 --&gt;|"Network /\nconnection\nerror"| netQ["Proxy Timeout\n/ Network Error"]
-    q1 --&gt;|"No space /\nquota"| spaceQ["Repository\nOut of Space"]
-    q1 --&gt;|"IVR VM\nnot booting"| ivrQ["Instant VM Recovery\nVM Not Starting"]
-    q1 --&gt;|"VBR service\ncrash"| svcQ["VBR Service\nCrash / Instability"]
-    q1 --&gt;|"Copy job\nnever finishes"| copyQ["Backup Copy Job\nNever Completes"]
-    q1 --&gt;|"SureBackup\nfailed"| sbQ["SureBackup Fails"]
-
-    snapQ --&gt;|"Creating"| snapCreate["Check VMware Tools\nDisable app-aware\nto isolate quiesce issue"]
-    snapQ --&gt;|"Committing"| snapCommit["Check vCenter for\nstuck snapshot\nVerify datastore space"]
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class openStats,netQ,spaceQ,ivrQ,svcQ,copyQ,sbQ,snapCreate,snapCommit action
-    class q1,snapQ decision
-    class fail terminal</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1Uj1v20AM3f0riOxBkDVDC8RNgRao09iBJy2nE2URlsnz8eREKPrfSyp2hkJeBD5Sjx_3XkMZYyHhB8i068pi0QbqH-Dmp9Tg4ZARJMNbyEy8q7jBYgRsbuCPdiGh8QwH3vX4dyEJeVNCUWvwbDF4F0-QFopa8dN7CtxMjbGBEnRf8RpDA_ZRYWgJ-_nWx3vrebyfrSmH9GLlZUYbxTtbuOIohwMVh19nSYzFOb-zvI_wSgeUoVR8Byssb5L38JSz5PlxKUR07hqTKBXJY8XPQwFpYeO1WRadsnN-sFqmwPaX3RzlhE42sJLiL5V94fmpp-j87eMaNphPFLHiZQ7awR1MTWvqqYyz3ChpdPJjiPshwdKgS1PxCm0Bw4fUm646P7h26saMcKZ_N_X0qhCTCOhqdBj3dqdZB-FVpDf9v5GGukcIKd0GL1RcBEilNw4cB0KNaFgHvD5gEvZzwGmJXOyI1kXXMljK_9JOTM4tZmpHaIJZzXRC0Kv6TMaH2y_waWLznOPJXefYTXNJTy44Axf3kjedzuH07Jd0_fLh00vLj3f6LzedtvgHittB1Q==?" /></p>
 <p>Veeam uses ports 2500–3300 (TCP) for data channel communication between VBR, proxies, and repositories.</p>
 <p><strong>Check proxy resource exhaustion:</strong> if the proxy CPU or RAM is at capacity, tasks queue and eventually time out. Increase max concurrent tasks or add a proxy.</p>
 <hr />
@@ -7695,7 +7650,7 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

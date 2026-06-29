@@ -7526,32 +7526,7 @@ Python diagnostic commands: read the full traceback, trace imports with python3 
 *Applies to: Python 3.x*
 </div>
 
-<pre class="mermaid"><code>graph TD
-    A([Python Issue]) --&gt; B{What type of error?}
-    B --&gt;|Exception / traceback| C[Read last frame of traceback\nIdentify file and line number]
-    B --&gt;|Import error / ModuleNotFound| D[python3 -v script.py\nTrace import search]
-    B --&gt;|Wrong output / logic bug| E[Add breakpoint or\nlogging.debug statements]
-    B --&gt;|Slow / high CPU| F[py-spy top --pid pid\nIdentify hot function]
-    C --&gt; G{Root cause clear?}
-    G --&gt;|No| H[python3 -m pdb script.py\nStep through to error line]
-    G --&gt;|Yes| I[Fix and test]
-    D --&gt; J[python3 -c import sys; print sys.path\nCheck venv activation]
-    J --&gt; K{Module found?}
-    K --&gt;|No| L[pip install package\nor activate correct venv]
-    K --&gt;|Wrong version| M[pip install package==version]
-    E --&gt; H
-    F --&gt; N[Check if blocking on I/O\nor CPU-bound tight loop]
-    H --&gt; I
-    L --&gt; I
-    M --&gt; I
-    N --&gt; I
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef ok fill:#15803d,color:#fff
-    class A,B,G,K dark
-    class C,D,E,F,H,J,L,M,N action
-    class I ok</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kktvnTAQhff-FaPsuV10lyiRct_kPhr1sWNjzICtC7ZlGxRU9b93jKvqLpwFOogZfzPn4EY5FEEZ_QhOdTIwtn6Eh_UD_PaSW6SvVOa66_EP21DlO_IGeu4DtI4PCKaF4LjAmotbpcsGdVDtDK3qEbimVqUR9DjU6LLMLTHtHKTRX6GYwAunbFjZudI_IxbUYI0L4JE7IbOEHRFemwZqh_xmjdIBjKt0b7pO6W7VYD124AMPONByPsvYL1sU3s4QjIWisKoBeu4cSUOWR71klWUciHHIVo73HgewTX3v80dAC0E6M3aSpgM6Z9ySWxZWEmyvPpZwA_qQbXq7nyj-hzj7J7AuJkSvK8uDrPRGorjBhHoCTuYm_qnBE0FP2co5jlMWlKac-x4sXQbeYaXJyD8ogjAuHllGZSmXPOX5eULnP1vqSoeSBdVC3Rtxo58ORkP55dsyf_P-q6jNGNOK9xt6Y2yW9Eqk9yUzKL0f8-mzNRQvsEmyTbJLsmeHKMckJdtGeWOnKOckF7ZLLfsoV3ZMnecklyTXJH8BJOcyRQ==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk01OwzAQhfc9xYg9C-jPogsWlAp1V7WwHrn2NLHq2JbjBEUIiUNwQk6C45CWn6TpLoq-997kzURIR9xLo-cgzIsejfIqs95kc1gJ0l7uK9g2b-A1T5mlwEmWGS3eRrknizfoiAlkWiBn1heO0KeE-0Ip9I7N4WobMLiBz_cP2AQUAgrfKAQUahQCymnH-OHqmFMPxnSi6DvpFnlK_BDtbeVTo5F0KZ3RWZi0DbqNQYuajO7rSMIPsj9hjHEMlJk1zuOeSRWGzFvrcbR-qhFoEGiRfs8JSu0paLwsCQXtiiSROsEX6VO0ovWeRO_VCYUjCjUKVuz6Q6ahCbZThLl3Ba-bFU0UKhM82pBpDFlGFE4oPCzvnx8hojrpT5mhdWYvQwy3Rdx4RplxVWs_i_brhoHF-jmuumE6XUNxRhXN9W3q5_DZxsEy50wxT0eJKZl6O54mXN_BZacndUm5l0nw-iceuqZz2t47OScaPIRz4sEFnxP37-2X6oJKa8vT0i75LbsUPfV1oQOldUkGquqS9BX0h_0CsLf0-Q==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7801,7 +7776,7 @@ Python diagnostic commands: read the full traceback, trace imports with python3 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

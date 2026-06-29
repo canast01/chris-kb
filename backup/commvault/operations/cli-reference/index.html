@@ -7738,33 +7738,7 @@ CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restor
 <hr />
 <h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
 <h3 id="restore-workflow-decision-tree">Restore Workflow Decision Tree<a class="headerlink" href="#restore-workflow-decision-tree" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
-    restoreStart(["Restore request received"])
-    restoreStart --&gt; q1{What needs\nto be restored?}
-
-    q1 --&gt;|"One or more files"| q2{Windows\nor Linux?}
-    q1 --&gt;|"Entire volume\nor VM disk"| volumeRestore["Volume-level restore\nqoperation restore\n-subclient -topath"]
-    q1 --&gt;|"Full VM"| vmRestore["Full VM restore\n(VSA subclient)\nrestore to alternate location"]
-    q1 --&gt;|"Application data\n(SQL, Oracle, Exchange)"| appRestore["Application-aware restore\nPoint-in-time log replay\nor granular item restore"]
-
-    q2 --&gt;|"Windows"| winFlr["File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath"]
-    q2 --&gt;|"Linux"| linFlr["File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath"]
-
-    volumeRestore --&gt; verifyDest["Verify destination\nhas sufficient space"]
-    vmRestore --&gt; verifyDest
-    appRestore --&gt; verifyDest
-    winFlr --&gt; verifyDest
-    linFlr --&gt; verifyDest
-
-    verifyDest --&gt; execute["Execute restore\nMonitor in Job Controller"]
-    execute --&gt; validate(["Validate restored\ndata integrity"])
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class volumeRestore,vmRestore,appRestore,winFlr,linFlr,verifyDest,execute action
-    class q1,q2 decision
-    class restoreStart,validate terminal</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNq9Uz1PAzEM3fsrrE4sN8DIgIT4GJAqIZA6dXHv3KslX5LL5VoqxH_HSa9ELRmY2Oxn-9l5dhr2VAe25hY8t9swm_XXtzDvr-fwOWzRkeKagKYV-prtrIwdvdEQrNfIfJn8SmhHonkJXpneOvIYSTNWDeO6FiYToArWYdiWG3SZ_HkUgeUic1wt3-_hh6dYj85lgnvnhOs0SIV79JSpXi2bULGpAncEYlsNOcHDylgPrUczCnrgQN2pptiuv4la3RRjezbP4uM7WH5JtPZ2PxBsvO1AJ0SdoKQb_FE2-cdeO_K8OTxqUTyA5ECjHptEtzJbHHRLmw3XiWtwWJfVow-qxxA39XS08swLa1gtYAMvdg0P1gRvRciXR0LhBhPTcjJPVM3KqItKFKj1HA5Fgin5PaCPr5pOSDP6Uc2YSbyjplirHwaqOzj7GiesO_fzderlROB4I5NzXOL5H0ssP4Ln73GBZ-KLwLHBBSglMJsxMK3mtKKUOyk7-wbMi4bs?" /></p>
 <p>Always verify destination and time range before executing a restore.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Restore to original location at a point in time</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>qoperation<span class="w"> </span>restore<span class="w"> </span>-subclient<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-totime<span class="w"> </span><span class="s2">&quot;2024-01-01 12:00:00&quot;</span>
@@ -7863,7 +7837,7 @@ CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restor
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

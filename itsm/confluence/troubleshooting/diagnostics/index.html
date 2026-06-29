@@ -7526,39 +7526,7 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 *Applies to: Confluence Data Center / Cloud*
 </div>
 
-<pre class="mermaid"><code>graph TD
-    A([Issue Reported]) --&gt; B{Type of issue?}
-    B --&gt;|Performance or slow pages| C[Check JVM heap and GC logs\njstat gcutil + jmap histo]
-    B --&gt;|Crash or OOM| D[Capture heap dump\njmap dump and analyse with MAT]
-    B --&gt;|Hang or freeze| E[Capture thread dumps x3 10s apart\njstack -l CONF_PID]
-    B --&gt;|DB errors or slow queries| F[Check DB query log\npg_stat_activity for long-running queries]
-    B --&gt;|Feature broken or exception| G[Check app log for exceptions\ngrep Exception atlassian-confluence.log]
-    C --&gt; H{High GC pressure?}
-    H --&gt;|Yes| I[Tune G1GC, increase heap in setenv.sh\nReview cache size settings]
-    H --&gt;|No| J[Check DB query latency and slow macros\nEXPLAIN ANALYZE suspicious query]
-    D --&gt; K[Identify top memory consumers in MAT\nLeak Suspects Report]
-    K --&gt; L{Plugin leak or heap too small?}
-    E --&gt; M[Analyse thread states: BLOCKED count\nIdentify deadlock in jstack output]
-    M --&gt; N[Identify blocking thread and lock owner\nDisable offending plugin or restart node]
-    F --&gt; O{Long-running queries or connection exhaustion?}
-    O --&gt;|Long-running| P[pg_cancel_backend or pg_terminate_backend\nAdd missing index via EXPLAIN ANALYZE]
-    O --&gt;|Connection exhaustion| Q[Scale DB connection pool in confluence.cfg.xml\nCheck for connection leaks in app log]
-    G --&gt; R[Match exception type to known issues\nor disable plugin and retest]
-    I --&gt; S[Collect support.zip + thread dump + heap dump\nOpen Atlassian HI ticket]
-    J --&gt; S
-    L --&gt; S
-    N --&gt; S
-    P --&gt; S
-    Q --&gt; S
-    R --&gt; S
-    S --&gt; T[Provide: instance name, version, node, repro steps\nLog excerpts and support.zip attachment]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H,L,O dark
-    class C,D,E,F,G,I,J,K,M,N,P,Q,R action
-    class S,T escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptVMtu2zAQvOsrFr02CVr0lkMBv-I48St2ULSFgYCR1hIbimRJyolb9N87lJTUKHgam0vOcGdHLKTjPEijL8nJsgpZNrykd8N39NtXwjJWURa6VPwnG6Eyqjh_opsvC6pYWBK6oOmIlCn9Tv_wQQQq8yZIRe_pR40NlfTBJNnGkU3Y0DjuuIqmtiCp-58tt9BCHT3TswwVLQb3SabJCVOoHIuiJfD08ok-fvAkrHChux7ufq5otFpePaxn4yTb1VuX4yH9bNgdY3s7bcuH2N-DgF0HGY60Nw4VXZ67Rmupy3azZJ9knb6xCmsjYXucX3K20X24Vzq2NHldIBGU8F4KfZ4bvVcN65wvcC7Jfg3262Rlhsp9o5mmH6ejM5I6hz--d1xq8hxYHy58tdMbPkh-plzkFZOXvzgWAxpLd3ST8EmALD-2k_PKPFMtcmfQ2-Trej6YLWmwHMy_fZ-Qb7yVuTSN704mBW4hMCtYB7k_UjCWaq4NVOCHb2p2Pt4fmdjpOYsn2oIThz1t2BoXkpQLUA76SPVJiTNlf0nD-Wp0OxmDvdEIy5twgU3KoEuI9QkyTbBNWmB5eufHeC4Go5eKtrRU5lmz2-mx9OJRMZn9nnURN1rVlNBBMhxDywXSpuCk0gpKq2RljQrCmgskRj084sZgj5xYDOxqqdHx6_pOD4qCaomoQV_qgl_oIAX9N7Gk0B2EtrlAB0gApqK7l4SsMSradRLcfF9evNRqp7vExOyfHFCYXzvN_ttIqm2gthAhr_59NRSOFoM09KRhKaGJhpE2kBe9tb2h0XmHpPv01LYxykYprCCaNsbn4pe0eMNOnhP8O3mmVpY1DV6_UbqeUZAwNM0_B_88WblHZe3MQRZYlxozh1ukRc1ndEDE0eRZm4EznLLOIK5s0eIcD0i0wVkEvv3cTq4tAmJa1UhhUnMQMxqt6r8ULpLbsiGdf6ZRB-MOJh1cdTDNriPMOrjJxhFus0mERbaIsMxWEdYd3GXTCJtsFmGb3XQw72DZwbqDuw42HWwj3Gd_AaMoRIA=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk79OwzAQh_c-xak7Q_8tHViAAQQSooiBxTria2JwbGM7QQFV4iF4Qp6EOGlSWpKULYm_33f2ncOFpcgLrZbA9ZsajVyRGq_TJVxyUl6sC1jVX-DDJWio5ASmWvHNyHkybMKihKIXJpTzqCJiCaH0yRLGq3IZJvD9-QVnAYEGgRoZt8awBVSxpK1zyp7zNIgMQ4WycMI1vmnlu3q4CRIDzXK_a8Z8Ygk541lqWITGZ5ZKLa_VjXdWee8rFAIKW7Qswf9RZs44enxCR-w1I1swQ3atbRrO29SYVzXOtxxUHPzi-u0L5jJjtPXsXZSH0FI2Q6vNi8q8qhl4vLyFHdNplTpmUkcYgNDbax1D-96ZsOS0zOqid-E5J9AWLlyEEj21EZ2j3LTXCE5OYfiaCJWT8yIuHX9CnfdgKHB02EPh4REOJfvH05M6aP8eNdCtEN3Nofdf6cKOdKYrMtSPLr6vCwfs3tkP1n4ABCS3Ag==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7921,7 +7889,7 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

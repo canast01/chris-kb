@@ -8834,40 +8834,7 @@ SRDF/A troubleshooting: DSE overflow, cycle time violations, SRDF/A suspended du
 <p>Common SRDF/A issues: link failures, increasing cycle times, suspended consistency groups, and volume capacity mismatches. Always collect <code>symrdf query -g &lt;group&gt; -v</code> and array event logs before engaging Dell support. Correlate with network monitoring timestamps to distinguish storage-side from WAN-side causes.</p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk0GLwjAQhe_-iqH3Ze8eFkTdRdgFWcVrDMnYBtKkJGndsvjfd1K7VWqLvSWv38tM3qRSORRBWTMHac9mNvN1XgSbz2Ej0QR1qmF3VeDXZ7xA4hTPrZGXGS1SY31Qgp20Pc8hWXUKvJOSdJ5YhJtU42Wmecq4RhdYcIQjkyiUpw5oj4QmnzyFRQRg3wCwagHaIw6eKazxygc0omaps2XBfOkLNBIl4yU1z4Oik5c3DD4iBrt_DBYtJrjW9WCRwF2KgVVWlzkywQsuVKhZrjz5RMZCpijFZN9gcGgwWLYYfLUYvMKeQNhaq2H9k_HSx_gHKypTca0kK7hyzAceYjzHzVU9wpZk2EV50F2ho_Exh55auY44OTQa3LRB573lO64rBOtg7SkcqtZZLDVy6Z4MvLzBw5OgKyBtU7Ldc88ewYht2pxHzNPmN2IeGsUIOpD7PdmLKDpu6JO_owdPiaNnmRJCz_J49R7wcOHe9z9HTqnD?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{SRDF/A link\ndegraded or suspended?}
-    S --&gt; B2{Cycle time\nexceeded?}
-    S --&gt; B3{Delta set\ntoo large?}
-    S --&gt; B4{RDF group\ninconsistent?}
-    S --&gt; B5{Failover\nblocked?}
-
-    B1 --&gt;|Check pair state| D1{State Transmit\nIdle or Suspended?}
-    D1 --&gt;|Transmit Idle| R1[See Lag Alert Triage —\nLink saturation: check DSE and bandwidth]
-    D1 --&gt;|Suspended| R2[See Lag Alert Triage —\nCheck suspend reason then resume]
-
-    B2 --&gt;|Check DSE utilisation| D2{DSE above\n70 percent?}
-    D2 --&gt;|Yes| R3[See Lag Alert Triage —\nThrottle R1 write I/O]
-    D2 --&gt;|WAN saturation| R4[See Lag Alert Triage —\nCheck network with network team]
-
-    B3 --&gt;|Check link bandwidth| D3{Link above\n80 percent?}
-    D3 --&gt;|Yes| R5[See Lag Alert Triage —\nCheck FCIP tunnel and WAN QoS]
-    D3 --&gt;|Write burst| R6[See Root Causes —\nWrite I/O spike: schedule batch off-peak]
-
-    B4 --&gt;|Check pair state for Invalid| D4{Pair state\nInvalid?}
-    D4 --&gt;|Yes| R7[See Invalid Pair State —\nConfirm authoritative side before resync]
-    D4 --&gt;|Thin pool| R8[See Target Volume Capacity —\nExpand thin pool on R2]
-
-    B5 --&gt;|Check R2 array health| D5{R2 array\nreachable?}
-    D5 --&gt;|No| R9[See Lag Alert Triage —\nDo NOT activate R2: engage Dell Support]
-    D5 --&gt;|CG suspended| R10[See Consistency Group Suspended —\nResolve root cause before resuming]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNVMtu2zAQvPsrFrkHjV95HVpEZloYCJLUMupLLoy0FglLJEGu7BpFgX5Ev7Bf0qVsFTmwRi7GWI8Z7uyMSu2xIG3NLXhdKRoMxPAWzsTwDH4EJR3ydX5AmqrGn4NFvJcjwoOs4K5GT7D0WlYIf379fjEP2mwgSGq9PFAWCosNiPwepCnhlX92uiSV5h6d5J51VKENDpnKowzWACk0jEPbYJJTRE4xSuuNT-otlbdENcJiCDuvCWH-4SlNNHnHwQ3SzvoN7DSpf38IZZM-dzybGKflpu-Q-zybPwO1xmDdWb-6e4SvNk8TXh4JF9YSzGQbMBy4Vv3cEJze8FuBF1q2bMqrpEKBXa_PHcpNeoZoi5ikJa-OknOzlbUu4VlqDzlJ6qewZq19A7IlZfkUnKctQtAlS-Paeoxb35sizX59ZF9KXyHBN1tzQHgyJwtN-4PC_XcXjSGlDThra-A4LdJJEdFxMU1r3ZzchrDw-LQEyRXbxuFiyNFU8b7Auoa8dc56-k_ZLo7c7EbQgdAUe_jibev4va4HWB5kFhhszQb5uMEibvCNTW2jTZVUyJl_pSSBDrFKEPaNI9t8Sj6cxe5n6e9CFnuWpd3LYpazdJazmJEsnZEsup6lXeePFJx_5Gr2YMRV78C4BxMuUQemPbjkSHbgqgfXvNoO3PRgeDH4C1oQsrU=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8879,54 +8846,7 @@ SRDF/A troubleshooting: DSE overflow, cycle time violations, SRDF/A suspended du
 </ul>
 <hr />
 <h2 id="lag-alert-triage-decision-tree">Lag Alert Triage Decision Tree<a class="headerlink" href="#lag-alert-triage-decision-tree" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    lagAlert["Lag Alert Fires\n(RPO threshold breached)"]
-    checkPairState["Check Pair State\nsymrdf -g grp -sid sid query"]
-    pairState{"Pair State?"}
-    transmitIdle["Transmit Idle\n→ Link saturation"]
-    suspended["Suspended\n→ Manual or auto-suspend"]
-    inconsistent["Inconsistent\n→ Data consistency issue"]
-    transmitting["Transmitting / Awaiting Cycle\n→ Transient or write burst"]
-
-    checkDSE["Check DSE Utilization\nsymrdf -g 20 -type A query -detail | grep DSE"]
-    dseHigh{"DSE &gt; 70%?"}
-    checkLinkBW["Check Link Bandwidth\nsymstat -rdf -dir RF-2F -i 5 -c 3"]
-    linkSaturated{"Link &gt; 80%\nUtilization?"}
-    checkNetOps["Check Network with Network Team\nFCIP tunnel state, WAN QoS"]
-    throttleIO["Throttle R1 Write I/O\nIdentify high-write workload"]
-    checkSuspendReason["Check Suspend Reason\nsymevent -sid sid list -last 30 | grep SRDF"]
-    resumeReplication["Resume Replication\nsymrdf -g grp -sid sid resume -noprompt"]
-    doNotActivateR2["Do NOT Activate R2\nEngage Dell Support"]
-    monitorRecovery["Monitor Lag Recovery\nevery 5 minutes"]
-
-    lagAlert --&gt; checkPairState
-    checkPairState --&gt; pairState
-    pairState --&gt;|"Transmit Idle"| transmitIdle
-    pairState --&gt;|"Suspended"| suspended
-    pairState --&gt;|"Inconsistent"| inconsistent
-    pairState --&gt;|"Transmitting"| transmitting
-
-    transmitIdle --&gt; checkDSE
-    checkDSE --&gt; dseHigh
-    dseHigh --&gt;|"Yes"| throttleIO
-    dseHigh --&gt;|"No"| checkLinkBW
-    checkLinkBW --&gt; linkSaturated
-    linkSaturated --&gt;|"Yes"| checkNetOps
-    linkSaturated --&gt;|"No"| monitorRecovery
-
-    suspended --&gt; checkSuspendReason
-    checkSuspendReason --&gt; resumeReplication
-    resumeReplication --&gt; monitorRecovery
-
-    inconsistent --&gt; doNotActivateR2
-
-    transmitting --&gt; monitorRecovery
-
-    style lagAlert fill:#be123c,color:#fff
-    style doNotActivateR2 fill:#be123c,color:#fff
-    style monitorRecovery fill:#15803d,color:#fff
-    style throttleIO fill:#b45309,color:#fff
-    style checkNetOps fill:#b45309,color:#fff</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9VE1T2zAQvfMrdnLqoR5omF44dCYQMs0MJNShw8UXYS22BllyJZlM-nHtD-hP5Jd0ZTvCBoVDHO2T9LQrvX1cGMyd0OoMjChKd3QkWTGTaNwZTK5YAe0YFrTMZupDerMGV9K41JLDvUGWl8gn8MuWrEbiIDKmCol_jmgif7xhwmwcczQ1ufAAeARaKFN2Vxn-AEkBhakhsYKD__1o0OyinPWALoyjK51hylbCLbn0i2_7EHycqee__-BKqEewzDWG-fqjLLaxNSqOnCg2-3G3_ZqphknQBljjdNKvjLIIlWtlhXWo_K0uB2HHNWeOQQDzHQhrm_frckIVg7p8CMcw2zLRDi92-b7Odomgs3yuWyMcwn1jrDv8aPPNZXguGsN3J6T42d7S8M2mJ5C4XY0w614MEo6OCQm_6Tmx9lujZ3CLX0lqdEQ_ihdaGu2cxOXal9kHkH6Cu7aE5fE6U0tOZYmHHZTEknS1bbV5lJq9o0n_8Od3ocJWB-dM8a3grmwLtCQrSNoyOak1XSTTBSQCPkOSw2mUWRLLphNTq5ZRfDiXFbp1bUMuFPr8YStcGYJbZFWmFhfLG3CNUijB54cf4W62gm96E2WvtBJOmxRz_URvQydcdwj4pt7DmUL_R4VVQjUO7eFMe_mnyKw3iz7hHoUObi-PGElroZklaRoSyeh7erKXxiadL6JHkbM0FaZYS5GzzpYmaYvBADzoHN12SJSuja7quMa5Xmk3I9N7oltMp3TCXMNqfQt7DNJppi5VwQqEOUpJVda1NnG24JeQfIGx572yQL8gmNaLlXl46FbjmeBAY3hoKXEqbwMjFwz5UV-GPvdg34X7vmxJQvMN0UH3DDvJT43kPm6GsLPT-tvJV1J9Md2wc6S9iBz9wjfKeaul2GHDi2wvYyyOkd_G9v8Ht0ecAw==?" /></p>
 <p><strong>Root causes:</strong></p>
 <table>
 <thead>
@@ -9050,7 +8970,7 @@ SRDF/A troubleshooting: DSE overflow, cycle time violations, SRDF/A suspended du
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

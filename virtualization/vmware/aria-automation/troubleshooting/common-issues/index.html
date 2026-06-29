@@ -9213,38 +9213,7 @@
 </code></pre></div></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; B1[Blueprint deployment failed]
-    S --&gt; B2[Cloud account unreachable]
-    S --&gt; B3[IPAM allocation error]
-    S --&gt; B4[Approval workflow stuck]
-    S --&gt; B5[Catalog item not visible]
-    S --&gt; B6[ABX action timeout]
-
-    B1 --&gt; D1{Network or\nstorage failure?}
-    D1 --&gt;|Network| R1[Check NSX Segment Creation · Verify NSX Account Perms\n→ Provisioning Failures]
-    D1 --&gt;|Storage| R2[Check Storage Policy Match · Datastore Capacity\n→ Provisioning Failures]
-
-    B2 --&gt; D2{Data collection\nerror?}
-    D2 --&gt;|Yes| R3[Trigger Manual Data Sync · Check Cloud Acct Log\n→ Integration Failures]
-    D2 --&gt;|No| R4[Check vIDM SSO Cert · Re-import in VAMI\n→ Integration Failures]
-
-    B3 --&gt; R5[Check IPAM Endpoint Connectivity · Verify IP Pool Capacity\n→ Provisioning Failures]
-
-    B4 --&gt; R6[Check Approval Policy · Notify Approver · Check Orchestrator Endpoint\n→ Integration Failures]
-
-    B5 --&gt; D3{Entitlement or\nYAML error?}
-    D3 --&gt;|Entitlement| R7[Check Project and Catalog Sharing Settings\n→ Diagnostic Steps]
-    D3 --&gt;|YAML| R8[Run Blueprint Validator · Fix Syntax Errors\n→ Diagnostic Steps]
-
-    B6 --&gt; R9[Increase ABX Action Timeout · Review Action Execution Logs\n→ Integration Failures]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
-    class D1,D2,D3 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdVDuO20AM7X0KYvst_N1PkcCWvICBeNewFs4WaSYjWpp4NCOMKH8QpM0Bcpntc5ScJBxJVlJoAzgVKfHzyDckY-VQkrLmHpxKUur1onu4-pgKAlUApQjFKcvJZu-v4GuRihzZkSOESTR-68367D3TJeZOGYIYc21PGbK6FUpj3B004KBA2zIGIaUt2bs0DoVMxWeN3SFDDlmspksQWlspfMWAzlnX7T5i92meO7sXGg7W7bbaHqCgUu66A8a-JEFC2wQUYQbGEuxVod6saOIhZi_cQlUMqQxtSZ2-oWcp7Hfa1t4WpCh38Bi9QIRJRV_AfFR5f77CBp3anirztOFrhS4rPplf33_AipvkOq1RJoEHZr10WHRDDVqoiKwTCcLKaiVPsBQkUw8VMgUF2xACkQup6HQpSOhBwkF3Af4Vn3nOEnSMaUp-HI8I0clID18XV48Gt0rwwSZ1AQtDmLiakn83OWqb3C_CJUTREwToyKdf47XKcssfysBmulxcmnvc5q5mcW7i3Pq5D6wxfo32TNhfL7ZYMcFW_zeX60mL1w5z82IM8mjJg9QWJrTl78nJFAvijqxra7yw1dA_VTjsLuumLYt7-cIGECaG8_pEqXC-tQiJWDZjGiqRGFuQkjx8mL_R8C1nXpcG_pyUjdAqrjrh_h7U0c8KiSPM_fJflPvOnxAjebEKBL-503pzn-vNrQdkr_BwNsyPKMtK4zEsLiSwF8H1O5j1Gzlo5LCRo0aOGznhI-GVdf-sDHiVKmV4VkZ8BitlzAeuUjiq_nNzVm75MFXKXe835LcF5A==?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9291,7 +9260,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

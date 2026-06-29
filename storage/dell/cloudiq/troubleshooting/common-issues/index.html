@@ -8881,40 +8881,7 @@
 </code></pre></div></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{System not reporting\nto CloudIQ?}
-    S --&gt; B2{Metric gap in\ntimeline?}
-    S --&gt; B3{Anomaly alert\nincorrect?}
-    S --&gt; B4{Capacity forecast\nwrong?}
-    S --&gt; B5{Connectivity issue\nproxy or firewall?}
-
-    B1 --&gt;|Check SCG service| D1{dsagw service\nrunning?}
-    D1 --&gt;|No| R1[See SCG Issues —\nRestart dsagw and watch journal logs]
-    D1 --&gt;|Device not registered| R2[See SCG Issues —\nSystem missing: add device in SCG]
-
-    B2 --&gt;|Check SCG uptime during gap| D2{SCG offline\nduring gap period?}
-    D2 --&gt;|Yes| R3[See SCG Issues —\nSCG VM powered off: restart and verify]
-    D2 --&gt;|Credential expired| R4[See Telemetry Issues —\nDevice poll fail: fix credentials]
-
-    B3 --&gt;|Check anomaly in CloudIQ UI| D3{Alert matches\nknown workload?}
-    D3 --&gt;|Yes - planned event| R5[See CloudIQ API —\nAcknowledge alert with change reference]
-    D3 --&gt;|Threshold wrong| R6[See Telemetry Issues —\nWrong health score: review alert policy]
-
-    B4 --&gt;|Query capacity API and compare| D4{Forecast confidence\nLOW?}
-    D4 --&gt;|Yes| R7[See CloudIQ API —\nInsufficient data: wait for more history]
-    D4 --&gt;|Data mismatch| R8[See CloudIQ API —\nQuery capacity endpoint to validate]
-
-    B5 --&gt;|Run SCG connectivity diagnostic| D5{cloudiq.dell.com\nreachable from SCG?}
-    D5 --&gt;|No| R9[See SCG Issues —\nFirewall blocked: allow port 443 to Dell]
-    D5 --&gt;|Proxy auth| R10[See SCG Issues —\nProxy auth fail: configure proxy creds in SCG]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9VMtu2zAQvPsrFrkHiF95-NAgCtHChwKJXTSXXlhyJW1DkQJJWRGKAv2IfmG_pEvZPhSgchuJ5Ax3dpaaPKpIzm7AU1XH2UzMN3Ah5hfwM9SyRf7PG6StDP6a7dLaHhH2j59gG0KHAf7-_vPN7jBE6SPoIKsepNXQy6hq-OE6b6UB46qQZ1xMMO6HELGBhkIgW21Aag0aD6QQyKbdWTqR6MQiL7WckuLvr5-hdT161ODKMp07FpRKOaCncshzrk6cX9Bgg9EP_zGL44VbZwyUkswGSnoDxSpoI0mT90Ski4plXnB9Enw0rtPbZ3h42h61HtSrdb1BXSFIg3z3nmINquaTyBQlF2cV5lmv3y3jxTtbQY3SMGFQzo-nD4T9SYkLJJV3SCSHxCovezNVzNaGrixJEfsEWka54UBRhNJ5aFgfagrR-Ymm3E7RPnfIpSnZSkVxALS6dcQK0cFBGmKhvD8iuS7WebW7iVh95NHqJXf-u3HqFTVn2BjXs1ns2Gq1TKoCjZmYtKsJ2ifv3gaQHbfiGCnlbElVx6a041KKV3hvSPbM_FLLCBQg1ghhaNromvvs5iKNfJF_Doo0bUV-2ooU4iIf4iJloshnokhWF3mr-W2Cyw-wm5_Bggd-BMszWPH0jGB9BtccwRHcnMEt93MEd2cwv5r9A_GmsFI=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8961,7 +8928,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

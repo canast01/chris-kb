@@ -9207,36 +9207,7 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>verify_resolution -&gt; resolution
 </code></pre></div>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; B1[Replication paused or stopped]
-    S --&gt; B2[RPO violation amber or red]
-    S --&gt; B3[Connection refused or initial sync stalled]
-    S --&gt; B4[Site pair disconnected]
-    S --&gt; B5[No datastore available for target]
-    S --&gt; B6[Certificate mismatch between sites]
-
-    B1 --&gt; D1{VRA appliance\nreachable?}
-    D1 --&gt;|No| R1[Start HMS/VRMS Services · Check TCP 44046\n→ Replication Fails]
-    D1 --&gt;|Yes| R2[Check Cert Thumbprints · Re-pair Sites\n→ Replication Fails]
-
-    B2 --&gt; D2{WAN bandwidth\nsaturated?}
-    D2 --&gt;|Yes| R3[Apply QoS · Raise RPO Value\n→ RPO Violation]
-    D2 --&gt;|No| R4[Check ESXi CPU Ready · VRA Disk Full\n→ RPO Violation]
-
-    B3 --&gt; R5[Check TCP 31031 · Route to VRA · Seed Pre-copy\n→ Replication Fails with Connection Refused]
-
-    B4 --&gt; R6[Check VRA Services · Port 44046 · Cert Thumbprints\n→ Site Pair Disconnected]
-
-    B5 --&gt; R7[Mount Target Datastore · Free Space\n→ No Datastore Available]
-
-    B6 --&gt; R8[Refresh Thumbprints in vCenter · Re-register VRMS\n→ Site Pair Disconnected]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class D1,D2 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVVMGO0zAQvfcrRnuv2LZpd7UHULeh4rIQkqVw4OIm02a0jh3ZTlcV4soH8DN751P4EsZOWgpKBXvyWPa8N573xgUZzB1pdQOGtqUbDLIbuPhYCgdkwZUIdl_VTlevLuCLLUWNfJEzhNpK_Dq4HfHtFGtJufAoUIvGYgHagHW6rrHoTxv7tOQd7EjLNlFUazQ-z5zLmXDOQivV1stHmwMVKXIkJJeqcuYVUp7DiBgjI4dcJxkoyOYt4Ln7U77_VkMhnOD3GASxEyTFWiJsmNgJs0XXnzrz5aJxtPG9QajIVsLlJazRPSIqsFyH7c2NfVfjUe9Z6s8yJnbw5i57sUrvMsjQ7ChHCz-eYFFi_gD3iwSi6DKafVY_v32HU4WW_IB-2tSr0ub7wuG-bKp1bUi5gJziMHTN988-Bzf2uPG4n9OrOq9ruYf3Ogs0giyCN8dKyAY7Ir89eKUfKDoW_zr7RLBIPnB5oth7zFU6h5jsAywbKf8bcXpE9O2cjC4no1CgblhOpwMq7zNkFyYGh7mu92f6Ao_kSjhxb9q6t594diT2FKfqJpp1CcIGrf9SqSUP_k68UvG__J1eMdOdbhTDBCtDfHQ64y8NImS1yDsVeBJ-n88Pk9CPfB0-ho1BW_5hJFKwW6ByPOytpwxuyfqtt_KzXzDIYPgSbkfdOu7WSbdG3Trt1hnPlg_S0SEYsz1DMDkEEX81IZjyfxGCGX8EIbjisQ7B9eAXEMrGcA==?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9306,7 +9277,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

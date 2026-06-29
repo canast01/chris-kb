@@ -7526,38 +7526,7 @@ Ansible diagnostic commands: progressively increase verbosity with -v to -vvvv, 
 *Applies to: Ansible 2.14+; AWX / Ansible Automation Platform 2.x*
 </div>
 
-<pre class="mermaid"><code>graph TD
-    A([Ansible Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Connection error / UNREACHABLE| C[--syntax-check first\nThen ansible host -m ping -vvv]
-    B --&gt;|Task fails or wrong output| D[Add debug var=varname task\nRun with -v to see task result]
-    B --&gt;|Wrong hosts targeted| E[ansible-playbook --list-hosts\nCheck inventory and -l limit]
-    B --&gt;|Variable not resolved| F[ansible-inventory --list\nCheck group_vars and host_vars]
-    B --&gt;|AWX job failed| G[GET /api/v2/jobs/ID/stdout\nCheck event log for task result]
-    B --&gt;|Slow execution| H[ANSIBLE_DEBUG=1 playbook\nProfile with callback_plugins]
-    C --&gt; I{SSH error type?}
-    I --&gt;|Permission denied publickey| J[ssh -vvv to confirm key loaded\ndeploy public key if missing]
-    I --&gt;|Connection refused or timed out| K[Test TCP 22 with nc -zv\nCheck firewall and sshd service]
-    I --&gt;|MODULE FAILURE python not found| L[ansible -m raw -a which python3\nInstall Python on target]
-    I --&gt;|sudo prompt or timeout| M[Check NOPASSWD sudoers\nVerify ansible_become_password]
-    D --&gt; N[ansible-playbook --check --diff\nSee what would change without applying]
-    E --&gt; O[Check -i inventory path and ansible.cfg\nVerify host/group name spelling]
-    F --&gt; P[ansible web01 -m setup -a filter=ansible_network*\nInspect all host facts]
-    G --&gt; Q[kubectl logs -n awx -l app.kubernetes.io/name=task\nCheck AWX task pod errors]
-    J --&gt; R[Collect playbook output with -vvv\nSave to file: 2&gt;&amp;1 | tee ansible-debug.txt]
-    K --&gt; R
-    L --&gt; R
-    M --&gt; R
-    N --&gt; R
-    O --&gt; R
-    P --&gt; R
-    Q --&gt; R
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
-    class R escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFVMtu2zAQvOsrFj0WYNyktwAu4FccJ47t2G7TgwCDkiiJNU0SJCVFLfrvXYpxkoOCArIG1oKzw-EsM25Y6riS12B4UbooGl_Dp_En-GNLqhl-xTKVhWB_owlWCLGtdPSZpCVLj5BzY10s9yWTQKXliWBQKuuAnEBzWQCp67qXbIpkoyyDjCVVATU1Q_xJemLgqD3GcltJaLgrkQGcAstCASlsJVwv5QwpX0QQLWibKHUEQgS3jnhRNpaTTjWXNZNOmRY1Z0AECH7i_Zw37zjflgXSM11hVKUPKN92fL5V96-XcI6E89keBlTzQX01-KUSO1hMB9ZlqnqlZL4TCFVArsx_N37rvVztFuPl7DCdjb_Ph5dwNiCWG6NyjufSuZlSIRKaHg9aVAWX_RoXyLfordxhxdqyO1Z_LKmSGIETHFmLamnGslhmTAvVgq4SwdOuwnM4cWsxD72k90i6Zxia_WQDV1dBqEyB_K7PfmAT1qD0zmAUgC9map6yXsLl26H5IBraAKHQlDwtQbeuVPJrLBfSOs-46T4APo6agvU7_ICMQclqvRntdk9TsFWmmMFM_WCG5-05_oeEperEDppa2yiT9dKt-pMaZoqQjOd5LHcY-aakDhpViQzSEheHU8SgANVatB85un6VS_i7tGuKxnoHX3pfpHnxqt_HdtBFGboxtJoJ8VGDzTuHG5Z8ufQ-W-ZwMTqNcXPMDM-OSObQiePnznONJOB9766JnKauP4OP2OFYoZlO-DmwQPCGaZ79tOLWL3zJIDGzF1wNvOBhuDfCtkdPP8PUaJUBM0Z9MI1b7LLtrYz8TL3scGFt1Z-0aAzkG0wCTAPMAtwEmAe4jRYe7gLcB1gGeIimHlbRzMM6uvGwieYeHqN7D9toGeAhwCrAOsAmwGOAfzoJ9TI=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk81OwzAMgO97Cmt3hPZ72AFpEhx2QwwBt8ht0hHokirJOio0iYfgCXkS3KwthaVltyr-_MWxXS6NiJ3UagFc79VgYItt5vR2ASsulJNJAevjCbzbZ8wEcRK3WvHDwDqRsRHLMZUcnWBZikWk9StDxZlUOeXrBQzXhMEIvj4-4aFCoUaBUKhQUwybO8qiUG1SUd0yZk5Yx2KtVFluLl1Rm8fefE9haIe7XROqLTYCrWC5MJG2LdnEy1ZVHJp4t21KNpvRIfXBSIxSYf37E4ydrbXTSutBaED_eg92-2eMm4KZnfJWLpOkls689NoUQFGvKqPdpjnD_RtDzNiLjsiEG6Wtk3FT5dwLl49PcAnL5S0QBi0saDbC6nR3XKC78jsXoA3c2BjTctB1iqYtOTTbBRdXcN72lB90-4aIk-TgUvQlhCffl_HPdPtSQ4Pr43vG8yvtjLaVzp_BdP5BISzUohDX25hQwmk7QlRnE_7A33dHxmI=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7821,7 +7790,7 @@ Ansible diagnostic commands: progressively increase verbosity with -v to -vvvv, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

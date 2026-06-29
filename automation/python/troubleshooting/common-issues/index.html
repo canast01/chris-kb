@@ -7528,29 +7528,7 @@ Common Issues reference covering Python Error Triage Flow, API and Network Timeo
 
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1ksFugzAMhu88hcV9L8Bh0rR1Ui9T1Va7RlEwNBqJUZKC0MS7z8CgiJJb8P9_xv6TXDtUQZPNIKfWJonvTB3IZHDM0QZddHCZKvDrb7JG9mlpyOZ9wofSkg9aiaKiNoP0Y6nAJ1fShRl-Im1ZYZ_UXbiRFegcOREcEzjjp1GCwyDBdZTifWSthbS5sBhacj8iaIN0D577vJ2OwBJ8TRJc_6XdPoqMmefxwmGBDq1iT_o-KtM4Hs6zstulQcdZMe6puk95pt9jDR61XXKNnIdzg8DrH7ySlQy4INTIql_uB15e4Sl_bRvkz5KxtS-eeASIRxsBohlG_DtprZ2bxQbiYY0-oI0ttsTGFhl943oaeKP_ATu9PHg=?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; B1{ModuleNotFound\nError?}
-    S --&gt; B2{SSL certificate\nverify failed?}
-    S --&gt; B3{Connection\ntimeout?}
-    S --&gt; B4{Permission\ndenied?}
-    S --&gt; B5{JSON decode\nerror?}
-    B1 --&gt;|Yes| D1{Correct venv\nactivated?}
-    D1 --&gt;|No| R1[Python Error Triage Flow\n— source venv/bin/activate]
-    D1 --&gt;|Yes| R2[Python Error Triage Flow\n— pip install package in active venv]
-    B2 --&gt;|Yes| D2{Corporate\nproxy in use?}
-    D2 --&gt;|Yes| R3[Common Errors Reference\n— set REQUESTS_CA_BUNDLE to corp CA]
-    D2 --&gt;|No| R4[Common Errors Reference\n— pass verify= with cert bundle path]
-    B3 --&gt;|Yes| D3{API reachable\nfrom host?}
-    D3 --&gt;|No| R5[API and Network Timeouts\n— fix firewall or proxy settings]
-    D3 --&gt;|Yes| R6[API and Network Timeouts\n— set timeout= in requests.get call]
-    B4 --&gt;|Yes| R7[Common Errors Reference\n— chmod or chown output directory]
-    B5 --&gt;|Yes| R8[Common Errors Reference\n— print resp.text before resp.json]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class B1,B2,B3,B4,B5,D1,D2,D3 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFU9tq20AQffdXDHlvgm9JCCTFslwohJDYDn0phM1qrN1G2t3ujiyLEOhH9Av7JZ2V47cFPQgOM6tzZs7MFNqjJG3NDXhdKhqN8vENnOXjM3gPSjjkOD8QpqzwY7SOuceOlDWw8t562HotSoRvlW1_mn9__kKwjZcIezT7i1dtLgSz7wVhmm8yyOe0A20CiaoCJ-RbzGoDPe1RJsmcR-Z8kladcm5p6_qkGmCNO_RoJH42gQTr1dPzarPdvCwXL9nzQ36_ArIgrXewXKR5Z0O8ToTANXu9626h1aRAoid4bUxRIWdJpZuJBefTtOicc4vH7yBMAQ9IrfVvsNU12obCUXWnD_x5bKOH7LHz9tDFHkmbMqRZLwdZo0d0jNzGiXj83WCgcF5yQrJUkjiLHmWztOjVkH9S1baILUhlWwMs7RqCot9h67u0YjQom6cVrwcn5rUh_iW4c8IDjwp31uMx8CtYk6TdMOsPJQh0AFIIoasd2fprur54U1n63rK4xVl6i7O4FFl6KfiI4csdrMcnMOGD6MH0BGa8VT2Yn8AlD6cHV-xZD65H_wGDAme9?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7562,20 +7540,7 @@ Common Issues reference covering Python Error Triage Flow, API and Network Timeo
 </ul>
 <hr />
 <h2 id="python-error-triage-flow">Python Error Triage Flow<a class="headerlink" href="#python-error-triage-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    error["Script Error / Failure"]
-    error --&gt; errType{"Error type?"}
-    errType --&gt;|ModuleNotFoundError| checkVenv["Is correct venv\nactivated?"]
-    checkVenv --&gt;|No| activateVenv["source venv/bin/activate\nthen pip install"]
-    checkVenv --&gt;|Yes| reinstall["pip install &lt;package&gt;\nin active venv"]
-    errType --&gt;|401 Unauthorized| checkToken["API token\nexpired or revoked?"]
-    checkToken --&gt;|Yes| rotateToken["Regenerate token\nin target system"]
-    errType --&gt;|ConnectionError\nTimeout| checkNetwork["curl -v &lt;api_url&gt;\nfrom automation host"]
-    checkNetwork --&gt;|Blocked| fixFW["Fix firewall /\nproxy settings"]
-    errType --&gt;|JSONDecodeError| checkResp["print(resp.text)\ncheck content-type"]
-    checkResp --&gt; updateParsing["Update parsing logic\nto match new schema"]
-    errType --&gt;|PermissionError| checkPath["ls -la on output\ndirectory"]
-    checkPath --&gt; fixPerms["chmod / chown\noutput directory"]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9U01v2zAMvedXEDntkuYeFB12aIBeiqBru4uBQpMZS4gtCRTtOBj230v5o0kQuzeJfHwiH59yS6jZercBsoXhxQKJPG1g-VuTDQyP6Qpr2Cpb1oRL-BeNCihwqVOuKPF_Knk9pdiyR7Ncfk4itUF9eEfXCPYpgvaUktBIJHNKGmkUYz5dO6aH8uhr0tiVrv9atx7TmWODDoINYF1kVZaTbIRDVqgusHAflD6oAh8yZx10pP0j8_O8-gOKfstfuyfgdM4ctkGEzUHEIGwkNjMTeZaWR4IXLNAhSWTkkRZYUYEM8RQZq_kmnpGPng7ComsqYdXAvQr2Q84yyZ58BapmX6m0azA-8iTV3rbbP8KxtS3sZYJjkmSduUC-PUFEZuuKON_FC8aQBCXr-AfJ5Y6xnX6qDrkMulMUhVJq3ro7hD4ApS-sll16kJ61AYdHiPJGpeZf3yk2wlRGWJUKZE5fc6g5c3nnck-nuaF3SFVM2pnK5-J2bfxR5O_r4fvy_sfA6gGGfzD-hxT6MvzZ-il86eXrzJcvb1g6l1w4rkOf_XODHxxxZY-U7HZ8g06bO-8wha8WdINPWp9VH3g7GRefO-aPiQ==?" /></p>
 <h2 id="api-and-network-timeouts">API and Network Timeouts<a class="headerlink" href="#api-and-network-timeouts" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -7676,7 +7641,7 @@ Common Issues reference covering Python Error Triage Flow, API and Network Timeo
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

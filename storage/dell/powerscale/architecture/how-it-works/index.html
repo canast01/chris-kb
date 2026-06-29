@@ -8854,18 +8854,7 @@ How It Works reference covering Overview, Architecture, OneFS Distributed File S
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the <strong>OneFS</strong> distributed operating system. All nodes in a cluster are peers — there is no dedicated metadata controller. The entire cluster presents a single namespace rooted at <code>/ifs</code> across all protocols (NFS, SMB, HDFS, S3, FTP). Clusters scale from a minimum of 3 nodes to 252 nodes.</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  N1["Node 1"] &amp; N2["Node 2"] &amp; N3["Node 3"] &amp; NN["Node N…"] --&gt; INT["InfiniBand / 100GbE\nInternal Cluster Network"]
-  INT --&gt; SC["SmartConnect\n(DNS-based load balancing)"]
-  SC --&gt; NFS(["NFS v3/v4 Clients"])
-  SC --&gt; SMB(["SMB / CIFS Clients"])
-  SC --&gt; HDFS(["HDFS / S3 Clients"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class N1,N2,N3,NN ctrl
-  class INT,SC net
-  class NFS,SMB,HDFS host</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UTFuwzAQ2_2KQ6YuQWKrU4YOVurWQ25RxyxyrDhC1VMhq-lQFMhr8rC-pCcj3oRMIkTqyKN6G8whWk8bCHY4xaLAcgML9L2BcgE_40l_GuZYpGlw5rfAauarPC9mXuR5nHn8u1yzkhbfWNPS0ZKtNfWwgnK9fume99RSNIG0A-m-RoaAJn778J6doySPUR86ROmJ-H5PD1tUy06PpgfndQ-ddpoOloZ81kalsI2Cs1idH9nUGopj3mxXJ7ddzWlly0_uiV-30-R0sFyJu2L-Elg-AVbc_QQElzwB5DYT4MJSaQkqyWtPZKNuiDPdUPIr_gFGxJvZ?" /></p>
 <h2 id="onefs-distributed-file-system">OneFS Distributed File System<a class="headerlink" href="#onefs-distributed-file-system" title="Permanent link">&para;</a></h2>
 <p>OneFS runs identically on every node. There is no primary node or metadata controller — all nodes share metadata, data, and client I/O.</p>
 <ul>
@@ -8907,15 +8896,7 @@ How It Works reference covering Overview, Architecture, OneFS Distributed File S
 </table>
 <p>Losing a node triggers <strong>SMARTFAIL</strong> — OneFS rebalances data to remaining nodes. Quorum (strict majority) is required for write operations.</p>
 <h2 id="node-pool-and-tier-architecture">Node Pool and Tier Architecture<a class="headerlink" href="#node-pool-and-tier-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    cluster["OneFS Cluster\n(single /ifs namespace)"]
-    cluster --&gt; poolNVMe["Node Pool: F-series NVMe\n(all-flash — performance tier)"]
-    cluster --&gt; poolSAS["Node Pool: H-series Hybrid\n(NVMe + SAS — capacity tier)"]
-    cluster --&gt; poolNLSAS["Node Pool: A-series NL-SAS\n(high-density — archive tier)"]
-    fp["SmartPools File Policy\n(age / path / type rules)"]
-    fp --&gt;|"hot data"| poolNVMe
-    fp --&gt;|"warm data"| poolSAS
-    fp --&gt;|"cold data"| poolNLSAS</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kcFKxDAQhu99imFPghTvPQiLUPawdoWCJy9jOm0G0jRMskIRwYfwCX0SJytVdlf3FGbmny9__nQsZBJPvgLhwaaiMG4fE0kFq52nuoW77_rJX0X2gyO44T6Cx5FiQEMreI0WA-m-gjAr3oowTa55vNfmqpk6ggetK6jLSMIUIY-Uh86VvcNo4fP9AwJJP8mI3hAkJvkX3K7bY-5m4W7mZ-FOyfkCuAZVHtAG1Smn-TK32Z6R1z-Ot6UOlWw1pLIjHzMus1GM5ZcLlvugzHZESZkZoWaX8Y7NnDMYNFAImKweaQ4EsncU_yQtXwPlLSwJn_bU5Zksv0ttHK39lifDg_gLy2y4zg==?" /></p>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9071,7 +9052,7 @@ How It Works reference covering Overview, Architecture, OneFS Distributed File S
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

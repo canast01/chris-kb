@@ -8608,33 +8608,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 <p><img alt="ONTAP — Common Issues" src="../../../../../assets/storage-netapp-ontap-troubleshooting-common-issues.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUslugzAQvfMVo9yr3nOoVGWRIrWHJl2OlmUGsGpsahsiVOXfOyZAIxfS3Ox5y8z4OZUWhZdGLyE1R50kri0rb8ol7FLUXmYtHM4V-HYFr5B4kpdGp6eEDrk2zkvBMmWOS1isxwpsqbIYNaEJ17nCUyK1kMGaeUtsZCkK6WgAuiMxF7seh9cOh3WP0x1x0vGrluKTWczQohbB4yVUYD9UJlWNUXWJLKuVYkcrPTK01lhH8vcOgi1BcA8fAYRNB0468Ty3mHNyELziQvqWCdJIwRWZPQ4orHoUVj066eY0r0oZujHFc1brArnyRUsLKh6ScoUk2wPRnjsaPPGcxnwbiLT3SKwmW1h0tOE59X04Nwjks3E0Uxh0kJiGq9P4JeDuAf5ELnWDdA37XfL-CXlG9SfIGd58dDOCqwnNaG7L4VIcPU4w-X3p6_8-4kYPEaFz60e0K0tHzFtWjSQ_bLmXBQ==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A[Volume offline or write errors]
-    S --&gt; B[NFS/CIFS share inaccessible]
-    S --&gt; C[Aggregate capacity critical]
-    S --&gt; D[SnapMirror lag / broken relationship]
-    S --&gt; E[Node takeover not triggering]
-    A --&gt; A1{Volume state online?}
-    A1 --&gt;|No| A2[Bring online — see Volume Full / Write Errors]
-    A1 --&gt;|Yes| A3[Check autogrow and snapshot reserve]
-    B --&gt; B1{Which protocol?}
-    B1 --&gt;|NFS| B2[Check LIF and export policy — see NFS Mount Hangs]
-    B1 --&gt;|CIFS/SMB| B3[Check AD join and CIFS server — see SMB/CIFS Share Inaccessible]
-    C --&gt; C1{Aggregate above 90%?}
-    C1 --&gt;|Yes| C2[Move volumes or add disks — see Aggregate Capacity Critical]
-    C1 --&gt;|No| C3[Check volume snapshot reserves]
-    D --&gt; D1{Relationship healthy?}
-    D1 --&gt;|No| D2[Resume or resync — see SnapMirror Lag / Unhealthy Relationship]
-    D1 --&gt;|Yes| D3[Check throttle and intercluster LIF]
-    E --&gt; E1{Failover enabled?}
-    E1 --&gt;|No| E2[Re-enable failover — see Storage Failover Not Triggering]
-    E1 --&gt;|Yes| E3[Check cluster interconnect and heartbeat]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E2,E3 section
-    class A1,B1,C1,D1,E1 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFU8tu2zAQvPsrFrkHQaRbDi2sh1EDcQ5R25xpai2xpklhSTs1igL9iH5hv6RLqrIQlElOS4A7w9nZYasIpVfW3AGprveLRXMHV0-98KAc-B7BnQ-Dt4ePV_DD9WJAbmSEMJ3Gn4slN3-1-nhAsLudVoYrwTMpj4BEllwSVjDsYdXclOtVA3xNCMoIKdE5tdWYxJSMWXYdYSeYXIpBSOXPIPktJYVOYirGNEYMGxW0gBYd3MCW7B4Nt2kRBne9GpLgOoi0LYIXe7QnJDDWg2ebOiRlurQht0Hmbfou47siQMGa6NWfX7_BIcI_C1dHrVngU7Svft2-Zc5EZY9yD-LobUf2GYRpwfGormeRhA7plPaxCAqLtMIiuxDfr1eRE78PljwMVit5vgjm5cHGHo2HTwx9ZcmzymUF36wykXDceZBHF7pmU4xZaGIW1u9mIcxQpmcowwwb3hecoqsuJFK0LbTK7d3lyTlK5RSl8q0olfM0I-9_bqddqILUKi21ClIf0cXvQ4HnbORsyhzc-xjcL6ZHoX1_hsf3slvNan1P1nuN0XxlPJLUR8clrDgd_CC5TkuuR8nXaAQvB3ZCaftik96S6DjK08UDG_T57T9Tz2InaaNOawx3ReE8OfktCp9kWDRw_QGWYynGUo6lGkvNPzP2ZNMh558Q27PpkHOuIjKbDjmvL5Jk0yFndyJfNh3yxV8n8cEX?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8646,20 +8620,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </ul>
 <hr />
 <h2 id="incident-triage-decision-tree">Incident Triage Decision Tree<a class="headerlink" href="#incident-triage-decision-tree" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    incident([Incident Reported]) --&gt; clusterOk{"cluster show\nAll nodes healthy?"}
-    clusterOk --&gt;|No| haCheck["storage failover show\nHA takeover active?"]
-    haCheck --&gt;|Yes| waitGiveback["Wait for auto-giveback\nor run manual giveback"]
-    haCheck --&gt;|No| nodeDown["Node down — check\ncluster ping-cluster\nhardware / power"]
-    clusterOk --&gt;|Yes| diskOk{"storage disk show -broken\nAny broken disks?"}
-    diskOk --&gt;|Yes| diskIssue["Check RAID state\nstorage aggregate show-status\nCheck spares available"]
-    diskOk --&gt;|No| volOk{"volume show -state !online\nAny offline volumes?"}
-    volOk --&gt;|Yes| volIssue["Bring volume online\ncheck aggregate state"]
-    volOk --&gt;|No| protocol{"Which protocol is failing?"}
-    protocol --&gt;|NFS| nfsCheck["network interface show\nnfs connected-client show\ncheck export policy"]
-    protocol --&gt;|SMB| smbCheck["vserver cifs show\nvserver cifs domain info\ncheck AD connectivity"]
-    protocol --&gt;|iSCSI| iscsCheck["iscsi session show\nlun mapping show\nmultipath on host"]
-    protocol --&gt;|SnapMirror| smCheck["snapmirror show -health false\ncheck intercluster LIF\ncheck throttle"]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1VMuu0zAQ3fcrhu4r9nfBVaECKiGudDdsunGdSWzVGUe2k1AhJD6CL-RLGL9Ci9JVnDP2meOZM260Qxm0pSdwulNhs9EkdYMUnmB7LEt4xcG6gM0WfnglBuTNfEpQZ_DnRprRB3QvFz5R1uCVnU-0NwbINuhBoTBBXZ9XCZT4oFDG4z5YJzqEVmhjp4Xn8x6CuGBCBKudcJ1oFjp84uhZJLZv_Aut5TNjsLuuBE7EiBsJekGjMFDxVcao_mBnrs72Ky-h4TX8-fUbZFR8onrfQVO3Kz8nUsI1s3AIb2GwM7pV6kb7y8vtpSOQLgy7s7MXJC4gXSGvU9Q_P2Q6ej8yuk2VhNf98QA-iIAnqvSi6xx2DKUcuxgd_YnyAT-wXA9i4sKLs8HVPJM1STB_xx6L1JQF3lgymjArtm0bfyDveyCag1Xze8fVK7uhEqUC34qOeVaZBmeDldbEjistFVQAtE9OYvZ1DdT66jzCMFt3AU3cwVZILNbjLSAtER_Chjus4zjkUFaI3-NocJ-NltfVLL4_1yyTRxdNLDXTZpY7qLG90MQiWlv594eaX086rGfQXi4XiWsNHr3noS45THL7EE1akH40QQ8iKK43KOvDA-XLYJIYeu2cdaXteaC5vMYvzUq1qxPx5fix4kFxQ8IDUy3vDezewfKU_HtUIlweiPpQROh21G_xOrD3BHnWyshVINnvBkv2ziYvv3nHglRfLY5LCYuH7sDa8jtw6dJ_WzP2F7yIAxs=?" /></p>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9121,7 +9082,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

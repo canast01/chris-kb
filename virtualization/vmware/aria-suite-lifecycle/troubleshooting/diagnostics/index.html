@@ -9254,40 +9254,7 @@ Aria Suite Lifecycle (vRSLCM) diagnostic commands: check service health, inspect
 *Applies to: Aria Suite Lifecycle 8.x*
 </div>
 <p><img alt="Aria Suite Lifecycle — Diagnostics" src="../../../../../assets/virtualization-vmware-aria-suite-lifecycle-troubleshooting-d.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([LCM Issue]) --&gt; B{What type of problem?}
-    B --&gt;|LCM UI unresponsive or slow| C[systemctl status vmware-vrlcm\njournalctl -u vmware-vrlcm -n 100]
-    B --&gt;|Deploy or upgrade operation failed| D[grep request-ID /var/log/vmware/vrlcm/vlcm.log\nRead installer.log for failed step]
-    B --&gt;|Certificate expiry warning| E[GET /lcm/api/v1/certificates\nCheck notAfter date per product]
-    B --&gt;|Disk space alert| F[df -h; du -sh /data/vmware/vrlcm/*\nClean old logs and bundles]
-    B --&gt;|NTP drift or SSO login failure| G[chronyc tracking\ntimedatectl status]
-    B --&gt;|Product environment shows error| H[GET /lcm/api/v1/environments\nCheck environment health JSON]
-    C --&gt; I{Service state?}
-    I --&gt;|Not running| J[systemctl start vmware-vrlcm\nCheck disk space first]
-    I --&gt;|Running but slow| K[Check disk /data for fullness\nCheck DB size du -sh /data/vmware/vrlcm/db]
-    D --&gt; L[grep ERROR vlcm.log | tail -50\nRead install step and failed component]
-    E --&gt; M{Days to expiry?}
-    M --&gt;|&lt; 30 days| N[LCM UI → Lifecycle → Certificate Management\nTrigger rotation]
-    M --&gt;|Already expired| O[Rotate immediately\nStop all operations first]
-    F --&gt; P[find /var/log/vmware/vrlcm -name *.log.* -mtime +30 -delete\nRemove old snapshots and content library cache]
-    G --&gt; Q[chronyc makestep\nVerify offset &lt; 5 seconds]
-    H --&gt; R[Check all required ports to product VMs\nnc -zv product-vm 443]
-    J --&gt; S[Collect logscraper bundle\nLCM UI → Support → Logscraper]
-    K --&gt; S
-    L --&gt; S
-    N --&gt; S
-    O --&gt; S
-    P --&gt; S
-    Q --&gt; S
-    R --&gt; S
-    S --&gt; T[Open VMware SR\nAttach logscraper ZIP]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,M dark
-    class C,D,E,F,G,H,J,K,L,N,O,P,Q,R action
-    class S,T escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9VM1S2zAQvvspdjjSMYYBLrTTGZJACCQEnJRDJxchr2M1suRKsjuh7bUP0Efsk3QV8RMYDZd8zq707d-3KoRB7oRWJ2DEsnJJ0juBnd4O_LQVa5Cs5GZqKfF30iePXVuHNXcSrGOutdDVP5jBtDOS1wv1TbdGMen9afvKB6mCg_39KPGAiJcGG7J9b9G6dDSArGMmk3qZBZJsQ5J19LNH1oXKkRUgFGUhJRpvg1IbKJmQWFBy2ERDnVGo4dkcMs_GGpF1BxlH40QpOHNoF6pfIV-B0u60dGigICs09NEYXbTcRVnPibUoIa0-QtFCaivI6B57nfsucUtkCrQsgPK1wFQB960qJNoo7ZBoeWW0WnNwhvGVUFS5EzX6rF6GEL18EakUVSeIrkblnivdskGFTLoKLmfT6yjniDhHUc_lW20Y90YaIVoh7ApswzhCKYyNt_OKyLaOb3oZpttKqdA-5z7ogRUP-E7Ti_tohPGT4s7yfJrDk6zgFzgSEKTH-68VthHUZl6PAuO6brSinkXpJ0Q_iXquyTPuT-DLCP79-QtjUSJfc4mbf_0XIcKEKbZEP5WFmtNqLkmCRtO4aVejzFNizv0BBFGTQgR9yfVCzZymzKkETSreXLfvtP6GWEpBdUb3j5aY1Qi7vld7u5DWXovw4XAf0gIlOvRdq3WHG41bxRpbaReEzrVyXmNS3Btm1sAZrzCaw-2W7Gu2Qt_7hbpDI8o16LK06OATHINF4izi6s-fJeRL9-8KPXQFNNpQOk4_bTPcTUhMikP60D3Z0q6Go6PDKO3M02p6ceiqX2FumH8bwhIv1NZkZ23jg4UpP5-Mks6JdNqgomR8q2GWL9Spc9Sf7RhfRzfR26ePihpZ28b7mfQg_Qz9AIMAZwHOAwwDXCQjD5cBrpKBh3Ey8XAdYJqce7hJhh5ukwsPeXLpYZZcBRgHuA4wDXAT4DZAHmDmYZ78B91xM8A=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFk01qwzAQRvc5xZB9CvldZNFN6CLQQmkOIIQ8iUVlSUiK21ACPURP2JNUsmzXbWx5Z6Q3z-P5xhk3yBxXcguZepOTib0U2qliC_sMpePHCxziCXzYnGr0HKeFktl1Yh1qMicsR_ZKBCuIRVNyhsQ66s52C9ODJ2AO359fsAsUPO6eoKYgUtPWGxqh8iSwNi8Il1b7Q1J6uVAnclSGoDHKtO5F5d5HDgJ350HwIERwWL-sG2do_GdyRh0SfNfcXBr5stN4h4JIDZtXtTnj9pVYTRk2xlXHGG6huh02rYk2qDQaGiIiOVLh8mhvlOtK-Wxw1nIQOai4YfmmbhNlyY2ShY-bUJn5V6rszFzzgk2n5w4KHoUaTUVp0Cpxjhv2Ep5LBJ_Og2VUhGE2Jaqk4tquH8zuYXS9uCzROn7ympu69PKkKlN7karrSz3FJ7NNFY7m9qc4PcQg_U1o_L_r44cH1kffjqmPSgynDx8Zyb-SH4uo3rw=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9635,7 +9602,7 @@ Aria Suite Lifecycle (vRSLCM) diagnostic commands: check service health, inspect
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

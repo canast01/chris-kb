@@ -7613,39 +7613,7 @@ Nutanix diagnostic commands: run NCC health checks across the cluster, inspect n
 *Applies to: AOS 6.x · AHV · Prism Element / Prism Central*
 </div>
 <p><img alt="Nutanix — Diagnostics" src="../../../../assets/virtualization-nutanix-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([Nutanix Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Cluster health alert or unknown failure| C[ncc health_checks run_all\ncluster status]
-    B --&gt;|VM storage I/O slow or failing| D[ncli disk ls for disk errors\nallssh links http://0:2009/ for Stargate]
-    B --&gt;|Node or CVM not responding| E[allssh genesis status\nncli host ls]
-    B --&gt;|Alert in Prism - investigate| F[ncli alert ls\nncli events ls limit=100]
-    B --&gt;|Storage capacity warning| G[ncli sp ls -- storage pool\nncli ctr ls -- container capacity]
-    B --&gt;|DR or replication failure| H[ncli pd ls -- protection domain status\nCheck remote site reachability]
-    C --&gt; I{NCC result?}
-    I --&gt;|FAIL on hardware check| J[ncli disk ls for disk state\nPrism Hardware page for disk details]
-    I --&gt;|FAIL on network check| K[allssh ping peer-cvm-ip\nCheck port 2100 CVM-to-CVM]
-    I --&gt;|WARN on capacity| L[ncli sp ls\ndu -sh /home/nutanix/ on each CVM]
-    D --&gt; M[allssh df -h for CVM disk usage\nRestart Stargate: genesis stop stargate; genesis start]
-    E --&gt; N[allssh uptime to check recent CVM restarts\nIPMI for physical node status]
-    F --&gt; O[ncli alert get id=alert-id for detail\nFollow recommended action in alert message]
-    G --&gt; P[ncli ctr ls for per-container usage\nIdentify top consumer with du on datastore]
-    H --&gt; Q[ncli pd ls for replication status\nTest network to remote site: ping remote-cvm-ip]
-    J --&gt; R[Collect ncc log_collector bundle\nOpen Nutanix support case]
-    K --&gt; R
-    L --&gt; R
-    M --&gt; R
-    N --&gt; R
-    O --&gt; R
-    P --&gt; R
-    Q --&gt; R
-    R --&gt; S[Upload bundle to Nutanix portal\nProvide: cluster UUID, AOS version, NCC version]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
-    class R,S escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9VMtu2zAQvOsrFjlHsJtbXaRAY8exkvgRu-nJQMCQG4kIRRIk5TQo-u9dilIegNyLx3zszO7sUkI65EEaPQEnyypk2cUETi5O4I-vmEXapWOmS4V_symdaM6hQqZC9cAr5M8eXKMfmFJ7zVXjAzrwgYXGDzLMWgYlQUj_DMrDk3HpPzpnnN9rYvK-AiU1UVch2MloNJ6cjcdfR-3lXWCuZAEH6S-JviMoUaOXvktmr1vVyvhAqoOx8z41ptDFW10MHlAHH3NVspbh_Mt4PBh_1cd7Gy_nOUkbx0oEa4zqyHhw3SE3OjCpyS7OLOMyvA6yLnpWK7pA60xIHQNhaqJ4K3Ea-0HBNV0AL-nHIeMVe5TqGH1B9MXgyfXRTkU53OuNk76GBXPihTkqMlb6dkcgFXfE6Jv3JlmpS7CILueHOpe2r8Ea6sAZOQ3TX8s8mJxgkOv2k-l7LRrIiXdUmRpHuqFr8vcIyKpoBBxjWb5nJJ4gr9o66HKqpfFU2l5vkQqntPoBnHwYMWOjK-32t4-T58Kg3updr7FB1gjBAO-6x2ncWnGXBKmqYrMs2pxs9eolZwq0Efi_d7b-PMwlBpDivF3kUqQ-tS3a67lRyrzEYFPXqAUKYGm8aLRSeI0-ejCotOmVutFu04wNfZvvzr9CUGHy6RWiW3Tqm5oOX2Qg05vYIsECi09mWOfu80OIMg6tIjfaXPs38JNMA43hxbjn6OqH1zBJ45Z2uoEblNqS1JRcoR2Inztlygee1qT62GihqJ61RQ2rNGLgG9vOLGd-OP0dcd5bZZjoCGJyfXQMZSo-KXOQggL7L-n9fTE7hR_rHRzQearzFFbTab8YFPpBQj1v4X0znE52Afl3mCaYJbhMME9wlWCRFRGuE9wkuM1mEZbZZYRVNo-wzq4ibLJFhLvsOsI2u0lwm2CZYJVgnWCT4C7BNsIu-wdNKjqg?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNU7tOwzAU3fsVV9079Dl0QEIRAwMMrcRqWfZtY-HYke2kqlAlPoIv5EtwYicUSB22pjkPn-MTLgwyJ7TaAtcnNZnYc1E6XWzhkaNy4nCGffgH3mxOS_Q4QQut-GViHZZkTkyliGKM5EilywnLkb3aLUz3_jXM4fP9A3aVgucsgwCBAJn2is0RqDpKjJqLIEKYrPyzIVRxkmvrokWnvWi1swYKEQoeCg00Wt32WEYPKtE421pg7RP3J19eqQdQKx5At3VXbR9USmtzctCmC3ESHAmrO_VV30uAgod2IWYNFrKXp6bqo_JpBEs4rmMS67ShR29CS8qEO7eZStM5rq_yRCh00DZZabQLW_BTKKhQCc8NobymiiEnFk0tGJKrs3aWm9byPiIhIkdTGbRaVmGUu-Z3jeDbebCMSuqwp-iayku_WJjdQXqRQtXoXY9e4w9pdHIpcmJLKdroVFLk0VtPkceu7wc30Wkj-H1b__p4hyg3-xsCj7Q2RBnpaoiSbugX4wuujf0k?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7889,7 +7857,7 @@ Nutanix diagnostic commands: run NCC health checks across the cluster, inspect n
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -9241,39 +9241,7 @@ PowerCLI diagnostic techniques: enable verbose and debug output, trace API calls
 *Applies to: PowerCLI 13.x*
 </div>
 <p><img alt="PowerCLI — Diagnostics" src="../../../../../assets/virtualization-vmware-powercli-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([PowerCLI Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Script throws an error| C[Enable -Verbose\nRead full exception message]
-    B --&gt;|Script produces wrong output| D[Add breakpoints\npdb-equivalent: Set-PSBreakpoint]
-    B --&gt;|Slow execution on large inventory| E[Measure-Command timing\nSwitch to Get-View]
-    B --&gt;|Connection or auth error| F[Test-Connection vcenter\ncurl /sdk to verify HTTPS]
-    B --&gt;|Cmdlet missing expected property| G[ExtensionData for raw API object\nGet-Member to list all properties]
-    C --&gt; H[Read $_.Exception.Message\nand $_.Exception.InnerException]
-    H --&gt; I{Error type?}
-    I --&gt;|InvalidLogin or 401| J[Verify credential and domain\nConnect-VIServer -Credential Get-Credential]
-    I --&gt;|NotFound or 404| K[Confirm object exists\nGet-VM -Name name; check typo]
-    I --&gt;|PermissionDenied| L[Check vCenter RBAC role\nfor the connecting account]
-    I --&gt;|Timeout| M[Test TCP 443 to vCenter\ncheck network and certificate]
-    D --&gt; N[Add Write-Debug statements\nor use Get-View for inspection]
-    E --&gt; O[Get-View -ViewType VirtualMachine\n-Filter RuntimePowerState]
-    F --&gt; P[Invoke-WebRequest -Uri vcenter/sdk\nCheck StatusCode = 200]
-    G --&gt; Q[vm.ExtensionData | Get-Member\nAccess Config.Hardware directly]
-    J --&gt; R[Collect module versions\nGet-Module VMware.* -ListAvailable]
-    K --&gt; R
-    L --&gt; R
-    M --&gt; R
-    N --&gt; R
-    O --&gt; R
-    P --&gt; R
-    Q --&gt; R
-    R --&gt; S[Capture debug output\nVerbose + DebugPreference + Out-File]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
-    class R,S escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1lF9v2jAUxd_zKa6mPW0Kq7Y-ddokCH9bUlLC6AvSZJwLeCR2ZjtQtO2779qmVJXSlxwlvvnZPvfYhdDIrVDyBrTY7mwU9W7gXe8d_DE7ViN9pWEmtyX-ixIaGUi2LhHiJeq1MriSc2QFbJqyBHziWDsUVGgM22IrpE-QblHAWiPb10pIa1ayLtYx_m7EgZUo7Q3kaOMs711KWkkDIqXITKMxTlRVMVmAFZWQ25XMj8LyHVgFI0ItBR5bEUNCLNBY-l_K4AMcOC0B9UryRpfwyRR7hzmgFpsTjBeLLG9FjZw5TxalIUifWQYbpUGzI3SzCaj1LypdSbeaFKs1agcthbHAyLpaqxq1FWha2WNie5_f_-wMnl3upMHllXQbfzUyoc3oy2srckLISevILY0sw265xoLMEKwEN0ehKibkSp7NipeTHDUZA3HyUuh2-PLaOsMdzUCMjdDV2RjKDllhgj_LFOJ7ViFIenwFvkNOLTjVqhU2dTBfckh842De6yagVUnOuBbYHQI_t1dugXGumjcSlZ7jAIskg-vrL77xyXMc_CQS7VHpvfeDu5ZtBGe2Per356g_amEx7uO62YKxVF2hTz0trjF4SagPjJCmDkFsRc4Iean3z8WpRlgKbRtWpozvhKR9x0NReitop6LCTB1R5_atdWYuC_Kg9hg_4npOB9F5EP_Q4vkwuFNAffcOOE5jElUgfIPPV1etyAdCHqrO6wPxF17iv5JdzinA4IOw7YyZLo5MIxT-QipPrdi5T05ZushUqmjoJqL8uQnO2UnDx2XqWJ0PEE8pV90DE6W7tlqZuWOy2jZuct8j1di6ocN6vuPgI_jeZRo3qFFy92XWWGdyO7JLSO95Mp3AxJimvSzqQfwdkiD9IIMgwyCjKHEyjiZOboPcBZkGSaO-k_to4GQWDZ1k0cjJQ3TrZB7dBZkGSYPcB5kFyYI8BJk7yaP_OOQOSg==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk89OAjEQxu88xcS7BxA8eDAxyIGbET1PSneAxtKubXcVDYkP4RP6JE4Lu_hn2eVGNr9vvs43H5lyJIOy5goy-2J6Pb9Z58Gur2CakQlqsYHZ7gu8-5XIiTkl1tZk254PlGMf5YrkE5bkPI_xKEyG0hpTjT2bMQZ9-Pr4hHFEoUKBUTig4IMIdFb7xIcJs9S0dxogGTHXFK3m1lNyymheLNEWIa-cBslpklDYo8kpoRDRIhx3uUBHIsOwIlwUWiO9Ssp_bnKR5t8zBAxBhKCGjs8dYsFPptdAJi6fiSBwYR068YIiV9X0YZr-yE-eVOgto8AoMAo3d1MQUpL3x61GmDu7UHqXkOWHrdUboRZuSajqRUbJ6m6HpoQqFBIKypRcAes28FyQU9RieYmBfMBSsoBcXKjuQKnCprK8TJYPjEI5Tmha6Cfa6OHIW13srnAff5cEHMjES6G5M7XElkJv6w7D-TWc1tG4qQ9qybP-iTtr1yZuaVObrLMsbeLO87eJOw_5S3xCuHHy4Xwn_ZObJEeDbII74muSdITWJOmI6o_kG6MMDWc=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9492,7 +9460,7 @@ PowerCLI diagnostic techniques: enable verbose and debug output, trace API calls
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

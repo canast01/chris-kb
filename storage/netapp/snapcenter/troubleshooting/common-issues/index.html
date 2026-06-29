@@ -8176,31 +8176,7 @@ SnapCenter troubleshooting: `Invoke-SmDiagnostics`, plugin connectivity failures
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kMsKgzAQRfd-xeC-P-Cimz7ArYVuJcTRBmJGkqhI8d87KlXxsZvce0_mkSmL0isyEWTUmiBwXVl5KiOIMzRe5R28JgW-7iMq5JwSJZmsD7goDDmvZJpraiMI77MCT1bCmRmaCFNo7ANJJeOpcq5Gl1rM0aKRnAlvowPx6EDydw5_adDybIw70vU0f_geNVi0Q3KNJEPdIJCFh5NCC48zQo3Q_XwPuFxht68yDfKzYGydO93wJH-wyzq5aTsQS_TsnJvUrsXG_wHn98Lr?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A[Backup job failed]
-    S --&gt; B[Plugin host not reachable]
-    S --&gt; C[Restore operation failed]
-    S --&gt; D[Schedule not triggering]
-    S --&gt; E[Credential or auth error]
-    A --&gt; A1{Failure phase?}
-    A1 --&gt;|Quiesce| A2[Check VSS writers and app-aware settings — see Common Issues Reference]
-    A1 --&gt;|Snapshot| A3[Verify ONTAP credentials and SVM connectivity]
-    B --&gt; B1{Agent service running?}
-    B1 --&gt;|No| B2[Restart SnapCenter agent on host — see Common Issues Reference]
-    B1 --&gt;|Yes| B3[Check firewall on TCP 8145 between server and host]
-    C --&gt; C1{Restore error type?}
-    C1 --&gt;|LUN mapping| C2[Check igroup membership on ONTAP — see Common Issues Reference]
-    C1 --&gt;|Space| C3[Check destination aggregate and FlexClone license]
-    D --&gt; D1{Scheduler service up?}
-    D1 --&gt;|No| D2[Restart SchedulerSvc and IIS on SnapCenter Server]
-    D1 --&gt;|Yes| D3[Review policy schedule and resource group association]
-    E --&gt; E1[Verify ONTAP credentials in Settings — see Common Issues Reference]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E1 section
-    class A1,B1,C1,D1 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqlU8Fu2zAMvfsriN57iL0CQw8bbCcFctgWVEV2VmTG1ipLhiTHC4YB-4h94b5klBy3HSD00J1Iw-Qj3-NTIy0KL42-BSvbzmcZu4Wrrx33IB34DsGd-8Gb_uMV_HAdH5AKqYPrVuHPrKTiiovHcYBv5gBHLhU2ycqKKndqbKWGzjgP2nj6zUXHDwqTHTV13KPzxiKYAS0Pa742Yk0NTHTYjAojvidKLVqp22T9hupriw1qL7kCY4GPvgO01tg02xV1lKv0vzygdSgeYc8YTFZ6tA64boAPwzWfONFw6D1t4-DPr9_0gVCbvidSW-dGdHCPR7SoRVqPsqAJe6JzPMOXzw_lDsTT8vMgtv8EwmgdLnqS_pw-RCBRpUlU-UVzbj0wzYea4JF0aSmCuZzuLctXxZM8R7LcxJUKeA_1Dt6v3t3AAf2EqAnXnsJAYhNmpY0RGNRpBvXzGWRrDfmyx_5Al-jkEAbOwr2FQf3MoCGFpJ79yNvWYss9xp3vFH6vldEISgrULg21DgTWaQLrf05wcbNlJxHxt1sWWLw4DYuCpaGKCHWSOMFgaKEzuOV5BDCLzoxWIMxCceeMkJFV-rmsXvMfvWv2P-7OGFx_gHIO1RzqOaznsKH3F2vyJSnIzLE8X5KCzBE78yUpSO0Iki9JkW0i3Cr7C0Kqq2s=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8299,7 +8275,7 @@ SnapCenter troubleshooting: `Invoke-SmDiagnostics`, plugin connectivity failures
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -7786,24 +7786,7 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 </ul>
 <hr />
 <h2 id="hardening-sequence-new-switch">Hardening Sequence — New Switch<a class="headerlink" href="#hardening-sequence-new-switch" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    start([New switch deployed]) --&gt; proto["Disable Telnet + HTTP\nEnable HTTPS only"]
-    proto --&gt; snmpHarden["Remove SNMPv1/v2c\nConfigure SNMPv3 SHA+AES"]
-    snmpHarden --&gt; aaa["Configure RADIUS / TACACS+\nauthorder RADIUS;LOCAL"]
-    aaa --&gt; rbac["Assign RBAC roles\nswitchadmin · zoneadmin · operator"]
-    rbac --&gt; ipf["Apply IPfilter policy\nmanagement subnet only"]
-    ipf --&gt; ntp["Configure NTP\n2 internal servers"]
-    ntp --&gt; syslog["Forward syslog to SIEM\nsyslogadmin --add"]
-    syslog --&gt; audit["Enable audit logging\nauditcfg --class 1,2,3,4"]
-    audit --&gt; domainId["Set static domain ID\ninsistDomainId=1"]
-    domainId --&gt; fabricBinding["Enable fabric binding\nfabricbinding --enable"]
-    fabricBinding --&gt; defZone["Disable default zone\ndefzone --noaccess"]
-    defZone --&gt; backup["configupload post-hardening\nto backup server"]
-    backup --&gt; cmdb["Update CMDB\nhostname · serial · domain ID"]
-    cmdb --&gt; done([Switch production-ready])
-
-    style done fill:#15803d,color:#fff
-    style start fill:#2563eb,color:#fff</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1VMFu2zAMvecriF6boEi7U4cNcJMOCdBmRZ1eCl8YSXGEyZQhyQmyod-1-75slOQ2LeDeRFp8Ih_fs9ROiaAtXYPT9S6MRj6gC9dwtlIH8AcdxA6kao09KnkGf_wOW3UNdo_mZdQ6GyxfnWuPG6NgrQypAOewWK8fKrqllI1BCZbM8VQfH0WqjXoZeWraBTqpuIWzR9XYvYJydf-wn17sL0VFM0tbXXeuz15BuSjOi9tyEAwRGeVU8ljMl08lXMC6mBWz8rwi7MLO8muu__b17uesuBsEcxsUjFZ4r2uCx5tiBs4a5SvKvKBsNMG_v_DbknoLbKscBusGIXW7jYhta46wfNhqE7iR1hotjhU1SFirRlEA320ik5-SRqH9MOcq8n0JmhiP0IBXbq-cHyb86I2tufyHdQcmHnICgoVyeXvP06U4DzSZoJTDVHdSR530W04hcF2tqY40cyi2NQMIg97DdHw5vhp_GYSStkFNS8loJU_NCgxaQM7Ccl6RJq99mPfXvk0HUba4cVrcaJLcwamxnIZNzleU4z7k9lS6NtyX2j7zat8pnDPYmZA2XhFH8cAgZFEI5YcJZxn96uK-RN4Xmwklb92HyS4JP_XF9OeL_fIGoUQjNwz01EoMCmb385uKdgxE2KgoPi7VvH4-vbH3CeNprDL7m30su_QXmDgW8rDk8o8BJt8h2T6bP4YnA7_zcvzAZoyGjMdopeSnGLAJohHikXUctZxgkup6dabyKKEssxi-iuRNLTH5YecfFZBq8gJfFxlTmeN-JzERKU285kf49n9ZFMjn?" /></p>
 <h3 id="remove-default-snmp-community-strings">Remove Default SNMP Community Strings<a class="headerlink" href="#remove-default-snmp-community-strings" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show existing community strings</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snmpconfig<span class="w"> </span>--show<span class="w"> </span>snmpv1
@@ -8050,7 +8033,7 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

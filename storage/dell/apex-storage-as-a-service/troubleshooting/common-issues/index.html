@@ -8766,40 +8766,7 @@ Common APEX Storage as a Service issues — provisioning failures, connectivity 
 </table>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{Portal shows\ndegraded capacity?}
-    S --&gt; B2{Snapshot policy\nnot executing?}
-    S --&gt; B3{Host connection\nrequest pending?}
-    S --&gt; B4{Billing or usage\nanomaly?}
-    S --&gt; B5{SLA breach\nalert?}
-
-    B1 --&gt;|Check SCG connectivity| D1{SCG appliance\nonline?}
-    D1 --&gt;|No| R1[See Issue Reference —\nAPEX Console shows infrastructure as offline]
-    D1 --&gt;|Hardware fault| R2[See Issue Reference —\nInfrastructure health warning in APEX Console]
-
-    B2 --&gt;|Check pool burst capacity| D2{Pool above\ncommitted tier?}
-    D2 --&gt;|Yes| R3[See Issue Reference —\nBurst capacity charges unexpected]
-    D2 --&gt;|Schedule miss| R4[See Portal Issues —\nSnap failure: check available burst capacity]
-
-    B3 --&gt;|Check APEX Console SR status| D3{SR raised\nin console?}
-    D3 --&gt;|No| R5[See Issue Reference —\nCapacity request delayed: raise SR in console]
-    D3 --&gt;|SLA window| R6[See Issue Reference —\nCapacity request delayed: review SLA response]
-
-    B4 --&gt;|Allow 24h telemetry sync| D4{Discrepancy after\n24 hours?}
-    D4 --&gt;|Yes| R7[See Issue Reference —\nBilling discrepancy: open support case]
-    D4 --&gt;|No| R8[See Portal Issues —\nCloudIQ gap: check SCG and telemetry]
-
-    B5 --&gt;|Check underlying platform health| D5{Platform alert\nin CloudIQ?}
-    D5 --&gt;|Yes| R9[See Issue Reference —\nInfrastructure health warning: check platform]
-    D5 --&gt;|Network path| R10[See Block Issues —\nPath offline: fix physical then rescan]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdVMtu2zAQvPsrFrkXiF956NAitILCQA-udGgPvWyolUWEJlmSiiMUBfoR_cJ-SZeOBSQA7UNuY2sxw53Z3UZ5klFZU4BX2y5OJuW0gItyegG_QoeO-H8uQLPV9HtSpW81EaxD6AkqasmTkQT__vz9Ye42999hZU2wmiB0dh9AmdZjiL6XsfcEGMC2rVaG8vSzc_Trt1wdoY4d7NEbZbasBK_1s_xl4i9nee35OW3R-xBBokOp4gCyQ7-lAL2hZ8cc1OQ5F0fOjfUR9Qt1eGGsDTpoUWnupWBCko-AT_wbH9i9hzd6-WbSg8t5Xnh5rpnV2Iann_yeCA1pHKhhClSBoK6Sm_KMkdXVO_npSdEe6i93DINjhRNBJePKRV77-mxQSus0Do0K0pNDI4cCrCMDoXeOY2BTT4hWN6fTWmnbN-uvsEU3hlWvPgOaBiJp2lH0J1JKSZTLvODtu8d9fITTGFvrdye29fIoILTl4tcNbZDJjrtYQKuewXVDUJL7jh27xfFINFnamkm_dRhBhVQLYdi5aHefssUiXQyRvyYiraPIr6NI0y3y0y3SdIj8dIjkt8j7zacNPnyEajqCGV-EA5iPYMFrdQDLEVzxMB7A9QhuONQDuB3B9HLyH9i6zZc=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8846,7 +8813,7 @@ Common APEX Storage as a Service issues — provisioning failures, connectivity 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

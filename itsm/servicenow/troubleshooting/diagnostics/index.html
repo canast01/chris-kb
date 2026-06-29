@@ -7978,37 +7978,7 @@ ServiceNow diagnostic tools: check instance health and thread state via stats.do
 *Applies to: ServiceNow Washington / Xanadu*
 </div>
 
-<pre class="mermaid"><code>graph TD
-    A([ServiceNow Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Slow page loads or timeouts| C[stats.do — check thread count and queue depth\nthread_monitor.do — look for blocked threads]
-    B --&gt;|Slow database queries| D[DB Activity Monitor for live queries\nSlow Queries log for historical &gt; 10 sec]
-    B --&gt;|Integration or MID Server failing| E[ECC Queue in UI for error state messages\nMID server: tail agent0.log.0]
-    B --&gt;|Script or Business Rule error| F[System Logs &gt; All — filter by source and time\nSession Debug for per-session BR trace]
-    B --&gt;|Scheduled job or workflow failing| G[System Diagnostics for self-test suite\nCheck failed scheduler jobs: sysauto table]
-    B --&gt;|Unknown platform issue| H[Background Script diagnostic snapshot\nSystem Diagnostics &gt; Diagnostics self-test]
-    C --&gt; I{Thread or queue issue?}
-    I --&gt;|Blocked threads in thread_monitor| J[Identify blocking transaction and table\nDisable offending Business Rule if causing lock]
-    I --&gt;|High queue depth at stats.do| K[Scale check: contact ServiceNow support for node capacity\nIdentify runaway scheduled job or report]
-    D --&gt; L[Identify slow query table and condition\nRequest index via HI portal for cloud instances]
-    E --&gt; M[Check MID server connectivity to instance\nVerify MID server credentials: test connection in UI]
-    F --&gt; N[Session Debug: enable SQL and BR trace\nReproduce issue and check session debug log]
-    G --&gt; O[Sysauto table: filter state=error\nWorkflow Contexts for stuck workflows]
-    H --&gt; P[Run Background Script snapshot\nCapture stats.do output and attach to ticket]
-    J --&gt; Q[Collect stats.do screenshot + thread_monitor + log excerpt\nOpen ServiceNow HI support ticket]
-    K --&gt; Q
-    L --&gt; Q
-    M --&gt; Q
-    N --&gt; Q
-    O --&gt; Q
-    P --&gt; Q
-    Q --&gt; R[Provide: instance name, version, affected node\nRepro steps, log excerpts, stats.do screenshot]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P action
-    class Q,R escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9VNtuKjcUfZ-v2DqvTaL0FamRAuRCAkkAtecF6cix9wwugz31hQRVlfoR_cJ-Sfe2GeDoWH1hMb7stS9rWWmHMmhrBuB0sw5VNRzAl-EX-NOvRYe0StvCNC3-VY1oxwcR_JWy8O_f_4Bco9xAWDsUCqSNJoAwCv6IGBEUdmG9Mnn329YaHazrb7bWbqC2Dt5bKzeoDkF8kXdMvOMh3FKeOx32MMux0v1W75AJnUa_MsvWfsA8fxFHk46stafTWooWbuDna_AoizR3RHM3GvF9Sl8b-HWS7qNz9MuFI2zRe9Ew1Wwypkhuh24AQegWaNmE6ytivbouxr-n-Mu9D7iFqW08JXPbtqkbtW4DUi_24G10ElMXg94iVUSENB0Y43vM5XToLv1hdbiA4ITEIt_DiW-sRWOsD1r6FMNjW18G9AF81IFoRmmSNdVBs_A0VxVbyuh3--4H4PdexGCpzPe2TPXImhFy0zgSgYKldLoLoI6s4I3o_NoGKujHjG6--zrmVmSaENOkuPPEO4pmoOt9lpU2DbfHeJEUnrvKNazMWHv-A7au0Sg-OIxeG2orLKhy0DVIwSsNcKQi4TP3l1SF2QcDcoAJRAVLkoWW-EJa9LHrrAup6cYqOio6IUnEK3PM1UUjPsT-2HbFbQe64JDvFrmn58V6Vj17YJ_LS4VSMkpz2SuzQNqkWWuj8BN2WsDjBDg0OYITk62NinZJ4kZi2YMzIswiOQmfOQz2riSB9CFW5jeyIGV2ftZhyle0pKgkvf42TSaZrcj7wk0-98AA0KQil_NpKrT3ANfZOasi-Ud7Hw9tSDn3flHJRWTRItdrNsxJ64Pemcn8v6SHYGW-WrepueUjmjd-hoOlQiSij8NeuYlvRLCIZNsfrHLyx0h0ITqE40NrY-hiflhFIH2tudPklA2WpTHnSdm2pZVTEE_tR8MM8BN8_yTTAr-U-CnRdZTAa4fmXMKklV7F_8O6INY3Z3da0XqvAzBiixdA4-fuX4Agt8lAAmcrHOZFOWLnL85zoK9C4kXa2ySPY64TnnvxYDWEyxsYZRhnuMtwn-Ehw2M1YXjK8FyNGabVHcOsumd4qR4YXqtHhrfqiWFePWeYZphleMnwmuEtw5xhUf0HRkWZcw==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk01u2zAQhfc-xSD7FMjvwosCTZ2FF9nEBxjQ4lgiQpEqh5JhFAF6iJ6wJ-mQiuT-yJYXAqTB9_hmHkfaBCqi8W4J2u_dYsGHuom-XsJak4tmd4BNX4HvXKmGhDOq9k6_LzhSgzdYVFS8oXEclSsIK1I2VtgZhVJZwtVGMLiBXz9-wteEwoBCj4KgIJXIn7S_Gm1SX8qVlj6MbpNFI0XUW1TSc2fiAaUTE33A3WB0m43WPQqrJ_jygcJLj8JOHrZ-D99aCob4tOUdhtYhH-SjRhm7dJ6jKRiZ7C7SYHmXLV9bJ1ElFFZHFBJ6HYnjaZt7DNQZ2qNqGmsKla4DldNYGy1Wg819b5NR-AMFQeFlvYINhY4CWF-emekByamtJTmYORlp2rYlSigYVSgHs4ds9pxROTijsEpozi-hFEnLXXYymylzJ6ddH3OSW1W8lcG3MhoXwTRxCHVwfRyTfBpR2GQUjvkDO9Vw5acjDcTetv1Kv6b3jkA6fuZCWRVplPhO2fdx3-H6M1y2z8eJ6T_x7I6eE89u2znx7A6dE8_uxDnx7NX-Jb4g4nTy8RIv-vmnJDNxTklmQpySzEQ3JZkJ7B_Jb2oBIt0=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/vegalite/svg/eNqtVMGO2jAQvfMVVrZ720KABdG9tdpKPbSXUqlSWw5DPCTuOnZqOynsin-v7U2CgcCiVU_JzHjePM-88VOPkOiNTjLMIbojUWZMoe8GgwpT6KfMZOWyz-Tg-YD3vuXM4KCa9H9rKaIbl2-Y4Wizn6zhTFwbh3XPIBVSG5Zo8qscxcNb8i1TqDPJqfaZ9vBKCjNnjy59OA5835GlmYcRUuXAIxva-mp_GTWZDdzOYm9nzcm6vDZYWGs0bTMoGNjFK-Alamv_9Dap_T6Wo1EscVU_IRSk1Ehroj78KIUjGs1hhaHfQlr3bFJ7tjevRn7PUZlj6OFl0PcfSCElt-iQ4uXE38X_B_0U-RbefxftXHJQD4FsNoVHWYJqxJFIJVB9BcpK_VFQGx23ySgSSZlIdwCb9tdpiCF3CQ3_hlVbRsicCcuvDcCa6QAh0LUoOQ9uxWGJ_DPLmRPdKD5qXqSlMnVaL4hE606CVUiiYfenBGHLg2HVrtVW2pA87HbCrc0F9KN268hSloKC2oRDWjksv2n9-DraG9W2nQOXqpO8H_3LvdUJBC-Ed1GZAxPBGnrvgUBJI6rWswiYKxApHiJcDSezeEz3Qa5oMpqOpgHM0dA4pugl1tXBH-6ana2RiuIlrak1saN6tIt7F13sFTF27Qwrut-sU0o_M4_wal-es868AN03uhB-r3PnwKsDgHOLEBaYY5qjMOT6lKZX0fHz09v2_gEY0aMB?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
@@ -8381,7 +8351,7 @@ ServiceNow diagnostic tools: check instance health and thread state via stats.do
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

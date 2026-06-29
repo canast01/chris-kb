@@ -8580,38 +8580,14 @@ Management groups provide a level of scope above subscriptions. They enable you 
 </div>
 
 <h2 id="azure-resource-hierarchy">Azure Resource Hierarchy<a class="headerlink" href="#azure-resource-hierarchy" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    tenant["Azure Tenant\nEntra ID boundary"]
-    mgRoot["Tenant Root Group\nManagement Group"]
-    mg["Child Management Group\ne.g. mg-production"]
-    sub["Subscription\nBilling + quota boundary"]
-    rg["Resource Group\nLifecycle + RBAC boundary"]
-    resource["Resource\nVM · Storage · Key Vault · VNet"]
-
-    tenant --&gt; mgRoot --&gt; mg --&gt; sub --&gt; rg --&gt; resource</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcFOwzAMhu99CmtXtD3ADkjbQAjBOHRTT7mkqUkjpU5xk0OHeK7d92QkbZAQGnDzH_n_7N9pDKPyxtEa2OjWF4VHkuTXsNicAiMcJynonjxLeLyD2gVqJI8LeB9a2WM0RoIkbfGj6HTpXDLPNkgKHtiFXtBektTYIeWXXwDRvGuNbeBnvyBc6RV0etmza8K09VXGEOoIOYR6UGz61CZoa6w1pOEG3oLz8u8UnJYocXCBFX4NfzavqEZlMTLK7Wb3DyK7v4EEVXu4nOHgHcdgqXzCESoZrE-iekF_lZW_BJa3MN83n3l-iCIVMXQKnkrWMcFU5MnFJ1YcrLU=?" /></p>
 <p>Governance controls — Azure Policy and RBAC — applied at any level are inherited by all children.</p>
 <h2 id="hierarchy-design">Hierarchy Design<a class="headerlink" href="#hierarchy-design" title="Permanent link">&para;</a></h2>
 <p>A well-designed management group hierarchy mirrors your organisational structure and access control requirements. All management groups reside under a single root (Tenant Root Group).</p>
 <h3 id="reference-hierarchy-pattern">Reference Hierarchy Pattern<a class="headerlink" href="#reference-hierarchy-pattern" title="Permanent link">&para;</a></h3>
 <p><img alt="Management Groups — Diagram" src="../../../../assets/cloud-azure-governance-management-groups-diagram.svg" /></p>
 <h2 id="azure-landing-zone-topology">Azure Landing Zone Topology<a class="headerlink" href="#azure-landing-zone-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    tenantRoot["Tenant Root Group"]
-    mgPlatform["mg-platform\nConnectivity · Identity · Management"]
-    mgLandingZones["mg-landingzones\nApplication Workloads"]
-    mgSandbox["mg-sandboxes\nUnrestricted experimentation"]
-    mgDecom["mg-decommissioned"]
-    mgProd["mg-production"]
-    mgStaging["mg-staging"]
-    mgDev["mg-dev"]
-    subConn["sub-connectivity\nExpressRoute · Firewall · DNS"]
-    subIdent["sub-identity\nEntra ID Connect · ADDS"]
-    subProdApp["sub-prod-app1\nWorkload A"]
-
-    tenantRoot --&gt; mgPlatform &amp; mgLandingZones &amp; mgSandbox &amp; mgDecom
-    mgPlatform --&gt; subConn &amp; subIdent
-    mgLandingZones --&gt; mgProd &amp; mgStaging &amp; mgDev
-    mgProd --&gt; subProdApp</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UsFKxDAQvfcrwt578LoHYbEqCyqyVQTpJdvEGEwnIUnrqvhd3v0yM01Ky7LxNjOZeZN57zFpeeulhjWxUrz6ovAcKPid1n5NVg9jQjAj11b3ZkW-3Cs1PLSHOQpC8e-iE_eK-hdtuzDSidKkrIELDYD4g_Qf5PeHbBkHn-JbClTwLhQyoDcUmATxrIG7CKxi5RMrDWyMUbKl-HvypO2b0pS5DFYdJvf6EGFcTBDjESx33srWc0b4wXAr8UcjaAaq4q1OhzIMO-lc6ObsZL_r90hC6A9R2S74aODyYMJ2t9O958jIVRDjnSqFcXVX5_BGEhOgTIQGMPCWkm1FEucIsqmqOqeY1SypFaK-_efg2lMRWE_cxSTLzTAxM-S-j5uDdOkA3F5SY84amDQkm5OjC2eS8pzMplv4Lz4sjXPko9iQ3DD7IpZHZY_Qkn6Tjqk0SnASGq9L9KZdkbCZx2nXsGibaSn-ANpPTBM=?" /></p>
 <h2 id="managing-management-groups">Managing Management Groups<a class="headerlink" href="#managing-management-groups" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all management groups in the tenant</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
@@ -8774,7 +8750,7 @@ Management groups provide a level of scope above subscriptions. They enable you 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

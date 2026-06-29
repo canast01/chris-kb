@@ -8321,24 +8321,7 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9Uk1vgzAMvfMrrN73B3qYhNZu6mE7rNOuURZcGgniKg5U3dT_PodKrLCEG_h9GL9HZT2aYMmtoaKzKwq-tKdA7Rp2FbpgDxfY3ybww0d9QuFZ3ZKrroU81I44WKMODZ3XsNqME3iWyWrUxCXa1Q1eC_3deVSGnIuLexsuKnjRCWtVRgye7jD4GLCkU99ObSxzhyw2n69Tj90AJD0c17Keuq8G-UgUrKvF4G3_Iosn04VbdKV0F44xLqNjlgq9J8_jQeUGygkBtgNhwZMDeblbaWOQWUkXFqvRcH9DoRxQ2Axo0s0jU9PdCn6Pzz0Cediy0Y0OOEqo1811bB8eHuFfu9b1KK-1yO55C31mFLneMvRkRYsfky9kUZbJ_F4zCyVq_xLO_9ozXjqAGSlxdnJd7tgkOXnijPkLU3mKyg==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; D1{VM unreachable —\nNSG rule blocking?}
-    S --&gt; D2{Storage account\naccess denied?}
-    S --&gt; D3{AKS node\nNotReady?}
-    S --&gt; D4{ExpressRoute\nBGP down?}
-    S --&gt; D5{ARM deployment\nfailed — quota or policy?}
-    D1 --&gt; R1[VM Connectivity Issues]
-    D2 --&gt; R2[Azure Storage Access Denied]
-    D3 --&gt; R3[AKS Pod Not Starting]
-    D4 --&gt; R4[NSG Troubleshooting]
-    D5 --&gt; R5[App Service 502/503]
-    R1 --&gt; R6[Azure AD Authentication Errors]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kU9LAzEQxe_7KYbexe6f9NCDEoyUIhZpRM9xd9gE2mRJsoUqfndn9uApvT3yZn5k3htcxD674LcQ3WhzVal6CytVr-AnWTMhvdOA8eMJf6sjex-v8BS857WLy1fYpzRjKs6rhllNmcWe_J4jgs4hmhFB9j2mBAq9w6EMbBnYloHsyRcNb2GAQ8iENTE7P5ZJHZO6Mom9g97Bewzz1wmTDeE2SDBIlEHsyWkCjfHiegSxbu7F-sb_N_-BSAVyzhZ9dr3hduA5xhDLIWta-7Qmg0tAO5Cu5ymH82NxmOqFuwc41tTNIhrKdBEtRbKIjk5ahKC-F7Gp_gAZyK-t?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8350,25 +8333,7 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
 </ul>
 <hr />
 <h2 id="azure-connectivity-triage">Azure Connectivity Triage<a class="headerlink" href="#azure-connectivity-triage" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    connFail["VM / Resource connectivity failure"]
-    nsgCheck{"Effective NSG rules\nallow traffic?"}
-    routeCheck{"Effective routes\ncorrect next hop?"}
-    fwCheck{"Azure Firewall / NVA\nrule allows traffic?"}
-    dnsCheck{"DNS resolution\ncorrect IP?"}
-    vmState{"VM running?\nProvisioning Succeeded?"}
-    resolved["Issue identified\nand resolved"]
-
-    connFail --&gt; vmState
-    vmState -- No --&gt; resolved
-    vmState -- Yes --&gt; nsgCheck
-    nsgCheck -- Deny found --&gt; resolved
-    nsgCheck -- OK --&gt; routeCheck
-    routeCheck -- Incorrect --&gt; resolved
-    routeCheck -- OK --&gt; fwCheck
-    fwCheck -- Blocked --&gt; resolved
-    fwCheck -- OK --&gt; dnsCheck
-    dnsCheck --&gt; resolved</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpt0LEKAjEMBuC9TxFuF_cbXATBwUXByaW0ubvgmUqbnoj47ubgei7d_jZfSBtPEZ1Q4BYi9YMY4wLzwdLYQnM9wRbOmEKODmEuzHYieUOnIkds4JMG-0Tt1pLlfsSvmR4XsaJ3zZKqynPaD-juykqsuqjzxwm9umNKGYE8slBH6G9s2UMB1W5OfZlSYn1KyIJF_g9V270KXFJVrYuEzQ6WRayfnu_Ku80PwDCKTw==?" /></p>
 <h2 id="vm-connectivity-issues">VM Connectivity Issues<a class="headerlink" href="#vm-connectivity-issues" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Check effective NSG rules on the NIC</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>show-effective-nsg<span class="w"> </span>--name<span class="w"> </span>&lt;nic-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
@@ -8506,7 +8471,7 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

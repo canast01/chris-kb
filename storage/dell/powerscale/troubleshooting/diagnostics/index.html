@@ -8861,39 +8861,7 @@ Dell PowerScale (Isilon) diagnostic commands: check cluster node and drive healt
 *Applies to: PowerScale OneFS 9.x (formerly Dell EMC Isilon)*
 </div>
 <p><img alt="PowerScale — Diagnostics" src="../../../../../assets/storage-dell-powerscale-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([PowerScale Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Node down or drive failure| C[isi status\nisi event list --severity critical]
-    B --&gt;|SyncIQ policy failing| D[isi sync policies list\nisi sync reports list]
-    B --&gt;|Quota write failure| E[isi quota quotas list\nCheck hard limit and current usage]
-    B --&gt;|Client connectivity issue| F[isi network subnets list\nnslookup SmartConnect zone]
-    B --&gt;|Capacity warning| G[isi storagepool list\nisi statistics query current]
-    B --&gt;|Slow NFS or SMB performance| H[isi statistics query current --keys CPU,BYTES_OUT\nesxtop or sar from client side]
-    C --&gt; I{Node state?}
-    I --&gt;|SMARTFAIL| J[Monitor restripe job\nisi job list; isi job status Restripe]
-    I --&gt;|OK but drive issue| K[isi devices node list -n node-id\nCheck drive bay in isi status]
-    D --&gt; L{Policy status?}
-    L --&gt;|Needs Attention| M[isi sync reports view --id report-id\nCheck network path to target: ping target-ip]
-    L --&gt;|Running but slow| N[Check replication interface: isi sync policies view\nVerify dedicated replication IP pool]
-    E --&gt; O[isi quota quotas list --type directory\nIdentify which path is over quota]
-    F --&gt; P[isi network interfaces list\nnslookup &lt;smartconnect-zone&gt; to confirm round-robin]
-    G --&gt; Q[isi storagepool nodepools list -v\ndu -sh /ifs/* to find top consumers]
-    H --&gt; R[isi statistics query current --keys CPU,BYTES_OUT,BYTES_IN,LATENCY --nodes all\nCompare latency across nodes]
-    J --&gt; S[Collect isi_gather_info bundle\nOpen Dell Support case]
-    K --&gt; S
-    M --&gt; S
-    N --&gt; S
-    O --&gt; S
-    P --&gt; S
-    Q --&gt; S
-    R --&gt; S
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
-    class S escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdVMtu2zAQvOsrFjkWEXJ3iwCx4yRK_IqdFAhgIKBJ2tqaJlWSsqsW_fcuTSl1G_bSi4bP2QdnJNBK7tHoHljclD7L-j0465_BD1eyStIqbTO9UfJnNqAddAjOM1-7pQ5juZfag0LnIc8dzSz6Bjh9kTOVpLnuaBrNoTIKOUp3pIiUx3UrK2N9XE6yDFuWr7XxLH47kkEp-RZKZgUt7NAD0wJ4bW1ItXZsI5OMNy2jlv5g7BZcvaJhR6qdMmZbV7DYMesHRmu6Cd-NTpPdvvXKWApYGaNOS6QO0gS5o8ylbbrsklR3J21PXaLGb2XjYDB7Pu-_PA0Xr9Pnp6WW7ps3FRgLjllYW7MDrjCcdyjSSRcUqUju3NPO2GikamjZeYuVhC9mFcuhwbG4j9DNokRg3h5Ncj60dQm5R04K0EbIVkn6OMlRdI8pLO4lrFgDqOG3BpO8I-IdJXfGp8rrFLZHeaAWomhXTqJ2SqiYL8Eb8MxupO9BhXrTTnKskqEmFCqSECtJnAWPUfJe2jXjdPa9A0IiS_2ZHLRuqCkiXJLij_vFDIKSkhGn_zIEFecbei5xtLqxzVIXgnQQwhxK5GWsDx0Ysm-8mYww-8sgb9W888gnF0zCo0nyYJLL0D9aWKPdgTW1Frk1K9TJQI8J8wRBhEFX036pRQ25K-EC1-7iQ-BfIxk9iJ4CuXonbVog8_8xVDsqJuejq6fhZPBCp0JODphSJBizq5gl_dKbad4A49a4qOl0EosgEKNU-ItQMq8begNpX1GvDayoPUou9bSSGq6lUrCoq6BN4MylzXRFdDNzkHZBv10JhXN1-mDWh_wSBhGuIwwj3ES4jXCXFQHuIzxkowDjCJNsGGCa3QSYZbcBHrO7APPsPsAie4gwjjCJMI0wi_AYYR7hF9PkPms=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkztuwzAQRHufYuE-hb-FizRGCpeJDkAsqLVMmCJlkpIhBAZyiJwwJwmpjyM7suROnzczq-EqFoa4E1ptINZnNZnYMs2cTjewi0k5sS8hqp_Apz1gRp4TmGoVXybWUcZmjB-IHxmXub83DFXMlI6JHQilO2xgGnkMZvDz9Q3bgEKDgkchoFCj02tCGAlVIqnJmN9lUOFHY1Inrfu8x72CwEOPfReNry0VFydmKJOCY2iDWYeudV903COP7t6hg0JAc_s4ZdmknHLt0Lamy45p_eaxw6qd02mDCTGOGXLhyqrsIKgtVx3LBoUWrcrOyOy1SVFxqqYW1gk-kLtuchW5szbHKs6maBzXShFvc9ed3Aat4qKAbivU9YYYslrm9fZ9hOuCQBt4sxwlOrpKdIHycl1NeHmF51ZPqIL8Jybe6594YKeGZKMrMyS-34QhdvTMh8SjB3cjfqLL4Px3WiN_ZR880luf5LatPmKkoz7JSDN3kl_cSe5k?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9153,7 +9121,7 @@ Dell PowerScale (Isilon) diagnostic commands: check cluster node and drive healt
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

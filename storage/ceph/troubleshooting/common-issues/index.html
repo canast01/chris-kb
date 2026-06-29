@@ -7526,55 +7526,10 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 *Applies to: Ceph Reef / Squid*
 </div>
 
-<pre class="mermaid"><code>graph TD
-    classDef start fill:#2563eb,color:#fff
-    classDef check fill:#374151,color:#fff
-    classDef warn fill:#b45309,color:#fff
-    classDef err fill:#991b1b,color:#fff
-    classDef ok fill:#15803d,color:#fff
-
-    A([Start: ceph -s shows unhealthy]):::start --&gt; B{Down OSDs?}:::check
-    B -- Yes --&gt; C[Check OSD log\nsmartctl + journalctl]:::warn
-    C --&gt; D([Restart OSD or\nreplace disk]):::warn
-    B -- No --&gt; E{Inactive / stuck PGs?}:::check
-    E -- Yes --&gt; F[ceph pg dump_stuck\nFind affected OSDs]:::err
-    F --&gt; G([Bring OSD back up\nor replace]):::err
-    E -- No --&gt; H{Nearfull or full?}:::check
-    H -- Yes --&gt; I[ceph osd set nofull\nor delete/expand]:::err
-    H -- No --&gt; J{MON quorum issues?}:::check
-    J -- Yes --&gt; K([SSH to MON hosts\nrestart failed MONs]):::err
-    J -- No --&gt; L{Slow ops?}:::check
-    L -- Yes --&gt; M[ceph osd perf\niostat on OSD host]:::warn
-    L -- No --&gt; N([Escalate to diagnostics/]):::ok</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptkMFKAzEQhu_7FEOvUnrvQdCurSJtwV4XZExmN7HpJGSyqIjv7uyq4CGnMGS-_5sZ6zOZ4iOvIfvBlabZrGGxcWTOcDy1EOLQsVwwF1MCXMFrHDNj0GIBn-IwkYKagDwE-mpahZ9IivbPeMwdZ0oBDYH1cq5CW4UMJQdpADte0rOU0Zw73nq2gH2vnWSnOKniO8Vvs-dhNr6gTj6mjmOGX3OVulHqNM25htm9FBAX3wRGdoShuI8q9vA3axQLQgU49mMIs85SoEIrek_Itko_TtLTPZQI--MBXJQi04F-DtajD7qo_tQX3f93J8p9x14TsEDkefcpr0oelLwTgwELTXLrcWBt9kZWVaDZwPIa2mY7PbvmGxfGvXM=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9ksFqwzAMhu95CtH72D2HwVjaZVDoaLazMbaamDh2sJ2WbvTdJ9ORhtTpTfr1_XIkRSqHIihrcpD2ZLLMn7s-2C6HD4kmqMMZqqsCv77hPRKneGeNvGQU1Mb6oAQ7aHvKYVWMCmxIWY2e-Ag3tcZLZr1k8SnCd1UBBYVJrkGuQ4POseg4DFqTo1y_br9Ktt7vc4juDclJt6fnme09a1TdMM0DGnGmBhXpsOs9PENJFdheK8kefc0k1o5LlGwwEp1XPxT6MIiWWn2-Q_Ffpm7fI0BJFZFkT6GtaJlvMa7rLSZQUZJkHXqrh-tx9jE-IlgHay94HGi02CPXl_Fy8PQCd5dR5oiU1mSbcrdbLACpIyygCxtfoB_vdsE0Xd4UmY0b0dvuxh9uJt-PNgOSA82YR2PM0NvHzwp_WEFKlw==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A[OSD down / cluster degraded]
-    S --&gt; B[PG stuck — active+undersized]
-    S --&gt; C[RADOS object not found]
-    S --&gt; D[Monitor quorum lost]
-    S --&gt; E[Slow requests / high latency]
-    A --&gt; A1{Disk healthy?}
-    A1 --&gt;|No| A2[Replace OSD disk — see OSD Down]
-    A1 --&gt;|Yes| A3[Restart OSD daemon and check OOM or network issue]
-    B --&gt; B1{Which OSDs map to PG?}
-    B1 --&gt;|OSD down| B2[Bring OSD back up or reweight to 0 — see PG Degraded / Undersized / Stuck]
-    B1 --&gt;|OSD up| B3[Run ceph pg repair and check CRUSH map]
-    C --&gt; C1{Pool accessible?}
-    C1 --&gt;|No| C2[Check PG state — may be inactive; resolve OSD first — see OSD Down]
-    C1 --&gt;|Yes| C3[Run rados stat on object and check for deletion or naming mismatch]
-    D --&gt; D1{MON daemon running?}
-    D1 --&gt;|No| D2[Restart ceph-mon service — see MON Quorum Lost]
-    D1 --&gt;|Yes| D3[Check clock skew with ceph time-sync-status — see Clock Skew]
-    E --&gt; E1{Drive or network?}
-    E1 --&gt;|Drive| E2[Check iostat await; disable scrub temporarily — see Slow Ops / High Latency]
-    E1 --&gt;|Network| E3[Run iperf3 between nodes; check cluster network path]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E2,E3 section
-    class A1,B1,C1,D1,E1 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNVMFu2zAMvecriF6HYKt9a4ANiR2sh2beahQ7KzITa7ElV6JrZMOAfcS-cF8ySo7dHtRhl0iR-Si-90hVyqIkZfQNWHWsabEob-Dqay0IlAOqEdy57ci0H67gh6tFhxzICKGPDf5crDm4KHOozKDhLcimd4QWKjxaUWEVxWwY8_kjOOrlCf78-g2CC3jCN72u0Dr1_RVYxrD7dV6UYPbf-Bi0ITgYRkXDcw7fGa3IWHjsje1baIyjaOyWY8vGDHz22KMjx1RqVgMaQajlOU79mlHr6_i3xBeLXSMkQtBHuZGrw_EgZ8Hi0DRAHQlLI1RgazQIXYGskSUrih0wKY00GHtim1yPcaF9hZt4hRtf4cYqfQyX7AUn7juf1-KAvhOADLyba2bD8oupLM7DbBX_Kb2R8UsCl16DxK6G7sjfOqHsCy7Z_UN5C63o4pZ7AlmcQOYJZCFJaCZ2KhTbijPsEZQeu2rFGGeap1H1g7KO_s-HbKqdORsXLgC24dJ7zwwOxrd7g36Ggi2i9aK2yrWCZB3vTc8rj_PKkxf-e92W3n2H9klJnEvfFZ_gy9jVd691dZ7OCsnG8K874QCDonr0g1SLS3fWcunJ9W5OnoXokqPj0-Kr38ar3z67okzQTAxC0coPgNg3_JpI2--BsO2MFVY15_nWMIBF52fv1s_e3T9mbzuZozq0h5QNpwFR85NQoVtdnJkeo2lQOkFxOxYlLN_Delw245KNSz4uW572EJNMm5SnK4Qn0ybldg3IZNqkbHRIkkyblMUL-ZJpky7-AoE50rc=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7781,7 +7736,7 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

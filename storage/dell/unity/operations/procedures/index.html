@@ -9215,27 +9215,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 </ul>
 <h2 id="lun-management">LUN Management<a class="headerlink" href="#lun-management" title="Permanent link">&para;</a></h2>
 <p>LUN lifecycle management on Dell Unity — create, map, expand, and manage snapshots.</p>
-<pre class="mermaid"><code>graph TD
-  START([Create LUN request]) --&gt; CHK{Health check\npassed?}
-  CHK --&gt;|No| FIX[Resolve faults\nbefore proceeding]
-  FIX --&gt; CHK
-  CHK --&gt;|Yes| POOL{Pool has\n≥ 20% free?}
-  POOL --&gt;|No| EXP[Expand pool\nor free space]
-  EXP --&gt; POOL
-  POOL --&gt;|Yes| CREATE["uemcli /stor/config/lun create\n-name -pool -size"]
-  CREATE --&gt; MAP["uemcli /stor/config/lunacl create\n-lun -host"]
-  MAP --&gt; FC{Protocol?}
-  FC --&gt;|FC| ZONE["Verify FC zone contains\nhost HBA WWN + Unity port WWN"]
-  FC --&gt;|iSCSI| IQN["Verify host IQN registered\nin Unisphere &gt; Hosts"]
-  ZONE &amp; IQN --&gt; HOST["Rescan HBAs on host\n(multipath -ll)"]
-  HOST --&gt; SNAP["Create snapshot schedule\n(optional)"]
-  SNAP --&gt; DONE([LUN ready for use])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class CHK,POOL,FC decision
-  class FIX,EXP,CREATE,MAP,ZONE,IQN,HOST,SNAP action
-  class START,DONE term</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1UsFO6zAQvPcrVpyQUNQ7B6QSWhUBbWnLA6FcjLNJLLlrYzuI8vT-_e2mQC_uJR7vesbO7NQmoE7G0SUE03ZpNCrnd5dwxt8z-Bs75ZE7fERRa_HfaHb7wt01Rmc_EBrV2xQresPGBQQfnEasDbVZ7mq5vGeyLNn-9GXF7emnV1SDd85W5AI0ARGiVxqzpHI9nWynzOtxp62BcUwujLWjxrRj2xPogCphRQWpHUIhulBE85WXe5isTmspbY9yol10Lqa8TyXLzMps73W5kAf_wWCaPcxK-HKEwNckZYjdFFGYX0_g-XkBF_BEJu3Zj5CkkFW8fVwcBQc6V_hAa2LCgHVFhkQn-o63cAVzPhOzUvPlZnuYsFYkr4jgaNCs6HzH4zZepQ4Ka7P0zWIwsBxcgkjKx84liLrDurfs27nzEjeVp98crLl_ktereg-cK-hjflab7WS9PV52IL33eGIkkmworoAjLDEWyJUhlYI5fZJAgVL6rR8C9p0zKXBEeLyCZJDfkP0e5vqDxX-G4uZgqWzEm8Eg2cifjv4DeDckPg==?" /></p>
 <h3 id="lun-overview">LUN Overview<a class="headerlink" href="#lun-overview" title="Permanent link">&para;</a></h3>
 <p><img alt="LUN Overview" src="../../../../../assets/unity-proc-lun-overview.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all LUNs</span>
@@ -9557,7 +9537,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

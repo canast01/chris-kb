@@ -9217,42 +9217,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Wait until bytesToSync = 0</span>
 </code></pre></div>
-<pre class="mermaid"><code>graph TD
-    alert(["Object degraded or absent\n(vSAN health alarm)"])
-    checkHost{"Is a host\noffline?"}
-    restoreHost["Restore host connectivity\nor power on host"]
-    checkDisk{"Is a disk group\noffline / failed?"}
-    checkNet{"Does network test\nshow packet loss?"}
-    fixNet["Fix network:\nMTU, VLAN, NIC, switch port"]
-    diskReplace["Proceed to disk replacement\n(Procedures → Disk Groups)"]
-    waitResync["Wait for vSAN resync\n(clomRepairDelay = 60 min default)"]
-    monResync["Monitor:\nesxcli vsan debug resync summary get"]
-    checkResync{"Resync completing\nwithin 24 hours?"}
-    checkCap{"Cluster capacity\n&gt; 70%?"}
-    freeCap["Free capacity:\nremove snapshots,\nlower FTT temporarily"]
-    escalate["Escalate to VMware Support\nwith state capture bundle"]
-    resolved(["Objects healthy"])
-
-    alert --&gt; checkHost
-    checkHost --&gt;|"Yes"| restoreHost --&gt; waitResync
-    checkHost --&gt;|"No"| checkDisk
-    checkDisk --&gt;|"Yes"| diskReplace --&gt; waitResync
-    checkDisk --&gt;|"No"| checkNet
-    checkNet --&gt;|"Yes"| fixNet --&gt; waitResync
-    checkNet --&gt;|"No"| waitResync
-    waitResync --&gt; monResync --&gt; checkResync
-    checkResync --&gt;|"Yes"| resolved
-    checkResync --&gt;|"Stalled"| checkCap
-    checkCap --&gt;|"Yes"| freeCap --&gt; monResync
-    checkCap --&gt;|"No"| escalate
-
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-
-    class checkHost,checkDisk,checkNet,checkResync,checkCap decision
-    class restoreHost,fixNet,diskReplace,waitResync,monResync,freeCap,escalate action
-    class alert,resolved terminal</code></pre>
+<img alt="Kroki" src="https://kroki.io/d2/svg/eNp9U82O0zAQvvcpRj1xKBInDpVAWu3SBYkWtFuWSy9TZ5qYOnZkO0kjxJUH4BF5Esb5cbKQchvPz-eZb75JpCXhpdFrsDLN_GKBiqxfw_LT8RtHIKHUYkIJGAt4dKT9Qb-oHm92kBEqnwEqtPkSvrsMC2IULkKdKvqxEBmJ83vjAlq0ZzMtOW8s9bkP3QsyfoIwWocOK-mbg-YmClOTBaPb8CxajdIzRqMFg33lB5y4ru3Ztm6eQCiTP1CB0t6RwgbewOtXkEvN856wVP76QHfSnYeBgj2bmXCA4RUK9i8_WyOIKfQGQoAT20jekdlGk5Jbg98_f0HAhHtrysJdb2JHkVQ2Z_NO8tJlbeQFNPna2PP6oLf7Lyt4-nizW8Huw-0KXC29yJhVOw-TGx253BoteTOMQu4ilITKYWDsWKY9s-DKPEfbQEr_oTACTl7XdGFURUmUo-tV11wHv8ViQGZznhpL1KVt2AKBBQqWF89lKTcVgdNYuMx4tzpo1epts9-Dp5xpQivV_PfkBB-DDxt_15th5U_bGlnNj2URSD5oJjwD50OUf_a8eDiWOlE0C9rdI7x8C_GExsMK7sntTO8ohMZDeF4StTsqOrgnop0KeA5pKBkUGFUZnJ3yegHOVf_rHs0QiJob1Rc_m-KMoUEof_sHGURptP116x9k8PzHaeKw0MUf1ELW0Q==?" />
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Find degraded/absent objects</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Healthy&quot;</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
@@ -9296,40 +9261,7 @@
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># VMkernel log — disk errors</span>
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;scsi\|disk\|naa&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
-<pre class="mermaid"><code>graph TD
-    highLat(["High vSAN latency detected\n(&gt; 10 ms read / &gt; 20 ms write)"])
-    checkNet{"vmkping -d -s 8972\npeer succeeds?"}
-    fixMTU["Fix MTU end-to-end\n(switch, vDS, vmk adapter = 9000)"]
-    checkResync{"Active resync\nin progress?"}
-    throttle["Throttle resync during\nbusiness hours:\nesxcli vsan debug resync\nthrottle set --throttle 500"]
-    checkCap{"Cluster capacity\n&gt; 80%?"}
-    freeCap["Free capacity:\ndelete snapshots,\nexpand cluster"]
-    checkDisk{"Disk group\nhealthy?"}
-    replaceDisk["Replace failed\nhardware"]
-    checkCPU{"Host CPU\ncongestion?"}
-    vMotion["vMotion high-IOPS\nVMs to less-loaded hosts"]
-    openCase["Escalate to VMware\nSupport"]
-    resolved(["Latency normal"])
-
-    highLat --&gt; checkNet
-    checkNet --&gt;|"No / packet loss"| fixMTU --&gt; resolved
-    checkNet --&gt;|"Yes"| checkResync
-    checkResync --&gt;|"Yes"| throttle --&gt; resolved
-    checkResync --&gt;|"No"| checkCap
-    checkCap --&gt;|"Yes"| freeCap --&gt; resolved
-    checkCap --&gt;|"No"| checkDisk
-    checkDisk --&gt;|"Degraded"| replaceDisk --&gt; resolved
-    checkDisk --&gt;|"Healthy"| checkCPU
-    checkCPU --&gt;|"Yes"| vMotion --&gt; resolved
-    checkCPU --&gt;|"No"| openCase
-
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-
-    class checkNet,checkResync,checkCap,checkDisk,checkCPU decision
-    class fixMTU,throttle,freeCap,replaceDisk,vMotion,openCase action
-    class highLat,resolved terminal</code></pre>
+<img alt="Kroki" src="https://kroki.io/d2/svg/eNp9k8Fu2zAMhu95CiKnHWosG7DDAixAka7YgKYLmqYnX1iJjYUokiDJToJh7z4qttwMcXaxKfoXRfH_LJUnEZU1U_BqU8XRqOLXA8YpjH9wBM3q9hE0RjLiCJIiq0mW5sMMPk1gF8ATSvgIM_h8Wu69ijSG36FCR1yT5Wg2mv6MREVi-0ipcA4HdW_qsHhes-peHYAjICOLaAt-8bFhr6KobqC5W_FjtwWU6CJ5-AZfJ5PJYEVPweqGJNd86C5irN-hvt7nE4WjEbnVdjWojpW3MWpOjp-7kD8nOcjaK7MpzWsdlKEQoLK1D9OS44PQCpqAhif6Wm-6HaXJ1SBQhKLol1-u3OzU3RxdbpTD4Zl6olZ2zxEIdChUPHIvkjR7CsGgC5WN4YbbOzg0EoSuAw_2-rl3KmzzwSm-MnunUVCnfWpX8IZKJ4oq9HKP_j_AzJfr_nLL9aCuWdgW4HEXQUK4-PlruSrNyyJAtKB5_oW2KEmyDSGGwUrWkZljSGZ-DwIT9WnzyyL1WJpV7Zz1w9Tm3waKGWS8e-RTssW6ozslMpX_qM5wOwcxfcow9MhdFnkXZxp6Qk4ttBRkGi73d8ne0XefW21v5bmtl2VyNrvWO5mSnUfZtYEmWl32YvQXDjSfwQ==?" />
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Per-disk I/O stats (IOPS, latency)</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>stats<span class="w"> </span>get
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
@@ -9383,35 +9315,7 @@
 </code></pre></div></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What triggered the alert?]) --&gt; A[Object DEGRADED\nor ABSENT]
-    S --&gt; B[Capacity alarm\n≥ 70 / 80%]
-    S --&gt; C[Skyline Health\ncheck failing]
-    S --&gt; D[Resync stuck\nor very slow]
-    S --&gt; E[VM storage\npolicy non-compliant]
-
-    A --&gt; A1{Is a host\ndown or isolated?}
-    A1 --&gt;|Yes| A2[Restore host first\n— wait for rebuild\n→ Object Health section]
-    A1 --&gt;|No| A3{Disk failure\nin disk group?}
-    A3 --&gt;|Yes| A4[Replace disk\n→ Disk Group Failure section]
-    A3 --&gt;|No| A5[Check network\npartition / witness]
-
-    B --&gt; B1{Which threshold?}
-    B1 --&gt;|70–79%| B2[Clean snapshots\ncheck dedup savings\n→ Capacity section]
-    B1 --&gt;|≥ 80%| B3[Escalate immediately\nStorage vMotion or\nadd capacity]
-
-    C --&gt; C1[Identify specific\nfailing check\n→ Health Checks section]
-    D --&gt; D1[Check resync throttle\nand available bandwidth\n→ Resync section]
-    E --&gt; E1[Run policy compliance\ncheck + remediate\n→ Policy Compliance section]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    classDef urgent fill:#b91c1c,color:#fff,stroke:#b91c1c
-    class A2,A4,A5,B2,C1,D1,E1 section
-    class A1,A3,B1 decision
-    class S start
-    class B3 urgent</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9U02P0zAQvedXjFbihFZs2l2B9gBqPlg4LKAWwSUX1542pq4d2W6rCCFxWokr4i_wx_glTOykJ6snT5x5b17evAhpkXtp9D1YuW19lq3u4epryzx4utiiRQG-RWAKrX9zBd9dyzqkboIxvVX4I1sQ4uP6G11AVT8sF1VdNdpYWBSr-sPnJKQgSMk6xqXviZrZfaP__foLL2_gBby6eZYElQRa7XolNcI7ZMq3jeYt8h1smKTbbRJVEWqJrtccnD_wXZB2RNuDU-aUhNQE-fJI7cayLTa6M0ryHrTR19zsOyWZ9mknckIu8vS7WRRCpAitcR420jpP3_3zD5yYpGcSZnF9kErQ7dNvGE2N3wouLipNPh8Gz9PvbsPgTjGOIKTbRfKKKniw5tDBW7LvQKouTrgbVhbc1uhPxhJNx6yXA4KWdpJeo3PpbQ-2FGlbisGWUiHT4DTrXGu8m9YqUJA6x460WxdVn0NzSWsxuFE7TsHyCHK_RyGpUn2jV3GncHw0QbixjWZCAB9508Eb9L8XqL3c0OQOudxI3ugxdhDURn3jroJR7qLIKj8bamM8fWuN94oCx7QAdiR2tlYIa3o8STHEfRgxhfkCdz1wLw8axuROqeU4Wfuc2kdbIuun2FmeOy8OyFZw_RoW8SjiUcajikdNP0PomVE4Q3E7FXcUiICbTcU8KwNDnlWBIs_qwJFn_wEr-ZXx?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9459,7 +9363,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

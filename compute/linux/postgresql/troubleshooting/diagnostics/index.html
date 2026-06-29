@@ -8243,35 +8243,7 @@ PostgreSQL diagnostic commands: read the error log, query pg_stat_activity for b
 *Applies to: PostgreSQL 14–17 on RHEL / Ubuntu LTS*
 </div>
 <p><img alt="PostgreSQL — Diagnostics" src="../../../../../assets/compute-linux-postgresql-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([PostgreSQL Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Queries hanging / slow| C[Check pg_stat_activity\nWhere state != idle]
-    B --&gt;|High CPU or I/O| D[Check pg_stat_statements\nTop queries by total_exec_time]
-    B --&gt;|Replication lag| E[Check pg_stat_replication\nlag_bytes on primary]
-    B --&gt;|Table bloat / disk full| F[Check pg_stat_user_tables\nn_dead_tup per table]
-    B --&gt;|Crash or restart| G[Check error log\ntail /var/log/postgresql/...]
-    C --&gt; H{Blocked sessions?}
-    H --&gt;|Yes| I[pg_blocking_pids pid\nFind blocking session]
-    H --&gt;|No, just slow| D
-    I --&gt; J[pg_cancel_backend or\npg_terminate_backend]
-    D --&gt; K[EXPLAIN query\nCheck index usage]
-    E --&gt; L{Lag increasing?}
-    L --&gt;|Yes| M[Check network\nand WAL send rate]
-    L --&gt;|High but stable| N[Monitor; may be acceptable]
-    F --&gt; O[VACUUM ANALYZE table\nMonitor n_dead_tup]
-    G --&gt; P[Check for OOM or\ndisk full in log]
-    J --&gt; Q[Collect pg_dump diag\nfor escalation]
-    K --&gt; Q
-    M --&gt; Q
-    O --&gt; Q
-    P --&gt; Q
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H,L dark
-    class C,D,E,F,G,I,J,K,M,N,O,P action
-    class Q escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kslu2zAQhu98imnute8pWkDeF8kL2jRtIUCgpKlMmCIVkkpjFHn3DsXGPZi96Jdm9H-YrRYGKye0ugcjmpNjbHIPd5M7-G1PvEOKUpqrRuIrm1JmesLqDF1TWMddwcn6LNwlV48nNAg-iPDuI4haYpQxu2EMnhaVs7n6ojt46tEItFBewGnHZYEvWBVOtHHg_AZosJOi4r6pXEneFOXFEU8r6IxoublEOYsbTm_RFI6XEqkyVdTI68L1HXRoYAhHOcsrB43RBqRucuW4kDB-5mZMn-NOW9cYtE9yPBqNopQVUVbRzJoyVGEpdXUWqik6UVugR64WQtXwFgeL1tIEooxNYFRcVSiLkldnJKs2uaKoQ9MKRTt5S0QRW0LMvx3SZL0bNkYnELqmIvAFesub-HxSMqbRTHadnEL3S5tzrjiV9Zik1Ay9GKopatyRMdNKOG0-QMsvUCLwqsLu_1vak-VrMn14yCDZJen3H_Ow0lz9BcG_hUcBh2uxP-nn_T4bxlcLS4FeShqD33zUevRWLSVF_K3VfdtBLTidiUehrbgcjjdqTsh8CPfz-ZjC2to-3iGbwPtPMA0yCzIPsgiyZCsv6yAztvayYTMvW5Z6yYLs2MLLni29HNjGy5Ftg2RB9kEOQf4AWY10MA==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk01OwzAQhfc9xYg9i_4uukBCCCQkVnTB0nKdaWvVsUPstKpQJQ7BCTkJY9cJAZKYbfO99zxvppksUThp9BIyc9SjkT3lhTP5Eh4z1E5uTrC6_AJvdscLJE7y3OjsPLIOCzZmYodiz9wOGZalKZky2yVcregjjOHz_QPuPAAEQACAgKvGzcdzvVUY_SbRj9OrDsgsWkuvs4zrjK2VqZ0nLecLCjUKhAKhYi_1QNCUbSR5et8SrVEU5jVMGO1o8jpoGoIeCA2-EQWPQkQptD9mxmQskllljuy1wlKire1nwb7p2iMQkX7Ped1R5cyBi6rKwxiOrxVSSbX3vN1Rg4YxAupL4q4_ZhFjjlxRRYWSgvtZQ5bizZIXrZiX2ydooSGL0M6MUGV1ub3nWCtdx70VXHGHjYTerc7NYcL1DQwdntQHtE5uyeGPJHlbQ-LkvQyJe69gSJRc85A4ubwf4t5Cvd_3ov71F-2SJMrrkvRU1oUmiuqSJOr5JfkCmPTw4Q==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8514,7 +8486,7 @@ PostgreSQL diagnostic commands: read the error log, query pg_stat_activity for b
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -8228,31 +8228,7 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
 *Applies to: ONTAP 9.x SnapMirror (Async, Sync, SM-BC, SnapVault)*
 </div>
 <p><img alt="SnapMirror — Diagnostics" src="../../../../../assets/storage-netapp-snapmirror-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([SnapMirror Issue]) --&gt; B[snapmirror show\nfields lag-time,healthy]
-    B --&gt; C{Healthy=false or\nhigh lag?}
-    C --&gt;|Unhealthy| D[snapmirror show\n-destination-path\nRead Reason field]
-    C --&gt;|High lag only| E[snapmirror show-history\nLast transfer duration]
-    D --&gt; F{Error type?}
-    F --&gt;|Network / LIF| G[network interface show\n-role intercluster]
-    F --&gt;|Transfer error| H[event log show\n-message-name snapmirror.*]
-    F --&gt;|SM-BC mediator| I[snapmirror mediator show\nCheck mediator connectivity]
-    E --&gt; J{Transfer slow?}
-    J --&gt;|Yes| K[Check intercluster\nLIF bandwidth]
-    J --&gt;|Aborted / stuck| L[snapmirror abort\nThen retry update]
-    G --&gt; M[ping -lif &lt;ic-lif&gt;\n-destination &lt;dest-lif&gt;]
-    H --&gt; N[Collect AutoSupport\nand EMS for NetApp SR]
-    I --&gt; N
-    K --&gt; N
-    L --&gt; N
-    M --&gt; N
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F,J dark
-    class B,D,E,G,H,I,K,L,M action
-    class N escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptkk1v4yAQhu_8ilGPq_X-gKqqlKb5cBLn0OwxF2rGBhUPFowbRVX_-4JRuxstFz8yMzy8fCjjsWXj6B686TULsbiHuxPJsTHeOw91CBPewUfQcsTYFLsl9RY_xVNsDLFxyI1Bu8uZOoNWBbCyr9gM-FOjtKyvRcEyCpbFynNJXSkMbEimtNUoWZ_pBaWC-AmOYF65aFv9b6u0Cez89UwHGRjYSwodelCTn_1Fzzp61sXKJlYI-eL8Gxhi9J1s8Su2dxbzaGunEFFUbKMC35EYrOu_pg4YguyxIjlE3fcWfv0oKurbfQ6ojOTv41tqbN_-DraOKN38u-Hy7eyibVes7NO9zbZ_dxWPsl7DqyR1MYp1cebhNqF8dZ7P9FsjxS72V5hGJbn83Jo4dzTUQ2VNBw-mTXy8fRbwkH7mQtFxTMmdtXEEFhO70zSOc4SYGlbNCbqY6oi8GEc4vRQVYgHVIzyJZcJzxkqsEzYZ24xa7BL2GQexSWjENuEo6ox9xiGjyfgDXC426A==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk0FuwjAQRfecYsSeBRRYsKhEEZWQCq1I95brTBKrjm3ZhgpVSD1ET9iT1CEJTdvEsEPW-_8z8ycxN8gcV3IGsXqTvZ495NqpfAarGKXjyQGi8gXebUY1eo7TXMn42LMONRkSliF7JQYFLXxsxjXJkAqXESrjGfQjj8EQvj4-YVGg0EShRMGjIGjaP6cUf4vKVGCVM6pynKHSJmhIxq1T5lAHjBoBNQMV0-16U7ly6dAwsfOPhgie2Nr2pmHbhOBhdW-7fceVr5KOaoK5JYkyxEqqc26Mqt3HDffHzfP8CZbrCDwKkUfXBWoA976IQNaE2PyFEauR8YQz4vtJpbKOs_MUk1NOtB7cLaDmoMF1m08JU0L4R0J3Ttmd1sq4othyqDpgWg5SojD3aFSip2LroTbo5lpDtG3NM2iV2JW3uC1-7xG8aGkZ9feCZ4naU3E8HyoMbuG6Q-Ryj37a1Hv9E3dfV0gVuJ6Q7OJxhMTBtkPCi03-El-x0cL5p7PwV9rGdm6vDb6wszZJYFNt-IX9_JF8A-5m93k=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8460,7 +8436,7 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

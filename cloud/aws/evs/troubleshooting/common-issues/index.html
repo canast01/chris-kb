@@ -8839,52 +8839,10 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 *Applies to: Amazon EVS*
 </div>
 <p><img alt="Amazon EVS — Common Issues" src="../../../../../assets/cloud-aws-evs-troubleshooting-common-issues.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([Issue Reported]) --&gt; B{Host FAILED\nor CREATE_FAILED?}
-    B -- Yes --&gt; C([Contact AWS Support\nwith host-id + env-id])
-    B -- No --&gt; D{vSAN degraded\nor inaccessible?}
-    D -- Yes --&gt; E{BytesToSync\nnon-zero?}
-    E -- Yes --&gt; F([Wait for resync\ndo not remove hosts])
-    E -- No --&gt; G([Check vSAN health\ncheck ENI MTU])
-    D -- No --&gt; H{HCX service\nmesh down?}
-    H -- Yes --&gt; I([Check DX path\nCheck HCX appliance\nhealth + certs])
-    H -- No --&gt; J{NSX-T routing\nfailure?}
-    J -- Yes --&gt; K([Check T0 BGP state\nCheck VPC route table])
-    J -- No --&gt; L([Check vCenter\nand SDDC Manager logs])
-
-    classDef issue fill:#1e3a5f,color:#fff
-    classDef host fill:#7c3aed,color:#fff
-    classDef vsan fill:#b45309,color:#fff
-    classDef hcx fill:#15803d,color:#fff
-    classDef nsx fill:#1d4ed8,color:#fff
-    classDef support fill:#374151,color:#fff
-
-    class A issue
-    class B,C host
-    class D,E,F,G vsan
-    class H,I hcx
-    class J,K nsx
-    class L support</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1j0FPwzAMhe_9FdauCInzbiWFUcGmiQ62Qy8mMU1EcaLELUKI_066iXEpN_vpve_ZxkXS4jwvIbrOSlGUS1jUKQ0EjxR8FDIL-EoWA2VL9iJ3PX0XKtuUZ0EtUO4baIYwuVv-cGLB-iSXzsAFEI95mEXcZsQencCrj1lPn6xbNh7YS17f_UhHTpoNr6Z-S_oNxqbcgCXsxbasj9LNpob17mk2WJ-D1QECTqHTeqcOgCH0DllTyydi_kBT_OeG-zNqdwXXqy0kQaFf3vNWQfSDEAi-9DRLePj7QhELxZaRDTRVpWCNjB1F6H03X1_8AIjgmKk=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNUkFuwjAQvPOKFaf2wAc4VIpIEEgFVaSi3CwrWRKriY1sx4Aq_t41qVIUHMQtnp0Ze2eSC42ZFUpOIVdHORqZc32wqp7CMkdpxf4MaYvAjyn5AYkneK1kfhnRRyGVsSJj-0odpzCOOwTmhIw7jb-Ey6LCy6ikOTO2yb6Z0mzPRYU5nbkl2nhBQ0j9EJSGebR8T2I60zDo5QyXLMdC85xMSuSVLcnFpdEa4j8YFlc4_JbsxAxqJzJkNZqS-Qz8M2Y7SFscVoRDTHjQQZqTZVo1VsjiukyjkbmaZUpKH6wT9kyG63Q3-YRNy4N5y4OX7QpmN8TX4BX8aBg6w_hBMNRaaUOG0VcKyTaF6GMJyRUMajUaVTVtvxv_7dAHm5iMVxRqJ1GOV5eufJi8wV25QjqkY0GyW96jOgck4daG_MMVDbCfq2NAHAr6ltqLxEv-833wX_eIofX7XqGle5xnVu1J7hfsEX4B4o6DLQ==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; D1{EVS cluster deployment\nfailed?}
-    S --&gt; D2{ESXi host disconnected\nor FAILED state?}
-    S --&gt; D3{vSAN health\nred / degraded?}
-    S --&gt; D4{NSX Manager\nunreachable?}
-    S --&gt; D5{VPC connectivity\nto on-prem broken?}
-    D1 --&gt; R1[AWS EVS API Errors]
-    D2 --&gt; R2[Host Stuck or FAILED State]
-    D3 --&gt; R3[vSAN Degraded Health]
-    D4 --&gt; R4[NSX-T Routing Failure]
-    D5 --&gt; R5[HCX Service Mesh Down]
-    R2 --&gt; R6[vSAN Degraded Health]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVkT9rwzAUxHd_iiN7Bv_LkKHFVA4OtKFYpckq7Icl6lhBklNK6XevpFkdut3THT_03o3K0OCUXvYwapIuy1i-x4blG3xbKW7k331ALNNMP1kfvObM0b5zNK9HtMZoY5NZVgROkeYEr9PWgbt1-IA2ODTH55b5WThK88rAK9O84N15cwKjyYiRRnQkZifTpCqQqjQpeCd-2b6h16tTy4SDUPNq_vhUHVB1GhW87ukCTuauBsILWQmmP5d0fPefHbgPn6VwUBZOEuzX9eb09TEZ9p1i-4A-96VEUfhrRlH6Y0RR-VWiqH05UeyyXx3UqW8=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9232,7 +9190,7 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -9272,35 +9272,7 @@
 </code></pre></div></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptj00KgzAQRvc5xeC-F3DRVVvotoVuJSSjDcQZSdKIFO_eWCGKupu8fG9-tHGogmEqQXNPQvih7QK3Jdw1UjD1AM-ZwNe_ZYcpZ2TLpEeRiobYB6Oq2nJfQnHJBG6JFNmZhkhqLI4ioktdK4ee7WeeXLz-DBZ2aK6Vx1RHBHZw9UpaGTArHKUd8yVwOsNuU0MR07NJ2jp3sNs6uWkzGUt0f9jm_wct7YfN?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A[VM cannot reach\nanother VM]
-    S --&gt; B[North-south broken\n/ BGP down]
-    S --&gt; C[Transport node\nconfig failed]
-    S --&gt; D[NSX Manager\nunreachable]
-
-    A --&gt; A1[Run Traceflow in NSX UI\nbetween source and dest]
-    A1 --&gt; A2{Where does\nit drop?}
-    A2 --&gt;|DFW on source| A3[→ DFW Rules section\ncheck applied policy]
-    A2 --&gt;|Segment / logical| A4[→ Segment Config section\ncheck port binding]
-    A2 --&gt;|T1 / T0 router| A5[→ Routing section\ncheck route tables]
-
-    B --&gt; B1{Edge node\nstatus?}
-    B1 --&gt;|Edge down| B2[→ Edge Failure section\ncheck HA and BFD]
-    B1 --&gt;|Edge up| B3{BGP peer\nstate?}
-    B3 --&gt;|Idle / Active| B4[→ BGP section\ncheck AS, timers, upstream]
-    B3 --&gt;|Established| B5[Check T0 static routes\nand route redistribution]
-
-    C --&gt; C1[→ Transport Node section\ncheck VIBs and TEP IP]
-    D --&gt; D1{Cluster\nstatus?}
-    D1 --&gt;|Degraded| D2[→ Manager Cluster section]
-    D1 --&gt;|Stable| D3[Check API gateway\nand LB VIP]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A3,A4,A5,B2,B4,B5,C1,D2,D3 section
-    class A2,B1,B3,D1 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptUk1v2zAMvftXED232PJ16WGDP5ouwFIESZr2kItiMbZQhzIkGUEw7LofsJ-4XzJatjfA0ImEqPdIPj6pDOZOaXoEo4rSRdHuEe7eSuFAWXAlgr1daqcvX-_ghy1FjfyREYKKCn9GMX8-rCEXRNpxQeTlkQTnJRo4rIOYhDEv2rjywerGlXAy-gPpSJ8ged6A1FcKwlKG7Y0gWzMWSEs8Uq7prAo4C1WhDKKyttnuHdaCRIHmSA35KcWpwvBGE0ZsGwLuleO50ldQBC3F6-pIJ3RXRAKe3OQIgiRItC7MNGWmeBquzbj259dvyJZvsG0qtGC7O_BSJeYfIOq6Uiih1pXKb2GSeU-yw-KC5CDt5Bgxeb1OiqSiIsyz6Hm2fA_-NCYw_IzgWsls-KKtZskkXJv25E-yQFjypRqD4w7fYi9lsszCHK1aySxcG0RozTOijXf34NQFjb2HpraOL38Jk7QKpB6z_wzWCafybm3b2ln2EhiUilnUqWm7hF066cf5b9UXtup4ssMqsX7l_dMGVpuwdVuqLKxqNqja-xrSqrGOY98nDJr92zLerKAQDq_i1i34PeGZwnNEO3j4AnEXki6kXcii2NcmbHafzIZkPiQLdocHTvmMPpkPySJKPdeEV_Vs0yGZRX8BEMWHPA==?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9348,7 +9320,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

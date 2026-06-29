@@ -8401,37 +8401,7 @@ ONTAP diagnostic commands: check cluster and HA health with <code>cluster show</
 *Applies to: ONTAP 9.x*
 </div>
 <p><img alt="ONTAP — Diagnostics" src="../../../../../assets/storage-netapp-ontap-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([ONTAP Issue]) --&gt; B[cluster show: node health\nsystem health status show\nstorage failover show: HA state]
-    B --&gt; C{Symptom scope?}
-    C --&gt;|Cluster or node| D[system node show: state and uptime\ncluster ring show: cluster services\nstorage failover interconnect show]
-    C --&gt;|Storage or disk| E[aggr show -state !online\nstorage disk show -broken\ndisk show -raid-state recon]
-    C --&gt;|Volume or space| F[volume show -state !online\nvolume show percent-used &gt; 90%\nvolume efficiency show: dedup]
-    C --&gt;|Network or LIF| G[net int show -status-oper down\nnet int show -is-home false\ncluster ping-cluster: ICL health]
-    C --&gt;|Protocol| H{Which protocol?}
-    H --&gt;|NFS| I[nfs connected-client show\nvserver export-policy check-access\nstatistics start -object nfsv3]
-    H --&gt;|CIFS/SMB| J[vserver cifs domain info\nvserver cifs session show\nstatistics start -object smb2]
-    H --&gt;|iSCSI| K[iscsi session show\nlun mapping show\nlun igroup show]
-    H --&gt;|FC| L[fcp adapter show\nfcp initiator show\nfcp topology show]
-    C --&gt;|SnapMirror| M[snapmirror show -health false\nsnapmirror lag show\nnet int show -role intercluster]
-    C --&gt;|Performance| N[statistics start -object volume\nqos statistics performance show\nsystem node run sysstat]
-    D --&gt; O[autosupport invoke: all nodes\nOpen NetApp support case]
-    E --&gt; O
-    F --&gt; O
-    G --&gt; O
-    I --&gt; O
-    J --&gt; O
-    K --&gt; O
-    L --&gt; O
-    M --&gt; O
-    N --&gt; O
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,H dark
-    class B,D,E,F,G,I,J,K,L,M,N action
-    class O escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1VE1v2zAMvftXaAV2NDBsp-VQIE0_kjZNdtgxF1Wmba62qElyumLYfx9lyalbKKcH6dF8FPnoCi0oj6QXwmLT-qJYLsTFfvdz-UNsnBvgQvx1rTTAPAdK3XTwr7jiGNUNzoMVrqWXhdBUgWhBdr49aPfKTJ-OwnnpBzfGMeXJygZELbGj4-nz9XIMy6utWG2VZa6ZSWJjATHZmElIXYnBeOzhoKdaLeomBZ3KB3tEBS5TGmoOUKQ1C45fZWu44Rpk08SXiDKKfyLdoYa3pBW65xTxZOkZ9EHPrqzEKn3JmUlnhW5Z6Ejd0ENeas4ZLhy0LwcHlbgU3798PvFQ16gQtHpNnaigGkxW8Y4VNfjQiJnk4Eri_KKiF37Fex5d2VIfeti5Wd8N971Mh4XYrLbJG1nVNauus8wm1FM7kWYCFefkl_jkrWOYJavBH0PWl4Y65EeqFtRzKRXPeByy9Og8KhdsYr0o6elXmC_nPX7Lqt6HvqfUClm-ol6i5lfX9CY6Mo41eJdOXj-j5fqnr1mpB5ZCpxx-yNQNWvTSmMm-8QYbS4M578wtZ6uVEbKSZtrUgw43qNGjZGvO7jxxw6h5PZ_vMWyblqZHa2nye1ryNPAZ3cmp1vcWsdRBWq1oiKzWLmid61908kH_ppGZgtiUNdleagXTBGb_Bssd43OIzyruwx4Pntxggn24xCPv6ULIrhsTsHn2BrTYgV8a7noKU9Ll_1rFUpSX4qpYBbiOcBPhNsJdsQ6wiXAf4SHCNoY8RtgV1wH2xU2E2wh3ETYR7iM8RNhGeIywi_AfCqMQfQ==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk01qwzAQhfc5xZB9FvldZNFNaaGbUhroVghp7IrYGiMpDqEEeoiesCepJMfun2J7Y4Tme--hmbFUBoVTpLcg6agnE3sqK0flFh4kaqeyE-yaG3izr7xCzylekpbniXVYsTnLlLGOGbQVaevr052_hzl8vn_AfahBW5t2HiGU67zAi8uCieLgT4ZxLZkmiczH5JqsU8K2novoeduQ4EkIJPwgrycsmXVkeI6M57nBnDuMWVLZvf-0EcsYsWvQeO7wGBjwcYErVlNxKJMPWUXnl1gf57ZmGt2RzD5lt452jw0wzm_DKkOOBBW2QqEyJVLGm2j8dCFnLToY4Qfu39as1XM41whk4M4KXoROthKqeXHudg5mN3Blp5Su0ceFMfyjh3anTzu4FX3i9IT7FFem2CcZGtQvbap5wel7HmN-t5RioFEpSao9KS7ZlBTY34o_ii-1G9dH?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9030,7 +9000,7 @@ ONTAP diagnostic commands: check cluster and HA health with <code>cluster show</
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

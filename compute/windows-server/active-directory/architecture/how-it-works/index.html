@@ -8171,17 +8171,7 @@ How It Works reference covering Forest and Domain Hierarchy, Core Components, FS
 <p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpdkjFv2zAQhXf-ioMnG4VTdMjiIUggFRrawYnkeslypq8SIYpk7qgY-fc9WQ7qeNFAfXz33js-SkbO4-CN9C4kZBxA6G2kYOmJOZ6aztk-kAj8uLu_gjiO4WgjB2K4NwZtjgyLnRAvAAV29YtRMDvrEoYMi33kXmdlF8NrWP4iPhBHAesdhbw639nXX6-UcUAXoIghc_SeeLpYFjNcFl_hyscDeigwo4_ta6iJ3y9eqhu0QW4pw0Q4Syr613kC6ZAJvgOmNE-o_xTGaA5YP6i1DfyOrbpZjhox4EDwDRKKnCIfV2ZfT1RZbOCpXr_8fIZlYlrjmDs4Of18ktChdCtTFrC-qJ75LSybqlFF0aK1Iejp41q0qS6qPK1GsnJn76Chesqz4IMG3cAuOM0tWkWrK0rgY-zHZKp54iRWnc8HGnQD0rl07WYepHZuB8xetBJ1vJ293CL683-q7afMnEc948E76ehSlnJarYLWTm-rZd0MHc0jheP0GP8BEbnXHw==?" /></p>
 <h2 id="forest-and-domain-hierarchy">Forest and Domain Hierarchy<a class="headerlink" href="#forest-and-domain-hierarchy" title="Permanent link">&para;</a></h2>
 <p>Active Directory is organised in a Forest → Domain → OU hierarchy:</p>
-<pre class="mermaid"><code>graph TB
-  FOREST["AD Forest\n(security boundary)"] --&gt; ROOT["Forest Root Domain\ncorp.example.com"]
-  ROOT --&gt; DC1["DC-01 Site A\nPDC · RID · Infra Master"]
-  ROOT --&gt; DC2["DC-02 Site A\nGlobal Catalog"]
-  ROOT --&gt;|"AD replication"| DC3["DC-03 · DC-04\nSite B — replica DCs"]
-  ROOT --&gt; CHILD["Child Domain\ndivision.corp.example.com"]
-  CHILD --&gt; CDC["Child DC"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class DC1,DC2,DC3,CDC ctrl
-  class FOREST,ROOT,CHILD mgmt</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkbFOwzAQhvc8xakTSyOaMHVAKjaFSKCglDHL1TGJJceObBdRISQegndh51F4Euw0SjukEpP_k-_7ffe7EoYzJ7RaghF146JonRe3m-clzFYU1tpw60p1YTnbGeH2sNU7VaHZz-DdNthxj3keVS35R1TkeQAPFBRaO6C6RaFKxbTpYv6GbSd5zHQ7yVOy8Dgl88sFbITjsCrVEyXw8w1FRsORqReD8IjWcXPGIhksktHiTuotSiDoUOr6DJYOWBqeCeKqVL3BDfx-fvneTgqG_sZOGpD77IF6C9IIWY1bV-JVWB9u_K_1CSVHBzLZMvwOzK8hhN0nHgqf3IlOTnQ66n7Ew6B9SUn0BzfWpNc=?" /></p>
 <p>The forest is the ultimate security boundary — Kerberos trust does not cross forest boundaries by default. Child domains share the forest schema and global catalog but have separate administrative boundaries.</p>
 <hr />
 <h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
@@ -8336,32 +8326,7 @@ How It Works reference covering Forest and Domain Hierarchy, Core Components, FS
 <hr />
 <h2 id="replication-topology">Replication Topology<a class="headerlink" href="#replication-topology" title="Permanent link">&para;</a></h2>
 <p>The KCC (Knowledge Consistency Checker) auto-generates the replication topology. Intra-site replication is frequent and near-real-time; inter-site replication is scheduled via site links.</p>
-<pre class="mermaid"><code>graph TD
-    siteA["Site A — London"]
-    siteB["Site B — New York"]
-    siteC["Site C — Singapore"]
-
-    dc01["DC-01\nPDC Emulator\nRID Master"]
-    dc02["DC-02\nGlobal Catalog"]
-    dc03["DC-03\nSite A replica"]
-    dc04["DC-04\nGlobal Catalog"]
-    dc05["DC-05\nSite B replica"]
-    dc06["DC-06\nSite C GC"]
-
-    siteA --&gt; dc01
-    siteA --&gt; dc02
-    siteA --&gt; dc03
-    siteB --&gt; dc04
-    siteB --&gt; dc05
-    siteC --&gt; dc06
-
-    dc01 &lt;--&gt;|"intra-site\nRPC — frequent"| dc02
-    dc01 &lt;--&gt;|"intra-site\nRPC — frequent"| dc03
-    dc04 &lt;--&gt;|"intra-site"| dc05
-
-    dc01 &lt;--&gt;|"inter-site link\nscheduled interval"| dc04
-    dc01 &lt;--&gt;|"inter-site link\nscheduled interval"| dc06
-    dc04 &lt;--&gt;|"inter-site link"| dc06</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkT1qw0AQRnudYnBvsH4LFwFpFUwgNiGuAmom0iIv2cyK1RoXxpBD5IQ-iWVpVAgskmr5YB7fm51KWVk6ZWgNVtUH53mtcjJdw2LfvZDC9ecXXg1VhhZwbg_YyG6yQ5BqLS9eVa78bjgXy5Vf0Fsu4Pn7qNEZW9D7Sw5bbJ20c2jAaFDQRptP1CDQoTb1HBAyEBbEflY2WpX4ELivko2rZP0qO3mCD2O_5goiLoj-axQzELNR9qeRGI1Eb7RXVGNjrJxrSLgh4QYBG_FwdjgdLJ_gfpVJCiYpHH6GUzRJ8eDIKfFuXdSxTg==?" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check replication health</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
@@ -8433,7 +8398,7 @@ How It Works reference covering Forest and Domain Hierarchy, Core Components, FS
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -8874,30 +8874,7 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 *Applies to: ECS 3.x*
 </div>
 <p><img alt="Dell ECS — Diagnostics" src="../../../../../assets/storage-dell-ecs-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([ECS Issue Reported]) --&gt; B[GET /vdc/nodes: cluster health\nGET /vdc/alerts: active alerts]
-    B --&gt; C{All nodes GOOD?}
-    C --&gt;|No — node DEGRADED| D[SSH to affected node\nsystemctl status storageos caspian]
-    D --&gt; E{Service running?}
-    E --&gt;|No| F[journalctl -u storageos: logs\ndf -h /data/ — disk full?\nRestart only if logs confirm safe]
-    E --&gt;|Yes| G[nodetool status: Cassandra ring\necho srvr | nc 2181: ZK mode\nlsblk: check for disk errors]
-    C --&gt;|Yes| H{S3 API functional?}
-    H --&gt;|No — 403 or 500| I[aws s3api head-bucket: auth check\nCheck IAM user + bucket policy\nVerify addr style and namespace]
-    H --&gt;|Yes| J{Geo-replication lag growing?}
-    J --&gt;|Yes| K[nc -zv remote-node 9100: WAN port\nGET /vdc/nodes: remote VDC health\nMonitor WAN bandwidth]
-    J --&gt;|No| L[Tail ECS logs for transient errors\ntail /var/log/ecs/*.log | grep ERR]
-    F --&gt; M[Collect support bundle\nPOST /vdc/support-bundle or Portal\nOpen Dell support case]
-    G --&gt; M
-    I --&gt; M
-    K --&gt; M
-    L --&gt; M
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,E,H,J dark
-    class B,D,F,G,I,K,L action
-    class M escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptU8tu2zAQvOsrFjm2UBW3l1aHFo7s-N0EdpAChS4bciWxoUmBpBy4D6Af0S_sl3RpuWkPOo3FWe5wZ9ZSORJBWZODU3UTkmScw8W02MHC-45gS611geQFfPMNtsRlXI-m1vQjueLS2fQOsoMUmbGSfA5Cdz6Qg4ZQh6Y0zzxqcoELkOUOBP3nYNuC2xaDzISZ3W4OwQJWFZ-ThKhbGn9k1b0IGnzA0HkG67Am60GgbxWawYbTOOwgc83MF9s5gzp2Tbt_HXPQtvalkRWkDWQSA2bw--cvkMo_QtVp_aE0W-KHuADW6COo6nQFhDWVcnvwWNGg6oxV40DB2r-T5FCg92ikQ47I1KUh0Vjw7uDgOxgBr0dvRzl8XsH-5IT2D_qRc2hI8GOs619Fzlk3bPecNeeDzIIZfGIv32CrYqIyfejEIwVOsQtNr1Ga4iS1GG-g85z8S-iLoLVaiWNp7smp6ggopeOZjprDN5wb7sm3KIaNWLL0cpBZRYsEpF8PfLq3gdJoGLwbXV7m8Gn8EeLC_rd3573sa-F-Ujyv5sYaxZmeLj3wk56UDM2g5po171BpiH-MU5LR2ODQeEUmnN0tTYg12QFdxkUZCZ-9eMW_OKfaUQvT7Xaw_SYuvNWaT8B3bRyAPTRSc5y3N7vzIGcm7RngB9zyJ-rS3LRkYEJaP9_mnR_2NRlD-h6ukiLCJJlGuO5hlswjLJJlhFUP6-Q6wiaZ9bDoYdXDuoc_jYJvlA==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk01OwzAQRvc9xaj7Ltq0my6QWCCoBAiRA1gmGRwLxxPFblCFKnEITshJcGya_uCa7pL4fc_WN04pWyysJL2Ekt71aGQ2dWOpXsKqRG3l6wby8AU-TMUbdJzkNelyOzIWGzZlNddcYO1oxhvJKuTKVqyosHhbwjh3EEzh-_MLHgYQrp9WEEDw4Hiw98fhWij89c-YybzXbSs0GSsLs9POvDbPvO5g_bwtY5pKVNihYsZUMWnmpY8Om3gO8vzuMvmcCaQWGyUL3lcas8-9_RZpcgBepl8ws24aai17WetSIStIqd3wgn0RCgkYBAz2WNStSDBF4SD9Me9JwPAeTbRoSK3Dvs_9c4dALdyYgitucYhQx9V2uFEwuYJLbozUHbomhDP9icYvQyqRHHgqmB5mKpmc05ngyRCOqH876wX7mZz_bWJcop8Ynmolxie6OMGPGjhZ-wG0L78D?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9291,7 +9268,7 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

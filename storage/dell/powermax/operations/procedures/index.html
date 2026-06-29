@@ -9336,34 +9336,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 </code></pre></div>
 <h2 id="provisioning">Provisioning<a class="headerlink" href="#provisioning" title="Permanent link">&para;</a></h2>
 <p>End-to-end workflow for provisioning storage on Dell PowerMax: create volumes, add to a storage group, and create (or update) a masking view so the host can see the storage.</p>
-<pre class="mermaid"><code>flowchart TD
-    START([Start: New Host Needs Storage]) --&gt; PREREQ{Prerequisites Met?}
-    PREREQ --&gt;|"No: zoning missing\nor HBA not logged in"| FIX_PRE["Fix Fabric Zoning\n+ confirm HBA logins"]
-    FIX_PRE --&gt; PREREQ
-    PREREQ --&gt;|"Yes"| CHK_SG{"SG already\nexists for host?"}
-    CHK_SG --&gt;|"Yes"| USE_SG["Use existing SG"]
-    CHK_SG --&gt;|"No"| CREATE_SG["Step 1 — Create SG\nsymsg create hostname_SG\n-srp SRP_1 -slo Diamond"]
-    CREATE_SG &amp; USE_SG --&gt; CREATE_DEV["Step 2 — Create TDEVs\nsymconfigure: create dev\ncount=N size=XGB sg=hostname_SG"]
-    CREATE_DEV --&gt; VERIFY_DEV["Verify: symsg show hostname_SG"]
-    VERIFY_DEV --&gt; CREATE_IG["Step 3 — Create Initiator Group\nsymaccess create hostname_IG\nAdd host HBA WWNs"]
-    CREATE_IG --&gt; CHK_PG{"Port Group\nexists for fabric?"}
-    CHK_PG --&gt;|"No"| CREATE_PG["Step 4 — Create Port Group\nsymaccess create fabric_PG\nAdd FA dir:port pairs"]
-    CHK_PG --&gt;|"Yes"| USE_PG["Use existing PG"]
-    CREATE_PG &amp; USE_PG --&gt; CREATE_MV["Step 5 — Create Masking View\nsymaccess create view hostname_MV\n-sg hostname_SG -ig hostname_IG -pg fabric_PG"]
-    CREATE_MV --&gt; HOST_SCAN["Step 6 — Host Rescan\nrescan-scsi-bus / multipath -ll"]
-    HOST_SCAN --&gt; VERIFY{Host sees\nall LUNs?}
-    VERIFY --&gt;|"No"| TSHOOT["Troubleshoot:\nsymaccess show view\ncheck zone, WWN, port state"]
-    TSHOOT --&gt; VERIFY
-    VERIFY --&gt;|"Yes"| DONE([Done — Storage Provisioned])
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    classDef fix fill:#b45309,stroke:#92400e,color:#fff
-    class CREATE_SG,CREATE_DEV,CREATE_IG,CREATE_PG,CREATE_MV,HOST_SCAN,VERIFY_DEV action
-    class PREREQ,CHK_SG,CHK_PG,VERIFY decision
-    class START,DONE terminal
-    class FIX_PRE,TSHOOT fix</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFVNtu2kAQfecrRnltrCq9PSClEQlgUAW4tkPSCglt7MWsYnatnYVcqkr9iH5hv6R7MXirOPTJ1sycmbMzZyZnkmaKCd4FyYq16nSieBAPvnbhxP2cwA9ck4pqvw4kvCjpz85wfLvUbh00ZI8wJHeSZfBdcMaLBX8DmeArJjcwuuxBKQrGsTXL1ejLMgl1kiQEUkpK8qcFp48MFcJKSFgLVBetyOtk4JDXSMEidGVIwvYy8aCX1vGJohWcwZ9fv-FKF1RUgxYcnzZYQOYMpionG7o0ngBlBUkcLc8gwFJAn5GN4PmxOv3BfF_onV8o1Q60tWx7iq3U8LpmTncLnoktV-dTQPZMz2_DS8Di3CPTWnM-iMfDb3XNOZVs9dQF9xxciwf4H77mPD705r1PecyZYkTpUYRSbCtLnmQZRXzRrLFuVi_PrcHO_eZm-vrUI1MvElLtE3tTX1k1XRyjGx3ofvDp-glfMHVpNdTxHPYgZ7JbGUhFmMRXdRa90Fl0tJeTw_g_-uQmBO8NeM7oQwu9nTY33ZzMjfQKf3wQsMJvNwRV0TyqldBolqTL5Ko33RP6ZAmNzIhiihnhCy7tN8AMWXC3RXgLm22pWEXUGoKyPCI6Izj70xqTJqPZLNUxqZ7HXUm1GoXq-g-3-tzZbmRrmt3Ds-D01OjmFOxYUOnGtCbvz6bm9vQ1wL4o0RIlhRaAFDuG-pjR9g1N0l6c2mYQqbow1S23zZhSmuM-SyuyvooQfIb69u1voDE5pxfjLlt94IzBHSzPcDhKzXny4tzHi9ML7t0X42g23zsCHmIcNsu9pxSF9fZ5cf_YnN6bNfNs7uMBJ_NG8cZ8UFvNx9icCmoxNKy9CDPKzl_K7SiR?" /></p>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <p><img alt="Prerequisites" src="../../../../../assets/powermax-proc-prerequisites.svg" /></p>
 <p>Before provisioning, confirm:
@@ -9554,7 +9527,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

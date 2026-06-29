@@ -8913,40 +8913,7 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 <p><img alt="Dell VPLEX — Common Issues" src="../../../../../assets/storage-dell-vplex-troubleshooting-common-issues.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkk1ugzAQhfecYsS-F2DRTX-kLJtW3VqWGahV8CS2IYoqpB6iJ-xJOnZaQgw0O_Pe-8bDg1JbVF6TKaCkg8kyd2x3ntoCNiUar6sjPJ8U-HBvcoec07IlUw4ZH2pDzmslqoYOBeT3owKPrOQjEy6Rpm5wyLRROowW3nKavXzzq8BLVJYp5zoUFiu0aFSkggLbP2WRUtTyqiLCTuw7rd4vZtxFH-IoB9-fX_AUMlem9mi5Fx7kqOlO3eWvUYOztkhOkW049whk4cEp2UiPI0K9bIbxW8DNLcy61qZHfqwZm-Zm7a7l0j5XclcaXKEWGpomk5cJxDma_iCpe7l44v67bpKdLZn4P1J9Kos=?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{Director\nfault?}
-    S --&gt; B2{Distributed volume\ninaccessible?}
-    S --&gt; B3{Witness\nunreachable - Metro?}
-    S --&gt; B4{Cache invalidation\nerror?}
-    S --&gt; B5{Cluster communication\nlost?}
-
-    B1 --&gt;|Check director hardware| D1{Director in\nmajor-failure state?}
-    D1 --&gt;|Yes| R1[See Issue Reference —\nDirector shows major-failure]
-    D1 --&gt;|Port fault| R2[See Issue Reference —\nHost Loses Access to All VPLEX Volumes]
-
-    B2 --&gt;|Check distributed device| D2{Device out\nof sync?}
-    D2 --&gt;|Yes| R3[See Issue Reference —\nDistributed Device Out-of-Sync]
-    D2 --&gt;|Storage view| R4[See Issue Reference —\nSingle Host Loses Access to Volumes]
-
-    B3 --&gt;|Check Witness VM and network| D3{ICL also\ndown?}
-    D3 --&gt;|Yes| R5[See Issue Reference —\nI/O Suspended on Consistency Group]
-    D3 --&gt;|Witness only| R6[See Issue Reference —\nWitness Not Reachable from One Cluster]
-
-    B4 --&gt;|Run health-check full| D4{health-check\nreports warnings?}
-    D4 --&gt;|Yes| R7[See Issue Reference —\nhealth-check reports warnings]
-    D4 --&gt;|RP CLI hang| R8[See Issue Reference —\nRecoverPoint CLI Commands Hang]
-
-    B5 --&gt;|Check ICL between clusters| D5{ICL link\ndown?}
-    D5 --&gt;|Yes| R9[See Incident Triage —\nICL down: restore network]
-    D5 --&gt;|No| R10[See Common Issues —\nHigh write latency on Metro volumes]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9VMtu2zAQvPsrFrkLjV95HVKEVpEYcOtAKpIeemGotcVE4gokZcEoCuQj8oX5ki6V6MbqNqCWM5zdHRXaovKazBVYvS_9ZJJOr-AknZ7AH1fKBvmcC6TZV_h3koVvOSKsnWsRMtyhRaMQ3l_ffpu05yILrqTOQS2fySY7qavWYpxuNkZ3R87Dhhw6uFEKnQNPcFNV8HC_-fYLHqhqa3RR4jQQp7O46Hzcg_NWP7UeC0jxoPl82_qEdkl-NCpOuBgjzHWogqiZUQvhmek8rrgcU1x_2ULeugZNwSbIwIqMY1tccYRbS20TJz0bI33U3oRX_yDPn6Qq5RO72lmqYWsQVlXLAjbuJPQnXcRFz8dES5SVLxNVonrhWw1Z76CT1nBP413LLsb4MlR0QHtP2nhYbdbcmbqWpnBwx_fjjw-tTpdxsctBzChdIHP-tFruhzGsNlBQF4KFjlOBYNB3ZF_-k6zTT7LwJh5ab8B9JoGTCZ3VHqGSH3Pkiu_oLcFhZIdypnwspQfN61YiuGPdeKq_RotFyLaI516EPIl4nkRYVBFfVBFGL-KjF6GzIt5Z_glBcg3ZdAAzjnQP5gNYcEJ6sBzAGW9aD84HcMHj68HlAKank3-0Vqut?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8959,26 +8926,7 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 <hr />
 <h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
 <p>When hosts report I/O suspension, a distributed device is out-of-sync, or a director is unreachable, work through this sequence first.</p>
-<pre class="mermaid"><code>flowchart TD
-    alert(["Host I/O issue /\nAlert received"])
-    clHealth["ll /clusters/*/health-indications/\nCluster non-ok?"]
-    ddHealth["ll /distributed-storage/distributed-devices/*/health-indications/\nDevice out-of-sync?"]
-    witnessHlth["ll /clusters/*/cluster-witness/\nWitness unreachable?"]
-    iclHlth["Check ICL\nll /clusters/*/communication/inter-cluster-links/"]
-    dirHealth["ll /engines/*/directors/*/hardware/\nDirector faulted?"]
-    svCheck["ll /clusters/*/exports/storage-views/\nStorage view intact?"]
-    hcFull["health-check --full\nCapture full output"]
-
-    alert --&gt; clHealth --&gt; ddHealth --&gt; witnessHlth --&gt; iclHlth --&gt; dirHealth --&gt; svCheck --&gt; hcFull
-
-    iclDown["Restore ICL\nNetwork team"]
-    iclHlth --&gt;|"ICL down"| iclDown
-
-    dirFault["Open Dell Sev-2 case\nDo not reseat without guidance"]
-    dirHealth --&gt;|"Director faulted"| dirFault
-
-    svFix["Add initiator / volume\nback to storage view"]
-    svCheck --&gt;|"View missing objects"| svFix</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1k01v2zAMhu_5FUSOBQQDO-awoUgQpECxAu1hl14UiYmJKJIhUXaHYf99lD86Z3NuFmW-pB6-tBTRMAW_gUjnmlcr7TDyBtaHkBieqheglDJC9e4fyw3I_0gt2jX8SrVucFMirP3Z4e-VcQfUjmvJdw4q43JijKl6qOo-rshbMroUTKK4He7BB6_C5duipLU3kpYSRzpmRqsSh6jPeBOz2JLBuxV3_TWEzCqcVPrpzXLVjthjSofFt4yfavxJZH8MX5B9RG1qfXS4rEtCaNDc1mgu8LR9fvf_yofrNfux6Yp8KTWVdOQvqVoGRfGGFPoz-Z6E7YcchjnoaDsdsbAYw3DS2Qm75Y5T23f6PwX8aELkVI1TUC1hV1i8DWcoZ5DuteFl5drss3MiPE7K9ESUOklUvKEbzhGhnMq8msz3iO5CJ_5dv2JpBQem35G7EC_AqK_3cO3LuyXxpUEPO5Q6b9iqL2B0QsETxJfF7wk1g8y6li7gnMlqb_AOqz19iOCjtfJyYtIFbwVtcPkqkkctD-QAaYZoUWjYQlBfYdqoz9UqwWknPpejBGeWndu3XI2um9zXS0xu-eubEh6nPU29hIYxzXNH5LeZE895as9j9QdaoZDc?" /></p>
 <ul>
 <li>[ ] Run <code>ll /clusters/*/health-indications/</code> immediately — identify which cluster has entered a non-ok health state and note when the state change occurred</li>
 <li>[ ] Check distributed device sync state: <code>ll /distributed-storage/distributed-devices/*/health-indications/</code> — an <code>out-of-sync</code> device means one leg of the distributed device is not being written to; identify which cluster leg is affected</li>
@@ -9300,7 +9248,7 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

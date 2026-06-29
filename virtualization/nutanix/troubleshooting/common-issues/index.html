@@ -7619,32 +7619,7 @@ Troubleshooting guide for the most frequent Nutanix problems: CVM down or unreac
 <p><img alt="Nutanix — Common Issues" src="../../../../assets/virtualization-nutanix-troubleshooting-common-issues.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9Uj1vgzAQ3fkVp-xV9gxdSKN2aFM1alfLNQdYgbvIGFBU5b_3CIhEBLOZex_2u0diHRpvmTaQcEtRVJ3Lk-dyA28JkrfpGQ79BP6qXJ9QeFaXTMklkkNGXHlrVFpwu4HVdpzATiarUdNdoikr8BKZplTdVaomh9rk-rcQwir-eYetjGEN3zdg1oGMUTnqwufK5GiOKtW2qB1WYvMRx_B6xSDuMNgN2KxT5dnpDFWCmdMJJoqdMs7K-3UhZocehu0AAzuIB3jWT6JVvpYXnbhFZylTTJymYiXpDh0CnwMCe1rv0zRkYzQRe2WYSObKsyL0Lbtj7xVfYYh7GDzDRw_P-kl8Luq-5a_u3GAX5aWSHNrjKOFGF5fxF4CnZ3io2FKD8pmJ7J43X2qAvNBfQLHcU0AULCPMX9j6vWiylU58W_HsDz6hBDcw4S3lnlADaR9ZwYwT6j8XwIhA?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([Alert or symptom]) --&gt; A[Run NCC: ncc --health_checks run_all]
-    A --&gt; B{NCC result?}
-    B --&gt;|FAIL - specific check| C[Identify failing check\nread check description]
-    B --&gt;|PASS or inconclusive| D[Check service health\ngenesis status · nodetool status]
-
-    C --&gt; C1{Check category}
-    C1 --&gt;|CVM / service| E1[CVM Down: restart via virsh / genesis restart]
-    C1 --&gt;|Storage| E2[Storage Degraded: check disk, RF, rebuild status]
-    C1 --&gt;|Replication| E3[PD Replication: check remote site, ncli remote-site]
-    C1 --&gt;|Network| E4[No network: OVS bridge check, AHV host ping]
-
-    D --&gt; D2{Service down?}
-    D2 --&gt;|Yes| F1[genesis restart on CVM · nodetool repair if Cassandra]
-    D2 --&gt;|No| F2[Read relevant log\nstargate.ERROR · curator.INFO]
-
-    F2 --&gt; G{Root cause found?}
-    G --&gt;|Yes| H[Apply fix · verify with NCC]
-    G --&gt;|No| I[Collect support bundle\nlogbay collect · open GSS case]
-
-    classDef action fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class E1,E2,E3,E4,F1,F2,H,I action
-    class B,C1,D2,G decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9k82KIjEQgO_9FIVnnUVnTn1YUNu_w-jSDZ6EISZldzAmIUnryLLPtfd9sq3YNgxL2EOoon6-VKoqQjrkQRqdg5N1E7KsymEwVegCGAf-frHBXAbw0zfMIgVRNNO1wl_ZlALLVsN2Ps9Bcw6jUYNMheaDN8jPHlyrP5hSyeQZJc-SHoINNgJ1kKc7nJhUUtfwIB60QyY6HQR67qSNpScxBWHmj0iP7io5QlfcQdeo0UsPPrDQevjzG7QRGIxRT1O6rHEEjpO-xcO3f4fC3GIjkTjUv6tkdJxv4Bv0lz59acyEMFUwjtUIBdaOCRR5_17pz0Mol0PKOLZSif8Vu3gl0o8CSrRKctbNt-M4vJiA4GXAIU1NyadlFC1p2BvBtgY0hptx5xx2-wqOTgqq8sEcwnS9h8b4AJaGlR5HfFsxSfqWsX3_NAiMhtjRr9NxaJl0IE8wZ94zLRxL8-JdZVwVhwqvTAdQpj7oCK5ZwJdFWe7KiOatY9Tvl812uUuiVkRaJT3r-E2sVbSj8jOyrujixt5kaOKXSCZt4p4YpcgCvrXW0EOPrRYKD5pKPLI78KebiMaihlVVAWc-PZqsgtF3mGazKOadKGhVo1yMe2XSK6-98kbziMpy3CuTbBXluhOb7C_VnV7m?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7941,7 +7916,7 @@ Troubleshooting guide for the most frequent Nutanix problems: CVM down or unreac
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

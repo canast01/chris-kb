@@ -8226,23 +8226,7 @@ Organisational standards for OU structure, naming conventions, group policy desi
 <p><img alt="Active Directory Standards" src="../../../../../assets/compute-windows-server-active-directory-architecture-design-.svg" /></p>
 <hr />
 <h2 id="ou-and-gpo-hierarchy">OU and GPO Hierarchy<a class="headerlink" href="#ou-and-gpo-hierarchy" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    domain["DC=corp,DC=example,DC=com\n(domain root)"]
-    domain --&gt;|"linked: ALL-USERS-PasswordPolicy"| ouServers["OU=Servers"]
-    domain --&gt; ouWorkstations["OU=Workstations"]
-    domain --&gt; ouUsers["OU=Users"]
-    domain --&gt; ouGroups["OU=Groups"]
-    domain --&gt; ouSvcAccts["OU=Service Accounts"]
-    domain --&gt; ouAdmin["OU=Admin"]
-
-    ouServers --&gt;|"linked: PROD-SERVERS-SecBaseline"| ouEMEA["OU=EMEA"]
-    ouServers --&gt; ouAPAC["OU=APAC"]
-    ouServers --&gt; ouAMER["OU=AMER"]
-    ouUsers --&gt; ouStaff["OU=Staff"]
-    ouUsers --&gt; ouContractors["OU=Contractors"]
-    ouAdmin --&gt;|"Tier 0 only — PAW access"| ouTier0["OU=Tier0"]
-    ouAdmin --&gt; ouTier1["OU=Tier1"]
-    ouAdmin --&gt; ouPAW["OU=PAW"]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kk1rwzAMhu_5FaanHjpYroMOQhZ2KivdSi-7GMdtzRorOE4ZjP33yR9p7XXaKa9fP1JkSa0yUlgF-oEZdTjaomih4wqPs6d6KcD0C_zKT971J7nwVveu5wFiBsDO2Ndw5L3EBJiJ68NJfhcwvkpzlmbAPC_bZTwQ6A7Mx2C5qyLyqUMEbYdLdi8J7NnA2EcuaKres6iEsEnBSkiGFozaUkFV2_lWYYSXBNasmipQTlG51lUdU6GioFWziRAq6imW7_fxHU4SWA3aGi4sTH1MDCLkTUlzH2Av_8HKK1YS2LraBQjFn0jcRXb3yC4LlXnpnmQXfiUyJww_zxhHnpl-jtf9DaYb22_PTenGw6FMuxn_4QaQW0mbpxUKF76lt1aZW9is4gew2Ec4?" /></p>
 <h2 id="ou-structure">OU Structure<a class="headerlink" href="#ou-structure" title="Permanent link">&para;</a></h2>
 <p>Top-level OUs are functional (Servers, Workstations, Users, Groups, Service Accounts). Geographic sub-OUs are used where region-specific GPO or delegation is required.</p>
 <p><img alt="Active Directory Standards — Diagram" src="../../../../../assets/compute-windows-server-active-directory-architecture-design-standards-diagram.svg" /></p>
@@ -8452,20 +8436,7 @@ Organisational standards for OU structure, naming conventions, group policy desi
 <p>Disable RC4 via GPO: <strong>Computer Config &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; Security Options &gt; Network security: Configure encryption types allowed for Kerberos</strong>.</p>
 <hr />
 <h2 id="tiered-administration-model">Tiered Administration Model<a class="headerlink" href="#tiered-administration-model" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    tier0["Tier 0 — Identity Infrastructure\nDCs · ADCS · AAD Connect · CyberArk Vault · DNS"]
-    tier1["Tier 1 — Servers and Services\nApp servers · SQL · ESXi hypervisors · Storage"]
-    tier2["Tier 2 — Workstations and End-user Devices\nDesktops · Laptops · VDI"]
-
-    admTier0["adm0-* accounts\n(Tier 0 admin)"] --&gt;|"access only from\nTier 0 PAW"| tier0
-    admTier1["adm1-* accounts\n(Tier 1 admin)"] --&gt;|"access from\njump server / Tier 1 PAW"| tier1
-    admTier2["Helpdesk accounts"] --&gt;|"standard workstation"| tier2
-
-    paw0["Tier 0 PAW\n(air-gapped, hardened)"] --&gt; tier0
-    paw1["Jump Server / Tier 1 PAW"] --&gt; tier1
-
-    tier0 -. "Tier 0 accounts must NOT\nlog on to Tier 1 or 2" .-&gt; tier1
-    tier1 -. "Tier 1 accounts must NOT\nlog on to Tier 2" .-&gt; tier2</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkr1OwzAQx_c-xakTQkQ0GTsgRXEliioECmoZWEx8JFZb27IdUIWQeAjehZ1H4UmwXSdlSGHy-T7-99PdMa6xslyKKWheN3Y0omx7x1FPpjB25iQ5BVpVshXWPIgTH4EJuAAXY3g1DVXoKp0EFfUG30Y2lsbE7_cPmDMUltsdzMWTpsbqtrKtxgdBCgNfn5CTogxvTqCQQjgx_y12j6hzvYYlbTfBQ67LwZ6RON0TpwPE6T_EaUecBuIS9TNqA1SwYPMKnVSuFJgYcTTl7cI_s_KeQ7NTPs3IGLJS0xr_gs1cx0vcKIZm3eMe5cs6vizwraReG0v92vaQM8GS1rEBwQhLnK6VKuAsqOrMJZkPNlH05dfWbvKVmxzlOqmpUsjOoKHabRHZsWI_wKt2q-Lo4BziOJ3UYE1_ZpBcQDiafo2dJ-1n1XmywHmo8I0P2T89QfqE?" /></p>
 <h2 id="privileged-access-model-tiering">Privileged Access Model (Tiering)<a class="headerlink" href="#privileged-access-model-tiering" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8527,7 +8498,7 @@ Organisational standards for OU structure, naming conventions, group policy desi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

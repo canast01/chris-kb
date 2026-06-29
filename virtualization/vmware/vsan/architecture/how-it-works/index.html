@@ -9383,35 +9383,6 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 <li>Once all required components acknowledge, DOM acknowledges the write to the VM.</li>
 <li>Data is de-staged from cache to capacity disks asynchronously in the background.</li>
 </ol>
-<pre class="mermaid"><code>graph TD
-    vm["VM\n(guest write I/O)"]
-    dom["DOM\n(Distributed Object Manager)\nowner host"]
-    lsom_local["LSOM — Local Host\nwrite to cache SSD buffer"]
-    vsan_net["vSAN VMkernel Network\n(unicast, 10/25 GbE)"]
-    lsom_remote["LSOM — Remote Host\nwrite to cache SSD buffer"]
-    ack["All required components\nacknowledge write"]
-    destage["Async destage:\ncache SSD → capacity disks"]
-    vm_ack["Write acknowledged\nto guest"]
-
-    vm --&gt; dom
-    dom --&gt; lsom_local
-    dom --&gt;|"FTT remote component"| vsan_net --&gt; lsom_remote
-    lsom_local --&gt; ack
-    lsom_remote --&gt; ack
-    ack --&gt; vm_ack
-    lsom_local --&gt; destage
-    lsom_remote --&gt; destage
-
-    classDef vm fill:#15803d,stroke:#166534,color:#fff
-    classDef mgr fill:#b45309,stroke:#92400e,color:#fff
-    classDef io fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-    class vm vm
-    class dom mgr
-    class lsom_local,lsom_remote,destage io
-    class vsan_net net
-    class ack,vm_ack vm</code></pre>
 <p><strong>ESA write path:</strong> DOM routes to component locations; LSOM writes directly to NVMe with inline compression — no cache tier.</p>
 <p><strong>Implication:</strong> Write latency is bounded by the slowest component acknowledgement. FTT=1 RAID-1 requires a round trip to a remote host — vSAN network latency directly contributes to front-end write latency.</p>
 <hr />
@@ -9427,33 +9398,6 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 <p><strong>Hybrid OSA only:</strong> Frequently accessed data may be served from the cache SSD read cache (30% of cache) rather than the HDD capacity tier.</p>
 <hr />
 <h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    policy["VM Storage Policy\n(FTT=1 RAID-1, checksum on)"]
-    obj["vSAN Storage Object\n(per VMDK / VM namespace)"]
-    compA["Component A\nESXi-01, Disk Group 1"]
-    compB["Component B\nESXi-02, Disk Group 1\n(mirror)"]
-    witness["Witness Component\nESXi-03\n(metadata tiebreaker)"]
-    diskA["Capacity SSD\n(naa.xxxxx)"]
-    diskB["Capacity SSD\n(naa.yyyyy)"]
-
-    policy --&gt;|"defines placement"| obj
-    obj --&gt; compA
-    obj --&gt; compB
-    obj --&gt; witness
-    compA --&gt; diskA
-    compB --&gt; diskB
-
-    classDef policy fill:#b45309,stroke:#92400e,color:#fff
-    classDef obj fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef comp fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef disk fill:#15803d,stroke:#166534,color:#fff
-    classDef wit fill:#1d4ed8,stroke:#1e40af,color:#fff
-
-    class policy policy
-    class obj obj
-    class compA,compB comp
-    class diskA,diskB disk
-    class witness wit</code></pre>
 <table>
 <thead>
 <tr>
@@ -9603,7 +9547,7 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

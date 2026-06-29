@@ -8908,40 +8908,7 @@ Common Issues reference covering Common Issues Reference, Incident Triage Sequen
 <p><img alt="Unity — Common Issues" src="../../../../../assets/storage-dell-unity-troubleshooting-common-issues.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9Ur1ugzAQ3nmKE1M79AUYOqQ_EqrUIam6Wo45iFXjS21DFFW8ew9CCSK4m_n-fPeZQjtUQZPNoKCTTRJ_ro-B6gzyAm3Q5Rl2FwR-_EEekXVa1mSLLuFDZckHrURp6JRB-jwh8MpIOnn6S6StDHaJoprtQnvfoBcOS3RoFWvSp4GBfGBg-8espmirdD-gCI7vROHxuxlj8pGCj4GC3Uit5nxZ3lrs8SBbTY3zwlIQ-6byHPTWc7CZOLh7pwAbJu9Xs1p03Bev5Mk0l07TzwGDK7bqnFu2_blFIAcvXkkjA04WaqXppjeCh0e4eQNtW-TPim1zXbT1iD7eb8TwT5ERx0pdc-Vis95xlcb-ooUqtsVCFp19obuZeMH_AtrGPiw=?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{SP fault\nor offline?}
-    S --&gt; B2{LUN\ninaccessible?}
-    S --&gt; B3{Snapshot schedule\nfailed?}
-    S --&gt; B4{NAS server\ndown?}
-    S --&gt; B5{Pool space\nalarm?}
-
-    B1 --&gt;|Check SP health| D1{Both SPs\nonline?}
-    D1 --&gt;|One offline| R1[See Storage Processors —\nOne SP offline: open Dell case]
-    D1 --&gt;|Both offline| R2[See Storage Processors —\nBoth SPs offline: P1 case]
-
-    B2 --&gt;|Check LUN mapping| D2{LUN mapped\nto host?}
-    D2 --&gt;|No| R3[See Block Storage —\nLUN not visible to FC host]
-    D2 --&gt;|Protocol issue| R4[See Block Storage —\nLUN not visible to iSCSI host]
-
-    B3 --&gt;|Check pool utilisation| D3{Pool above\n90% full?}
-    D3 --&gt;|Yes| R5[See Pool and Capacity —\nPool capacity alert at 80%]
-    D3 --&gt;|Protection policy| R6[See Replication —\nReplication session in Error state]
-
-    B4 --&gt;|Check NAS server SP ownership| D4{NAS server\nfailed over?}
-    D4 --&gt;|Yes| R7[See NAS / File Storage —\nNAS server not responding after SP failover]
-    D4 --&gt;|AD issue| R8[See NAS / File Storage —\nSMB share inaccessible]
-
-    B5 --&gt;|Check pool subscription| D5{Pool degraded\nor drive failed?}
-    D5 --&gt;|Drive failed| R9[See Pool and Capacity —\nPool health Degraded]
-    D5 --&gt;|Snapshot growth| R10[See Pool and Capacity —\nPool over-subscribed warning]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVVMtuFDEQvO9XtCJxjNjZR7LJAYTXREKCsNoR4sKl19M7Y-G4R7YJihASH8EX8iVpT3Z4SF4lnKbUtqvs6uppbCCTLPtLCLbt0mSiq0s40dUJfIsd9iR12YC-dfR9ss1rNRHUiQO2BJvAhmLkEOHXj5-f_Hsvaxvg_d5ZL2e5Jw-anAODkcqcs0c4FadOSOMf1k11nE5nOj0rS80PUsqx-fxbcFB5--EaPCe4tdHuHEFiuFpDxzGVqRb_RWXrdf3mOJvOF9PzstLyoLRhdoC-gTX2aGy6e1AbymYsoaOQABOsps_KdGcHui31zhrMvX8g-rsQpQH5az28DoEDxITpiOHZCb0oi50fxK5f1fAcrqyjf63K9UjhlsLgWKDYs2-sbwH3SYqSpT1ax7KhLLB6RKB-p0COBZKnoMm5yi0pPyQbrZdlnYsnNKEjdBJVTW3AhpojEzR9AlN-72n8sosm2B018BWDF1OKjLXwfeyk4zZC6gji3U2f-OZlcbPKA6zKw63y5Kjy5KgcUFUOqMoBUOUAqOypKnsqfxo4fQHbagQzGd4BzEewkMkYwHIEZ5K3AZyPYCWNG8DFCKrp5B5PPJz7?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9225,29 +9192,7 @@ Common Issues reference covering Common Issues Reference, Incident Triage Sequen
 </table>
 <h2 id="incident-triage-sequence">Incident Triage Sequence<a class="headerlink" href="#incident-triage-sequence" title="Permanent link">&para;</a></h2>
 <p>When a host reports I/O errors or a LUN is inaccessible, work through this sequence:</p>
-<pre class="mermaid"><code>graph TD
-  START(["Host reports I/O errors\nor LUN inaccessible"]) --&gt; SP{Both SPs\nonline?}
-  SP --&gt;|No| SPWAIT["Wait 60 sec for\nmultipath re-path\nIf SP stays offline → P1 case"]
-  SP --&gt;|Yes| POOL{Pool and disk\ngroups healthy?}
-  POOL --&gt;|No| DRIVE["Identify faulted drive\nInitiate replacement\nMonitor RAID rebuild"]
-  POOL --&gt;|Yes| ACL{LUN mapped\nto host?}
-  ACL --&gt;|No| ADDACL["uemcli /stor/config/lunacl create\n-lun -host"]
-  ACL --&gt;|Yes| PROTO{Protocol?}
-  PROTO --&gt;|FC| FCCHECK["Verify FC zone:\nhost HBA WWN + Unity port WWN\nboth present"]
-  PROTO --&gt;|iSCSI| ISCSICHECK["Verify host IQN registered\nCheck CHAP credentials\nPing iSCSI portal IP"]
-  FCCHECK &amp; ISCSICHECK --&gt; NIC{Network\ninterface up?}
-  NIC --&gt;|No| NICFIX["Check SP port; restore interface\nuemcli /net/port/fc show"]
-  NIC --&gt;|Yes| ALERTS{Active alerts\nin last 2 hours?}
-  ALERTS --&gt;|Yes| ALINV["Investigate alert details\nin Unisphere event log"]
-  ALERTS --&gt;|No| BUNDLE["Collect support bundle\nOpen Dell case"]
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class SP,POOL,ACL,PROTO,NIC,ALERTS decision
-  class ADDACL,FCCHECK,ISCSICHECK,NICFIX,ALINV,BUNDLE action
-  class SPWAIT,DRIVE warn
-  class START term</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U0uO2zAM3ecUxGyLIO2mixQokLETRGjquHE-XXij2LQtVJEMSU6RFt32AD1iT1LSnsEUA2djmeTTo0g-lsphEZQ1c3CqbsJkkqVzeMjSB_jpG9ki-QkgTa3xF8VOC7Gn-EmqAO_fgscCKutyc-l0UK0MDcGnfOZGVJCl4IO8ebBVpZVB-Pv7D6TvoJAeRxOk2-2G6PkYjcc7cVwSQJRogqpuUElKjCWUTl2RchoVlAxId1otC7wQLDefLbmtg91CxBQ5d0qXo_SLiLPTdzwaxwOgw0uhFcw8kc4KaypVz3RnZKGhcEjpczMlG6aN9WG8zt12v-VC-RxFrKJovYw-EeaIjitdRfDDGpznhllh_biA0ymBN3Cg4m7QWhfYkZuzpSm0Dj3VPkotsigTr9h7TvElIVytfECHZW6iBotvEK0XKdfVt1xqn5tUmRoUs_RppQYxrpdERJSCvveiK_GVAEMeEguzfSAINxZBGXpHRVPMzXPHDYYZg2ZVAb6x38fntFnu9hkPsv-5gxHJkYVkrpRN1awZqZF6WGKQiqtUhlvr24aaAXil6kHbepTt8ZDEG9ZlZLUmN_iu7Qdy7kyp6f3bFg3EqPV96Wf7xY5Xa82TIPnSdQ9itgV0zjp6Dwl4c0ioK7Io0Ht11uNEtKUw_QjDrvYbxWa_OSxwNgYlDypk-0lsL44XiTwL8ZWXZseeYYRPHe-Zua__2UNnJv8AxsR2Kg==?" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — determine if the array is healthy</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/env/health<span class="w"> </span>show<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;health.value ne OK&quot;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
@@ -9386,7 +9331,7 @@ Common Issues reference covering Common Issues Reference, Incident Triage Sequen
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

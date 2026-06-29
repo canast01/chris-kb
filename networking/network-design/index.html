@@ -6815,28 +6815,7 @@
 <hr />
 <h2 id="enterprise-network-tier-model">Enterprise Network Tier Model<a class="headerlink" href="#enterprise-network-tier-model" title="Permanent link">&para;</a></h2>
 <p>The three-tier (core / distribution / access) model remains the reference architecture for large data centres. Smaller environments may collapse distribution into the core (two-tier / spine-leaf), but the design principles are identical.</p>
-<p><pre class="mermaid"><code>graph TD
-    Internet["Internet / WAN / MPLS"]
-    FW_Pair["Firewall Pair\n(Palo Alto PA-5450 HA Active-Passive)"]
-    Core_A["Core Switch A\n(Cisco Nexus 9504)"]
-    Core_B["Core Switch B\n(Cisco Nexus 9504)"]
-    Dist_A["Distribution Switch A\n(Cisco Nexus 9300)"]
-    Dist_B["Distribution Switch B\n(Cisco Nexus 9300)"]
-    Access_A["Access / ToR A\n(Nexus 93180YC-FX)"]
-    Access_B["Access / ToR B\n(Nexus 93180YC-FX)"]
-    Hosts["ESXi Hosts / Bare Metal Servers\n(dual-homed, LACP)"]
-
-    Internet --&gt; FW_Pair
-    FW_Pair --&gt; Core_A &amp; Core_B
-    Core_A &lt;--&gt;|"vPC peer-link\n2×100GbE"| Core_B
-    Core_A --&gt; Dist_A &amp; Dist_B
-    Core_B --&gt; Dist_A &amp; Dist_B
-    Dist_A &lt;--&gt;|"vPC"| Dist_B
-    Dist_A --&gt; Access_A &amp; Access_B
-    Dist_B --&gt; Access_A &amp; Access_B
-    Access_A &lt;--&gt;|"vPC"| Access_B
-    Access_A --&gt; Hosts
-    Access_B --&gt; Hosts</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkt9LwzAQx9_3Vxx78sFixQ10D0JSLRO2EaywCcKI3bEGYiNJtgni_-71p2Os0pf2ctz3k8t9b6Mspl6ZfAJWbTM_GDzlHm2OfgLDJoQrWLIFfedilgzh22XyE0lASplvNf4M4uVaSGVJExPwILWG4vyWXwipDTDtDQgWjEfjEKYMGF25x0BI5-h_lhgZi2tGwCKA5KB8mgEjYKRcamCBXzsHd-Nw1K3mJ2reV_2gnC_vLgKr3nfFgDp7uAnDbgrvoPC-FJam6FzZTRWSDS_muWyjkV7fhq9REK_-A_BTAO8LmBrnHakfk5WC8kAELmmuc_RSQ4J2j9YRbrOTOsjMB24uYcYicRbXLhgE91DvTbM_Raoyvva_TfCjRGVP7VKbqCv42Ypmiu04j5K8dqqzrnxzO8e_zC9ePA5I?" />
 <img alt="Network Design — Diagram" src="../../assets/networking-network-design-diagram.svg" /></p>
 <p><strong>Zone definitions:</strong></p>
 <table>
@@ -6882,19 +6861,7 @@
 </table>
 <hr />
 <h2 id="load-balancer-placement">Load Balancer Placement<a class="headerlink" href="#load-balancer-placement" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    Client["Client (Internet)"]
-    ELB["External Load Balancer\n(F5 BIG-IP / NSX-T ALB)\nDMZ zone"]
-    WAF["Web Application Firewall\n(inline with ELB or cloud-native)"]
-    AppTier["Application Tier\n(Production zone)"]
-    ILB["Internal Load Balancer\n(NSX-T ALB Service Engine)\nProduction zone"]
-    DBTier["Database Tier\n(Production zone)"]
-
-    Client --&gt; ELB
-    ELB --&gt; WAF
-    WAF --&gt; AppTier
-    AppTier --&gt; ILB
-    ILB --&gt; DBTier</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVkTFrw0AMhXf_CpEpHUynLhkCdm0HgxsCCaSULIot7INDZy6XpLT0v1eK3dLBhXYT4t137z01xlMdjOMFeNN2IYoerSEOC5gNA8xLDuSZwgzeTx32JEp5gtxa-ojyKhVp_qoStFA5bCBFi1yTP_C8eIC0XMXlBu5hvX2Od5BU6d2Bs6cXeHNMk8x9UghzT0dI-t6aGtUfFOL0itYK1bA1THA1oQMxAM5Dbd25iVmkl2mooHaGvIB_QnUlwI13zflWw--uylvSoYyJpN_pYEv-YmqCnFtxKWH_Qs_S0V2GAY94ov9YG28G8VLr0JvoKDVqlTqO4b9K0JXE0Ug6Dn9Hn5u6r2g=?" /></p>
 <ul>
 <li>Place external LBs in the DMZ with VIPs on the DMZ subnet; real servers in the production zone</li>
 <li>Place internal LBs within the production zone for service-to-service load distribution</li>
@@ -7093,7 +7060,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

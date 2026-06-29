@@ -9003,40 +9003,7 @@ Common Issues reference covering Quick Reference, Host Connectivity Issues, Repl
 <p><img alt="PowerStore — Common Issues" src="../../../../../assets/storage-dell-powerstore-troubleshooting-common-issues.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9Us1uhCAQvvsUE-_7Ah562bbp3lr7AIbg6JIiYwHdmI3vXqhdtSje4PsZ5puhFBq5FaQyKOmmksQMTWupyeBSorKiGuBzQuBurqxFpxOsIVWOiTvUiowVvKgk3TJIn2cEXh2Szh7_CFO1xDH57gT_KjRWqFFxx6UfHoH8gey6rq5qwUkp320v7FAIYzo0zv7mKDivKLj8Urt1NLZScOYTLxXyBTzytqgr0g1zPS7e9wU88nLWMv6v7fMfctytIdlN68n9uUcgDS-GM8kszhbqmRzn3cHpCTa7EapHd62dba3bbCOii88_YtgbdES6N9eIdDPGtS7IPHXxGGD47wI2li-QbVMFgm2WQBAkCNgfh11WRQ==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{Node hardware\nfault?}
-    S --&gt; B2{Volume\ninaccessible?}
-    S --&gt; B3{Replication\nsession failed?}
-    S --&gt; B4{NAS server\noffline?}
-    S --&gt; B5{Storage pool\ncapacity alarm?}
-
-    B1 --&gt;|Check appliance health| D1{Node in\nfault state?}
-    D1 --&gt;|Yes| R1[See Quick Reference —\nAlert: drive fault / pool degraded]
-    D1 --&gt;|No| R2[See Management Plane Issues —\nPowerStore Manager Inaccessible]
-
-    B2 --&gt;|Check host object and zoning| D2{FC or\niSCSI?}
-    D2 --&gt;|FC| R3[See Host Connectivity —\nFC Host Cannot See Volumes]
-    D2 --&gt;|iSCSI| R4[See Host Connectivity —\niSCSI Host Cannot Connect]
-
-    B3 --&gt;|Check replication session state| D3{Network or\ncredential error?}
-    D3 --&gt;|Network| R5[See Replication Issues —\nReplication Session in Failed State]
-    D3 --&gt;|Metro link| R6[See Replication Issues —\nMetro Volume Link Down]
-
-    B4 --&gt;|Check NAS server node| D4{NAS server\nfailed over?}
-    D4 --&gt;|Yes| R7[See Quick Reference —\nNAS server offline]
-    D4 --&gt;|SMB auth| R8[See Host Connectivity —\nMultipath Not Working]
-
-    B5 --&gt;|Check pool utilisation| D5{Pool above\n85% used?}
-    D5 --&gt;|Yes| R9[See Capacity Issues —\nPool Approaching Full Capacity]
-    D5 --&gt;|Snapshot full| R10[See Snapshot Failures —\nSnapshot schedule failures]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFVNtqGzEQffdXDHkvjW-5-KHF8mJqqEOygualL1PteFdYloSkdQglkI_IF_ZLKtm7oQbFfdqDNJwzOjNnK-lIBGn0DJysmzAYFMMZXBTDC_jtG7QUz2MB6lrRy6BMd5wIHloptlDShhxpQfDn9e2nnityYQaVk3uCDbYqwGewxiioqHZYUZUnHXWka9RY0450gHuFmmDlfUv-SH5vnsjxYFxf52ClUQjyXv5SlGUuEnMxyquOO9VvxgdYGK2TD3sZno96y0V3g1qbAKnyh1HtjnyebnKeTvIFX50wdjX5xlNzxTivNO2USrJKCkzDO3Hq33Oe7IlfqWGJUlEFPGDIu1Ve_Yd4TcGZzgX4LvUWCvOk8w9IdhSTvM71uSW6m3Pw5PZxvmazUVJ_0OzNeb_XcfukxdDAXfT60bit1HW-1eRnMc2r3HYqC7QoEvnpSsbVnlvrDIom0sOyVeq99IMAXXaMXKP1TewtzaV1Pef7sRcNVa1KQTreZ_l4ZHtsMID0EBoC_7yzwey-ZotZSi_LJ5ulqLB8VFjaRpbfRpYGzfKDZslZlnc2_mbg0xcohz0YxbQewLgHkxiDA5j24Cru1QFc9-Amju8AbnswvBz8BZUEoio=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9367,7 +9334,7 @@ Common Issues reference covering Quick Reference, Host Connectivity Issues, Repl
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

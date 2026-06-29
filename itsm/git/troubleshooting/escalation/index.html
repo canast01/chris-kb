@@ -7538,18 +7538,7 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 </ul>
 <hr />
 <h2 id="escalation-matrix">Escalation Matrix<a class="headerlink" href="#escalation-matrix" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    INC([Incident Reported]) --&gt; L1
-
-    L1["L1 — Platform Operations\nOn-call / helpdesk\nResponse: 15 min"]
-    L2["L2 — Git Platform Engineering\nSenior infra / platform team\nResponse: 30 min"]
-    L3["L3 — Vendor Support / SRE\nGitHub/GitLab Premier Support\nResponse: per SLA"]
-    EMERG["Emergency Recovery\nRepo rescue / forensics"]
-
-    L1 --&gt;|Unresolved after 30 min\nor severity critical| L2
-    L2 --&gt;|Unresolved after 60 min\nor data loss suspected| L3
-    L2 --&gt;|Corruption / data loss confirmed| EMERG
-    L3 --&gt;|Vendor escalation| EMERG</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kcFKw0AQhu95iqH3UpPgpQdBJNRCtCUBT7lsN9NkMJksuxuhiOBD-IQ-ibNBbQ_pKT_Zf7-Pma3JovY08BosNa2Pou3zwxoWW9ZUI3so0AzWY72Ad9cqg9KTC4qbDj-iPJZqHsP35xfsO-WPg-1hZ9CqgHQV73ipVdfBClrsTI3uteICnZFDIcW30BPPk5NATibyhvyZnnFDjGiJm4pLZBosEB-tEof5K3lU_aUovbkuSoMonUQvyLXgytGEmQVYFlnFon8cDyv55OoAe4s94X_p0mLC7_x-VpM9ZcVGTFmPtkHWJ1msHt7QngLBDNJ1ekRxygDIjrSb5YTngeUd5LEsfwqJ7GoK6W-YVDLXOf8AZiGjdg==?" /></p>
 <hr />
 <h2 id="data-to-collect-before-escalating">Data to Collect Before Escalating<a class="headerlink" href="#data-to-collect-before-escalating" title="Permanent link">&para;</a></h2>
 <p>Collect this data immediately when a P1/P2 incident begins — do not wait until you open the ticket.</p>
@@ -7718,28 +7707,7 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 <a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;Gitlab::CurrentSettings.update!(maintenance_mode: false)&quot;</span>
 </code></pre></div>
 <h3 id="recovery-decision-tree">Recovery Decision Tree<a class="headerlink" href="#recovery-decision-tree" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
-    CORRUPT([Corruption / Data Loss Confirmed]) --&gt; SCOPE{Scope?}
-
-    SCOPE --&gt;|Single branch deleted\nno corruption| REFLOG[Check git reflog\nRecreate branch via API]
-    SCOPE --&gt;|Missing objects\nfsck errors| OBJECTS{Backup available?}
-    SCOPE --&gt;|Full repo gone| FULL{Mirror available?}
-
-    OBJECTS --&gt;|Yes — recent mirror| RSYNC[Rsync objects from mirror\nRe-verify with fsck]
-    OBJECTS --&gt;|Yes — GitLab backup| RESTORE[gitlab-backup restore\nFull instance restore]
-    OBJECTS --&gt;|No backup| PARTIAL[Attempt partial recovery\nEscalate to vendor immediately]
-
-    FULL --&gt;|Yes| RECLONE[Clone --mirror from backup\nSwap repository path]
-    FULL --&gt;|No| LOST[Data may be unrecoverable\nEscalate to vendor\nNotify stakeholders]
-
-    REFLOG --&gt; VALIDATE[Validate: git fsck\ngit log\nTest clone]
-    RSYNC --&gt; VALIDATE
-    RESTORE --&gt; VALIDATE
-    RECLONE --&gt; VALIDATE
-    PARTIAL --&gt; VALIDATE
-
-    VALIDATE --&gt;|Pass| POSTMORTEM([Write incident report\nSchedule postmortem])
-    VALIDATE --&gt;|Fail| ESCALATE([Escalate to L3 vendor support])</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U8GOmzAQvecrRntHPfSWQyXKkioVGyJgt6rExZhJcGNsZJusUNV_7xjCarPynmw_j5_nvZlphUHuhFZbMOLcuc2mTPJjuoWHeX2Av7ZjA9IthTF1lvhvU6S7LP9BIUmH_AJn4ej2JPW5VgVyg8whNIYp3sFVMIiP-yBN_v1nmlQl8dx24c_K34eEYgo7KQ66-UNXFk5G99ALY7Txn0ZXNOI0watwHZwsv3ySd1nlhddGKUvWRA3jl3GgEOu0wVrtRilBKEsPOK5wkOoYF9U-zogqdg77wcHAjBNM-iBN2Uy1Si1n0nvhNFxRtdqA6HtsBWFyCtLunjPP6ZdPFCRZfvAKEqkVQhQtHix-LHJqVb4yL2rQVpCAiVJzXZAuy8uKuB6ZY9CzCRqEUd0EsEZiSEOtDtp5r8mlC3ZatmhskP0lzvaPceWzfWFStESznZvFF6hWfjf3TEU-A_d6wlZTkk95UaVPRPTLCEpGKC5aVG4WaRwp5h22o0Qgza4nCPsgV1omcbak9F5Z9nUtkB0Hzxh8nORF8Xz0hiXamHHwUwNfYHYv09ZCotVJGKpw8PkyWBB9g2V-1v6fEd_kd8DSqu-hW8vNPbKEzL3wdvbFvI2mP67uLwN0jyzkH7CZ7Q67_XiHrZs5o7fK3MGryZv_4f9wAQ==?" /></p>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7775,7 +7743,7 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

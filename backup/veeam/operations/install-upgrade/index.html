@@ -7780,27 +7780,6 @@ Install & Upgrade reference covering Release Cadence, Decommission Procedure.
 <h2 id="release-cadence">Release Cadence<a class="headerlink" href="#release-cadence" title="Permanent link">&para;</a></h2>
 <p>Veeam releases major versions (VBR 12, 12.1, 12.2) annually with cumulative patches (P-releases) throughout the year.</p>
 <h3 id="upgrade-component-order">Upgrade Component Order<a class="headerlink" href="#upgrade-component-order" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
-    start(["Start upgrade\nmaintenance window"])
-    start --&gt; configBackup["Export VBR configuration backup\nExport-VBRConfiguration\nVerify backup off-server"]
-    configBackup --&gt; snapshot["Take VM snapshot of\nVBR Server (if virtualised)"]
-    snapshot --&gt; jobCheck{"Any active\njobs running?"}
-    jobCheck --&gt;|Yes| wait["Wait for jobs to\ncomplete or suspend"]
-    wait --&gt; jobCheck
-    jobCheck --&gt;|No| vbrUpgrade["Upgrade VBR Backup Server\n(installer auto-backs up config DB)"]
-    vbrUpgrade --&gt; voneUpgrade["Upgrade Veeam ONE\n(must match VBR major version)"]
-    voneUpgrade --&gt; proxyUpgrade["Push proxy upgrades\nVBR console → Proxies → Upgrade"]
-    proxyUpgrade --&gt; repoUpgrade["Update Linux repository agents\nVBR console → Repositories → Upgrade"]
-    repoUpgrade --&gt; validate["Post-upgrade validation:\nGet-VBRJob — all jobs visible\nRun non-critical backup test"]
-    validate --&gt; cleanup["Delete VM snapshot\nafter 48h stable operation"]
-    cleanup --&gt; done(["Upgrade complete"])
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class configBackup,snapshot,wait,vbrUpgrade,voneUpgrade,proxyUpgrade,repoUpgrade,validate,cleanup action
-    class jobCheck decision
-    class start,done terminal</code></pre>
 <p>Store the config backup off the Backup Server — it is useless if the server hosting it is lost.</p>
 <h2 id="decommission-procedure">Decommission Procedure<a class="headerlink" href="#decommission-procedure" title="Permanent link">&para;</a></h2>
 <p>When retiring a Veeam Backup Server:
@@ -7843,7 +7822,7 @@ Install & Upgrade reference covering Release Cadence, Decommission Procedure.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

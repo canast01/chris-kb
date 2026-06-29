@@ -9255,36 +9255,7 @@
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="n">triage_decision_tree</span> <span class="o">-&gt;</span> <span class="n">resolution</span>
 </code></pre></div>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; B1[Protection group shows error]
-    S --&gt; B2[Recovery plan stuck Running]
-    S --&gt; B3[Test failover VMs fail to power on]
-    S --&gt; B4[Site pair shows Error]
-    S --&gt; B5[Failback fails]
-    S --&gt; B6[RPO breach or replication lag]
-
-    B1 --&gt; D1{RPO lag\nor snapshot issue?}
-    D1 --&gt;|RPO lag| R1[Check Bandwidth · ESXi CPU · Storage I/O\n→ Protection Group Shows Error]
-    D1 --&gt;|Snapshot| R2[Re-discover Devices via Array Pairs\n→ Protection Group Shows Error]
-
-    B2 --&gt; D2{Manual step\nor VM power-on?}
-    D2 --&gt;|Manual step| R3[Approve or Skip Pending Step\n→ Recovery Plan Stuck in Running]
-    D2 --&gt;|VM power-on| R4[Check Recovery Site Resources · Script Exit Code\n→ Recovery Plan Stuck in Running]
-
-    B3 --&gt; R5[Check Network Mapping · Placeholder VM\n→ Test Failover: VMs Fail to Power On]
-
-    B4 --&gt; R6[Renew Cert · Re-enter Credentials · Check Port 9086\n→ Site Pair Shows Error]
-
-    B5 --&gt; R7[Run Reprotect · Verify Protected Site Operational\n→ Failback Fails]
-
-    B6 --&gt; R8[Check WAN Bandwidth · vSR Appliance · Disk Space\n→ Protection Group Shows Error]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class D1,D2 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdVEtu2zAQ3fsUg-yD1t-4XrSwLbvoIrEgtUkX3TDSxCKskMSQtmoU3eYAvUz3PUpP0iElCy2gNIBXfBLnzePMPDKXhJmTWs2A5LZwvV46g4u7QjiQFlyBYI-PxunHdxfwzRbCIAcyQ6htid97iz5Hx6RdnQS2pPcGbKErC0ikqZs1YFaCmT4gHcGUQoF1-2wHyV4pqbbdpCGTPqJ18CBk6alwe23DBzgNRlf8R6tu7oi5qXQIRkhqzrd6_nxjDl9z4nvBh_IKtjtu4uuIN3BPKLICNPGuKWUmQjNK0V1J5JsW9Tv3Er-3LJB1F0LllcxdAb9-wir9LGEZf_I4dZrEFuHDq80X9fvpB_w1gPdhAOkLBSb1AC5zacMQIMKDzNDCQQqYE4kjxNwoe2b6yKePBt3SfoxzY4h1fcPSnTQQo8p57lwZmlqzdUfs3ZEGd0j1X4Mko7Z1LTvMPEGr9-TL883LSBoHq6_SwVLneL7cuJW7QVdp2sG1MMaXwTKcJ8NCl3mwaS0SzLtuzDsL7l037o2Dezfd7k2CzVBhBUsk59Pz7FA5piwJc0ZSlKG6-jyx5qg3r6eTWjc0wc_zZV9ceaU9F46mHrpPeoskH44nG2BeJ9wYpOBzUdYy7YVZP3thkmnbs7v5zb8OP6QJsC9KKVSG_kck7Q5Sw30804a9FC7fwqLfrINmHTbrqFnHzTrhi-lB0j-BATs5gOEJjPgZCmDMb0oAE34tArji5yCAae8PIwzTLw==?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9389,31 +9360,33 @@
 <a id="__codelineno-4-64" name="__codelineno-4-64" href="#__codelineno-4-64"></a>
 <a id="__codelineno-4-65" name="__codelineno-4-65" href="#__codelineno-4-65"></a>Use this flowchart to quickly route to the correct troubleshooting section.
 <a id="__codelineno-4-66" name="__codelineno-4-66" href="#__codelineno-4-66"></a>
-<a id="__codelineno-4-67" name="__codelineno-4-67" href="#__codelineno-4-67"></a>```mermaid
-<a id="__codelineno-4-68" name="__codelineno-4-68" href="#__codelineno-4-68"></a>flowchart TD
-<a id="__codelineno-4-69" name="__codelineno-4-69" href="#__codelineno-4-69"></a>    start([&quot;SRM alert or failure&quot;])
-<a id="__codelineno-4-70" name="__codelineno-4-70" href="#__codelineno-4-70"></a>    start --&gt; q1{Where is\nthe failure?}
-<a id="__codelineno-4-71" name="__codelineno-4-71" href="#__codelineno-4-71"></a>
-<a id="__codelineno-4-72" name="__codelineno-4-72" href="#__codelineno-4-72"></a>    q1 --&gt;|&quot;VM shows Not Ready\nor missing from PG&quot;| vmNotReady[&quot;VM Not in PG\n/ Not Ready State&quot;]
-<a id="__codelineno-4-73" name="__codelineno-4-73" href="#__codelineno-4-73"></a>    q1 --&gt;|&quot;Recovery plan\nfailed mid-run&quot;| planFailed{Which step\nfailed?}
-<a id="__codelineno-4-74" name="__codelineno-4-74" href="#__codelineno-4-74"></a>    q1 --&gt;|&quot;Array Manager\nshows Error&quot;| sraFail[&quot;SRA Communication\nFailure&quot;]
-<a id="__codelineno-4-75" name="__codelineno-4-75" href="#__codelineno-4-75"></a>    q1 --&gt;|&quot;Site Pair shows Error&quot;| sitePair[&quot;Site Pair Error\n(cert / connectivity)&quot;]
-<a id="__codelineno-4-76" name="__codelineno-4-76" href="#__codelineno-4-76"></a>
-<a id="__codelineno-4-77" name="__codelineno-4-77" href="#__codelineno-4-77"></a>    planFailed --&gt;|&quot;Network mapping&quot;| netMap[&quot;Recovery Plan\nNetwork Mapping step&quot;]
-<a id="__codelineno-4-78" name="__codelineno-4-78" href="#__codelineno-4-78"></a>    planFailed --&gt;|&quot;Plan stuck Running&quot;| stuck[&quot;Recovery Plan\nStuck Running&quot;]
-<a id="__codelineno-4-79" name="__codelineno-4-79" href="#__codelineno-4-79"></a>
-<a id="__codelineno-4-80" name="__codelineno-4-80" href="#__codelineno-4-80"></a>    vmNotReady --&gt; vr[&quot;Check vSphere Replication\nstatus + disk space + RPO&quot;]
-<a id="__codelineno-4-81" name="__codelineno-4-81" href="#__codelineno-4-81"></a>    sraFail --&gt; sraLog[&quot;Check SRA service\n+ array API reachability&quot;]
-<a id="__codelineno-4-82" name="__codelineno-4-82" href="#__codelineno-4-82"></a>    sitePair --&gt; cert[&quot;Check cert validity\n+ vCenter reachability port 443&quot;]
-<a id="__codelineno-4-83" name="__codelineno-4-83" href="#__codelineno-4-83"></a>    netMap --&gt; netCheck[&quot;Verify all source networks\nhave target mappings&quot;]
-<a id="__codelineno-4-84" name="__codelineno-4-84" href="#__codelineno-4-84"></a>    stuck --&gt; script[&quot;Check custom script\nexit code or VM power-on error&quot;]
-<a id="__codelineno-4-85" name="__codelineno-4-85" href="#__codelineno-4-85"></a>
-<a id="__codelineno-4-86" name="__codelineno-4-86" href="#__codelineno-4-86"></a>    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-<a id="__codelineno-4-87" name="__codelineno-4-87" href="#__codelineno-4-87"></a>    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-<a id="__codelineno-4-88" name="__codelineno-4-88" href="#__codelineno-4-88"></a>    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-<a id="__codelineno-4-89" name="__codelineno-4-89" href="#__codelineno-4-89"></a>    class vr,sraLog,cert,netCheck,script action
-<a id="__codelineno-4-90" name="__codelineno-4-90" href="#__codelineno-4-90"></a>    class q1,planFailed decision
-<a id="__codelineno-4-91" name="__codelineno-4-91" href="#__codelineno-4-91"></a>    class start terminal
+<a id="__codelineno-4-67" name="__codelineno-4-67" href="#__codelineno-4-67"></a>```d2
+<a id="__codelineno-4-68" name="__codelineno-4-68" href="#__codelineno-4-68"></a>direction: right
+<a id="__codelineno-4-69" name="__codelineno-4-69" href="#__codelineno-4-69"></a>
+<a id="__codelineno-4-70" name="__codelineno-4-70" href="#__codelineno-4-70"></a>q1: &quot;q1&quot; {shape: rectangle}
+<a id="__codelineno-4-71" name="__codelineno-4-71" href="#__codelineno-4-71"></a>vmNotReady: &quot;VM Not in PG\n/ Not Ready State&quot; {shape: rectangle}
+<a id="__codelineno-4-72" name="__codelineno-4-72" href="#__codelineno-4-72"></a>sraFail: &quot;SRA Communication\nFailure&quot; {shape: rectangle}
+<a id="__codelineno-4-73" name="__codelineno-4-73" href="#__codelineno-4-73"></a>sitePair: &quot;Site Pair Error\n(cert / connectivity&quot; {shape: rectangle}
+<a id="__codelineno-4-74" name="__codelineno-4-74" href="#__codelineno-4-74"></a>planFailed: &quot;planFailed&quot; {shape: rectangle}
+<a id="__codelineno-4-75" name="__codelineno-4-75" href="#__codelineno-4-75"></a>netMap: &quot;Recovery Plan\nNetwork Mapping step&quot; {shape: rectangle}
+<a id="__codelineno-4-76" name="__codelineno-4-76" href="#__codelineno-4-76"></a>stuck: &quot;Recovery Plan\nStuck Running&quot; {shape: rectangle}
+<a id="__codelineno-4-77" name="__codelineno-4-77" href="#__codelineno-4-77"></a>vr: &quot;Check vSphere Replication\nstatus + disk space + RPO&quot; {shape: rectangle}
+<a id="__codelineno-4-78" name="__codelineno-4-78" href="#__codelineno-4-78"></a>sraLog: &quot;Check SRA service\n+ array API reachability&quot; {shape: rectangle}
+<a id="__codelineno-4-79" name="__codelineno-4-79" href="#__codelineno-4-79"></a>cert: &quot;Check cert validity\n+ vCenter reachability port 443&quot; {shape: rectangle}
+<a id="__codelineno-4-80" name="__codelineno-4-80" href="#__codelineno-4-80"></a>netCheck: &quot;Verify all source networks\nhave target mappings&quot; {shape: rectangle}
+<a id="__codelineno-4-81" name="__codelineno-4-81" href="#__codelineno-4-81"></a>script: &quot;Check custom script\nexit code or VM power-on error&quot; {shape: rectangle}
+<a id="__codelineno-4-82" name="__codelineno-4-82" href="#__codelineno-4-82"></a>start: &quot;SRM alert or failure&quot; {shape: oval}
+<a id="__codelineno-4-83" name="__codelineno-4-83" href="#__codelineno-4-83"></a>
+<a id="__codelineno-4-84" name="__codelineno-4-84" href="#__codelineno-4-84"></a>q1 -&gt; vmNotReady
+<a id="__codelineno-4-85" name="__codelineno-4-85" href="#__codelineno-4-85"></a>q1 -&gt; sraFail
+<a id="__codelineno-4-86" name="__codelineno-4-86" href="#__codelineno-4-86"></a>q1 -&gt; sitePair
+<a id="__codelineno-4-87" name="__codelineno-4-87" href="#__codelineno-4-87"></a>planFailed -&gt; netMap
+<a id="__codelineno-4-88" name="__codelineno-4-88" href="#__codelineno-4-88"></a>planFailed -&gt; stuck
+<a id="__codelineno-4-89" name="__codelineno-4-89" href="#__codelineno-4-89"></a>vmNotReady -&gt; vr
+<a id="__codelineno-4-90" name="__codelineno-4-90" href="#__codelineno-4-90"></a>sraFail -&gt; sraLog
+<a id="__codelineno-4-91" name="__codelineno-4-91" href="#__codelineno-4-91"></a>sitePair -&gt; cert
+<a id="__codelineno-4-92" name="__codelineno-4-92" href="#__codelineno-4-92"></a>netMap -&gt; netCheck
+<a id="__codelineno-4-93" name="__codelineno-4-93" href="#__codelineno-4-93"></a>stuck -&gt; script
 </code></pre></div></p>
 </li>
 <li>
@@ -9486,7 +9459,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

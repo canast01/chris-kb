@@ -9261,40 +9261,7 @@ ESXi diagnostic commands: read vmkernel.log and hostd.log for errors, use esxcli
 *Applies to: vSphere 7.x / 8.x*
 </div>
 <p><img alt="ESXi — Diagnostics" src="../../../../../assets/virtualization-vmware-esxi-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([ESXi Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Host disconnected from vCenter| C[Check vpxa.log on host\nping vCenter from ESXi]
-    B --&gt;|VM won't power on or fails| D[Check vmkernel.log\nCheck hostd.log for VM task error]
-    B --&gt;|Storage I/O errors or latency| E[esxcli storage core path list\nesxtop -b DAVG check]
-    B --&gt;|Network connectivity issue| F[esxcli network ip interface list\nesxcli network vm list]
-    B --&gt;|High CPU or memory on host| G[esxtop interactive mode\nCheck CPU ready and balloon]
-    B --&gt;|HA or vMotion failure| H[Check fdm.log\nCheck cluster events in vCenter]
-    C --&gt; I{Management agent running?}
-    I --&gt;|Yes, but still disconnected| J[Check vCenter connectivity\nping vcenter-ip from ESXi]
-    I --&gt;|No| K[Restart management agents\n/etc/init.d/hostd restart\n/etc/init.d/vpxa restart]
-    D --&gt; L[tail /var/log/vmkernel.log | grep vm-name\ntail /var/log/hostd.log | grep ERROR]
-    E --&gt; M{Path state?}
-    M --&gt;|Dead paths| N[esxcli storage core path list | grep dead\nCheck storage network and switch zoning]
-    M --&gt;|Paths OK, latency high| O[Check storage array; check esxtop DAVG vs KAVG\nKAVG high = queue depth issue on host]
-    F --&gt; P[esxcli network vm list -w vm-name\nCheck vmkping to test VMkernel adapters]
-    G --&gt; Q[esxtop batch: esxtop -b -d 2 -n 30\nFilter CSV for %RDY &gt; 10 or MCTLSZ &gt; 0]
-    H --&gt; R[tail /var/log/fdm.log | grep -i error\nCheck HA heartbeat datastores]
-    J --&gt; S[Collect vm-support bundle\nvm-support -n -w /tmp/]
-    K --&gt; S
-    L --&gt; S
-    N --&gt; S
-    O --&gt; S
-    P --&gt; S
-    Q --&gt; S
-    R --&gt; S
-    S --&gt; T[Open VMware SR\nAttach bundle]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,M dark
-    class C,D,E,F,G,H,J,K,L,N,O,P,Q,R action
-    class S,T escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFVMtu2zAQvPMrFgF6VJS2txQt4MjP2I4dKQ3awhdaoi3CEsmStJz08e9dilbsIkR78Vhc7Sw5M1TBNcstl-IaNN-WlpCba7i4uYCfpqSK4SqWqdhW7DdJsJKULN9Bo57oZSW3IAWU0tiVUFxsoUmYsEzDRssaBtkXHqTpn2jqHdOCVY5qJfyaoyta7o3U8DgHS80OmNZSB9kGyMbMU15xMFZqumWQS81AUVtCxd3esGylgmgN_d7jCHI3J8g1PHEJZg9S74Ar4O5MG5qzE935G03drgcJR57QTW9ZKErdMKhlwbrzJsvP2EGLZ6CigDWtKilFkGz8otumqM8ly6u9cbKzBuU3OKkzIkgzQZpJsHJ7MuZoZC6FcPFouH3uPM7bUoTC_NvmKbKlzFiqLdRUoDE1dgIibnIlYmbzmAtuL4u49Rx725f_LrmkdZXgmBmOsZRXEDdUx6hKfJ4qgK1mCgZpukiD7XNsnwcrd_8LFvzy5AW611nRvdmFw3lqDtzmJfyQAvULjlq8CN_1U63p8wcfVTgmqA1vY2CKuBLuF0q8svARvu_ZnuE-FO6MG4P_j_cyOG35OuXHDEN0wL-RoPVLPFHM1nYrwaILeCG9uEALqjAHJjji_pT7NcXDX8PpDkYFvINIwPurlRjyysUsyR7b2_4m7X-FT_D2CvBhnjzMsm_4eBUckb7y_XgrOlsi7r8a3UnGPSgZpmjNqIWC4mcFtWbh_WfOEFlVuOIEMXulJMZ4vRdFhdKcLeFBULTY1ioOMj0g00IxgcIdKKYnS1eiZy3FQHi2YFcPu9zFgolzM_gKuYHoEyQe-h4GHoYeRh7GZOLg1sOU9B3MyNzBnYcFGTpYkpGDezJ2kJJbBxmZeph5uPOw8LD0cO8h9ZA5eCB_AIuRHpw=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkz1ug0AQhXufYuQ-hX8LF2msFOmiOEq7WsMAK8MO2l3jWJGlHCInzEkyiwHjhJ8KxH7vPXgzhMpg4BTpDYR00pOJPWe5o2wDzyFqp6Iz7K5P4NMmMkfmlMxIh5eJdZiLmQgSDA4ipVhEKkW7gemOD2AGP1_fsPWHwIdQHk4bFx8rdZxi5TOvfVSBwjoyMvZX6bA2nLcNmYKKgpLqd15Uzhrdiczh3nTRMq2AMb-lyNFEZDKpAxTcRqzJOhVYcVIuEbXzsnR-uaHQQsGjgPbDUd6ftBLO0HHPvSVETiSs5TwbkNZ-aHXSqkx6a6HgUWihpCEyPMNiy0NF0x-5FoVMVcgFNEOQOmy6qyPXZeR7hTaTYLRpcY_84QiZVJyofQGdqQYtpcfrBr76ex4sGXiygUy9dS0hfq9Ls57w8Ah966d0gVxyzOp_-NCWDel6dmhIMromQ-LRyQ-JR2d4J-5s0XvdJjP2h3bRnY11gSM9dUlG2umSjHTyR_ILzpjtcw==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9575,7 +9542,7 @@ ESXi diagnostic commands: read vmkernel.log and hostd.log for errors, use esxcli
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

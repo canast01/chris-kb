@@ -7824,28 +7824,7 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
 <li>[ ] Module versions on target hosts match the expected baseline</li>
 </ul>
 <h2 id="powershell-error-handling-flow">PowerShell Error Handling Flow<a class="headerlink" href="#powershell-error-handling-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    scriptStart["Script Execution\n($ErrorActionPreference = Stop)"]
-    tryBlock["try { ... }"]
-    cmdRun["Cmdlet / Command\nExecutes"]
-    success["Command succeeds\n(continue)"]
-    termErr["Terminating Error\nthrown"]
-    catchBlock["catch { ... }\n(inspect $_.Exception)"]
-    logError["Write-Error / Out-File\n(log error to file)"]
-    sendAlert["Send-MailMessage\nor webhook alert"]
-    finallyBlock["finally { ... }\n(cleanup / Stop-Transcript)"]
-    exitCode["exit 1\n(non-zero signals failure)"]
-
-    scriptStart --&gt; tryBlock
-    tryBlock --&gt; cmdRun
-    cmdRun --&gt;|OK| success
-    cmdRun --&gt;|Error| termErr
-    termErr --&gt; catchBlock
-    catchBlock --&gt; logError
-    logError --&gt; sendAlert
-    sendAlert --&gt; finallyBlock
-    success --&gt; finallyBlock
-    finallyBlock --&gt; exitCode</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptUsFqwzAMvecrROlhl3TsWtigK92tbKyFXQrDc5TE1JGD7dBupf8-2Um6wHyTnqVnPT0VyqL0ytASrKpqn2VOWtX6nRfWL2G2ixlszii7UHagu_nGWmNXsevNYokWSSI8ws6bdgYXV4sWmY55BVUar5m338_ayCPzcQgXWCwWcE2WyqZ473iY2bopNHq4h7VpGkHFgfoZ0CX7XCclOhca-3qICBaOJ5aGvKIO08OhbVgRd-45UiS4tIKo8UC-tuZE6UmFl_UoKyajMP5RkWu5FOafi81ZYht2lWTRpopfMceHVR7zmLHs187nL0ojk3ENYIS9gZKx9AaQipXG3jWO861Qess7ERWTcPMJv2pjjiBCUZKiZPVa37wa0oksqVFQ1_J4wet8bwX155Kkw7Pya1MwOAshPDADGcp_0BpwqmJ2ByVP2dm0pOktQv4E4x3dDiqA_cUMhxOA4RQmyGDxaHXsurk3MTI8jIbcnImU427_thzg6b7GC_yHT5PwOG4l-wWgdDvN?" /></p>
 <h3 id="scheduled-tasks-for-automated-reports">Scheduled Tasks for Automated Reports<a class="headerlink" href="#scheduled-tasks-for-automated-reports" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a scheduled task to run a report script daily</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$action</span>  <span class="p">=</span> <span class="nb">New-ScheduledTaskAction</span> <span class="n">-Execute</span> <span class="s1">&#39;powershell.exe&#39;</span> <span class="p">`</span>
@@ -8140,7 +8119,7 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

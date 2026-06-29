@@ -7720,32 +7720,7 @@ BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signin
 <h2 id="bitlocker-drive-encryption">BitLocker — Drive Encryption<a class="headerlink" href="#bitlocker-drive-encryption" title="Permanent link">&para;</a></h2>
 <p>BitLocker provides full-volume encryption for OS and data drives. On servers, it is typically combined with Active Directory key escrow so recovery keys are centrally stored.</p>
 <h3 id="bitlocker-unlock-flow">BitLocker Unlock Flow<a class="headerlink" href="#bitlocker-unlock-flow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
-    powerOn["Server Powers On\nUEFI POST"]
-    tpmCheck{"TPM present\nand healthy?"}
-    pcrMeasure["TPM measures boot components\nUEFI · MBR · bootloader · BCD"]
-    pcrMatch{"PCR values match\nexpected sealed state?"}
-    pinPrompt{"PIN protector\nconfigured?"}
-    pinEntry["Prompt for\nStartup PIN"]
-    networkUnlock{"Network Unlock\nconfigured + on corp network?"}
-    wdsUnlock["WDS server provides\nNetwork Unlock key"]
-    vmkRelease["TPM releases\nVolume Master Key (VMK)"]
-    fvekDecrypt["VMK decrypts\nFull Volume Encryption Key (FVEK)"]
-    driveUnlocked["Drive Unlocked\nOS boots normally"]
-    recoveryPrompt["BitLocker Recovery\nPrompt for 48-digit key"]
-    adEscrow["Retrieve key from\nActive Directory"]
-
-    powerOn --&gt; tpmCheck
-    tpmCheck -- No --&gt; recoveryPrompt
-    tpmCheck -- Yes --&gt; pcrMeasure --&gt; pcrMatch
-    pcrMatch -- No --&gt; recoveryPrompt
-    pcrMatch -- Yes --&gt; pinPrompt
-    pinPrompt -- Yes --&gt; pinEntry --&gt; networkUnlock
-    pinPrompt -- No --&gt; networkUnlock
-    networkUnlock -- Yes --&gt; wdsUnlock --&gt; vmkRelease
-    networkUnlock -- No --&gt; vmkRelease
-    vmkRelease --&gt; fvekDecrypt --&gt; driveUnlocked
-    recoveryPrompt --&gt; adEscrow --&gt; driveUnlocked</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1k71u2zAQx3c_xcFTlmwdig4B6kgGglSxYCXuooUVzzYhihSOtAyh6HN175P1aFqy3cqT7vNH8u4vqQgrr6z5AqR2ez-btfaItGJ_XiB1SJCHgIOVKc1HunyBfFW8z-Gn24sWuYvbhdlp_DXzbfO8x6rm1sGcrGsrylC4A3F4_p5n0ETPwQ9rPVS2aa1B4935wD-_IVuswyfktRWSb8Xe4jm5yxe-2jN9MKfrlEmNp57rcuJDPWwtlabwgvyhhfzlbbLNoD9aqj-Mtqe33viTHUfpxurvSQEuDrYl2ymJ_My3iIBYBTX2k5yuqdeoeVjD4Ch6TNhYfWgQMuE8k1-xh4dN9jpJ2XZYJ1hR33rGcBXI6DFmedAazqzUnKKsjchbbtJpoCTVYbw6SkYmwYchUJpVcVqcA2OpEVpPP45Ny1Pp4yoYs1D-WyAQrM-p0lz2BJ8-P0q1U_7utIRMXUX2yKg1elLIl-Ja2DKjNF9Z9RxITvq31N9TyHid0Z6sHH4beHyCQfxXQg_hQYuj7kLwRjwXoYTUZdtXiw-JqwVeLzOkblbxz0hDfpjJOJz_m_4CP5N4aw==?" /></p>
 <h3 id="enable-bitlocker-on-data-drives">Enable BitLocker on Data Drives<a class="headerlink" href="#enable-bitlocker-on-data-drives" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Automatically unlock data drives when OS drive is unlocked</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Enable-BitLocker</span> <span class="n">-MountPoint</span> <span class="s2">&quot;D:&quot;</span> <span class="n">-EncryptionMethod</span> <span class="n">XtsAes256</span> <span class="n">-RecoveryPasswordProtector</span>
@@ -8047,7 +8022,7 @@ BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signin
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

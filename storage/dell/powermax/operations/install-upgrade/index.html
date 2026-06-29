@@ -8959,30 +8959,7 @@ Install & Upgrade reference covering Software Version Matrix, Upgrade Paths, Ref
 <li><strong>Major release upgrade</strong> (e.g., 5977 → 5978 or 5978 → 10.0): requires pre-upgrade validation report from Dell Support. Solutions Enabler and Unisphere must be upgraded to the target-compatible version <strong>before</strong> the array microcode upgrade.</li>
 <li><strong>Downgrade</strong>: PowerMaxOS does not support in-place downgrades. Rolling back requires Dell Support engagement and a service restoration procedure.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TD
-    START([Plan Major Release Upgrade]) --&gt; COMPAT{"Check Dell\nSimple Support Matrix\nCompatibility?"}
-    COMPAT --&gt;|"Incompatible versions"| FIX_VER["Align SE + Unisphere\ntarget versions first"]
-    FIX_VER --&gt; COMPAT
-    COMPAT --&gt;|"Compatible"| HEALTH{"Pre-upgrade health:\nSRDF Synchronized?\nNo failed drives?"}
-    HEALTH --&gt;|"Issues found"| RESOLVE["Resolve health issues\nbefore proceeding"]
-    RESOLVE --&gt; HEALTH
-    HEALTH --&gt;|"Healthy"| SE_UP["Step 1 — Upgrade\nSolutions Enabler\n(all mgmt hosts)"]
-    SE_UP --&gt; UNI_UP["Step 2 — Upgrade\nUnisphere vApp"]
-    UNI_UP --&gt; PRECHECK["Step 3 — Run\nDell pre-upgrade\nhealth check script\n→ submit to Dell Support"]
-    PRECHECK --&gt; ARRAY_UP["Step 4 — Apply\nPowerMaxOS upgrade\nvia Unisphere\n(rolling director push)"]
-    ARRAY_UP --&gt; MONITOR["Monitor director-by-director\nroll in Unisphere"]
-    MONITOR --&gt; POST{"Post-upgrade:\nSRDF OK?\nHost I/O OK?\nSnapVX OK?"}
-    POST --&gt;|"Issues"| DELL["Engage Dell Support\nwith pre/post logs"]
-    POST --&gt;|"All healthy"| DONE([Upgrade Complete])
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    classDef fix fill:#b45309,stroke:#92400e,color:#fff
-    class SE_UP,UNI_UP,PRECHECK,ARRAY_UP,MONITOR action
-    class COMPAT,HEALTH,POST decision
-    class START,DONE terminal
-    class FIX_VER,RESOLVE,DELL fix</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptU91q2zAUvs9THHpVGKHs5yoXKyZxSWgSBzsJHRiKYp_Y2hRJSHLabAx6tQcYe8I-ySTbSlPQnSXrfOec76ekCgtDBR-BolVtBoNsHaXrEVytGOGwIN-FghQZEo2wkZUiJV7BL10TibbE1hJeMfw9GCeLVeTqxjUWP2CCjOU8owfJELJGSqGMRTOKPud8LA6SGLqjjJrTbRDubvbwuI1TixcxWnHIYvgAG061rFFhzg1RFRo4otJ2eA17qrQJIk3jaL6euoUUDptuA6iRMFOP7ITp5A6yEy9qJTj9ieVtzpcC9oQyLKFU9Ig6PGEaZ8l8G1vgFLVgRw8KVOsGdc53uBcKQSpRIJaUV0GYLH7crCxIZlDCR3h9-edptsMJ1ph2vZiTHUOV82vCGByqg4FaaKODkJvl7ALz03vMM4dwjKQM1q_SeDyNx_ce4XOLkDY8505Wu9GZyJz3Sxet6rpQVJqcv_75C7rZHagBI1oveA8EG0ZpGn27GPlL29COx045X4knVAvynGRwbnqk5NIM10owZgmGsnWzdaxsdB1stUiWs3XifLWwerunvma4Ow39d84dIlD-1iXMVJK1UbFSeEa8p5J766Sp_QGzm6Q7ZZzI7YP7DoJN4vncgsW8IhW-Iy3nT9RybHm_kQ6RiSqs_CRZOkP2YoPLGUMTnr0LOgy_QhfdPsHuog-fD2HwTRerPl3uos-Dz0XwTWv2zvLu2Bm196u78M47W9BdenecbeIuex29nm2xFaNVxB0cmW8HS8vgP5Mwp_M=?" /></p>
 <p>Upgrade sequence for a major release:</p>
 <ol>
 <li>Upgrade Solutions Enabler on all management hosts.</li>
@@ -9100,7 +9077,7 @@ Install & Upgrade reference covering Software Version Matrix, Upgrade Paths, Ref
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -8989,41 +8989,7 @@ SRDF/S health checks: `symrdf query -synchronous` link status, invalid track cou
 </blockquote>
 <p>Regular health checks on SRDF/S replication confirm that all device pairs are synchronized, RDF directors and links are operational, and no track backlogs exist. These checks should run daily as part of infrastructure monitoring and immediately before any planned failover or maintenance activity.</p>
 <p>Health checks cover four layers: pair state, link/director status, performance metrics, and array-level configuration consistency.</p>
-<pre class="mermaid"><code>flowchart TD
-    dailyStart["Daily Health Check"]
-    pairState["Check Pair State\nsymrdf query -g dgname"]
-    allSynced{"All Pairs\nSynchronized?"}
-    checkRTT["Check WAN RTT\nping -c 20 dr-site-ip"]
-    rttOk{"RTT ≤ 5ms?"}
-    checkDirector["Check RDF Director\nsymcfg list -dir all -rdf"]
-    dirOnline{"Directors\nOnline?"}
-    checkLink["Check Link Utilization\nsymstat -rdf -dir RF-1F -i 5 -c 3"]
-    linkOk{"Utilization\n&lt; 80%?"}
-    healthy["Health Check PASSED\nDocument results"]
-    investigatePairs["Investigate Pair State\nCheck invalid tracks"]
-    investigateRTT["Report to Network Team\nRTT exceeds SRDF/S budget"]
-    investigateDir["Check Director Port\nPhysical link and configuration"]
-    investigateLink["Investigate Link Saturation\nEngage network team"]
-
-    dailyStart --&gt; pairState
-    pairState --&gt; allSynced
-    allSynced --&gt;|"Yes"| checkRTT
-    allSynced --&gt;|"No"| investigatePairs
-    checkRTT --&gt; rttOk
-    rttOk --&gt;|"Yes"| checkDirector
-    rttOk --&gt;|"No"| investigateRTT
-    checkDirector --&gt; dirOnline
-    dirOnline --&gt;|"Yes"| checkLink
-    dirOnline --&gt;|"No"| investigateDir
-    checkLink --&gt; linkOk
-    linkOk --&gt;|"Yes"| healthy
-    linkOk --&gt;|"No"| investigateLink
-
-    style healthy fill:#15803d,color:#fff
-    style investigatePairs fill:#be123c,color:#fff
-    style investigateRTT fill:#be123c,color:#fff
-    style investigateDir fill:#be123c,color:#fff
-    style investigateLink fill:#b45309,color:#fff</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFU02P0zAQvfdXjHqP-BKXPSCtyFYgod2qKeKSi7Fdx4o7KfYUCIj_zthJnWaVVU9xnsdvZt6bUdZrSbbDO_DWNLRaKWFdX5HwdAfrMv7AJy0cNfCx0bJdw9_QiJPmeH4o0Dj9b3US1vMTYnSdomDLCCSoxtAfvTrAj7P2PRQGlEFx1ItEwrmqR6kVE-XzYqSMaXb7fc747f4R-L_Gk0UDhYS3r0H5IljShT0tclj8qQNZw1XGegNzfZ6gWQ9DDn4gnFVAXsg2LHJ6oqeWidL35crLpHvnc_m7cgMXMEkmDwacDQSF4jJYDChYxVt9DIrs9KnzBNTBo6ZfnW9hr8WxRr4F_VtqrQJUnPFVBd_PymhapOW8T-gsRlfz-eWWvlhsczvxB76SdfaPiOOVWgqsZepi6Gm3Kd5soLDwPtr17lZrrE6mvygFW-6zxm3TByuFY8E4rUAFssODNWefki8yx9Dk1HBYjGnS4PccdL0CsL2vqoeyxrKT56NG4ifh7Cjc6mBU6HrGkk6VoLHSGh_QCKMBR9-IfVukvdpTKD5A3sBpFyOcd2jarAhflmeOPl-HvGPxMs3zMN2Z4eLCBM8ncT7q8T6P0TRcmS1KMYfn5k9TFu8G10YXIzB6dYU8U371H3jnvhE=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/vegalite/svg/eNqlVE1v2zAMvedXCOp66_LZBkFvwzBgh-6yDBiwNQfFYmwtspRJtJekyH-fpNqOErtZgJ1skuLjI_mklx4h9J1NMsgZfSQ0Q9zYx8GghJT1U4FZsewLPXg9ELzvpUAYlA_9X1YreufzUaAEl_3iDG_CFj3WZ2ASM_Ixg2RtyXMxHo7uybfMgM205DbkuuMrrXAu9h5gNIl830GkWQBS2uRMUhc6hHp_BMfMBe5nw2Bn9cmKgEXYOGs8bTI4Q3aMl0wWYJ39M9ik8odYDmhE4qs-CbUmBQop9gxF1Wt1aq-V50vnbAWx3yE792xYeQ53_1vggwSD7QrjpkL4LppGc2bW0SZ2m4CyZKaedqKNAvOVcVHYT4q76KRJBpVoLlR6BNg1v34pAqRPqFuoWTVllM6FcvyaANsKGyFEUlGFlFFXki1BPolcYGiuNT9qtcEqrRdF6LaTYBmTqNn9Lphy5d2oy-POnFZYsj6KzOvwCvq0kTFZ6kJxZnbxklYeK0i3P7ylJ6s6NHuQ2nSSD6v_92xtwqJLF1xc50yoSNfBe6ZRUouq8Swi5oapFM4RbkYPs-GEn4Lc8GQ8HU8jmNbSJKQQJNY1wR--zc7RaMPhmtFUmjhSbV3Hk0YXJ0VQa4li0_0IvKX0C_uIW_vymnXhEeju6Er4k8ldAi_PAC5dhLjAHNIcFJLbtzS9ou3np3fo_QVtO3_s?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9345,7 +9311,7 @@ SRDF/S health checks: `symrdf query -synchronous` link status, invalid track cou
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

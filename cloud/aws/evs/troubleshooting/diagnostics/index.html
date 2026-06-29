@@ -8868,37 +8868,7 @@ EVS diagnostic commands: check AWS host and ENI state, inspect CloudTrail for AP
 *Applies to: Amazon EVS (Elastic VMware Service)*
 </div>
 <p><img alt="Amazon EVS — Diagnostics" src="../../../../../assets/cloud-aws-evs-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([EVS Issue]) --&gt; B{Which layer?}
-    B --&gt;|Host unreachable or EC2 status check failing| C[aws evs list-environment-hosts\naws ec2 describe-instance-status]
-    B --&gt;|VPC network connectivity failure| D[aws ec2 describe-route-tables\nVPC Flow Logs for REJECT entries]
-    B --&gt;|VM or workload not reachable inside EVS| E[NSX-T Traceflow for DFW path\nvSphere client ping / traceroute from VM]
-    B --&gt;|AWS API calls failing - error in CloudTrail| F[aws cloudtrail lookup-events EventSource=evs.amazonaws.com\nFilter for errorCode field]
-    B --&gt;|vCenter or vSAN platform issue| G[vCenter: vmon-cli -l / vpxd.log\nvSAN: vSphere UI Health plugin]
-    B --&gt;|HCX migration or extension failing| H[HCX Manager UI: Interconnect status\nHCX Support &gt; Download Log Bundle]
-    C --&gt; I{Host state?}
-    I --&gt;|NOT_AVAILABLE or error| J[aws ec2 describe-instances for i4i host IDs\nCheck ENI attachment: aws ec2 describe-network-interfaces]
-    I --&gt;|All hosts OK but issue persists| K[Check VPC route tables and security groups\nVerify management ENI connectivity]
-    D --&gt; L[aws logs start-query on evs-flow-logs group\nFilter REJECT entries by srcAddr and dstPort]
-    E --&gt; M[NSX-T: nsxcli get alarms\nTraceflow in NSX UI: Plan &gt; Traceflow]
-    F --&gt; N[Parse CloudTrailEvent.errorCode from lookup-events\nCheck IAM policy for missing evs: permission]
-    G --&gt; O[vc-support.sh for vCenter bundle\nPowerCLI: Get-VsanView for vSAN health]
-    H --&gt; P[Check HCX Interconnect tunnel state in HCX UI\nSSH to HCX Manager: /opt/vmware/log/ for errors]
-    J --&gt; Q[Collect all layer bundles\nOpen AWS and/or VMware SR]
-    K --&gt; Q
-    L --&gt; Q
-    M --&gt; Q
-    N --&gt; Q
-    O --&gt; Q
-    P --&gt; Q
-    Q --&gt; R[AWS case: account ID, environment ID, host IDs, CloudTrail event IDs\nVMware case: vSphere bundle, NSX-T bundle, SDDC Manager bundle]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P action
-    class Q,R escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1VNFu6jgQfc9XjPrcgLTaJ6S9Eg1Q0gKlTcu9D7wYZyBWjZ21Hbjsav99Z2LgUm326SiZ8TkznjMulUMZlDUDcGpXhSR5GMDdwx387StRI_2lsDA7jf8kGUXE0QMePGjlQ4rmoJw1ezQhrawPfm3auPwNSvTSqQ2myng6LzElCI3vJB5diG8POtsETIPYaCTe1TKDibZHmNmdh6118DZ-GmfvQNpOYTfvmHgXxY_0Hd6dkLjl83x0NPkOtQjV2hyKukKHILUiIqiV2UEfAme3-rB1dg-reSf95Fy21LYp6YzSoK39bOoUD8TmYcxQ2MZJ_IMurSf24i_LV9STdr82E6UDurYidM66zJYkqFCXnXKPJHfIiBHdAA57a1KqGlJNBR_qn2VP2x03NFxQ9NzWRw5TFDpUUOtmp0wn75R4p9kPmAsjdlTPRz6AnFWkNYbSIE5ubTipaOraugDfYGSPRltR8kTgoTGlxk56YrvLOyNPXWO_-CUOWf2ugJ0F-YgKyCqUnzBe5CBCELJi4w3gPxQGw9G6T6KiJrY0ym53PJN8ZGRzxXFHu4EwJXiUjVPhBDsK1WxBdGp7gn17TSzdVnK-JHWg1E6Z2blLzcal3lxI_2zQncAa3qSUXZm2wVboaouv_obNCbyTw7J0bXWlD0uaQ6fi_GL7ARj_k02ywwBCC7enNn6tgjJAae28l1oYmuk11slLxrpbCucRMnb8Ozu-tXjvxr68L1-24DK2fDiH2molT-1k98p73ja6ggHU6Npv2-3QF3a-TH30Xs9XLcN5F2DTem9tlvaILptRN48Y0pUXZqUwLjxvBVTtJnQKLK9WYI9_MX9oCHW7A8g3xgkf-doUxRSChZvFGUDf1qF_2B-Fwz5NtP9rtbsd-MqyVmvWEZpeD3G69kP39lKjgeH3ggfeJ6bVnJmheOskeyMyTpbCU0BIaRvDe3MPN890-31ZqPubOUI7rLhmZ51IdHlKYlX3EN_Ty1cxGmXXh2Pz_4_AkIobrwrIvW-6M5IHSL9BFmEUYRxhEuExwjTJGZ4iPCcjhlkyZpgnE4ZF8sjwkkwZlskTw2vyHGEWYR5hEeElwjLCK8Nb8i_CZmZP?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk81O4zAUhfd9iivWZcHvogskVECqNIwQQR12lie-baw6tuXrJCCExEPwhPMk2PkpnZk06S6yvnOPfe6JkA5TL42egTCVnkzoNbfe5DNYCNRerl4haU7gjTJuMXCS50aL9wl5tOyEpRmmG8YrYpkhz7gWTOqV4-Rdkc7gKAkYnMCfj0-YRxSufyUQUQgofKO-cAjkucejrVe8HNdrha3baeuWKlMI77hUbGUcw5IYt5J1bqc7bvOIPkUUAgq3ywSuHxaAzhlH-53OwiPIhkNW2pStlKmYMmuq7TT6zumsdlo0KCwf5nAXUPgR0NouoJVxGxDO2AG38_ZdZV5xh8wq7oM6Zxly5bPO7HznWcv7SEJHQkPud7hoHTS9-HZseGFMrpt-sTP9Z_J8_NTODCuKqe0ffclSo1QdFdkMw_1rk1gEEmJbgctmfoNCmdTotLGa1l1Ibm7mcM81X6OD34UWCvszc0hGFU1tH-N3iRB3SykPeeBWYkqu3redhuMrOKyzUpdIXq7DrP_EoxUcEo-2akg8VpIh7dD6h3Sju_1LfEC4cfL3-g76q_skI0H2SYbj61PsD62PHonqH8kXFpYN8Q==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9178,7 +9148,7 @@ EVS diagnostic commands: check AWS host and ENI state, inspect CloudTrail for AP
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

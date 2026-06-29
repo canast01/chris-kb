@@ -7520,21 +7520,7 @@ Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle m
 </table>
 <hr />
 <h2 id="trust-protection-platform-topology">Trust Protection Platform Topology<a class="headerlink" href="#trust-protection-platform-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  TPP["Venafi Trust Protection Platform"]
-  TPP --&gt; DISC["Discovery Engine\n(network scan / agent)"]
-  TPP --&gt; CA1["CA Connector — ADCS"]
-  TPP --&gt; CA2["CA Connector — DigiCert / Entrust"]
-  TPP --&gt; AUTO["Automation\n(renewal / provisioning)"]
-  DISC --&gt;|"found certs"| TPP
-  ADMIN(["Security Admin"]) --&gt;|"portal"| TPP
-  TPP --&gt;|"SIEM / SNMP"| SIEM(["SIEM / Monitoring"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class TPP,DISC ctrl
-  class CA1,CA2,AUTO mgmt
-  class ADMIN,SIEM host</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kb9OwzAQxvc8xakTC0J07IBkORkyBCIlMLFY6dU9kZyri9OqQkg8BE_Ik3CmRCzp5PP5-333x1sS7CIF3oCQ38csa-t6A6sXZLcjaGUaI9QS4kUFde_iLsiwgvdx7w6omL449j1-ZHnZWGVzGrtwRDlDwZ4YX_mGMZ6CvMHYOYY7cB45LlpYc68O1oANzJoOAt-fX2By21zRr5f0OXmyKFFrFRzTEIu0eW6fFDdTDINL82mrgown1yt5kHCkUbPEfhnPq_JR-Qa7SSiewWwH4kVpUxZVUuqhzpV6aqvXfNMfwO0DpH3OsS7mP1zPYRrgd-3porlLS_PlT5SKZj9eip_t?" /></p>
 <hr />
 <h2 id="policy-tree-structure">Policy Tree Structure<a class="headerlink" href="#policy-tree-structure" title="Permanent link">&para;</a></h2>
 <p>The Venafi policy tree (<code>\VED\Policy\</code>) organises certificates into folders that apply inheritance-based policy. Certificates inherit policy settings from parent folders unless explicitly overridden.</p>
@@ -7586,46 +7572,14 @@ Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle m
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>graph TD
-    tpp["Venafi Trust Protection Platform"]
-    tpp --&gt; adcs["CA Connector: ADCS\n(Microsoft Active Directory CS)"]
-    tpp --&gt; digicert["CA Connector: DigiCert\n(public OV / EV / DV)"]
-    tpp --&gt; entrust["CA Connector: Entrust\n(public / OV)"]
-    tpp --&gt; acme["ACME Connector\n(Let's Encrypt)"]
-    tpp --&gt; vault["HashiCorp Vault PKI\n(short-lived / service mesh)"]
-
-    adcs --&gt;|"DCOM / CES"| adcsServer["ADCS Issuing CA Server"]
-    digicert --&gt;|"REST API"| digicertCloud["DigiCert API Cloud"]
-    entrust --&gt;|"REST API"| entrustCloud["Entrust API Cloud"]
-    acme --&gt;|"ACME RFC 8555"| leCloud["Let's Encrypt"]
-    vault --&gt;|"Vault REST API"| vaultPKI["Vault PKI Engine"]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUrFqwzAQ3f0VR6YuIXuGgpEDDU2oIcVTF9U-2wJZMic5UEr_vSfbSgJx08XI7-69u_ekShGWXlmzBVJN65PE9_0WVgUaWSt4p8F5yMn6qQtyLX1tqVvBt2tlj0zjijSNxp9EVqVjrkhBWGMYt7SFNBOnD_N0VCVZZ2sPKSudEbJxsqUvEKdFtUo1qkTyd4oZFwQXWLUfPrUq4a2ADezCJysWtdD44OROajfhV6UNay17KzsGVqk47q4CzDugX-w_y0GHeS_StUpY6qEICOSve2a51pJfa86h4pEO6cxWoUPX_hnsiZuQwgocKOydG5RpgO1MhYcRCm2HiqkxOUjzPYzgo7Qiaw7pH5LG2P8wEvYfnlfMgm-gUQYX-8NThPUzBPfxHB3F_3nVSyvfUjyP48boosiU1CWVW71x92j8RnjCg2wAZ4-Tk8sMtpH8Age8IfA=?" /></p>
 <hr />
 <h2 id="certificate-lifecycle-flow">Certificate Lifecycle Flow<a class="headerlink" href="#certificate-lifecycle-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    request["Certificate Request\n(UI / API / vcert CLI / CI-CD)"]
-    request --&gt; policyCheck{"Policy engine\nvalidation"}
-    policyCheck --&gt;|"SAN missing / key too small\npolicy violation"| reject["Reject with\nviolation message"]
-    policyCheck --&gt;|"internal auto-issue"| submitCA["Submit CSR to\nconfigured CA connector"]
-    policyCheck --&gt;|"external / approval required"| approvalQ["Enter Approval Queue\n(Security team review)"]
-    approvalQ --&gt;|"approved"| submitCA
-    approvalQ --&gt;|"rejected"| reject
-    submitCA --&gt; caIssue["CA issues certificate"]
-    caIssue --&gt; tppStore["Venafi stores certificate\n+ notifies owner"]
-    tppStore --&gt; monitor["Expiry monitoring begins\n(30-day alert window)"]
-    monitor --&gt;|"within renewal window"| autoRenew["Auto-renew triggered\n(new CSR generated)"]
-    autoRenew --&gt; submitCA
-    monitor --&gt;|"key compromise / decommission"| revoke["Revoke via CA connector\n+ update CRL / OCSP"]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1Uk1r20AQvftXDDkFgmmgtxwCYtuDIVBHoj35spHG8iTyrLofUk3pf--MLMVWUC5i5u2-p515ryKPZSTHD-CpPsTVyuPvhCE-wI1BH2lPpY0I-Rnd8e3PDXyBbKvfrpQbYJ60Npu1-XYDf8PBtihiomq5bvDfqnUNlSdzwPJNRLdDB8g1Me64sw1VVh-wyPX4Ko3Q8qGAnuJBSOSagQNHDMHWuMgN6eVI0WTCLoYSTJFDdDsuHe-pTh4rMBlIx8JyflHFtq138spnkfnOET1kIwLPCZOMcFtgmTzFE0S0R-F2hP2iVmk3ISTU1WZAWgYoL0te5MS2LeRtSvqFbPcEQdsZccd3wE47wV3PuDzK0TEJVwf505I_wQgQ1_CC4keQYb7eryt7AtuotT1x5ZZnsSm6HBl7kcukXnttIEqKapTNipT2uvJaTrw8s_rE4s694WCxFtCRnbmiw6W20hCa_EmS9sMU20WlKbqwfoSr0F0HUI_OmfqITmn5iL_7f0nC7PoMHaWnQ4VGzyfvFZosffdWwdGLyaTh19OKL8ue_frq6nmJq__MUVkw?" /></p>
 <hr />
 <h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
 <p>Venafi TPP is deployed as a primary + secondary pair sharing a common Microsoft SQL Server backend.</p>
-<pre class="mermaid"><code>graph TD
-    client["API Consumers\n(CI-CD / scripts / UI)"] --&gt;|"HTTPS 443"| lb["Load Balancer / VIP\n(venafi.corp.example.com)"]
-    lb --&gt; tppPrimary["TPP Primary Node\n(active)"]
-    lb --&gt; tppSecondary["TPP Secondary Node\n(active)"]
-    tppPrimary --&gt; sqlAG["SQL Server\n(Always On AG preferred)"]
-    tppSecondary --&gt; sqlAG
-    edgeProxy["Edge Proxy\n(segmented network)"] --&gt;|"HTTPS 443"| lb
-    admin["Security Admin\n(portal)"] --&gt;|"HTTPS 443"| lb</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkU1PwzAMhu_9FdZOXDbuOyCVgqZKExQNOHHJEq-LyBdO1q1C_HfcqmpBKhI32_Hz2n6jNKFM2rs1kK6PKcuk0ejSGhZ5VULhXTxZpPjmropyWdzBNURJOqTI0Uu5gM94FAGZZhnhaoNfmdkzvfVCwa0wwkkk7n0tK9Zo0ImDXklPYYUXYYNBTuysTAqhIm0FtSz3XFUwZPDgFbKW4L0b_AvdofROTfCY_wOPHybfMLd72jJHDRL35-Ys2giPDvINBMIDEqGa5VHVWJG_dLPvOYY-YY2ItWVzUYHDdPb0PosLZbXrxqM8kU4t5F2B8eApCTPLDN8Gyxswe_6BLpgMnAqjDT_s7Z76k3_5NlXHcwb1fr8h_gbHtMfY?" /></p>
 <p>Both nodes are active; the load balancer distributes requests. SQL Server is the single source of truth — both nodes are stateless with respect to certificate data. If one node fails, the load balancer routes all traffic to the remaining node.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;Venafi*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">sql01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">1433</span>
@@ -7725,7 +7679,7 @@ Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle m
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

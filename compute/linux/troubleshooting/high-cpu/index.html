@@ -7884,29 +7884,7 @@ High CPU Troubleshooting reference covering Overview, CPU Threshold Reference, D
 </table>
 <hr />
 <h2 id="diagnostic-flowchart">Diagnostic Flowchart<a class="headerlink" href="#diagnostic-flowchart" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    A[High CPU Alert] --&gt; B{Platform?}
-    B -- Linux --&gt; C[top / htop — identify PID\nps aux --sort=-%cpu]
-    C --&gt; D{Kernel or user space?}
-    D -- Kernel high sy% --&gt; E[perf top — identify kernel function\nCheck for storage I/O wait driving ksoftirqd]
-    D -- User space --&gt; F{Single PID or many?}
-    F -- Single PID --&gt; G[Identify process\nCheck parent: pstree -p PID]
-    G --&gt; H{Safe to kill?}
-    H -- Yes --&gt; I[kill -15 PID\nMonitor recovery]
-    H -- No --&gt; J[Notify app owner\nCapture thread dump first]
-    F -- Many PIDs --&gt; K[Check if same binary\nPossibly fork bomb or worker threads]
-    B -- Windows --&gt; L[Get-Process sort CPU\nperfmon counter: % Processor Time]
-    L --&gt; M{Service or app?}
-    M -- Service --&gt; N[Check service dependencies\nEvent log for errors]
-    M -- App --&gt; O[Capture process dump\nDebug or rollback]
-    B -- VMware VM --&gt; P[esxtop — check %RDY %CSTP\nFilter: G for group, H for host]
-    P --&gt; Q{%RDY &gt; 5%?}
-    Q -- Yes --&gt; R[Host overcommitted\nDRS / migrate VM / reduce vCPU]
-    Q -- No --&gt; S[CPU issue is inside guest\nFollow Linux or Windows path]
-    B -- Java/JVM --&gt; T[jstack PID — thread dump\nCheck for BLOCKED threads]
-    T --&gt; U{GC overhead high?}
-    U -- Yes --&gt; V[jstat -gcutil PID 1000\nAnalyze heap usage]
-    U -- No --&gt; W[Find CPU-burning thread\nCorrelate thread ID hex to jstack output]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9lM9u2zAMxu95CqJAbjPaHnYJsEOW9E_WtA3arsWAXGSbtrnIkkZJSbNhwB5iT7gnGeW4Q4F5uzgWTP348SOZkhiLQNZMgKluwmg0ncDRpbzCbPURpho5HME33yiHEiKxytQav49mEhasg2No0s-vHz-BSjSBqj2sFvO1cR5UfIYs85bDu2xcuDgIOhOQQ67gL8wG2aCGKppO4drMGiw2UFkGHyyrGmFxfAs7RQFKpi2ZGjbeVoH4SzmY60JyLV7wjm2B3r9gnWL5MAHnAyNC5lIZg5SFUDakNWSnbw-1XltDoigF2S3yfvDaB7l2Y7vUyjmwO4MsyZULkRFCw6hKKGProCL2w65fCeMglyrwqkXIySjer83Kek-53id7NpDbNgcRtJMDcg_3g8ilIC8wZKuDHZDalXovHZSutNZAYaMJyBMYQx8k5AdqcZB380eiR95SgVCiQyOuF4Ti9tlWbAZt666RyGx5WNhtAvXu9L3q7FmbOeaxTuWx1TpXxWbw_kruo39-Gaui0zS-m3-C8ez-YbU256S7si46JTXb6N7AZXdo7D8acJe2Qz5C6nNh25ZCwFIk3d3LKrRUswoIj9dyYCyjVL8VLwdR96k-2THyPqI8gYyX2Yc6og-iTmqzO1iSkS0SSU9kSrvzMqehGeQ9CO-zD2JHGsqu5ldD9Xp73i9vZ1dn8_-OxWNPC5DVRQykO-jpycnJ2kyN0vuvCA0qB9HLIg4ingRxLqrTNGV5ZJMW9JBT1Fhm1MmsXqTQG3yWfwHoi7AxuDjchdFvQCipPw==?" /></p>
 <h3 id="perf-deeper-kernel-analysis">perf — Deeper Kernel Analysis<a class="headerlink" href="#perf-deeper-kernel-analysis" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Record 30 seconds of CPU activity</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>perf<span class="w"> </span>record<span class="w"> </span>-g<span class="w"> </span>-a<span class="w"> </span>sleep<span class="w"> </span><span class="m">30</span>
@@ -8142,7 +8120,7 @@ High CPU Troubleshooting reference covering Overview, CPU Threshold Reference, D
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

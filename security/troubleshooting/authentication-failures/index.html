@@ -7027,29 +7027,7 @@ Authentication Failures Troubleshooting reference covering Overview, Symptom Cla
 </table>
 <hr />
 <h2 id="diagnostic-flowchart">Diagnostic Flowchart<a class="headerlink" href="#diagnostic-flowchart" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    A[Authentication Failure Reported] --&gt; B{Can user reach DC?}
-    B -- No --&gt; C[Check DNS: nltest /dsgetdc]
-    C --&gt; D{DC resolved?}
-    D -- No --&gt; E[Fix DNS / conditional forwarder]
-    D -- Yes --&gt; F[Check firewall port 88/389/636]
-    B -- Yes --&gt; G{Account locked?}
-    G -- Yes --&gt; H[Identify lockout source\nEvent 4740 on PDC emulator]
-    H --&gt; I[Find rogue process / stale credential\nReset password]
-    G -- No --&gt; J{Clock skew issue?}
-    J -- Yes --&gt; K[Fix NTP / w32tm /resync]
-    J -- No --&gt; L{Kerberos or LDAP?}
-    L -- Kerberos --&gt; M[Run klist / kinit\nCheck SPN with setspn -L]
-    M --&gt; N{Valid TGT obtained?}
-    N -- No --&gt; O[Check KDC connectivity\nVerify pre-auth enabled]
-    N -- Yes --&gt; P[Check service ticket\nSPN misconfiguration?]
-    L -- LDAP --&gt; Q[Test ldp.exe or ldapsearch\nConfirm bind DN and credentials]
-    Q --&gt; R{TLS/SSL required?}
-    R -- Yes --&gt; S[Verify cert chain\nCheck LDAPS port 636]
-    L -- Certificate --&gt; T[Check cert expiry\nopenssl x509 -noout -dates]
-    T --&gt; U{CRL/OCSP reachable?}
-    U -- No --&gt; V[Fix CDP / add OCSP proxy]
-    U -- Yes --&gt; W[Check EKU — Client Auth OID 1.3.6.1.5.5.7.3.2]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1k89uGjEQxu88xYj7QhISQji0QrugIFLYAk0vXBx72LXW2Cvbyx9VlfoQfcI-SceE0oujPayl3e8338w3FtIi99LoIVhZlL7Veh5CeypQe7k9gTK8Mo0HZxrLcaPHe_oA94_3N2A05FkKuGsU88a24YcrWY3EISDThcKfrSmxJlILsKZoEGprODoHXXCeKQRu8VyIqY1eokMPNXPuYKyI0kZEGzW-DBLOgmmYMKkai7DE2liPcV1KurREXkE2Xw1BK4_OQ1e4Ar3gUcn4bPwYBOSWGy1kqMcUbI09MCsw3vDkWmpLgz0wpSAYg8Gg2xs8dfu9flQ2u5Sbr3Mqd-jd-R10LbqTjtv7Qv8vGw2VkqETqKSWfqPfK6_yORykL4EG6moNyUuUsbhanVGM1KIOi7CX_rTRr2hD-rXFhNHAATV7Ux9MN79yHNq95AiUToVkJxjZSUforSwae07sc5TxlRjrEIoSdQePCMbSkdUOmeUlNRYQdgdvYZeyOTB6_V8eF2VS0u1LHxwpAl4yqf_N6CUb5av3aD7KZH3t6yzHYy0tjcbUqJ1TcHy4eYJEm3A7EsFopaKU10uyaRaSZULAIl3l4SYcT1HB92vZ8ewb_Pn1G1Ilw6ULmw-LaQa3nV6n37ntPNDzSOe7KKf1DMknmLb-AgNTUo8=?" /></p>
 <h3 id="3-clock-skew-detection">3. Clock Skew Detection<a class="headerlink" href="#3-clock-skew-detection" title="Permanent link">&para;</a></h3>
 <p>Kerberos requires clocks within 5 minutes. Skew &gt;5 min causes KRB5KRB_AP_ERR_SKEW.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check domain time sync status</span>
@@ -7345,7 +7323,7 @@ Authentication Failures Troubleshooting reference covering Overview, Symptom Cla
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

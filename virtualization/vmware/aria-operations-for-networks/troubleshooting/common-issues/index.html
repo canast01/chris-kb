@@ -9245,38 +9245,7 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
 <p><img alt="Aria Operations for Networks — Common Issues" src="../../../../../assets/virtualization-vmware-aria-operations-for-networks-troublesh.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk8FuwjAMhu88hcV92p3DJARDQmIbAu0cWU1aLKVx1bQgNPHuc1Loti4V3Fz7-387TqqpNllD7Gag-eQmE38uq4bLGay1cQ3lZ9h3GfjyB6yMcIQlO32ZSFA49g1lKrd8msF02WdgJZlprwlN0BXWiAobVJ7bOjOqNlplbG03gsqRrNHBRxjYRwZ2RsMzLHoKVpFKejuOk3hFLgaqxErs3jmO44FcDOANq6T-OgvXivPckjPBqCWxWNwq8NFVgtfnOulSYXNQ6NCePXnlD3wiVyiZLRbEnFwmllv5gvkVg32HgcwaC9Jp7TIuK2saE1PJXlZjpVArywV1C2xrIaab5Xwra5svYRMqcWlSSXrUxrNtu0ewC_HRhPavPkOL0vwm4SPaS_9C4OkF_r0Ackcjn4XI_nD373xEmb7REXj0-kb4xy5qRDyy-d_0YD1B9bPr-z_CgE-tYoCMLGBAPXLsgSR52AHzDQzZmaw=?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; B1[Data source red / collection failed]
-    S --&gt; B2[No flows in Flow Map]
-    S --&gt; B3[Path analysis shows no path]
-    S --&gt; B4[Physical device not discovered]
-    S --&gt; B5[Collector offline in UI]
-    S --&gt; B6[LDAP login failure]
-
-    B1 --&gt; D1{API reachable\nand credentials valid?}
-    D1 --&gt;|No| R1[Fix API Connectivity · Update Credentials · Re-accept Cert]
-    D1 --&gt;|Yes| R2[Check Service Account Lock · Run Test Connection]
-
-    B2 --&gt; D2{IPFIX configured\non source?}
-    D2 --&gt;|No| R3[Set IPFIX Target to Collector IP · Enable on vDS]
-    D2 --&gt;|Yes| R4[Check UDP 2055 Firewall · Review proxy.log]
-
-    B3 --&gt; R5[Verify All Source Devices Discovered · Check NSX Data Source]
-
-    B4 --&gt; R6[Add Device via SNMP · Verify Credentials · Check Collector Reachability]
-
-    B5 --&gt; D3{Collector VM\npowered on?}
-    D3 --&gt;|No| R7[Power on Collector VM]
-    D3 --&gt;|Yes| R8[Restart ni-collector service · Re-register in UI]
-
-    B6 --&gt; R9[Test LDAP Bind DN · Check LDAPS Cert · Use LDAP Browser Tool]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
-    class D1,D2,D3 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1VMtu2zAQvPsrFrm7rV95HVrYVg0YiA1BstNcGWolEWVIgaTlGEW_q_d-WZeUbAMFc-KK3Jldzg5VCIPcCa0ewYiqdoNB_gg3P2rmQFhwNYI9vTVOv327gV-2Zg1SIiGYqiT-HixGlJ0wx8Dqg-FIZwV8Bq6l7GihZEJiEQePCbzVUEp9tCAUrCiADWvi2RPKTpmrgSkmT5bas7UHKg0NbcdBUw-qKZszCQW2gnpU2kEhLNctmo9amxFu2d1CG9BlKYVC3-N-HQfcEuApmacgdSW6ax8MRnOTINooepb5s5V4h3m6hqVWysvYCneCv39g3xTMISypa1ROMGn9boZDxjk2DpZoXJzVK72skf-EHE0QYc65PigHT5o2PctBwQ6tuxTVKt68p0rG8TJ-RDk6WKer9QvsmKnow2m4KrlOfbHvir1KBLJHm-Rxquml432SwvjLbAYr8uqRSdlduhV4hMbo99MnkjxO4qf4jEaUJ5gTLu88mgQbWEguHvCMXbFt_gLBz11unNbPel4UPRG0gtK3m3Czvtp_I-q4rypkyHjNXoWkwcZV9komk3j5O-9pfUTjBbySPm_i6feUntFkmXGgxJBfALa3Quchg5Wwjkg_Nnn2QFTBJMHpC6FIg-31gn43Dy4MbrXY5xl6pkS801pGeQc5DL_CYtSv436d9Ou0X2f9eksvyAfZ6ByMyZYhmJyDKf0vQjCjf0AICNXt3J2De3q1IXgY_APUE6ff?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9515,7 +9484,7 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

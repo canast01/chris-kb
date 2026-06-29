@@ -8920,33 +8920,7 @@ PowerPath diagnostic commands: check path state and count with <code>powermt dis
 *Applies to: PowerPath*
 </div>
 <p><img alt="PowerPath — Diagnostics" src="../../../../../assets/storage-dell-powerpath-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([PowerPath issue or path loss]) --&gt; B[powermt display dev=all\nCount dead vs alive paths]
-    B --&gt; C{Dead paths?}
-    C --&gt;|No dead paths| D[powermt check_registration\nConfirm license valid and current]
-    C --&gt;|Dead paths found| E[powermt display ports class=all\nIdentify HBA ports with dead paths]
-    E --&gt; F{HBA port state?}
-    F --&gt;|Port offline or missing| G[lsmod | grep emcp: module loaded?\ndmesg | grep emcpower: kern log\nSystemctl status PowerPath: service]
-    F --&gt;|Port online| H[Check fabric layer\nBrocade nsshow: initiator visible?\nCisco: show fcns database]
-    G --&gt; I{Module loaded?}
-    I --&gt;|No| J[Reinstall or reload emcp module\nCheck kernel version compatibility\nmodinfo emcp | grep version]
-    I --&gt;|Yes| K[/sys/class/fc_host: port state\nCheck link_failure_count value]
-    H --&gt; L{Initiator in name server?}
-    L --&gt;|No| M[Check FC zone configuration\nZone must contain initiator WWN\nCheck portlogshow for FLOGI events]
-    L --&gt;|Yes| N[Check array side\nConfirm FA port is Online\nConfirm host WWN is registered]
-    J --&gt; O[powermt restore\nVerify: powermt display dev=all]
-    K --&gt; O
-    M --&gt; O
-    N --&gt; O
-    D --&gt; O
-    O --&gt; P[Collect support bundle\nSee Step 6 for collection script\nOpen Dell support case]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F,I,L dark
-    class B,D,E,G,H,J,K,M,N,O action
-    class P escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U01vGjEQve-vGOVe5dYDUlsFCAmEAGqkRqqQkLFnYYSxVx7vRvTjv3e8DpSDc3raHc_He_PGUEAdybsBBNrtY1XdDeBm5d8wrFTcAzG3CD5Ak76sZ76B37xXDUqCZCq3s_i3GkpSk5KOEQxxY9UJDHZflLVrN_Ktk9-oDHQMylKHfblyqZGUGhUj46smeo_6sAm4I45BJQKpj6spHMGSRscInbQyoJwB3YaALhar3hdGb3yIDNoq5kxhaiSd6hM8Du_eo28kgvSkPuYykdqTYuRBIpaP3gDsAjaAR90PMYADBidC79bu5cRR_kcLHFVsGS5rGQBj6IRmsfZjUjDpA7XaBtIglDCs3TB4rQyCY977twGQo0gqynI7Ytpa_CYaEmsv5eUB1NoxGBXVVnG501Q6TYuRmUS-IzmZ3Nrkn4DWi1aJJwjt1qI064dMhNFCh4FljaD9UQSlLVmKp7WTt-RqnxP_ZLHenxYbP0njWz7xbb-921pv9p7joF9ar-OlryV32NSKbBtwo3uPimPaMtO5lJ0XI88XtScj-OUdCgPx4a492_Jn-ndsOaZAVOSuhH99XZzHSQPK2rPyEprMlw9TwE6MVzbX4tJYhSCmZTL4_wgm2adywLB0QvUqlARJnVMsXxAGNMUey6vjCMgystT5gUFOIUlaPPhioVUa1lsrf4Dbph9t2zqTbPCCCC9R9vq5J67zs-QF1oGauHbLBh2MUZx0ztUfWbK6g09fYViNEowz3FeTBA8ZHqtpglmGp2qe4DnDopolWFZPGZ4zLDKMMywTrKp_9nTP5A==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVk71uwjAQx3ee4sTOwOfAUImhA1LVoQwdLRMbepJzjmwHiiqkPkSfsE9SJy5JPxwHtuj0-_9s310EGpk51LQEoY80GNhTXjidL2EtJDncnWATKvBmX3ghPYc81yTOA-tkwcYMCR1yxXx9T9o6zFim85yTsEsYbjwEY_h8_4B1AKEF4QIOG3t1HU57Jb_9E6aQyldbyAx3Xt2GG_uktj9U2OjC_TgkIZ-yI5J_t03pp7X-OYA3HjBjlhPb8a2Ju2e1e7N6hMBcZ50zbgw_WRQyJp3X0lWFjCrmOumC2bIotHFsW5JQ0g9RqctuBPEi3DZgEDBosajbSKtVGSxP1fdBgjZwbzOuuJNNRB-4OjfrB6M7uGa9kA7Sl_be9C-a3JxUsGcrUtHueadSnfNMhZLz-hXs7WPlbOfU-9_F8GTPYoGuTsXYjv7E0ERX_uBfmJ_kGg==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9298,7 +9272,7 @@ PowerPath diagnostic commands: check path state and count with <code>powermt dis
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

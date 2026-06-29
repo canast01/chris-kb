@@ -7743,27 +7743,7 @@ Backup Failures Troubleshooting reference covering Overview, Failure Classificat
 </table>
 <hr />
 <h2 id="diagnostic-flowchart">Diagnostic Flowchart<a class="headerlink" href="#diagnostic-flowchart" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    A[Backup Job Failed] --&gt; B[Identify error in job log]
-    B --&gt; C{Error type?}
-    C -- Network/Timeout --&gt; D[Test-NetConnection to repo\nCheck MTU / proxy]
-    D --&gt; E{Reachable?}
-    E -- No --&gt; F[Engage network team\nCheck firewall rules]
-    E -- Yes --&gt; G[Check throughput: iperf3\nVerify backup window]
-    C -- VSS Error --&gt; H[vssadmin list writers\nCheck for Failed state]
-    H --&gt; I{Writers healthy?}
-    I -- No --&gt; J[Restart VSS writers\nnet stop / net start]
-    I -- Yes --&gt; K[Check VSS event log\nApplication Log Event 8193/12293]
-    C -- Snapshot Failure --&gt; L[vSphere client: check VM snapshots\nCheck for delta consolidation needed]
-    L --&gt; M[Consolidate snapshots\nReset CBT if required]
-    C -- Repo Full --&gt; N[Check repo free space\ndf -h / Get-VBRRepository]
-    N --&gt; O[Delete expired restore points\nScale-out repo expansion]
-    C -- Agent Error --&gt; P[Check Veeam agent log\nC:\ProgramData\Veeam\Backup\]
-    P --&gt; Q{Agent version current?}
-    Q -- No --&gt; R[Update agent to match VBR version]
-    Q -- Yes --&gt; S[Re-push agent\nCheck firewall port 2500-3300]
-    C -- Authentication --&gt; T[Check service account in job\nTest-ADServiceAccount]
-    T --&gt; U[Reset password\nVerify AD group membership]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1k01v2zAMhu_-FUTvRtMEA9YcBuSj7dYlbREnOfmiyLStRZY0SU5aDPvvpa3VLTD1JMMkH5IvyUJY5F5oNQUrqtonyWwKF3PGj62Be32AWyYkFhfwx9XMIHmRO1OVxL_JnDx_FKi8KF8ArdUWhIJfFCR1FY1YUcQpMzVaBC4FhU6B18iPsF-DU8y4WnuXq0X_ryRggdIz4Fo5LUXBukpBIRaflLSmBIvBGT8yN-jQw2K-BVFSyO-WOo9DHjpIX4FFo6G0SCDDOOaqKCGt4RLu0Kf7-WZDdie8ti9R0COBliiRCsFn0-UjqyN3BKOF6qrKOJOY6taHXOTGlKMmo7ztUJhDexIcgXGuW-X_6Z6rLeHT2TIL5lmwRlk7YgVJDHPurG2Rqz3abpSzJVRW0_wbbA5oXS1MFLEkRJ_wAT2JrsIigdd9L29TXG93JJix-jku0i1RblTFKqTBeirkCB5ZMywByXZmUoJtJboo4W6QxddUd1WblvZKGLTlZGjqEFb6LFShz1HM9245nWNFQ2pK4TycrfDU_8d9DOcAztN2RSn3QVfPrId9lr0zqDkK04bECJ_kESX8HNrp4vFEV9IdVK5mxkjBww2sdAU3venr1fXk8mo8vp5EaU_vNCRZgXR-4y2m-ZPVlWXNknmW9_Y8nH4eZW2ItTP9YQUMjbphntdAtwAnavOzzc16VVLTujqE_jdeo0mw8ZfRKJ1MRqMoJJlB-g3myap71slD9zwm2-7ZJa8sj6sZ?" /></p>
 <h3 id="vss-error-investigation">VSS Error Investigation<a class="headerlink" href="#vss-error-investigation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>rem List VSS writers and state
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vssadmin list writers
@@ -8101,7 +8081,7 @@ Backup Failures Troubleshooting reference covering Overview, Failure Classificat
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

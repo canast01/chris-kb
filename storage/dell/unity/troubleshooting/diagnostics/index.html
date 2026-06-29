@@ -8934,28 +8934,7 @@ Unity XT diagnostic commands: check system-wide health with <code>uemcli /env/he
 *Applies to: Unity XT*
 </div>
 <p><img alt="Unity — Diagnostics" src="../../../../../assets/storage-dell-unity-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    START(["Host reports I/O errors"]) --&gt; SP{Both SPs online?}
-    SP --&gt;|No| SPCK["uemcli /env/sp show -detail\nWait 60 sec — SP may be recovering"]
-    SPCK --&gt; SPSTILL{SP still offline?}
-    SPSTILL --&gt;|Yes| P1["Open Dell P1 case immediately"]
-    SPSTILL --&gt;|No| POOL
-    SP --&gt;|Yes| POOL{Pool and disk groups healthy?}
-    POOL --&gt;|No| DRIVE["uemcli /stor/config/disk show\nReplace drive and monitor rebuild\nNo pool changes during rebuild"]
-    POOL --&gt;|Yes| ACL{LUN has host access?}
-    ACL --&gt;|No| ADDACL["Add host access\nuemcli /stor/config/lunacl create"]
-    ACL --&gt;|Yes| NIC{Network interface up?}
-    NIC --&gt;|No| NICFIX["uemcli /net/port/fc show\nRestore port or recheck LIF"]
-    NIC --&gt;|Yes| ALT{Active alerts in last 2 hours?}
-    ALT --&gt;|Yes| ALINV["uemcli /prac/alert show -detail\nInvestigate alert root cause"]
-    ALT --&gt;|No| BUNDLE["uemcli /sys/serviceinfo collect\nOpen Dell support case"]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class START,SP,SPSTILL,POOL,ACL,NIC,ALT dark
-    class SPCK,DRIVE,ADDACL,NICFIX,ALINV action
-    class P1,BUNDLE escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U8GO0zAQvfcrRntfmV447AFpaVgREbVRWxYOuXjtaWKtY0e2E1QhJD6CL-RLmEkptJJ7cTJ-4zd-M8_aBFTJePcAwbRdWix29QPc7eo7-B47OSDtU4J0rcUfhK0-ETpir6wBgW4ScYDY-W9wrzFJYxv3RZoEb99ARAW_f_6CXQ29PMILMpGfMBjX3iDf7cuqmqvPf9msekkJmwEdFGgt1EtQMiKYvkdtZEJ7zB_bbJiZP1m82JbPHy6kxeSDUN4dTCu0ia-zyMZtcbBSIehgJgTpNPTeGcolrpfRWN24tYfBewuqI2qMoEdWfMazxR9XfDda82hR_E3QGjofE0ilMMbG5S5rRycVVQ9IzcjyrcsVkdF6C30qv150wmESgw9JHNS_JnBBBN6FWbrqUL1CVT7lBVR7vn21v4GW6-eLekOQSkiLxH1trNJNVNi0pAtOePA-0fjHmBf6_vO6qK6GeowiYpiMQuMOHpS3ltIb999PcRxmWWyqvEv3j1uW85EHEZCTI5RiAxiCDzF7hqwN9--AX8_Z5RzXy6uIrDnblIPZjuwLDk4G4MlwdBoQN3XGuHvn4CR48Qe9yEfd?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk01qwzAQhfc-xZB9F_ldZFHoootCyKKhayHsiSMiS0ajJIQS6CF6wp6kslUrTaNa3hnzvffGb8aFMJhbodUSCn1SWUbnqra6WsJLgcqK7Rk2_g28047X6DjBK62KS0YWazZmdHYPFdshl3bHuCoYl2gsLWG0cQSM4evj07k0FHgKHAWeGgXfZhCuSok_zhNGVhteIquNzpFIG-ayS6XJijzYT7y9RyGg8Av9P2N6zdBatsMXgvZdTpcxvc1waPsFDTosZ8bkQcWmn7XOq7f1MJ85U5zaMbdCYld9kHau89Z1_bRpx2xQ8OiwlAVTaE_a7JlQFs2W5xibfeFTPAoBTWYYJC0P_uhem-cjglvYM-VccotBoo9cXsJFwsMjJC9OqCO64NLZ3OmS99QnTh5Knziy_T48ueQ-cXJ3N-L-PhvT67IG_ZUxSaK7mOSusRiU6CkmSbTzR_INAAHxXw==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9291,7 +9270,7 @@ Unity XT diagnostic commands: check system-wide health with <code>uemcli /env/he
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

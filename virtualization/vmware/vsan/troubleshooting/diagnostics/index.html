@@ -9521,37 +9521,7 @@ vSAN diagnostic commands: check all vSAN health checks from the Skyline Health U
 *Applies to: vSAN 7.x / 8.x*
 </div>
 <p><img alt="vSAN — Diagnostics" src="../../../../../assets/virtualization-vmware-vsan-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([vSAN Issue]) --&gt; B{What type of problem?}
-    B --&gt;|VM I/O errors or performance degraded| C[vSphere Client: Cluster → Monitor → vSAN → Skyline Health\nCheck failed health checks and recommended actions]
-    B --&gt;|Object absent degraded or inaccessible| D[esxcli vsan debug object list on ESXi\nFilter: grep -v Healthy to find problem objects]
-    B --&gt;|High latency or low throughput| E[vSphere Client: Monitor → vSAN → Performance\nCheck cluster read/write latency and congestion]
-    B --&gt;|Network partition or split-brain| F[esxcli vsan debug network test\nvmkping -I vmk2 -d -s 8972 peer-vmk-ip]
-    B --&gt;|Disk group failed or disk fault alarm| G[esxcli vsan storage list\nesxcli storage core device smart get -d naa\ngrep LSOM vmkernel.log]
-    B --&gt;|Rebalancing or resync not completing| H[RVC: vsan.resync_dashboard .\nCheck slack space and bandwidth cap settings]
-    C --&gt; I{Health check result?}
-    I --&gt;|Failed health check with fix action| J[Follow recommended action in Skyline Health UI\nRe-run health check to confirm fix]
-    I --&gt;|Health all green but symptom persists| K[Step 2: object-level diagnostics\nesxcli vsan debug object list]
-    D --&gt; L[esxcli vsan debug object get -u uuid\nCheck component locations and health state]
-    E --&gt; M[esxcli vsan perf get\nIdentify noisy VM: PowerCLI Get-Stat disk.write.average]
-    F --&gt; N[esxcli vsan network list\nesxcli network nic stats get -n vmnic2]
-    G --&gt; O[Check SMART: Reallocated Pending Uncorrectable sectors\ngrep naa.device vmkernel.log for errors]
-    H --&gt; P[Check slack space: esxcli vsan storage list\nReview resync bandwidth: vSAN config]
-    J --&gt; Q[Collect vCenter and ESXi support bundle\nOpen VMware SR]
-    K --&gt; Q
-    L --&gt; Q
-    M --&gt; Q
-    N --&gt; Q
-    O --&gt; Q
-    P --&gt; Q
-    Q --&gt; R[vc-support.sh from VCSA + vm-support --vsan on each ESXi host\nAttach to VMware Support Request]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P action
-    class Q,R escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9lM9u4zYQxu96isFeF3KBXLrrQwHHiRMnduxI3aAHAwUtjSXW1FAlKXmNRa99gD5in6RDUU53A-5e9An893FmfsNSGiyc1DQFI6vaJcn1FN5dv4MvthYt8ihPC6oU_pXMeabP2xoNwlxJJDdl7axDA__-_Q-sNUmnw3-fz56Gn_x4VpIQ7lEoV-9oXmNxhIOQCkuoh0Eo_JgFQaW3002DVPKsGC5mo3e54bug_VwoCb0VBCXuuwr0_g9eAkpaB5rgNv9N7mghFd9wCpXBFtJ-vMkZnIaDZMvW6L3CZtwct7uNhB4Nd4vmoE0jqMBLrMWYIoOi_OlkpENQwiEV5yHiQlOF1kcadV5EAyV0J22O4Hjnjvrm2EqqIF0C_15BWkJq4cPHn6-gRTQpD6ayjR5_9-Z4yxGJCocU7micuQwWmsMvsZcFgm2EcVCh824kxI6G_K7yzdpfAg2hmihdRV3v2TV7YZ6858SgPVPxeylsvdfClDC5pM4q4b-tYEOfqz1_TrL0yIgWLDrHYccrtmSLZXTmgWcWWil9itAGkt4gC5-WO8owNR19w6vnh2t3kKZhjj5HrR7ZKneclqvpiFeqsEcFpRQVaa56YV-zHOc4eu7qR_QPNemg62T5iqBuWk1MLShdiKGrhnyO8VjHPEaN1m-MWsbbG-xoWfJx8nAG0tKe4YVXbvUJzXy1hDt0ac5ncpj2OBmQn4gePUNRl6c3Lhe6v4HwMkiyGC5sQ6DEtPHQVfTgDR8cMpCvZ9mvU8g44CEFXPAt1913zSdirodN_AwwVAXTbkecGezJCPzXUAP3OKAxvDDqu331_YrgKXy_0TL2QM-j74T_MZ-Gh2XALN5Jz96JYfaF7-dcEn5ofGX90we2a1vNXbrvqFT8Hm1aJK7USXAb51n0vMw_dEU67pzYGg5GN_Ayz2fwnnNwmYE0HcLgjkFR1MGv1j6WmXN-hNvjYjVuyfDPDr9D9Gx4YDnWpbVdnJLkGtJfYB7kJshtkEWQuyD3ydLLQ5DH5MbLKrn1sk4WXp6SOy-b5N7LNnnw8pw8BlkFWQd5CrIJsg3y7CVL_gNIFX2w?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk79OwzAQh_c-xakTDAz9O3RAqgoSLAU1Eqtl4mtiktiR7aaqUCUegifkSXCcJm0hjbtZ1vf77nK-MK4wNFyKGTC5Fb2e3mW5kdkMnhkKw9c7CKob-NQxzdFynGZSsH1PG8zJgIQxhgkpNBVEJ7uUCyQx0tTEM-gHFoEB_Hx9w6LEoAjmSwgqDJ4c1m_MZStURCke3EOSo1pLlVERIrF1IyG14aGuzUNnfj1CcAJd9o6IfP-wd4QKRkKZ5VLYb20K1PaRs784FCwKDXpdmTERaLZSJW2tj518WQHX-SbWoxPXtDtESm7yo7s2T5z5wRKu6RIFh15XZUooK8pZstO27ftyHdvadZWpqzI_oKdquHGsK756W9y2llKoZbqpFm9VngsEqeBRhzSlBpuILGi6b7YS7u7Bv3VcFGg7iaznX7Bjpbpi3o3pCl_Yg66I96m7wt4XPAt7xllaj4_l-S_bYM_o2iKtA2sDPWNqi3iG8yfyCxkz79I=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9992,7 +9962,7 @@ vSAN diagnostic commands: check all vSAN health checks from the Skyline Health U
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

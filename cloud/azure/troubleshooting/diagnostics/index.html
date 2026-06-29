@@ -8314,40 +8314,7 @@ Azure diagnostic commands: check account and subscription context with az cli, d
 *Applies to: Microsoft Azure — all core IaaS services*
 </div>
 
-<pre class="mermaid"><code>graph TD
-    A([Azure Issue]) --&gt; B{What type of problem?}
-    B --&gt;|VM not reachable / SSH-RDP fails| C[az vm get-instance-view\nCheck power state and agent health]
-    B --&gt;|Network connectivity error| D[az network nic show-effective-nsg\nFind deny rule]
-    B --&gt;|Recent change caused regression| E[az monitor activity-log list\nFind the change event]
-    B --&gt;|VM boot failure| F[az vm boot-diagnostics get-boot-log\nRead serial console output]
-    B --&gt;|App error / log analysis| G[Log Analytics KQL\nHeartbeat or custom table]
-    B --&gt;|Key Vault access denied| H[az keyvault show\nCheck access policies and firewall]
-    C --&gt; I{Power state?}
-    I --&gt;|Stopped / deallocated| J[az vm start --name vm -g rg\nVerify billing and quota]
-    I --&gt;|Running but agent failed| K[az vm run-command invoke\nRun ipconfig or hostname]
-    D --&gt; L{Rule found?}
-    L --&gt;|Deny rule| M[az network nsg rule update\nor add allow rule with lower priority]
-    L --&gt;|No rule; check UDR| N[az network nic show-effective-route-table\nBlackhole route?]
-    E --&gt; O[Review change: who, what, when\nRoll back if recent deployment]
-    F --&gt; P[Boot error in serial log\nCheck disk, kernel panic, fstab]
-    G --&gt; Q[KQL: Heartbeat | where TimeGenerated &gt; ago 1h\nCount by Computer]
-    H --&gt; R[Check RBAC vs access policies\nCheck network ACLs on Key Vault]
-    J --&gt; S[Collect resource diag\naz vm boot-diagnostics get-boot-log]
-    K --&gt; S
-    M --&gt; S
-    N --&gt; S
-    O --&gt; S
-    P --&gt; S
-    Q --&gt; S
-    R --&gt; S
-    S --&gt; T[Open Azure support request\nportal.azure.com → Help + support]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
-    class S,T escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNlEtu2zAQhvc6xSDbRgG69SKF7cSP2IljJ8jKG1oaS4SpoUJSFpS22x6gR-xJMhTjFAgYtBv9EEf6NI9_lEuDmZOaBmBkUbokGQ3gbHQG320pauRTDgsqFP5MxhwRL3CsoECXSrIcyDA9Smy3NC4xO0CtWzTAAYcgKAdRIDkoUShXRplXgUnoWm0OQDIDW-o2xf3e53XElGyxpYlkWI7UgWkURknXgVRpkk4bEP5t6bpU6QKUtO4N4kqErOR3EPDIyUVZk_dKd1q7NJeiIG2dzGxfen_I3C1tUORg0UihINNktULQjaubOHfK3CXnMyShuh63WC-3NENh3A6FA048a6zTFTix-6TQWUjugN1RNMr1_Tr1X2QZWstjUDKTaPsZ7HnErVAqCpszbB6N3Lz3gMdpHKQpiQr9fVqA4dqfuOx9BzuplKSi_9Rzo52I0hbvNNNQmumq8s9LOuoDchsbAllzA_ey8D0oudn-a1HU0jcxGrn9YCZb9HaBps7ZkFvytsjZlErpNkRa6UpQvWlrI7Vhw0TJd_-0qeGxY9pPbUsjJbJD6c3QH3-LMlfM3KDfnjdDDqAt9TlfhPNXJG6MVgp2DAO59-_6bcqxVrqrPvPuvd9fNiigMVywpJM_e8MGm-TSHs7ZQYZQQS24nHPY85h3UeKaiezTAfz16Q-fn0F4lBVOkdBwf3O45H3X8LXkz-iGM911MNYVLwOaKHjD4JDQZjQcw9F-9O8p31Pfh-OlBU2wwA6evPmj2AeP5cbxCR9b3ZgMwe_wlv5jqaPIR0auaiQYvjRctm3qWhtPf27Q_1r8nVAXwkcv2N3w59dvbpeq4cvp4Sh3yNyAnFvbxP2ejCC9hHGQqyDXQSZBpkFmydzLTZBFsvRyG-QuufaySiZe7pOpl3Uy87JJbrw8JIsgt0HugqyC3AdZB9kEefDymLwCHJ0fkA==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk01OwzAQRvc9xah7Fv1ddIFUIYSQAIlW6tZynWlikdjBdgIRqsQhOCEnwXaSEiBO2UXV-16m800irpAZLsUKIvkiRiNdZbmR2QpuIxSGHyrY1r_Am05ojpbjNJMiOo60wZxMSInKYkQXe80Uz52MMCkMvpoVjLcWggl8vn_AzoPQBaEBxye7G4eKOMXGPyUsQfZEyoxoQw0SKiKSIE1N0tqn3n7lMNjdg8fAYlBjYfeMKKQR2UtpiP1XsZDacKZb78x7NxYBh0AHCTvnzbxCx35UJQvDRdw6551ZH7Y3fswGCTsXjZPapkpuKpLKmByksuMzW1LrXnTc6waFOxmDRaFGgSVWjAPzL8lzgap-BRU0rbobWfo3PDrAi9ct0OtTqGVa1Me1cc8lgp3kWjOauoraiCxpejxdHlxcwn8ui4sSbRexNf2JDh7NUDB4EUOhYOVDobOdDoUDJf2InF2hs31XdPZr68MD6-pDA0vqQ8-spi_Su5Bf4Bcjp9rU?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8591,7 +8558,7 @@ Azure diagnostic commands: check account and subscription context with az cli, d
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

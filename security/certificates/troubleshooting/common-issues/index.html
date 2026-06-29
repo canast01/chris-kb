@@ -7530,32 +7530,7 @@ Common Issues reference covering Certificate Issue Triage Flow, Common checks, I
 
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFUkFuwyAQvPsVq9z7AR96SRvJ6q3tHSG8sVEwGwFxFFX-e8A0Dqa2e2N2ZhZ2lloaFE6SLqGmqy4Ke-vOjroSqhq1k8cbfMUK_NiWn9HrJO9I10PhD40m66RgR0XXEnZvUwUOvrKbPOESrhuFQyHQ-LZScIdMWntB5oy34aPH_slDFXj4HvmNjtT5BzHRojjZ0GHEEPGiQ2ohw3hMk8NgqX4LMBaWb2n9ASfHfoQb-pP2ecYJg_4jQIhwUW_QkrrEVXyGc49ABt6t4Cpk8bBQz9Uw7QleXuHPHqTu0cPG21LdP8mvuebprqjyRNeazUJcEc2TS0XZpEH8jG37Z-XadKqMm8-SG5MJMip9d0bdAQilRDo=?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; A{Certificate expired\nor browser error?}
-    S --&gt; B{Certificate not\ntrusted / chain error?}
-    S --&gt; C{Auto-renewal\nfailed?}
-    S --&gt; D{Wrong SAN or CN\non certificate?}
-    S --&gt; E{Private key\nmismatch?}
-    A --&gt;|Yes| A1{Expired internal\nor external?}
-    A1 --&gt;|External| A2[P1 incident: 1-hour SLA\nEmergency renewal via CA]
-    A1 --&gt;|Internal| A3[certutil -verify\nRenew via ADCS or ACME]
-    A3 --&gt; A4[Expired Certificate Response]
-    B --&gt;|Yes| B1[openssl s_client check chain\nAdd intermediate cert to TLS config\nDistribute root CA via GPO]
-    B1 --&gt; B2[Certificate Issue Triage Flow]
-    C --&gt;|Yes| C1{ACME or\nADCS renewal?}
-    C1 --&gt;|ACME| C2[Check DNS/HTTP challenge\nVerify ACME client logs\nConfirm port 80/443 reachable]
-    C1 --&gt;|ADCS| C3[certutil -pulse\nCheck CA service and CRL\nVerify template permissions]
-    C3 --&gt; C4[Common ADCS Issues]
-    D --&gt;|Yes| D1[openssl x509 -text -in cert.pem\nCompare SAN list to hostname\nRequest new cert with correct SANs]
-    D1 --&gt; D2[Certificate Issue Triage Flow]
-    E --&gt;|Yes| E1[openssl verify cert against key\nIf mismatch: re-issue cert\nor restore correct private key]
-    E1 --&gt; E2[Expired Certificate Response]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A4,B2,C4,D2,E2 section
-    class A,A1,B,C,C1,D,E decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqdVE1v2zAMvftXEL17rZ0M2HLY4NjeViDrgiTYLgYG1WFsobLkScpHMfS_j1TWIgO0Sy8WYeqRfHykttJi66XRM7Cy632SFNkMrorsCn67XoxI_-mC0J3Cp6TIybfMQOpWblH7GWRpb_YW1oui0fWAtkPdPhJE41EoOEgBZREPNaFQLVq_91JBekArd4-NXjEy4IqqXIOxUJRf63iEKUWoTyMx2EJJkeROtsIjrNCNRjuMouYEmsc9TNyMqJ1T4H62ShJDaHtsH-grpG50sd0Sd492wK3kVEwAvIHNYg2t0TvZNbqSzlt5vye3NcZTAwKfz8tv8bTc08vyb53bI2ysFB3CJ2WOUVjJ1ZZxmcoQMhRe3a2vv2w2S2agFOoOG_099Do0Fv6yVKZzjS6ZgR1gNMTq3c31dDqhsIKg9yrezfJfFce9cpTgnJp4O7QH2SIITQqtFi-pPQ6jYq4jtVI6R_Pn4vFZ49IMg9HngQjNid-t6GoV91wqe3p78x5SjycPqdRBwTcjDsx-GIVFWBd3oEhD1rU3zmsxIA_mL0rsgcczqH6UvifNLedhzH-Kep26NY923HPJ5bw153pERyNKBT4grdHtDqivg_Btz-hUhqx8r9G0U5aYGKL6XP5o5YGLI2w8af6aVVsT6EcvPEgHvkdwj8PozfAxvs386sRngDsY9dBbBekHKPJnY0LPSjCmyZzPeUZbHYycFoaN8sWY0PAGY5pUfFYZzUkw8qTms86o2cHIkz8gm7Wj?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7567,19 +7542,7 @@ Common Issues reference covering Certificate Issue Triage Flow, Common checks, I
 </ul>
 <hr />
 <h2 id="certificate-issue-triage-flow">Certificate Issue Triage Flow<a class="headerlink" href="#certificate-issue-triage-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    issue["Certificate error reported\n(TLS failure / untrusted / expired)"]
-    issue --&gt; checkExpiry{"Is the certificate\nexpired?"}
-    checkExpiry --&gt;|"yes"| expiredPath["Emergency renewal\n(P1 if external — 1 hour SLA)"]
-    checkExpiry --&gt;|"no"| checkChain{"Chain validation\nfails?"}
-    checkChain --&gt;|"yes"| chainFix["Intermediate not sent by server\nAdd intermediate to TLS config\nopenssl verify to confirm"]
-    checkChain --&gt;|"no"| checkTrust{"Root CA trusted\nby client?"}
-    checkTrust --&gt;|"no"| addRoot["Distribute root CA cert\nvia GPO / system trust store"]
-    checkTrust --&gt;|"yes"| checkRevoke{"Certificate\nrevoked?"}
-    checkRevoke --&gt;|"yes — CRL / OCSP"| replaceRevoked["Replace with new cert\nIssue on clean host"]
-    checkRevoke --&gt;|"no"| checkSAN{"CN / SAN matches\nhostname?"}
-    checkSAN --&gt;|"no"| newCert["Request new cert with\ncorrect CN and SANs"]
-    checkSAN --&gt;|"yes"| deepDiag["Further diagnostics:\nopenssl s_client full output\ncertutil -verify -urlfetch"]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U8tu2zAQvPsrFjn1YhS5-tDAcB4IEKRGnKOAghFXEhFqqS5JJ0ZRoB_RL-yXdNeSa8W1ThL2NbM7Q-sYy-QCLYBd3aTZzMWYcQEXK-TkKleahIDMgYGxC5zQFvTp-WEDlXE-M8JnyJQ4R8nIP753MtJewI_YmE4G6XxDtcefs7LB8vVGC3YCcB8hNQjlEaegofvqbPuQXJvUSPtNi1wjlTspIXwzXmitL8FVQiEhk_Hw59dvuIQmZIbNw3Ka0qoxjnRl_cLWeGeN3qQg3TFeTXRK8a17101IAFu0Tm9FIUFESvCyky9vkQtaWgtuXJQC6AnLQJWrCwodUowepNhVO83uM9xOc37Wiwv2UxC81RIGBQoS2NI7IXCetrFWW6Tz2sXE7iULHR6GqBYFbZ2Bu_VXETPuZGbbz4aYAuM0oSfchtcT4xTE--iEoGIob0rsO60u0wfgzaUGRNSB0L1aEgLJYmhIBI1pmsdm-agkHoW-_EJrkoRjQdpFpsXzVARMee85fM8o6x7g92QKKgNrOchgQ1ZHx7ODLGJ37Uwtk24zi8EZRPKaBN2VcXHUOn7rZYIqew8hpy7LqoqYk_MwH7wwz-wrlB3OovWvFeZfYPS2xu9MU6N3c5o62n_0EvpE7-7_wgfrjVyoicFWJ9GRMcYm0dRH7U-zByX_SarBQaMPscO5Z38BImi3LA==?" /></p>
 <h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Confirm current health</li>
@@ -7689,7 +7652,7 @@ Common Issues reference covering Certificate Issue Triage Flow, Common checks, I
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

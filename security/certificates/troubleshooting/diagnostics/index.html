@@ -7530,45 +7530,7 @@ Certificate diagnostic commands: check expiry and SANs with openssl s_client, ve
 *Applies to: Linux (RHEL/Ubuntu) · Windows Server · OpenSSL 3.x · ADCS*
 </div>
 
-<pre class="mermaid"><code>graph TD
-    A([Certificate Issue]) --&gt; B{What type of problem?}
-    B --&gt;|TLS handshake failure in browser or app| C[openssl s_client -connect host:443 -showcerts\nRead: handshake failure, error code, chain presented]
-    B --&gt;|Certificate expired| D[echo | openssl s_client -connect host:443 2&gt;/dev/null | openssl x509 -noout -dates\nCheck notAfter date]
-    B --&gt;|Wrong hostname / SAN mismatch| E[openssl x509 -in cert.pem -noout -text | grep -A5 'Subject Alternative'\nVerify hostname appears in SAN list]
-    B --&gt;|Chain validation error / untrusted CA| F[openssl s_client -connect host:443 -showcerts\nCount BEGIN CERTIFICATE blocks in output]
-    B --&gt;|Windows cert store issue| G[Get-ChildItem Cert:\LocalMachine\My\nTest-Certificate; certutil -verify]
-    B --&gt;|ADCS CA not issuing certs| H[certutil -ping\nsc query certsvc]
-    B --&gt;|OCSP or CRL check failing| I[openssl s_client -connect host:443 -status\ngrep OCSP Response]
-    C --&gt; J{Error in handshake?}
-    J --&gt;|ssl_error_rx_record_too_long| K[Check if HTTPS app is actually serving plain HTTP\nTry: curl -v http://host:443]
-    J --&gt;|certificate verify failed| L[Check chain and root CA trust\nopenssl verify -CAfile ca-bundle.pem cert.pem]
-    J --&gt;|hostname mismatch| E
-    D --&gt; M{notAfter in the past?}
-    M --&gt;|Yes| N[Replace certificate immediately\nRenew from CA; update on all servers]
-    M --&gt;|Within 30 days| O[Plan rotation now\nSet calendar reminder]
-    F --&gt; P{How many certs?}
-    P --&gt;|Only 1 END CERTIFICATE| Q[Server not sending intermediate\nAdd intermediate to server TLS config]
-    P --&gt;|2+ but still fails| R[Check root CA in client trust store\nopenssl verify -CAfile root.pem -untrusted int.pem cert.pem]
-    G --&gt; S[certutil -verify cert.cer\nCheck chain and revocation in output]
-    H --&gt; T[Check ADCS event log\nEvent Viewer → Application → CertificationAuthority]
-    I --&gt; U[Check CRL freshness\nopenssl crl -in IssuingCA.crl -inform DER -noout -text | grep Next Update]
-    J --&gt; V[Collect diagnostic output\nopenssl s_client -connect host:443 -showcerts &gt; diag.txt 2&gt;&amp;1]
-    K --&gt; V
-    L --&gt; V
-    N --&gt; V
-    O --&gt; V
-    Q --&gt; V
-    R --&gt; V
-    S --&gt; V
-    T --&gt; V
-    U --&gt; V
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,J,M,P dark
-    class C,D,E,F,G,H,I,K,L,N,O,Q,R,S,T,U action
-    class V escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqVVEtu2zAQ3esUg6yrpkDbRV2ggCI7thPbcSTFKwOFSo0sIjSpkpRTo-22B-gRe5IORdtJAfa38aM5ozdvfqy4Rma5kgPQfNPYKLoYwNnFGXw2Tdki3ZK5lBuBX6OULKpFaYwA854JjtJCzJSU5AONMnbw6tVLiE2jHhhqa9Yyw7IaQFPKiujuEeqSi07jM0CtlQamKjqzpuQSWo2GCLEKxh5SbGSNAjgq-PT6xRuIpVIdiahKixQubZDdg1Q2qS1qcLdBttGTTDwPCXCSn7e4PZFa_GThC2w0thAnr4NMl_9fk1R15HMxGk8XkI6yYno5TZNiBB-EYvcGSAlFbzsbjDemeGO0cdpwUU0tqU2JdbCeKVaKeckaLnE9369lgYa8yMZrzqgOb_v8OssFxDvUvN4H-SfE_-jYcrlZS8PgY4d63zOYHQt-OP3XQtjSdlSFvqo3ab6EDE2rpAl36opor4KWa7L4fvMaJkWxzKFsW-AGSma7Uog9GNQ7ygBa4QbM-VBd9H4ArNOuDNBY2w7Oz4_qgnFmpzh-TmmWQStlIU3A6s7YtTzm7esKcZrUXCCwMv7QyUpgP1XH8QoGmVOQedCyIEuGlAHDnuLQTuDbLVacTmLv1kziA9Ra0Tgkb6Fr3eSDIrFC9FVAbYLsN8S-FKWkjKgv9AzQ8jysZY6W1AuUVanJfctlhTpIsHQEQcstWfI-tFtIUiEr1wtOK64P0tcyqapfbsCqg14oZjm9D7LmmyB9dmrLsRluhf3Y9W0BY5XG3zbHfeW3nbbR-WOv5O-tyn_ZkANr_wX9HJ-gJ6OCO1rNvrR_3uzilFAyTHPAnctEKNq_UX9ccXygsvz49h2SthX8QOr-P6453SSdbZTmNrzfd6coaTajiUHTSDTmsUzMbQYpnRrTUb_S5PnhplZ6C8NRFnweF-581_72wV1R2FXQkjhBT-baxQ1zRBcQv4PUw9DDyMOlh7GHiYdpdOXg2sPMwyiaO1h4uImWDm49ZNHYQR5NHBTR1MFddO1gFc08LDzceLj1kHnIPRQe7jz8BNtwe6U=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk0tuwjAQhvecYsS-C54LFpUQ6gIJtRWR2uXItQ2xGuzINgFUIfUQPWFPUj8IJW1I2KHw_fNNZiZMaE6tUHICTO1kp2MOm9yqzQTmjEsrVgdI4hP4MCnJueME2SjJjh1jeY49pCmn70i5drSgxHLk-1zoAxLJcALdxGHQg-_PL5h5FC5QiCg4FN6IERRWgmfMdM823x6R64yffH0U0uTuYcUYU85Y-vrBN49oxRjRYEymj9dFAyy4du-PNuUVF02JOHsGwfMSSHBkRRXI64bhaXSKmjwMi-qsrDu8mNfTLHkO_c6Wi-vVRrgT0u3QVJo1VmmObmVl4VEo_BrRSrcB9dtdS2WsoA1LGCNhDLVSbgsErcJMyO0erd4a65SlaxxcU8bAozCbglWw8CgENCprNZoblW3jYS7974KD0vBgKMl8s2VEFSQ7nq8W7u7htqsUsuDuJdfuj3_h1hNrCredTVO2_iCaEq1Lbwq3brESvmGsvvLv4m76XusizSOsS9QNro5rGVddpGVIfyI_dqQAPg==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7829,7 +7791,7 @@ Certificate diagnostic commands: check expiry and SANs with openssl s_client, ve
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -8215,29 +8215,7 @@ Superna Eyeglass diagnostic commands: check service health with igls adm status,
 *Applies to: Superna Eyeglass 2.x*
 </div>
 <p><img alt="Superna Eyeglass — Diagnostics" src="../../../../../assets/storage-netapp-superna-eyeglass-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([Eyeglass Alert]) --&gt; B[igls adm status\nAll services running?]
-    B --&gt; C{Services OK?}
-    C --&gt;|No| D[Check appliance resources\ndf -h; free -m]
-    C --&gt;|Yes| E[igls dr readiness\nCheck score]
-    E --&gt; F{DR score OK?}
-    F --&gt;|&lt; 80%| G[igls synciq status\nFind failing policy]
-    F --&gt;|OK| H[igls config replication status\nCheck share/quota sync]
-    G --&gt; I{Policy error type?}
-    I --&gt;|SyncIQ job failed| J[isi sync jobs list\non PowerScale cluster]
-    I --&gt;|Network / auth| K[Check OneFS API\ncurl https://cluster:8080/]
-    H --&gt; L[Read sync.log\n/var/log/eyeglass/]
-    D --&gt; L
-    J --&gt; L
-    K --&gt; L
-    L --&gt; M[Collect support bundle\nAdmin UI → Support Bundle]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F,I dark
-    class B,D,E,G,H,J,K,L action
-    class M escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptkk1u2zAQhfc8xSB7R1kGDpBA_lEs20GDGt1pw1BjiS09VDhUCiPItgfoEXuSjizbK64-go_vzQ9Y24AmWk9TCLZpo1L5FG6WR2ycZobcYYg38Mmt7lCeyFtNjcMvNZNntnEMuj4ARx17rih3DhjDhzXIEHoiS81T0j4X-zypLAalRfMLdNc5q8mgyOz7IKEV1XuYtA-wD4gwOSQTlpfW6iDXuraELM4xlI0PmLQVYiuSyvMlkI9k7Pt13MJSDXttnYwJnXfWHJP-1cVvPO1tI5IMZvSw9mvWubtWB8zeex_1qVgyrpS4Mqmsh0JsT1b46d8YnOVYkdR59b8x7Ix2CMb1HDEkEzbX7X8jLHaQv5YVmT44aGPseJplZ_f0_u7-LktmbCXju-z91Mat801F2YcOmZwyPP-stPNlqO6dkxvgvut8iPDWU-1Q_lZ9sAQ_Svj35y_szuLsJCazVA6TR5ip-YDFiKUqBjyPWKlywHrERq0GbNVixHrEZsR2wIv6D8IKEEg=?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk01OwzAQhfc9xagrWLCgP5sukBAUqRISpTmAZTnTxsL1BNtNFaFKHIITchLsNkl_yE93cfK996I341gaFE6SnkBMW93r2XydOlpPYBajdnKZQ3R4A1824Sl6TvI16XjXsw5Tds9EguKDYY4rxa1lFk0mBbIEuXLJBPqRx-Aefr9_4CmgMC1QKFA4oP0qIfwS1yuFRcagyIgNM8hjqTHkCDJY2g9O7J8XUFGwp5qdh4WzzbWQn4w0cwmylLZorOCqtB-e2Ecenb0DafAozAMaeRRBqI33NM1hoyKMNC4t46lkgrQO9WfS5awMG52EvWl8ieBxPoNTFG6qCh2VubfNweN9bccRKVqxpVRoy8jxPnLhoeNwPAR7qNY3WCgSPKxOsHn1dHWuVRi0pDaHVVuE5wyBDExDz9xhJaGMq121h3D3ANftmdQZWidX3uufuG2B2nSd69Em7hx3m7hlZA2yi4mcUVcUGCyOI-q6d3V0R1l1ko6K6iSNxVzAZ3VcfPsDorfcPg==?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8463,7 +8441,7 @@ Superna Eyeglass diagnostic commands: check service health with igls adm status,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

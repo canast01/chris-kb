@@ -8748,40 +8748,7 @@ Common Issues reference covering Incident Triage, Common Symptoms and Resolution
 <p><img alt="Dell ECS — Common Issues" src="../../../../../assets/storage-dell-ecs-troubleshooting-common-issues.svg" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFkcFuwjAMhu99Cqt3XqAHLgMkrhvaNYoS00VKbZSEIjT13ecW1lZpEbfk9_fbfxzrAprkmCqwfKOiiPfmkrip4GiRkjvf4euhwG_80RcUzumGyXaFHGrimJxRZ8-3CsrdqMBBlHL09EM01R67wpFxfWuVgtBSK49PBU6Dsuoy3MhQ9UwXlSarAkb21z58lC4fA_GfNoIQ8DkRq11bDPLCWSPp8z1oMGmrzrllmNIicIB9NNrrhKOFW-27cauw2cJia45alGsttjm32NML7u1mXvhW3j4ns5i9Y0LzT8yqbyJl9CJIVv8DSyL-7Q==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{Node\nunavailable?}
-    S --&gt; B2{Object GET or PUT\nfailing - S3 error?}
-    S --&gt; B3{Bucket policy\nconflict?}
-    S --&gt; B4{Replication\ngeo lag?}
-    S --&gt; B5{Certificate expired\non ECS endpoint?}
-
-    B1 --&gt;|Check ECS Portal hardware view| D1{Node in\nDEGRADED state?}
-    D1 --&gt;|Yes| R1[See Incident Triage —\nCheck portal for FAILED or SUSPECT disks]
-    D1 --&gt;|Service down| R2[See Symptoms and Resolutions —\nSSH to node: check storageos service]
-
-    B2 --&gt;|Test S3 endpoint with HeadBucket| D2{S3 API\nreturning 403?}
-    D2 --&gt;|AccessDenied| R3[See Incident Triage —\nCheck IAM user namespace and bucket policy]
-    D2 --&gt;|503 Unavailable| R4[See Symptoms and Resolutions —\n503: data service process down on nodes]
-
-    B3 --&gt;|Check bucket policy with ecscli| D3{Policy blocks\ncorrect principal?}
-    D3 --&gt;|Yes - misconfigured| R5[See Symptoms and Resolutions —\nS3 AccessDenied: fix IAM or bucket policy]
-    D3 --&gt;|WORM retention| R6[See Symptoms and Resolutions —\nWORM object deletion blocked by retention]
-
-    B4 --&gt;|Check Geo Monitoring in portal| D4{WAN link\nsaturated?}
-    D4 --&gt;|Yes| R7[See Incident Triage —\nCheck WAN port 9100 and replication throttle]
-    D4 --&gt;|Read-after-write| R8[See Symptoms and Resolutions —\nObject 404: wait for geo-replication]
-
-    B5 --&gt;|Check ECS Portal certificates| D5{Certificate\npast expiry?}
-    D5 --&gt;|Yes| R9[See Symptoms and Resolutions —\nECS Portal login fails: renew certificate]
-    D5 --&gt;|Quota| R10[See Symptoms and Resolutions —\nBucket quota exceeded: increase or expire objects]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNVMtu2zAQvPsrFrkHkPxIYh9amJaLGmibwErhSy80ubZYy6RK0rWNokA_ol_YL-mSioAeWES3gR47M7uzK5VF4ZXRM7BqX_nBoMhncFPkN_DDVbxBek4fcL2v8edgHd6ViLDSQknUHp6t4nuEP79-f9GLCsUBGmM9r2FnLLybrz4sCyBUfi6flotnkModXLr08KV0eT023hwdcC1hjc7Up6DPtRxl-R68AW0k_S4iofPGkgbjwKH9rgQm6xehfjFMc49et7Waf4QTEYDmR3QNFxgFbk_igJ5M10pc08XHvYxNMhIhueedC2isEegcSHPWYHT0nO5dEfQXozT9pF9fRzAXga5ArVDOYKcu0TMNr4fHu14km8c1Fdx-pR9BYo3hFWxrQ-Wpk1eq6Kn59DDtMjSyGKcF3L8-wc38UwwnTPMsiwItNmSJRxm-ssb7Oh2e9UMvf4-ttXFGSs9c-bgElMzbf4jS1sKQikmae9qLe7ko4aldvdrslYYdV7ULlTSeQaD1ahck_MdgnvViYW0Uvp0MBRUvAlGGsCgtLHKHIS14aeimvIw5ndeSuDYV96Ac9R3BtZxvkx-zcHNY-h6xsNQsvdQsLAVLLwULUWLpKLEwC5aeBR1HuH0D67wDQ7orEYw6MKZtjGDSgTtKbgT3HXiggUcw7UCeDf4CVnviEA==?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8794,27 +8761,7 @@ Common Issues reference covering Incident Triage, Common Symptoms and Resolution
 <hr />
 <h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
 <p>When S3 writes fail, geo-replication falls behind, or a node goes offline, work through this sequence first.</p>
-<pre class="mermaid"><code>graph TD
-  REPORT(["Incident reported"]) --&gt; NODE{Any node\nDEGRADED?}
-  NODE --&gt;|Yes| DISK_CHK["Check Portal → Hardware → Disks\nFAILED or SUSPECT disks?"]
-  DISK_CHK --&gt; DISK_REPL["Initiate disk replacement\nMonitor rebuild"]
-  NODE --&gt;|No| S3TEST{"S3 API\nresponding?"}
-  S3TEST --&gt;|No| SVC["SSH to node\nsystemctl status storageos\nReview /var/log/ecs/"]
-  S3TEST --&gt;|Yes| AUTH_ERR{S3\nAccessDenied?}
-  AUTH_ERR --&gt;|Yes| IAM["Check: IAM user namespace\nBucket policy · addressing style\necscli bucket get --namespace ..."]
-  AUTH_ERR --&gt;|No| GEOREP{Geo-rep lag\ngrowing?}
-  GEOREP --&gt;|Yes| WAN["Check WAN link :9100\nRemote VDC health\nReplication throttle"]
-  GEOREP --&gt;|No| CAP{Quota\nexceeded?}
-  CAP --&gt;|Yes| QUOTA["Increase quota in portal\nor expire old objects"]
-  CAP --&gt;|No| BUNDLE["Collect support bundle\nOpen Dell case"]
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class NODE,S3TEST,AUTH_ERR,GEOREP,CAP decision
-  class DISK_CHK,DISK_REPL,SVC,IAM,WAN,QUOTA,BUNDLE action
-  class START term
-  class REPORT term</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U8GO0zAQvfcrRntvu2hP9ADKJoFG221Kk5ZLpJUbjxJT1w62s0uFuPIB_Ax3PoUvYZxuczKHJDP2y5uZ52cuDNZOaLUAI5rWTSbrPEkXcOM_N_DdtqxD2iMQU43EH5MkKx6e4uUDYeIW6yNstHFMwt-fv2DJDH9hBockEfZoK_UhylZpAtpAsSs2aVwC9xvv_0--TTcrYs-UcII5HPAE6iSr8YTKVepR0x4xGjz0QvIgVXFXpkVJPMUdRJusUgZtpxUXqgnXLvaxRxdLcBqU5lgpe7YOT7WTYB1zvaWPNqxBTXNt8VngC8yfmZlL3cyxtvMgb7Qrl0_pdkvk1zCIy6LHq6YLoAR6iwYUO1HfNHml7vv6iA46LUV9hj-_gXFOQ1maiBo7S4JQE7UUcLggG3qm05EBZrNZsPLHNCfNqfglCGI-R-vxxCkGKdQRFm_f3N56KU6azmmfxNAik671Sx11ybyzwLVGOycxyBtHvjC9g7ufdnkZDV6oDTKL8LXXjoFQpIJ3XaXIBfitIxeDlhz04Qv9bINc97t1svLWjrWUtAy27zwLqaW4Fy_vUEGCUkJNpYIcpE6-LS8NCU5e9L4kDgx7cLhMMH0H10sz3p5x0Zt9hF08-2rdYWEfj_7xOdni9bR8Rufg9fPhINQ1uUw6-QdhY0pN?" /></p>
 <ul>
 <li>[ ] Check ECS Portal → Hardware → Nodes immediately — identify any node that has moved to <code>DEGRADED</code> or offline state; note when the state change occurred</li>
 <li>[ ] Query <code>GET /vdc/alerts</code> — retrieve the active alert list and identify alerts timestamped near the start of the incident</li>
@@ -8948,7 +8895,7 @@ Common Issues reference covering Incident Triage, Common Symptoms and Resolution
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

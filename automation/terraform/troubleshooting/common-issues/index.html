@@ -7528,29 +7528,7 @@ Common Issues reference covering Terraform Troubleshooting Decision Flow, Refres
 
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNksFugzAMhu88hcV9L8Bhl7WTeu2q9RhlwdBoIUZJAFUT7z5DB-0CSL2F398f23_ItUMVNNkMcupskvhrVQeqMjjkaIMurvBxU-DHX2SNzGlZkc37hA-lJR-0EoWhLoN0Nyvwzko6e4Ym0pYG-ySgc7IgV4ngqPky6C9EQdtS5Ki051FEwVedJgxO_zHY_WHbLTpy376WCoX2vkHP150nCQ6jtOpTVPFmgjuTEw4LdGgVI-nbWID9UIDjVFi9o0XHobHbk2luwaafowZ3bdX5aDkO5xaB2-29kkYGnC3UStPPDwUvr7B4CG1b5M-SbY_cc9FvmJehboBbKW7gK4E9ktFug-OOPvUzRZZ4j6i8Pn0ELWaO6r-MIEOE?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; B1{Provider auth\nerror?}
-    S --&gt; B2{State lock\nstuck?}
-    S --&gt; B3{Resource already\nexists error?}
-    S --&gt; B4{Plan or apply\ntimeout?}
-    S --&gt; B5{Dependency\ncycle in graph?}
-    B1 --&gt;|Yes| D1{Env vars\nset correctly?}
-    D1 --&gt;|No| R1[Common Error Reference\n— set AWS_/ARM_ env vars]
-    D1 --&gt;|Yes| R2[Terraform Troubleshooting Decision Flow\n— terraform init -upgrade]
-    B2 --&gt;|Yes| D2{Stale lock\nor active run?}
-    D2 --&gt;|Stale| R3[Common Error Reference\n— terraform force-unlock LOCK_ID]
-    D2 --&gt;|Active| R4[Workspace Issues\n— wait for concurrent run to finish]
-    B3 --&gt;|Yes| D3{Resource in\nanother state file?}
-    D3 --&gt;|Yes| R5[Common Error Reference\n— terraform state rm then import]
-    D3 --&gt;|No| R6[Terraform Troubleshooting Decision Flow\n— terraform import resource.type.name id]
-    B4 --&gt;|Yes| R7[Workspace Issues\n— check provider timeout settings]
-    B5 --&gt;|Yes| R8[Common Error Reference\n— terraform graph to visualise cycle]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class B1,B2,B3,B4,B5,D1,D2,D3 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqlU8tKJEEQvM9XJN7HZV4qHhTLXkFUFkbBizDU1uRMF3ZXNllZI8Oy4Ef4hX6JWS2zXkoU9tIE3U1EZGTk0jM68RSOgf26lsGgGh3DXjXagz-xth3qe_3BhnWDfwfz_O2c2pYC_GQmhjmukDE4fAivzy8QUeDs_nbx42x-swAMG9hYjmWusXLdIbNdEbdwx5R-NxhrIvFhDRU6H9UXXDT09E4u_372wQsMU7dmu8Qie5XZq3FZefLFFB9C-nA4TKEh9wjXv86vFpdVmXOqnPfEj7GzDuEyxoTxne3JqlklAkfBJVYdAU4BhGClg8S6PEA2WU3KYrNvDxDFCoICqTGAbztiKXMe_Mc6elpli5Q0r33ZdrgfbIvgl0Uxk9My07KRw0-TdDXqGjqmjV8ig_gWKUkuXfZYrpnJWZlZWero2zlq07o6r2zjY7KNjwhu65py-W7zBLUV8DHnDnHbdkLtadlgvilTvjeTW2zKLTa5IKZcED1iGJ7AfLQDYz2IHkx2YKoN68FsBw50LT041NB6cDR4Az1Ha40=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7562,19 +7540,7 @@ Common Issues reference covering Terraform Troubleshooting Decision Flow, Refres
 </ul>
 <hr />
 <h2 id="terraform-troubleshooting-decision-flow">Terraform Troubleshooting Decision Flow<a class="headerlink" href="#terraform-troubleshooting-decision-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    failure["Terraform Error\nor Unexpected Behaviour"]
-    failure --&gt; errType{"Error category?"}
-    errType --&gt;|Provider auth| checkCreds["Check cloud credentials\naws sts get-caller-identity"]
-    checkCreds --&gt;|Invalid| fixCreds["Set AWS_ / ARM_\nenvironment variables"]
-    errType --&gt;|State locked| checkLock["Identify lock holder\n(error message shows lock ID)"]
-    checkLock --&gt;|Stale lock| forceUnlock["terraform force-unlock\n&lt;LOCK_ID&gt;"]
-    errType --&gt;|Resource exists in\nanother state| rmImport["terraform state rm\nthen terraform import"]
-    errType --&gt;|Provider version\nmismatch| initUpgrade["terraform init -upgrade\nupdate lock file"]
-    errType --&gt;|Cycle / dependency| graphCmd["terraform graph | dot\nvisualise dependency tree"]
-    errType --&gt;|Drift after apply| refreshOnly["terraform apply\n-refresh-only"]
-    errType --&gt;|Unknown| enableDebug["TF_LOG=DEBUG\nTF_LOG_PATH=debug.log"]
-    enableDebug --&gt; reviewLog["Review provider\nAPI call trace"]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U8FunDAQve9XjPbUC-09alJtdtMUdauNkl31goQcewArxkZjQ4La_ntt71JAJTf85s3DfvNGSELupNFXQLKs3GpVMKlawitYH5GIFYZquCMylGlDcNL41vgOFHCLFeukaWkNv2zFGt8StJguFf5Z-d5jH7B1bAbOHJaG-i-LbF4hf9kSCusbtuEAXJlWAPcYaieZsplmrxass1CiSzhTCimRser6RdVCvg2aT-hg8_Mph0-wefyRZxp1J8no2rdDx0iyZ4X2_bvtDX_xMmn8XdGD8meojBLoffmA8Yk1WstKBFsZf9HISHfLFzPE8aTVWdT98zniSRsLmf68P2y_5-nuZlGD6rRuDLmZgHXeZqA6065CDWNBRu6ikNTSnZqSmMCZVsAhac-VTLeNCNrxWYVUuKjluU21rcVMKILwG4RxmXfdtkxJiyCwQe395D04wmU9woLQVget-pkkaxrVZzq51BPjCcsx1GGwO3xuy5Dor_n-cH-9u7s93Wf6fMofNsdv1yIwPipTvnONTuLr3gSNx_gNDZlOxulvHlIIafSvYHz5GcNSQXIDl8UYFiRAY_onixAKQ4D_I4c4jsGM1DFSU_aQkik2GfgUHmY3ax_9n8ITV6cOnzsuVq3-AnafkN4=?" /></p>
 <h2 id="workspace-issues">Workspace Issues<a class="headerlink" href="#workspace-issues" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check current workspace</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
@@ -7676,7 +7642,7 @@ Common Issues reference covering Terraform Troubleshooting Decision Flow, Refres
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

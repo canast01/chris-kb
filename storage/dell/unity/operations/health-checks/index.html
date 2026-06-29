@@ -9213,31 +9213,7 @@ Daily and pre/post-change health checks for Dell Unity storage systems.
 </table>
 <h2 id="daily-health-check-sequence">Daily Health Check Sequence<a class="headerlink" href="#daily-health-check-sequence" title="Permanent link">&para;</a></h2>
 <p><img alt="Daily Health Check Sequence" src="../../../../../assets/storage-dell-unity-hc-daily-health-check-sequence.svg" /></p>
-<pre class="mermaid"><code>graph TD
-  START([Begin daily check]) --&gt; SYS["uemcli /env/health show\n-filter 'health.value ne OK'"]
-  SYS --&gt; SYS_OK{Any non-OK\ncomponents?}
-  SYS_OK --&gt;|Yes| TRIAGE["Triage fault\ncheck Common Issues KB"]
-  SYS_OK --&gt;|No| SP["uemcli /env/sp show\nBoth SPs Active?"]
-  SP --&gt; SP_OK{Both Active?}
-  SP_OK --&gt;|No| SPFAIL["One SP offline —\ncheck fault LEDs\nopen Dell case if hardware"]
-  SP_OK --&gt;|Yes| POOL["uemcli /stor/config/pool show\nPool capacity &lt; 80%?"]
-  POOL --&gt; POOL_OK{Free &gt; 20%?}
-  POOL_OK --&gt;|No| CAPACT["Expand pool or\ndelete snapshots"]
-  POOL_OK --&gt;|Yes| REP["uemcli /prot/rep/session show\nAll sessions Active?"]
-  REP --&gt; REP_OK{All Active?}
-  REP_OK --&gt;|No| REPFIX["Resume or investigate\nreplication session"]
-  REP_OK --&gt;|Yes| DISK["uemcli /stor/config/disk show\nAll disks Normal?"]
-  DISK --&gt; DISK_OK{Any faulted?}
-  DISK_OK --&gt;|Yes| REPLACE["Initiate drive replacement\nmonitor RAID rebuild"]
-  DISK_OK --&gt;|No| DONE([All checks passed])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class SYS_OK,SP_OK,POOL_OK,REP_OK,DISK_OK decision
-  class SYS,SP,POOL,REP,DISK action
-  class TRIAGE,SPFAIL,CAPACT,REPFIX,REPLACE warn
-  class START,DONE term</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9U82K3DAMvs9TiIUel_RYltIh87MlzLATJnNoYaC4iZKYdexgeWa7lEIfok_YJ6kce2goSW-S_En6JH-qpMXSSaMfwMqmdYtFcUqPpwe4W2EjNVRCqlcoWyyf7-A7taJHRnKK0I3CH4vic8HYC3alkpCgviYtCuVaoNa8nPV9LZVDO5f65bDj7GBMYk7HLP24ZczJStEg1OKi3FkPfGBtus5oyIguSLBbTXfJ_-FHfeS2MkyzyAlSXsAVlzPpkWM-R7HIH9Nsz5CDRi4Hpq6VZPP3z183ogNr2G83dNamRw0bVApKQQiyhlbY6kVYnKyeHw770QDkjE1Ko2vZJL0xKo6Se7MUvSile4X38O7tm-VsuTBQtCZR6zRP114D22-90BUMnYw96woVOgTSoufGjiazj9vxyntrXGKxTwiJWGeRccoLiJH_fwBXC4SDMYd5zD55DNKlQ6YKUl-RnGyEw7Pm9kqWwg3tQ9PJOpus2M0su5L0PKLuXYInYzuhlrO1AvFozTHfp2sv8ExLJ5ktVJZ3AZ6yKLFDzXJnlUvmAsc02_DL14tU1XTTw5Ov5RkOyiPoBRFOg8Olw_0H4AOM1-i9cHOjQJGHMwi2V_tf38vopirvB-mMIzxi_MTo8VeNAn47t2VFgN_IOOSnWvwBk56N4A==?" /></p>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9274,7 +9250,7 @@ Daily and pre/post-change health checks for Dell Unity storage systems.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

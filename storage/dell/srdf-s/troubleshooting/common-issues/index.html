@@ -8846,40 +8846,7 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
 <p>Always collect <code>symrdf query -g &lt;group&gt; -v</code> and array event logs before engaging Dell support.</p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkjFvgzAQhXd-xYk96s7QpTQSUipFoZ0dCxt6qrGRbRJFVf57z5BSSiCJxGDuvnvm3UOglYVHoxMQ5qijyJ3qxps6gUxI7bE8Qd5X4Nt98kYSh7w2WpwjOlTaOI8FK5U5JhCnQwXWVImHmXAJ15WS50ih_gpXMaqZg7QnJmSBjj6BeSuJjTdErFJCYHdBIL0g8E7IrGzD0TLU9By4QsGc5z6IbakOqGGf9Y095KFzU8M1Cv21Qh7Kt-bRKVYW2LDgkZUcVWuDQpZv4AnWL9kWgjdY951ZjVaj9lILKTqBYJ-J1qKuWM27Fqes4o8B69QCBmmHwdsvVszfYKUzqu0z34XzQYKx8OoKrsjZMGJoX-fhh4DVM1wFTsuW9FrR2Ji7G_HC3EKGd-h_aS2wC8ks0I9lMB6ebCaI_K353i8_oWe3sMCMvE-IWccT5hGfk5Efn2iSIg==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?])
-    S --&gt; B1{SRDF/S pair\nsuspended?}
-    S --&gt; B2{Write I/O stall\non source?}
-    S --&gt; B3{Link bandwidth\nsaturated?}
-    S --&gt; B4{Failover test\nfailure?}
-    S --&gt; B5{Pair in\nInvalid state?}
-
-    B1 --&gt;|Check pair state| D1{State Write\nDisabled or Suspended?}
-    D1 --&gt;|Suspended| R1[See Link-Down Recovery —\nCheck physical link then resume]
-    D1 --&gt;|Partitioned| R2[See Link-Down Recovery —\nResume pair after link restored]
-
-    B2 --&gt;|Check RTT to DR site| D2{RTT above\n5ms?}
-    D2 --&gt;|Yes| R3[See Link-Down Recovery —\nEscalate to network team]
-    D2 --&gt;|Write storm| R4[See Common Issues —\nPair in Consistent state: monitor]
-
-    B3 --&gt;|Check FCIP or dark fibre| D3{Link physically\ndown?}
-    D3 --&gt;|Yes| R5[See ISL / FCIP Link Failure —\nRestore link then resync pair]
-    D3 --&gt;|Bandwidth full| R6[See Root Causes —\nFCIP MTU mismatch or GRE overhead]
-
-    B4 --&gt;|Check pair state before test| D4{Pair in\nSplit state?}
-    D4 --&gt;|Unexpected split| R7[See Pair in Split State —\nConfirm authoritative side]
-    D4 --&gt;|Maintenance trigger| R8[See Unintended Failover —\nSuspend before maintenance]
-
-    B5 --&gt;|Check event log for cause| D5{R1 or R2\nauthoritative?}
-    D5 --&gt;|R1 authoritative| R9[See Invalid State —\nResync R1 to R2]
-    D5 --&gt;|R2 authoritative| R10[See Invalid State —\nFailback from R2: engage Dell Support]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqFlM1q3DAQx-_7FEPuodmvfOyhBa2SspBCsBty6UWxZ9cilmQkecNSCn2IPmGfpDNauySgJbdBGv_mr__MuNYeq6idXYHXuyZOJnK6gjM5PYOfoVEd0jklKLtr8dek4LsSEe61fTmX7tVCgZXboz_A399_fth1g9ULdM0h6Eq10FIaxAYtQUJvMA-dfQAt0rfQKe1BbSP6I5eQ0Xmss1DJUDnLF5x_UPA2kHgVEaIDi_HVeXoFKpOnLQba2hnjLGxC6DEcQQ8sWVu6skGHiDZCiAReAWVqUp_XzvrkPF9tOVTblPfwCe7Wm4f0DLhTuu09_neMrXnv_8FWycM893LgFs5FWKs-jG9IJb59fwSjg1GxasB5-FrcAhvWoDrhP7siF_laV0Ot0Z6ya3WEkp0ZxsjZrfYGVB8b5zVd6D1C0PWJCboegI9WW3K5xjr5wQqPwLIPHZ3DM27ZF6NSnrJVHijZZbnMF7sZO2D3qtX1W93F0eViypNTnJi-6cVpAKt-VrRCW-8M8Gag3akdgsS2hbLvOudjFlsS9KlREXTgjkM4mC468yWbLHiPRX7HBW-OyGsXPJkiP5mCOy7yHRfsp8j7ST8cOP9Mno3BjJY3BfMxWNBKpGA5Bpc0YCm4GoNraloKbsZgejH5BxFroic=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8891,54 +8858,7 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
 </ul>
 <hr />
 <h2 id="link-down-recovery-decision-tree">Link-Down Recovery Decision Tree<a class="headerlink" href="#link-down-recovery-decision-tree" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    linkAlert["Alert: SRDF/S Link Down\nor Pairs not Synchronized"]
-    checkPairState["Check Pair State\nsymrdf -g dgname -sid sid query"]
-    pairStateVal{"Pair State?"}
-    writeDisabled["Write Disabled\n→ Array stopped writes\nto protect consistency"]
-    invalidState["Invalid State\n→ Possible data divergence"]
-    suspended["Suspended\n→ Link dropped or manual suspend"]
-    partitioned["Partitioned\n→ Link interrupted mid-transfer"]
-
-    checkPhysLink["Check Physical Link\nFCIP tunnel / dark fibre state"]
-    linkUp{"Link\nRestored?"}
-    checkRTT["Check RTT\nping -c 20 dr-site-ip"]
-    rttNormal{"RTT ≤ 5ms?"}
-    resumePair["Resume Pair\nsymrdf -g dgname -sid sid resume -noprompt"]
-    resyncPair["Resync Pair\nsymrdf -g dgname -sid sid resync -noprompt"]
-    monitorSync["Monitor SyncInProg\nuntil Synchronized"]
-    checkDataAuth["Identify Authoritative Side\nDo NOT resync without confirming"]
-    engageSupport["Engage Dell Support\nData consistency risk"]
-    escalateNet["Escalate to Network Team\nRTT still elevated"]
-
-    linkAlert --&gt; checkPairState
-    checkPairState --&gt; pairStateVal
-    pairStateVal --&gt;|"Write Disabled"| writeDisabled
-    pairStateVal --&gt;|"Invalid"| invalidState
-    pairStateVal --&gt;|"Suspended"| suspended
-    pairStateVal --&gt;|"Partitioned"| partitioned
-
-    writeDisabled --&gt; checkPhysLink
-    suspended --&gt; checkPhysLink
-    partitioned --&gt; checkPhysLink
-
-    checkPhysLink --&gt; linkUp
-    linkUp --&gt;|"Yes"| checkRTT
-    linkUp --&gt;|"No"| escalateNet
-    checkRTT --&gt; rttNormal
-    rttNormal --&gt;|"Yes — Write Disabled / Suspended"| resyncPair
-    rttNormal --&gt;|"Yes — Partitioned"| resumePair
-    rttNormal --&gt;|"No"| escalateNet
-    resyncPair --&gt; monitorSync
-    resumePair --&gt; monitorSync
-    invalidState --&gt; checkDataAuth
-    checkDataAuth --&gt; engageSupport
-
-    style linkAlert fill:#be123c,color:#fff
-    style monitorSync fill:#15803d,color:#fff
-    style engageSupport fill:#be123c,color:#fff
-    style escalateNet fill:#b45309,color:#fff
-    style checkDataAuth fill:#be123c,color:#fff</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNVM1u2zAMvucpiN6NDjv2MCBoWqBA1wVxtl18US3GEWJTniQ3yIZd9wB7xD3JKPlPbpyiB8Pi3yeK5EepDOZOaboBo4q9WyxKRYdlicbdwFX3Tzer--sUHtkCK32kjLSBtVDGAmkH6YnyvdGkfqK8gl92L2pkOMYVVJT4e5HvMT94_9QJx6arW68ICBBUGdlTZeQOkgJkQaJCSKyS4L8fDZrTLGzdI34TJYPG4qz_0SiHK2XFc4mSA757GXpFRv_-_IWlMeIE1um6RgkhwmbkNNRGO4aCXJNV1iHl80kpehGlkv1LH1qxf6a_Yq2tVXwjSOEESPWCpmA4nIWzja2RZMg37c8tTmiHNG2m3JBKUCNK6CIuVMw45bsd8NajFCEqcmhMUztGrZRMnBFkd2je6Oz-ZH3o2FhWqJxz8dqM7m8f1uAaIizhml9tDrBTzwa5zFyUWVw_hF9rBmwPl-_ebLfDtXzOqFZUQJLDxw9cGx4ih4maj0fLKXICT-hH_a6TgHvNmqPmLLcoqowYljNVZQlY4gu7zNfWOPekTRVGcTjPe6JlxvjpZ9dNEAIX3mJBGwMJaR7EqnaXgJsKR2AW3gPs3d4GrpjcThtPdEb-3EqB9w-0NrrIqCGu0Ds3wYrnftm4vaeHRA7cncDLmtkmHPMBUiWZLCvuxJdt__SjYo8mEHCnTMVtnu8qFaLAtKlrHVbYXZBhhdy_TsvInnkRk3n32cMs3LgOIfkE00X2aq95h3gHTfaTN072z5k1XhxnxmENnFkiSk8X3JhvR89xl5ybIpRz40Ty5paUHUkHf-ZJpIrYNTDV6wdqjIQJ6oETZ_pupKf6GH6M9ZZoViNCvLbE1R5e0A_mdEzDdfFULf4DxsqdOQ==?" /></p>
 <hr />
 <h2 id="pair-in-invalid-state">Pair in <code>Invalid</code> State<a class="headerlink" href="#pair-in-invalid-state" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Pair state shows <code>Invalid</code> — typically after an unresolved split or an earlier failover that was not cleanly restored.</p>
@@ -9041,7 +8961,7 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:59:29 UTC"><span class="timeago" datetime="2026-06-28T18:59:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:59:29 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

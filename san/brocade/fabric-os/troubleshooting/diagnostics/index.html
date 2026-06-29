@@ -7887,43 +7887,7 @@ Brocade FabricOS diagnostic commands: check hardware sensors and MAPS alerts wit
 *Applies to: Brocade FOS 9.x*
 </div>
 <p><img alt="FabricOS — Diagnostics" src="../../../../../assets/san-brocade-fabric-os-troubleshooting-diagnostics.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([FabricOS Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Hardware alarm or environmental fault| C[sensorshow: temp fan PSU status\nswitchstatusshow: overall health]
-    B --&gt;|MAPS alert triggered| D[mapsdashboard --show\nmapsdb --show for threshold breach detail]
-    B --&gt;|Port offline or link flapping| E[portshow slot/port: state speed credits\nsfpshow slot/port: Rx Tx power levels]
-    B --&gt;|Host cannot see storage target| F[nsallshow: confirm WWN in name server\ncfgshow + zoneshow: verify zone membership]
-    B --&gt;|Fabric segmented or domain conflict| G[fabricshow: domain IDs and principal switch\ntopologyshow: ISL topology]
-    B --&gt;|I/O errors or CRC errors on port| H[portstatsshow slot/port: error counters\nportlogshow slot/port: FLOGI FLOGO RESET events]
-    B --&gt;|High latency or I/O slowdown| I[portbufshow: BB credit zero count\nbottleneckmon --show: slow drain detection]
-    C --&gt; J{Sensor state?}
-    J --&gt;|FAILED or OUT_OF_RANGE| K[Check hardware: fan replacement PSU swap\nEscalate to Broadcom TAC for blade]
-    J --&gt;|All OK| L[Continue to errshow for software root cause]
-    D --&gt; M[Review MAPS category: PORT ISL SWITCH FABRIC\nIdentify threshold breach and affected resource]
-    E --&gt; N{SFP optical levels?}
-    N --&gt;|Rx power below threshold| O[Replace SFP or check cable loss budget\nTest with sfpshow on remote port]
-    N --&gt;|Levels OK| P[porttest loopback: disable port first\nPorttest PASS = HBA or cable issue]
-    F --&gt; Q[portloginshow: confirm FLOGI for this HBA WWN\nalishow: confirm alias includes correct WWN]
-    G --&gt; R[errshow for E_Port segmentation messages\nCheck domain ID conflict: switchshow on each switch]
-    H --&gt; S[portstatsreset to baseline, recheck after 5 min\nHigh CRC = cable or SFP; high Link Reset = HBA driver]
-    I --&gt; T[Identify zero-credit port: portbufshow on suspect ports\nIsolate slow-drain HBA: portdisable then monitor]
-    K --&gt; U[Collect supportsave before and after replacement\nOpen Broadcom TAC case]
-    L --&gt; U
-    M --&gt; U
-    O --&gt; U
-    P --&gt; U
-    Q --&gt; U
-    R --&gt; U
-    S --&gt; U
-    T --&gt; U
-    U --&gt; V[supportsave -h scp-server -u user -d /backups/\nRun on both switches in HA pair]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,J,N dark
-    class C,D,E,F,G,H,I,K,L,M,O,P,Q,R,S,T action
-    class U,V escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1VcFu4zgMvfsriF53g572ksUukKRJ4zZtUjudXgwsZJuOhcqSIcnNdBb770NKSZF2PZc8WKT4KPKRqaXFykujp2DlofVJMp_C1fwK_nWt6JFOySz0QeF_yYIsDrUz1rXmOAWPXQ-N0LDLn8F54QdXaHeUvmrjV3Qzb2iFUtCiUL4djXxDkTvRu1q4tjTC1jCZ8OVCh9Py9AmNseBbi_ShaigtiqqFGr2QajTukuL2xvpw2Snjr_lrGpJFcD1iDZXFWnrOvOm_-mXfYf8denNECwrfULlRmhXRaEdvjA-ujG6k7eDl5RGkBi064kJLZSh01RwCyW_ww2iM_mSQzXs4gA67Eqm-sh9luiWmRpRWVvFqbTpBFOmNA6Fr6K3UleyFgtiGQnvTG2UO79E9zTdwPhmNvz4XjArkvlYDraX6V2bQnlIsNJ9SpK9uq832Ng2_W8iW-XIPVDntx0uXngjLoYkpzuenjsAPtCayFbo03ivUWL12Rp_UMGXSI9SWK0AiiDoeZbkjlrtRyz1ZFi3FhZZkdxSWzCxpi70SFXaUeJT3UfSFXrpKKJaONzC3RtSV6WA_WwRhlkrUOEqyYRKjvdRDuEqF_JCzM41nWrDGeKjE4MZjPFCMDN8kHuFhtsvJ0-PB2Pcp7LbZPnQ2f0n3izWsZvMsXRQ6rSl5Ftb_JoalIpqGgpP-yWYGW42zPhLr46hlG_IJRYJ8tQNWRqhjJUqFoIxzUA71Aal7e3QeSJAtnGfMcIU7Q5Xk5o8S7E7K8HxZGdOXonolxUsXCNgENGaO4u_ObrtZnsNfsJ7PQj7BUTo3jD_u6cRAGpb68-hGDcd1I10ISNNcaKHkZ0c6EI6mvFJDjY6OLROw8yhlRpSX3V_-w7nTdjiw0gQLmFaAc-KANGBRmB8zHkiVrHiBxS17KmVoajwaZc0vp5r6jZ5VWAqHSmr8nV0Dk2hosOEP6KQu9Jr-DmCRLaiesZCULjX6T2jZsJH6FbIQKta7tpL22Cj9nug_xMhTPTlNeNwXF-PPj3ED7eUqGqkGqTNh4njWJ3HWiS7eOmvBt0hlM1p6M57BcxhApTiuG_oQWrwhlEhNwNM88Nsvxr7Q257CfhrzSvxiOr_xX-NF4An1o-oncevDZAAaa8IarlnFQ--uC50Nmt9Lq-3cPGQlwXoGvZDjD6GHX63C_t_mkP5S2ckcJn_DIsJNhGWEVYTbCOsIaXLHcB9hk9wwPCSPDNsIu2TF8JTcMmTJmiFPUoZ9cs_wnGwiPETYRthFeIqQRcgj7CM8M3xLfgKYqe3c?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk0FOwzAQRfc9xaj7LlraTRdIUIGExAJR9pbrTBILxxPZTqoKVeIQnJCT4CRtoMWxskvs9_9M_kwSaVA4SXoNCe31ZGIPRemoWMNTgtrJ9ADb7gQ-bM5L9JzkBenkOLEOSzZnIkfxzlDX0pAuvIgrZlFbMpbxNUy3HoM5fH9-waZB4QKFEwpcJ2D30okccuTK5dO-YtMi15nCU80FK8k45hvJNFknhT2XWbRlXvwt_LkddrphKd8ZKRTWqEKGN63hYwvNWmqc8ZLtqjRFw4TBRAZ7XbbW9y0GHTbOe8UEKeUPmeOC2aps09hVOlF4Nl91eXccvN1t4MRBxwXdFWVMkeDNPjRtPlMG_XtQYdCSqrr9eW2eawQy8GAFV9xhL6Gaq2O_XDC7hXHLI3WNPo3Me_0Th7YgxkdmHZNFJxkTxsc0oLwawQU1IrHG4ncmQ39LiBpMJwRHMgnhsSSu-Ivvv7r7AdOjw-Q=?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8314,7 +8278,7 @@ Brocade FabricOS diagnostic commands: check hardware sensors and MAPS alerts wit
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

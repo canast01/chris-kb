@@ -7680,24 +7680,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
 <p>Structured approach to diagnosing common Windows Server issues.</p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9UstugzAQvPMVK-79gRx6aRo1UhtFSe-WBRuwMLuR7RChKv9eYypEqM3N3nmY2aFUBgunmDZQ8p2yzPbt1XG7gX2J5NSlh_M4gR9byyt6npItU_nI_KEitk4V4qL5voF8O01g5yf5pBkekVRpfGSmvIqCiYZnO-V64YxXeU5-2h7hbYbAd0CiLrWqatFiy6b3yg9_g69wi7JLZRtxuWkt2Igg1dIhFX34ZtvAzmPABoLR54hFnQjdnU3znEBZe0PrvQ4j-pxiH9Com0XTqQIFsRPWSeMUVd7mPI7hwA7Of-P4LtGyvo31nYZzh0OKd1vIIeAk4U7qx9QtvLzCv-4UdeivlZfNecm2EvynXhKclTYSitWtJzTx3c7Jix2EuNNCU__pgjXLu0CSKRe8lWwLZizRgvILW75u2g==?" /></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    S([What is the symptom?]) --&gt; D1{Blue screen\nor BSOD?}
-    S --&gt; D2{RDP not\nconnecting?}
-    S --&gt; D3{Service fails\nto start?}
-    S --&gt; D4{Critical Event ID\nin System log?}
-    S --&gt; D5{Disk I/O high\nor storage fault?}
-    D1 --&gt; R1[System Crash / Reboot Analysis]
-    D2 --&gt; R2[RDP / Remote Access Issues]
-    D3 --&gt; R3[Service Not Starting]
-    D4 --&gt; R4[High Memory]
-    D5 --&gt; R5[Disk Full or High Latency]
-    R2 --&gt; R6[Network Connectivity Issues]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class D1,D2,D3,D4,D5 decision
-    class S start</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9kU9LAzEQxe_7KYbeRfZfDz0opUtR0CLZg-e4DpvQ3aRkppUgfncnOUdvj7yZH5P3Pm3Aia13Owh2NlxVQ72DzVBv4JuMvqC8y4B284I_lUreGIlxhUPQZOAeFH54z7B3eolkqbg3NInZlJnJU8NbRq2eEfbThETwTHTFP3ht4rVlXvJGDDc7IZzkspF1YOvmMqlLpK5MSt6TpAKvcliIZUCfAH0ZkD1LZzhelwV8gEx70YxuKuPUVlZOyF8-nOHgnUvt3CzH_-IYZefdaAZLwAaB4nphvz4Wh6VguHsAVUsrWTQSZxatpJFFJ7_Kopd2sthWv4HCsU8=?" /></p>
 <hr />
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7709,25 +7692,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
 </ul>
 <hr />
 <h2 id="rdp-connectivity-triage">RDP Connectivity Triage<a class="headerlink" href="#rdp-connectivity-triage" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    rdpFail["RDP Connection Fails"]
-    pingOk{"Ping\nsucceeds?"}
-    termSvc{"TermService\nRunning?"}
-    fwAllow{"Firewall rule\n3389 allowed?"}
-    authOk{"Account\nnot locked?"}
-    sessionLimit{"Session limit\nreached?"}
-    resolved["Connected\nsuccessfully"]
-
-    rdpFail --&gt; pingOk
-    pingOk -- No --&gt; resolved
-    pingOk -- Yes --&gt; termSvc
-    termSvc -- No --&gt; resolved
-    termSvc -- Yes --&gt; fwAllow
-    fwAllow -- No --&gt; resolved
-    fwAllow -- Yes --&gt; authOk
-    authOk -- No --&gt; resolved
-    authOk -- Yes --&gt; sessionLimit
-    sessionLimit --&gt; resolved</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptkM0KwjAQhO95itC7L9CDIIonQdGrl5Bs28VtUvLTIuK7uzUtKOQ2O3yz7KxBDzqis7X02HZRCG-Go0KqZXU9XOTeWZsBObuhkq_QqQEYZ1vZluAtBrTt-cGJLIpMgBB4ywl7jEz-jkXeQ3A0gmF2uQHM3YakNSebRPQsxiL4_jZqTi2qSDXTjshNTC2qSKkUu2-tLIrM-i652crc_q_pbK9NxAdG74Ju?" /></p>
 <h2 id="high-memory">High Memory<a class="headerlink" href="#high-memory" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Memory summary</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$os</span> <span class="p">=</span> <span class="nb">Get-CimInstance</span> <span class="n">Win32_OperatingSystem</span>
@@ -7839,7 +7804,7 @@ Quick reference for common problems and resolutions. Structured approach to diag
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 18:29:13 UTC"><span class="timeago" datetime="2026-06-28T18:29:13+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 18:29:13 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

@@ -8965,25 +8965,7 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 </ul>
 <hr />
 <h2 id="remove-a-host">Remove a Host<a class="headerlink" href="#remove-a-host" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    A[Pre-check: verify ≥4 hosts remain after removal] --&gt; B[vSphere Maintenance Mode\nwith vSAN full data evacuation]
-    B --&gt; C[vSAN Evacuate Data\nfrom host disk groups]
-    C --&gt; D{BytesToSync = 0?}
-    D -- No --&gt; D
-    D -- Yes --&gt; E[AWS: delete-environment-host]
-    E --&gt; F[Verify host removed\nfrom EVS host list]
-    F --&gt; G[Verify vSAN rebalance\ncompletes on remaining hosts]
-    G --&gt; H[Done — cluster healthy]
-
-    classDef check fill:#1e3a5f,color:#fff
-    classDef action fill:#15803d,color:#fff
-    classDef verify fill:#b45309,color:#fff
-    classDef done fill:#7c3aed,color:#fff
-
-    class A,D check
-    class B,C,E action
-    class F,G verify
-    class H done</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1kb9ugzAQh3c_xSk7WyeGShAgWVJVQkoXFtcc2Io5I9tQRVWlrt37Cn2xPEltiNSFTud_3-fzz62yKLwylIJVvfSMZSnsni0mQqK4pDCjVd0Vbl8_DyCN8w4sDlwR8M6jjRMzc72Ddyf5iMESdJx6jR8sD6a5HiVahFNAPBInEcamxYbelJcw19kTdJPW0HLPAWcuJh7b2RTuF2EgyvUcQhGohjprhqU5aJW7QG_NNLpNQxkM2UudQosaPSZIs7KGBiSfRMEmVAXovMawXLK8Gdv7veW5Xpe1-oc__PFL9xZfuY5JNCTMMMZGHBi6B6uoX4PedB2DqzCEcPv8BqEnFz9BItdeXjeBIgKbOyyD5BFylseyZ2UsFatiObBDLEf2C5LSuz0=?" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Verify vSAN has enough hosts remaining (minimum 3 after removal; 4 for FTT=1 with full tolerance)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;length(hostSummaries)&#39;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
@@ -9273,7 +9255,7 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     

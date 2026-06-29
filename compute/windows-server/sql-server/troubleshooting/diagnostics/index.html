@@ -8179,39 +8179,7 @@ SQL Server diagnostic commands: read sp_readerrorlog, query sys.dm_exec_requests
 *Applies to: SQL Server 2019 / 2022 on Windows Server 2019 / 2022*
 </div>
 <p><img alt="SQL Server — Diagnostics" src="../../../../../assets/compute-windows-server-sql-server-troubleshooting-diagnostic.svg" /></p>
-<pre class="mermaid"><code>graph TD
-    A([SQL Server Issue]) --&gt; B{What type of problem?}
-    B --&gt;|Service or instance down| C[Check error log\nsp_readerrorlog 0 1 error]
-    B --&gt;|Queries slow or hanging| D[sys.dm_exec_requests\nWhere blocking_session_id &gt; 0]
-    B --&gt;|AG replica out of sync| E[sys.dm_hadr_availability_replica_states\nCheck sync state and health]
-    B --&gt;|Disk space growing fast| F[Check log file growth\nDBCC SQLPERF LOGSPACE]
-    B --&gt;|Specific query regressed| G[Query Store: sys.query_store_runtime_stats\nCompare plans before and after]
-    C --&gt; H{Error type?}
-    H --&gt;|Login failed| I[Check sp_readerrorlog for Login failed\nVerify SQL or Windows auth]
-    H --&gt;|Access denied / permission| J[Check SQL Server error log\nand Windows Event Log]
-    H --&gt;|Service crash| K[Windows Event Log\nGet-EventLog Application MSSQLSERVER]
-    D --&gt; L[Find head blocker\nblocking_session_id where no one blocks it]
-    L --&gt; M[KILL blocking_session_id\nOnly if blocking &gt; 300 sec]
-    E --&gt; N{Health state?}
-    N --&gt;|NOT_SYNCHRONIZING| O[Check log_send_queue_size\nCheck network between replicas]
-    N --&gt;|SYNCHRONIZING long| P[Wait for redo to catch up\nCheck redo_queue_size]
-    F --&gt; Q[Check log reuse wait desc\nALTER DATABASE SET RECOVERY or backup log]
-    G --&gt; R[Force good plan with\nQUERY_STORE FORCE_PLAN]
-    I --&gt; S[Collect diagnostics\nfor Microsoft SR]
-    J --&gt; S
-    K --&gt; S
-    M --&gt; S
-    O --&gt; S
-    P --&gt; S
-    Q --&gt; S
-    R --&gt; S
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H,N dark
-    class C,D,E,F,G,I,J,K,L,M,O,P,Q,R action
-    class S escalate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1k8Fu2zAMhu9-CqL3Dhl266GA4zhpGqdO7KzFAAOGYjOxEFdyJblZNuzdS1ltlm3a6YdJ6yNF_qq5wspwKW5A8X1jgmB8A1fjK_ipG9YhRSnNxL7FX0FEmajB6gColFTQyn0hdFcqZPUQoQCM4LNLexETQuiT_lQ_l_gdKzr60qM2uhBPDSqEbSurAxf7UqPW1FXJa7iFkZcV_2Y1rFYle2W8ZVvecnMicNfyipXaMIOEd33rk6hgCAETNTTIWtN44dPzXe2ldrxF2Ct5NE0hJuMognydrOJsCkk6y1dhFHshM4Kse1QnyI1UlLPtvtgA9UWBUvXC8GccurRNyueO0RS6lgkNW9zRP0OjbGfQP9A7KnHnzczPN_h7RYSFRO65gB1NDOtCPKLiu5O9FFDuiYtaHjWw_j_DuT-j7Ykc1SuqS0_Ylj8g8SsKY8t5SQsi_fNnIWZorodP-oKwG1ZpTQrLnCrmcfYYZ15eQrwpd6utnZtQFcJnq-NgOCFBinffaeDGS10SdTFPEp89C5GK9gR8d06SYb-MRqCx8sIeCPbgzaSXnqMSoi7JLD3Zg__ADwsLNEepDuQOc0QU8G507SWu7HgZN8PKFdYSjAQaZdVA330QbfyikBe0_uM5KOw1wtGCa9RVIcJkE2cwCTfhOMxjyOMNZHGU0pa-WUNtWXXoO3vUC8_s0qSq6IlJWQ_uhyO3T239lQhlvkmzGKZpFsXlKgn9w8tth7JtKQI1Z3shteEVPSp79SWvlNRyZyD3-yak0xdenmvd-wcRjOH6FiInEyexk6mTWXBnZe7k3skimFhJgsTKMniwkjpZBVMr62BmJQvmVvLg3snCydJJ6mTlZO0kc_IGFjLv2Q==?" /></p>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNk0FOwzAQRfc9xah7Fi1tF10gIYQQS-gBLDeZJlZdO9hOqghV4hCckJMwTuo2QOKwi-z3_7f-TFJhMHFCqzWk-qgmE1sfCqcPa3hOUTmxq2HTnsC7zXmBxAl-0Co9TazDgs1YkmOyZy5HhsZow6TO1jDd0CXM4OvjEx48AARAAwAB04ubj-cqk3j2m5_9OL2qQmbwrUTrLOMqZVupg_O849yiEFAgFAhN9kJFgm5DUMWF5FshhatZZnRZsBy5DEG3naD7DgpPHgWPunw4ZRHqwUORblmilfO1-r5b_0W3ogaCKzTsuzz7UpdsJyT6lx9d3tTkTBnclx13QsGj0KJNTYSqhMejVox6NTWzThtkO5pwIbmiyWQGrRUhatVEvXgUNh4FQsGjEFCtbG8MXWpZtq28-m-aJmkfbcIld3iR6IrL02VF4eYOYisoVEXrIDJy-CMZ3bKYeHRzYuLIQsRko_OOiUcn-EM8WKn3u47qX79rn2Skvj7JYGl98EhVfZKRgn5JvgF5ZvfL?" /></p>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8504,7 +8472,7 @@ SQL Server diagnostic commands: read sp_readerrorlog, query sys.dm_exec_requests
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:16:04 UTC"><span class="timeago" datetime="2026-06-29T00:16:04+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:16:04 UTC">2026-06-29</span>
   </span>
 
     
