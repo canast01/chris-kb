@@ -132,6 +132,34 @@ psql -c "SHOW max_connections;"
 mysql -e "SHOW STATUS LIKE 'Threads_connected';"
 mysql -e "SHOW VARIABLES LIKE 'max_connections';"
 ```
+
+```text title="Expected output"
+count | state
+-------+--------
+     2 | active
+     8 | idle
+     1 | idle in transaction
+(3 rows)
+
+ max_connections
+-----------------
+       100
+(1 row)
+
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| Threads_connected| 87    |
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| max_connections  | 100   |
++------------------+-------+
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — Increase `max_connections` in postgresql.conf and restart PostgreSQL, or terminate idle sessions with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle';`
+    **`ERROR 1040 (HY000): Too many connections`** — Increase `max_connections` in my.cnf (set to a higher value like 200), restart MySQL, or kill idle connections with `SHOW PROCESSLIST;` and `KILL <process_id>;`
 ![MySQL / MariaDB — Common Issues — Diagram](../../../../assets/compute-linux-mysql-troubleshooting-common-issues-diagram.svg)
 
 ---

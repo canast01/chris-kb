@@ -123,6 +123,36 @@ sudo tail -f /var/log/mysqld.log | grep -i 'error\|warning\|crash\|abort'
 #   [ERROR] Disk is full — clear binary logs or add disk
 ```
 
+
+```text title="Expected output"
+● mysqld.service - MySQL Server
+     Loaded: loaded (/usr/lib/systemd/system/mysqld.service; enabled; vendor preset: disabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+   Main PID: 2847 (mysqld)
+    Tasks: 27 (limit: 4915)
+   Memory: 512.3M
+   CGroup: /system.slice/mysqld.service
+           └─2847 /usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid
+
+2024-01-17T14:32:18.456123Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld: ready for connections.
+2024-01-17T14:32:19.123456Z 2 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2024-01-17T15:47:32.789012Z 3 [ERROR] [MY-012345] [InnoDB] Detected table corruption in table 'production/users'
+2024-01-17T16:22:11.234567Z 4 [Warning] [MY-010015] [Server] MySQL server has gone away
+2024-01-17T17:05:44.567890Z 5 [ERROR] [MY-013146] [Server] Can't create a new thread (errno 11)
+
+Jan 17 14:32:18 db-prod-01 mysqld[2847]: 2024-01-17T14:32:18.456123Z 0 [System] [MY-013169] [Server] ready for connections.
+Jan 17 17:05:44 db-prod-01 mysqld[2847]: 2024-01-17T17:05:44.567890Z 5 [ERROR] [MY-013146] [Server] Can't create a new thread (errno 11)
+Jan 17 17:06:12 db-prod-01 mysqld[2847]: 2024-01-17T17:06:12.891234Z 6 [Warning] [MY-010068] [Server] Disk space low on /var/lib/mysql
+
+[ERROR] [MY-012345] [InnoDB] Detected table corruption in table 'production/users'
+[Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+[ERROR] [MY-013146] [Server] Can't create a new thread (errno 11)
+```
+
+!!! warning "Common errors"
+    **`sudo: tail: command not found`** — Ensure you have sudo privileges and tail is installed; try `which tail` to verify the path.
+    **`[ERROR] [MY-013146] [Server] Can't create a new thread (errno 11)`** — Increase the OS thread limit by raising `ulimit -u` or adjusting `/etc/security/limits.conf` and restarting mysqld.
+    **`[ERROR] [MY-012345] [InnoDB] Detected table corruption in table 'production/users'`** — Run `REPAIR TABLE production.users;` from the MySQL client, or restore from a backup if repair fails.
 ---
 
 ## Step 2 — Check active connections and long-running queries
@@ -233,6 +263,58 @@ mysql -u root -p -e "EXPLAIN SELECT * FROM db.table WHERE col = 'value'\G"
 #   Extra = Using filesort → sort is happening in memory/disk (costly)
 ```
 
+
+```text title="Expected output"
+# Query 1: SELECT * FROM db.table WHERE col = 'value'
+#
+# Count         : 847
+# Exec time     : 12s
+# Lock time     : 156ms
+# Rows sent     : 12
+# Rows examine  : 2847291
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+# 1ms
+# 10ms  ################################################################
+# 100ms ################################################################
+# 1s    ################################################################
+# 10s+  ################################################################
+
+# Top 5 queries by total execution time
+1. SELECT * FROM db.table WHERE col = 'value'
+   Count: 847, Exec time: 12s, Lock time: 156ms, Rows sent: 12, Rows examine: 2847291
+
+2. SELECT id, name FROM users WHERE status = 'active'
+   Count: 523, Exec time: 8s, Lock time: 89ms, Rows sent: 4521, Rows examine: 1203847
+
+3. SELECT * FROM orders WHERE created_at > DATE_SUB(NOW(), INTERVAL 7 DAY)
+   Count: 312, Exec time: 5s, Lock time: 45ms, Rows sent: 8934, Rows examine: 892341
+
+4. SELECT COUNT(*) FROM transactions WHERE user_id = 42
+   Count: 1847, Exec time: 3s, Lock time: 12ms, Rows sent: 1, Rows examine: 456789
+
+5. SELECT * FROM logs WHERE level = 'ERROR'
+   Count: 234, Exec time: 2s, Lock time: 8ms, Rows sent: 567, Rows examine: 123456
+
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: db.table
+         type: ALL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 2847291
+        Extra: Using where
+```
+
+!!! warning "Common errors"
+    **`Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Ensure MySQL service is running with `systemctl start mysql` and verify socket path in `/etc/mysql/mysql.conf.d/mysqld.cnf`.
+    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost'`** — Verify MySQL root password is correct or use `-p` flag without password if authentication plugin allows it.
+    **`No such file or directory: /var/log/mysql/slow.log`** — Enable slow query logging in MySQL with `SET GLOBAL slow_query_log = 'ON';` and verify log file path matches your MySQL configuration.
 ---
 
 ## Step 6 — Check replication status
@@ -286,6 +368,60 @@ SHOW BINARY LOG STATUS\G
 } 2>&1 > /tmp/mysql-diag-$(date +%F-%H%M).txt
 ```
 
+
+```text title="Expected output"
+=== MySQL version ===
+VERSION()
+8.0.35-0ubuntu0.20.04.1
+=== Active processes ===
+ID	USER	HOST	DB	COMMAND	TIME	STATE	INFO
+42	root	localhost	NULL	Query	0	init	SHOW FULL PROCESSLIST
+156	app_user	192.168.1.45:54321	production	Query	127	Sending data	SELECT * FROM orders WHERE created_at > DATE_SUB(NOW(), INTERVAL 1 DAY)
+203	repl_user	db-replica-01:3306	NULL	Binlog Dump	8942	Master has sent all binlog to slave	NULL
+=== Long-running transactions ===
+trx_id	trx_state	dur_sec	trx_query
+421954	RUNNING	3847	SELECT COUNT(*) FROM transactions WHERE status='pending'
+421847	RUNNING	1203	UPDATE inventory SET qty=qty-1 WHERE sku='SKU-9847'
+=== InnoDB status ===
+=====================================
+2024-01-15 14:32:18 0x7f8c4a2b1700 INNODB MONITOR OUTPUT
+-----
+Per second averages calculated from last 47 seconds
+-----------
+Trx id counter 421955
+Purge done for trx's n:o >= 421847 undo n:o >= 0 page undo n:o >= 0
+History list length 24
+---LATEST DETECTED DEADLOCK---
+2024-01-15 14:28:03 0x7f8c4a2b1700
+*** (1) TRANSACTION:
+TRANSACTION 421847, ACTIVE 1203 sec inserting
+mysql tables in use 1, locked 1
+LOCK WAIT 2 locks, 0 undo log entries, 0 bytes undo log
+MySQL thread id 156, OS thread handle 0x7f8c4a2b1700, query id 203 192.168.1.45 app_user updating
+UPDATE orders SET status='shipped' WHERE id=9847
+=== Replication status ===
+             Slave_IO_State: Waiting for master to send event
+                  Master_Host: db-primary-01
+                  Master_User: repl_user
+              Master_Log_File: mysql-bin.000047
+          Read_Master_Log_Pos: 2847361
+               Relay_Log_File: db-replica-01-relay-bin.000156
+                Relay_Log_Pos: 2847361
+        Relay_Master_Log_File: mysql-bin.000047
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: Yes
+          Seconds_Behind_Master: 0
+=== Binary log list ===
+Log_name	File_size
+mysql-bin.000045	1073741824
+mysql-bin.000046	1073741824
+mysql-bin.000047	536870912
+=== Disk usage ===
+Filesystem	Size	Used	Avail	Use%
+/dev/sda3	500G	387G	98G	79%
+=== Error log (last 100 lines) ===
+2024-01-15T14:15:23.847392Z 0 [Note] [MY-000000]
+```
 ---
 
 ## Log locations

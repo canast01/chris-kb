@@ -121,6 +121,31 @@ psql -U postgres -c "SELECT now() AS current_time;"
 # Update application connection string / DNS to point at new primary
 ```
 
+
+```text title="Expected output"
+replication_lag 
+-----------------
+ 00:00:00.234567
+(1 row)
+
+waiting for server to promote.... done
+server promoted
+
+ pg_is_in_recovery 
+-------------------
+ f
+(1 row)
+
+ current_time 
+-------------------------------
+ 2024-01-15 14:32:18.456789+00
+(1 row)
+```
+
+!!! warning "Common errors"
+    **`FATAL: role "postgres" does not exist`** — Create the postgres role with `createuser -s postgres` or connect as the actual superuser account.
+    **`could not open file "/var/lib/postgresql/data/promote_standby": Permission denied`** — Run the `touch` command as the postgres user with `sudo -u postgres touch /var/lib/postgresql/data/promote_standby`.
+    **`pg_is_in_recovery returned 't' (true) after promotion`** — Wait 10–15 seconds for the promotion to fully complete, then re-run the verification query.
 ```bash
 # Automatic failover — check MHA status
 masterha_check_repl --conf=/etc/mha/app.conf
@@ -166,6 +191,23 @@ psql -c "SELECT pid, state, wait_event_type, query FROM pg_stat_activity WHERE s
 SELECT session_id, blocking_session_id, wait_type, wait_time FROM sys.dm_exec_requests WHERE blocking_session_id != 0;
 ```
 
+
+```text title="Expected output"
+INSERT 0 1
+Query OK, 0 rows affected (0.02 sec)
+OK
+ pid  | state  | wait_event_type |                             query
+------+--------+-----------------+---------------------------------------------------------------
+ 1847 | active | IO              | INSERT INTO health_check(ts) VALUES (now());
+ 1923 | active | Lock            | SELECT * FROM transactions WHERE status = 'pending';
+ 2041 | active | NULL            | VACUUM ANALYZE health_check;
+(3 rows)
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not translate host name "<new-primary>" to address: Name or service not known`** — Replace `<new-primary>` with the actual hostname or IP address of the new primary server.
+    **`ERROR 1045 (28000): Access denied for user 'appuser'@'<new-primary>'`** — Verify the appuser password is correct and the user has INSERT privileges on the health_check table.
+    **`curl: (7) Failed to connect to <app-endpoint> port 443: Connection refused`** — Confirm the application endpoint is running and accessible; check firewall rules and application service status.
 ---
 
 ## Verify

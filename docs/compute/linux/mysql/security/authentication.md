@@ -72,6 +72,27 @@ mysql -u cert_user \
   --ssl-key=/etc/mysql/client-key.pem
 ```
 
+
+```text title="Expected output"
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 42857
+Server version: 8.0.35-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+```
+
+!!! warning "Common errors"
+    **`ERROR 2026 (HY000): SSL connection error: error:00000000:lib(0):func(0):reason(0)`** — Verify certificate files exist and are readable with `ls -la /etc/mysql/*.pem` and check file permissions are 600 or 644.
+    **`ERROR 1045 (28000): Access denied for user 'cert_user'@'localhost' (using password: NO)`** — Ensure the MySQL user `cert_user` is created with `CREATE USER 'cert_user'@'%' IDENTIFIED BY 'password' REQUIRE X509;` and grant appropriate privileges.
+    **`ERROR 2003 (HY000): Can't connect to MySQL server on 'localhost' (111)`** — Verify MySQL server is running with `systemctl status mysql` and check that the host is correct (add `-h hostname` if connecting remotely).
 ## Account Locking
 
 ```sql

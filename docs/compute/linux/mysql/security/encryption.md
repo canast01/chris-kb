@@ -82,6 +82,22 @@ xtrabackup --backup --encrypt=AES256 \
   --target-dir=/backup/xb-$(date +%F)
 ```
 
+
+```text title="Expected output"
+xtrabackup: recognized server arguments: --datadir=/var/lib/mysql --port=3306
+xtrabackup: recognized client arguments: --socket=/var/run/mysqld/mysqld.sock
+230415 14:32:18 Backup created in directory '/backup/xb-2024-04-15'
+230415 14:32:18 MySQL binlog position: filename 'mysql-bin.000042', position '1847293'
+230415 14:32:45 [00] Encrypting backup with AES256...
+230415 14:32:52 [00] Encryption completed
+230415 14:32:52 Backup successfully prepared
+230415 14:32:53 All done! Backup saved in '/backup/xb-2024-04-15'
+```
+
+!!! warning "Common errors"
+    **`xtrabackup: error: failed to read encryption key from '/etc/xtrabackup.key': Permission denied`** — Ensure the key file is readable by the MySQL/backup user with `chmod 400 /etc/xtrabackup.key && chown mysql:mysql /etc/xtrabackup.key`.
+    **`xtrabackup: error: Target directory '/backup/xb-2024-04-15' already exists`** — Remove the existing backup directory or use a unique target directory name with a different timestamp or suffix.
+    **`xtrabackup: error: Failed to connect to MySQL server on 'localhost' (111)`** — Verify MySQL is running with `systemctl status mysql` and check socket/port connectivity.
 ## Key Rotation
 
 ```sql

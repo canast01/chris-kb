@@ -35,6 +35,54 @@ az policy definition show \
   --query "policyRule"
 ```
 
+
+```text title="Expected output"
+Name                                                          ID
+────────────────────────────────────────────────────────────  ──────────────────────────────────────
+Allowed locations                                             AllowedLocations
+Allowed virtual machine SKUs                                  AllowedVMSkus
+Append a tag and its value to resources                       AppendTagToResources
+Audit VMs that do not use managed disks                       AuditVMsNotUsingManagedDisks
+Require a tag and its value on resources                      RequireTagAndValue
+...
+
+Name                                                          ID
+────────────────────────────────────────────────────────────  ──────────────────────────────────────
+Append a tag and its value to resources                       AppendTagToResources
+Require a tag and its value on resources                      RequireTagAndValue
+Inherit a tag from the resource group                         InheritTagFromResourceGroup
+
+{
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025",
+  "name": "96670d01-0a4d-4649-9c89-2d3abc0a5025",
+  "displayName": "Audit VMs that do not use managed disks",
+  "description": "This policy audits VMs that do not use managed disks",
+  "policyType": "BuiltIn",
+  "mode": "All"
+}
+
+{
+  "if": {
+    "allOf": [
+      {
+        "field": "type",
+        "equals": "Microsoft.Compute/virtualMachines"
+      },
+      {
+        "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.managedDisk",
+        "exists": false
+      }
+    ]
+  },
+  "then": {
+    "effect": "audit"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`Policy definition not found. The policy definition with name '96670d01-0a4d-4649-9c89-2d3abc0a5025' does not exist.`** — Verify the policy definition ID is correct and exists in your subscription using `az policy definition list`.
+    **`The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Authorization/policyDefinitions/read'.`** — Ensure your user account has the Policy Insights Reader or higher role assigned at the subscription level.
 ### Commonly Used Built-in Policies
 
 | Display Name | Definition ID | Effect |
@@ -83,6 +131,40 @@ az policy definition delete \
   --name "deny-non-approved-vm-images"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/policyDefinitions/deny-non-approved-vm-images",
+  "name": "deny-non-approved-vm-images",
+  "displayName": "Deny non-approved VM images",
+  "description": "Ensures only approved marketplace images are used",
+  "mode": "Indexed",
+  "type": "Microsoft.Authorization/policyDefinitions"
+}
+{
+  "id": "/providers/Microsoft.Management/managementGroups/mg-prod-001/providers/Microsoft.Authorization/policyDefinitions/require-diagnostics-storage",
+  "name": "require-diagnostics-storage",
+  "displayName": "Require diagnostic settings for storage accounts",
+  "mode": "Indexed",
+  "type": "Microsoft.Authorization/policyDefinitions"
+}
+Name                                          ID                              Mode
+----------------------------------------------  --------------------------------  -------
+Deny non-approved VM images                   deny-non-approved-vm-images     Indexed
+Require diagnostic settings for storage...    require-diagnostics-storage     Indexed
+{
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/policyDefinitions/deny-non-approved-vm-images",
+  "name": "deny-non-approved-vm-images",
+  "displayName": "Deny non-approved VM images",
+  "mode": "Indexed",
+  "type": "Microsoft.Authorization/policyDefinitions"
+}
+```
+
+!!! warning "Common errors"
+    **`File not found: policy-rules.json`** — Verify the JSON file exists in the current working directory or provide the absolute file path with the `--rules` parameter.
+    **`InvalidPolicyDefinitionName: Policy definition 'deny-non-approved-vm-images' already exists`** — Use a unique policy name or delete the existing definition before recreating it.
+    **`AuthorizationFailed: The client does not have permission to perform action 'Microsoft.Authorization/policyDefinitions/write'`** — Ensure your Azure account has the Policy Contributor or Owner role at the subscription or management group scope.
 ## Policy Effects
 
 The effect defines what happens when a resource is evaluated and does not comply.
@@ -140,6 +222,27 @@ az policy state summarize \
   --output table
 ```
 
+
+```text title="Expected output"
+Scan request accepted. Scan ID: scan-20240215-4a7c9e2f
+Compliance evaluation in progress...
+
+Name                          Resource Group        Policy Definition Name              Compliance State
+-----------------------------  --------------------  ----------------------------------  ------------------
+storage-prod-001              rg-prod-eastus        Require HTTPS for Storage Accounts  NonCompliant
+vm-legacy-db-02               rg-legacy-westus      Enforce Encryption at Rest          NonCompliant
+keyvault-dev-shared           rg-dev-centralus      Require Key Vault Soft Delete       NonCompliant
+
+Policy                                                    NonCompliant
+----------------------------------------------------------  --------------
+/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/...  3
+/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/...  7
+/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/...  0
+```
+
+!!! warning "Common errors"
+    **`The subscription '<subscription-id>' could not be found.`** — Replace `<subscription-id>` with a valid subscription ID from `az account list`.
+    **`No policy assignments found for the given filter criteria.`** — Verify the policy definition name matches exactly using `az policy definition list --query "[].displayName"` and check that the policy is assigned to the subscription.
 ## Azure Policy Evaluation Flow
 
 ```d2

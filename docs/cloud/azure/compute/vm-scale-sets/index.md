@@ -78,6 +78,38 @@ az vmss list \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "fqdns": "",
+  "id": "/subscriptions/12a34b5c-6789-0def-1234-567890abcdef/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachineScaleSets/linux-vmss-01",
+  "identity": null,
+  "location": "eastus",
+  "name": "linux-vmss-01",
+  "resourceGroup": "prod-rg",
+  "zones": [
+    "1",
+    "2",
+    "3"
+  ]
+}
+{
+  "fqdns": "win-vmss-01.eastus.cloudapp.azure.com",
+  "id": "/subscriptions/12a34b5c-6789-0def-1234-567890abcdef/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachineScaleSets/win-vmss-01",
+  "location": "eastus",
+  "name": "win-vmss-01",
+  "resourceGroup": "prod-rg"
+}
+Name           ResourceGroup    Location    Zones    Orchestration Mode    Capacity
+-------------  ---------------  ----------  -------  --------------------  ----------
+linux-vmss-01  prod-rg          eastus      1,2,3    Flexible              2
+win-vmss-01    prod-rg          eastus               Uniform                2
+```
+
+!!! warning "Common errors"
+    **`The image 'Ubuntu2204' could not be found.`** — Use a valid image URN like `UbuntuLTS` or `Ubuntu2204` with the full publisher format, or run `az vm image list --output table` to verify available images.
+    **`The resource 'Microsoft.Network/loadBalancers/<lb-name>' under resource group '<rg>' was not found.`** — Create the load balancer first with `az network lb create` or verify the `--load-balancer` parameter references an existing resource in the same resource group.
+    **`The password does not meet complexity requirements.`** — Ensure the Windows admin password is at least 12 characters and includes uppercase, lowercase, numbers, and special characters.
 ---
 
 ## Scaling Operations
@@ -109,6 +141,31 @@ az vmss list-instances \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachineScaleSets/web-vmss",
+  "name": "web-vmss",
+  "provisioningState": "Succeeded"
+}
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachineScaleSets/web-vmss",
+  "name": "web-vmss",
+  "provisioningState": "Succeeded"
+}
+Capacity    Name                Tier
+----------  ------------------  --------
+2           Standard_D2s_v3     Standard
+
+InstanceId    ProvisioningState    PowerState      VmId
+------------  -------------------  ---------------  ------------------------------------
+0             Succeeded            VM running       a1b2c3d4-e5f6-7890-abcd-ef1234567890
+1             Succeeded            VM running       b2c3d4e5-f6a7-8901-bcde-f12345678901
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in your subscription.
+    **`ResourceNotFound`** — Confirm the VMSS name is correct by running `az vmss list --resource-group <rg>` to list all scale sets in the resource group.
 ---
 
 ## Autoscale Rules
@@ -144,6 +201,64 @@ az monitor autoscale list \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "enabled": true,
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/prod-rg/providers/microsoft.insights/autoscalesettings/vmss-autoscale-prod",
+  "location": "eastus",
+  "name": "vmss-autoscale-prod",
+  "notificationEnabled": false,
+  "profiles": [
+    {
+      "capacity": {
+        "default": "2",
+        "maximum": "10",
+        "minimum": "2"
+      },
+      "name": "Auto scale based on CPU",
+      "rules": []
+    }
+  ],
+  "resourceGroup": "prod-rg",
+  "targetResourceUri": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-prod"
+}
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/prod-rg/providers/microsoft.insights/autoscalesettings/vmss-autoscale-prod/profiles/0/rules/0",
+  "metricName": "Percentage CPU",
+  "metricResourceId": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachineScaleSets/vmss-prod",
+  "operator": "GreaterThan",
+  "scaleAction": {
+    "cooldown": "PT5M",
+    "direction": "Increase",
+    "type": "ChangeCount",
+    "value": "2"
+  },
+  "statistic": "Average",
+  "threshold": 70.0,
+  "timeAggregation": "Average",
+  "timeWindow": "PT5M"
+}
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/prod-rg/providers/microsoft.insights/autoscalesettings/vmss-autoscale-prod/profiles/0/rules/1",
+  "metricName": "Percentage CPU",
+  "operator": "LessThan",
+  "scaleAction": {
+    "cooldown": "PT10M",
+    "direction": "Decrease",
+    "type": "ChangeCount",
+    "value": "1"
+  },
+  "threshold": 30.0,
+  "timeWindow": "PT10M"
+}
+Name                      ResourceGroup    Enabled    MinCount    MaxCount    DefaultCount
+------------------------  ---------------  ---------  ----------  ----------  ---------------
+vmss-autoscale-prod       prod-rg          True       2           10          2
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachineScaleSets/<vmss-resource-id>' under resource group '<rg>' was not found.`** — Verify the VMSS resource ID is correct and exists in the specified resource group using `az vmss
 ---
 
 ## Upgrade Policies
@@ -170,6 +285,45 @@ az vmss update-instances \
   --instance-ids 0 1 2
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12a34b56-78cd-90ef-1234-567890abcdef/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachineScaleSets/web-vmss-01",
+  "name": "web-vmss-01",
+  "type": "Microsoft.Compute/virtualMachineScaleSets",
+  "location": "eastus",
+  "upgradePolicy": {
+    "mode": "Rolling",
+    "rollingUpgradePolicy": {
+      "maxBatchInstancePercent": 20,
+      "maxUnhealthyInstancePercent": 20,
+      "pauseTimeBetweenBatches": "PT0S"
+    }
+  },
+  "provisioningState": "Succeeded"
+}
+{
+  "value": [
+    {
+      "instanceId": "0",
+      "latestModelApplied": true
+    },
+    {
+      "instanceId": "1",
+      "latestModelApplied": true
+    },
+    {
+      "instanceId": "2",
+      "latestModelApplied": true
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound: Resource group '<rg>' could not be found.`** — Verify the resource group name matches exactly and exists in the current subscription using `az group list`.
+    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachineScaleSets/<vmss-name>' under resource group '<rg>' was not found.`** — Confirm the VMSS name is correct and exists in the specified resource group with `az vmss list --resource-group <rg>`.
+    **`InvalidParameter: Instance IDs '0 1 2' are invalid. Valid instance IDs must be integers between 0 and <max-capacity>.`** — Ensure instance IDs do not exceed the current capacity of the scale set; check with `az vmss show --resource-group <rg> --name <vmss-name> --query 'sku.capacity'`.
 ---
 
 ## Health Probes and Automatic Repairs
@@ -192,6 +346,33 @@ az vmss update \
   --automatic-repairs-grace-period PT30M
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachineScaleSets/web-vmss/extensions/ApplicationHealthLinux",
+  "name": "ApplicationHealthLinux",
+  "provisioningState": "Succeeded",
+  "publisher": "Microsoft.ManagedServices",
+  "type": "Microsoft.Compute/virtualMachineScaleSets/extensions",
+  "typeHandlerVersion": "1.0",
+  "autoUpgradeMinorVersion": true
+}
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachineScaleSets/web-vmss",
+  "name": "web-vmss",
+  "automaticRepairsPolicy": {
+    "enabled": true,
+    "gracePeriod": "PT30M"
+  },
+  "provisioningState": "Succeeded",
+  "type": "Microsoft.Compute/virtualMachineScaleSets"
+}
+```
+
+!!! warning "Common errors"
+    **`Extension with name ApplicationHealthLinux already exists`** — Remove the existing extension with `az vmss extension delete` before re-running the set command.
+    **`The resource group '<rg>' could not be found`** — Verify the resource group name with `az group list` and ensure you are using the correct subscription.
+    **`Invalid requestPath: must start with /`** — Ensure the health check path in the settings JSON begins with a forward slash (e.g., `"/health"` not `"health"`).
 ---
 
 ## Instance Operations
@@ -224,6 +405,58 @@ az vmss run-command invoke \
   --scripts "systemctl status nginx"
 ```
 
+
+```text title="Expected output"
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Instance 0 restarted successfully",
+      "time": "2024-01-15T10:32:47.123456Z"
+    }
+  ]
+}
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Instance 1 deallocated successfully",
+      "time": "2024-01-15T10:33:12.456789Z"
+    }
+  ]
+}
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provisioning succeeded",
+      "level": "Info",
+      "message": "Instance 2 deleted successfully",
+      "time": "2024-01-15T10:33:58.789012Z"
+    }
+  ]
+}
+{
+  "value": [
+    {
+      "code": "ComponentStatus/succeeded",
+      "displayStatus": "Execution succeeded",
+      "level": "Info",
+      "message": "● nginx.service - The NGINX HTTP and reverse proxy server\n   Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; vendor preset: disabled)\n   Active: active (running) since Mon 2024-01-15 10:25:33 UTC; 8min ago",
+      "time": "2024-01-15T10:34:22.012345Z"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in your subscription.
+    **`ResourceNotFound`** — Confirm the VMSS name is correct using `az vmss list --resource-group <rg>` and check the spelling.
+    **`InvalidInstanceId`** — Ensure the instance ID exists in the scale set; retrieve valid IDs with `az vmss list-instances --resource-group <rg> --name <vmss-name>`.
 ---
 
 ## Scale Set Reference Table

@@ -61,6 +61,51 @@ mysql -h <mysql-host> -u root -p -e "SELECT @@version;"
 mysqlsh admin@<cluster-host>:3306 -- cluster status
 ```
 
+
+```text title="Expected output"
+Connection to mysql-prod-01.internal 3306 port [tcp/mysql] succeeded!
+mysql: [Warning] Using a password on the command line interface can be insecure.
++-----------+
+| @@version |
++-----------+
+| 8.0.35-27 |
++-----------+
+The MySQL Shell version 8.0.34
+{
+    "clusterName": "mysql-cluster-prod",
+    "defaultReplicaSet": {
+        "name": "default",
+        "primary": "mysql-prod-01.internal:3306",
+        "status": "OK",
+        "statusText": "Cluster is ONLINE and can tolerate up to ONE failure.",
+        "topology": {
+            "mysql-prod-01.internal:3306": {
+                "address": "mysql-prod-01.internal:3306",
+                "mode": "R/W",
+                "status": "ONLINE",
+                "version": "8.0.35-27"
+            },
+            "mysql-prod-02.internal:3306": {
+                "address": "mysql-prod-02.internal:3306",
+                "mode": "R/O",
+                "status": "ONLINE",
+                "version": "8.0.35-27"
+            },
+            "mysql-prod-03.internal:3306": {
+                "address": "mysql-prod-03.internal:3306",
+                "mode": "R/O",
+                "status": "ONLINE",
+                "version": "8.0.35-27"
+            }
+        }
+    }
+}
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify the MySQL service is running on the target host with `systemctl status mysql` and confirm the port is not blocked by firewall rules.
+    **`Access denied for user 'root'@'<ip>'`** — Check the password is correct and the root user has permissions from that source IP in the `mysql.user` table.
+    **`ERROR: Shell.Errors.RuntimeError: Error connecting to target server`** — Ensure MySQL Shell is installed, the cluster host is reachable, and the admin user credentials are valid.
 ## See also
 
 - [MySQL — Architecture](../how-it-works/)

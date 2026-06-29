@@ -351,6 +351,31 @@ az vm list-ip-addresses \
   --output table
 ```
 
+
+```text title="Expected output"
+/subscriptions/12a4b5c6-d7e8-4f9a-b0c1-2d3e4f5a6b7c/resourceGroups/prod-rg/providers/Microsoft.Network/networkInterfaces/vm-prod-nic-01
+
+(no output — command completes silently)
+
+{
+  "etag": "W/\"a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d\"",
+  "id": "/subscriptions/12a4b5c6-d7e8-4f9a-b0c1-2d3e4f5a6b7c/resourceGroups/prod-rg/providers/Microsoft.Network/networkSecurityGroups/vm-prod-nsg/securityRules/open-port-443-tcp",
+  "name": "open-port-443-tcp",
+  "priority": 100,
+  "protocol": "Tcp",
+  "sourcePortRange": "*",
+  "destinationPortRange": "443"
+}
+
+VirtualMachine    PublicIPAddresses    PrivateIPAddresses
+----------------  -------------------  --------------------
+vm-prod-01        203.0.113.45         10.0.1.42
+```
+
+!!! warning "Common errors"
+    **`The NIC 'nic-name' does not exist in the resource group 'rg'.`** — Verify the NIC name with `az network nic list --resource-group <rg>` and use the correct name.
+    **`The public IP address 'pip-name' does not exist in the resource group 'rg'.`** — Create the public IP first with `az network public-ip create --resource-group <rg> --name <pip-name>` or use an existing one.
+    **`(ResourceNotFound) No virtual machines found with name 'vm-name' in resource group 'rg'.`** — Confirm the VM name and resource group are correct using `az vm list --resource-group <rg>`.
 ---
 
 ## Running Commands on a VM
@@ -371,6 +396,31 @@ az vm run-command invoke \
   --scripts "Get-Process | Sort-Object CPU -Descending | Select-Object -First 10"
 ```
 
+
+```text title="Expected output"
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provision succeeded",
+      "message": "Filesystem     Size  Used Avail Use% Mounted on\n/dev/sda1       30G  8.2G   21G  28% /\n/dev/sdb1      100G  45G   55G  45% /mnt/data\ntmpfs          3.9G     0  3.9G   0% /dev/shm\n\n              total        used        free      shared  buff/cache   available\nMem:           7872        2145        3421         156        2306        5234\nSwap:          2048         512        1536\n\n 10:34:22 up 45 days, 12:18,  2 users,  load average: 0.42, 0.38, 0.35"
+    }
+  ]
+}
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provision succeeded",
+      "message": "Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName\n-------  ------    -----      -----     ------     --  -- -----------\n    892      45    892156     1245632      156.2   4521   0 sqlservr\n    654      32    756234      987654       98.7   3892   0 w3wp\n    421      18    345678      456789       45.3   2156   0 svchost\n    389      22    234567      345678       32.1   1987   0 mssearch\n    267      15    123456      234567       18.9   1654   0 LogonUI\n    198      12     98765      156789       12.4   1423   0 csrss\n    145       8     67890      123456        8.7   1234   0 services\n    112       6     45678       98765        5.2   1045   0 lsass\n    89        4     34567       78901        3.1    892   0 svchost\n    67        3     23456       56789        1.8    654   0 conhost"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`.
+    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action' over scope '<subscription-id>'.`** — Ensure your Azure account has the Virtual Machine Contributor role or higher on the target VM or resource group.
 ---
 
 ## Monitoring and Health
@@ -396,3 +446,31 @@ az vm list --show-details \
   --query "[].{Name:name, RG:resourceGroup, Size:hardwareProfile.vmSize, State:powerState, Location:location}" \
   --output table
 ```
+
+
+```text title="Expected output"
+PowerState    ProvisioningState
+-----------   -----------------
+VM running    Succeeded
+
+{
+  "Agent": "Guest Agent Status: Ready",
+  "Disks": [
+    "Disk is Healthy"
+  ]
+}
+
+Name              RG                Size           State        Location
+----------------  ----------------  -----------    -----------  ----------
+prod-web-01       prod-rg            Standard_D2s   VM running   eastus
+prod-web-02       prod-rg            Standard_D2s   VM running   eastus
+prod-db-01        prod-rg            Standard_E4s   VM running   eastus
+dev-test-vm       dev-rg             Standard_B2s   VM stopped   westus2
+staging-app-01    staging-rg         Standard_D4s   VM running   centralus
+...
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure you have access to the subscription.
+    **`ResourceNotFound`** — Confirm the VM name is correct and exists in the specified resource group using `az vm list --resource-group <rg>`.
+    **`AuthorizationFailed`** — Ensure your Azure CLI session is authenticated with `az login` and has Reader or higher permissions on the target subscription.

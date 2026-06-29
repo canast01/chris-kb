@@ -63,6 +63,45 @@ az ad app delete \
   --id <app-id>
 ```
 
+
+```text title="Expected output"
+{
+  "appId": "a7c3f8e2-1b4d-4c9a-8f2e-3d5c7b9a1e4f",
+  "displayName": "my-api-app",
+  "id": "d9e2f4a1-5c8b-4e7d-9a2f-1b3c5d7e9f2a",
+  "signInAudience": "AzureADMyOrg"
+}
+{
+  "appId": "b8d4g9f3-2c5e-5d0b-9g3f-4e6d8c0b2f5g",
+  "displayName": "my-web-app",
+  "id": "e0f3g5b2-6d9c-5f8e-0b3g-2c4d6e8f0g3b",
+  "signInAudience": "AzureADMyOrg",
+  "web": {
+    "redirectUris": [
+      "https://app.example.com/auth/callback"
+    ]
+  }
+}
+DisplayName                 AppId                                ObjectId
+--------------------------  ----------------------------------  ------------------------------------
+my-api-app                  a7c3f8e2-1b4d-4c9a-8f2e-3d5c7b9a1e4f  d9e2f4a1-5c8b-4e7d-9a2f-1b3c5d7e9f2a
+my-web-app                  b8d4g9f3-2c5e-5d0b-9g3f-4e6d8c0b2f5g  e0f3g5b2-6d9c-5f8e-0b3g-2c4d6e8f0g3b
+legacy-service              c9e5h0g4-3d6f-6e1c-0h4g-5f7e9d1c3g6c  f1g4h6c3-7e0d-6g9f-1c4h-3d5e7f9g1h4c
+...
+{
+  "appId": "a7c3f8e2-1b4d-4c9a-8f2e-3d5c7b9a1e4f",
+  "displayName": "my-api-app",
+  "id": "d9e2f4a1-5c8b-4e7d-9a2f-1b3c5d7e9f2a",
+  "signInAudience": "AzureADMyOrg",
+  "createdDateTime": "2024-01-15T10:32:45.123Z"
+}
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Insufficient privileges to complete the operation.`** — Ensure your Azure account has Application Administrator or Cloud Application Administrator role in the tenant.
+    **`Invalid value provided for parameter 'id': <app-id>. The value should be a valid UUID or object ID.`** — Replace `<app-id>` or `<app-id-or-
 ## Client Secrets
 
 Client secrets are password credentials used by confidential clients (server-side applications) to authenticate.
@@ -85,6 +124,23 @@ az ad app credential delete \
   --key-id <key-id>
 ```
 
+
+```text title="Expected output"
+{
+  "appId": "550e8400-e29b-41d4-a716-446655440000",
+  "password": "Eby8vdM02xNcWQbOo1xNYcK1xNcWQbOo1x",
+  "tenant": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+}
+KeyId                                DisplayName    StartDate              EndDate
+───────────────────────────────────  ─────────────  ─────────────────────  ─────────────────────
+a1b2c3d4-e5f6-7890-abcd-ef1234567890 key1           2024-01-15T10:22:33Z   2025-01-15T10:22:33Z
+b2c3d4e5-f6a7-8901-bcde-f12345678901 key2           2023-06-20T14:45:12Z   2024-06-20T14:45:12Z
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Invalid value: '<app-id>' is not a valid UUID or application name.`** — Replace `<app-id>` with the actual application ID (UUID format) or registered app name from your Azure AD tenant.
+    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure your Azure CLI account has Application Administrator or Global Administrator role in the Azure AD tenant.
 ### Secret Rotation Checklist
 
 | Step | Action |
@@ -114,6 +170,33 @@ az ad app credential reset \
   --append
 ```
 
+
+```text title="Expected output"
+{
+  "appId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "displayName": "my-application",
+  "objectId": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+  "servicePrincipalId": "12345678-1234-1234-1234-123456789012"
+}
+
+Certificate uploaded successfully.
+Credential with keyId 'abc123def456' has been added to app registration.
+
+{
+  "appId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "displayName": "my-application",
+  "objectId": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+  "servicePrincipalId": "12345678-1234-1234-1234-123456789012"
+}
+
+Certificate 'my-app-cert' created in Key Vault 'prod-kv-001'.
+Credential with keyId 'xyz789uvw012' has been added to app registration.
+```
+
+!!! warning "Common errors"
+    **`Certificate file not found: /path/to/certificate.pem`** — Verify the certificate file path exists and is readable with `ls -la /path/to/certificate.pem`.
+    **`The Key Vault 'keyvault-name' was not found in subscription`** — Confirm the Key Vault name is correct and exists in the current subscription with `az keyvault list --query "[].name"`.
+    **`Insufficient privileges to perform action on resource`** — Ensure your Azure account has the Application Administrator or Global Administrator role assigned in the tenant.
 ## API Permissions
 
 App registrations request permissions to other APIs (Microsoft Graph, Azure Resource Manager, custom APIs) through the `requiredResourceAccess` manifest field.
@@ -141,6 +224,21 @@ az ad app permission list \
   --output table
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+Admin consent granted for application 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d'.
+ResourceAppId                        PermissionId                         PermissionType    ConsentType
+-----------------------------------  -----------------------------------  -----------------  -----------
+00000003-0000-0000-c000-000000000000  e1fe6dd8-ba31-4d61-89e7-88639da4683d  Scope              Principal
+00000003-0000-0000-c000-000000000000  7ab1d382-f21e-4acd-a863-ba3e13f7da61  Role               Admin
+```
+
+!!! warning "Common errors"
+    **`Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied`** — Ensure you have Application Administrator or Global Administrator role in the Azure AD tenant.
+    **`No registered application found with identifier '<app-id>'.`** — Verify the app ID is correct and exists in your tenant by running `az ad app list --filter "appId eq '<app-id>'"`.
+    **`The permission ID '7ab1d382-f21e-4acd-a863-ba3e13f7da61' does not exist for resource '00000003-0000-0000-c000-000000000000'.`** — Confirm the permission ID is valid for Microsoft Graph by checking the Microsoft Graph permissions reference documentation.
 ### Common API Permission Types
 
 | Permission Type | Description | Consent |
@@ -165,6 +263,16 @@ az ad app update \
   --set appRoles=@app-roles.json
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Request_BadRequest: Invalid object identifier '<app-id>'.`** — Verify the app ID is a valid UUID format (e.g., `00000000-0000-0000-0000-000000000000`) and exists in your Azure AD tenant.
+    **`FileNotFoundError: [Errno 2] No such file or directory: 'app-roles.json'`** — Ensure the `app-roles.json` file exists in the current working directory and contains valid JSON matching the appRoles schema.
+    **`AuthorizationError: Insufficient privileges to complete the operation.`** — Confirm your Azure CLI account has Application Administrator or Global Administrator role in the tenant.
 ## Service Principal
 
 Every app registration has an associated service principal (enterprise application) in the tenant. Use the service principal for role assignments.
@@ -185,6 +293,39 @@ az role assignment create \
   --scope "/subscriptions/<subscription-id>"
 ```
 
+
+```text title="Expected output"
+{
+  "appId": "550e8400-e29b-41d4-a716-446655440000",
+  "displayName": "my-app-registration",
+  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "servicePrincipalNames": [
+    "https://my-app-registration",
+    "550e8400-e29b-41d4-a716-446655440000"
+  ],
+  "servicePrincipalType": "Application"
+}
+{
+  "appId": "550e8400-e29b-41d4-a716-446655440000",
+  "appOwnerOrganizationId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+  "displayName": "my-app-registration",
+  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "servicePrincipalType": "Application"
+}
+{
+  "canDelegate": false,
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "principalId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "principalType": "ServicePrincipal",
+  "roleDefinitionId": "/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+  "scope": "/subscriptions/12345678-1234-1234-1234-123456789012"
+}
+```
+
+!!! warning "Common errors"
+    **`Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied`** — Ensure your Azure account has sufficient permissions (Owner or User Access Administrator role) on the subscription.
+    **`Operation failed with status: 'Not Found'. Details: Code: ResourceNotFound`** — Verify the app-id exists by running `az ad app list --filter "appId eq '<app-id>'"` and use the correct application ID.
+    **`The role assignment already exists.`** — Remove the existing role assignment with `az role assignment delete --assignee <app-id> --role Contributor --scope <scope>` before reassigning.
 ## Common App Registration Patterns
 
 | Pattern | Description |

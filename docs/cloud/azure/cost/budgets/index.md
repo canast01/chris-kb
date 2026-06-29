@@ -75,6 +75,63 @@ az costmanagement budget delete \
   --scope "/subscriptions/<subscription-id>"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.CostManagement/budgets/monthly-sub-budget",
+  "name": "monthly-sub-budget",
+  "type": "Microsoft.CostManagement/budgets",
+  "properties": {
+    "displayName": "monthly-sub-budget",
+    "category": "Cost",
+    "amount": 5000.0,
+    "timeGrain": "Monthly",
+    "timePeriod": {
+      "startDate": "2026-05-01T00:00:00Z",
+      "endDate": "2027-05-01T00:00:00Z"
+    },
+    "notifications": {
+      "Notification1": {
+        "enabled": true,
+        "operator": "GreaterThan",
+        "threshold": 80,
+        "thresholdType": "Actual",
+        "contactEmails": ["finops@example.com"]
+      },
+      "Notification2": {
+        "enabled": true,
+        "operator": "GreaterThan",
+        "threshold": 100,
+        "thresholdType": "Actual",
+        "contactEmails": ["finops@example.com", "eng-leads@example.com"]
+      }
+    }
+  }
+}
+
+BudgetName          Category    Amount    TimeGrain    StartDate      EndDate
+-------------------  ----------  --------  -----------  ---------------  ---------------
+monthly-sub-budget   Cost        5000.0    Monthly      2026-05-01       2027-05-01
+q3-resource-budget   Cost        8500.0    Monthly      2026-07-01       2026-09-30
+annual-cap-budget    Cost        50000.0   Annually     2026-01-01       2026-12-31
+
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.CostManagement/budgets/monthly-sub-budget",
+  "name": "monthly-sub-budget",
+  "properties": {
+    "displayName": "monthly-sub-budget",
+    "amount": 5000.0,
+    "timeGrain": "Monthly"
+  }
+}
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`ERROR: (InvalidRequest) Invalid scope format. Scope must be a valid resource ID.`** — Replace `<subscription-id>` with your actual subscription ID (e.g., `a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d`).
+    **`ERROR: (AuthorizationFailed) The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.CostManagement/budgets/write' over scope '/subscriptions/xxx'.`** — Ensure your user account has the Cost Management Contributor role assigned on the subscription.
+    **`ERROR: (BadRequest) Invalid JSON in notifications parameter: Unexpected character in JSON at position 45.
 ## Scope Options
 
 Budgets can target different scopes. Use the narrowest scope that makes sense for the use case.
@@ -98,6 +155,36 @@ az costmanagement budget create \
   --end-date 2027-05-01
 ```
 
+
+```text title="Expected output"
+{
+  "eTag": "\"1d00c8e0-0000-0100-0000-67a4f2c10000\"",
+  "id": "/subscriptions/a1b2c3d4-e5f6-4789-0abc-def123456789/resourceGroups/rg-team-alpha/providers/Microsoft.CostManagement/budgets/team-alpha-monthly",
+  "name": "team-alpha-monthly",
+  "properties": {
+    "amount": 1000.0,
+    "category": "Cost",
+    "currentSpend": {
+      "amount": 247.53,
+      "unit": "USD"
+    },
+    "endDate": "2027-05-01T00:00:00Z",
+    "notifications": {},
+    "startDate": "2026-05-01T00:00:00Z",
+    "timeGrain": "Monthly",
+    "timePeriod": {
+      "endDate": "2027-05-01T00:00:00Z",
+      "startDate": "2026-05-01T00:00:00Z"
+    }
+  },
+  "type": "Microsoft.CostManagement/budgets"
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound: The resource group 'rg-team-alpha' could not be found.`** — Verify the resource group name exists in the subscription using `az group list --query "[].name"`.
+    **`InvalidParameter: The value of parameter 'scope' is invalid.`** — Ensure the subscription ID is correct and the scope format is exactly `/subscriptions/<sub-id>/resourceGroups/<rg-name>` with no trailing slashes.
+    **`AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.CostManagement/budgets/write'.`** — Assign the user or service principal the "Cost Management Contributor" role on the resource group or subscription.
 ## Alert Thresholds
 
 Each budget supports up to five notification rules. Notifications fire when actual or forecasted spend crosses a percentage of the budget amount.
@@ -138,6 +225,25 @@ az monitor action-group show \
   --output tsv
 ```
 
+
+```text title="Expected output"
+{
+  "armId": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-finops/providers/microsoft.insights/actionGroups/ag-budget-alerts",
+  "enabled": true,
+  "groupShortName": "budg-alert",
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-finops/providers/microsoft.insights/actionGroups/ag-budget-alerts",
+  "location": "global",
+  "name": "ag-budget-alerts",
+  "resourceGroup": "rg-finops",
+  "tags": {},
+  "type": "Microsoft.Insights/actionGroups"
+}
+/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-finops/providers/microsoft.insights/actionGroups/ag-budget-alerts
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound : Resource group 'rg-finops' could not be found.`** — Create the resource group first with `az group create --name rg-finops --location eastus`.
+    **`InvalidEmailAddress : The email address 'finops@example.com' is invalid or the action cannot be created.`** — Verify the email address is correctly formatted and the recipient has accepted the action group notification.
 ## Budget Best Practices
 
 | Practice | Rationale |

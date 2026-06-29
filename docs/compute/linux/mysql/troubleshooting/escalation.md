@@ -99,6 +99,27 @@ mysql -u root -p -e "SHOW GLOBAL VARIABLES LIKE 'innodb%';" > /tmp/innodb-vars.t
 mysql -u root -p -e "SHOW GLOBAL STATUS;" > /tmp/global-status.txt
 ```
 
+
+```text title="Expected output"
+mysqld  Ver 8.0.35-0ubuntu0.20.04.1 for Linux on x86_64 (Ubuntu)
+Enter password: 
+VERSION()	@@datadir	@@innodb_buffer_pool_size	@@max_connections
+8.0.35	/var/lib/mysql	1073741824	151
+Variable_name	Value
+innodb_abort_on_paint	OFF
+innodb_adaptive_flushing	ON
+innodb_adaptive_flushing_lwm	10
+innodb_adaptive_hash_index	ON
+innodb_adaptive_hash_index_parts	8
+...
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct or use `mysql -u root -p` without `-p` if no password is set.
+    **`ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Ensure MySQL/MariaDB service is running with `sudo systemctl start mysql` or `sudo systemctl start mariadb`.
+    **`bash: mysqld: command not found`** — Add the MySQL bin directory to PATH with `export PATH=$PATH:/usr/sbin:/usr/local/mysql/bin` or use the full path `/usr/sbin/mysqld --version`.
 ### 2. Save the error log
 
 ```bash
@@ -114,6 +135,17 @@ sudo dmesg | grep -i "out of memory\|kill process\|mysqld" > /tmp/dmesg-mysql.tx
 sudo grep -i "mysqld\|mysql\|oom" /var/log/messages 2>/dev/null | tail -100 >> /tmp/dmesg-mysql.txt
 ```
 
+
+```text title="Expected output"
+tail: cannot open '/var/log/mysqld.log' for reading: No such file or directory
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/var/log/mysqld.log' for reading: No such file or directory`** — Verify the correct log path for your distribution by running `mysql -u root -p -e "SHOW VARIABLES LIKE 'log_error';"` first.
+    **`sudo: no tty present and no askpass program specified`** — Run the commands with a TTY or configure passwordless sudo for the mysql log paths in sudoers.
+    **`grep: /var/log/messages: No such file or directory`** — This is expected on systemd-based systems; use `sudo journalctl -u mysql -n 100` instead to check the system journal.
 ### 3. Capture InnoDB status (critical for crash and lock issues)
 
 ```bash
@@ -126,6 +158,16 @@ mysql -u root -p -e "SHOW ENGINE INNODB STATUS\G" > /tmp/innodb-status-$(date +%
 # - TRANSACTIONS section for long-running transactions
 ```
 
+
+```text title="Expected output"
+mysql: [Warning] Using a password on the command line interface can be insecure.
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`mysql: [Warning] Using a password on the command line interface can be insecure.`** — Use a MySQL options file (~/.my.cnf) with [client] section containing password, or use mysql_config_editor to store credentials securely.
+    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost'`** — Verify the root password is correct and the user has SUPER privilege; use `mysql -u root -p` interactively to test credentials first.
+    **`bash: /tmp/innodb-status-20250115143022.txt: Permission denied`** — Ensure the /tmp directory is writable by the user running the command, or redirect to a directory with write permissions like `~/innodb-status.txt`.
 ### 4. Capture replication status (if replica)
 
 ```bash
@@ -139,6 +181,48 @@ mysql -u root -p -e "SHOW MASTER STATUS\G" > /tmp/master-status.txt
 mysql -u root -p -e "SHOW BINARY LOGS;" > /tmp/binlog-list.txt
 ```
 
+
+```text title="Expected output"
+Enter password: 
+Enter password: 
+Enter password: 
+# /tmp/replica-status-202401151430.txt contains:
+*************************** 1. row ***************************
+             Replica_IO_State: Waiting for source to send event
+                  Source_Host: 10.45.12.8
+                  Source_User: repl_user
+                  Source_Port: 3306
+                Source_Log_File: mysql-bin.000047
+            Read_Master_Log_Pos: 156284391
+                 Relay_Log_File: relay-bin.000089
+                  Relay_Log_Pos: 156284504
+          Relay_Master_Log_File: mysql-bin.000047
+               Slave_IO_Running: Yes
+              Slave_SQL_Running: Yes
+                 Seconds_Behind_Master: 0
+
+# /tmp/master-status.txt contains:
+*************************** 1. row ***************************
+             File: mysql-bin.000047
+         Position: 156284391
+     Binlog_Do_DB: 
+ Binlog_Ignore_DB: 
+Executed_Gtid_Set: 8e4a2c91-7f3b-11ed-9a1c-0242ac110002:1-4521847
+
+# /tmp/binlog-list.txt contains:
++------------------+-----------+-----------+
+| Log_name         | File_size | Encrypted |
++------------------+-----------+-----------+
+| mysql-bin.000045 | 536870912 | N         |
+| mysql-bin.000046 | 536870912 | N         |
+| mysql-bin.000047 | 156284391 | N         |
++------------------+-----------+-----------+
+```
+
+!!! warning "Common errors"
+    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct and the user has REPLICATION CLIENT privilege; use `mysql -u root -p -e "SHOW GRANTS FOR root@localhost;"` to confirm permissions.
+    **`ERROR 2003 (HY000): Can't connect to MySQL server on '10.45.12.8' (111)`** — Ensure the MySQL service is running on the target host with `systemctl status mysql` and that the firewall allows port 3306 from the replica server.
+    **`ERROR 1227 (42000): Access denied; you need (at least one of) the REPLICATION CLIENT privilege(s) for this operation`** — Grant the required privilege with `GRANT REPLICATION CLIENT ON *.* TO 'root'@'localhost';` on the primary server.
 ### 5. Capture active process list and blocking
 
 ```bash
@@ -158,6 +242,30 @@ JOIN information_schema.INNODB_TRX r
 SQL
 ```
 
+
+```text title="Expected output"
+mysql: [Warning] Using a password on the command line is insecure.
+(no output — command completes silently)
+mysql: [Warning] Using a password on the command line is insecured.
+(no output — command completes silently)
+
+$ cat /tmp/processlist.txt
+     Id	User	Host	db	Command	Time	State	Info
+      5	root	localhost	NULL	Query	0	init	SHOW FULL PROCESSLIST
+     12	app_user	192.168.1.45:52341	production	Query	2	Sending data	SELECT * FROM orders WHERE status='pending'
+     18	app_user	192.168.1.46:52342	production	Sleep	45	NULL	NULL
+     24	replication	192.168.1.50:3306	NULL	Binlog Dump	3600	Master has sent all binlog to slave	NULL
+
+$ cat /tmp/lock-waits.txt
+waiting_trx	waiting_query	blocking_trx	blocking_query	trx_started
+trx_12345	UPDATE inventory SET qty=qty-1 WHERE id=999	trx_12340	UPDATE inventory SET qty=qty+5 WHERE id=999	2024-01-15 14:23:18
+trx_12346	DELETE FROM orders WHERE order_id=5001	trx_12345	SELECT * FROM orders WHERE order_id=5001 FOR UPDATE	2024-01-15 14:23:22
+```
+
+!!! warning "Common errors"
+    **`mysql: [Warning] Using a password on the command line is insecure.`** — Use a MySQL options file (~/.my.cnf) with [client] section containing user and password, or use mysql_config_editor to store credentials securely.
+    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct and the user has PROCESS and SUPER privileges with `GRANT PROCESS, SUPER ON *.* TO 'root'@'localhost';`.
+    **`ERROR 1064 (42000): You have an error in your SQL syntax`** — Ensure the heredoc SQL block uses proper quoting and that all table names in information_schema match your MySQL version (use SHOW TABLES IN information_schema to verify).
 ### 6. Write the timeline
 
 ```text
@@ -267,6 +375,63 @@ df -h /var/lib/mysql
 dmesg | grep -i "kill process\|out of memory" | grep -i mysql | tail -20
 ```
 
+
+```text title="Expected output"
+Enter password: 
++-----------+-----------------+
+| VERSION() | @@hostname      |
++-----------+-----------------+
+| 8.0.35    | db-prod-01.local|
++-----------+-----------------+
+● mysqld.service - MySQL Server
+     Loaded: loaded (/usr/lib/systemd/system/mysqld.service; enabled; vendor preset: disabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 45 days ago
+   Process: 2847 ExecStartPost=/usr/bin/mysql-systemd-start post (code=exited, status=0/SUCCESS)
+ Main PID: 2801 (mysqld)
+   Status: "Server is operational"
+    Tasks: 28 (limit: 4915)
+   Memory: 2.3G
+   CGroup: /system.slice/mysqld.service
+           └─2801 /usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid
+2024-01-17T14:35:22.456789Z 0 [Note] InnoDB: Buffer pool size set to 2.0G
+2024-01-17T14:35:45.123456Z 0 [Note] Server hostname (bind-address): '*'; port: 3306
+2024-01-17T14:36:01.987654Z 0 [Note] Ready for connections
+2024-01-17T15:42:18.654321Z 3 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2024-01-17T16:18:33.112233Z 8 [Note] [MY-000000] [InnoDB] Checkpoint age: 524288
+Enter password: 
+=====================================
+2024-01-17 16:45:22 0x7f8a2c3d4e5f
+-----
+LOG
+-----
+2024-01-17T16:45:12.345678Z 0 [Note] InnoDB: Shutdown initiated
+2024-01-17T16:45:15.234567Z 0 [Note] InnoDB: Shutdown completed; log sequence number 98765432
+---REPLICA STATUS---
+             Slave_IO_State: Waiting for master to send event
+                  Master_Host: db-primary-01.local
+                  Master_User: repl_user
+              Master_Log_File: mysql-bin.000847
+          Read_Master_Log_Pos: 154328901
+               Relay_Log_File: db-prod-01-relay-bin.000512
+                Relay_Log_Pos: 154328614
+        Relay_Master_Log_File: mysql-bin.000847
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: Yes
+              Replicate_Do_DB: 
+          Replicate_Ignore_DB: mysql,sys,performance_schema
+             Second_Behind_Master: 0
+Enter password: 
+     Id: 4
+   User: root
+   Host: localhost
+     db: NULL
+Command: Query
+   Time: 0
+  State: executing
+   Info: SHOW FULL PROCESSLIST
+     Id: 8
+   User: app_user
+```
 ---
 
 ## Support SLA Reference

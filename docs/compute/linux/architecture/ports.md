@@ -103,6 +103,27 @@ dig @<dns-server> corp.local
 curl -sk -o /dev/null -w "%{http_code}" https://<satellite-or-repo-host>/
 ```
 
+
+```text title="Expected output"
+13:47:22 up 42 days, 3:15, 1 user, load average: 0.12, 0.08, 0.05
+# HELP node_cpu_seconds_total Seconds the cpus spent in each mode.
+# TYPE node_cpu_seconds_total counter
+node_cpu_seconds_total{cpu="0",mode="user"} 8847.23
+node_cpu_seconds_total{cpu="0",mode="system"} 1203.45
+System time offset      : 0.000012345 seconds slow of NTP time
+; <<>> DiG 9.16.23-RH <<>> @10.20.30.40 corp.local
+; (1 server found)
+;; Query time: 12 msec
+;; SERVER: 10.20.30.40#53(10.20.30.40)
+;; WHEN: Wed Jan 15 13:47:35 UTC 2025
+;; MSG SIZE  rcvd: 87
+200
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host <linux-host> port 22: Connection timed out`** — Verify the host is reachable with `ping <linux-host>` and check firewall rules allow SSH from the jump host.
+    **`curl: (7) Failed to connect to <linux-host> port 9100: Connection refused`** — Confirm node_exporter is running with `systemctl status node_exporter` and listening on port 9100.
+    **`dig: couldn't get address for '<dns-server>': not known`** — Replace `<dns-server>` with a valid IP address (e.g., `8.8.8.8`) or verify DNS server hostname resolves.
 ---
 
 ## See also

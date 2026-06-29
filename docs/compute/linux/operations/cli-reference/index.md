@@ -61,6 +61,27 @@ nohup <command> &                   # Run detached
 jobs                                # List background jobs
 ```
 
+
+```text title="Expected output"
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.2  19232  9140 ?        Ss   08:14   0:02 /sbin/init
+root       412  0.1  0.8  55280 32456 ?        Ss   08:14   0:15 /lib/systemd/systemd-journald
+postgres   2847  2.3  5.6 892456 228904 ?       Ss   09:22   1:47 /usr/lib/postgresql/13/bin/postgres
+nginx      3102  0.4  1.2 145680 48920 ?        S    09:45   0:08 nginx: worker process
+root       4521  8.7  12.1 2456780 492560 ?     Sl   10:01   3:42 java -Xmx2g -jar app.jar
+ubuntu     5634  0.0  0.1  21544  4128 pts/0    Ss   10:15   0:00 -bash
+ubuntu     6789  1.2  0.3  98765  12340 pts/0   S+   10:22   0:05 python3 data_processor.py
+
+nohup: ignoring input and appending output to 'nohup.out'
+[1] 7234
+
+[1]+  Running                 nohup long_running_task.sh &
+```
+
+!!! warning "Common errors"
+    **`bash: kill: (12345): No such process`** — Verify the PID exists with `ps aux | grep <PID>` before attempting to kill it.
+    **`pkill: invalid option -- 'f'`** — Use `pkill -f` on Linux systems; on some BSD variants use `pgrep -f` to find processes first.
+    **`nohup: failed to run command '<command>': No such file or directory`** — Ensure the command path is correct and the executable exists in your PATH or provide the full absolute path.
 ## Disk and Filesystem
 
 ```bash

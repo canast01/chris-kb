@@ -57,6 +57,37 @@ az reservation reservation show \
   --reservation-id <reservation-id>
 ```
 
+
+```text title="Expected output"
+ReservationOrderId                       DisplayName                    CreatedDateTime      ExpiryDateTime       BenefitStartTime     Term
+---------------------------------------- ------------------------------ -------------------- -------------------- -------------------- ------
+00000000-0000-0000-0000-000000000001     Reserved Instance - Compute    2023-06-15T10:30:00Z 2025-06-15T10:30:00Z 2023-06-15T00:00:00Z P1Y
+00000000-0000-0000-0000-000000000002     Reserved Instance - Storage    2023-08-22T14:15:00Z 2026-08-22T14:15:00Z 2023-08-22T00:00:00Z P3Y
+
+ReservationId                            DisplayName                    State      ExpiryDate           ProvisioningState
+------------------------------------ -------------------------------- ---------- -------------------- ------------------
+11111111-1111-1111-1111-111111111111 Reserved Instance - Compute-1    Succeeded  2025-06-15T00:00:00Z Succeeded
+11111111-1111-1111-1111-111111111112 Reserved Instance - Compute-2    Succeeded  2025-06-15T00:00:00Z Succeeded
+
+{
+  "id": "/providers/Microsoft.Capacity/reservationOrders/00000000-0000-0000-0000-000000000001/reservations/11111111-1111-1111-1111-111111111111",
+  "name": "11111111-1111-1111-1111-111111111111",
+  "properties": {
+    "displayName": "Reserved Instance - Compute-1",
+    "appliedScopes": [
+      "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    ],
+    "quantity": 1,
+    "provisioningState": "Succeeded",
+    "expiryDate": "2025-06-15",
+    "skuDescription": "Compute_Standard_D2s_v3_1_Year"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`The provided reservation order ID '<order-id>' does not exist.`** — Replace `<order-id>` with a valid reservation order ID from the `az reservation reservation-order list` output.
+    **`Authorization failed for template deployment. The client '<client-id>' with object id '<object-id>' does not have permission to perform action 'Microsoft.Capacity/reservationOrders/read' over scope '/subscriptions/<subscription-id>'.`** — Ensure your Azure account has the Reader role or higher on the subscription containing the reservations.
 ### Purchase Workflow
 
 Reservations are purchased through the Azure portal or REST API. The CLI is used primarily for post-purchase management (listing, scope changes, exchange/refund).
@@ -89,6 +120,32 @@ az reservation reservation update \
   --applied-scope-type Shared
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/providers/microsoft.capacity/reservationOrders/50000000-aaaa-bbbb-cccc-100000000000/reservations/60000000-dddd-eeee-ffff-200000000000",
+  "name": "60000000-dddd-eeee-ffff-200000000000",
+  "type": "Microsoft.Capacity/reservationOrders/reservations",
+  "sku": {
+    "name": "Standard_D2s_v3"
+  },
+  "properties": {
+    "appliedScopeType": "Shared",
+    "appliedScopes": [],
+    "quantity": 1,
+    "provisioningState": "Succeeded",
+    "displayName": "Compute_SavingsPlan",
+    "effectiveDateTime": "2024-01-15T00:00:00Z",
+    "lastUpdatedDateTime": "2024-01-20T14:32:18.5432109Z",
+    "expiryDate": "2025-01-15"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`InvalidParameterValue: The provided reservation order ID is invalid or not found.`** — Verify the reservation order ID exists in your subscription using `az reservation reservation-order list`.
+    **`AuthorizationFailed: The client does not have permission to perform action 'Microsoft.Capacity/reservationOrders/reservations/write' on scope.`** — Ensure your Azure account has Owner or Contributor role on the subscription containing the reservation.
+    **`BadRequest: Cannot change scope type from Single to Shared when reservation has applied scopes defined.`** — Remove existing applied scopes first using `az reservation reservation update --applied-scopes ""` before changing scope type.
 ## Exchange and Refund
 
 Reservations can be exchanged for a different SKU or region, or refunded (subject to a 12% early termination fee and $50,000/year refund cap).
@@ -104,6 +161,19 @@ az reservation reservation show \
 # REST endpoint: POST /providers/Microsoft.Capacity/reservationOrders/{orderId}/exchange
 ```
 
+
+```text title="Expected output"
+{
+  "SKU": "Standard_D2s_v3",
+  "Scope": "Shared",
+  "Quantity": 5,
+  "ExpiryDate": "2026-03-15T00:00:00Z"
+}
+```
+
+!!! warning "Common errors"
+    **`The provided reservation order ID '<order-id>' is invalid or does not exist.`** — Verify the reservation order ID by running `az reservation reservation-order list` and copy the exact ID from the output.
+    **`No subscriptions found in your account. Please call 'az account set' to select a subscription.`** — Set your active subscription with `az account set --subscription <subscription-id>` before running the command.
 ## Utilisation Monitoring
 
 Low utilisation means the discount is being wasted. Track utilisation and act quickly if it drops below 80%.
@@ -123,6 +193,22 @@ az consumption reservation detail list \
   --output table
 ```
 
+
+```text title="Expected output"
+ReservationOrderId                       ReservationId                            UsageDate            SkuName                  TotalReservedQuantity    TotalUsedQuantity    UnusedQuantity    UtilizationPercentage
+---------------------------------------- ---------------------------------------- -------------------- ---------------------- ----------------------- -------------------- ------------------- ----------------------
+550e8400-e29b-41d4-a716-446655440000     6ba7b810-9dad-11d1-80b4-00c04fd430c8     2026-05-01           Standard_D4s_v3         100.0                  87.5                 12.5                 87.5
+550e8400-e29b-41d4-a716-446655440000     6ba7b810-9dad-11d1-80b4-00c04fd430c8     2026-05-02           Standard_D4s_v3         100.0                  92.0                 8.0                  92.0
+550e8400-e29b-41d4-a716-446655440000     6ba7b810-9dad-11d1-80b4-00c04fd430c8     2026-05-03           Standard_D4s_v3         100.0                  100.0                0.0                  100.0
+550e8400-e29b-41d4-a716-446655440000     6ba7b810-9dad-11d1-80b4-00c04fd430c8     2026-05-04           Standard_D4s_v3         100.0                  78.5                 21.5                 78.5
+550e8400-e29b-41d4-a716-446655440000     6ba7b810-9dad-11d1-80b4-00c04fd430c8     2026-05-05           Standard_D4s_v3         100.0                  95.0                 5.0                  95.0
+
+ReservationOrderId                       ReservationId                            InstanceId                                                           UsageDate            SkuName                  ReservedQuantity    UsedQuantity    ChargeType
+---------------------------------------- ---------------------------------------- ------------------------------------------------------------------ -------------------- ---------------------- ------------------- -------------- ----------------
+550e8400-e29b-41d4-a716-446655440000     6ba7b810-9dad-11d1-80b4-00c04fd430c8     /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-prod-01     2026-05-01           Standard_D4s_v3         50.0                45.0            Reserved
+550e8400-e29b-41d4-a716-446655440000     6ba7b810-9dad-11d1-80b4-00c04fd430c8     /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-prod-02     2026-05-01           Standard_D4s_v3         50.0                42.5            Reserved
+550e8400-e29
+```
 ### Utilisation Thresholds
 
 | Utilisation % | Status | Action |

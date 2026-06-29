@@ -69,6 +69,43 @@ az policy exemption delete \
   --scope "/subscriptions/<sub-id>/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01/providers/Microsoft.Authorization/policyExemptions/legacy-vm-public-ip-exemption",
+  "name": "legacy-vm-public-ip-exemption",
+  "type": "Microsoft.Authorization/policyExemptions",
+  "displayName": "Legacy VM - public IP required until migration",
+  "description": "This VM requires a public IP until the migration to private endpoint is complete in Q3 2026",
+  "exemptionCategory": "Waiver",
+  "expiresOn": "2026-09-30T00:00:00Z",
+  "policyAssignmentId": "/subscriptions/a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8/providers/Microsoft.Authorization/policyAssignments/deny-public-ip"
+}
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8/resourceGroups/rg-sandbox/providers/Microsoft.Authorization/policyExemptions/sandbox-rg-exemption",
+  "name": "sandbox-rg-exemption",
+  "type": "Microsoft.Authorization/policyExemptions",
+  "displayName": "Sandbox RG - tagging not required",
+  "exemptionCategory": "Mitigated",
+  "expiresOn": "2026-12-31T00:00:00Z",
+  "policyAssignmentId": "/subscriptions/a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8/providers/Microsoft.Authorization/policyAssignments/require-cost-centre-tag"
+}
+Name                                  DisplayName                                    ExemptionCategory    ExpiresOn
+------------------------------------  -----------------------------------------------  -------------------  ----------
+legacy-vm-public-ip-exemption         Legacy VM - public IP required until migration  Waiver               2026-09-30
+sandbox-rg-exemption                  Sandbox RG - tagging not required               Mitigated            2026-12-31
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01/providers/Microsoft.Authorization/policyExemptions/legacy-vm-public-ip-exemption",
+  "name": "legacy-vm-public-ip-exemption",
+  "displayName": "Legacy VM - public IP required until migration",
+  "exemptionCategory": "Waiver",
+  "expiresOn": "2026-09-30T00:00:00Z"
+}
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`The policy assignment '/subscriptions/<sub-id>/providers/Microsoft.Authorization/policyAss
 ## Waiver vs Mitigated
 
 The exemption category communicates the rationale for the exemption and is important for audit purposes.
@@ -98,6 +135,32 @@ az policy exemption list \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01/providers/Microsoft.Authorization/policyExemptions/legacy-vm-public-ip-exemption",
+  "name": "legacy-vm-public-ip-exemption",
+  "type": "Microsoft.Authorization/policyExemptions",
+  "properties": {
+    "policyAssignmentId": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Authorization/policyAssignments/audit-public-ip",
+    "exemptionCategory": "Waived",
+    "expiresOn": "2026-12-31T00:00:00Z",
+    "displayName": "Legacy VM Public IP Exemption",
+    "description": "Exemption for legacy VM migration period"
+  }
+}
+
+Name                                  Scope                                                                                                                                                 Expiry                    Category
+------------------------------------  -----------------------------------------------------------------------------------------------------------------------------------------------------  ------------------------  ----------
+legacy-vm-public-ip-exemption         /subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-legacy/providers/Microsoft.Compute/virtualMachines/vm-legacy-01             2026-12-31T00:00:00Z      Waived
+storage-encryption-exemption          /subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-prod/providers/Microsoft.Storage/storageAccounts/stgprod01                  2025-06-15T00:00:00Z      Mitigated
+network-nsg-exemption                 /subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-network                                                                      2025-02-28T00:00:00Z      Waived
+```
+
+!!! warning "Common errors"
+    **`The provided scope is invalid.`** — Verify the subscription ID and resource group name are correct, and that the resource exists in the specified scope.
+    **`The policy exemption 'legacy-vm-public-ip-exemption' was not found.`** — Confirm the exemption name matches exactly and exists in the target scope before attempting to update.
+    **`The date format is invalid. Expected format: YYYY-MM-DDTHH:MM:SSZ`** — Use ISO 8601 format with UTC timezone (Z suffix) for the `--expires-on` parameter.
 ### Exemption Lifecycle
 
 | Stage | Action |
@@ -122,6 +185,20 @@ az monitor activity-log list \
   --start-time 2026-05-01T00:00:00Z
 ```
 
+
+```text title="Expected output"
+Time                          Operation                                    Caller                           Status
+2026-05-15T14:32:18.456789Z   Microsoft.Authorization/policyExemptions/write  user@contoso.com                 Succeeded
+2026-05-14T09:17:42.123456Z   Microsoft.Authorization/policyExemptions/write  automation-svc@contoso.onmicrosoft.com  Succeeded
+2026-05-12T16:45:33.789012Z   Microsoft.Authorization/policyExemptions/delete  admin@contoso.com                Succeeded
+2026-05-10T11:22:05.345678Z   Microsoft.Authorization/policyExemptions/write  user@contoso.com                 Succeeded
+2026-05-08T08:19:51.901234Z   Microsoft.Authorization/policyExemptions/read   audit-reader@contoso.com        Succeeded
+```
+
+!!! warning "Common errors"
+    **`ERROR: The subscription '<subscription-id>' could not be found.`** — Replace `<subscription-id>` with your actual Azure subscription ID or run `az account show --query id` to retrieve it.
+    **`ERROR: The following arguments are required: --subscription`** — Provide the `--subscription` parameter with a valid subscription ID or set the default subscription using `az account set --subscription <id>`.
+    **`ERROR: The time format is invalid. Valid formats are: 'YYYY-MM-DDTHH:MM:SSZ' or 'YYYY-MM-DD HH:MM:SS'.`** — Ensure the `--start-time` value uses ISO 8601 format (e.g., `2026-05-01T00:00:00Z`) with a valid date.
 ## Exemption Best Practices
 
 | Practice | Rationale |

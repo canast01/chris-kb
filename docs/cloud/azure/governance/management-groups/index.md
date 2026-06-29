@@ -107,6 +107,60 @@ az account management-group subscription remove \
   --subscription <subscription-id>
 ```
 
+
+```text title="Expected output"
+Name                DisplayName                 Type
+------------------  --------------------------  --------
+mg-root             Root Management Group       /subscriptions
+mg-platform         Platform Services          /subscriptions
+mg-landingzones     Landing Zones              /subscriptions
+mg-sandbox          Sandbox                    /subscriptions
+mg-decommissioned   Decommissioned Resources   /subscriptions
+
+{
+  "id": "/providers/Microsoft.Management/managementGroups/mg-platform",
+  "name": "mg-platform",
+  "displayName": "Platform Services",
+  "parentDisplayNameChain": ["Root Management Group"],
+  "children": [
+    {
+      "id": "/providers/Microsoft.Management/managementGroups/mg-networking",
+      "name": "mg-networking",
+      "displayName": "Networking"
+    },
+    {
+      "id": "/providers/Microsoft.Management/managementGroups/mg-security",
+      "name": "mg-security",
+      "displayName": "Security"
+    }
+  ]
+}
+
+{
+  "id": "/providers/Microsoft.Management/managementGroups/mg-new-workloads",
+  "name": "mg-new-workloads",
+  "displayName": "New Workloads",
+  "parentId": "/providers/Microsoft.Management/managementGroups/mg-landingzones"
+}
+
+{
+  "id": "/providers/Microsoft.Management/managementGroups/mg-new-workloads",
+  "name": "mg-new-workloads",
+  "displayName": "New Workloads",
+  "parentId": "/providers/Microsoft.Management/managementGroups/mg-platform"
+}
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`ManagementGroupNotFound: Management group 'mg-new-workloads' not found.`** — Verify the management group name exists with `az account management-group list` before attempting operations.
+    **`ChildrenOperationNotAllowed: Cannot move management group 'mg-new-workloads' because it contains subscriptions or child groups.`** — Remove all child management groups and subscriptions before moving or deleting a management group.
+    **`AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.Management/managementGroups/write' on scope.`** — Ensure your Azure account has Management Group Contributor or Owner role at the tenant root scope.
 ## Policy Inheritance
 
 Policies assigned at a management group level are automatically inherited by all child management groups and subscriptions.
@@ -130,6 +184,45 @@ az policy state list \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/providers/Microsoft.Management/managementGroups/mg-production/providers/Microsoft.Authorization/policyAssignments/deny-public-ip-mg",
+  "name": "deny-public-ip-mg",
+  "type": "Microsoft.Authorization/policyAssignments",
+  "displayName": "deny-public-ip-mg",
+  "policyDefinitionId": "/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/policyDefinitions/9daedab3-fb2d-461e-b861-71790eead4f6",
+  "scope": "/providers/Microsoft.Management/managementGroups/mg-production",
+  "notScopes": [],
+  "parameters": {},
+  "description": null,
+  "metadata": {
+    "createdBy": "user@contoso.com",
+    "createdOn": "2024-01-15T10:32:45.123456Z",
+    "updatedBy": "user@contoso.com",
+    "updatedOn": "2024-01-15T10:32:45.123456Z"
+  },
+  "enforcementMode": "Default"
+}
+
+Name                          Scope                                                                      Description
+------------------------------  -------------------------------------------------------------------------  -----------
+deny-public-ip-mg             /providers/Microsoft.Management/managementGroups/mg-production
+audit-storage-https           /providers/Microsoft.Management/managementGroups/mg-production
+require-tags-mg               /providers/Microsoft.Management/managementGroups/mg-production
+...
+
+ResourceId                                                                                    ComplianceState  PolicyAssignmentId
+------------------------------------------------------------------------------------------------------  ----------------  -----------------------------------------------
+/subscriptions/abc12345-def6-7890-ghij-klmnopqrstuv/resourceGroups/rg-prod-01/providers/Microsoft.Network/publicIPAddresses/pip-app-01  NonCompliant      deny-public-ip-mg
+/subscriptions/abc12345-def6-7890-ghij-klmnopqrstuv/resourceGroups/rg-prod-02/providers/Microsoft.Compute/virtualMachines/vm-web-03  NonCompliant      deny-public-ip-mg
+/subscriptions/xyz98765-abc4-3210-defg-hijklmnopqrs/resourceGroups/rg-prod-db/providers/Microsoft.Network/publicIPAddresses/pip-db-02  NonCompliant      deny-public-ip-mg
+```
+
+!!! warning "Common errors"
+    **`The policy definition with ID '9daedab3-fb2d-461e-b861-71790eead4f6' could not be found.`** — Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct ID.
+    **`The scope '/providers/Microsoft.Management/managementGroups/mg-production' is invalid or you do not have access to this management group.`** — Confirm the management group name is correct and you have Reader or higher permissions on it using `az account management-group show --name mg-production`.
+    **`Operation failed with status: 'Forbidden'. The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ### Policy Assignment Hierarchy
 
 | Level Assigned | Applies To |
@@ -163,6 +256,37 @@ az role assignment list \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "canDelegate": false,
+  "id": "/providers/Microsoft.Management/managementGroups/mg-platform/providers/Microsoft.Authorization/roleAssignments/a7f3c2e1-9b4d-47e8-b6f2-1c5d8a9e3f2b",
+  "name": "a7f3c2e1-9b4d-47e8-b6f2-1c5d8a9e3f2b",
+  "principalId": "d4e5f6a7-8b9c-4d1e-9f2a-3b4c5d6e7f8a",
+  "principalType": "Group",
+  "roleDefinitionId": "/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7",
+  "scope": "/providers/Microsoft.Management/managementGroups/mg-platform",
+  "type": "Microsoft.Authorization/roleAssignments"
+}
+{
+  "canDelegate": false,
+  "id": "/providers/Microsoft.Management/managementGroups/mg-landingzones/providers/Microsoft.Authorization/roleAssignments/b8g4d3f2-0c5e-48f9-c7g3-2d6e9b0f4g3c",
+  "name": "b8g4d3f2-0c5e-48f9-c7g3-2d6e9b0f4g3c",
+  "principalId": "e5f6g7h8-9c0d-5e2f-0g3h-4c5d6e7f8g9h",
+  "principalType": "ServicePrincipal",
+  "roleDefinitionId": "/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+  "scope": "/providers/Microsoft.Management/managementGroups/mg-landingzones",
+  "type": "Microsoft.Authorization/roleAssignments"
+}
+RoleAssignmentName                       RoleDefinitionName    Scope
+───────────────────────────────────────  ────────────────────  ──────────────────────────────────────────────────────────────
+a7f3c2e1-9b4d-47e8-b6f2-1c5d8a9e3f2b    Reader                /providers/Microsoft.Management/managementGroups/mg-platform
+c9h5e4g3-1d6f-49g0-d8h4-3e7f0c1g5h4d    Owner                 /providers/Microsoft.Management/managementGroups/mg-platform
+d0i6f5h4-2e7g-50h1-e9i5-4f8g1d2h6i5e    Contributor           /providers/Microsoft.Management/managementGroups/mg-platform
+```
+
+!!! warning "Common errors"
+    **`The provided object identifier <group-object-id
 ## Management Group Design Principles
 
 | Principle | Guidance |
