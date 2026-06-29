@@ -315,6 +315,33 @@ az backup recoverypoint show \
   --name <recovery-point-id>
 ```
 
+
+```text title="Expected output"
+Name                                 Type    Timestamp                 
+-----------------------------------  ------  -------------------------
+2024-01-15T14:32:18.000000+00:00    Full    2024-01-15T14:32:18+00:00
+2024-01-14T14:32:15.000000+00:00    Full    2024-01-14T14:32:15+00:00
+2024-01-13T14:31:22.000000+00:00    Incr    2024-01-13T14:31:22+00:00
+2024-01-12T14:30:45.000000+00:00    Incr    2024-01-12T14:30:45+00:00
+2024-01-11T14:29:33.000000+00:00    Full    2024-01-11T14:29:33+00:00
+...
+
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/prod-rg/providers/Microsoft.RecoveryServices/vaults/prod-vault/backupFabrics/Azure/protectionContainers/IaasVMContainer;iaasvmcontainerv2;prod-rg;prod-vm-01/protectedItems/VM;iaasvmcontainerv2;prod-rg;prod-vm-01/recoveryPoints/2024-01-15T14:32:18.000000+00:00",
+  "name": "2024-01-15T14:32:18.000000+00:00",
+  "properties": {
+    "recoveryPointTime": "2024-01-15T14:32:18+00:00",
+    "recoveryPointType": "Full",
+    "sourceVMStorageType": "Premium"
+  },
+  "type": "Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/recoveryPoints"
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The specified backup item could not be found.`** — Verify the container name matches the VM's protection container name (typically `IaasVMContainer;iaasvmcontainerv2;<rg>;<vm-name>`).
+    **`InvalidRecoveryPointId: Recovery point '<recovery-point-id>' does not exist for the specified item.`** — Ensure the recovery point name is an exact timestamp from the list output and hasn't expired based on retention policy.
+    **`VaultNotFound: The Recovery Services vault '<vault-name>' was not found in resource group '<rg>'.`** — Confirm the vault name and resource group are correct and the vault exists in your subscription.
 | Recovery Point Type | Description |
 |---|---|
 | AppConsistent | Application-quiesced snapshot, safe for DBs |
@@ -347,6 +374,29 @@ az backup restore restore-disks \
   --restore-to-staging-storage-account false
 ```
 
+
+```text title="Expected output"
+Restore operation initiated successfully.
+Job ID: 12345678-1234-1234-1234-123456789012
+Status: InProgress
+Start Time: 2024-01-15T10:32:45.123456+00:00
+Duration: 0:00:00
+Items Restored: 0
+Items Failed: 0
+
+Restore operation initiated successfully.
+Job ID: 87654321-4321-4321-4321-210987654321
+Status: InProgress
+Start Time: 2024-01-15T10:35:12.654321+00:00
+Duration: 0:00:00
+Items Restored: 0
+Items Failed: 0
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>' could not be found.`** — Verify the vault name and resource group are correct and exist in your subscription.
+    **`InvalidParameterValue: The recovery point '<recovery-point-id>' is invalid or expired.`** — List available recovery points with `az backup recoverypoint list` and use a valid, non-expired recovery point ID.
+    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/recoveryPoints/restore/action'.`** — Ensure your user or service principal has the "Backup Operator" or "Contributor" role on the Recovery Services vault.
 ---
 
 ## Disabling and Removing Protection
@@ -373,3 +423,20 @@ az backup protection disable \
   --delete-backup-data true \
   --yes
 ```
+
+
+```text title="Expected output"
+Request sent to disable protection for item prod-vm-01 in vault backup-vault-prod.
+Disable protection request has been submitted successfully.
+
+Request sent to delete backup data for item prod-vm-01 in vault backup-vault-prod.
+Deleting backup data for item prod-vm-01. This operation may take several minutes.
+Delete backup data request has been submitted successfully.
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound : The specified backup item could not be found.`** — Verify the container name matches the VM's registered name in the vault using `az backup container list --resource-group <rg> --vault-name <vault-name>`.
+    
+    **`InvalidParameterValue : The value of parameter 'backupManagementType' is invalid.`** — Ensure `--backup-management-type` is set to `AzureIaasVM` (case-sensitive) and matches the actual backup type of the item.
+    
+    **`AuthorizationFailed : The client does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/write'.`** — Assign the Backup Operator or Backup Admin role to your Azure account on the Recovery Services vault.
