@@ -11,35 +11,30 @@ vSphere Lifecycle Manager (vLCM) introduces image-based management as the replac
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph TD
-    classDef define fill:#2563eb,color:#fff,stroke:none
-    classDef scan fill:#7c3aed,color:#fff,stroke:none
-    classDef action fill:#15803d,color:#fff,stroke:none
-    classDef host fill:#b45309,color:#fff,stroke:none
-    classDef done fill:#374151,color:#fff,stroke:none
+```d2
+direction: right
 
-    IMG[Cluster Image Definition\nBase image + Add-ons\n+ Components]:::define
-    SCAN[Compliance Scan\nCompare host state\nto desired image]:::scan
-    COMP{Compliant?}:::scan
-    DRY[Dry Run\nCheck Remediation\nHW compat + DRS check]:::action
-    STAGE[Stage Image\nDownload to host\nbefore maintenance]:::action
-    MM[Enter Maintenance\nDRS vMotion VMs off host]:::host
-    REM[Apply Image\nInstall VIBs + patches]:::host
-    REBOOT[Host Reboot]:::host
-    REJOIN[Exit Maintenance\nRejoin cluster\nNext host]:::done
-    OK[No action\nAll hosts compliant]:::done
+IMG: "IMG" {shape: rectangle}
+SCAN: "SCAN" {shape: rectangle}
+COMP: "COMP" {shape: rectangle}
+DRY: "DRY" {shape: rectangle}
+OK: "OK" {shape: rectangle}
+STAGE: "STAGE" {shape: rectangle}
+MM: "MM" {shape: rectangle}
+REM: "REM" {shape: rectangle}
+REBOOT: "REBOOT" {shape: rectangle}
+REJOIN: "REJOIN" {shape: rectangle}
 
-    IMG --> SCAN
-    SCAN --> COMP
-    COMP -->|Non-compliant| DRY
-    COMP -->|Compliant| OK
-    DRY --> STAGE
-    STAGE --> MM
-    MM --> REM
-    REM --> REBOOT
-    REBOOT --> REJOIN
-    REJOIN -->|Next host| MM
+IMG -> SCAN
+SCAN -> COMP
+COMP -> DRY
+COMP -> OK
+DRY -> STAGE
+STAGE -> MM
+MM -> REM
+REM -> REBOOT
+REBOOT -> REJOIN
+REJOIN -> MM
 ```
 
 ## Image-Based vs Baseline-Based Management

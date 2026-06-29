@@ -24,20 +24,29 @@ FabricOS procedures: `switchshow`, `fabricshow`, zone configuration with `cfgadd
 
 ## Zoning Workflow
 
-```mermaid
-flowchart TD
-    start([New host to zone]) --> getWWPN["Collect host HBA WWPNs\nnsshow after FLOGI\nor esxcli storage san fc list"]
-    getWWPN --> createAlias["alicreate host alias\nalicreate array alias"]
-    createAlias --> createZone["zonecreate\n(one zone per HBA port)"]
-    createZone --> addCfg["cfgadd to active zone set"]
-    addCfg --> preview["zoneshow — review before activate"]
-    preview --> cfgEnable["cfgenable zoneset-name\n(live immediately in fabric)"]
-    cfgEnable --> cfgSave["cfgsave\n(persist to flash)"]
-    cfgSave --> verify["Verify host sees storage\nnszonemember · host-side rescan"]
-    verify --> done([Zoning complete])
+```d2
+direction: right
 
-    style done fill:#15803d,color:#fff
-    style start fill:#2563eb,color:#fff
+start: "New host to zone" {shape: oval}
+getWWPN: "Collect host HBA WWPNs\nnsshow after FLOGI\nor esxcli storage san fc list" {shape: rectangle}
+createAlias: "alicreate host alias\nalicreate array alias" {shape: rectangle}
+createZone: "zonecreate\n(one zone per HBA port" {shape: rectangle}
+addCfg: "cfgadd to active zone set" {shape: rectangle}
+preview: "zoneshow — review before activate" {shape: rectangle}
+cfgEnable: "cfgenable zoneset-name\n(live immediately in fabric" {shape: rectangle}
+cfgSave: "cfgsave\n(persist to flash" {shape: rectangle}
+verify: "Verify host sees storage\nnszonemember · host-side rescan" {shape: rectangle}
+done: "Zoning complete" {shape: rectangle}
+
+start -> getWWPN
+getWWPN -> createAlias
+createAlias -> createZone
+createZone -> addCfg
+addCfg -> preview
+preview -> cfgEnable
+cfgEnable -> cfgSave
+cfgSave -> verify
+verify -> done
 ```
 
 ### Create Aliases

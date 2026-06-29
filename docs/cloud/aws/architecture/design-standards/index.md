@@ -70,18 +70,19 @@ Region abbreviations: `euw1` = eu-west-1, `use1` = us-east-1, `apse1` = ap-south
 
 ## S3 Object Lifecycle
 
-```mermaid
-flowchart LR
-    standard["S3 Standard\nFrequent access\n(day 0)"]
-    ia["S3 Standard-IA\nInfrequent access\n(day 30+)"]
-    glacier["S3 Glacier\nInstant Retrieval\n(day 90+)"]
-    deepArchive["S3 Glacier\nDeep Archive\n(day 180+)"]
-    expire["Object Expired\nDeleted by lifecycle rule"]
+```d2
+direction: right
 
-    standard -->|"Transition rule\n≥ 30 days"| ia
-    ia -->|"Transition rule\n≥ 90 days"| glacier
-    glacier -->|"Transition rule\n≥ 180 days"| deepArchive
-    deepArchive -->|"Expiration rule"| expire
+standard: "S3 Standard\nFrequent access\n(day 0" {shape: rectangle}
+ia: "S3 Standard-IA\nInfrequent access\n(day 30+" {shape: rectangle}
+glacier: "S3 Glacier\nInstant Retrieval\n(day 90+" {shape: rectangle}
+deepArchive: "S3 Glacier\nDeep Archive\n(day 180+" {shape: rectangle}
+expire: "Object Expired\nDeleted by lifecycle rule" {shape: rectangle}
+
+standard -> ia
+ia -> glacier
+glacier -> deepArchive
+deepArchive -> expire
 ```
 
 ## Security Standards

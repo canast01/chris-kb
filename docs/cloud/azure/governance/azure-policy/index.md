@@ -142,29 +142,23 @@ az policy state summarize \
 
 ## Azure Policy Evaluation Flow
 
-```mermaid
-flowchart TD
-    resourceOp["Resource create / update / read"]
-    exempt{"Exemption\nexists?"}
-    policyEval["Evaluate against\nall assigned policies"]
-    deny{"Effect = Deny?"}
-    audit{"Effect = Audit?"}
-    deployIfNot{"Effect = DeployIfNotExists\nor Modify?"}
-    blocked["Operation BLOCKED\n403 response"]
-    nonCompliant["Mark NonCompliant\nallow operation"]
-    remediation["Remediation Task\nauto-remediate"]
-    compliant["Compliant\noperation proceeds"]
+```d2
+direction: right
 
-    resourceOp --> exempt
-    exempt -- Yes --> compliant
-    exempt -- No --> policyEval
-    policyEval --> deny
-    deny -- Yes --> blocked
-    deny -- No --> audit
-    audit -- Yes --> nonCompliant
-    audit -- No --> deployIfNot
-    deployIfNot -- Yes --> remediation --> compliant
-    deployIfNot -- No --> compliant
+resourceOp: "Resource create / update / read" {shape: rectangle}
+exempt: "exempt" {shape: rectangle}
+policyEval: "Evaluate against\nall assigned policies" {shape: rectangle}
+deny: "deny" {shape: rectangle}
+remediation: "Remediation Task\nauto-remediate" {shape: rectangle}
+compliant: "Compliant\noperation proceeds" {shape: rectangle}
+blocked: "Operation BLOCKED\n403 response" {shape: rectangle}
+nonCompliant: "Mark NonCompliant\nallow operation" {shape: rectangle}
+audit: "audit" {shape: rectangle}
+deployIfNot: "deployIfNot" {shape: rectangle}
+
+resourceOp -> exempt
+policyEval -> deny
+remediation -> compliant
 ```
 
 ## Policy Lifecycle Management

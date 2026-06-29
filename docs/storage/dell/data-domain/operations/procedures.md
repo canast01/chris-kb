@@ -44,25 +44,42 @@ Verify these items before performing any change on the Data Domain — DDOS upgr
 
 ## Maintenance Window
 
-```mermaid
-flowchart TD
-    A([Start Maintenance]) --> B["Confirm window does not\noverlap backup schedule"]
-    B --> C["replication show\nNote context states"]
-    C --> D{"Any context\nin Error?"}
-    D -->|Yes| E["Resolve replication issue\nbefore proceeding"]
-    E --> D
-    D -->|No| F["Confirm no active backup sessions\nin backup software"]
-    F --> G{"DDOS upgrade?"}
-    G -->|Yes| H["filesys clean start\nWait for completion"]
-    G -->|No| I["Export config backup\nvia System Manager"]
-    H --> I
-    I --> J["Perform change\nper approved runbook"]
-    J --> K["filesys status\nreplication show\nalerts show current"]
-    K --> L{"All healthy?"}
-    L -->|No| M["Investigate and resolve"]
-    M --> K
-    L -->|Yes| N["Run test DDBoost backup\nConfirm job success"]
-    N --> O([Close Window])
+```d2
+direction: right
+
+A: "Start Maintenance" {shape: rectangle}
+B: "Confirm window does not\noverlap backup schedule" {shape: rectangle}
+C: "replication show\nNote context states" {shape: rectangle}
+D: "Any context\nin Error?" {shape: rectangle}
+E: "Resolve replication issue\nbefore proceeding" {shape: rectangle}
+F: "Confirm no active backup sessions\nin backup software" {shape: rectangle}
+G: "DDOS upgrade?" {shape: rectangle}
+H: "filesys clean start\nWait for completion" {shape: rectangle}
+I: "Export config backup\nvia System Manager" {shape: rectangle}
+J: "Perform change\nper approved runbook" {shape: rectangle}
+K: "filesys status\nreplication show\nalerts show current" {shape: rectangle}
+L: "All healthy?" {shape: rectangle}
+M: "Investigate and resolve" {shape: rectangle}
+N: "Run test DDBoost backup\nConfirm job success" {shape: rectangle}
+O: "Close Window" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+E -> D
+D -> F
+F -> G
+G -> H
+G -> I
+H -> I
+I -> J
+J -> K
+K -> L
+L -> M
+M -> K
+L -> N
+N -> O
 ```
 
 ### Replication State

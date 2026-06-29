@@ -7,16 +7,12 @@ search:
 ---
 # FlashArray — Common Issues
 
-
 <div class="kb-summary">
 Detailed resolution procedures for the most frequently encountered FlashArray issues. Each section includes diagnostic commands, root cause identification, and resolution steps.
 
 *Applies to: FlashArray Purity 6.x*
 </div>
 ![FlashArray — Common Issues](../../../../assets/storage-pure-flasharray-troubleshooting-common-issues.svg)
-
-
-
 
 ---
 
@@ -48,34 +44,46 @@ activecluster_pod_out_of_sync_paused -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A[Host volume not visible]
-    S --> B[Drive failure / RAID rebuilding]
-    S --> C[Replication session behind]
-    S --> D[Alert storm from phone-home]
-    S --> E[Purity upgrade failed or hung]
-    A --> A1{Volume connected to host?}
-    A1 -->|No| A2[Connect volume to host group — see Volume Not Visible on Host After Provisioning]
-    A1 -->|Yes| A3[Check initiator registration and rescan HBA on host]
-    B --> B1{Multiple drives failed?}
-    B1 -->|Yes| B2[P1 case immediately — do not pull drives — see Drive Failure and Rebuild]
-    B1 -->|No| B3[Single drive — open P2 case; monitor rebuild with puredrive list]
-    C --> C1{Replication link up?}
-    C1 -->|No| C2[Restore network path; pod resyncs automatically — see ActiveCluster Pod Out of Sync]
-    C1 -->|Yes| C3[Check mediator reachability and bandwidth saturation]
-    D --> D1{Critical alerts present?}
-    D1 -->|Yes| D2[Address hardware or capacity alerts — see Array Reporting High Latency]
-    D1 -->|No| D3[Check Pure1 cloud connectivity and phone-home proxy settings]
-    E --> E1{Upgrade pre-check failed?}
-    E1 -->|Yes| E2[Run purearray upgrade --check and resolve blockers — see Purity Upgrade Hangs or Fails]
-    E1 -->|No| E3[Contact Pure Support if no progress after 30 minutes]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E2,E3 section
-    class A1,B1,C1,D1,E1 decision
-    class S start
+```d2
+direction: right
+
+S: "What is the symptom?" {shape: rectangle}
+A: "Host volume not visible" {shape: rectangle}
+B: "Drive failure / RAID rebuilding" {shape: rectangle}
+C: "Replication session behind" {shape: rectangle}
+D: "Alert storm from phone-home" {shape: rectangle}
+E: "Purity upgrade failed or hung" {shape: rectangle}
+A1: "A1" {shape: rectangle}
+A2: "Connect volume to host group — see Volume Not Visible on Host After Provisioning" {shape: rectangle}
+A3: "Check initiator registration and rescan HBA on host" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "P1 case immediately — do not pull drives — see Drive Failure and Rebuild" {shape: rectangle}
+B3: "Single drive — open P2 case; monitor rebuild with puredrive list" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "Restore network path; pod resyncs automatically — see ActiveCluster Pod Out of Sync" {shape: rectangle}
+C3: "Check mediator reachability and bandwidth saturation" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+D2: "Address hardware or capacity alerts — see Array Reporting High Latency" {shape: rectangle}
+D3: "Check Pure1 cloud connectivity and phone-home proxy settings" {shape: rectangle}
+E1: "E1" {shape: rectangle}
+E2: "Run purearray upgrade --check and resolve blockers — see Purity Upgrade Hangs or Fails" {shape: rectangle}
+E3: "Contact Pure Support if no progress after 30 minutes" {shape: rectangle}
+
+S -> A
+S -> B
+S -> C
+S -> D
+S -> E
+A1 -> A2
+A1 -> A3
+B1 -> B2
+B1 -> B3
+C1 -> C2
+C1 -> C3
+D1 -> D2
+D1 -> D3
+E1 -> E2
+E1 -> E3
 ```
 
 ---
@@ -96,28 +104,33 @@ graph TD
 - `purealert list` shows a drive failure alert with severity `error`
 - `puredrive list` shows a drive in `failed`, `recovering`, or `unhealthy` state
 
-```mermaid
-flowchart TD
-  A["purealert list shows\ndrive error alert"] --> B["puredrive list\n(identify bay and state)"]
-  B --> C{"Drive state?"}
-  C -->|"recovering"| D["Automatic rebuild in progress\nDo NOT pull the drive\nMonitor: puredrive list --progress"]
-  C -->|"failed"| E{"Second drive\nalso failed?"}
-  E -->|"Yes"| F["P1 case immediately\nDo NOT pull any drive\nAwait Pure Support guidance"]
-  E -->|"No"| G["Open P2 case\nSchedule drive replacement\nArray degraded but protected"]
-  C -->|"unhealthy"| H["Open P2 case — drive may fail soon\nMonitor closely\nPurity may proactively evict"]
-  C -->|"missing"| I["Check physical seating\nOpen support case if drive present\nbut not detected"]
-  D --> J{"Rebuild complete\n(state = healthy)?"}
-  J -->|"Yes"| K["Array back to full redundancy\nOpen case to schedule physical replacement"]
-  J -->|"Stalled > 1 hour"| L["Open support case\nDo not manually intervene"]
+```d2
+direction: right
 
-  classDef decision fill:#b45309,stroke:#92400e,color:#fff
-  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
-  classDef good fill:#15803d,stroke:#166534,color:#fff
-  classDef info fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  class C,E,J decision
-  class F,L warn
-  class K good
-  class D,G,H,I info
+A: "purealert list shows\ndrive error alert" {shape: rectangle}
+B: "puredrive list\n(identify bay and state" {shape: rectangle}
+C: "Drive state?" {shape: rectangle}
+D: "Automatic rebuild in progress\nDo NOT pull the drive\nMonitor: puredrive list --progress" {shape: rectangle}
+E: "Second drive\nalso failed?" {shape: rectangle}
+F: "P1 case immediately\nDo NOT pull any drive\nAwait Pure Support guidance" {shape: rectangle}
+G: "Open P2 case\nSchedule drive replacement\nArray degraded but protected" {shape: rectangle}
+H: "Open P2 case — drive may fail soon\nMonitor closely\nPurity may proactively evict" {shape: rectangle}
+I: "Check physical seating\nOpen support case if drive present\nbut not detected" {shape: rectangle}
+J: "Rebuild complete\n(state = healthy" {shape: rectangle}
+K: "Array back to full redundancy\nOpen case to schedule physical replacement" {shape: rectangle}
+L: "Open support case\nDo not manually intervene" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+E -> F
+E -> G
+C -> H
+C -> I
+D -> J
+J -> K
+J -> L
 ```
 
 ### Diagnosis
@@ -296,26 +309,33 @@ purepod list --mediator oracle-pod
 - `purealert list` shows replication error alert
 - Hosts at one site may be serving I/O on stale data
 
-```mermaid
-flowchart TD
-  A["purepod list shows\npod paused / unhealthy"] --> B["Check inter-array\nreplication link\npurenetwork list"]
-  B --> C{"Replication\nlink up?"}
-  C -->|"No"| D["Restore network path\n(routing / VLAN / firewall)\nPod resyncs automatically"]
-  C -->|"Yes"| E["Check mediator\npurepod list --mediator"]
-  E --> F{"Mediator\nreachable?"}
-  F -->|"No"| G["Verify HTTPS outbound port 443\nto mediator IP from both arrays\nCheck proxy: purearray list --proxy"]
-  G --> H["Note: replication continues\nwithout mediator if inter-array\nlink is healthy"]
-  F -->|"Yes"| I{"Pod paused\non both arrays?"}
-  I -->|"Yes — split-brain"| J["Do NOT force-promote\nwithout Pure Support\nContact Pure Support P1"]
-  I -->|"No"| K["Check replica-link state\npurepod replica-link list"]
-  K --> L["Resume if manually paused\npurepod replica-link resume\n--remote array --remote-pod pod"]
+```d2
+direction: right
 
-  classDef decision fill:#b45309,stroke:#92400e,color:#fff
-  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
-  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  class C,F,I decision
-  class J warn
-  class D,G,H,K,L fix
+A: "purepod list shows\npod paused / unhealthy" {shape: rectangle}
+B: "Check inter-array\nreplication link\npurenetwork list" {shape: rectangle}
+C: "Replication\nlink up?" {shape: rectangle}
+D: "Restore network path\n(routing / VLAN / firewall" {shape: rectangle}
+E: "Check mediator\npurepod list --mediator" {shape: rectangle}
+F: "Mediator\nreachable?" {shape: rectangle}
+G: "Verify HTTPS outbound port 443\nto mediator IP from both arrays\nCheck proxy: purearray list --proxy" {shape: rectangle}
+H: "Note: replication continues\nwithout mediator if inter-array\nlink is healthy" {shape: rectangle}
+I: "Pod paused\non both arrays?" {shape: rectangle}
+J: "Do NOT force-promote\nwithout Pure Support\nContact Pure Support P1" {shape: rectangle}
+K: "Check replica-link state\npurepod replica-link list" {shape: rectangle}
+L: "Resume if manually paused\npurepod replica-link resume\n--remote array --remote-pod pod" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+E -> F
+F -> G
+G -> H
+F -> I
+I -> J
+I -> K
+K -> L
 ```
 
 ### Diagnosis

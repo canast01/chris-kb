@@ -48,24 +48,25 @@ end note
 
 ## Credential Flow — API Authentication
 
-```mermaid
-graph TD
-    script["Python Script"]
-    envVar["Environment Variable\n(os.environ)"]
-    dotenv[".env File\n(python-dotenv)"]
-    secretsMgr["Secrets Manager\n(AWS / HashiCorp Vault)"]
-    apiKey["API Key / Token"]
-    bearerHeader["Authorization: Bearer\nheader"]
-    apiEndpoint["API Endpoint\n(requests.get/post)"]
+```d2
+direction: right
 
-    script --> envVar
-    script --> dotenv
-    script --> secretsMgr
-    envVar --> apiKey
-    dotenv --> apiKey
-    secretsMgr --> apiKey
-    apiKey --> bearerHeader
-    bearerHeader --> apiEndpoint
+script: "Python Script" {shape: rectangle}
+envVar: "Environment Variable\n(os.environ" {shape: rectangle}
+dotenv: ".env File\n(python-dotenv" {shape: rectangle}
+secretsMgr: "Secrets Manager\n(AWS / HashiCorp Vault" {shape: rectangle}
+apiKey: "API Key / Token" {shape: rectangle}
+bearerHeader: "Authorization: Bearer\nheader" {shape: rectangle}
+apiEndpoint: "API Endpoint\n(requests.get/post" {shape: rectangle}
+
+script -> envVar
+script -> dotenv
+script -> secretsMgr
+envVar -> apiKey
+dotenv -> apiKey
+secretsMgr -> apiKey
+apiKey -> bearerHeader
+bearerHeader -> apiEndpoint
 ```
 
 ```python

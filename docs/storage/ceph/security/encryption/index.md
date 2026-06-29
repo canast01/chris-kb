@@ -11,22 +11,28 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph TD
-    classDef layer fill:#1e3a5f,color:#fff
-    classDef ctrl fill:#15803d,color:#fff
-    classDef detail fill:#374151,color:#fff
+```d2
+direction: right
 
-    A([OSD at-rest\ndm-crypt / LUKS]):::layer --> B[Key stored in\nMON KV store]:::ctrl
-    B --> C[cephadm generates\nrandom LUKS key per OSD]:::detail
+A: "OSD at-rest\ndm-crypt / LUKS" {shape: rectangle}
+B: "Key stored in\nMON KV store" {shape: rectangle}
+C: "cephadm generates\nrandom LUKS key per OSD" {shape: rectangle}
+D: "In-transit\nmsgr2 secure mode" {shape: rectangle}
+E: "AES-GCM encryption\nall daemon connections" {shape: rectangle}
+F: "Enable: ms_cluster_mode secure\nms_service_mode secure" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "SSE-S3\nCeph-managed keys" {shape: rectangle}
+J: "SSE-KMS\nHashiCorp Vault" {shape: rectangle}
+K: "SSE-C\nClient-provided key" {shape: rectangle}
+G: "RGW SSE\nObject-level encryption" {shape: rectangle}
 
-    D([In-transit\nmsgr2 secure mode]):::layer --> E[AES-GCM encryption\nall daemon connections]:::ctrl
-    E --> F[Enable: ms_cluster_mode secure\nms_service_mode secure]:::detail
-
-    G([RGW SSE\nObject-level encryption]):::layer --> H{Key management}:::ctrl
-    H --> I([SSE-S3\nCeph-managed keys]):::detail
-    H --> J([SSE-KMS\nHashiCorp Vault]):::detail
-    H --> K([SSE-C\nClient-provided key]):::detail
+A -> B
+B -> C
+D -> E
+E -> F
+H -> I
+H -> J
+H -> K
 ```
 
 ```d2

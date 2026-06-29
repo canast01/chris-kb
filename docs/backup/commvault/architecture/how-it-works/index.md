@@ -17,22 +17,24 @@ Commvault provides enterprise backup, recovery, replication, archive, and data p
 
 ## Component Topology
 
-```mermaid
-graph TB
-  CS["CommServe\n(command & control)"] --> WEBCON["Web Console\n& Command Center"]
-  MA1["Media Agent 1\n(data mover)"] & MA2["Media Agent 2"] --> CS
-  SRC(["Source — VMs / DBs / Files"]) --> MA1 & MA2
-  MA1 & MA2 --> DISK[("Disk Library\nDDB dedup")]
-  DISK -->|"aux copy"| TAPE[("Tape / Object\nlong-term retention")]
-  ADMIN(["Backup Admin"]) --> WEBCON
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class CS,MA1,MA2 ctrl
-  class DISK,TAPE store
-  class SRC,ADMIN host
-  class WEBCON mgmt
+```d2
+direction: right
+
+MA1: "Media Agent 1\n(data mover" {shape: rectangle}
+MA2: "Media Agent 2" {shape: rectangle}
+CS: "CS" {shape: rectangle}
+SRC: "Source — VMs / DBs / Files" {shape: rectangle}
+DISK: "Disk Library\nDDB dedup" {shape: rectangle}
+TAPE: "Tape / Object\nlong-term retention" {shape: rectangle}
+ADMIN: "Backup Admin" {shape: rectangle}
+WEBCON: "WEBCON" {shape: rectangle}
+
+MA1 -> MA2
+MA2 -> CS
+SRC -> MA1
+MA2 -> DISK
+DISK -> TAPE
+ADMIN -> WEBCON
 ```
 
 MediaAgent best practices:

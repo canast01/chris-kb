@@ -7,14 +7,12 @@ tags:
 ---
 # vSAN — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Storage Architecture Modes, Objects and Components, Write Path, Read Path, Core Components and 1 more sections.
 
 *Applies to: vSAN 7.x · 8.x*
 </div>
 ![vSAN — How It Works](../../../../assets/virtualization-vmware-vsan-architecture-how-it-works.svg)
-
 
 ```d2
 direction: right
@@ -48,7 +46,6 @@ cluster.host1 -> cluster.host3: vSAN VMkernel (UDP 2233)
 ### Original Storage Architecture (OSA) — vSAN 6.x / 7.x
 
 OSA uses a two-tier model within each disk group: a dedicated flash cache device and one or more capacity devices.
-
 
 ### Object Placement — FTT=1 RAID-5 (4 hosts minimum)
 
@@ -110,38 +107,6 @@ CACHE -> CAP: Destage to capacity tier
 5. Once all required components acknowledge, DOM acknowledges the write to the VM.
 6. Data is de-staged from cache to capacity disks asynchronously in the background.
 
-```mermaid
-graph TD
-    vm["VM\n(guest write I/O)"]
-    dom["DOM\n(Distributed Object Manager)\nowner host"]
-    lsom_local["LSOM — Local Host\nwrite to cache SSD buffer"]
-    vsan_net["vSAN VMkernel Network\n(unicast, 10/25 GbE)"]
-    lsom_remote["LSOM — Remote Host\nwrite to cache SSD buffer"]
-    ack["All required components\nacknowledge write"]
-    destage["Async destage:\ncache SSD → capacity disks"]
-    vm_ack["Write acknowledged\nto guest"]
-
-    vm --> dom
-    dom --> lsom_local
-    dom -->|"FTT remote component"| vsan_net --> lsom_remote
-    lsom_local --> ack
-    lsom_remote --> ack
-    ack --> vm_ack
-    lsom_local --> destage
-    lsom_remote --> destage
-
-    classDef vm fill:#15803d,stroke:#166534,color:#fff
-    classDef mgr fill:#b45309,stroke:#92400e,color:#fff
-    classDef io fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-    class vm vm
-    class dom mgr
-    class lsom_local,lsom_remote,destage io
-    class vsan_net net
-    class ack,vm_ack vm
-```
-
 **ESA write path:** DOM routes to component locations; LSOM writes directly to NVMe with inline compression — no cache tier.
 
 **Implication:** Write latency is bounded by the slowest component acknowledgement. FTT=1 RAID-1 requires a round trip to a remote host — vSAN network latency directly contributes to front-end write latency.
@@ -164,36 +129,6 @@ graph TD
 ---
 
 ## Core Components
-
-```mermaid
-graph TD
-    policy["VM Storage Policy\n(FTT=1 RAID-1, checksum on)"]
-    obj["vSAN Storage Object\n(per VMDK / VM namespace)"]
-    compA["Component A\nESXi-01, Disk Group 1"]
-    compB["Component B\nESXi-02, Disk Group 1\n(mirror)"]
-    witness["Witness Component\nESXi-03\n(metadata tiebreaker)"]
-    diskA["Capacity SSD\n(naa.xxxxx)"]
-    diskB["Capacity SSD\n(naa.yyyyy)"]
-
-    policy -->|"defines placement"| obj
-    obj --> compA
-    obj --> compB
-    obj --> witness
-    compA --> diskA
-    compB --> diskB
-
-    classDef policy fill:#b45309,stroke:#92400e,color:#fff
-    classDef obj fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef comp fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef disk fill:#15803d,stroke:#166534,color:#fff
-    classDef wit fill:#1d4ed8,stroke:#1e40af,color:#fff
-
-    class policy policy
-    class obj obj
-    class compA,compB comp
-    class diskA,diskB disk
-    class witness wit
-```
 
 | Component | Role |
 |---|---|
@@ -223,7 +158,6 @@ graph TD
 - `/var/log/clomd.log`
 - `/var/log/cmmdsd.log`
 - `/var/log/vobd.log`
-
 
 ---
 

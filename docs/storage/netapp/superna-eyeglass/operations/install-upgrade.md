@@ -25,18 +25,25 @@ Install & Upgrade reference covering Version Compatibility Matrix, EOL Tracking,
 
 Eyeglass version must be compatible with the deployed PowerScale OneFS version. Always verify before upgrading either system.
 
-```mermaid
-flowchart TD
-    start(["Plan upgrade"]) --> exportCfg
-    exportCfg["Export configuration backup\nAdmin UI → Admin → Configuration Backup"]
-    deployOVA["Deploy new Eyeglass OVA\nalongside existing appliance"]
-    importCfg["Import configuration to new OVA\nRe-register clusters and DNS"]
-    verifyScore["Verify DR Readiness Score\n= 100%"]
-    validate24h["24-hour validation period\nConfirm SyncIQ state, shares, exports"]
-    decommOld["Shut down old appliance"]
-    done(["Upgrade complete"])
+```d2
+direction: right
 
-    exportCfg --> deployOVA --> importCfg --> verifyScore --> validate24h --> decommOld --> done
+start: "Plan upgrade" {shape: oval}
+exportCfg: "Export configuration backup\nAdmin UI → Admin → Configuration Backup" {shape: rectangle}
+deployOVA: "Deploy new Eyeglass OVA\nalongside existing appliance" {shape: rectangle}
+importCfg: "Import configuration to new OVA\nRe-register clusters and DNS" {shape: rectangle}
+verifyScore: "Verify DR Readiness Score\n= 100%" {shape: rectangle}
+validate24h: "24-hour validation period\nConfirm SyncIQ state, shares, exports" {shape: rectangle}
+decommOld: "Shut down old appliance" {shape: rectangle}
+done: "Upgrade complete" {shape: rectangle}
+
+start -> exportCfg
+exportCfg -> deployOVA
+deployOVA -> importCfg
+importCfg -> verifyScore
+verifyScore -> validate24h
+validate24h -> decommOld
+decommOld -> done
 ```
 
 If Eyeglass shows API errors after OneFS upgrade, check if an Eyeglass update is required to support the new OneFS version.

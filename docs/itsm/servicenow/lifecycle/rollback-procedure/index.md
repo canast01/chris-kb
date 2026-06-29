@@ -12,19 +12,28 @@ Restores a system to its last known-good state when a change produces failures, 
 
 ## Decision Framework
 
-```mermaid
-flowchart TD
-    A[Change Applied] --> B{Post-change\nvalidation}
-    B -->|All checks pass| C[Declare success\nClose change ticket]
-    B -->|Failure detected| D{Fix forward\nin < 30 min?}
-    D -->|Yes| E[Attempt fix\nwith ops lead approval]
-    D -->|No| F[ROLLBACK]
-    E --> G{Fixed?}
-    G -->|Yes| C
-    G -->|No| F
-    F --> H[Execute rollback]
-    H --> I[Validate rollback]
-    I --> J[Incident report\nand change re-plan]
+```d2
+direction: right
+
+B: "B" {shape: rectangle}
+C: "Declare success\nClose change ticket" {shape: rectangle}
+D: "D" {shape: rectangle}
+E: "Attempt fix\nwith ops lead approval" {shape: rectangle}
+F: "ROLLBACK" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Execute rollback" {shape: rectangle}
+I: "Validate rollback" {shape: rectangle}
+J: "Incident report\nand change re-plan" {shape: rectangle}
+A: "Change Applied" {shape: rectangle}
+
+B -> C
+D -> E
+D -> F
+G -> C
+G -> F
+F -> H
+H -> I
+I -> J
 ```
 
 ```bash

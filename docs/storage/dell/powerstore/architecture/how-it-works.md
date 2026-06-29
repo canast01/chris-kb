@@ -41,22 +41,22 @@ Dell PowerStore is a mid-range all-flash platform built on an active-active appl
 
 ## Architecture
 
-```mermaid
-graph TB
-  HA(["FC / iSCSI / NVMe-oF Hosts"]) --> IOM_A["I/O Module\nNode A"]
-  HA --> IOM_B["I/O Module\nNode B"]
-  IOM_A <-->|"active-active\nNVMe fabric"| IOM_B
-  IOM_A & IOM_B --> NVMe[("NVMe SSDs\nRAID 5/6")]
-  IOM_A & IOM_B --> NVDIMM["NVDIMM\nWrite Cache\n(power-safe)"]
-  MGR["PowerStore Manager\n(HTTPS)"] --> IOM_A
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class IOM_A,IOM_B ctrl
-  class NVMe,NVDIMM store
-  class HA host
-  class MGR mgmt
+```d2
+direction: right
+
+HA: "FC / iSCSI / NVMe-oF Hosts" {shape: rectangle}
+IOM_A: "I/O Module\nNode A" {shape: rectangle}
+IOM_B: "I/O Module\nNode B" {shape: rectangle}
+NVMe: "NVMe SSDs\nRAID 5/6" {shape: rectangle}
+NVDIMM: "NVDIMM\nWrite Cache\n(power-safe" {shape: rectangle}
+MGR: "PowerStore Manager\n(HTTPS" {shape: rectangle}
+
+HA -> IOM_A
+HA -> IOM_B
+IOM_A -> IOM_B
+IOM_B -> NVMe
+IOM_B -> NVDIMM
+MGR -> IOM_A
 ```
 
 ## Appliance Architecture

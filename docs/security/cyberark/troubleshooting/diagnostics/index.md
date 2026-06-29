@@ -13,32 +13,39 @@ CyberArk PAM diagnostic commands: check Vault, PVWA, CPM, and PSM Windows servic
 *Applies to: CyberArk PAM (Privilege Access Manager) — Vault, PVWA, CPM, PSM*
 </div>
 
-```mermaid
-flowchart TD
-    A([CyberArk issue reported]) --> B{Which component?}
-    B -->|Login failure / PVWA error| C[Check PVWA IIS app pool\nGet-WebApplication PasswordVault]
-    B -->|Password rotation failed| D[Check CPM service\nGet-Service CyberArk Central Policy Manager]
-    B -->|PSM session fails to launch| E[Check PSM service\nGet-Service Cyber-Ark Privileged Session Manager]
-    B -->|LDAP / MFA not working| F[Test LDAPS port 636\nTest RADIUS port 1812]
-    C --> G[Test-NetConnection vault01 -Port 1858\nVault reachable?]
-    D --> H[Review pm.log\nFind rotation error code]
-    E --> I[Review PSMConsole.log\nFind session launch error]
-    F --> J[Check PVWA auth config\nAuth Methods in PVWA Admin]
-    G --> K{Vault reachable?}
-    K -->|No| L[Check firewall rules\nbetween component and Vault]
-    K -->|Yes| M[Collect component logs\nfor CyberArk support]
-    H --> M
-    I --> M
-    J --> M
-    L --> M
-    M --> N[Open CyberArk SR\nmy.cyberark.com]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,K dark
-    class C,D,E,F,G,H,I,J,L action
-    class M,N escalate
+B: "B" {shape: rectangle}
+C: "Check PVWA IIS app pool\nGet-WebApplication PasswordVault" {shape: rectangle}
+D: "Check CPM service\nGet-Service CyberArk Central Policy Manager" {shape: rectangle}
+E: "Check PSM service\nGet-Service Cyber-Ark Privileged Session Manager" {shape: rectangle}
+F: "Test LDAPS port 636\nTest RADIUS port 1812" {shape: rectangle}
+G: "Test-NetConnection vault01 -Port 1858\nVault reachable?" {shape: rectangle}
+H: "Review pm.log\nFind rotation error code" {shape: rectangle}
+I: "Review PSMConsole.log\nFind session launch error" {shape: rectangle}
+J: "Check PVWA auth config\nAuth Methods in PVWA Admin" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "Check firewall rules\nbetween component and Vault" {shape: rectangle}
+M: "Collect component logs\nfor CyberArk support" {shape: rectangle}
+N: "Open CyberArk SR\nmy.cyberark.com" {shape: rectangle}
+A: "CyberArk issue reported" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+C -> G
+D -> H
+E -> I
+F -> J
+K -> L
+K -> M
+H -> M
+I -> M
+J -> M
+L -> M
+M -> N
 ```
 
 ```d2

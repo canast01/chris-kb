@@ -44,20 +44,19 @@ Three-tier PKI hierarchy with offline Root CA, ADCS-backed Issuing CA, and comme
 
 ## PKI Hierarchy
 
-```mermaid
-graph TB
-  ROOT[("Root CA\n(offline — HSM)")] -->|"signs"| INT1["Intermediate CA 1\nInternal Issuing CA"]
-  ROOT -->|"signs"| INT2["Intermediate CA 2\nPublic / External CA"]
-  INT1 -->|"issues"| CERT1["Server Certificate"]
-  INT1 -->|"issues"| CERT2["Client Certificate"]
-  INT2 -->|"issues"| CERT3["Publicly Trusted Cert"]
-  CERT1 & CERT2 & CERT3 -.->|"OCSP / CRL"| CRL["Revocation\nCRL / OCSP Responder"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class ROOT store
-  class INT1,INT2 ctrl
-  class CERT1,CERT2,CERT3 host
-  class CRL mgmt
+```d2
+direction: right
+
+ROOT: "Root CA\n(offline — HSM" {shape: rectangle}
+INT1: "Intermediate CA 1\nInternal Issuing CA" {shape: rectangle}
+INT2: "Intermediate CA 2\nPublic / External CA" {shape: rectangle}
+CERT1: "Server Certificate" {shape: rectangle}
+CERT2: "Client Certificate" {shape: rectangle}
+CERT3: "Publicly Trusted Cert" {shape: rectangle}
+
+ROOT -> INT1
+ROOT -> INT2
+INT1 -> CERT1
+INT1 -> CERT2
+INT2 -> CERT3
 ```

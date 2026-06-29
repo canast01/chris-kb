@@ -13,19 +13,18 @@ Consumption-based capacity model on PowerMax, PowerStore, and PowerScale. Additi
 
 ![Flex on Demand — Architecture — Diagram](../../../../assets/storage-dell-fod-architecture-diagram.svg)
 
-```mermaid
-graph TB
-  ARRAY["Dell Array\nPowerMax / PowerStore / PowerScale"] -->|"telemetry"| SCG["Secure Connect Gateway"]
-  SCG -->|"HTTPS 443"| CLOUDIQ["Dell CloudIQ\n(metering & reporting)"]
-  CLOUDIQ --> BILL["APEX Console\nMonthly billing"]
-  ADMIN(["Storage Admin"]) -->|"portal"| CLOUDIQ
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class ARRAY ctrl
-  class SCG ctrl
-  class CLOUDIQ,BILL cloud
-  class ADMIN host
+```d2
+direction: right
+
+ARRAY: "Dell Array\nPowerMax / PowerStore / PowerScale" {shape: rectangle}
+SCG: "Secure Connect Gateway" {shape: rectangle}
+CLOUDIQ: "CLOUDIQ" {shape: rectangle}
+BILL: "APEX Console\nMonthly billing" {shape: rectangle}
+ADMIN: "Storage Admin" {shape: rectangle}
+
+ARRAY -> SCG
+CLOUDIQ -> BILL
+ADMIN -> CLOUDIQ
 ```
 ![Flex on Demand Architecture](../../../../assets/fod-architecture-overview.svg)
 

@@ -9,8 +9,6 @@ search:
 # VMware SRM — Common Issues
 ![VMware SRM — Common Issues](../../../../assets/virtualization-vmware-srm-troubleshooting-common-issues.svg)
 
-
-
 ```python
    Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter
    Test credentials against array directly:
@@ -53,37 +51,41 @@ triage_decision_tree -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1[Protection group shows error]
-    S --> B2[Recovery plan stuck Running]
-    S --> B3[Test failover VMs fail to power on]
-    S --> B4[Site pair shows Error]
-    S --> B5[Failback fails]
-    S --> B6[RPO breach or replication lag]
+```d2
+direction: right
 
-    B1 --> D1{RPO lag\nor snapshot issue?}
-    D1 -->|RPO lag| R1[Check Bandwidth · ESXi CPU · Storage I/O\n→ Protection Group Shows Error]
-    D1 -->|Snapshot| R2[Re-discover Devices via Array Pairs\n→ Protection Group Shows Error]
+S: "What is the symptom?" {shape: rectangle}
+B1: "Protection group shows error" {shape: rectangle}
+B2: "Recovery plan stuck Running" {shape: rectangle}
+B3: "Test failover VMs fail to power on" {shape: rectangle}
+B4: "Site pair shows Error" {shape: rectangle}
+B5: "Failback fails" {shape: rectangle}
+B6: "RPO breach or replication lag" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+R1: "Check Bandwidth · ESXi CPU · Storage I/O\n→ Protection Group Shows Error" {shape: rectangle}
+R2: "Re-discover Devices via Array Pairs\n→ Protection Group Shows Error" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Approve or Skip Pending Step\n→ Recovery Plan Stuck in Running" {shape: rectangle}
+R4: "Check Recovery Site Resources · Script Exit Code\n→ Recovery Plan Stuck in Running" {shape: rectangle}
+R5: "Check Network Mapping · Placeholder VM\n→ Test Failover: VMs Fail to Power On" {shape: rectangle}
+R6: "Renew Cert · Re-enter Credentials · Check Port 9086\n→ Site Pair Shows Error" {shape: rectangle}
+R7: "Run Reprotect · Verify Protected Site Operational\n→ Failback Fails" {shape: rectangle}
+R8: "Check WAN Bandwidth · vSR Appliance · Disk Space\n→ Protection Group Shows Error" {shape: rectangle}
 
-    B2 --> D2{Manual step\nor VM power-on?}
-    D2 -->|Manual step| R3[Approve or Skip Pending Step\n→ Recovery Plan Stuck in Running]
-    D2 -->|VM power-on| R4[Check Recovery Site Resources · Script Exit Code\n→ Recovery Plan Stuck in Running]
-
-    B3 --> R5[Check Network Mapping · Placeholder VM\n→ Test Failover: VMs Fail to Power On]
-
-    B4 --> R6[Renew Cert · Re-enter Credentials · Check Port 9086\n→ Site Pair Shows Error]
-
-    B5 --> R7[Run Reprotect · Verify Protected Site Operational\n→ Failback Fails]
-
-    B6 --> R8[Check WAN Bandwidth · vSR Appliance · Disk Space\n→ Protection Group Shows Error]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class D1,D2 decision
-    class S start
+S -> B1
+S -> B2
+S -> B3
+S -> B4
+S -> B5
+S -> B6
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+B3 -> R5
+B4 -> R6
+B5 -> R7
+B6 -> R8
 ```
 
 ---
@@ -194,33 +196,34 @@ graph TD
 
 Use this flowchart to quickly route to the correct troubleshooting section.
 
-```mermaid
-flowchart TD
-    start(["SRM alert or failure"])
-    start --> q1{Where is\nthe failure?}
+```d2
+direction: right
 
-    q1 -->|"VM shows Not Ready\nor missing from PG"| vmNotReady["VM Not in PG\n/ Not Ready State"]
-    q1 -->|"Recovery plan\nfailed mid-run"| planFailed{Which step\nfailed?}
-    q1 -->|"Array Manager\nshows Error"| sraFail["SRA Communication\nFailure"]
-    q1 -->|"Site Pair shows Error"| sitePair["Site Pair Error\n(cert / connectivity)"]
+q1: "q1" {shape: rectangle}
+vmNotReady: "VM Not in PG\n/ Not Ready State" {shape: rectangle}
+sraFail: "SRA Communication\nFailure" {shape: rectangle}
+sitePair: "Site Pair Error\n(cert / connectivity" {shape: rectangle}
+planFailed: "planFailed" {shape: rectangle}
+netMap: "Recovery Plan\nNetwork Mapping step" {shape: rectangle}
+stuck: "Recovery Plan\nStuck Running" {shape: rectangle}
+vr: "Check vSphere Replication\nstatus + disk space + RPO" {shape: rectangle}
+sraLog: "Check SRA service\n+ array API reachability" {shape: rectangle}
+cert: "Check cert validity\n+ vCenter reachability port 443" {shape: rectangle}
+netCheck: "Verify all source networks\nhave target mappings" {shape: rectangle}
+script: "Check custom script\nexit code or VM power-on error" {shape: rectangle}
+start: "SRM alert or failure" {shape: oval}
 
-    planFailed -->|"Network mapping"| netMap["Recovery Plan\nNetwork Mapping step"]
-    planFailed -->|"Plan stuck Running"| stuck["Recovery Plan\nStuck Running"]
-
-    vmNotReady --> vr["Check vSphere Replication\nstatus + disk space + RPO"]
-    sraFail --> sraLog["Check SRA service\n+ array API reachability"]
-    sitePair --> cert["Check cert validity\n+ vCenter reachability port 443"]
-    netMap --> netCheck["Verify all source networks\nhave target mappings"]
-    stuck --> script["Check custom script\nexit code or VM power-on error"]
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class vr,sraLog,cert,netCheck,script action
-    class q1,planFailed decision
-    class start terminal
+q1 -> vmNotReady
+q1 -> sraFail
+q1 -> sitePair
+planFailed -> netMap
+planFailed -> stuck
+vmNotReady -> vr
+sraFail -> sraLog
+sitePair -> cert
+netMap -> netCheck
+stuck -> script
 ```
-
 
 1. SRM → Configure → Array Managers → check status
 2. Verify SRA service is running:
@@ -234,7 +237,6 @@ flowchart TD
    Invoke-WebRequest -Uri "https://<array-ip>/univmax/restapi/system/version" -SkipCertificateCheck
    ```
 
-
 ## Recovery Plan Stuck `Running`
 
 ```text
@@ -245,7 +247,6 @@ Cause: Custom script step timed out, or a VM failed to power on
 2. If a custom script step: check the script exit code in task details; a non-zero exit causes indefinite wait
 3. If a VM power-on step: check vCenter tasks for that VM — may have a configuration issue (missing network, snapshot)
 4. As a last resort (during actual DR): manually advance the plan past the stuck step using "Force Next Step"
-
 
 ## Site Pair Shows `Error`
 

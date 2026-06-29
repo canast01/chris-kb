@@ -13,22 +13,25 @@ VxRail is sold exclusively as a pre-configured appliance and managed as a system
 
 ## HCI Node Cluster
 
-```mermaid
-graph TB
-  VXM["VxRail Manager\n(lifecycle management)"] --> VCSA["vCenter Server"]
-  VXM --> NODES["VxRail Cluster\n3 – 64 nodes"]
-  NODES --> N1["VxRail Node 1\nvSAN cache + capacity"]
-  NODES --> N2["Node 2"]
-  NODES --> N3["Node N…"]
-  N1 & N2 & N3 --> DS[("vSAN Datastore")]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class VXM,VCSA mgmt
-  class NODES ctrl
-  class N1,N2,N3 host
-  class DS store
+```d2
+direction: right
+
+VXM: "VxRail Manager\n(lifecycle management" {shape: rectangle}
+VCSA: "vCenter Server" {shape: rectangle}
+NODES: "VxRail Cluster\n3 – 64 nodes" {shape: rectangle}
+N1: "VxRail Node 1\nvSAN cache + capacity" {shape: rectangle}
+N2: "Node 2" {shape: rectangle}
+N3: "Node N…" {shape: rectangle}
+DS: "vSAN Datastore" {shape: rectangle}
+
+VXM -> VCSA
+VXM -> NODES
+NODES -> N1
+NODES -> N2
+NODES -> N3
+N1 -> N2
+N2 -> N3
+N3 -> DS
 ```
 
 ## See also

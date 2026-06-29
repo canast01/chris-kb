@@ -35,22 +35,33 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 
 ![Health Check Decision Flow](../../../../assets/storage-netapp-ontap-hc-health-check-decision-flow.svg)
 
-```mermaid
-flowchart TD
-    start([Start Health Check]) --> clusterShow["cluster show\nall nodes healthy?"]
-    clusterShow -->|No| nodeDown["Investigate node\nstorage failover show"]
-    clusterShow -->|Yes| diskCheck["storage disk show -broken\nany broken disks?"]
-    diskCheck -->|Yes| diskAction["Check spares available\nescalate if no spare"]
-    diskCheck -->|No| aggrCheck["storage aggregate show\nany above 85% used?"]
-    aggrCheck -->|Yes| aggrAction["Move volumes or\nadd disks"]
-    aggrCheck -->|No| smCheck["snapmirror show\nall healthy + within RPO?"]
-    smCheck -->|No| smAction["Resume / update\nSnapMirror relationships"]
-    smCheck -->|Yes| alertCheck["system health alert show\nany active alerts?"]
-    alertCheck -->|Yes| alertAction["Review and action\nalerts by severity"]
-    alertCheck -->|No| done([All Checks Pass])
+```d2
+direction: right
 
-    style done fill:#15803d,color:#fff
-    style start fill:#2563eb,color:#fff
+start: "Start Health Check" {shape: oval}
+clusterShow: "cluster show\nall nodes healthy?" {shape: rectangle}
+nodeDown: "Investigate node\nstorage failover show" {shape: rectangle}
+diskCheck: "storage disk show -broken\nany broken disks?" {shape: rectangle}
+diskAction: "Check spares available\nescalate if no spare" {shape: rectangle}
+aggrCheck: "storage aggregate show\nany above 85% used?" {shape: rectangle}
+aggrAction: "Move volumes or\nadd disks" {shape: rectangle}
+smCheck: "snapmirror show\nall healthy + within RPO?" {shape: rectangle}
+smAction: "Resume / update\nSnapMirror relationships" {shape: rectangle}
+alertCheck: "system health alert show\nany active alerts?" {shape: rectangle}
+alertAction: "Review and action\nalerts by severity" {shape: rectangle}
+done: "All Checks Pass" {shape: rectangle}
+
+start -> clusterShow
+clusterShow -> nodeDown
+clusterShow -> diskCheck
+diskCheck -> diskAction
+diskCheck -> aggrCheck
+aggrCheck -> aggrAction
+aggrCheck -> smCheck
+smCheck -> smAction
+smCheck -> alertCheck
+alertCheck -> alertAction
+alertCheck -> done
 ```
 
 ## Daily Checks

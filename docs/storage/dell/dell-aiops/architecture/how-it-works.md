@@ -41,24 +41,19 @@ AIO -> ML: Feedback loop (improve model)
 
 ## Architecture
 
-```mermaid
-graph LR
-    Sources["Storage Arrays<br/>PowerStore · PowerMax<br/>PowerScale · Unity XT<br/>Data Domain"]
-    SCG["Secure Connect Gateway<br/>on-prem OVA<br/>polls every 5 min<br/>HTTPS outbound only"]
-    AIPipeline["Dell AI Pipeline<br/>cloud-managed<br/>anomaly detection · RCA<br/>capacity forecasting"]
-    Console["CloudIQ / APEX Console<br/>SaaS portal<br/>recommendations<br/>health scores · alerts"]
-    Notify["Notification Channels<br/>PagerDuty · email<br/>webhooks · ITSM"]
+```d2
+direction: right
 
-    Sources -->|"REST API TCP 443"| SCG
-    SCG -->|"encrypted telemetry HTTPS"| AIPipeline
-    AIPipeline -->|"anomaly + RCA events"| Console
-    Console -->|"alert routing"| Notify
+Sources: "Storage Arrays · PowerStore · PowerMax · PowerScale · Unity XT · Data Domain" {shape: rectangle}
+SCG: "Secure Connect Gateway · on-prem OVA · polls every 5 min · HTTPS outbound only" {shape: rectangle}
+AIPipeline: "Dell AI Pipeline · cloud-managed · anomaly detection · RCA · capacity forecasting" {shape: rectangle}
+Console: "CloudIQ / APEX Console · SaaS portal · recommendations · health scores · alerts" {shape: rectangle}
+Notify: "Notification Channels · PagerDuty · email · webhooks · ITSM" {shape: rectangle}
 
-    style Sources fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style SCG fill:#b45309,stroke:#92400e,color:#fff
-    style AIPipeline fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Console fill:#15803d,stroke:#166534,color:#fff
-    style Notify fill:#15803d,stroke:#166534,color:#fff
+Sources -> SCG
+SCG -> AIPipeline
+AIPipeline -> Console
+Console -> Notify
 ```
 
 ---

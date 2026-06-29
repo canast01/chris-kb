@@ -35,20 +35,21 @@ branch_protection -> hardening_reference: hardens
 
 ## Minimal Permissions
 
-```mermaid
-flowchart TD
-    repo["GitHub Repository"]
-    branchProtect["Branch Protection\nmain branch\nrequired status checks\nPR reviews enforced"]
-    workflowPerms["Workflow permissions\ncontents: read (default)\nOverride per job only"]
-    actionPin["Action pinning\nactions/checkout@SHA\nDependabot weekly updates"]
-    secretScan["Secret scanning\nPush protection enabled\nAlert on commit"]
-    selfHostedIsolate["Self-hosted runners\nEphemeral — fresh per run\nIsolated from production"]
+```d2
+direction: right
 
-    repo --> branchProtect
-    repo --> workflowPerms
-    repo --> actionPin
-    repo --> secretScan
-    repo --> selfHostedIsolate
+repo: "GitHub Repository" {shape: rectangle}
+branchProtect: "Branch Protection\nmain branch\nrequired status checks\nPR reviews enforced" {shape: rectangle}
+workflowPerms: "Workflow permissions\ncontents: read (default)\nOverride per job only" {shape: rectangle}
+actionPin: "Action pinning\nactions/checkout@SHA\nDependabot weekly updates" {shape: rectangle}
+secretScan: "Secret scanning\nPush protection enabled\nAlert on commit" {shape: rectangle}
+selfHostedIsolate: "Self-hosted runners\nEphemeral — fresh per run\nIsolated from production" {shape: rectangle}
+
+repo -> branchProtect
+repo -> workflowPerms
+repo -> actionPin
+repo -> secretScan
+repo -> selfHostedIsolate
 ```
 
 ## Branch Protection
@@ -84,17 +85,23 @@ EOF
 | Secret scanning | Enable push protection to block commits with secrets |
 | Audit log | Review `gh api /orgs/OWNER/audit-log` for anomalies |
 
-```mermaid
-flowchart LR
-    prOpen(["Developer opens PR"])
-    actionlint["actionlint\nworkflow YAML lint"]
-    statusChecks["Required status checks\nbuild + test jobs"]
-    reviewApproval["PR review\n1 required approver"]
-    branchMerge["Merge to main\nprotected branch"]
-    release["Release tag pushed\nv1.2.3"]
-    oidcPublish["OIDC publish\nno stored cloud secrets"]
+```d2
+direction: right
 
-    prOpen --> actionlint --> statusChecks --> reviewApproval --> branchMerge --> release --> oidcPublish
+prOpen: "Developer opens PR" {shape: rectangle}
+actionlint: "actionlint\nworkflow YAML lint" {shape: rectangle}
+statusChecks: "Required status checks\nbuild + test jobs" {shape: rectangle}
+reviewApproval: "PR review\n1 required approver" {shape: rectangle}
+branchMerge: "Merge to main\nprotected branch" {shape: rectangle}
+release: "Release tag pushed\nv1.2.3" {shape: rectangle}
+oidcPublish: "OIDC publish\nno stored cloud secrets" {shape: rectangle}
+
+prOpen -> actionlint
+actionlint -> statusChecks
+statusChecks -> reviewApproval
+reviewApproval -> branchMerge
+branchMerge -> release
+release -> oidcPublish
 ```
 
 ---

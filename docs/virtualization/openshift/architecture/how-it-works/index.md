@@ -10,27 +10,23 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph TD
-    A[oc / kubectl] --> B[kube-apiserver\nAuthN + AuthZ + Admission]
-    B --> C[etcd\npersist to Raft log]
-    C --> D[kube-controller-manager\nreconcile desired state]
-    D --> E[kube-scheduler\nassign pod to node]
-    E --> F[kubelet\nexecute pod spec]
-    F --> G[CRI-O\npull image + run container]
+```d2
+direction: right
 
-    classDef client fill:#374151,color:#fff
-    classDef api fill:#2563eb,color:#fff
-    classDef store fill:#7c3aed,color:#fff
-    classDef ctrl fill:#15803d,color:#fff
-    classDef node fill:#b45309,color:#fff
-    classDef runtime fill:#164e63,color:#fff
-    class A client
-    class B api
-    class C store
-    class D,E ctrl
-    class F node
-    class G runtime
+A: "oc / kubectl" {shape: rectangle}
+B: "kube-apiserver\nAuthN + AuthZ + Admission" {shape: rectangle}
+C: "etcd\npersist to Raft log" {shape: rectangle}
+D: "kube-controller-manager\nreconcile desired state" {shape: rectangle}
+E: "kube-scheduler\nassign pod to node" {shape: rectangle}
+F: "kubelet\nexecute pod spec" {shape: rectangle}
+G: "CRI-O\npull image + run container" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+E -> F
+F -> G
 ```
 
 ## Control Plane Components

@@ -11,23 +11,18 @@ vCenter High Availability (VCHA) deploys three vCenter instances — active, pas
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph LR
-    classDef active fill:#2563eb,color:#fff,stroke:none
-    classDef passive fill:#15803d,color:#fff,stroke:none
-    classDef witness fill:#b45309,color:#fff,stroke:none
-    classDef net fill:#1e3a5f,color:#fff,stroke:none
+```d2
+direction: right
 
-    A[Active vCenter]:::active
-    P[Passive vCenter]:::passive
-    W[Witness Node]:::witness
-    HN[HA Network\n192.168.10.0/24\nport 8095]:::net
+A: "A" {shape: rectangle}
+HN: "HN" {shape: rectangle}
+P: "P" {shape: rectangle}
+W: "W" {shape: rectangle}
 
-    A -->|DB replication\nDRBD filesystem sync| HN
-    HN -->|continuous sync| P
-    A -->|heartbeat| HN
-    HN -->|heartbeat| W
-    P -->|quorum check| W
+A -> HN
+HN -> P
+HN -> W
+P -> W
 ```
 
 ## 3-Node Topology

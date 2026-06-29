@@ -7,16 +7,12 @@ search:
 ---
 # PowerStore — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Quick Reference, Host Connectivity Issues, Replication Issues, Performance Issues, Capacity Issues and 2 more sections.
 
 *Applies to: PowerStore 3.x*
 </div>
 ![PowerStore — Common Issues](../../../../assets/storage-dell-powerstore-troubleshooting-common-issues.svg)
-
-
-
 
 ```d2
 direction: down
@@ -46,41 +42,41 @@ capacity_issues -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{Node hardware\nfault?}
-    S --> B2{Volume\ninaccessible?}
-    S --> B3{Replication\nsession failed?}
-    S --> B4{NAS server\noffline?}
-    S --> B5{Storage pool\ncapacity alarm?}
+```d2
+direction: right
 
-    B1 -->|Check appliance health| D1{Node in\nfault state?}
-    D1 -->|Yes| R1[See Quick Reference —\nAlert: drive fault / pool degraded]
-    D1 -->|No| R2[See Management Plane Issues —\nPowerStore Manager Inaccessible]
+D1: "D1" {shape: rectangle}
+R1: "See Quick Reference —\nAlert: drive fault / pool degraded" {shape: rectangle}
+R2: "See Management Plane Issues —\nPowerStore Manager Inaccessible" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Host Connectivity —\nFC Host Cannot See Volumes" {shape: rectangle}
+R4: "See Host Connectivity —\niSCSI Host Cannot Connect" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Replication Issues —\nReplication Session in Failed State" {shape: rectangle}
+R6: "See Replication Issues —\nMetro Volume Link Down" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Quick Reference —\nNAS server offline" {shape: rectangle}
+R8: "See Host Connectivity —\nMultipath Not Working" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See Capacity Issues —\nPool Approaching Full Capacity" {shape: rectangle}
+R10: "See Snapshot Failures —\nSnapshot schedule failures" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Check host object and zoning| D2{FC or\niSCSI?}
-    D2 -->|FC| R3[See Host Connectivity —\nFC Host Cannot See Volumes]
-    D2 -->|iSCSI| R4[See Host Connectivity —\niSCSI Host Cannot Connect]
-
-    B3 -->|Check replication session state| D3{Network or\ncredential error?}
-    D3 -->|Network| R5[See Replication Issues —\nReplication Session in Failed State]
-    D3 -->|Metro link| R6[See Replication Issues —\nMetro Volume Link Down]
-
-    B4 -->|Check NAS server node| D4{NAS server\nfailed over?}
-    D4 -->|Yes| R7[See Quick Reference —\nNAS server offline]
-    D4 -->|SMB auth| R8[See Host Connectivity —\nMultipath Not Working]
-
-    B5 -->|Check pool utilisation| D5{Pool above\n85% used?}
-    D5 -->|Yes| R9[See Capacity Issues —\nPool Approaching Full Capacity]
-    D5 -->|Snapshot full| R10[See Snapshot Failures —\nSnapshot schedule failures]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---

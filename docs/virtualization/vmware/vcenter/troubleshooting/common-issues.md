@@ -9,16 +9,12 @@ search:
 ---
 # vCenter Troubleshooting — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Issue Summary, vCenter Services Not Starting, Certificate Errors, ESXi Host Disconnected or Not Responding, SSO / Authentication Failures and 5 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
 ![vCenter Troubleshooting — Common Issues](../../../../assets/virtualization-vmware-vcenter-troubleshooting-common-issues.svg)
-
-
-
 
 ```d2
 direction: down
@@ -71,34 +67,41 @@ service-control --start --all
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A[Can't log in / UI unreachable]
-    S --> B[ESXi host disconnected]
-    S --> C[Certificate or SSO error]
-    S --> D[Service crashed / alarm]
-    S --> E[Upgrade failed]
+```d2
+direction: right
 
-    A --> A1{vSphere Client\nloads at all?}
-    A1 -->|No — blank/timeout| A2{VCSA VM powered on?}
-    A2 -->|No| A3[Power on VCSA — check host it runs on]
-    A2 -->|Yes| A4[→ Services Not Starting section]
-    A1 -->|Yes — login page| A5{Error message?}
-    A5 -->|Certificate / SEC_E| A6[→ Certificate Errors section]
-    A5 -->|SSO / locked out| A7[→ SSO / Auth Failures section]
-    A5 -->|VAMI 5480 unreachable| A8[→ VAMI Inaccessible section]
+S: "What is the symptom?" {shape: rectangle}
+A: "Can" {shape: rectangle}
+B: "ESXi host disconnected" {shape: rectangle}
+C: "Certificate or SSO error" {shape: rectangle}
+D: "Service crashed / alarm" {shape: rectangle}
+E: "Upgrade failed" {shape: rectangle}
+A2: "A2" {shape: rectangle}
+A3: "Power on VCSA — check host it runs on" {shape: rectangle}
+A4: "→ Services Not Starting section" {shape: rectangle}
+A5: "A5" {shape: rectangle}
+A6: "→ Certificate Errors section" {shape: rectangle}
+A7: "→ SSO / Auth Failures section" {shape: rectangle}
+A8: "→ VAMI Inaccessible section" {shape: rectangle}
+B1: "→ ESXi Host Disconnected section" {shape: rectangle}
+D1: "→ Alarms and Events section" {shape: rectangle}
+E1: "→ vCenter Upgrade Failures section" {shape: rectangle}
+A1: "A1" {shape: rectangle}
 
-    B --> B1[→ ESXi Host Disconnected section]
-    C --> A6
-    D --> D1[→ Alarms and Events section]
-    E --> E1[→ vCenter Upgrade Failures section]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A6,A7,A8,A4,A3,B1,D1,E1 section
-    class A1,A2,A5 decision
-    class S start
+S -> A
+S -> B
+S -> C
+S -> D
+S -> E
+A2 -> A3
+A2 -> A4
+A5 -> A6
+A5 -> A7
+A5 -> A8
+B -> B1
+C -> A6
+D -> D1
+E -> E1
 ```
 
 ---

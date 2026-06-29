@@ -20,29 +20,30 @@ This guide covers the hierarchical design model, VLAN segmentation strategy, rou
 
 The three-tier (core / distribution / access) model remains the reference architecture for large data centres. Smaller environments may collapse distribution into the core (two-tier / spine-leaf), but the design principles are identical.
 
-```mermaid
-graph TD
-    Internet["Internet / WAN / MPLS"]
-    FW_Pair["Firewall Pair\n(Palo Alto PA-5450 HA Active-Passive)"]
-    Core_A["Core Switch A\n(Cisco Nexus 9504)"]
-    Core_B["Core Switch B\n(Cisco Nexus 9504)"]
-    Dist_A["Distribution Switch A\n(Cisco Nexus 9300)"]
-    Dist_B["Distribution Switch B\n(Cisco Nexus 9300)"]
-    Access_A["Access / ToR A\n(Nexus 93180YC-FX)"]
-    Access_B["Access / ToR B\n(Nexus 93180YC-FX)"]
-    Hosts["ESXi Hosts / Bare Metal Servers\n(dual-homed, LACP)"]
+```d2
+direction: right
 
-    Internet --> FW_Pair
-    FW_Pair --> Core_A & Core_B
-    Core_A <-->|"vPC peer-link\n2×100GbE"| Core_B
-    Core_A --> Dist_A & Dist_B
-    Core_B --> Dist_A & Dist_B
-    Dist_A <-->|"vPC"| Dist_B
-    Dist_A --> Access_A & Access_B
-    Dist_B --> Access_A & Access_B
-    Access_A <-->|"vPC"| Access_B
-    Access_A --> Hosts
-    Access_B --> Hosts
+Internet: "Internet / WAN / MPLS" {shape: rectangle}
+FW_Pair: "Firewall Pair\n(Palo Alto PA-5450 HA Active-Passive" {shape: rectangle}
+Core_A: "Core Switch A\n(Cisco Nexus 9504" {shape: rectangle}
+Core_B: "Core Switch B\n(Cisco Nexus 9504" {shape: rectangle}
+Dist_A: "Distribution Switch A\n(Cisco Nexus 9300" {shape: rectangle}
+Dist_B: "Distribution Switch B\n(Cisco Nexus 9300" {shape: rectangle}
+Access_A: "Access / ToR A\n(Nexus 93180YC-FX" {shape: rectangle}
+Access_B: "Access / ToR B\n(Nexus 93180YC-FX" {shape: rectangle}
+Hosts: "ESXi Hosts / Bare Metal Servers\n(dual-homed, LACP" {shape: rectangle}
+
+Internet -> FW_Pair
+FW_Pair -> Core_A
+Core_A -> Core_B
+Core_A -> Dist_A
+Dist_A -> Dist_B
+Core_B -> Dist_A
+Dist_A -> Access_A
+Access_A -> Access_B
+Dist_B -> Access_A
+Access_A -> Hosts
+Access_B -> Hosts
 ```
 ![Network Design — Diagram](../../assets/networking-network-design-diagram.svg)
 
@@ -61,20 +62,21 @@ graph TD
 
 ## Load Balancer Placement
 
-```mermaid
-graph TD
-    Client["Client (Internet)"]
-    ELB["External Load Balancer\n(F5 BIG-IP / NSX-T ALB)\nDMZ zone"]
-    WAF["Web Application Firewall\n(inline with ELB or cloud-native)"]
-    AppTier["Application Tier\n(Production zone)"]
-    ILB["Internal Load Balancer\n(NSX-T ALB Service Engine)\nProduction zone"]
-    DBTier["Database Tier\n(Production zone)"]
+```d2
+direction: right
 
-    Client --> ELB
-    ELB --> WAF
-    WAF --> AppTier
-    AppTier --> ILB
-    ILB --> DBTier
+Client: "Client (Internet" {shape: rectangle}
+ELB: "External Load Balancer\n(F5 BIG-IP / NSX-T ALB)\nDMZ zone" {shape: rectangle}
+WAF: "Web Application Firewall\n(inline with ELB or cloud-native" {shape: rectangle}
+AppTier: "Application Tier\n(Production zone" {shape: rectangle}
+ILB: "Internal Load Balancer\n(NSX-T ALB Service Engine)\nProduction zone" {shape: rectangle}
+DBTier: "Database Tier\n(Production zone" {shape: rectangle}
+
+Client -> ELB
+ELB -> WAF
+WAF -> AppTier
+AppTier -> ILB
+ILB -> DBTier
 ```
 
 - Place external LBs in the DMZ with VIPs on the DMZ subnet; real servers in the production zone

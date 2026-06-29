@@ -45,26 +45,6 @@ expiry_alerting -> validate
 
 ## Machine Identity Discovery Topology
 
-```mermaid
-graph TD
-    tpp["Venafi Trust Protection Platform"]
-    tpp -->|"schedule scan job"| netDisc["Network Discovery Engine\n(IP range / CIDR scan)"]
-    tpp -->|"agent or agentless WMI"| winDisc["Windows Certificate Store\nDiscovery"]
-    tpp -->|"Edge Proxy"| segNets["Segmented / DMZ Networks\n(via Proxy relay)"]
-
-    netDisc -->|"scan ports 443 8443 636 3389"| tlsEndpoints["TLS Endpoints\n(servers / load balancers)"]
-    winDisc -->|"LocalMachine store"| winHosts["Windows Hosts\n(IIS / app servers)"]
-    segNets -->|"proxy-relayed scan"| segHosts["Isolated Network Hosts"]
-
-    tlsEndpoints -->|"discovered certs"| tpp
-    winHosts -->|"cert inventory"| tpp
-    segHosts -->|"cert inventory"| tpp
-
-    tpp --> certInventory["Certificate Inventory\n(discovered / unmanaged certs)"]
-    certInventory -->|"assign to policy folder"| managed["Managed Certificate\n(lifecycle enforced)"]
-    certInventory -->|"no action"| unmanaged["Unmanaged — weekly\norphan report"]
-```
-
 ---
 
 ## Certificate Discovery

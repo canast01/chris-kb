@@ -39,31 +39,37 @@ Always confirm the compatibility matrix in the Dell Simple Support Matrix before
 - **Major release upgrade** (e.g., 5977 → 5978 or 5978 → 10.0): requires pre-upgrade validation report from Dell Support. Solutions Enabler and Unisphere must be upgraded to the target-compatible version **before** the array microcode upgrade.
 - **Downgrade**: PowerMaxOS does not support in-place downgrades. Rolling back requires Dell Support engagement and a service restoration procedure.
 
-```mermaid
-flowchart TD
-    START([Plan Major Release Upgrade]) --> COMPAT{"Check Dell\nSimple Support Matrix\nCompatibility?"}
-    COMPAT -->|"Incompatible versions"| FIX_VER["Align SE + Unisphere\ntarget versions first"]
-    FIX_VER --> COMPAT
-    COMPAT -->|"Compatible"| HEALTH{"Pre-upgrade health:\nSRDF Synchronized?\nNo failed drives?"}
-    HEALTH -->|"Issues found"| RESOLVE["Resolve health issues\nbefore proceeding"]
-    RESOLVE --> HEALTH
-    HEALTH -->|"Healthy"| SE_UP["Step 1 — Upgrade\nSolutions Enabler\n(all mgmt hosts)"]
-    SE_UP --> UNI_UP["Step 2 — Upgrade\nUnisphere vApp"]
-    UNI_UP --> PRECHECK["Step 3 — Run\nDell pre-upgrade\nhealth check script\n→ submit to Dell Support"]
-    PRECHECK --> ARRAY_UP["Step 4 — Apply\nPowerMaxOS upgrade\nvia Unisphere\n(rolling director push)"]
-    ARRAY_UP --> MONITOR["Monitor director-by-director\nroll in Unisphere"]
-    MONITOR --> POST{"Post-upgrade:\nSRDF OK?\nHost I/O OK?\nSnapVX OK?"}
-    POST -->|"Issues"| DELL["Engage Dell Support\nwith pre/post logs"]
-    POST -->|"All healthy"| DONE([Upgrade Complete])
+```d2
+direction: right
 
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    classDef fix fill:#b45309,stroke:#92400e,color:#fff
-    class SE_UP,UNI_UP,PRECHECK,ARRAY_UP,MONITOR action
-    class COMPAT,HEALTH,POST decision
-    class START,DONE terminal
-    class FIX_VER,RESOLVE,DELL fix
+START: "Plan Major Release Upgrade" {shape: rectangle}
+COMPAT: "Check Dell\nSimple Support Matrix\nCompatibility?" {shape: rectangle}
+FIX_VER: "Align SE + Unisphere\ntarget versions first" {shape: rectangle}
+HEALTH: "Pre-upgrade health:\nSRDF Synchronized?\nNo failed drives?" {shape: rectangle}
+RESOLVE: "Resolve health issues\nbefore proceeding" {shape: rectangle}
+SE_UP: "Step 1 — Upgrade\nSolutions Enabler\n(all mgmt hosts" {shape: rectangle}
+UNI_UP: "Step 2 — Upgrade\nUnisphere vApp" {shape: rectangle}
+PRECHECK: "Step 3 — Run\nDell pre-upgrade\nhealth check script\n→ submit to Dell Support" {shape: rectangle}
+ARRAY_UP: "Step 4 — Apply\nPowerMaxOS upgrade\nvia Unisphere\n(rolling director push" {shape: rectangle}
+MONITOR: "Monitor director-by-director\nroll in Unisphere" {shape: rectangle}
+POST: "Post-upgrade:\nSRDF OK?\nHost I/O OK?\nSnapVX OK?" {shape: rectangle}
+DELL: "Engage Dell Support\nwith pre/post logs" {shape: rectangle}
+DONE: "Upgrade Complete" {shape: rectangle}
+
+START -> COMPAT
+COMPAT -> FIX_VER
+FIX_VER -> COMPAT
+COMPAT -> HEALTH
+HEALTH -> RESOLVE
+RESOLVE -> HEALTH
+HEALTH -> SE_UP
+SE_UP -> UNI_UP
+UNI_UP -> PRECHECK
+PRECHECK -> ARRAY_UP
+ARRAY_UP -> MONITOR
+MONITOR -> POST
+POST -> DELL
+POST -> DONE
 ```
 
 Upgrade sequence for a major release:

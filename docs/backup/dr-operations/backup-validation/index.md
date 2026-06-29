@@ -142,26 +142,31 @@ The recommended approach is **automated validation for every backup job** combin
 
 ## Validation Workflow
 
-```mermaid
-flowchart TD
-    A[Backup Job Completes] --> B{Job Status OK?}
-    B -- No --> C[Alert: Backup Failure\nTicket Created]
-    B -- Yes --> D[Automated Validation Triggered]
-    D --> E{Validation Type}
-    E --> F[Checksum / Hash Verify]
-    E --> G[Mount & File Scan]
-    E --> H[VM Boot Test\nSureBackup / DataLabs]
-    F --> I{Pass?}
-    G --> I
-    H --> I
-    I -- No --> J[Alert: Validation Failure\nEscalate to Backup Admin]
-    I -- Yes --> K[Validation Record Written]
-    K --> L{Scheduled Manual\nRestore Due?}
-    L -- No --> M[Done — Await Next Job]
-    L -- Yes --> N[Manual Restore Procedure]
-    N --> O[Application Verification]
-    O --> P[Test Report Generated]
-    P --> M
+```d2
+direction: right
+
+E: "E" {shape: rectangle}
+F: "Checksum / Hash Verify" {shape: rectangle}
+H: "VM Boot Test\nSureBackup / DataLabs" {shape: rectangle}
+G: "G" {shape: rectangle}
+I: "I" {shape: rectangle}
+N: "Manual Restore Procedure" {shape: rectangle}
+O: "Application Verification" {shape: rectangle}
+P: "Test Report Generated" {shape: rectangle}
+M: "Done — Await Next Job" {shape: rectangle}
+A: "Backup Job Completes" {shape: rectangle}
+C: "Alert: Backup Failure\nTicket Created" {shape: rectangle}
+D: "Automated Validation Triggered" {shape: rectangle}
+J: "Alert: Validation Failure\nEscalate to Backup Admin" {shape: rectangle}
+K: "Validation Record Written" {shape: rectangle}
+
+E -> F
+E -> H
+G -> I
+H -> I
+N -> O
+O -> P
+P -> M
 ```
 
 Expected output columns: `Name` (VM name), `Status` (Success / Warning / Failed), timing. Any `Failed` row requires immediate investigation and re-run after remediation.

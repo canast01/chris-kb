@@ -13,23 +13,6 @@ Step-by-step guide to installing Git, configuring global settings, setting up SS
 *Applies to: Git 2.x*
 </div>
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Install Git"]
-    s2["Configure Global User Settings"]
-    s3["Set Up SSH Key Authentication"]
-    s4["Clone First Repository"]
-    s5["Configure Default Editor and Diff Tool"]
-    s6["Set Up .gitignore"]
-    s7["Configure Credential Helper"]
-    s8["✓ Validate Setup"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

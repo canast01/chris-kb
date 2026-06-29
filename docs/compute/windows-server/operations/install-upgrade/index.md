@@ -37,19 +37,6 @@ verify -> validate
 
 ## Patch Deployment Ring Flow
 
-```mermaid
-flowchart LR
-    patchTuesday["Patch Tuesday\nMicrosoft releases CU"]
-    devRing["Dev / Test Ring\nApply within 48h"]
-    preRing["Pre-Production Ring\n+7 days after dev validation"]
-    prodRing["Production Ring\n+14–21 days after pre-prod"]
-    dcRing["Domain Controllers\nStagger — one DC at a time"]
-    report["Compliance Report\nWSUS / Azure Update Manager"]
-
-    patchTuesday --> devRing --> preRing --> prodRing --> report
-    preRing --> dcRing --> report
-```
-
 ---
 
 ## Patching

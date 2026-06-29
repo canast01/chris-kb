@@ -47,27 +47,6 @@ agentbased_install -> validate
 
 ## IPI Install Sequence
 
-```mermaid
-graph TD
-    A["install-config.yaml\ncreated by operator"]:::dark --> B["openshift-install\ncreate manifests"]:::dark
-    B --> C["openshift-install\ncreate ignition-configs"]:::blue
-    C --> D["Bootstrap node boots\nfrom RHCOS ignition"]:::green
-    D --> E["Bootstrap hosts\ntemporary API + etcd"]:::green
-    E --> F["Master nodes join\nfetch master.ign"]:::orange
-    F --> G["Bootstrap removed\nby installer"]:::orange
-    G --> H["Worker nodes boot\nfetch worker.ign"]:::purple
-    H --> I["Worker CSRs submitted\noperator approves"]:::purple
-    I --> J["Cluster Operators\nbecome Available"]:::teal
-    J --> K["install-complete\nkubeconfig written"]:::teal
-
-    classDef dark fill:#374151,color:#fff
-    classDef blue fill:#2563eb,color:#fff
-    classDef green fill:#15803d,color:#fff
-    classDef orange fill:#b45309,color:#fff
-    classDef purple fill:#7c3aed,color:#fff
-    classDef teal fill:#164e63,color:#fff
-```
-
 ## DNS Requirements
 
 Required DNS records must exist **before** running `openshift-install`. The installer validates DNS early and aborts if records are missing.

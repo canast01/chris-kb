@@ -10,7 +10,6 @@ search:
 # vSAN — Common Issues
 ![vSAN — Common Issues](../../../../assets/virtualization-vmware-vsan-troubleshooting-common-issues.svg)
 
-
 ```bash
 # 1. Cluster membership and overall status
 esxcli vsan cluster get
@@ -49,43 +48,41 @@ Host 3 ──── data copy 3
 esxcli vsan debug resync summary get
 # Wait until bytesToSync = 0
 ```
-```mermaid
-graph TD
-    alert(["Object degraded or absent\n(vSAN health alarm)"])
-    checkHost{"Is a host\noffline?"}
-    restoreHost["Restore host connectivity\nor power on host"]
-    checkDisk{"Is a disk group\noffline / failed?"}
-    checkNet{"Does network test\nshow packet loss?"}
-    fixNet["Fix network:\nMTU, VLAN, NIC, switch port"]
-    diskReplace["Proceed to disk replacement\n(Procedures → Disk Groups)"]
-    waitResync["Wait for vSAN resync\n(clomRepairDelay = 60 min default)"]
-    monResync["Monitor:\nesxcli vsan debug resync summary get"]
-    checkResync{"Resync completing\nwithin 24 hours?"}
-    checkCap{"Cluster capacity\n> 70%?"}
-    freeCap["Free capacity:\nremove snapshots,\nlower FTT temporarily"]
-    escalate["Escalate to VMware Support\nwith state capture bundle"]
-    resolved(["Objects healthy"])
+```d2
+direction: right
 
-    alert --> checkHost
-    checkHost -->|"Yes"| restoreHost --> waitResync
-    checkHost -->|"No"| checkDisk
-    checkDisk -->|"Yes"| diskReplace --> waitResync
-    checkDisk -->|"No"| checkNet
-    checkNet -->|"Yes"| fixNet --> waitResync
-    checkNet -->|"No"| waitResync
-    waitResync --> monResync --> checkResync
-    checkResync -->|"Yes"| resolved
-    checkResync -->|"Stalled"| checkCap
-    checkCap -->|"Yes"| freeCap --> monResync
-    checkCap -->|"No"| escalate
+alert: "Object degraded or absent\n(vSAN health alarm" {shape: rectangle}
+checkHost: "checkHost" {shape: rectangle}
+restoreHost: "Restore host connectivity\nor power on host" {shape: rectangle}
+waitResync: "Wait for vSAN resync\n(clomRepairDelay = 60 min default" {shape: rectangle}
+checkDisk: "checkDisk" {shape: rectangle}
+diskReplace: "Proceed to disk replacement\n(Procedures → Disk Groups" {shape: rectangle}
+checkNet: "checkNet" {shape: rectangle}
+fixNet: "Fix network:\nMTU, VLAN, NIC, switch port" {shape: rectangle}
+monResync: "Monitor:\nesxcli vsan debug resync summary get" {shape: rectangle}
+checkResync: "checkResync" {shape: rectangle}
+resolved: "Objects healthy" {shape: rectangle}
+checkCap: "checkCap" {shape: rectangle}
+freeCap: "Free capacity:\nremove snapshots,\nlower FTT temporarily" {shape: rectangle}
+escalate: "Escalate to VMware Support\nwith state capture bundle" {shape: rectangle}
 
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-
-    class checkHost,checkDisk,checkNet,checkResync,checkCap decision
-    class restoreHost,fixNet,diskReplace,waitResync,monResync,freeCap,escalate action
-    class alert,resolved terminal
+alert -> checkHost
+checkHost -> restoreHost
+restoreHost -> waitResync
+checkHost -> checkDisk
+checkDisk -> diskReplace
+diskReplace -> waitResync
+checkDisk -> checkNet
+checkNet -> fixNet
+fixNet -> waitResync
+checkNet -> waitResync
+waitResync -> monResync
+monResync -> checkResync
+checkResync -> resolved
+checkResync -> checkCap
+checkCap -> freeCap
+freeCap -> monResync
+checkCap -> escalate
 ```
 ```bash
 # Find degraded/absent objects
@@ -135,41 +132,39 @@ esxcli software vib list | grep -i <controller-vendor>
 # VMkernel log — disk errors
 grep -i "scsi\|disk\|naa" /var/log/vmkernel.log | grep -i "error\|fail" | tail -30
 ```
-```mermaid
-graph TD
-    highLat(["High vSAN latency detected\n(> 10 ms read / > 20 ms write)"])
-    checkNet{"vmkping -d -s 8972\npeer succeeds?"}
-    fixMTU["Fix MTU end-to-end\n(switch, vDS, vmk adapter = 9000)"]
-    checkResync{"Active resync\nin progress?"}
-    throttle["Throttle resync during\nbusiness hours:\nesxcli vsan debug resync\nthrottle set --throttle 500"]
-    checkCap{"Cluster capacity\n> 80%?"}
-    freeCap["Free capacity:\ndelete snapshots,\nexpand cluster"]
-    checkDisk{"Disk group\nhealthy?"}
-    replaceDisk["Replace failed\nhardware"]
-    checkCPU{"Host CPU\ncongestion?"}
-    vMotion["vMotion high-IOPS\nVMs to less-loaded hosts"]
-    openCase["Escalate to VMware\nSupport"]
-    resolved(["Latency normal"])
+```d2
+direction: right
 
-    highLat --> checkNet
-    checkNet -->|"No / packet loss"| fixMTU --> resolved
-    checkNet -->|"Yes"| checkResync
-    checkResync -->|"Yes"| throttle --> resolved
-    checkResync -->|"No"| checkCap
-    checkCap -->|"Yes"| freeCap --> resolved
-    checkCap -->|"No"| checkDisk
-    checkDisk -->|"Degraded"| replaceDisk --> resolved
-    checkDisk -->|"Healthy"| checkCPU
-    checkCPU -->|"Yes"| vMotion --> resolved
-    checkCPU -->|"No"| openCase
+highLat: "High vSAN latency detected\n(> 10 ms read / > 20 ms write" {shape: rectangle}
+checkNet: "checkNet" {shape: rectangle}
+fixMTU: "Fix MTU end-to-end\n(switch, vDS, vmk adapter = 9000" {shape: rectangle}
+resolved: "Latency normal" {shape: rectangle}
+checkResync: "checkResync" {shape: rectangle}
+throttle: "Throttle resync during\nbusiness hours:\nesxcli vsan debug resync\nthrottle set --throttle 500" {shape: rectangle}
+checkCap: "checkCap" {shape: rectangle}
+freeCap: "Free capacity:\ndelete snapshots,\nexpand cluster" {shape: rectangle}
+checkDisk: "checkDisk" {shape: rectangle}
+replaceDisk: "Replace failed\nhardware" {shape: rectangle}
+checkCPU: "checkCPU" {shape: rectangle}
+vMotion: "vMotion high-IOPS\nVMs to less-loaded hosts" {shape: rectangle}
+openCase: "Escalate to VMware\nSupport" {shape: rectangle}
 
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-
-    class checkNet,checkResync,checkCap,checkDisk,checkCPU decision
-    class fixMTU,throttle,freeCap,replaceDisk,vMotion,openCase action
-    class highLat,resolved terminal
+highLat -> checkNet
+checkNet -> fixMTU
+fixMTU -> resolved
+checkNet -> checkResync
+checkResync -> throttle
+throttle -> resolved
+checkResync -> checkCap
+checkCap -> freeCap
+freeCap -> resolved
+checkCap -> checkDisk
+checkDisk -> replaceDisk
+replaceDisk -> resolved
+checkDisk -> checkCPU
+checkCPU -> vMotion
+vMotion -> resolved
+checkCPU -> openCase
 ```
 ```bash
 # Per-disk I/O stats (IOPS, latency)
@@ -246,36 +241,40 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What triggered the alert?]) --> A[Object DEGRADED\nor ABSENT]
-    S --> B[Capacity alarm\n≥ 70 / 80%]
-    S --> C[Skyline Health\ncheck failing]
-    S --> D[Resync stuck\nor very slow]
-    S --> E[VM storage\npolicy non-compliant]
+```d2
+direction: right
 
-    A --> A1{Is a host\ndown or isolated?}
-    A1 -->|Yes| A2[Restore host first\n— wait for rebuild\n→ Object Health section]
-    A1 -->|No| A3{Disk failure\nin disk group?}
-    A3 -->|Yes| A4[Replace disk\n→ Disk Group Failure section]
-    A3 -->|No| A5[Check network\npartition / witness]
+S: "What triggered the alert?" {shape: rectangle}
+A: "Object DEGRADED\nor ABSENT" {shape: rectangle}
+B: "Capacity alarm\n≥ 70 / 80%" {shape: rectangle}
+C: "Skyline Health\ncheck failing" {shape: rectangle}
+D: "Resync stuck\nor very slow" {shape: rectangle}
+E: "VM storage\npolicy non-compliant" {shape: rectangle}
+A1: "A1" {shape: rectangle}
+A2: "Restore host first\n— wait for rebuild\n→ Object Health section" {shape: rectangle}
+A3: "A3" {shape: rectangle}
+A4: "Replace disk\n→ Disk Group Failure section" {shape: rectangle}
+A5: "Check network\npartition / witness" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "Clean snapshots\ncheck dedup savings\n→ Capacity section" {shape: rectangle}
+B3: "Escalate immediately\nStorage vMotion or\nadd capacity" {shape: rectangle}
+C1: "Identify specific\nfailing check\n→ Health Checks section" {shape: rectangle}
+D1: "Check resync throttle\nand available bandwidth\n→ Resync section" {shape: rectangle}
+E1: "Run policy compliance\ncheck + remediate\n→ Policy Compliance section" {shape: rectangle}
 
-    B --> B1{Which threshold?}
-    B1 -->|70–79%| B2[Clean snapshots\ncheck dedup savings\n→ Capacity section]
-    B1 -->|≥ 80%| B3[Escalate immediately\nStorage vMotion or\nadd capacity]
-
-    C --> C1[Identify specific\nfailing check\n→ Health Checks section]
-    D --> D1[Check resync throttle\nand available bandwidth\n→ Resync section]
-    E --> E1[Run policy compliance\ncheck + remediate\n→ Policy Compliance section]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    classDef urgent fill:#b91c1c,color:#fff,stroke:#b91c1c
-    class A2,A4,A5,B2,C1,D1,E1 section
-    class A1,A3,B1 decision
-    class S start
-    class B3 urgent
+S -> A
+S -> B
+S -> C
+S -> D
+S -> E
+A1 -> A2
+A3 -> A4
+A3 -> A5
+B1 -> B2
+B1 -> B3
+C -> C1
+D -> D1
+E -> E1
 ```
 
 ---

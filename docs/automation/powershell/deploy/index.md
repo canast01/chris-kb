@@ -13,22 +13,6 @@ enabling remote management, and turning on logging.
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Install PowerShell Core (Cross-Platform)"]
-    s2["Install Required Modules"]
-    s3["Configure PowerShell Profile"]
-    s4["Configure Execution Policy"]
-    s5["Set Up Remote Management (WinRM)"]
-    s6["Configure Logging and Transcripts"]
-    s7["✓ Validate the Environment"]
-    s8["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
-    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

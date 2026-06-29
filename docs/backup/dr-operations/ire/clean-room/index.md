@@ -19,15 +19,24 @@ The clean room is where analysis occurs. Data and systems are treated as suspect
 
 ## Clean Room Architecture
 
-```mermaid
-graph LR
-    BACKUP["Immutable Backup Copy"] --> RESTORE["Restore to\nIRE Staging"]
-    RESTORE --> SCAN["Malware Scan\n(offline AV + forensics)"]
-    SCAN -->|"Clean"| CLEANROOM["Clean Room\n(validated data)"]
-    SCAN -->|"Infected / suspect"| QUARANTINE["Quarantine\n(investigate + remediate)"]
-    CLEANROOM --> VALIDATE["Business Validation\n(app team testing)"]
-    VALIDATE -->|"Approved"| REINTRODUCE["Reintroduce to Production"]
-    VALIDATE -->|"Issues found"| RESTORE
+```d2
+direction: right
+
+BACKUP: "Immutable Backup Copy" {shape: rectangle}
+RESTORE: "Restore to\nIRE Staging" {shape: rectangle}
+SCAN: "Malware Scan\n(offline AV + forensics" {shape: rectangle}
+CLEANROOM: "Clean Room\n(validated data" {shape: rectangle}
+QUARANTINE: "Quarantine\n(investigate + remediate" {shape: rectangle}
+VALIDATE: "Business Validation\n(app team testing" {shape: rectangle}
+REINTRODUCE: "Reintroduce to Production" {shape: rectangle}
+
+BACKUP -> RESTORE
+RESTORE -> SCAN
+SCAN -> CLEANROOM
+SCAN -> QUARANTINE
+CLEANROOM -> VALIDATE
+VALIDATE -> REINTRODUCE
+VALIDATE -> RESTORE
 ```
 
 ## Common Issues

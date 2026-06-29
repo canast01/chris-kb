@@ -20,37 +20,48 @@ Subclient → Restore → Out-of-Place → Specify destination client and path
 ```bash
 qoperation execscript -sn QS_ValidateCopy -si "StoragePolicyName" -si "CopyName"
 ```
-```mermaid
-flowchart TD
-    A([Recovery Request]) --> B{What needs recovery?}
-    B --> C[Entire VM]
-    B --> D[Specific files/folders]
-    B --> E[Application data\nExchange / SQL / AD]
+```d2
+direction: right
 
-    C --> F{Target location?}
-    F --> G[Original location\nIn-Place Restore]
-    F --> H[Alternate host/DS\nOut-of-Place Restore]
+B: "B" {shape: rectangle}
+C: "Entire VM" {shape: rectangle}
+D: "Specific files/folders" {shape: rectangle}
+E: "Application data\nExchange / SQL / AD" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Original location\nIn-Place Restore" {shape: rectangle}
+H: "Alternate host/DS\nOut-of-Place Restore" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "File-Level Recovery\nvia live browse" {shape: rectangle}
+K: "Mount backup as\nvirtual volume\nthen browse" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Exchange → Mailbox\nor Item Restore" {shape: rectangle}
+N: "SQL → DB Restore\nor Table-level" {shape: rectangle}
+O: "AD → Authoritative\nor Non-authoritative" {shape: rectangle}
+P: "Validate services post-restore" {shape: rectangle}
+Q: "Q" {shape: rectangle}
+R: "Recovery Complete" {shape: rectangle}
+S: "Escalate /\nRestore alternate point" {shape: rectangle}
+A: "Recovery Request" {shape: rectangle}
 
-    D --> I{Source accessible?}
-    I --> |Yes - live agent| J[File-Level Recovery\nvia live browse]
-    I --> |No - offline VM| K[Mount backup as\nvirtual volume\nthen browse]
-
-    E --> L{Application type?}
-    L --> M[Exchange → Mailbox\nor Item Restore]
-    L --> N[SQL → DB Restore\nor Table-level]
-    L --> O[AD → Authoritative\nor Non-authoritative]
-
-    G --> P[Validate services post-restore]
-    H --> P
-    J --> P
-    K --> P
-    M --> P
-    N --> P
-    O --> P
-
-    P --> Q{Validation passed?}
-    Q --> |Yes| R([Recovery Complete])
-    Q --> |No| S[Escalate /\nRestore alternate point]
+B -> C
+B -> D
+B -> E
+F -> G
+F -> H
+I -> J
+I -> K
+L -> M
+L -> N
+L -> O
+G -> P
+H -> P
+J -> P
+K -> P
+M -> P
+N -> P
+O -> P
+Q -> R
+Q -> S
 ```
 
 ```plantuml

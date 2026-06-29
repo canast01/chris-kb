@@ -7,16 +7,12 @@ search:
 ---
 # PowerPath — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths Dead to a Device, Device Not Visible After LUN Provisioning, Incorrect Path Count and 6 more sections.
 
 *Applies to: PowerPath*
 </div>
 ![PowerPath — Common Issues](../../../../assets/storage-dell-powerpath-troubleshooting-common-issues.svg)
-
-
-
 
 ```d2
 direction: down
@@ -46,41 +42,41 @@ incorrect_path_count -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{Path not\ndetected - emcpowern missing?}
-    S --> B2{Dead paths\non LUN?}
-    S --> B3{powermt check\nshows degraded?}
-    S --> B4{Multipath policy\nmismatch?}
-    S --> B5{Host reboot needed\nafter upgrade?}
+```d2
+direction: right
 
-    B1 -->|Rescan SCSI bus| D1{Device visible\nafter rescan?}
-    D1 -->|No| R1[See Device Not Visible —\nVerify LUN masking and host group]
-    D1 -->|Still missing| R2[See PowerPath Not Starting —\nCheck kernel module and DKMS]
+D1: "D1" {shape: rectangle}
+R1: "See Device Not Visible —\nVerify LUN masking and host group" {shape: rectangle}
+R2: "See PowerPath Not Starting —\nCheck kernel module and DKMS" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Dead Paths —\nCheck HBA port state and fabric switch" {shape: rectangle}
+R4: "See All Paths Dead —\nVerify masking and issue LIP on HBA" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Incorrect Path Count —\nTrace missing path from HBA to array" {shape: rectangle}
+R6: "See Path Flapping —\nReplace marginal SFP or cable" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Wrong Load Balance Policy —\nSet CLAROpt and powermt save" {shape: rectangle}
+R8: "See DM-Multipath Conflict —\nBlacklist Dell devices in multipath.conf" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See PowerPath Not Starting —\nmodprobe emcp and start service" {shape: rectangle}
+R10: "See Configuration Not Persisting —\nRun powermt save after every change" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Run powermt restore| D2{Paths recovered\nafter restore?}
-    D2 -->|No| R3[See Dead Paths —\nCheck HBA port state and fabric switch]
-    D2 -->|All paths dead| R4[See All Paths Dead —\nVerify masking and issue LIP on HBA]
-
-    B3 -->|Check path count vs baseline| D3{Fewer paths\nthan expected?}
-    D3 -->|Yes| R5[See Incorrect Path Count —\nTrace missing path from HBA to array]
-    D3 -->|Flapping| R6[See Path Flapping —\nReplace marginal SFP or cable]
-
-    B4 -->|Check powermt display options| D4{Policy is\nRoundRobin or BasicFailover?}
-    D4 -->|Yes| R7[See Wrong Load Balance Policy —\nSet CLAROpt and powermt save]
-    D4 -->|DM-Multipath conflict| R8[See DM-Multipath Conflict —\nBlacklist Dell devices in multipath.conf]
-
-    B5 -->|Check PowerPath service| D5{powermt daemon\nconnectable?}
-    D5 -->|No| R9[See PowerPath Not Starting —\nmodprobe emcp and start service]
-    D5 -->|Config lost| R10[See Configuration Not Persisting —\nRun powermt save after every change]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---
@@ -97,20 +93,37 @@ graph TD
 
 ## Dead Path Triage Flow
 
-```mermaid
-flowchart TD
-    A([Dead path detected]) --> B["powermt restore\nForce immediate path retry"]
-    B --> C{"Paths recovered?"}
-    C -->|Yes| D["powermt save\nMonitor for flapping"]
-    C -->|No| E{"HBA port\nOnline?"}
-    E -->|No| F["Check cable / SFP\nCheck HBA driver"]
-    E -->|Yes| G{"Fabric switch port\nOnline?"}
-    G -->|No| H["portshow / show interface\nCheck SFP, cable, BBCR"]
-    G -->|Yes| I{"Array FA port\nonline & zoned?"}
-    I -->|No| J["Restore zoning\nCheck array port state"]
-    I -->|Yes| K["Verify LUN masking\nCheck host group on array"]
-    F & H & J & K --> L(["Open support case if\npath does not recover"])
-    D --> Z([Resolved])
+```d2
+direction: right
+
+A: "Dead path detected" {shape: rectangle}
+B: "powermt restore\nForce immediate path retry" {shape: rectangle}
+C: "Paths recovered?" {shape: rectangle}
+D: "powermt save\nMonitor for flapping" {shape: rectangle}
+E: "HBA port\nOnline?" {shape: rectangle}
+F: "Check cable / SFP\nCheck HBA driver" {shape: rectangle}
+G: "Fabric switch port\nOnline?" {shape: rectangle}
+H: "portshow / show interface\nCheck SFP, cable, BBCR" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Restore zoning\nCheck array port state" {shape: rectangle}
+K: "Verify LUN masking\nCheck host group on array" {shape: rectangle}
+L: "Open support case if\npath does not recover" {shape: rectangle}
+Z: "Resolved" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+E -> F
+E -> G
+G -> H
+I -> J
+I -> K
+F -> H
+H -> J
+J -> K
+K -> L
+D -> Z
 ```
 
 ## Dead Paths

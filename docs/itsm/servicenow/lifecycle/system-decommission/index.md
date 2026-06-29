@@ -12,16 +12,27 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 
 ## Decommission Workflow
 
-```mermaid
-flowchart TD
-    A[Decommission\nrequest raised] --> B[Owner approval\nand data sign-off]
-    B --> C[Dependency check\nand notification]
-    C --> D[Data retention\nreview]
-    D --> E[Remove from\nmonitoring + backup]
-    E --> F[Revoke access\nand credentials]
-    F --> G[Shut down\nand archive]
-    G --> H[Reclaim resources\nor delete VM]
-    H --> I[CMDB and\ndocumentation update]
+```d2
+direction: right
+
+A: "Decommission\nrequest raised" {shape: rectangle}
+B: "Owner approval\nand data sign-off" {shape: rectangle}
+C: "Dependency check\nand notification" {shape: rectangle}
+D: "Data retention\nreview" {shape: rectangle}
+E: "Remove from\nmonitoring + backup" {shape: rectangle}
+F: "Revoke access\nand credentials" {shape: rectangle}
+G: "Shut down\nand archive" {shape: rectangle}
+H: "Reclaim resources\nor delete VM" {shape: rectangle}
+I: "CMDB and\ndocumentation update" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+E -> F
+F -> G
+G -> H
+H -> I
 ```
 
 | Data Category | Decision | Signed Off |

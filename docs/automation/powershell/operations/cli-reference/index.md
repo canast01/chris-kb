@@ -26,18 +26,19 @@ PowerShell is Microsoft's cross-platform command shell and scripting language. U
 
 ## Script Execution Pipeline
 
-```mermaid
-graph LR
-    readHost["Read-Host / param()\n(user input / args)"]
-    processLogic["Process Logic\n(filter / transform / query)"]
-    exportCsv["Export-Csv\n(or ConvertTo-Json)"]
-    sendEmail["Send-MailMessage\n(email report)"]
-    logResult["Out-File / Add-Content\n(log file)"]
+```d2
+direction: right
 
-    readHost --> processLogic
-    processLogic --> exportCsv
-    exportCsv --> sendEmail
-    processLogic --> logResult
+readHost: "Read-Host / param()\n(user input / args" {shape: rectangle}
+processLogic: "Process Logic\n(filter / transform / query" {shape: rectangle}
+exportCsv: "Export-Csv\n(or ConvertTo-Json" {shape: rectangle}
+sendEmail: "Send-MailMessage\n(email report" {shape: rectangle}
+logResult: "Out-File / Add-Content\n(log file" {shape: rectangle}
+
+readHost -> processLogic
+processLogic -> exportCsv
+exportCsv -> sendEmail
+processLogic -> logResult
 ```
 
 ---

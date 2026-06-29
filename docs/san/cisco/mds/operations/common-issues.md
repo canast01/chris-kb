@@ -36,26 +36,37 @@ interface fc1/4
 # Confirm port comes up
 show interface fc1/4
 ```
-```mermaid
-flowchart TD
-  A["Host cannot see storage"] --> B["show flogi database vsan 10\n| grep host-pwwn"]
-  B --> C{"Host in\nFLOGI?"}
-  C -->|"No"| D["Check port state\nCheck VSAN assignment\nCheck cable and SFP"]
-  C -->|"Yes"| E["show flogi database vsan 10\n| grep storage-pwwn"]
-  E --> F{"Storage in\nFLOGI?"}
-  F -->|"No"| G["Check array port state\nCheck VSAN membership on array port"]
-  F -->|"Yes"| H["show zone member pwwn\nhost-pwwn vsan 10"]
-  H --> I{"Zone with both\ndevices exists?"}
-  I -->|"No"| J["Create zone with initiator\nand target device aliases\nActivate zone set"]
-  I -->|"Yes"| K["show zoneset active vsan 10\n| grep zone-name"]
-  K --> L{"Zone set\nactive?"}
-  L -->|"No"| M["zoneset activate name\nzoneset-name vsan 10"]
-  L -->|"Yes"| N["Verify WWPNs in zone match\nFLOGI pWWN exactly\nCheck for alias typos"]
+```d2
+direction: right
 
-  classDef decision fill:#b45309,stroke:#92400e,color:#fff
-  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  class C,F,I,L decision
-  class D,G,J,M,N fix
+A: "Host cannot see storage" {shape: rectangle}
+B: "show flogi database vsan 10\n| grep host-pwwn" {shape: rectangle}
+C: "Host in\nFLOGI?" {shape: rectangle}
+D: "Check port state\nCheck VSAN assignment\nCheck cable and SFP" {shape: rectangle}
+E: "show flogi database vsan 10\n| grep storage-pwwn" {shape: rectangle}
+F: "Storage in\nFLOGI?" {shape: rectangle}
+G: "Check array port state\nCheck VSAN membership on array port" {shape: rectangle}
+H: "show zone member pwwn\nhost-pwwn vsan 10" {shape: rectangle}
+I: "Zone with both\ndevices exists?" {shape: rectangle}
+J: "Create zone with initiator\nand target device aliases\nActivate zone set" {shape: rectangle}
+K: "show zoneset active vsan 10\n| grep zone-name" {shape: rectangle}
+L: "Zone set\nactive?" {shape: rectangle}
+M: "zoneset activate name\nzoneset-name vsan 10" {shape: rectangle}
+N: "Verify WWPNs in zone match\nFLOGI pWWN exactly\nCheck for alias typos" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+E -> F
+F -> G
+F -> H
+H -> I
+I -> J
+I -> K
+K -> L
+L -> M
+L -> N
 ```
 ```bash
 # Step 1 — Is the host HBA logged into the fabric?

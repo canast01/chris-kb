@@ -10,13 +10,20 @@ SNMP is the primary protocol for collecting metrics from network devices, storag
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    A[Switches\nRouters\nStorage\nUPS] -->|SNMP Poll UDP/161| B[SNMP Exporter\nor NMS Collector]
-    A -->|Traps UDP/162| C[Trap Receiver]
-    B --> D[Prometheus / Zabbix / LibreNMS]
-    C --> D
-    D --> E[Grafana / Alertmanager]
+```d2
+direction: right
+
+A: "Switches\nRouters\nStorage\nUPS" {shape: rectangle}
+B: "SNMP Exporter\nor NMS Collector" {shape: rectangle}
+C: "Trap Receiver" {shape: rectangle}
+D: "Prometheus / Zabbix / LibreNMS" {shape: rectangle}
+E: "Grafana / Alertmanager" {shape: rectangle}
+
+A -> B
+A -> C
+B -> D
+C -> D
+D -> E
 ```
 
 ## Prometheus + SNMP Exporter

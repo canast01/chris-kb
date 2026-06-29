@@ -41,17 +41,15 @@ Capacity on Demand (COD) is a software-defined capacity licensing model for Dell
 
 ## Capacity Model
 
-```mermaid
-graph LR
-  ARRAY["Dell Array\nPowerStore / PowerMax\n(on-premises)"] <-->|"Dell APEX portal\ncapacity-on-demand"| APEX["Dell APEX\nCloud Console"]
-  ADMIN(["Storage Admin"]) -->|"portal"| APEX
-  APEX --> BILL["Usage-based Billing\n& Reporting"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class ARRAY ctrl
-  class APEX,BILL cloud
-  class ADMIN host
+```d2
+direction: right
+
+ARRAY: "Dell Array\nPowerStore / PowerMax\n(on-premises" {shape: rectangle}
+APEX: "Dell APEX\nCloud Console" {shape: rectangle}
+ADMIN: "Storage Admin" {shape: rectangle}
+
+ARRAY -> APEX
+ADMIN -> APEX
 ```
 
 ## Object Storage Data Model

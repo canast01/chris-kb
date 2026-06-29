@@ -55,43 +55,40 @@ for rdfg in 20 21 22; do
   symrdf -g ${rdfg} -type A query | tail -5
 done
 ```
-```mermaid
-flowchart TD
-    startCheck["Daily Health Check Start"]
-    checkPairState["Check Pair States\nsymrdf -g 20 -type A query"]
-    allConsistent{"All Pairs\nConsistent?"}
-    checkLag["Check Lag Value\nsymrdf -g 20 -type A query -detail | grep Lag"]
-    lagOk{"Lag within\nSLA threshold?"}
-    checkDSE["Check DSE Utilization\nsymstat -rdf -g 20 | grep DSE"]
-    dseOk{"DSE < 30%?"}
-    checkLink["Check RDF Link\nsymcfg list -rdfg 20 -detail"]
-    linkOnline{"Link Online\nand < 80%?"}
-    allHealthy["All Checks Passed\nDocument in log"]
-    investigatePair["Investigate Pair State\nCheck for link/network issues"]
-    investigateLag["Investigate Lag Growth\nCheck write rate and link utilization"]
-    investigateDSE["Investigate DSE\nCheck for write burst or undersized DSE device"]
-    escalate["Escalate to Storage / Network Team"]
+```d2
+direction: right
 
-    startCheck --> checkPairState
-    checkPairState --> allConsistent
-    allConsistent -->|"Yes"| checkLag
-    allConsistent -->|"No"| investigatePair
-    investigatePair --> escalate
-    checkLag --> lagOk
-    lagOk -->|"Yes"| checkDSE
-    lagOk -->|"No"| investigateLag
-    investigateLag --> escalate
-    checkDSE --> dseOk
-    dseOk -->|"Yes"| checkLink
-    dseOk -->|"No"| investigateDSE
-    investigateDSE --> escalate
-    checkLink --> linkOnline
-    linkOnline -->|"Yes"| allHealthy
-    linkOnline -->|"No"| escalate
+startCheck: "Daily Health Check Start" {shape: rectangle}
+checkPairState: "Check Pair States\nsymrdf -g 20 -type A query" {shape: rectangle}
+allConsistent: "allConsistent" {shape: rectangle}
+checkLag: "Check Lag Value\nsymrdf -g 20 -type A query -detail | grep Lag" {shape: rectangle}
+investigatePair: "Investigate Pair State\nCheck for link/network issues" {shape: rectangle}
+escalate: "Escalate to Storage / Network Team" {shape: rectangle}
+lagOk: "lagOk" {shape: rectangle}
+checkDSE: "Check DSE Utilization\nsymstat -rdf -g 20 | grep DSE" {shape: rectangle}
+investigateLag: "Investigate Lag Growth\nCheck write rate and link utilization" {shape: rectangle}
+dseOk: "dseOk" {shape: rectangle}
+checkLink: "Check RDF Link\nsymcfg list -rdfg 20 -detail" {shape: rectangle}
+investigateDSE: "Investigate DSE\nCheck for write burst or undersized DSE device" {shape: rectangle}
+linkOnline: "linkOnline" {shape: rectangle}
+allHealthy: "All Checks Passed\nDocument in log" {shape: rectangle}
 
-    style allHealthy fill:#15803d,color:#fff
-    style escalate fill:#be123c,color:#fff
-    style startCheck fill:#2563eb,color:#fff
+startCheck -> checkPairState
+checkPairState -> allConsistent
+allConsistent -> checkLag
+allConsistent -> investigatePair
+investigatePair -> escalate
+checkLag -> lagOk
+lagOk -> checkDSE
+lagOk -> investigateLag
+investigateLag -> escalate
+checkDSE -> dseOk
+dseOk -> checkLink
+dseOk -> investigateDSE
+investigateDSE -> escalate
+checkLink -> linkOnline
+linkOnline -> allHealthy
+linkOnline -> escalate
 ```
 
 ---

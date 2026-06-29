@@ -148,22 +148,35 @@ Include all of the following in the initial SR submission:
 
 ## Escalation Decision Flow
 
-```mermaid
-flowchart TD
-    issue["Venafi issue detected"]
-    issue --> severity{"Severity\nassessment"}
-    severity -->|"production TPP down\nno certs can issue"| sev1["Sev 1 — Critical"]
-    severity -->|"major feature degraded\nworkaround available"| sev2["Sev 2 — High"]
-    severity -->|"non-critical feature\nimpaired"| sev3["Sev 3 — Medium"]
-    sev1 --> preCollect["Run pre-collection\nchecklist (TPP version, logs, CA diag)"]
-    sev2 --> preCollect
-    sev3 --> openPortal["Open portal ticket\nsupport.venafi.com"]
-    preCollect --> openPortal
-    openPortal -->|"Sev 1"| callHotline["Call Venafi support hotline\nsimultaneously"]
-    callHotline --> slaCheck{"Response within SLA?"}
-    slaCheck -->|"no"| escalateSSE["Request escalation to\nSenior Support Engineer"]
-    escalateSSE --> tamEscalate["Contact TAM / CSM\nfor business-critical escalation"]
-    slaCheck -->|"yes"| workWithSupport["Work with support engineer\nto resolution"]
+```d2
+direction: right
+
+issue: "Venafi issue detected" {shape: rectangle}
+severity: "Severity\nassessment" {shape: rectangle}
+sev1: "Sev 1 — Critical" {shape: rectangle}
+sev2: "Sev 2 — High" {shape: rectangle}
+sev3: "Sev 3 — Medium" {shape: rectangle}
+preCollect: "Run pre-collection\nchecklist (TPP version, logs, CA diag" {shape: rectangle}
+openPortal: "Open portal ticket\nsupport.venafi.com" {shape: rectangle}
+callHotline: "Call Venafi support hotline\nsimultaneously" {shape: rectangle}
+slaCheck: "Response within SLA?" {shape: rectangle}
+escalateSSE: "Request escalation to\nSenior Support Engineer" {shape: rectangle}
+tamEscalate: "Contact TAM / CSM\nfor business-critical escalation" {shape: rectangle}
+workWithSupport: "Work with support engineer\nto resolution" {shape: rectangle}
+
+issue -> severity
+severity -> sev1
+severity -> sev2
+severity -> sev3
+sev1 -> preCollect
+sev2 -> preCollect
+sev3 -> openPortal
+preCollect -> openPortal
+openPortal -> callHotline
+callHotline -> slaCheck
+slaCheck -> escalateSSE
+escalateSSE -> tamEscalate
+slaCheck -> workWithSupport
 ```
 
 ---

@@ -14,47 +14,58 @@ Brocade FabricOS diagnostic commands: check hardware sensors and MAPS alerts wit
 </div>
 ![FabricOS — Diagnostics](../../../../assets/san-brocade-fabric-os-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "sensorshow: temp fan PSU status\nswitchstatusshow: overall health" {shape: rectangle}
+D: "mapsdashboard --show\nmapsdb --show for threshold breach detail" {shape: rectangle}
+E: "portshow slot/port: state speed credits\nsfpshow slot/port: Rx Tx power levels" {shape: rectangle}
+F: "nsallshow: confirm WWN in name server\ncfgshow + zoneshow: verify zone membership" {shape: rectangle}
+G: "fabricshow: domain IDs and principal switch\ntopologyshow: ISL topology" {shape: rectangle}
+H: "portstatsshow slot/port: error counters\nportlogshow slot/port: FLOGI FLOGO RESET events" {shape: rectangle}
+I: "portbufshow: BB credit zero count\nbottleneckmon --show: slow drain detection" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Check hardware: fan replacement PSU swap\nEscalate to Broadcom TAC for blade" {shape: rectangle}
+L: "Continue to errshow for software root cause" {shape: rectangle}
+M: "Review MAPS category: PORT ISL SWITCH FABRIC\nIdentify threshold breach and affected resource" {shape: rectangle}
+N: "N" {shape: rectangle}
+O: "Replace SFP or check cable loss budget\nTest with sfpshow on remote port" {shape: rectangle}
+P: "porttest loopback: disable port first\nPorttest PASS = HBA or cable issue" {shape: rectangle}
+Q: "portloginshow: confirm FLOGI for this HBA WWN\nalishow: confirm alias includes correct WWN" {shape: rectangle}
+R: "errshow for E_Port segmentation messages\nCheck domain ID conflict: switchshow on each switch" {shape: rectangle}
+S: "portstatsreset to baseline, recheck after 5 min\nHigh CRC = cable or SFP; high Link Reset = HBA driver" {shape: rectangle}
+T: "Identify zero-credit port: portbufshow on suspect ports\nIsolate slow-drain HBA: portdisable then monitor" {shape: rectangle}
+U: "Collect supportsave before and after replacement\nOpen Broadcom TAC case" {shape: rectangle}
+V: "supportsave -h scp-server -u user -d /backups/\nRun on both switches in HA pair" {shape: rectangle}
+A: "FabricOS Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([FabricOS Issue]) --> B{What type of problem?}
-    B -->|Hardware alarm or environmental fault| C[sensorshow: temp fan PSU status\nswitchstatusshow: overall health]
-    B -->|MAPS alert triggered| D[mapsdashboard --show\nmapsdb --show for threshold breach detail]
-    B -->|Port offline or link flapping| E[portshow slot/port: state speed credits\nsfpshow slot/port: Rx Tx power levels]
-    B -->|Host cannot see storage target| F[nsallshow: confirm WWN in name server\ncfgshow + zoneshow: verify zone membership]
-    B -->|Fabric segmented or domain conflict| G[fabricshow: domain IDs and principal switch\ntopologyshow: ISL topology]
-    B -->|I/O errors or CRC errors on port| H[portstatsshow slot/port: error counters\nportlogshow slot/port: FLOGI FLOGO RESET events]
-    B -->|High latency or I/O slowdown| I[portbufshow: BB credit zero count\nbottleneckmon --show: slow drain detection]
-    C --> J{Sensor state?}
-    J -->|FAILED or OUT_OF_RANGE| K[Check hardware: fan replacement PSU swap\nEscalate to Broadcom TAC for blade]
-    J -->|All OK| L[Continue to errshow for software root cause]
-    D --> M[Review MAPS category: PORT ISL SWITCH FABRIC\nIdentify threshold breach and affected resource]
-    E --> N{SFP optical levels?}
-    N -->|Rx power below threshold| O[Replace SFP or check cable loss budget\nTest with sfpshow on remote port]
-    N -->|Levels OK| P[porttest loopback: disable port first\nPorttest PASS = HBA or cable issue]
-    F --> Q[portloginshow: confirm FLOGI for this HBA WWN\nalishow: confirm alias includes correct WWN]
-    G --> R[errshow for E_Port segmentation messages\nCheck domain ID conflict: switchshow on each switch]
-    H --> S[portstatsreset to baseline, recheck after 5 min\nHigh CRC = cable or SFP; high Link Reset = HBA driver]
-    I --> T[Identify zero-credit port: portbufshow on suspect ports\nIsolate slow-drain HBA: portdisable then monitor]
-    K --> U[Collect supportsave before and after replacement\nOpen Broadcom TAC case]
-    L --> U
-    M --> U
-    O --> U
-    P --> U
-    Q --> U
-    R --> U
-    S --> U
-    T --> U
-    U --> V[supportsave -h scp-server -u user -d /backups/\nRun on both switches in HA pair]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,J,N dark
-    class C,D,E,F,G,H,I,K,L,M,O,P,Q,R,S,T action
-    class U,V escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+B -> I
+J -> K
+J -> L
+D -> M
+N -> O
+N -> P
+F -> Q
+G -> R
+H -> S
+I -> T
+K -> U
+L -> U
+M -> U
+O -> U
+P -> U
+Q -> U
+R -> U
+S -> U
+T -> U
+U -> V
 ```
 
 ```d2

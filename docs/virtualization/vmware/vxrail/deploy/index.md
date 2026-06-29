@@ -16,21 +16,6 @@ End-to-end deployment guide for a new VxRail cluster. Covers pre-deployment read
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Phase 1: Physical Readiness"]
-    s2["Phase 2: First Run Wizard"]
-    s3["Phase 3: vSAN Configuration"]
-    s4["Phase 4: Network Validation"]
-    s5["Phase 5: SupportAssist and OMIVV"]
-    s6["Phase 6: Post-Deploy Hardening and Baseline"]
-    s7["Post-Deployment Checklist"]
-    s8["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

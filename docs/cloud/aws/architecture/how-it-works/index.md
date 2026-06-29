@@ -17,22 +17,27 @@ AWS is deployed as a multi-account organisation via AWS Organizations. All produ
 
 ## Account Structure
 
-```mermaid
-graph TB
-  ORG["AWS Organization\n(management account)"] --> LOG["Log Archive Account"]
-  ORG --> AUDIT["Audit / Security Account"]
-  ORG --> PROD["Production Account\n(workload VPC)"]
-  PROD --> VPC["VPC — 10.0.0.0/16"]
-  VPC --> PUB["Public Subnets\nALB · NAT GW"]
-  VPC --> PRIV["Private Subnets\nEC2 · RDS · EKS"]
-  PUB --> IGW["Internet Gateway"]
-  PRIV --> TGW["Transit Gateway\nhub-and-spoke"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class ORG,LOG,AUDIT,PROD ctrl
-  class VPC,PUB,PRIV net
-  class IGW,TGW cloud
+```d2
+direction: right
+
+ORG: "AWS Organization\n(management account" {shape: rectangle}
+LOG: "Log Archive Account" {shape: rectangle}
+AUDIT: "Audit / Security Account" {shape: rectangle}
+PROD: "Production Account\n(workload VPC" {shape: rectangle}
+VPC: "VPC — 10.0.0.0/16" {shape: rectangle}
+PUB: "Public Subnets\nALB · NAT GW" {shape: rectangle}
+PRIV: "Private Subnets\nEC2 · RDS · EKS" {shape: rectangle}
+IGW: "Internet Gateway" {shape: rectangle}
+TGW: "Transit Gateway\nhub-and-spoke" {shape: rectangle}
+
+ORG -> LOG
+ORG -> AUDIT
+ORG -> PROD
+PROD -> VPC
+VPC -> PUB
+VPC -> PRIV
+PUB -> IGW
+PRIV -> TGW
 ```
 
 - **Humans**: IAM Identity Center — no direct IAM users in member accounts

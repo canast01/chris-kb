@@ -12,29 +12,30 @@ Diagnostic tools and techniques: must-gather collection, oc adm inspect, Prometh
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph TD
-    A([Issue Reported]) --> B[Collect must-gather\noc adm must-gather]
-    B --> C[Review Operator Logs\noc describe co + pod logs]
-    C --> D{Issue in etcd?}
-    D -->|Yes| E[Review etcd Metrics\nWAL latency, DB size, leader]
-    D -->|No| F{Issue in Networking?}
-    F -->|Yes| G[Network Trace\novn-trace / tcpdump / curl test]
-    F -->|No| H[Review Node Logs\noc adm node-logs\noc debug node]
-    H --> I{Resolved?}
-    E --> I
-    G --> I
-    I -->|No| J[Open Support Case\nAttach must-gather + sos report]
-    I -->|Yes| K([Resolved])
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    classDef ok fill:#15803d,color:#fff
-    class A,D,F,I dark
-    class B,C,E,G,H action
-    class J escalate
-    class K ok
+A: "Issue Reported" {shape: rectangle}
+B: "Collect must-gather\noc adm must-gather" {shape: rectangle}
+C: "Review Operator Logs\noc describe co + pod logs" {shape: rectangle}
+D: "D" {shape: rectangle}
+E: "Review etcd Metrics\nWAL latency, DB size, leader" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Network Trace\novn-trace / tcpdump / curl test" {shape: rectangle}
+H: "Review Node Logs\noc adm node-logs\noc debug node" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Open Support Case\nAttach must-gather + sos report" {shape: rectangle}
+K: "Resolved" {shape: rectangle}
+
+A -> B
+B -> C
+D -> E
+F -> G
+F -> H
+E -> I
+G -> I
+I -> J
+I -> K
 ```
 
 ```d2

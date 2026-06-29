@@ -12,29 +12,22 @@ Conditional Access (CA) policies are the enforcement engine of Zero Trust in Mic
 
 ## Conditional Access Evaluation Flow
 
-```mermaid
-flowchart TD
-    signIn["Sign-in Attempt"]
-    signals["Signals Evaluated\nuser · location · device · app · risk"]
-    policiesEval["All matching CA policies evaluated"]
-    block{"Any policy\nresult = Block?"}
-    mfaReq{"Any policy\nrequires MFA?"}
-    compliantReq{"Compliant device\nrequired?"}
-    mfaComplete{"MFA\ncompleted?"}
-    blocked["Access BLOCKED"]
-    granted["Access GRANTED\ntoken issued"]
+```d2
+direction: right
 
-    signIn --> signals --> policiesEval
-    policiesEval --> block
-    block -- Yes --> blocked
-    block -- No --> mfaReq
-    mfaReq -- Yes --> mfaComplete
-    mfaComplete -- Yes --> compliantReq
-    mfaComplete -- No --> blocked
-    mfaReq -- No --> compliantReq
-    compliantReq -- Yes (compliant) --> granted
-    compliantReq -- No (non-compliant) --> blocked
-    compliantReq -- No requirement --> granted
+signIn: "Sign-in Attempt" {shape: rectangle}
+signals: "Signals Evaluated\nuser · location · device · app · risk" {shape: rectangle}
+policiesEval: "All matching CA policies evaluated" {shape: rectangle}
+block: "block" {shape: rectangle}
+blocked: "Access BLOCKED" {shape: rectangle}
+granted: "Access GRANTED\ntoken issued" {shape: rectangle}
+mfaReq: "mfaReq" {shape: rectangle}
+mfaComplete: "mfaComplete" {shape: rectangle}
+compliantReq: "compliantReq" {shape: rectangle}
+
+signIn -> signals
+signals -> policiesEval
+policiesEval -> block
 ```
 
 ## CA Policy Creation

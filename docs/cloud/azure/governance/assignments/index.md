@@ -12,16 +12,18 @@ A policy assignment connects a policy definition or initiative (policy set) to a
 
 ## Policy Assignment Scope Hierarchy
 
-```mermaid
-flowchart TD
-    mgScope["Management Group Scope\nbroadest — all child subs inherit"]
-    subScope["Subscription Scope\napplies to all RGs in subscription"]
-    rgScope["Resource Group Scope\napplies to all resources in RG"]
-    resourceScope["Resource Scope\nnarrowest — single resource only"]
-    exempt["Exemption\nwaiver for specific scope or resource"]
+```d2
+direction: right
 
-    mgScope -->|"inherits down"| subScope -->|"inherits down"| rgScope -->|"inherits down"| resourceScope
-    resourceScope -.->|"override"| exempt
+mgScope: "Management Group Scope\nbroadest — all child subs inherit" {shape: rectangle}
+subScope: "Subscription Scope\napplies to all RGs in subscription" {shape: rectangle}
+rgScope: "Resource Group Scope\napplies to all resources in RG" {shape: rectangle}
+resourceScope: "Resource Scope\nnarrowest — single resource only" {shape: rectangle}
+exempt: "Exemption\nwaiver for specific scope or resource" {shape: rectangle}
+
+mgScope -> subScope
+subScope -> rgScope
+rgScope -> resourceScope
 ```
 
 ## Creating a Policy Assignment

@@ -45,30 +45,6 @@ run_this_routine -> 2_log_checks
 
 ## Health Check Flow
 
-```mermaid
-flowchart TD
-    Start([Start Daily Health Check]) --> A[Check service status\nProcess + HTTP response]
-    A --> B{Service OK?}
-    B -- No --> B1[Investigate startup logs\nAttempt restart]
-    B -- Yes --> C[Check application logs\nfor ERRORs / WARNs]
-    C --> D{Errors found?}
-    D -- Yes --> D1[Triage log errors\nSee diagnostics page]
-    D -- No --> E[Check disk space\nInstall, home, shared home, DB]
-    E --> F{Disk > 80%?}
-    F -- Yes --> F1[Purge old backups\nClean temp files\nAlert ops team]
-    F -- No --> G[Check DB connectivity\nand query latency]
-    G --> H{DB latency OK?}
-    H -- No --> H1[Check DB server\nReview slow query log]
-    H -- Yes --> I[Check search index\nstatus and queue depth]
-    I --> J{Index healthy?}
-    J -- No --> J1[Trigger index rebuild\nor partial re-index]
-    J -- Yes --> K[Check cluster nodes\nData Center only]
-    K --> L{All nodes active?}
-    L -- No --> L1[Investigate offline node\nCheck Hazelcast logs]
-    L -- Yes --> M[Review scheduled jobs\nfor failures]
-    M --> N([Health Check Complete\nLog result])
-```
-
 ## Run This Routine
 
 1. **Confluence service status** — On Linux run `systemctl status confluence`; on Windows run `net start | findstr /i confluence`; the service must be active and running; if stopped, check `catalina.out` for the last error before restarting.

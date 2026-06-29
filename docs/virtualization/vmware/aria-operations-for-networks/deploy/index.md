@@ -15,25 +15,7 @@ End-to-end deployment guide for Aria Operations for Networks (AON). Covers pre-f
 </div>
 ![Aria Operations for Networks — Deploy](../../../../assets/virtualization-vmware-aria-operations-for-networks-deploy-in.svg)
 
-
-
-
 ---
-
-
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Phase 1 — Pre-Flight Checks"]
-    s2["Phase 2 — Platform Node OVA Deployment"]
-    s3["Phase 3 — Proxy / Collector Node Deployment"]
-    s4["Phase 4 — Data Source Configuration"]
-    s5["Phase 5 — IPFIX Flow Collection"]
-    s6["Phase 6 — Post-Deployment Validation"]
-    s7["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
-    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
 
 ```d2
 direction: right

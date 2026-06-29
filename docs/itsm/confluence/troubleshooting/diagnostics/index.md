@@ -13,40 +13,51 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 *Applies to: Confluence Data Center / Cloud*
 </div>
 
-```mermaid
-graph TD
-    A([Issue Reported]) --> B{Type of issue?}
-    B -->|Performance or slow pages| C[Check JVM heap and GC logs\njstat gcutil + jmap histo]
-    B -->|Crash or OOM| D[Capture heap dump\njmap dump and analyse with MAT]
-    B -->|Hang or freeze| E[Capture thread dumps x3 10s apart\njstack -l CONF_PID]
-    B -->|DB errors or slow queries| F[Check DB query log\npg_stat_activity for long-running queries]
-    B -->|Feature broken or exception| G[Check app log for exceptions\ngrep Exception atlassian-confluence.log]
-    C --> H{High GC pressure?}
-    H -->|Yes| I[Tune G1GC, increase heap in setenv.sh\nReview cache size settings]
-    H -->|No| J[Check DB query latency and slow macros\nEXPLAIN ANALYZE suspicious query]
-    D --> K[Identify top memory consumers in MAT\nLeak Suspects Report]
-    K --> L{Plugin leak or heap too small?}
-    E --> M[Analyse thread states: BLOCKED count\nIdentify deadlock in jstack output]
-    M --> N[Identify blocking thread and lock owner\nDisable offending plugin or restart node]
-    F --> O{Long-running queries or connection exhaustion?}
-    O -->|Long-running| P[pg_cancel_backend or pg_terminate_backend\nAdd missing index via EXPLAIN ANALYZE]
-    O -->|Connection exhaustion| Q[Scale DB connection pool in confluence.cfg.xml\nCheck for connection leaks in app log]
-    G --> R[Match exception type to known issues\nor disable plugin and retest]
-    I --> S[Collect support.zip + thread dump + heap dump\nOpen Atlassian HI ticket]
-    J --> S
-    L --> S
-    N --> S
-    P --> S
-    Q --> S
-    R --> S
-    S --> T[Provide: instance name, version, node, repro steps\nLog excerpts and support.zip attachment]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H,L,O dark
-    class C,D,E,F,G,I,J,K,M,N,P,Q,R action
-    class S,T escalate
+B: "B" {shape: rectangle}
+C: "Check JVM heap and GC logs\njstat gcutil + jmap histo" {shape: rectangle}
+D: "Capture heap dump\njmap dump and analyse with MAT" {shape: rectangle}
+E: "Capture thread dumps x3 10s apart\njstack -l CONF_PID" {shape: rectangle}
+F: "Check DB query log\npg_stat_activity for long-running queries" {shape: rectangle}
+G: "Check app log for exceptions\ngrep Exception atlassian-confluence.log" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Tune G1GC, increase heap in setenv.sh\nReview cache size settings" {shape: rectangle}
+J: "Check DB query latency and slow macros\nEXPLAIN ANALYZE suspicious query" {shape: rectangle}
+K: "Identify top memory consumers in MAT\nLeak Suspects Report" {shape: rectangle}
+M: "Analyse thread states: BLOCKED count\nIdentify deadlock in jstack output" {shape: rectangle}
+N: "Identify blocking thread and lock owner\nDisable offending plugin or restart node" {shape: rectangle}
+O: "O" {shape: rectangle}
+P: "pg_cancel_backend or pg_terminate_backend\nAdd missing index via EXPLAIN ANALYZE" {shape: rectangle}
+Q: "Scale DB connection pool in confluence.cfg.xml\nCheck for connection leaks in app log" {shape: rectangle}
+R: "Match exception type to known issues\nor disable plugin and retest" {shape: rectangle}
+S: "Collect support.zip + thread dump + heap dump\nOpen Atlassian HI ticket" {shape: rectangle}
+L: "L" {shape: rectangle}
+T: "Provide: instance name, version, node, repro steps\nLog excerpts and support.zip attachment" {shape: rectangle}
+A: "Issue Reported" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+H -> I
+H -> J
+D -> K
+E -> M
+M -> N
+O -> P
+O -> Q
+G -> R
+I -> S
+J -> S
+L -> S
+N -> S
+P -> S
+Q -> S
+R -> S
+S -> T
 ```
 
 ```d2

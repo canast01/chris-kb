@@ -36,19 +36,28 @@ These targets drive technology selection. An RTO of 15 minutes with RPO=0 mandat
 
 Four canonical DR strategies exist, differing in cost, complexity, and recovery speed. Selecting the wrong strategy is the most common DR design error.
 
-```mermaid
-flowchart TD
-    A["What is the RTO?"] --> B{RTO < 15 min?}
-    B -->|Yes| C{RPO = 0?}
-    C -->|Yes| D["Active-Active\n(sync replication, both sites serve traffic)"]
-    C -->|No| E["Warm Standby with sync replication\nor vSAN Stretched Cluster"]
-    B -->|No| F{RTO < 4 hr?}
-    F -->|Yes| G{RPO < 1 hr?}
-    G -->|Yes| H["Warm Standby\n(async replication, pre-powered VMs)"]
-    G -->|No| I["Pilot Light\n(infra ready, VMs/data replicated but off)"]
-    F -->|No| J{RTO < 24 hr?}
-    J -->|Yes| K["Pilot Light\n(scale up on failover)"]
-    J -->|No| L["Backup-Restore\n(periodic backup, manual restore process)"]
+```d2
+direction: right
+
+C: "C" {shape: rectangle}
+D: "Active-Active\n(sync replication, both sites serve traffic" {shape: rectangle}
+E: "Warm Standby with sync replication\nor vSAN Stretched Cluster" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Warm Standby\n(async replication, pre-powered VMs" {shape: rectangle}
+I: "Pilot Light\n(infra ready, VMs/data replicated but off" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Pilot Light\n(scale up on failover" {shape: rectangle}
+L: "Backup-Restore\n(periodic backup, manual restore process" {shape: rectangle}
+A: "What is the RTO?" {shape: rectangle}
+B: "B" {shape: rectangle}
+F: "F" {shape: rectangle}
+
+C -> D
+C -> E
+G -> H
+G -> I
+J -> K
+J -> L
 ```
 ![Disaster Recovery Design — Diagram](../../../assets/backup-dr-operations-dr-design-diagram.svg)
 

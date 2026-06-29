@@ -43,32 +43,42 @@ backup_copy_job_never_completes -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A[Backup job failed — cannot connect to guest]
-    S --> B[Repository full]
-    S --> C[Restore fails — no valid restore point]
-    S --> D[Tape job error]
-    S --> E[Veeam B&R service crashed]
-    A --> A1{Proxy reachable?}
-    A1 -->|No| A2[Check proxy TCP 2500-3300 and VMware Tools — see Triage Decision Tree]
-    A1 -->|Yes| A3[Check VSS writer state and quiesce settings on guest]
-    B --> B1{SOBR offload configured?}
-    B1 -->|Yes| B2[Trigger capacity tier offload manually — see Repository Out of Space]
-    B1 -->|No| B3[Reduce retention or delete orphaned backup files]
-    C --> C1{Restore point visible in console?}
-    C1 -->|No| C2[Check retention policy and catalog — restore point may be expired]
-    C1 -->|Yes| C3[Check vPower NFS service and mount server access — see Instant VM Recovery]
-    D --> D1{Tape library online?}
-    D1 -->|No| D2[Check media manager and tape library connectivity]
-    D1 -->|Yes| D3[Check media expiry and tape slot inventory]
-    E --> E1[Restart VBR service and check Windows Event Log — see VBR Service Crash / Instability]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E1 section
-    class A1,B1,C1,D1 decision
-    class S start
+```d2
+direction: right
+
+S: "What is the symptom?" {shape: rectangle}
+A: "Backup job failed — cannot connect to guest" {shape: rectangle}
+B: "Repository full" {shape: rectangle}
+C: "Restore fails — no valid restore point" {shape: rectangle}
+D: "Tape job error" {shape: rectangle}
+A1: "A1" {shape: rectangle}
+A2: "Check proxy TCP 2500-3300 and VMware Tools — see Triage Decision Tree" {shape: rectangle}
+A3: "Check VSS writer state and quiesce settings on guest" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "Trigger capacity tier offload manually — see Repository Out of Space" {shape: rectangle}
+B3: "Reduce retention or delete orphaned backup files" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "Check retention policy and catalog — restore point may be expired" {shape: rectangle}
+C3: "Check vPower NFS service and mount server access — see Instant VM Recovery" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+D2: "Check media manager and tape library connectivity" {shape: rectangle}
+D3: "Check media expiry and tape slot inventory" {shape: rectangle}
+E: "E" {shape: rectangle}
+E1: "Restart VBR service and check Windows Event Log — see VBR Service Crash / Instability" {shape: rectangle}
+
+S -> A
+S -> B
+S -> C
+S -> D
+A1 -> A2
+A1 -> A3
+B1 -> B2
+B1 -> B3
+C1 -> C2
+C1 -> C3
+D1 -> D2
+D1 -> D3
+E -> E1
 ```
 
 ---
@@ -85,29 +95,32 @@ graph TD
 
 ## Triage Decision Tree
 
-```mermaid
-flowchart TD
-    fail(["Job failure or warning\ndetected"])
-    fail --> openStats["Open Job Statistics\nExpand failed task\nRead Reason field"]
-    openStats --> q1{Error category}
+```d2
+direction: right
 
-    q1 -->|"Snapshot / VSS\nerror"| snapQ{"Creating or\ncommitting?"}
-    q1 -->|"Network /\nconnection\nerror"| netQ["Proxy Timeout\n/ Network Error"]
-    q1 -->|"No space /\nquota"| spaceQ["Repository\nOut of Space"]
-    q1 -->|"IVR VM\nnot booting"| ivrQ["Instant VM Recovery\nVM Not Starting"]
-    q1 -->|"VBR service\ncrash"| svcQ["VBR Service\nCrash / Instability"]
-    q1 -->|"Copy job\nnever finishes"| copyQ["Backup Copy Job\nNever Completes"]
-    q1 -->|"SureBackup\nfailed"| sbQ["SureBackup Fails"]
+fail: "Job failure or warning\ndetected" {shape: rectangle}
+openStats: "Open Job Statistics\nExpand failed task\nRead Reason field" {shape: rectangle}
+q1: "q1" {shape: rectangle}
+snapQ: "Creating or\ncommitting?" {shape: rectangle}
+netQ: "Proxy Timeout\n/ Network Error" {shape: rectangle}
+spaceQ: "Repository\nOut of Space" {shape: rectangle}
+ivrQ: "Instant VM Recovery\nVM Not Starting" {shape: rectangle}
+svcQ: "VBR Service\nCrash / Instability" {shape: rectangle}
+copyQ: "Backup Copy Job\nNever Completes" {shape: rectangle}
+sbQ: "SureBackup Fails" {shape: rectangle}
+snapCreate: "Check VMware Tools\nDisable app-aware\nto isolate quiesce issue" {shape: rectangle}
+snapCommit: "Check vCenter for\nstuck snapshot\nVerify datastore space" {shape: rectangle}
 
-    snapQ -->|"Creating"| snapCreate["Check VMware Tools\nDisable app-aware\nto isolate quiesce issue"]
-    snapQ -->|"Committing"| snapCommit["Check vCenter for\nstuck snapshot\nVerify datastore space"]
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class openStats,netQ,spaceQ,ivrQ,svcQ,copyQ,sbQ,snapCreate,snapCommit action
-    class q1,snapQ decision
-    class fail terminal
+fail -> openStats
+q1 -> snapQ
+q1 -> netQ
+q1 -> spaceQ
+q1 -> ivrQ
+q1 -> svcQ
+q1 -> copyQ
+q1 -> sbQ
+snapQ -> snapCreate
+snapQ -> snapCommit
 ```
 
 Veeam uses ports 2500–3300 (TCP) for data channel communication between VBR, proxies, and repositories.

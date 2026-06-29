@@ -39,22 +39,24 @@ Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle m
 
 ## Trust Protection Platform Topology
 
-```mermaid
-graph TB
-  TPP["Venafi Trust Protection Platform"]
-  TPP --> DISC["Discovery Engine\n(network scan / agent)"]
-  TPP --> CA1["CA Connector — ADCS"]
-  TPP --> CA2["CA Connector — DigiCert / Entrust"]
-  TPP --> AUTO["Automation\n(renewal / provisioning)"]
-  DISC -->|"found certs"| TPP
-  ADMIN(["Security Admin"]) -->|"portal"| TPP
-  TPP -->|"SIEM / SNMP"| SIEM(["SIEM / Monitoring"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class TPP,DISC ctrl
-  class CA1,CA2,AUTO mgmt
-  class ADMIN,SIEM host
+```d2
+direction: right
+
+TPP: "Venafi Trust Protection Platform" {shape: rectangle}
+DISC: "Discovery Engine\n(network scan / agent" {shape: rectangle}
+CA1: "CA Connector — ADCS" {shape: rectangle}
+CA2: "CA Connector — DigiCert / Entrust" {shape: rectangle}
+AUTO: "Automation\n(renewal / provisioning" {shape: rectangle}
+ADMIN: "Security Admin" {shape: rectangle}
+SIEM: "SIEM / Monitoring" {shape: rectangle}
+
+TPP -> DISC
+TPP -> CA1
+TPP -> CA2
+TPP -> AUTO
+DISC -> TPP
+ADMIN -> TPP
+TPP -> SIEM
 ```
 
 ---
@@ -86,41 +88,63 @@ Policy folder settings:
 | Let's Encrypt | ACME connector | HTTP-01 or DNS-01 challenge; requires accessible validation endpoint |
 | Internal standalone CA | Generic PKCS#10 / SCEP | For CAs without a native connector |
 
-```mermaid
-graph TD
-    tpp["Venafi Trust Protection Platform"]
-    tpp --> adcs["CA Connector: ADCS\n(Microsoft Active Directory CS)"]
-    tpp --> digicert["CA Connector: DigiCert\n(public OV / EV / DV)"]
-    tpp --> entrust["CA Connector: Entrust\n(public / OV)"]
-    tpp --> acme["ACME Connector\n(Let's Encrypt)"]
-    tpp --> vault["HashiCorp Vault PKI\n(short-lived / service mesh)"]
+```d2
+direction: right
 
-    adcs -->|"DCOM / CES"| adcsServer["ADCS Issuing CA Server"]
-    digicert -->|"REST API"| digicertCloud["DigiCert API Cloud"]
-    entrust -->|"REST API"| entrustCloud["Entrust API Cloud"]
-    acme -->|"ACME RFC 8555"| leCloud["Let's Encrypt"]
-    vault -->|"Vault REST API"| vaultPKI["Vault PKI Engine"]
+tpp: "Venafi Trust Protection Platform" {shape: rectangle}
+adcs: "CA Connector: ADCS\n(Microsoft Active Directory CS" {shape: rectangle}
+digicert: "CA Connector: DigiCert\n(public OV / EV / DV" {shape: rectangle}
+entrust: "CA Connector: Entrust\n(public / OV" {shape: rectangle}
+acme: "ACME Connector\n(Let" {shape: rectangle}
+vault: "HashiCorp Vault PKI\n(short-lived / service mesh" {shape: rectangle}
+adcsServer: "ADCS Issuing CA Server" {shape: rectangle}
+digicertCloud: "DigiCert API Cloud" {shape: rectangle}
+entrustCloud: "Entrust API Cloud" {shape: rectangle}
+leCloud: "Let" {shape: rectangle}
+vaultPKI: "Vault PKI Engine" {shape: rectangle}
+
+tpp -> adcs
+tpp -> digicert
+tpp -> entrust
+tpp -> acme
+tpp -> vault
+adcs -> adcsServer
+digicert -> digicertCloud
+entrust -> entrustCloud
+acme -> leCloud
+vault -> vaultPKI
 ```
 
 ---
 
 ## Certificate Lifecycle Flow
 
-```mermaid
-flowchart TD
-    request["Certificate Request\n(UI / API / vcert CLI / CI-CD)"]
-    request --> policyCheck{"Policy engine\nvalidation"}
-    policyCheck -->|"SAN missing / key too small\npolicy violation"| reject["Reject with\nviolation message"]
-    policyCheck -->|"internal auto-issue"| submitCA["Submit CSR to\nconfigured CA connector"]
-    policyCheck -->|"external / approval required"| approvalQ["Enter Approval Queue\n(Security team review)"]
-    approvalQ -->|"approved"| submitCA
-    approvalQ -->|"rejected"| reject
-    submitCA --> caIssue["CA issues certificate"]
-    caIssue --> tppStore["Venafi stores certificate\n+ notifies owner"]
-    tppStore --> monitor["Expiry monitoring begins\n(30-day alert window)"]
-    monitor -->|"within renewal window"| autoRenew["Auto-renew triggered\n(new CSR generated)"]
-    autoRenew --> submitCA
-    monitor -->|"key compromise / decommission"| revoke["Revoke via CA connector\n+ update CRL / OCSP"]
+```d2
+direction: right
+
+request: "Certificate Request\n(UI / API / vcert CLI / CI-CD" {shape: rectangle}
+policyCheck: "Policy engine\nvalidation" {shape: rectangle}
+reject: "Reject with\nviolation message" {shape: rectangle}
+submitCA: "Submit CSR to\nconfigured CA connector" {shape: rectangle}
+approvalQ: "Enter Approval Queue\n(Security team review" {shape: rectangle}
+caIssue: "CA issues certificate" {shape: rectangle}
+tppStore: "Venafi stores certificate\n+ notifies owner" {shape: rectangle}
+monitor: "Expiry monitoring begins\n(30-day alert window" {shape: rectangle}
+autoRenew: "Auto-renew triggered\n(new CSR generated" {shape: rectangle}
+revoke: "Revoke via CA connector\n+ update CRL / OCSP" {shape: rectangle}
+
+request -> policyCheck
+policyCheck -> reject
+policyCheck -> submitCA
+policyCheck -> approvalQ
+approvalQ -> submitCA
+approvalQ -> reject
+submitCA -> caIssue
+caIssue -> tppStore
+tppStore -> monitor
+monitor -> autoRenew
+autoRenew -> submitCA
+monitor -> revoke
 ```
 
 ---
@@ -129,15 +153,24 @@ flowchart TD
 
 Venafi TPP is deployed as a primary + secondary pair sharing a common Microsoft SQL Server backend.
 
-```mermaid
-graph TD
-    client["API Consumers\n(CI-CD / scripts / UI)"] -->|"HTTPS 443"| lb["Load Balancer / VIP\n(venafi.corp.example.com)"]
-    lb --> tppPrimary["TPP Primary Node\n(active)"]
-    lb --> tppSecondary["TPP Secondary Node\n(active)"]
-    tppPrimary --> sqlAG["SQL Server\n(Always On AG preferred)"]
-    tppSecondary --> sqlAG
-    edgeProxy["Edge Proxy\n(segmented network)"] -->|"HTTPS 443"| lb
-    admin["Security Admin\n(portal)"] -->|"HTTPS 443"| lb
+```d2
+direction: right
+
+client: "API Consumers\n(CI-CD / scripts / UI" {shape: rectangle}
+lb: "Load Balancer / VIP\n(venafi.corp.example.com" {shape: rectangle}
+tppPrimary: "TPP Primary Node\n(active" {shape: rectangle}
+tppSecondary: "TPP Secondary Node\n(active" {shape: rectangle}
+sqlAG: "SQL Server\n(Always On AG preferred" {shape: rectangle}
+edgeProxy: "Edge Proxy\n(segmented network" {shape: rectangle}
+admin: "Security Admin\n(portal" {shape: rectangle}
+
+client -> lb
+lb -> tppPrimary
+lb -> tppSecondary
+tppPrimary -> sqlAG
+tppSecondary -> sqlAG
+edgeProxy -> lb
+admin -> lb
 ```
 
 Both nodes are active; the load balancer distributes requests. SQL Server is the single source of truth — both nodes are stateless with respect to certificate data. If one node fails, the load balancer routes all traffic to the remaining node.

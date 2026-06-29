@@ -13,21 +13,26 @@ Host-side multipath I/O driver for Dell/EMC arrays. Intercepts block I/O and dis
 
 ![PowerPath — Architecture — Diagram](../../../../assets/storage-dell-powerpath-architecture-diagram.svg)
 
-```mermaid
-graph LR
-  HOST(["Host — Linux / Windows / VMware"]) --> PP["PowerPath\n(MPIO driver)"]
-  PP --> P1["HBA0 → Fabric A → SP-A"]
-  PP --> P2["HBA0 → Fabric A → SP-B"]
-  PP --> P3["HBA1 → Fabric B → SP-A"]
-  PP --> P4["HBA1 → Fabric B → SP-B"]
-  P1 & P2 & P3 & P4 --> ARRAY["Storage Array\nPowerMax / Unity"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class PP net
-  class P1,P2,P3,P4 net
-  class HOST host
-  class ARRAY ctrl
+```d2
+direction: right
+
+HOST: "Host — Linux / Windows / VMware" {shape: rectangle}
+PP: "PowerPath\n(MPIO driver" {shape: rectangle}
+P1: "HBA0 → Fabric A → SP-A" {shape: rectangle}
+P2: "HBA0 → Fabric A → SP-B" {shape: rectangle}
+P3: "HBA1 → Fabric B → SP-A" {shape: rectangle}
+P4: "HBA1 → Fabric B → SP-B" {shape: rectangle}
+ARRAY: "Storage Array\nPowerMax / Unity" {shape: rectangle}
+
+HOST -> PP
+PP -> P1
+PP -> P2
+PP -> P3
+PP -> P4
+P1 -> P2
+P2 -> P3
+P3 -> P4
+P4 -> ARRAY
 ```
 ![PowerPath Architecture](../../../../assets/powerpath-architecture-overview.svg)
 

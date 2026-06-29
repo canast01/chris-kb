@@ -13,33 +13,39 @@ Python diagnostic commands: read the full traceback, trace imports with python3 
 *Applies to: Python 3.x*
 </div>
 
-```mermaid
-graph TD
-    A([Python Issue]) --> B{What type of error?}
-    B -->|Exception / traceback| C[Read last frame of traceback\nIdentify file and line number]
-    B -->|Import error / ModuleNotFound| D[python3 -v script.py\nTrace import search]
-    B -->|Wrong output / logic bug| E[Add breakpoint or\nlogging.debug statements]
-    B -->|Slow / high CPU| F[py-spy top --pid pid\nIdentify hot function]
-    C --> G{Root cause clear?}
-    G -->|No| H[python3 -m pdb script.py\nStep through to error line]
-    G -->|Yes| I[Fix and test]
-    D --> J[python3 -c import sys; print sys.path\nCheck venv activation]
-    J --> K{Module found?}
-    K -->|No| L[pip install package\nor activate correct venv]
-    K -->|Wrong version| M[pip install package==version]
-    E --> H
-    F --> N[Check if blocking on I/O\nor CPU-bound tight loop]
-    H --> I
-    L --> I
-    M --> I
-    N --> I
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef ok fill:#15803d,color:#fff
-    class A,B,G,K dark
-    class C,D,E,F,H,J,L,M,N action
-    class I ok
+B: "B" {shape: rectangle}
+C: "Read last frame of traceback\nIdentify file and line number" {shape: rectangle}
+D: "python3 -v script.py\nTrace import search" {shape: rectangle}
+E: "Add breakpoint or\nlogging.debug statements" {shape: rectangle}
+F: "py-spy top --pid pid\nIdentify hot function" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "python3 -m pdb script.py\nStep through to error line" {shape: rectangle}
+I: "Fix and test" {shape: rectangle}
+J: "python3 -c import sys; print sys.path\nCheck venv activation" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "pip install package\nor activate correct venv" {shape: rectangle}
+M: "pip install package==version" {shape: rectangle}
+N: "Check if blocking on I/O\nor CPU-bound tight loop" {shape: rectangle}
+A: "Python Issue" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+G -> H
+G -> I
+D -> J
+K -> L
+K -> M
+E -> H
+F -> N
+H -> I
+L -> I
+M -> I
+N -> I
 ```
 
 ```d2

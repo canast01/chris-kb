@@ -7,7 +7,6 @@ tags:
 ---
 # vCenter — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Deployment Model, Core Services, Main Dependencies, vCenter HA (VCHA), Service Startup Order and 7 more sections.
 
@@ -84,61 +83,11 @@ VCHA provides active/passive failover for the VCSA itself. Three nodes required:
 
 Shared storage is **not** required — replication is network-based over a dedicated HA network. Failover is automatic on active node failure; RPO is near-zero, RTO is typically under 60 seconds.
 
-```mermaid
-graph LR
-    clients["vSphere Clients\n& API consumers"]
-    active["Active VCSA\n(serves all traffic)"]
-    passive["Passive VCSA\n(hot standby)"]
-    witness["Witness VCSA\n(2 vCPU / 1 GB — tie-breaker)"]
-
-    clients -->|"port 443"| active
-    active -->|"continuous replication\n(HA network)"| passive
-    active -.->|"heartbeat"| witness
-    passive -.->|"heartbeat"| witness
-
-    classDef active fill:#15803d,stroke:#166534,color:#fff
-    classDef standby fill:#b45309,stroke:#92400e,color:#fff
-    classDef witness fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef client fill:#2563eb,stroke:#1d4ed8,color:#fff
-
-    class active active
-    class passive standby
-    class witness witness
-    class clients client
-```
-
-
 ---
 
 ## Service Startup Order
 
 Services must start in the correct dependency order or vpxd will fail to initialise:
-
-```mermaid
-graph TD
-    vpostgres["vmware-vpostgres\n(PostgreSQL database)"]
-    stsd["vmware-stsd\n(SSO token service)"]
-    idmd["vmware-sts-idmd\n(identity management)"]
-    vpxd["vpxd\n(core vCenter daemon)"]
-    ui["vsphere-ui\n(HTML5 Client)"]
-    eam["vmware-eam\n(ESX Agent Manager)"]
-
-    vpostgres --> stsd
-    stsd --> idmd
-    idmd --> vpxd
-    vpxd --> ui
-    vpxd --> eam
-
-    classDef db fill:#1d4ed8,stroke:#1e40af,color:#fff
-    classDef sso fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef core fill:#b45309,stroke:#92400e,color:#fff
-    classDef svc fill:#15803d,stroke:#166534,color:#fff
-
-    class vpostgres db
-    class stsd,idmd sso
-    class vpxd core
-    class ui,eam svc
-```
 
 ```bash
 # Manual restart in dependency order
@@ -333,11 +282,9 @@ curl -sk -H "vmware-api-session-id: $TOKEN" \
 
 Swagger UI: `https://<vcenter>/apiexplorer`
 
-
 ---
 
 ## vCenter HA (VCHA) — Topology
-
 
 ---
 
@@ -377,30 +324,21 @@ UI --> Admin: vSphere Client dashboard (roles from group mapping)
 
 ## VM Encryption — Key Hierarchy
 
-
 ---
 
 ## Content Library — Publish & Subscribe
-
-
 
 ---
 
 ## Resource Pools — Shares, Limits & Reservations
 
-
-
 ---
 
 ## vMotion Types — Comparison
 
-
-
 ---
 
 ## DRS — Placement & Balancing Logic
-
-
 
 ## See also
 

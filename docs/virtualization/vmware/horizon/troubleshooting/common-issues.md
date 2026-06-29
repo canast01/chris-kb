@@ -9,8 +9,6 @@ search:
 # VMware Horizon — Common Issues
 ![VMware Horizon — Common Issues](../../../../assets/virtualization-vmware-horizon-troubleshooting-common-issues.svg)
 
-
-
 ```text
    vCenter → Monitor → Tasks — filter by the stuck desktop VM name
    ```
@@ -45,37 +43,42 @@ app_volumes_appstack_fails_to_mount -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1[No desktop sources available]
-    S --> B2[Black screen after login]
-    S --> B3[Slow login]
-    S --> B4[UAG disconnected from Connection Server]
-    S --> B5[AppStack fails to mount]
+```d2
+direction: right
 
-    B1 --> D1{Pool exhausted\nor entitlement?}
-    D1 -->|Pool exhausted| R1[Increase Pool Size or Add Headroom\n→ No Desktop Sources Available]
-    D1 -->|Entitlement missing| R2[Add AD Group to Pool Entitlements\n→ No Desktop Sources Available]
+S: "What is the symptom?" {shape: rectangle}
+B1: "No desktop sources available" {shape: rectangle}
+B2: "Black screen after login" {shape: rectangle}
+B3: "Slow login" {shape: rectangle}
+B4: "UAG disconnected from Connection Server" {shape: rectangle}
+B5: "AppStack fails to mount" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+R1: "Increase Pool Size or Add Headroom\n→ No Desktop Sources Available" {shape: rectangle}
+R2: "Add AD Group to Pool Entitlements\n→ No Desktop Sources Available" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Reset Desktop · Restart Agent\n→ Black Screen After Login" {shape: rectangle}
+R4: "Check Blast/PCoIP Port · vGPU Driver\n→ Black Screen After Login" {shape: rectangle}
+R5: "Check DEM Profile · App Volumes · AV Exclusions\n→ Slow Login" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R6: "Update Thumbprint in UAG Config\n→ UAG Shows Disconnected" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R7: "Check Firewall TCP 443 UAG to CS\n→ UAG Shows Disconnected" {shape: rectangle}
+R8: "Check App Volumes Manager Reachability\n→ App Volumes AppStack Fails to Mount" {shape: rectangle}
 
-    B2 --> D2{Horizon Agent\nrunning?}
-    D2 -->|No| R3[Reset Desktop · Restart Agent\n→ Black Screen After Login]
-    D2 -->|Yes| R4[Check Blast/PCoIP Port · vGPU Driver\n→ Black Screen After Login]
-
-    B3 --> R5[Check DEM Profile · App Volumes · AV Exclusions\n→ Slow Login]
-
-    B4 --> D3{Cert thumbprint\nmatch?}
-    D4 -->|No| R6[Update Thumbprint in UAG Config\n→ UAG Shows Disconnected]
-    D3 -->|Yes| R7[Check Firewall TCP 443 UAG to CS\n→ UAG Shows Disconnected]
-    D3 -->|No| R6
-
-    B5 --> R8[Check App Volumes Manager Reachability\n→ App Volumes AppStack Fails to Mount]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class D1,D2,D3 decision
-    class S start
+S -> B1
+S -> B2
+S -> B3
+S -> B4
+S -> B5
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+B3 -> R5
+D4 -> R6
+D3 -> R7
+D3 -> R6
+B5 -> R8
 ```
 
 ---

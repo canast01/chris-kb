@@ -11,18 +11,23 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph TD
-    classDef layer fill:#1e3a5f,color:#fff
-    classDef ctrl fill:#2563eb,color:#fff
-    classDef detail fill:#374151,color:#fff
+```d2
+direction: right
 
-    A([Network isolation\ncluster / public separation]):::layer --> B[msgr2 secure mode\nin-transit encryption]:::ctrl
-    B --> C[CephX auth\nper-entity keys + caps]:::ctrl
-    C --> D[OSD encryption\ndm-crypt at rest]:::ctrl
-    D --> E[RGW HTTPS / TLS\nobject gateway hardening]:::ctrl
-    E --> F[Dashboard TLS + MFA\nrestrict admin access]:::ctrl
-    F --> G[Audit logging\nauth_debug + ops log]:::detail
+A: "Network isolation\ncluster / public separation" {shape: rectangle}
+B: "msgr2 secure mode\nin-transit encryption" {shape: rectangle}
+C: "CephX auth\nper-entity keys + caps" {shape: rectangle}
+D: "OSD encryption\ndm-crypt at rest" {shape: rectangle}
+E: "RGW HTTPS / TLS\nobject gateway hardening" {shape: rectangle}
+F: "Dashboard TLS + MFA\nrestrict admin access" {shape: rectangle}
+G: "Audit logging\nauth_debug + ops log" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+E -> F
+F -> G
 ```
 
 ```d2

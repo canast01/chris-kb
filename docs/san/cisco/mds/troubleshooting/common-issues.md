@@ -8,7 +8,6 @@ search:
 # Cisco MDS — Troubleshooting Common Issues
 ![Cisco MDS — Troubleshooting Common Issues](../../../../assets/san-cisco-mds-troubleshooting-common-issues.svg)
 
-
 ```bash
 # 1. Identify down or errDisabled interfaces
 show interface brief
@@ -67,23 +66,31 @@ show zoneset active vsan 10
 show vsan membership interface fc<host-port>
 show vsan membership interface fc<storage-port>
 ```
-```mermaid
-flowchart TD
-  A["Host cannot see storage"] --> B{"Host pWWN in\nshow flogi database?"}
-  B -->|"No"| B1["Check port state\nCheck VSAN assignment\nCheck cable / SFP"]
-  B -->|"Yes"| C{"Storage pWWN in\nshow flogi database?"}
-  C -->|"No"| C1["Check array port and\nVSAN membership"]
-  C -->|"Yes"| D{"Zone containing\nboth devices exists?"}
-  D -->|"No"| D1["Create zone with aliases\nAdd to zone set\nActivate zone set"]
-  D -->|"Yes"| E{"Zone set\nactive?"}
-  E -->|"No"| E1["zoneset activate name\nzoneset-name vsan N"]
-  E -->|"Yes"| F{"Still failing?"}
-  F -->|"Yes"| F1["Verify WWPNs match\nFLOGI pWWN exactly\nCheck enhanced zoning mode\nCheck IVR if different VSANs"]
+```d2
+direction: right
 
-  classDef decision fill:#b45309,stroke:#92400e,color:#fff
-  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  class B,C,D,E,F decision
-  class B1,C1,D1,E1,F1 fix
+A: "Host cannot see storage" {shape: rectangle}
+B: "Host pWWN in\nshow flogi database?" {shape: rectangle}
+B1: "Check port state\nCheck VSAN assignment\nCheck cable / SFP" {shape: rectangle}
+C: "Storage pWWN in\nshow flogi database?" {shape: rectangle}
+C1: "Check array port and\nVSAN membership" {shape: rectangle}
+D: "Zone containing\nboth devices exists?" {shape: rectangle}
+D1: "Create zone with aliases\nAdd to zone set\nActivate zone set" {shape: rectangle}
+E: "Zone set\nactive?" {shape: rectangle}
+E1: "zoneset activate name\nzoneset-name vsan N" {shape: rectangle}
+F: "Still failing?" {shape: rectangle}
+F1: "Verify WWPNs match\nFLOGI pWWN exactly\nCheck enhanced zoning mode\nCheck IVR if different VSANs" {shape: rectangle}
+
+A -> B
+B -> B1
+B -> C
+C -> C1
+C -> D
+D -> D1
+D -> E
+E -> E1
+E -> F
+F -> F1
 ```
 ```bash
 # Check zone status
@@ -162,31 +169,39 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A{Port channel\ndegraded?}
-    S --> B{VSAN mismatch\nor isolation?}
-    S --> C{BB credit\nstarvation errors?}
-    S --> D{Zone conflict\nor host blocked?}
-    S --> E{NP port not\nlogged in?}
-    A -->|Yes| A1[show port-channel summary\nVerify member port states\nCheck SFP and cable]
-    A1 --> A2[ISL / E_Port Issues]
-    B -->|Yes| B1[show vsan membership\nshow trunk\nAlign VSAN list on both ends]
-    B1 --> B2[ISL / E_Port Issues]
-    C -->|Yes| C1[show interface counters\nIdentify slow-drain device\nEnable slow-drain detection]
-    C1 --> C2[Performance Issues]
-    D -->|Yes| D1{Host pWWN in\nflogi database?}
-    D1 -->|No| D2[Check port VSAN · SFP · cable]
-    D1 -->|Yes| D3[show zone active\nVerify both WWPNs zoned\nCommit pending changes]
-    D3 --> D4[Zoning Issues]
-    E -->|Yes| E1[show interface fc\nCheck NPV/NPIV config\nVerify FLOGI on parent port]
-    E1 --> E2[Login Failures]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A2,B2,C2,D4,E2 section
-    class A,B,C,D,D1,E decision
-    class S start
+```d2
+direction: right
+
+A: "A" {shape: rectangle}
+A1: "show port-channel summary\nVerify member port states\nCheck SFP and cable" {shape: rectangle}
+A2: "ISL / E_Port Issues" {shape: rectangle}
+B: "B" {shape: rectangle}
+B1: "show vsan membership\nshow trunk\nAlign VSAN list on both ends" {shape: rectangle}
+B2: "ISL / E_Port Issues" {shape: rectangle}
+C: "C" {shape: rectangle}
+C1: "show interface counters\nIdentify slow-drain device\nEnable slow-drain detection" {shape: rectangle}
+C2: "Performance Issues" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+D2: "Check port VSAN · SFP · cable" {shape: rectangle}
+D3: "show zone active\nVerify both WWPNs zoned\nCommit pending changes" {shape: rectangle}
+D4: "Zoning Issues" {shape: rectangle}
+E: "E" {shape: rectangle}
+E1: "show interface fc\nCheck NPV/NPIV config\nVerify FLOGI on parent port" {shape: rectangle}
+E2: "Login Failures" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+D: "D" {shape: rectangle}
+
+A -> A1
+A1 -> A2
+B -> B1
+B1 -> B2
+C -> C1
+C1 -> C2
+D1 -> D2
+D1 -> D3
+D3 -> D4
+E -> E1
+E1 -> E2
 ```
 
 ---

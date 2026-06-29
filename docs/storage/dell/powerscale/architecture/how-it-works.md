@@ -44,19 +44,27 @@ Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the **OneF
 
 ## Architecture
 
-```mermaid
-graph TB
-  N1["Node 1"] & N2["Node 2"] & N3["Node 3"] & NN["Node N…"] --> INT["InfiniBand / 100GbE\nInternal Cluster Network"]
-  INT --> SC["SmartConnect\n(DNS-based load balancing)"]
-  SC --> NFS(["NFS v3/v4 Clients"])
-  SC --> SMB(["SMB / CIFS Clients"])
-  SC --> HDFS(["HDFS / S3 Clients"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class N1,N2,N3,NN ctrl
-  class INT,SC net
-  class NFS,SMB,HDFS host
+```d2
+direction: right
+
+N1: "Node 1" {shape: rectangle}
+N2: "Node 2" {shape: rectangle}
+N3: "Node 3" {shape: rectangle}
+NN: "Node N…" {shape: rectangle}
+INT: "InfiniBand / 100GbE\nInternal Cluster Network" {shape: rectangle}
+SC: "SmartConnect\n(DNS-based load balancing" {shape: rectangle}
+NFS: "NFS v3/v4 Clients" {shape: rectangle}
+SMB: "SMB / CIFS Clients" {shape: rectangle}
+HDFS: "HDFS / S3 Clients" {shape: rectangle}
+
+N1 -> N2
+N2 -> N3
+N3 -> NN
+NN -> INT
+INT -> SC
+SC -> NFS
+SC -> SMB
+SC -> HDFS
 ```
 
 ## OneFS Distributed File System
@@ -80,16 +88,21 @@ Losing a node triggers **SMARTFAIL** — OneFS rebalances data to remaining node
 
 ## Node Pool and Tier Architecture
 
-```mermaid
-graph TD
-    cluster["OneFS Cluster\n(single /ifs namespace)"]
-    cluster --> poolNVMe["Node Pool: F-series NVMe\n(all-flash — performance tier)"]
-    cluster --> poolSAS["Node Pool: H-series Hybrid\n(NVMe + SAS — capacity tier)"]
-    cluster --> poolNLSAS["Node Pool: A-series NL-SAS\n(high-density — archive tier)"]
-    fp["SmartPools File Policy\n(age / path / type rules)"]
-    fp -->|"hot data"| poolNVMe
-    fp -->|"warm data"| poolSAS
-    fp -->|"cold data"| poolNLSAS
+```d2
+direction: right
+
+cluster: "OneFS Cluster\n(single /ifs namespace" {shape: rectangle}
+poolNVMe: "Node Pool: F-series NVMe\n(all-flash — performance tier" {shape: rectangle}
+poolSAS: "Node Pool: H-series Hybrid\n(NVMe + SAS — capacity tier" {shape: rectangle}
+poolNLSAS: "Node Pool: A-series NL-SAS\n(high-density — archive tier" {shape: rectangle}
+fp: "SmartPools File Policy\n(age / path / type rules" {shape: rectangle}
+
+cluster -> poolNVMe
+cluster -> poolSAS
+cluster -> poolNLSAS
+fp -> poolNVMe
+fp -> poolSAS
+fp -> poolNLSAS
 ```
 
 ## Components

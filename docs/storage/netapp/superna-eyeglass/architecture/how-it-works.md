@@ -42,21 +42,20 @@ Superna Eyeglass is a DR orchestration platform purpose-built for NetApp PowerSc
 
 ## Component Topology
 
-```mermaid
-graph LR
-  PS_A["PowerScale Cluster A\n(production)"] -->|"SyncIQ policy"| PS_B["PowerScale Cluster B\n(DR)"]
-  EG["Superna Eyeglass\nDR Assistant"] -->|"monitors SyncIQ"| PS_A
-  EG -->|"orchestrates failover\naccess zone migration"| PS_B
-  ADMIN(["Admin"]) -->|"Eyeglass UI"| EG
-  DNS(["DNS / AD\naccess zone cutover"]) <--> EG
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class PS_A ctrl
-  class PS_B dr
-  class EG mgmt
-  class ADMIN,DNS host
+```d2
+direction: right
+
+PS_A: "PowerScale Cluster A\n(production" {shape: rectangle}
+PS_B: "PowerScale Cluster B\n(DR" {shape: rectangle}
+EG: "Superna Eyeglass\nDR Assistant" {shape: rectangle}
+ADMIN: "Admin" {shape: rectangle}
+DNS: "DNS / AD\naccess zone cutover" {shape: rectangle}
+
+PS_A -> PS_B
+EG -> PS_A
+EG -> PS_B
+ADMIN -> EG
+DNS -> EG
 ```
 
 ## Sizing

@@ -54,17 +54,17 @@ SnapMirror is ONTAP's built-in replication engine, providing volume-level and SV
 | SnapMirror Business Continuity (SMBC) | Zero RPO, transparent failover | Consistency group-based; mediator-assisted automatic failover; no host reconfiguration |
 | SnapVault / XDP | Daily/weekly backup copies | Extended data protection; independent retention on destination; replaces legacy SnapVault |
 
-```mermaid
-graph LR
-  SRC["Source Volume\nSVM / Cluster A"] -->|"SnapMirror replication\n(incremental block diff)"| DST["Destination Volume\nSVM / Cluster B — read-only"]
-  SRC --> SNAP[("Local Snapshots")]
-  DST -->|"break to activate for DR"| DRACT["DR Active Volume\n(after SnapMirror break)"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  class SRC,DST ctrl
-  class SNAP store
-  class DRACT dr
+```d2
+direction: right
+
+SRC: "Source Volume\nSVM / Cluster A" {shape: rectangle}
+DST: "Destination Volume\nSVM / Cluster B — read-only" {shape: rectangle}
+SNAP: "Local Snapshots" {shape: rectangle}
+DRACT: "DR Active Volume\n(after SnapMirror break" {shape: rectangle}
+
+SRC -> DST
+SRC -> SNAP
+DST -> DRACT
 ```
 
 ## Components

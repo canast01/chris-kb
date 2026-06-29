@@ -38,23 +38,6 @@ configure_user_and_group_sync -> validate
 
 # Superna Eyeglass — Initial Deployment
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Deploy the Eyeglass Appliance"]
-    s3["Connect to Source Cluster"]
-    s4["Connect to DR Cluster"]
-    s5["Configure Replication Jobs"]
-    s6["Configure User and Group Sync"]
-    s7["Run First Sync"]
-    s8["✓ Validate the Deployment"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 PowerScale (Isilon) clusters at both sites (production and DR), vSphere for Eyeglass virtual appliance, network access between Eyeglass and both clusters (HTTPS 8080/443), Eyeglass licence, DNS entries for both cluster SmartConnect zones.

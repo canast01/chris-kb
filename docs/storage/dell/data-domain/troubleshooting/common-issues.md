@@ -8,12 +8,10 @@ search:
 # Dell Data Domain Common Issues
 ![Dell Data Domain Common Issues](../../../../assets/storage-dell-data-domain-troubleshooting-common-issues.svg)
 
-
 ```bash
 replication disable <context>
 replication enable <context>
 ```
-
 
 ```d2
 direction: down
@@ -31,41 +29,41 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{Deduplication\nratio dropped?}
-    S --> B2{CIFS or NFS share\ninaccessible?}
-    S --> B3{Replication\nbehind schedule?}
-    S --> B4{Cleaning job\nstalled?}
-    S --> B5{Disk fault in\nRAID group?}
+```d2
+direction: right
 
-    B1 -->|Check DRR in GUI| D1{New data type\npre-compressed?}
-    D1 -->|Yes| R1[See Space Issues —\nData type incompatible with dedup: review policy]
-    D1 -->|Space low| R2[See Space Issues —\nFS above 80%: expire backups then clean]
+D1: "D1" {shape: rectangle}
+R1: "See Space Issues —\nData type incompatible with dedup: review policy" {shape: rectangle}
+R2: "See Space Issues —\nFS above 80%: expire backups then clean" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Space Issues —\nMTree quota hit or FS full" {shape: rectangle}
+R4: "See Backup/Restore —\nCIFS/NFS mount auth or credential issue" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Replication Issues —\nContext broken: resync context" {shape: rectangle}
+R6: "See Replication Issues —\nLag over 4 hours: check WAN bandwidth" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Space Issues —\nCleaning not run: restart cleaning job" {shape: rectangle}
+R8: "See Space Issues —\nNo space for replication: expire and clean" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See Problem Table —\nDisk fault: check disks and open Dell case" {shape: rectangle}
+R10: "See Backup/Restore —\nRestore slow: check disk and NVRAM health" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Check filesystem and share| D2{Filesystem\nmounted?}
-    D2 -->|No| R3[See Space Issues —\nMTree quota hit or FS full]
-    D2 -->|Auth failure| R4[See Backup/Restore —\nCIFS/NFS mount auth or credential issue]
-
-    B3 -->|Check replication context| D3{Context in\nerror state?}
-    D3 -->|Yes| R5[See Replication Issues —\nContext broken: resync context]
-    D3 -->|WAN lag| R6[See Replication Issues —\nLag over 4 hours: check WAN bandwidth]
-
-    B4 -->|Check cleaning status| D4{Cleaning\nrunning?}
-    D4 -->|Stalled| R7[See Space Issues —\nCleaning not run: restart cleaning job]
-    D4 -->|No space| R8[See Space Issues —\nNo space for replication: expire and clean]
-
-    B5 -->|Check disk state in GUI| D5{RAID group\ndegraded?}
-    D5 -->|Drive failed| R9[See Problem Table —\nDisk fault: check disks and open Dell case]
-    D5 -->|Slow restore| R10[See Backup/Restore —\nRestore slow: check disk and NVRAM health]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---

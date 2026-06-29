@@ -13,23 +13,25 @@ Network Security Groups (NSGs) are stateful packet filters that control inbound 
 
 ## NSG Rule Evaluation
 
-```mermaid
-flowchart TD
-    traffic["Inbound / Outbound Traffic"]
-    defaultDeny["Default Deny-All rule\npriority 65500"]
-    rule100{"Priority 100\nrule matches?"}
-    rule200{"Priority 200\nrule matches?"}
-    ruleN{"Priority N\nnext rule..."}
-    allow["ALLOW\ntraffic passes"]
-    deny["DENY\ntraffic dropped"]
+```d2
+direction: right
 
-    traffic --> rule100
-    rule100 -->|"Allow match"| allow
-    rule100 -->|"Deny match"| deny
-    rule100 -->|"No match"| rule200
-    rule200 -->|"Match"| allow
-    rule200 -->|"No match"| ruleN
-    ruleN --> defaultDeny --> deny
+traffic: "Inbound / Outbound Traffic" {shape: rectangle}
+rule100: "rule100" {shape: rectangle}
+allow: "ALLOW\ntraffic passes" {shape: rectangle}
+deny: "DENY\ntraffic dropped" {shape: rectangle}
+rule200: "rule200" {shape: rectangle}
+ruleN: "ruleN" {shape: rectangle}
+defaultDeny: "Default Deny-All rule\npriority 65500" {shape: rectangle}
+
+traffic -> rule100
+rule100 -> allow
+rule100 -> deny
+rule100 -> rule200
+rule200 -> allow
+rule200 -> ruleN
+ruleN -> defaultDeny
+defaultDeny -> deny
 ```
 
 ## Creating and Managing NSGs

@@ -16,29 +16,6 @@ End-to-end deployment guide for VMware Site Recovery Manager DR orchestration. P
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Phase 1 — Prerequisites"]
-    s2["Phase 2 — SRM Appliance Deployment"]
-    s3["Phase 3 — Site Pairing and Inventory Mappings"]
-    s4["Phase 4 — Replication Configuration"]
-    s5["Phase 5 — Protection Groups"]
-    s6["Phase 6 — Recovery Plans and Test Failover"]
-    s7["Prerequisites"]
-    s8["Deploy SRM at Protected Site"]
-    s9["Deploy SRM at Recovery Site"]
-    s10["Pair the Sites"]
-    s11["Configure Replication"]
-    s12["Configure Mappings"]
-    s13["Create a Protection Group"]
-    s14["Create a Recovery Plan"]
-    s15["Test the Recovery Plan"]
-    s16["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9 --> s10 --> s11 --> s12 --> s13 --> s14 --> s15 --> s16
-    style s16 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

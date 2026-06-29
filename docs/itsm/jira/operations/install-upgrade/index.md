@@ -75,17 +75,25 @@ ehcache.object.port=40011
 systemctl start jira
 # Complete setup wizard via browser: http://<node-ip>:8080
 ```
-```mermaid
-flowchart LR
-    BACKUP[Take Backup] --> DRAIN[Drain Node 1\nfrom LB]
-    DRAIN --> STOP1[Stop Jira\nNode 1]
-    STOP1 --> UPGRADE1[Upgrade\nNode 1]
-    UPGRADE1 --> START1[Start\nNode 1]
-    START1 --> SMOKE1{Smoke\nTest OK?}
-    SMOKE1 -- No --> ROLLBACK[Rollback\nNode 1]
-    SMOKE1 -- Yes --> POOL1[Return Node 1\nto LB]
-    POOL1 --> NEXT[Repeat for\nNodes 2, 3...]
-    NEXT --> DONE([All Nodes\nUpgraded])
+```d2
+direction: right
+
+BACKUP: "Take Backup" {shape: rectangle}
+DRAIN: "Drain Node 1\nfrom LB" {shape: rectangle}
+STOP1: "Stop Jira\nNode 1" {shape: rectangle}
+UPGRADE1: "Upgrade\nNode 1" {shape: rectangle}
+START1: "Start\nNode 1" {shape: rectangle}
+POOL1: "Return Node 1\nto LB" {shape: rectangle}
+NEXT: "Repeat for\nNodes 2, 3..." {shape: rectangle}
+DONE: "All Nodes\nUpgraded" {shape: rectangle}
+ROLLBACK: "Rollback\nNode 1" {shape: rectangle}
+
+BACKUP -> DRAIN
+DRAIN -> STOP1
+STOP1 -> UPGRADE1
+UPGRADE1 -> START1
+POOL1 -> NEXT
+NEXT -> DONE
 ```
 ```bash
 # Database backup

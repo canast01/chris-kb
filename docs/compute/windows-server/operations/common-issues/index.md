@@ -58,26 +58,21 @@ rdp_remote_access_issues -> resolution
 4. **What is the resource state?** — CPU, memory, disk, network
 5. **Which service or application is affected?** — Event logs, Get-Service
 
-```mermaid
-flowchart TD
-    incident["Incident / Alert"]
-    reachable{"Ping / RDP\nreachable?"}
-    rebooted{"Event 6008 or 41?\nUnexpected reboot?"}
-    changed{"Recent Windows Update\nor GPO change?"}
-    resourceOk{"CPU · Memory · Disk\nwithin thresholds?"}
-    svcOk{"Get-Service shows\nno stopped auto svcs?"}
-    escalate["Escalate\nL3 / Microsoft Support"]
-    resolve["Root cause found\nResolve and document"]
+```d2
+direction: right
 
-    incident --> reachable
-    reachable -- No --> escalate
-    reachable -- Yes --> rebooted
-    rebooted -- Yes --> changed
-    rebooted -- No --> resourceOk
-    changed --> resolve
-    resourceOk -- No --> resolve
-    resourceOk -- Yes --> svcOk
-    svcOk --> resolve
+incident: "Incident / Alert" {shape: rectangle}
+reachable: "reachable" {shape: rectangle}
+changed: "changed" {shape: rectangle}
+resolve: "Root cause found\nResolve and document" {shape: rectangle}
+svcOk: "svcOk" {shape: rectangle}
+escalate: "Escalate\nL3 / Microsoft Support" {shape: rectangle}
+rebooted: "rebooted" {shape: rectangle}
+resourceOk: "resourceOk" {shape: rectangle}
+
+incident -> reachable
+changed -> resolve
+svcOk -> resolve
 ```
 
 ## High Memory

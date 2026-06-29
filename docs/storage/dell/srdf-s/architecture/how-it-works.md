@@ -39,18 +39,15 @@ SRDF/S (Synchronous) provides zero-data-loss replication between two PowerMax ar
 
 ## Write Commit Model
 
-```mermaid
-graph LR
-  PM_A["PowerMax Primary\nSite A — R1"] -->|"SRDF/S synchronous\n(≤10ms RTT)"| PM_B["PowerMax Secondary\nSite B — R2"]
-  PM_A --> HA(["Production Hosts\nSite A"])
-  PM_B -.->|"read-only\n(Synchronized state)"| HB(["Standby Hosts\nSite B"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class PM_A ctrl
-  class PM_B dr
-  class HA host
-  class HB dr
+```d2
+direction: right
+
+PM_A: "PowerMax Primary\nSite A — R1" {shape: rectangle}
+PM_B: "PowerMax Secondary\nSite B — R2" {shape: rectangle}
+HA: "Production Hosts\nSite A" {shape: rectangle}
+
+PM_A -> PM_B
+PM_A -> HA
 ```
 
 ## RTT Requirements

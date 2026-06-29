@@ -14,33 +14,35 @@ Superna Eyeglass diagnostic commands: check service health with igls adm status,
 </div>
 ![Superna Eyeglass — Diagnostics](../../../../assets/storage-netapp-superna-eyeglass-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "Eyeglass Alert" {shape: rectangle}
+B: "igls adm status\nAll services running?" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "Check appliance resources\ndf -h; free -m" {shape: rectangle}
+E: "igls dr readiness\nCheck score" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "igls synciq status\nFind failing policy" {shape: rectangle}
+H: "igls config replication status\nCheck share/quota sync" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "isi sync jobs list\non PowerScale cluster" {shape: rectangle}
+K: "Check OneFS API\ncurl https://cluster:8080/" {shape: rectangle}
+L: "Read sync.log\n/var/log/eyeglass/" {shape: rectangle}
+M: "Collect support bundle\nAdmin UI → Support Bundle" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([Eyeglass Alert]) --> B[igls adm status\nAll services running?]
-    B --> C{Services OK?}
-    C -->|No| D[Check appliance resources\ndf -h; free -m]
-    C -->|Yes| E[igls dr readiness\nCheck score]
-    E --> F{DR score OK?}
-    F -->|< 80%| G[igls synciq status\nFind failing policy]
-    F -->|OK| H[igls config replication status\nCheck share/quota sync]
-    G --> I{Policy error type?}
-    I -->|SyncIQ job failed| J[isi sync jobs list\non PowerScale cluster]
-    I -->|Network / auth| K[Check OneFS API\ncurl https://cluster:8080/]
-    H --> L[Read sync.log\n/var/log/eyeglass/]
-    D --> L
-    J --> L
-    K --> L
-    L --> M[Collect support bundle\nAdmin UI → Support Bundle]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F,I dark
-    class B,D,E,G,H,J,K,L action
-    class M escalate
+A -> B
+C -> D
+C -> E
+F -> G
+F -> H
+I -> J
+I -> K
+H -> L
+D -> L
+J -> L
+K -> L
+L -> M
 ```
 
 ```d2

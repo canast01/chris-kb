@@ -14,34 +14,38 @@ SRDF/S diagnostic commands: check pair state and link health with symrdf, measur
 </div>
 ![SRDF/S — Diagnostics](../../../../assets/storage-dell-srdf-s-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "SRDF/S Issue" {shape: rectangle}
+B: "symrdf query -g group -v\nCheck pair state" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "Latency complaint\nMeasure WAN RTT" {shape: rectangle}
+E: "symevent list -type rdf\nFind interruption event" {shape: rectangle}
+F: "Check RF ports\nsymcfg list -rdfg all" {shape: rectangle}
+G: "ping -c 20 dr-site-ip\nAverage RTT × 2 = host write latency added" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Notify network team\nRTT exceeds SRDF/S budget" {shape: rectangle}
+J: "symstat -type rdf -v\nCheck link utilization" {shape: rectangle}
+K: "Fix network issue\nThen symrdf establish" {shape: rectangle}
+L: "symcfg -sid -rdfg n -v\nCheck port and speed" {shape: rectangle}
+M: "Collect diagnostics\nBundle for Dell SR" {shape: rectangle}
+N: "Open Dell TAC SR\nsupport.dell.com" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([SRDF/S Issue]) --> B[symrdf query -g group -v\nCheck pair state]
-    B --> C{Pair state?}
-    C -->|Synchronized| D[Latency complaint\nMeasure WAN RTT]
-    C -->|Partitioned / Suspended| E[symevent list -type rdf\nFind interruption event]
-    C -->|Not Synchronized| F[Check RF ports\nsymcfg list -rdfg all]
-    D --> G[ping -c 20 dr-site-ip\nAverage RTT × 2 = host write latency added]
-    G --> H{RTT > 5ms?}
-    H -->|Yes| I[Notify network team\nRTT exceeds SRDF/S budget]
-    H -->|No| J[symstat -type rdf -v\nCheck link utilization]
-    E --> K[Fix network issue\nThen symrdf establish]
-    F --> L[symcfg -sid -rdfg n -v\nCheck port and speed]
-    I --> M[Collect diagnostics\nBundle for Dell SR]
-    J --> M
-    K --> M
-    L --> M
-    M --> N[Open Dell TAC SR\nsupport.dell.com]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,H dark
-    class B,D,E,F,G,I,J,K,L action
-    class M,N escalate
+A -> B
+C -> D
+C -> E
+C -> F
+D -> G
+H -> I
+H -> J
+E -> K
+F -> L
+I -> M
+J -> M
+K -> M
+L -> M
+M -> N
 ```
 
 ```d2

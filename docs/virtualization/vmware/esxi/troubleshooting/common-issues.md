@@ -9,14 +9,12 @@ search:
 ---
 # ESXi — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Resolution Steps, All Paths Down (APD) — Storage, High CPU Ready Time, High Memory Ballooning or Swapping, PSOD (Purple Screen of Death) and 3 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
 ![ESXi — Common Issues](../../../../assets/virtualization-vmware-esxi-troubleshooting-common-issues.svg)
-
 
 ESXi Common Issue Resolution Paths
 
@@ -72,37 +70,44 @@ vmfs_datastore_inaccessible -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A[Host shows PSOD]
-    S --> B[Host disconnected in vCenter]
-    S --> C[VM slow / high latency]
-    S --> D[Storage inaccessible / APD]
-    S --> E[Auth / certificate failure]
+```d2
+direction: right
 
-    A --> A1[Collect vmkernel.log + crash dump\nfrom DCUI or iDRAC]
-    A1 --> A2{Kernel module in\nstack trace?}
-    A2 -->|Yes — driver/plugin| A3[Update driver or firmware\n→ PSOD section]
-    A2 -->|No| A4[Escalate to VMware GSS\nwith vm-support bundle]
+S: "What is the symptom?" {shape: rectangle}
+A: "Host shows PSOD" {shape: rectangle}
+B: "Host disconnected in vCenter" {shape: rectangle}
+C: "VM slow / high latency" {shape: rectangle}
+D: "Storage inaccessible / APD" {shape: rectangle}
+E: "Auth / certificate failure" {shape: rectangle}
+A1: "Collect vmkernel.log + crash dump\nfrom DCUI or iDRAC" {shape: rectangle}
+A2: "A2" {shape: rectangle}
+A3: "Update driver or firmware\n→ PSOD section" {shape: rectangle}
+A4: "Escalate to VMware GSS\nwith vm-support bundle" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "Restart management agents\n→ Host Disconnected section" {shape: rectangle}
+B3: "Check network / DNS / NTP\n→ Host Disconnected section" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "→ High CPU Ready section" {shape: rectangle}
+C3: "→ Memory Ballooning section" {shape: rectangle}
+C4: "→ VMFS Inaccessible section" {shape: rectangle}
+D1: "→ All Paths Down section" {shape: rectangle}
+E1: "→ Certificate Thumbprint section" {shape: rectangle}
 
-    B --> B1{vpxa agent\nrunning on host?}
-    B1 -->|No| B2[Restart management agents\n→ Host Disconnected section]
-    B1 -->|Yes| B3[Check network / DNS / NTP\n→ Host Disconnected section]
-
-    C --> C1{esxtop — which\nresource is hot?}
-    C1 -->|CPU Ready > 10%| C2[→ High CPU Ready section]
-    C1 -->|Memory balloon/swap| C3[→ Memory Ballooning section]
-    C1 -->|Storage latency > 20ms| C4[→ VMFS Inaccessible section]
-
-    D --> D1[→ All Paths Down section]
-    E --> E1[→ Certificate Thumbprint section]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A3,A4,B2,B3,C2,C3,C4,D1,E1 section
-    class A2,B1,C1 decision
-    class S start
+S -> A
+S -> B
+S -> C
+S -> D
+S -> E
+A -> A1
+A2 -> A3
+A2 -> A4
+B1 -> B2
+B1 -> B3
+C1 -> C2
+C1 -> C3
+C1 -> C4
+D -> D1
+E -> E1
 ```
 
 ---

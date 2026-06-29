@@ -46,34 +46,22 @@ SUP --> ENG: Case / resolution path
 
 ## Escalation Matrix
 
-```mermaid
-flowchart TD
-    ISSUE([Issue Reported]) --> L1[L1 — Operations / Service Desk\nFirst response, known issues,\npassword resets, basic config]
+```d2
+direction: right
 
-    L1 --> L1_RESOLVE{Resolved\nat L1?}
-    L1_RESOLVE -- Yes --> DONE([Resolved])
-    L1_RESOLVE -- No --> L1_TIME{Within\nL1 SLA?}
-    L1_TIME -- No --> L2_ESC[Escalate to L2]
-    L1_TIME -- Yes --> L1
+ISSUE: "Issue Reported" {shape: rectangle}
+L1: "L1 — Operations / Service Desk\nFirst response, known issues,\npassword resets, basic config" {shape: rectangle}
+L2_ESC: "Escalate to L2" {shape: rectangle}
+L2: "L2 — Jira Administrator\nAdvanced config, integrations,\nlog analysis, plugin issues,\nperformance troubleshooting" {shape: rectangle}
+L3_ESC: "Escalate to L3" {shape: rectangle}
+L3: "L3 — Senior Engineer / Atlassian Support\nData corruption, code-level bugs,\nDB schema issues, cluster failures,\nAtlassian vendor engagement" {shape: rectangle}
+VENDOR: "Escalate to Atlassian\nSupport / Emergency Hotline" {shape: rectangle}
+DONE: "Resolved" {shape: rectangle}
 
-    L2_ESC --> L2[L2 — Jira Administrator\nAdvanced config, integrations,\nlog analysis, plugin issues,\nperformance troubleshooting]
-
-    L2 --> L2_RESOLVE{Resolved\nat L2?}
-    L2_RESOLVE -- Yes --> DONE
-    L2_RESOLVE -- No --> L2_TIME{Within\nL2 SLA?}
-    L2_TIME -- No --> L3_ESC[Escalate to L3]
-    L2_TIME -- Yes --> L2
-
-    L3_ESC --> L3[L3 — Senior Engineer / Atlassian Support\nData corruption, code-level bugs,\nDB schema issues, cluster failures,\nAtlassian vendor engagement]
-
-    L3 --> L3_RESOLVE{Resolved\nat L3?}
-    L3_RESOLVE -- Yes --> DONE
-    L3_RESOLVE -- No --> VENDOR[Escalate to Atlassian\nSupport / Emergency Hotline]
-
-    VENDOR --> DONE
-
-    style DONE fill:#2d8a4e,color:#fff
-    style VENDOR fill:#c0392b,color:#fff
+ISSUE -> L1
+L2_ESC -> L2
+L3_ESC -> L3
+VENDOR -> DONE
 ```
 
 ## Pre-Escalation Self-Check

@@ -26,22 +26,25 @@ Windows Server delivers infrastructure services through **Roles** (major functio
 
 ## Role Topology
 
-```mermaid
-graph TB
-  WS["Windows Server 2019 / 2022"]
-  WS --> AD["Active Directory DS\n(DC role)"]
-  WS --> DNS_R["DNS Server"]
-  WS --> FS["File Server\nSMB · DFS"]
-  WS --> IIS["IIS / App Roles"]
-  WS --> WSUS["Windows Update\nWSUS / Azure Update Manager"]
-  WS --> SEC["Windows Defender\nFirewall · Audit Policy"]
-  ADMIN(["Windows Admin"]) -->|"RDP / PowerShell"| WS
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class WS ctrl
-  class AD,DNS_R,FS,IIS,WSUS,SEC mgmt
-  class ADMIN host
+```d2
+direction: right
+
+WS: "Windows Server 2019 / 2022" {shape: rectangle}
+AD: "Active Directory DS\n(DC role" {shape: rectangle}
+DNS_R: "DNS Server" {shape: rectangle}
+FS: "File Server\nSMB · DFS" {shape: rectangle}
+IIS: "IIS / App Roles" {shape: rectangle}
+WSUS: "Windows Update\nWSUS / Azure Update Manager" {shape: rectangle}
+SEC: "Windows Defender\nFirewall · Audit Policy" {shape: rectangle}
+ADMIN: "Windows Admin" {shape: rectangle}
+
+WS -> AD
+WS -> DNS_R
+WS -> FS
+WS -> IIS
+WS -> WSUS
+WS -> SEC
+ADMIN -> WS
 ```
 
 ---

@@ -13,27 +13,22 @@ vSAN health is tracked at the component level through a state machine: ACTIVE â†
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph TD
-    classDef active fill:#15803d,color:#fff,stroke:none
-    classDef absent fill:#b45309,color:#fff,stroke:none
-    classDef degraded fill:#7c3aed,color:#fff,stroke:none
-    classDef rebuild fill:#2563eb,color:#fff,stroke:none
-    classDef stale fill:#374151,color:#fff,stroke:none
+```d2
+direction: right
 
-    ACT[ACTIVE\nComponent accessible\non disk group]:::active
-    ABS[ABSENT\nComponent unreachable\n&lt; clom.degradedStateDelay]:::absent
-    DEG[DEGRADED\nAbsent threshold exceeded\nclom schedules rebuild]:::degraded
-    REB[REBUILDING\nNew replica being\nwritten on alternate host]:::rebuild
-    STA[STALE\nComponent exists but\nobject has newer version]:::stale
+ACT: "ACT" {shape: rectangle}
+ABS: "ABS" {shape: rectangle}
+DEG: "DEG" {shape: rectangle}
+REB: "REB" {shape: rectangle}
+STA: "STA" {shape: rectangle}
 
-    ACT -->|host/disk offline| ABS
-    ABS -->|host/disk returns\nbefore timer| ACT
-    ABS -->|absent &gt; delay\ndefault 60 min| DEG
-    DEG -->|rebuild target found\ncapacity available| REB
-    REB -->|rebuild complete| ACT
-    ACT -->|replaced while active| STA
-    STA -->|garbage collected\nby CLOM| ACT
+ACT -> ABS
+ABS -> ACT
+ABS -> DEG
+DEG -> REB
+REB -> ACT
+ACT -> STA
+STA -> ACT
 ```
 
 ## Health Checks Taxonomy

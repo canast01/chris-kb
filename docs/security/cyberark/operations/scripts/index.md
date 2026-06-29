@@ -22,19 +22,30 @@ PowerShell automation using the `psPAS` module and the PVWA REST API. All automa
 
 ## Automation Workflow
 
-```mermaid
-flowchart TD
-    schedTask["Scheduled Task / CI-CD pipeline"] --> authPVWA["New-PASSession\n(svc-cyberark-api)"]
-    authPVWA --> doWork{"Task type"}
-    doWork -->|"onboarding"| onboard["Add-PASAccount\n(from CSV or IaC)"]
-    doWork -->|"rotation report"| rotReport["Get-PASAccount\nfilter failed CPM status"]
-    doWork -->|"safe audit"| safeAudit["Get-PASSafe + Get-PASSafeMember\nexport to CSV"]
-    doWork -->|"session inventory"| sessionInv["Get-PASRecording\ndate-range export"]
-    onboard --> closeSess["Close-PASSession"]
-    rotReport --> alertEmail["Send-MailMessage\n(failure alert)"]
-    alertEmail --> closeSess
-    safeAudit --> closeSess
-    sessionInv --> closeSess
+```d2
+direction: right
+
+schedTask: "Scheduled Task / CI-CD pipeline" {shape: rectangle}
+authPVWA: "New-PASSession\n(svc-cyberark-api" {shape: rectangle}
+doWork: "Task type" {shape: rectangle}
+onboard: "Add-PASAccount\n(from CSV or IaC" {shape: rectangle}
+rotReport: "Get-PASAccount\nfilter failed CPM status" {shape: rectangle}
+safeAudit: "Get-PASSafe + Get-PASSafeMember\nexport to CSV" {shape: rectangle}
+sessionInv: "Get-PASRecording\ndate-range export" {shape: rectangle}
+closeSess: "Close-PASSession" {shape: rectangle}
+alertEmail: "Send-MailMessage\n(failure alert" {shape: rectangle}
+
+schedTask -> authPVWA
+authPVWA -> doWork
+doWork -> onboard
+doWork -> rotReport
+doWork -> safeAudit
+doWork -> sessionInv
+onboard -> closeSess
+rotReport -> alertEmail
+alertEmail -> closeSess
+safeAudit -> closeSess
+sessionInv -> closeSess
 ```
 
 ---

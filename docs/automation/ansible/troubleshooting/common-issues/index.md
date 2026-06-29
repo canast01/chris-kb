@@ -40,30 +40,35 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1{SSH connection\nrefused?}
-    S --> B2{Module or\ncollection not found?}
-    S --> B3{Privilege\nescalation failed?}
-    S --> B4{Variable\nundefined?}
-    S --> B5{Playbook not\nidempotent?}
-    B1 -->|Yes| D1{sshd running\non target?}
-    D1 -->|No| R1[SSH Connection Issues\n— start sshd / open port 22]
-    D1 -->|Yes| R2[Inventory and Vault Issues\n— check ansible_host / firewall]
-    B2 -->|Yes| D2{Collection in\nrequirements.yml?}
-    D2 -->|No| R3[Common Module Errors\n— ansible-galaxy collection install]
-    D2 -->|Yes| R4[Common Module Errors\n— rebuild EE image for AWX]
-    B3 -->|Yes| D3{NOPASSWD in\nsudoers?}
-    D3 -->|No| R5[SSH and Become Issues\n— add NOPASSWD or --ask-become-pass]
-    D3 -->|Yes| R6[Fact Gathering Issues\n— verify become_user]
-    B4 -->|Yes| R7[Common Module Errors\n— use -vvv and register debug]
-    B5 -->|Yes| R8[Common Module Errors\n— ansible-playbook --check --diff]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class B1,B2,B3,B4,B5,D1,D2,D3 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "SSH Connection Issues\n— start sshd / open port 22" {shape: rectangle}
+R2: "Inventory and Vault Issues\n— check ansible_host / firewall" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Common Module Errors\n— ansible-galaxy collection install" {shape: rectangle}
+R4: "Common Module Errors\n— rebuild EE image for AWX" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "SSH and Become Issues\n— add NOPASSWD or --ask-become-pass" {shape: rectangle}
+R6: "Fact Gathering Issues\n— verify become_user" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+R7: "Common Module Errors\n— use -vvv and register debug" {shape: rectangle}
+B5: "B5" {shape: rectangle}
+R8: "Common Module Errors\n— ansible-playbook --check --diff" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+B4 -> R7
+B5 -> R8
 ```
 
 ---
@@ -80,21 +85,33 @@ graph TD
 
 ## Ansible Troubleshooting Decision Flow
 
-```mermaid
-flowchart TD
-    failure["Playbook Failure\nor Unexpected Result"]
-    failure --> checkSSH["Can you SSH manually\nto the target host?"]
-    checkSSH -->|No| fixSSH["Fix SSH: key, user,\nport, firewall"]
-    checkSSH -->|Yes| checkBecome["Does become/sudo\nwork on target?"]
-    checkBecome -->|No| fixSudo["Add NOPASSWD to sudoers\nor use --ask-become-pass"]
-    checkBecome -->|Yes| addVerbose["Re-run with -vvv\nfor connection details"]
-    addVerbose --> checkInventory["Is the host listed\nin the inventory?"]
-    checkInventory -->|No| fixInventory["Add host to inventory\nor fix dynamic source"]
-    checkInventory -->|Yes| checkVault["Are Vault secrets\ndecryptable?"]
-    checkVault -->|No| fixVault["Provide correct vault\npassword / file"]
-    checkVault -->|Yes| checkModule["Is the required\ncollection installed?"]
-    checkModule -->|No| installCol["ansible-galaxy collection install\n<namespace.collection>"]
-    checkModule -->|Yes| resolved["Examine task output\n& register debug"]
+```d2
+direction: right
+
+failure: "Playbook Failure\nor Unexpected Result" {shape: rectangle}
+checkSSH: "Can you SSH manually\nto the target host?" {shape: rectangle}
+fixSSH: "Fix SSH: key, user,\nport, firewall" {shape: rectangle}
+checkBecome: "Does become/sudo\nwork on target?" {shape: rectangle}
+fixSudo: "Add NOPASSWD to sudoers\nor use --ask-become-pass" {shape: rectangle}
+addVerbose: "Re-run with -vvv\nfor connection details" {shape: rectangle}
+checkInventory: "Is the host listed\nin the inventory?" {shape: rectangle}
+fixInventory: "Add host to inventory\nor fix dynamic source" {shape: rectangle}
+checkVault: "Are Vault secrets\ndecryptable?" {shape: rectangle}
+fixVault: "Provide correct vault\npassword / file" {shape: rectangle}
+checkModule: "Is the required\ncollection installed?" {shape: rectangle}
+installCol: "ansible-galaxy collection install\n<namespace.collection>" {shape: rectangle}
+
+failure -> checkSSH
+checkSSH -> fixSSH
+checkSSH -> checkBecome
+checkBecome -> fixSudo
+checkBecome -> addVerbose
+addVerbose -> checkInventory
+checkInventory -> fixInventory
+checkInventory -> checkVault
+checkVault -> fixVault
+checkVault -> checkModule
+checkModule -> installCol
 ```
 
 ## Common Module Errors

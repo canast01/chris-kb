@@ -12,20 +12,17 @@ EVS cluster sizing, AZ placement, CIDR planning, Direct Connect bandwidth requir
 </div>
 ![Amazon EVS — Design Standards](../../../../assets/cloud-aws-evs-architecture-design-standards.svg)
 
-```mermaid
-graph TB
-    classDef dev fill:#b45309,color:#fff
-    classDef min fill:#1d4ed8,color:#fff
-    classDef prod fill:#15803d,color:#fff
-    classDef stretch fill:#7c3aed,color:#fff
+```d2
+direction: right
 
-    DEV["3-Node Dev/Test\nRAID-1 FTT=1\n~50% usable capacity"]:::dev
-    MIN["4-Node Production Minimum\nRAID-1 FTT=1\n1 host failure tolerated"]:::min
-    PROD["6-Node Production Recommended\nRAID-6 FTT=2\n2 host failures tolerated"]:::prod
-    STR["Stretched Cluster\n3+3 nodes across 2 AZs\nWitness in AZ-c (t3.medium)"]:::stretch
+DEV: "DEV" {shape: rectangle}
+MIN: "MIN" {shape: rectangle}
+PROD: "PROD" {shape: rectangle}
+STR: "STR" {shape: rectangle}
 
-    DEV --> MIN --> PROD
-    PROD --> STR
+DEV -> MIN
+MIN -> PROD
+PROD -> STR
 ```
 
 ## Host Type Selection

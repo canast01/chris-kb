@@ -13,33 +13,39 @@ Commvault diagnostic commands: identify job failures with qlist, test component 
 *Applies to: Commvault 2024.x / Commvault Cloud*
 </div>
 
-```mermaid
-graph TD
-    A([Job Failure Alert]) --> B[qlist jobs -jobid\nGet error code]
-    B --> C{Error category}
-    C -->|Client connectivity| D[cvping -clientName\nTest CS-to-client comms]
-    C -->|Storage / DDB| E[qlist ddb\nCheck DDB health + space]
-    C -->|Auth / permission| F[Check client credentials\nSubclient properties]
-    C -->|Unknown| G[CommVaultDiagnostics.exe\nCollect CV_DIAG bundle]
-    D --> H{cvping result?}
-    H -->|Failed| I[Check firewall TCP 8400\nCheck CvFwd service on client]
-    H -->|OK| J[Read clBackup.log\nOn client machine]
-    E --> K{DDB state?}
-    K -->|Inconsistent| L[QS_DDBVerify script\nVerify + reseal DDB]
-    K -->|Space issue| M[Check MA disk space\ndf -h or Get-PSDrive]
-    F --> G
-    I --> G
-    J --> G
-    L --> G
-    M --> G
-    G --> N[Open Commvault SR\nsupport.commvault.com]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,H,K dark
-    class B,D,E,F,G,I,J,L,M action
-    class N escalate
+A: "Job Failure Alert" {shape: rectangle}
+B: "qlist jobs -jobid\nGet error code" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "cvping -clientName\nTest CS-to-client comms" {shape: rectangle}
+E: "qlist ddb\nCheck DDB health + space" {shape: rectangle}
+F: "Check client credentials\nSubclient properties" {shape: rectangle}
+G: "CommVaultDiagnostics.exe\nCollect CV_DIAG bundle" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Check firewall TCP 8400\nCheck CvFwd service on client" {shape: rectangle}
+J: "Read clBackup.log\nOn client machine" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "QS_DDBVerify script\nVerify + reseal DDB" {shape: rectangle}
+M: "Check MA disk space\ndf -h or Get-PSDrive" {shape: rectangle}
+N: "Open Commvault SR\nsupport.commvault.com" {shape: rectangle}
+
+A -> B
+C -> D
+C -> E
+C -> F
+C -> G
+H -> I
+H -> J
+K -> L
+K -> M
+F -> G
+I -> G
+J -> G
+L -> G
+M -> G
+G -> N
 ```
 
 ```d2

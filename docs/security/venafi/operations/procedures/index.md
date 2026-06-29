@@ -22,19 +22,30 @@ Operational procedures for certificate renewal, automation, and reporting.
 
 ## Renewal and Reporting Workflow
 
-```mermaid
-flowchart TD
-    expiryAlert["Expiry alert triggered\n(30 / 14 / 7 days)"]
-    expiryAlert --> checkAuto{"Automated renewal\nconfigured?"}
-    checkAuto -->|"yes — Venafi driver"| autoRenew["Venafi auto-renews\nand deploys to target"]
-    checkAuto -->|"no — manual"| manualRenew["Certificate owner notified\nManual renewal required"]
-    manualRenew --> genCSR["Generate new CSR\non target host"]
-    genCSR --> submitVenafi["Submit via vcert / UI / API\nto Venafi policy folder"]
-    submitVenafi --> policyCheck["Policy validation"]
-    policyCheck --> caIssue["CA issues new cert"]
-    caIssue --> install["Install on target service\n+ validate TLS"]
-    install --> closeAlert["Close alert — update\ncert inventory"]
-    autoRenew --> closeAlert
+```d2
+direction: right
+
+expiryAlert: "Expiry alert triggered\n(30 / 14 / 7 days" {shape: rectangle}
+checkAuto: "Automated renewal\nconfigured?" {shape: rectangle}
+autoRenew: "Venafi auto-renews\nand deploys to target" {shape: rectangle}
+manualRenew: "Certificate owner notified\nManual renewal required" {shape: rectangle}
+genCSR: "Generate new CSR\non target host" {shape: rectangle}
+submitVenafi: "Submit via vcert / UI / API\nto Venafi policy folder" {shape: rectangle}
+policyCheck: "Policy validation" {shape: rectangle}
+caIssue: "CA issues new cert" {shape: rectangle}
+install: "Install on target service\n+ validate TLS" {shape: rectangle}
+closeAlert: "Close alert — update\ncert inventory" {shape: rectangle}
+
+expiryAlert -> checkAuto
+checkAuto -> autoRenew
+checkAuto -> manualRenew
+manualRenew -> genCSR
+genCSR -> submitVenafi
+submitVenafi -> policyCheck
+policyCheck -> caIssue
+caIssue -> install
+install -> closeAlert
+autoRenew -> closeAlert
 ```
 
 ---

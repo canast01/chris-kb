@@ -7,16 +7,12 @@ search:
 ---
 # COD — Common Issues
 
-
 <div class="kb-summary">
 Common COD issues — capacity activation failures, allocation errors, and licensing troubleshooting.
 
 *Applies to: Cloud for Desktop (COD)*
 </div>
 ![COD — Common Issues](../../../../assets/storage-dell-cod-troubleshooting-common-issues.svg)
-
-
-
 
 > Part of the [COD](../index.md) reference.
 
@@ -49,36 +45,35 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{Capacity-on-demand\nrequest stuck?}
-    S --> B2{License not\nactivating?}
-    S --> B3{Storage pool expansion\nblocked?}
-    S --> B4{Portal API\nerror?}
+```d2
+direction: right
 
-    B1 -->|Check APEX Console SR| D1{SR raised\nand SLA elapsed?}
-    D1 -->|No SR| R1[See Issue Reference —\nCapacity request delayed: raise SR in console]
-    D1 -->|SLA not elapsed| R2[See Issue Reference —\nReview contracted SLA response time]
+D1: "D1" {shape: rectangle}
+R1: "See Issue Reference —\nCapacity request delayed: raise SR in console" {shape: rectangle}
+R2: "See Issue Reference —\nReview contracted SLA response time" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Issue Reference —\nLicense key rejected: contact Dell for re-issue" {shape: rectangle}
+R4: "See Issue Reference —\nsymlicense install: run as StorageAdmin" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Issue Reference —\nCOD drives not visible: upgrade firmware first" {shape: rectangle}
+R6: "See Issue Reference —\nCapacity available in SYMCLI: bind to thin pool" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Issue Reference —\nCloudIQ shows 0 headroom: allow 60 min refresh" {shape: rectangle}
+R8: "See Issue Reference —\nKey duplicate: do not apply again; contact Dell" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
 
-    B2 -->|Verify array SID in license file| D2{SID in key\nmatches array?}
-    D2 -->|No - SN mismatch| R3[See Issue Reference —\nLicense key rejected: contact Dell for re-issue]
-    D2 -->|Permission error| R4[See Issue Reference —\nsymlicense install: run as StorageAdmin]
-
-    B3 -->|Check firmware compatibility| D3{Array firmware\nmeets minimum?}
-    D3 -->|No| R5[See Issue Reference —\nCOD drives not visible: upgrade firmware first]
-    D3 -->|Devices not bound| R6[See Issue Reference —\nCapacity available in SYMCLI: bind to thin pool]
-
-    B4 -->|Check CloudIQ telemetry lag| D4{CloudIQ showing\nstale COD data?}
-    D4 -->|Yes| R7[See Issue Reference —\nCloudIQ shows 0 headroom: allow 60 min refresh]
-    D4 -->|Duplicate key| R8[See Issue Reference —\nKey duplicate: do not apply again; contact Dell]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class B1,B2,B3,B4,D1,D2,D3,D4 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
 ```
 
 ---

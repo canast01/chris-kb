@@ -14,7 +14,6 @@ SQL Server troubleshooting: AG synchronization failures, blocking queries, `msdb
 </div>
 ![SQL Server — Common Issues](../../../../assets/compute-windows-server-sql-server-troubleshooting-common-iss.svg)
 
-
 ```d2
 direction: down
 
@@ -34,25 +33,28 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> D1{Connection timeout\nor login failed?}
-    S --> D2{AG replica not\nsynchronising?}
-    S --> D3{Blocking or\ndeadlock alert?}
-    S --> D4{tempdb full?}
-    S --> D5{Log file full\nor log shipping lag?}
-    D1 --> R1[Database — Performance Troubleshooting]
-    D2 --> R2[Database — Performance Troubleshooting]
-    D3 --> R3[Database — Performance Troubleshooting]
-    D4 --> R4[Database — Performance Troubleshooting]
-    D5 --> R5[Verify resolution]
-    R1 --> R6[Verify resolution]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class D1,D2,D3,D4,D5 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "Database — Performance Troubleshooting" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R2: "Database — Performance Troubleshooting" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R3: "Database — Performance Troubleshooting" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R4: "Database — Performance Troubleshooting" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R5: "Verify resolution" {shape: rectangle}
+R6: "Verify resolution" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+
+D1 -> R1
+D2 -> R2
+D3 -> R3
+D4 -> R4
+D5 -> R5
+R1 -> R6
 ```
 
 ---

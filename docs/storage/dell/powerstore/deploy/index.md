@@ -47,23 +47,6 @@ This guide covers initial deployment of a Dell PowerStore appliance from physica
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Rack, Cable, and Power On"]
-    s3["Run PowerStore Manager Setup Wizard"]
-    s4["Configure Network"]
-    s5["Create First Volume"]
-    s6["Configure Host Connectivity"]
-    s7["Set Up Data Protection"]
-    s8["✓ Validate"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 **Hardware:**

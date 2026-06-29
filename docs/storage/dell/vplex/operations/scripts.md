@@ -12,21 +12,25 @@ Dell VPLEX automation scripts: `vplexcli` and Python REST API examples for distr
 </div>
 ![Dell VPLEX — Scripts](../../../../assets/storage-dell-vplex-operations-scripts.svg)
 
-```mermaid
-flowchart LR
-    schedCron(["Scheduled cron\nor CI pipeline"])
-    devHealth["vplex_device_health.sh\nSSH to VMS → vplexcli"]
-    cgMonitor["vplex_cg_monitor.pl\nConsistency group state"]
-    dailyCheck["vplex_daily_check.sh\nFull daily health run"]
-    preChange["vplex_precheck.sh\nPre-maintenance gate"]
-    nms["NMS / Monitoring\nNagios / Zabbix / Prometheus"]
-    pagerAlert["Alert\nSev-2 page / ticket"]
+```d2
+direction: right
 
-    schedCron --> devHealth --> nms
-    schedCron --> cgMonitor --> nms
-    schedCron --> dailyCheck --> nms
-    preChange -->|"exit 2 on failure\nblock maintenance"| pagerAlert
-    nms -->|"threshold breach"| pagerAlert
+schedCron: "Scheduled cron\nor CI pipeline" {shape: rectangle}
+devHealth: "vplex_device_health.sh\nSSH to VMS → vplexcli" {shape: rectangle}
+nms: "NMS / Monitoring\nNagios / Zabbix / Prometheus" {shape: rectangle}
+cgMonitor: "vplex_cg_monitor.pl\nConsistency group state" {shape: rectangle}
+dailyCheck: "vplex_daily_check.sh\nFull daily health run" {shape: rectangle}
+preChange: "vplex_precheck.sh\nPre-maintenance gate" {shape: rectangle}
+pagerAlert: "Alert\nSev-2 page / ticket" {shape: rectangle}
+
+schedCron -> devHealth
+devHealth -> nms
+schedCron -> cgMonitor
+cgMonitor -> nms
+schedCron -> dailyCheck
+dailyCheck -> nms
+preChange -> pagerAlert
+nms -> pagerAlert
 ```
 
 ---

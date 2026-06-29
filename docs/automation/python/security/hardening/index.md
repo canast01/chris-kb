@@ -33,28 +33,29 @@ file_and_permission_security -> hardening_checklist: hardens
 
 ## Secure Script Development Checklist Flow
 
-```mermaid
-flowchart TD
-    code["Write Script Code"]
-    inputVal["Validate all external\ninputs (regex / type)"]
-    noEval["Avoid eval() / exec()\nwith external data"]
-    subproc["Use subprocess with\nlist args (no shell=True)"]
-    secrets["Load secrets from\nenv / secrets manager"]
-    pinDeps["Pin dependencies\n(pip freeze)"]
-    audit["pip-audit:\ncheck for CVEs"]
-    filePerms["Set file permissions\n(chmod 600 for secrets)"]
-    noLogs["Never log secrets\nor stack traces externally"]
-    ready["Script ready\nfor production"]
+```d2
+direction: right
 
-    code --> inputVal
-    inputVal --> noEval
-    noEval --> subproc
-    subproc --> secrets
-    secrets --> pinDeps
-    pinDeps --> audit
-    audit --> filePerms
-    filePerms --> noLogs
-    noLogs --> ready
+code: "Write Script Code" {shape: rectangle}
+inputVal: "Validate all external\ninputs (regex / type" {shape: rectangle}
+noEval: "Avoid eval() / exec()\nwith external data" {shape: rectangle}
+subproc: "Use subprocess with\nlist args (no shell=True" {shape: rectangle}
+secrets: "Load secrets from\nenv / secrets manager" {shape: rectangle}
+pinDeps: "Pin dependencies\n(pip freeze" {shape: rectangle}
+audit: "pip-audit:\ncheck for CVEs" {shape: rectangle}
+filePerms: "Set file permissions\n(chmod 600 for secrets" {shape: rectangle}
+noLogs: "Never log secrets\nor stack traces externally" {shape: rectangle}
+ready: "Script ready\nfor production" {shape: rectangle}
+
+code -> inputVal
+inputVal -> noEval
+noEval -> subproc
+subproc -> secrets
+secrets -> pinDeps
+pinDeps -> audit
+audit -> filePerms
+filePerms -> noLogs
+noLogs -> ready
 ```
 
 ## File and Permission Security

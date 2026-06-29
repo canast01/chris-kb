@@ -42,23 +42,6 @@ This guide covers building a multi-account AWS Landing Zone from scratch: AWS Or
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Create AWS Organization and Enable AWS SSO"]
-    s3["Create Accounts and OUs"]
-    s4["Configure CloudTrail (All Regions)"]
-    s5["Configure AWS Config"]
-    s6["Set Up VPC and Networking"]
-    s7["Configure IAM Roles and SCPs"]
-    s8["Enable GuardDuty"]
-    s9["Configure Security Hub"]
-    s10["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9 --> s10
-    style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 | Requirement | Notes |

@@ -13,21 +13,25 @@ ONTAP architecture reference — HA topology, WAFL filesystem engine, SVM design
 
 ![ONTAP — Architecture — Diagram](../../../../assets/storage-netapp-ontap-architecture-diagram.svg)
 
-```mermaid
-graph TB
-  N1["Node 1 (Controller)\nSVM-1 · SVM-2"] <-->|"HA interconnect\n100GbE cluster net"| N2["Node 2 (Controller)\n(takeover on failover)"]
-  N1 & N2 --> SHELVES[("Disk Shelves\nNVMe SSD / SAS HDD")]
-  N1 --> NAS["NFS · SMB/CIFS"]
-  N1 --> SAN["iSCSI · FC · NVMe-oF"]
-  N2 --> NAS & SAN
-  NAS --> NC(["NAS Clients"])
-  SAN --> SC(["SAN Hosts"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class N1,N2 ctrl
-  class SHELVES store
-  class NC,SC host
+```d2
+direction: right
+
+N1: "Node 1 (Controller" {shape: rectangle}
+N2: "Node 2 (Controller" {shape: rectangle}
+SHELVES: "Disk Shelves\nNVMe SSD / SAS HDD" {shape: rectangle}
+NAS: "NFS · SMB/CIFS" {shape: rectangle}
+SAN: "iSCSI · FC · NVMe-oF" {shape: rectangle}
+NC: "NAS Clients" {shape: rectangle}
+SC: "SAN Hosts" {shape: rectangle}
+
+N1 -> N2
+N2 -> SHELVES
+N1 -> NAS
+N1 -> SAN
+N2 -> NAS
+NAS -> SAN
+NAS -> NC
+SAN -> SC
 ```
 ![ONTAP Architecture](../../../../assets/ontap-architecture-overview.svg)
 
@@ -42,5 +46,4 @@ graph TB
 | AFF (All Flash FAS) | All-NVMe or all-SSD | Latency-sensitive databases, VDI, high-IOPS workloads |
 | FAS (Fabric-Attached Storage) | Hybrid flash/disk | Capacity-optimised, mixed, file, and backup workloads |
 | ONTAP Select | Software-defined on x86 | Edge, ROBO, dev/test; VMware or KVM hypervisor |
-
 

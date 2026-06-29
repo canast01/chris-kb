@@ -11,21 +11,21 @@ Ceph integrations: Kubernetes CSI (Rook-Ceph), OpenShift ODF, OpenStack Cinder/G
 *Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
 
-```mermaid
-graph LR
-    classDef ceph fill:#1e3a5f,color:#fff
-    classDef k8s fill:#2563eb,color:#fff
-    classDef ostack fill:#b45309,color:#fff
-    classDef obs fill:#15803d,color:#fff
-    classDef nfs fill:#7c3aed,color:#fff
+```d2
+direction: right
 
-    CEPH([Ceph Cluster]):::ceph
+CEPH: "CEPH" {shape: rectangle}
+ODF: "OpenShift ODF\nRBD CSI + CephFS CSI\nopenshift-storage ns" {shape: rectangle}
+ROOK: "Kubernetes Rook-Ceph\nCephCluster CR\nRBD + CephFS StorageClass" {shape: rectangle}
+OS: "OpenStack\nCinder/RBD\nNova/RBD ephemeral\nSwift/RGW" {shape: rectangle}
+PROM: "Prometheus\nMGR prometheus module\nport 9283" {shape: rectangle}
+NFS: "NFS Ganesha\nCephFS NFS export\nceph nfs cluster" {shape: rectangle}
 
-    CEPH --> ODF[OpenShift ODF\nRBD CSI + CephFS CSI\nopenshift-storage ns]:::k8s
-    CEPH --> ROOK[Kubernetes Rook-Ceph\nCephCluster CR\nRBD + CephFS StorageClass]:::k8s
-    CEPH --> OS[OpenStack\nCinder/RBD\nNova/RBD ephemeral\nSwift/RGW]:::ostack
-    CEPH --> PROM[Prometheus\nMGR prometheus module\nport 9283]:::obs
-    CEPH --> NFS[NFS Ganesha\nCephFS NFS export\nceph nfs cluster]:::nfs
+CEPH -> ODF
+CEPH -> ROOK
+CEPH -> OS
+CEPH -> PROM
+CEPH -> NFS
 ```
 
 ## OpenShift ODF

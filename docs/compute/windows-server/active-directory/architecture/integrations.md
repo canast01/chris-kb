@@ -31,18 +31,27 @@ Active Directory serves as the central identity provider for the enterprise. Int
 
 ## AD Integration Hub
 
-```mermaid
-graph TD
-    ad["Active Directory\nDomain Services"]
+```d2
+direction: right
 
-    ad -->|"LDAP sync / writeback"| azureAD["Azure AD Connect\n(Entra ID / hybrid identity)"]
-    ad -->|"SSSD ad provider\nrealm join"| linux["Linux Systems\n(RHEL / Ubuntu)"]
-    ad -->|"RADIUS / TACACS+ via NPS"| network["Cisco Switches / MDS\nNetwork Devices"]
-    ad -->|"AD SSO identity source"| vcenter["VMware vCenter\n(and VxRail / HCI)"]
-    ad -->|"LDAPS group membership"| nsx["VMware NSX-T\n(role assignment)"]
-    ad -->|"LDAP bind"| cyberark["CyberArk PVWA\n(user auth + safe entitlements)"]
-    ad -->|"LDAP group membership"| venafi["Venafi TPP\n(RBAC roles)"]
-    ad -->|"UF Security log 4624/4625/4740"| splunk["Splunk SIEM\n(DC event forwarding)"]
+ad: "Active Directory\nDomain Services" {shape: rectangle}
+azureAD: "Azure AD Connect\n(Entra ID / hybrid identity" {shape: rectangle}
+linux: "Linux Systems\n(RHEL / Ubuntu" {shape: rectangle}
+network: "Cisco Switches / MDS\nNetwork Devices" {shape: rectangle}
+vcenter: "VMware vCenter\n(and VxRail / HCI" {shape: rectangle}
+nsx: "VMware NSX-T\n(role assignment" {shape: rectangle}
+cyberark: "CyberArk PVWA\n(user auth + safe entitlements" {shape: rectangle}
+venafi: "Venafi TPP\n(RBAC roles" {shape: rectangle}
+splunk: "Splunk SIEM\n(DC event forwarding" {shape: rectangle}
+
+ad -> azureAD
+ad -> linux
+ad -> network
+ad -> vcenter
+ad -> nsx
+ad -> cyberark
+ad -> venafi
+ad -> splunk
 ```
 
 ---

@@ -43,23 +43,37 @@ Verify these items before performing any change on a PowerScale cluster — node
 
 ## Maintenance Window
 
-```mermaid
-flowchart TD
-    A([Start Maintenance]) --> B["Notify NFS/SMB client teams"]
-    B --> C{"isi status clean?"}
-    C -->|No| D["Resolve faults first"]
-    D --> C
-    C -->|Yes| E["Pause SyncIQ policies"]
-    E --> F["Check capacity headroom\n< 80% in isi storagepool"]
-    F --> G{"Node SmartFail?"}
-    G -->|Yes| H["isi devices node smartfail LNN\nMonitor Restripe job"]
-    G -->|No| I["Perform change per runbook"]
-    H --> I
-    I --> J["isi status — all nodes ONLINE?"]
-    J -->|No| K["Investigate & resolve"]
-    K --> J
-    J -->|Yes| L["Re-enable SyncIQ policies\nTrigger manual run → confirm SUCCESS"]
-    L --> M([Close Window])
+```d2
+direction: right
+
+A: "Start Maintenance" {shape: rectangle}
+B: "Notify NFS/SMB client teams" {shape: rectangle}
+C: "isi status clean?" {shape: rectangle}
+D: "Resolve faults first" {shape: rectangle}
+E: "Pause SyncIQ policies" {shape: rectangle}
+F: "Check capacity headroom\n< 80% in isi storagepool" {shape: rectangle}
+G: "Node SmartFail?" {shape: rectangle}
+H: "isi devices node smartfail LNN\nMonitor Restripe job" {shape: rectangle}
+I: "Perform change per runbook" {shape: rectangle}
+J: "isi status — all nodes ONLINE?" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "Re-enable SyncIQ policies\nTrigger manual run → confirm SUCCESS" {shape: rectangle}
+M: "Close Window" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> C
+C -> E
+E -> F
+F -> G
+G -> H
+G -> I
+H -> I
+I -> J
+K -> J
+J -> L
+L -> M
 ```
 
 Steps for planned maintenance on a PowerScale cluster — node SmartFail, OneFS upgrade, or network reconfiguration.

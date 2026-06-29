@@ -38,25 +38,33 @@ CyberArk integrates with AD, MFA, ticketing, VMware, Linux, and automation tooli
 
 ## Integration Topology
 
-```mermaid
-graph TD
-    vault["CyberArk Vault\n(core credential store)"]
-    pvwa["PVWA\n(UI + REST API)"]
-    cpm["CPM\n(rotation engine)"]
-    psm["PSM\n(session proxy)"]
+```d2
+direction: right
 
-    pvwa -->|"SDK port 1858"| vault
-    cpm -->|"SDK port 1858"| vault
-    psm -->|"SDK port 1858"| vault
+pvwa: "PVWA\n(UI + REST API" {shape: rectangle}
+vault: "CyberArk Vault\n(core credential store" {shape: rectangle}
+cpm: "CPM\n(rotation engine" {shape: rectangle}
+psm: "PSM\n(session proxy" {shape: rectangle}
+adLdap: "Active Directory\n(auth + group membership" {shape: rectangle}
+mfa: "Duo / RSA MFA Proxy" {shape: rectangle}
+snow: "ServiceNow\n(ticket validation" {shape: rectangle}
+siem: "SIEM / Splunk" {shape: rectangle}
+linuxHosts: "Linux and Windows\nTarget Hosts" {shape: rectangle}
+vcenter: "VMware vCenter" {shape: rectangle}
+targetSys: "Target Systems" {shape: rectangle}
+ansible: "Ansible / Terraform\n(automation" {shape: rectangle}
 
-    pvwa -->|"LDAPS 636"| adLdap["Active Directory\n(auth + group membership)"]
-    pvwa -->|"RADIUS 1812"| mfa["Duo / RSA MFA Proxy"]
-    pvwa -->|"REST API"| snow["ServiceNow\n(ticket validation)"]
-    vault -->|"Syslog UDP 514"| siem["SIEM / Splunk"]
-    cpm -->|"SSH / RDP / SQL"| linuxHosts["Linux and Windows\nTarget Hosts"]
-    cpm -->|"vSphere API"| vcenter["VMware vCenter"]
-    psm -->|"RDP / SSH session"| targetSys["Target Systems"]
-    ansible["Ansible / Terraform\n(automation)"] -->|"REST API"| pvwa
+pvwa -> vault
+cpm -> vault
+psm -> vault
+pvwa -> adLdap
+pvwa -> mfa
+pvwa -> snow
+vault -> siem
+cpm -> linuxHosts
+cpm -> vcenter
+psm -> targetSys
+ansible -> pvwa
 ```
 
 ---

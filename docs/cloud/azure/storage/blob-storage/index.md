@@ -16,18 +16,22 @@ Azure Blob Storage is Microsoft's object store for unstructured data. Blobs are 
 
 ## Blob Lifecycle Management Flow
 
-```mermaid
-flowchart LR
-    upload["Blob Upload\nHot Tier"]
-    cool["Cool Tier\nafter 30 days"]
-    cold["Cold Tier\nafter 90 days"]
-    archive["Archive Tier\nafter 180 days"]
-    rehydrate["Rehydrate\nhours latency"]
-    delete["Delete\nafter retention period"]
+```d2
+direction: right
 
-    upload -->|"Lifecycle rule"| cool -->|"Lifecycle rule"| cold -->|"Lifecycle rule"| archive
-    archive -->|"access needed"| rehydrate --> cool
-    archive -->|"Lifecycle rule"| delete
+upload: "Blob Upload\nHot Tier" {shape: rectangle}
+cool: "Cool Tier\nafter 30 days" {shape: rectangle}
+cold: "Cold Tier\nafter 90 days" {shape: rectangle}
+archive: "Archive Tier\nafter 180 days" {shape: rectangle}
+rehydrate: "Rehydrate\nhours latency" {shape: rectangle}
+delete: "Delete\nafter retention period" {shape: rectangle}
+
+upload -> cool
+cool -> cold
+cold -> archive
+archive -> rehydrate
+rehydrate -> cool
+archive -> delete
 ```
 
 ## Access Tiers

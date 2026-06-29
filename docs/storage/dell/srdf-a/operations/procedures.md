@@ -78,41 +78,35 @@ Planned failover (site still accessible) uses `-establish` to immediately revers
 
 ![Failover Decision Flow](../../../../assets/srdf-a-proc-failover-decision-flow.svg)
 
-```mermaid
-flowchart TD
-    incident["Incident: Primary Site Issue Reported"]
-    primaryReachable{"Primary Site\nReachable?"}
-    checkCycleState["Check Cycle State and Lag\nsymrdf -g 20 -type A query -detail"]
-    r2Consistent{"R2 in Consistent\nor Transmitting State?"}
-    stakeholderBriefing["Brief Stakeholders on RPO\n(lag = data exposure window)"]
-    managementAuth{"Management\nAuthorisation\nGranted?"}
-    plannedFO["Planned Failover\nsymrdf -g 20 -type A failover -establish -noprompt"]
-    unplannedFO["Unplanned Failover\nsymrdf -g 20 -type A failover -noprompt"]
-    presentR2["Present R2 Volumes\nto DR Hosts"]
-    validateApp["Validate Application\nat DR Site"]
-    failback["When Primary Recovers:\nRestore + Establish\nsymrdf restore → establish"]
-    waitSite["Continue Monitoring\nWait for Site Recovery"]
+```d2
+direction: right
 
-    incident --> primaryReachable
-    primaryReachable -->|"Yes — planned"| checkCycleState
-    primaryReachable -->|"No — unplanned"| stakeholderBriefing
-    checkCycleState --> r2Consistent
-    r2Consistent -->|"Yes"| stakeholderBriefing
-    r2Consistent -->|"No — Inconsistent"| stakeholderBriefing
-    stakeholderBriefing --> managementAuth
-    managementAuth -->|"Approved — planned"| plannedFO
-    managementAuth -->|"Approved — unplanned"| unplannedFO
-    managementAuth -->|"Not approved"| waitSite
-    plannedFO --> presentR2
-    unplannedFO --> presentR2
-    presentR2 --> validateApp
-    validateApp --> failback
+incident: "Incident: Primary Site Issue Reported" {shape: rectangle}
+primaryReachable: "primaryReachable" {shape: rectangle}
+checkCycleState: "Check Cycle State and Lag\nsymrdf -g 20 -type A query -detail" {shape: rectangle}
+stakeholderBriefing: "Brief Stakeholders on RPO\n(lag = data exposure window" {shape: rectangle}
+r2Consistent: "r2Consistent" {shape: rectangle}
+managementAuth: "managementAuth" {shape: rectangle}
+plannedFO: "Planned Failover\nsymrdf -g 20 -type A failover -establish -noprompt" {shape: rectangle}
+unplannedFO: "Unplanned Failover\nsymrdf -g 20 -type A failover -noprompt" {shape: rectangle}
+waitSite: "Continue Monitoring\nWait for Site Recovery" {shape: rectangle}
+presentR2: "Present R2 Volumes\nto DR Hosts" {shape: rectangle}
+validateApp: "Validate Application\nat DR Site" {shape: rectangle}
+failback: "When Primary Recovers:\nRestore + Establish\nsymrdf restore → establish" {shape: rectangle}
 
-    style incident fill:#be123c,color:#fff
-    style plannedFO fill:#2563eb,color:#fff
-    style unplannedFO fill:#7c3aed,color:#fff
-    style validateApp fill:#15803d,color:#fff
-    style waitSite fill:#6b7280,color:#fff
+incident -> primaryReachable
+primaryReachable -> checkCycleState
+primaryReachable -> stakeholderBriefing
+checkCycleState -> r2Consistent
+r2Consistent -> stakeholderBriefing
+stakeholderBriefing -> managementAuth
+managementAuth -> plannedFO
+managementAuth -> unplannedFO
+managementAuth -> waitSite
+plannedFO -> presentR2
+unplannedFO -> presentR2
+presentR2 -> validateApp
+validateApp -> failback
 ```
 
 | RPO Factor | How to Check | Acceptable Threshold |
@@ -141,26 +135,23 @@ symrdf -g 20 -type A query | grep -v "Failed Over"
 
 ![Failback and Replication Restoration](../../../../assets/srdf-a-proc-failback-and-replication-restoration.svg)
 
-```mermaid
-flowchart TD
-    primaryRestored["Primary Site Restored"]
-    restoreR1["Restore R1 from R2\nsymrdf -g 20 -type A restore -noprompt"]
-    waitRestore["Wait for Restore Complete\nMonitor: symrdf -g 20 -type A query -detail"]
-    establishAsync["Re-establish SRDF/A Replication\nsymrdf -g 20 -type A establish -noprompt"]
-    verifyConsistent["Verify Consistent State\nsymrdf -g 20 -type A query"]
-    drHostsOff["Quiesce DR Applications\nUnmount R2 Volumes from DR Hosts"]
-    done["SRDF/A Replication Restored\nRPO Protection Active"]
+```d2
+direction: right
 
-    primaryRestored --> drHostsOff
-    drHostsOff --> restoreR1
-    restoreR1 --> waitRestore
-    waitRestore --> establishAsync
-    establishAsync --> verifyConsistent
-    verifyConsistent --> done
+primaryRestored: "Primary Site Restored" {shape: rectangle}
+drHostsOff: "Quiesce DR Applications\nUnmount R2 Volumes from DR Hosts" {shape: rectangle}
+restoreR1: "Restore R1 from R2\nsymrdf -g 20 -type A restore -noprompt" {shape: rectangle}
+waitRestore: "Wait for Restore Complete\nMonitor: symrdf -g 20 -type A query -detail" {shape: rectangle}
+establishAsync: "Re-establish SRDF/A Replication\nsymrdf -g 20 -type A establish -noprompt" {shape: rectangle}
+verifyConsistent: "Verify Consistent State\nsymrdf -g 20 -type A query" {shape: rectangle}
+done: "SRDF/A Replication Restored\nRPO Protection Active" {shape: rectangle}
 
-    style primaryRestored fill:#2563eb,color:#fff
-    style done fill:#15803d,color:#fff
-    style drHostsOff fill:#b45309,color:#fff
+primaryRestored -> drHostsOff
+drHostsOff -> restoreR1
+restoreR1 -> waitRestore
+waitRestore -> establishAsync
+establishAsync -> verifyConsistent
+verifyConsistent -> done
 ```
 
 ```bash

@@ -205,18 +205,26 @@ ssh -p 122 admin@github.example.com "ghe-upgrade --allow-downgrade /home/admin/g
 # For major version rollback — restore from backup-utils snapshot
 /opt/github-backup-utils/bin/ghe-restore -s /backup/ghes/<snapshot-dir> github-restored.example.com
 ```
-```mermaid
-flowchart TD
-    START([Post-Upgrade Failure Detected]) --> ASSESS{Severity?}
-    ASSESS -->|Non-critical, workaround exists| MONITOR[Monitor & Patch\nFile bug with vendor]
-    ASSESS -->|Degraded performance only| TUNE[Tune config\nAdjust resources]
-    ASSESS -->|Data inaccessible / corruption| ROLLBACK{Rollback type?}
-    ROLLBACK -->|Same minor version| PKG[Reinstall previous\npackage version]
-    ROLLBACK -->|Major version downgrade| RESTORE[Full restore\nfrom pre-upgrade backup]
-    PKG --> VERIFY[Run gitlab:check\nVerify endpoints]
-    RESTORE --> VERIFY
-    VERIFY -->|Pass| DONE([Service Restored])
-    VERIFY -->|Fail| ESCALATE([Escalate to Vendor Support])
+```d2
+direction: right
+
+ASSESS: "ASSESS" {shape: rectangle}
+TUNE: "Tune config\nAdjust resources" {shape: rectangle}
+ROLLBACK: "ROLLBACK" {shape: rectangle}
+PKG: "Reinstall previous\npackage version" {shape: rectangle}
+RESTORE: "Full restore\nfrom pre-upgrade backup" {shape: rectangle}
+VERIFY: "Run gitlab:check\nVerify endpoints" {shape: rectangle}
+DONE: "Service Restored" {shape: rectangle}
+ESCALATE: "Escalate to Vendor Support" {shape: rectangle}
+START: "Post-Upgrade Failure Detected" {shape: rectangle}
+
+ASSESS -> TUNE
+ROLLBACK -> PKG
+ROLLBACK -> RESTORE
+PKG -> VERIFY
+RESTORE -> VERIFY
+VERIFY -> DONE
+VERIFY -> ESCALATE
 ```
 
 ## Before you begin

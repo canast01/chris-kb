@@ -23,18 +23,25 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 
 ## Overview
 
-```mermaid
-graph TD
-    prod["Production Data\n/ifs/data/..."]
+```d2
+direction: right
 
-    prod -->|"SnapshotIQ\n(local, minutes–hours RPO)"| snap["[(Snapshots)]\n/ifs/.snapshot/"]
-    prod -->|"SyncIQ\n(async replication, 1–4 hr RPO)"| drCluster["DR PowerScale Cluster\n/ifs/replicated/..."]
-    prod -->|"NDMP\n(backup schedule RPO)"| ndmpTarget["Tape / Disk\nvia NDMP three-way"]
-    prod -->|"Veeam NAS Backup\n(schedule RPO)"| veeamRepo["Veeam Repository\n(hardened or scale-out)"]
+prod: "Production Data\n/ifs/data/..." {shape: rectangle}
+snap: "Snapshots" {shape: rectangle}
+drCluster: "DR PowerScale Cluster\n/ifs/replicated/..." {shape: rectangle}
+ndmpTarget: "Tape / Disk\nvia NDMP three-way" {shape: rectangle}
+veeamRepo: "Veeam Repository\n(hardened or scale-out" {shape: rectangle}
+restore1: "File/Dir Restore\n< 60 min" {shape: rectangle}
+restore2: "Cluster Failover\n15–60 min" {shape: rectangle}
+restore3: "Veeam Restore\nhours" {shape: rectangle}
 
-    snap -->|"file copy / rsync\nor snapshot revert"| restore1(["File/Dir Restore\n< 60 min"])
-    drCluster -->|"SyncIQ failover\n(DNS/DFS update)"| restore2(["Cluster Failover\n15–60 min"])
-    veeamRepo -->|"file-level or full\nshare restore"| restore3(["Veeam Restore\nhours"])
+prod -> snap
+prod -> drCluster
+prod -> ndmpTarget
+prod -> veeamRepo
+snap -> restore1
+drCluster -> restore2
+veeamRepo -> restore3
 ```
 
 PowerScale provides several complementary mechanisms for data protection and recovery. Selecting the right combination depends on the RPO, RTO, and retention requirements for each data set.

@@ -14,43 +14,51 @@ Dell PowerScale (Isilon) diagnostic commands: check cluster node and drive healt
 </div>
 ![PowerScale — Diagnostics](../../../../assets/storage-dell-powerscale-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "isi status\nisi event list --severity critical" {shape: rectangle}
+D: "isi sync policies list\nisi sync reports list" {shape: rectangle}
+E: "isi quota quotas list\nCheck hard limit and current usage" {shape: rectangle}
+F: "isi network subnets list\nnslookup SmartConnect zone" {shape: rectangle}
+G: "isi storagepool list\nisi statistics query current" {shape: rectangle}
+H: "isi statistics query current --keys CPU,BYTES_OUT\nesxtop or sar from client side" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Monitor restripe job\nisi job list; isi job status Restripe" {shape: rectangle}
+K: "isi devices node list -n node-id\nCheck drive bay in isi status" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "isi sync reports view --id report-id\nCheck network path to target: ping target-ip" {shape: rectangle}
+N: "Check replication interface: isi sync policies view\nVerify dedicated replication IP pool" {shape: rectangle}
+O: "isi quota quotas list --type directory\nIdentify which path is over quota" {shape: rectangle}
+P: "isi network interfaces list\nnslookup <smartconnect-zone> to confirm round-robin" {shape: rectangle}
+Q: "isi storagepool nodepools list -v\ndu -sh /ifs/* to find top consumers" {shape: rectangle}
+R: "isi statistics query current --keys CPU,BYTES_OUT,BYTES_IN,LATENCY --nodes all\nCompare latency across nodes" {shape: rectangle}
+S: "Collect isi_gather_info bundle\nOpen Dell Support case" {shape: rectangle}
+A: "PowerScale Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([PowerScale Issue]) --> B{What type of problem?}
-    B -->|Node down or drive failure| C[isi status\nisi event list --severity critical]
-    B -->|SyncIQ policy failing| D[isi sync policies list\nisi sync reports list]
-    B -->|Quota write failure| E[isi quota quotas list\nCheck hard limit and current usage]
-    B -->|Client connectivity issue| F[isi network subnets list\nnslookup SmartConnect zone]
-    B -->|Capacity warning| G[isi storagepool list\nisi statistics query current]
-    B -->|Slow NFS or SMB performance| H[isi statistics query current --keys CPU,BYTES_OUT\nesxtop or sar from client side]
-    C --> I{Node state?}
-    I -->|SMARTFAIL| J[Monitor restripe job\nisi job list; isi job status Restripe]
-    I -->|OK but drive issue| K[isi devices node list -n node-id\nCheck drive bay in isi status]
-    D --> L{Policy status?}
-    L -->|Needs Attention| M[isi sync reports view --id report-id\nCheck network path to target: ping target-ip]
-    L -->|Running but slow| N[Check replication interface: isi sync policies view\nVerify dedicated replication IP pool]
-    E --> O[isi quota quotas list --type directory\nIdentify which path is over quota]
-    F --> P[isi network interfaces list\nnslookup <smartconnect-zone> to confirm round-robin]
-    G --> Q[isi storagepool nodepools list -v\ndu -sh /ifs/* to find top consumers]
-    H --> R[isi statistics query current --keys CPU,BYTES_OUT,BYTES_IN,LATENCY --nodes all\nCompare latency across nodes]
-    J --> S[Collect isi_gather_info bundle\nOpen Dell Support case]
-    K --> S
-    M --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
-    class S escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+L -> M
+L -> N
+E -> O
+F -> P
+G -> Q
+H -> R
+J -> S
+K -> S
+M -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
 ```
 
 ```d2

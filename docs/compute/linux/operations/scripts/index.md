@@ -26,16 +26,21 @@ Scripts stored in the team's Git repository. All are idempotent and safe to run 
 
 ## Script Deployment Flow
 
-```mermaid
-flowchart LR
-    gitRepo["Git Repository\nscripts/linux/"]
-    ansible["Ansible Playbook\ndeploy-scripts.yml"]
-    copy["Copy to servers\n/usr/local/bin/"]
-    cron["Cron Schedule\ncrontab · systemd timer"]
-    output["Output\n/var/log/ops/ · logger"]
-    siem["SIEM / Log Platform\ncentralised logging"]
+```d2
+direction: right
 
-    gitRepo --> ansible --> copy --> cron --> output --> siem
+gitRepo: "Git Repository\nscripts/linux/" {shape: rectangle}
+ansible: "Ansible Playbook\ndeploy-scripts.yml" {shape: rectangle}
+copy: "Copy to servers\n/usr/local/bin/" {shape: rectangle}
+cron: "Cron Schedule\ncrontab · systemd timer" {shape: rectangle}
+output: "Output\n/var/log/ops/ · logger" {shape: rectangle}
+siem: "SIEM / Log Platform\ncentralised logging" {shape: rectangle}
+
+gitRepo -> ansible
+ansible -> copy
+copy -> cron
+cron -> output
+output -> siem
 ```
 
 ## patch-status-report.sh

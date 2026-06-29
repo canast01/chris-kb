@@ -13,20 +13,17 @@ Consumption-based STaaS model — Dell owns and manages on-premises PowerStore, 
 
 ![APEX Storage as a Service — Architecture — Diagram](../../../../assets/storage-dell-apex-storage-as-a-service-architecture-diagram.svg)
 
-```mermaid
-graph TB
-  DELL["Dell Infrastructure\n(owned and managed by Dell)"] --> SCG["Secure Connect Gateway\n(on-premises telemetry relay)"]
-  SCG -->|"outbound HTTPS 443"| APEX["APEX Console\n(SaaS — Dell cloud)"]
-  APEX --> METER["Usage Metering\n& Billing"]
-  APEX --> ALERT["Capacity Alerts\n& Health Reporting"]
-  ADMIN(["Customer Admin"]) -->|"web portal / API"| APEX
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class DELL ctrl
-  class SCG ctrl
-  class APEX,METER,ALERT cloud
-  class ADMIN host
+```d2
+direction: right
+
+DELL: "Dell Infrastructure\n(owned and managed by Dell" {shape: rectangle}
+SCG: "Secure Connect Gateway\n(on-premises telemetry relay" {shape: rectangle}
+APEX: "APEX Console\n(SaaS — Dell cloud" {shape: rectangle}
+ADMIN: "Customer Admin" {shape: rectangle}
+
+DELL -> SCG
+SCG -> APEX
+ADMIN -> APEX
 ```
 ![APEX STaaS Architecture](../../../../assets/apex-storage-as-a-service-architecture-overview.svg)
 

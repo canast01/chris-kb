@@ -38,30 +38,35 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1{ModuleNotFound\nError?}
-    S --> B2{SSL certificate\nverify failed?}
-    S --> B3{Connection\ntimeout?}
-    S --> B4{Permission\ndenied?}
-    S --> B5{JSON decode\nerror?}
-    B1 -->|Yes| D1{Correct venv\nactivated?}
-    D1 -->|No| R1[Python Error Triage Flow\n— source venv/bin/activate]
-    D1 -->|Yes| R2[Python Error Triage Flow\n— pip install package in active venv]
-    B2 -->|Yes| D2{Corporate\nproxy in use?}
-    D2 -->|Yes| R3[Common Errors Reference\n— set REQUESTS_CA_BUNDLE to corp CA]
-    D2 -->|No| R4[Common Errors Reference\n— pass verify= with cert bundle path]
-    B3 -->|Yes| D3{API reachable\nfrom host?}
-    D3 -->|No| R5[API and Network Timeouts\n— fix firewall or proxy settings]
-    D3 -->|Yes| R6[API and Network Timeouts\n— set timeout= in requests.get call]
-    B4 -->|Yes| R7[Common Errors Reference\n— chmod or chown output directory]
-    B5 -->|Yes| R8[Common Errors Reference\n— print resp.text before resp.json]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class B1,B2,B3,B4,B5,D1,D2,D3 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "Python Error Triage Flow\n— source venv/bin/activate" {shape: rectangle}
+R2: "Python Error Triage Flow\n— pip install package in active venv" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Common Errors Reference\n— set REQUESTS_CA_BUNDLE to corp CA" {shape: rectangle}
+R4: "Common Errors Reference\n— pass verify= with cert bundle path" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "API and Network Timeouts\n— fix firewall or proxy settings" {shape: rectangle}
+R6: "API and Network Timeouts\n— set timeout= in requests.get call" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+R7: "Common Errors Reference\n— chmod or chown output directory" {shape: rectangle}
+B5: "B5" {shape: rectangle}
+R8: "Common Errors Reference\n— print resp.text before resp.json" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+B4 -> R7
+B5 -> R8
 ```
 
 ---
@@ -78,21 +83,35 @@ graph TD
 
 ## Python Error Triage Flow
 
-```mermaid
-flowchart TD
-    error["Script Error / Failure"]
-    error --> errType{"Error type?"}
-    errType -->|ModuleNotFoundError| checkVenv["Is correct venv\nactivated?"]
-    checkVenv -->|No| activateVenv["source venv/bin/activate\nthen pip install"]
-    checkVenv -->|Yes| reinstall["pip install <package>\nin active venv"]
-    errType -->|401 Unauthorized| checkToken["API token\nexpired or revoked?"]
-    checkToken -->|Yes| rotateToken["Regenerate token\nin target system"]
-    errType -->|ConnectionError\nTimeout| checkNetwork["curl -v <api_url>\nfrom automation host"]
-    checkNetwork -->|Blocked| fixFW["Fix firewall /\nproxy settings"]
-    errType -->|JSONDecodeError| checkResp["print(resp.text)\ncheck content-type"]
-    checkResp --> updateParsing["Update parsing logic\nto match new schema"]
-    errType -->|PermissionError| checkPath["ls -la on output\ndirectory"]
-    checkPath --> fixPerms["chmod / chown\noutput directory"]
+```d2
+direction: right
+
+error: "Script Error / Failure" {shape: rectangle}
+errType: "Error type?" {shape: rectangle}
+checkVenv: "Is correct venv\nactivated?" {shape: rectangle}
+activateVenv: "source venv/bin/activate\nthen pip install" {shape: rectangle}
+reinstall: "pip install <package>\nin active venv" {shape: rectangle}
+checkToken: "API token\nexpired or revoked?" {shape: rectangle}
+rotateToken: "Regenerate token\nin target system" {shape: rectangle}
+checkNetwork: "curl -v <api_url>\nfrom automation host" {shape: rectangle}
+fixFW: "Fix firewall /\nproxy settings" {shape: rectangle}
+checkResp: "print(resp.text" {shape: rectangle}
+updateParsing: "Update parsing logic\nto match new schema" {shape: rectangle}
+checkPath: "ls -la on output\ndirectory" {shape: rectangle}
+fixPerms: "chmod / chown\noutput directory" {shape: rectangle}
+
+error -> errType
+errType -> checkVenv
+checkVenv -> activateVenv
+checkVenv -> reinstall
+errType -> checkToken
+checkToken -> rotateToken
+errType -> checkNetwork
+checkNetwork -> fixFW
+errType -> checkResp
+checkResp -> updateParsing
+errType -> checkPath
+checkPath -> fixPerms
 ```
 
 ## API and Network Timeouts

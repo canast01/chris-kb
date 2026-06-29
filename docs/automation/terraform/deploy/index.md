@@ -42,22 +42,6 @@ This guide covers setting up a production-ready Terraform environment: installat
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Install Terraform"]
-    s3["Configure Backend (Remote State)"]
-    s4["Configure Provider Credentials"]
-    s5["Initialise a New Module"]
-    s6["Configure Workspace per Environment"]
-    s7["Set Up CI/CD Integration"]
-    s8["Enable Drift Detection (Scheduled Plan)"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 | Requirement | Notes |

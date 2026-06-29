@@ -27,19 +27,37 @@ This page covers the most frequent operational issues encountered on Dell Data D
 
 ## Incident Triage — First Response
 
-```mermaid
-flowchart TD
-    A([Backup failure / replication lag / DDBoost disconnect]) --> B["alerts show current\nfilesys show space"]
-    B --> C{"filesys post-comp\n> 90%?"}
-    C -->|Yes| D["filesys clean start\nCoordinate backup expiry"]
-    C -->|No| E{"filesys status\nEnabled + Running?"}
-    E -->|No| F["disk show state\nalerts show current\nfilesys enable (if no HW alerts)"]
-    E -->|Yes| G{"Replication context\nin Error?"}
-    G -->|Yes| H["replication show errors\nnet ping destination\nCheck destination capacity"]
-    G -->|No| I{"DDBoost client\ndisconnected?"}
-    I -->|Yes| J["ddboost show clients\nReset DD Boost password\nUpdate backup app credentials"]
-    I -->|No| K["Check backup app logs\nfor specific error code"]
-    D & F & H & J & K --> L(["Open Dell support case\nif unresolved"])
+```d2
+direction: right
+
+A: "Backup failure / replication lag / DDBoost disconnect" {shape: rectangle}
+B: "alerts show current\nfilesys show space" {shape: rectangle}
+C: "filesys post-comp\n> 90%?" {shape: rectangle}
+D: "filesys clean start\nCoordinate backup expiry" {shape: rectangle}
+E: "filesys status\nEnabled + Running?" {shape: rectangle}
+F: "disk show state\nalerts show current\nfilesys enable (if no HW alerts" {shape: rectangle}
+G: "Replication context\nin Error?" {shape: rectangle}
+H: "replication show errors\nnet ping destination\nCheck destination capacity" {shape: rectangle}
+I: "DDBoost client\ndisconnected?" {shape: rectangle}
+J: "ddboost show clients\nReset DD Boost password\nUpdate backup app credentials" {shape: rectangle}
+K: "Check backup app logs\nfor specific error code" {shape: rectangle}
+L: "Open Dell support case\nif unresolved" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+E -> F
+E -> G
+G -> H
+G -> I
+I -> J
+I -> K
+D -> F
+F -> H
+H -> J
+J -> K
+K -> L
 ```
 
 ### Recovery Steps

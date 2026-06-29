@@ -14,32 +14,32 @@ Unity XT diagnostic commands: check system-wide health with <code>uemcli /env/he
 </div>
 ![Unity — Diagnostics](../../../../assets/storage-dell-unity-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+SP: "SP" {shape: rectangle}
+SPCK: "uemcli /env/sp show -detail\nWait 60 sec — SP may be recovering" {shape: rectangle}
+SPSTILL: "SPSTILL" {shape: rectangle}
+P1: "Open Dell P1 case immediately" {shape: rectangle}
+POOL: "POOL" {shape: rectangle}
+DRIVE: "uemcli /stor/config/disk show\nReplace drive and monitor rebuild\nNo pool changes during rebuild" {shape: rectangle}
+ACL: "ACL" {shape: rectangle}
+ADDACL: "Add host access\nuemcli /stor/config/lunacl create" {shape: rectangle}
+NIC: "NIC" {shape: rectangle}
+NICFIX: "uemcli /net/port/fc show\nRestore port or recheck LIF" {shape: rectangle}
+ALT: "ALT" {shape: rectangle}
+ALINV: "uemcli /prac/alert show -detail\nInvestigate alert root cause" {shape: rectangle}
+BUNDLE: "uemcli /sys/serviceinfo collect\nOpen Dell support case" {shape: rectangle}
+START: "Host reports I/O errors" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    START(["Host reports I/O errors"]) --> SP{Both SPs online?}
-    SP -->|No| SPCK["uemcli /env/sp show -detail\nWait 60 sec — SP may be recovering"]
-    SPCK --> SPSTILL{SP still offline?}
-    SPSTILL -->|Yes| P1["Open Dell P1 case immediately"]
-    SPSTILL -->|No| POOL
-    SP -->|Yes| POOL{Pool and disk groups healthy?}
-    POOL -->|No| DRIVE["uemcli /stor/config/disk show\nReplace drive and monitor rebuild\nNo pool changes during rebuild"]
-    POOL -->|Yes| ACL{LUN has host access?}
-    ACL -->|No| ADDACL["Add host access\nuemcli /stor/config/lunacl create"]
-    ACL -->|Yes| NIC{Network interface up?}
-    NIC -->|No| NICFIX["uemcli /net/port/fc show\nRestore port or recheck LIF"]
-    NIC -->|Yes| ALT{Active alerts in last 2 hours?}
-    ALT -->|Yes| ALINV["uemcli /prac/alert show -detail\nInvestigate alert root cause"]
-    ALT -->|No| BUNDLE["uemcli /sys/serviceinfo collect\nOpen Dell support case"]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class START,SP,SPSTILL,POOL,ACL,NIC,ALT dark
-    class SPCK,DRIVE,ADDACL,NICFIX,ALINV action
-    class P1,BUNDLE escalate
+SP -> SPCK
+SPSTILL -> P1
+SPSTILL -> POOL
+POOL -> DRIVE
+ACL -> ADDACL
+NIC -> NICFIX
+ALT -> ALINV
+ALT -> BUNDLE
 ```
 
 ```d2

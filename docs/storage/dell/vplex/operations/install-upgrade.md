@@ -57,20 +57,29 @@ GeoSynchrony upgrades follow a one-version-at-a-time path for major version jump
 6. For Metro deployments, upgrade one cluster at a time; verify cross-cluster operation before upgrading the second cluster.
 7. Post-upgrade: run `health-check --full` and validate all distributed devices show healthy status.
 
-```mermaid
-flowchart TD
-    preCheck["Pre-upgrade checklist\nCompatibility matrix verified\nAll devices in-sync\nVMS snapshot taken"]
-    dl["Download GeoSynchrony bundle\ndell.com/support\nVerify checksum"]
-    dir1A["Upgrade director-1-1-A\nVerify health-state: ok"]
-    dir1B["Upgrade director-1-1-B\nVerify health-state: ok"]
-    ddCheck1["Confirm distributed device\nsync state after engine-1-1"]
-    nextEngine["Repeat for next engine\n(if present)"]
-    upgradeVms["Upgrade VMS\nmanagement software"]
-    hcFull["health-check --full\nNo warnings or errors"]
-    cluster2["Upgrade Cluster-2\n(Metro — same sequence)"]
-    done(["Upgrade complete\nUpdate lifecycle register"])
+```d2
+direction: right
 
-    preCheck --> dl --> dir1A --> dir1B --> ddCheck1 --> nextEngine --> upgradeVms --> hcFull --> cluster2 --> done
+preCheck: "Pre-upgrade checklist\nCompatibility matrix verified\nAll devices in-sync\nVMS snapshot taken" {shape: rectangle}
+dl: "Download GeoSynchrony bundle\ndell.com/support\nVerify checksum" {shape: rectangle}
+dir1A: "Upgrade director-1-1-A\nVerify health-state: ok" {shape: rectangle}
+dir1B: "Upgrade director-1-1-B\nVerify health-state: ok" {shape: rectangle}
+ddCheck1: "Confirm distributed device\nsync state after engine-1-1" {shape: rectangle}
+nextEngine: "Repeat for next engine\n(if present" {shape: rectangle}
+upgradeVms: "Upgrade VMS\nmanagement software" {shape: rectangle}
+hcFull: "health-check --full\nNo warnings or errors" {shape: rectangle}
+cluster2: "Upgrade Cluster-2\n(Metro — same sequence" {shape: rectangle}
+done: "Upgrade complete\nUpdate lifecycle register" {shape: rectangle}
+
+preCheck -> dl
+dl -> dir1A
+dir1A -> dir1B
+dir1B -> ddCheck1
+ddCheck1 -> nextEngine
+nextEngine -> upgradeVms
+upgradeVms -> hcFull
+hcFull -> cluster2
+cluster2 -> done
 ```
 
 ## Hardware Lifecycle

@@ -24,42 +24,51 @@ Certificate infrastructure follows a three-tier PKI hierarchy: an offline, air-g
 
 ## PKI Hierarchy
 
-```mermaid
-graph TB
-  ROOT[("Root CA\n(offline — HSM)")] -->|"signs"| INT1["Intermediate CA 1\nInternal Issuing CA"]
-  ROOT -->|"signs"| INT2["Intermediate CA 2\nPublic / External CA"]
-  INT1 -->|"issues"| CERT1["Server Certificate"]
-  INT1 -->|"issues"| CERT2["Client Certificate"]
-  INT2 -->|"issues"| CERT3["Publicly Trusted Cert"]
-  CERT1 & CERT2 & CERT3 -.->|"OCSP / CRL"| CRL["Revocation\nCRL / OCSP Responder"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class ROOT store
-  class INT1,INT2 ctrl
-  class CERT1,CERT2,CERT3 host
-  class CRL mgmt
+```d2
+direction: right
+
+ROOT: "Root CA\n(offline — HSM" {shape: rectangle}
+INT1: "Intermediate CA 1\nInternal Issuing CA" {shape: rectangle}
+INT2: "Intermediate CA 2\nPublic / External CA" {shape: rectangle}
+CERT1: "Server Certificate" {shape: rectangle}
+CERT2: "Client Certificate" {shape: rectangle}
+CERT3: "Publicly Trusted Cert" {shape: rectangle}
+
+ROOT -> INT1
+ROOT -> INT2
+INT1 -> CERT1
+INT1 -> CERT2
+INT2 -> CERT3
 ```
 
 ---
 
 ## Certificate Lifecycle Flow
 
-```mermaid
-flowchart TD
-    csrGen["CSR Generation\n(key pair on target host / HSM)"]
-    csrGen --> submit["Submit CSR to CA\n(ADCS / DigiCert / Venafi)"]
-    submit --> caSign["CA validates and signs\n(issues certificate)"]
-    caSign --> deploy["Deploy to target service\n(nginx / IIS / F5 / Java keystore)"]
-    deploy --> monitor["Continuous expiry monitoring\n(Venafi / openssl / Prometheus)"]
-    monitor --> renewWindow{"Within renewal\nwindow?"}
-    renewWindow -->|"yes — 30 days"| renewDecision{"Automated\nrenewal?"}
-    renewWindow -->|"no"| monitor
-    renewDecision -->|"yes — Venafi / ACME"| csrGen
-    renewDecision -->|"no — manual"| manualRenew["Manual renewal procedure\n(owner notified)"]
-    manualRenew --> csrGen
-    monitor -->|"key compromise\nor decommission"| revoke["Revoke via CA\nPublish CRL + OCSP update"]
+```d2
+direction: right
+
+csrGen: "CSR Generation\n(key pair on target host / HSM" {shape: rectangle}
+submit: "Submit CSR to CA\n(ADCS / DigiCert / Venafi" {shape: rectangle}
+caSign: "CA validates and signs\n(issues certificate" {shape: rectangle}
+deploy: "Deploy to target service\n(nginx / IIS / F5 / Java keystore" {shape: rectangle}
+monitor: "Continuous expiry monitoring\n(Venafi / openssl / Prometheus" {shape: rectangle}
+renewWindow: "Within renewal\nwindow?" {shape: rectangle}
+renewDecision: "Automated\nrenewal?" {shape: rectangle}
+manualRenew: "Manual renewal procedure\n(owner notified" {shape: rectangle}
+revoke: "Revoke via CA\nPublish CRL + OCSP update" {shape: rectangle}
+
+csrGen -> submit
+submit -> caSign
+caSign -> deploy
+deploy -> monitor
+monitor -> renewWindow
+renewWindow -> renewDecision
+renewWindow -> monitor
+renewDecision -> csrGen
+renewDecision -> manualRenew
+manualRenew -> csrGen
+monitor -> revoke
 ```
 
 ---

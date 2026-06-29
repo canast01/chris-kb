@@ -61,23 +61,30 @@ ENG --> SRC: Done
 
 ## Restore Type Decision Tree
 
-```mermaid
-flowchart TD
-    A([Recovery Required]) --> B{What is lost?}
-    B --> |Entire VM| C{Production available?}
-    B --> |Files/Folders| G[File-Level Recovery]
-    B --> |Application data\nExchange/SQL/AD| H[Application-Item Recovery]
-    B --> |VM config only| I[VM Config Restore]
+```d2
+direction: right
 
-    C --> |Yes — RTO flexible| D[Full VM Restore\nto original/new location]
-    C --> |No — RTO critical| E[Instant VM Recovery\nrun from backup]
+B: "B" {shape: rectangle}
+G: "File-Level Recovery" {shape: rectangle}
+H: "Application-Item Recovery" {shape: rectangle}
+I: "VM Config Restore" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "Full VM Restore\nto original/new location" {shape: rectangle}
+E: "Instant VM Recovery\nrun from backup" {shape: rectangle}
+F: "Storage vMotion\nto production after stabilised" {shape: rectangle}
+J: "J" {shape: rectangle}
+A: "Recovery Required" {shape: rectangle}
 
-    E --> F[Storage vMotion\nto production after stabilised]
-    D --> J([Validation & sign-off])
-    F --> J
-    G --> J
-    H --> J
-    I --> J
+B -> G
+B -> H
+B -> I
+C -> D
+C -> E
+E -> F
+F -> J
+G -> J
+H -> J
+I -> J
 ```
 
 This performs a Storage vMotion in the background. The VM remains live throughout.

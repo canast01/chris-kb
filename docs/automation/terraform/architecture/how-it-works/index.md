@@ -15,34 +15,43 @@ Terraform is a declarative infrastructure-as-code tool that manages resources ac
 
 ## High-Level Architecture
 
-```mermaid
-flowchart TD
-    DEV([Developer / CI Pipeline]) --> CLI[Terraform CLI]
-    CLI --> INIT[terraform init\nDownload providers & modules]
-    CLI --> PLAN[terraform plan\nGenerate execution plan]
-    CLI --> APPLY[terraform apply\nMutate infrastructure]
+```d2
+direction: right
 
-    INIT --> PR[Provider Registry\nregistry.terraform.io]
-    INIT --> MR[Module Registry\nprivate or public]
+DEV: "Developer / CI Pipeline" {shape: rectangle}
+CLI: "Terraform CLI" {shape: rectangle}
+PLAN: "terraform plan\nGenerate execution plan" {shape: rectangle}
+APPLY: "terraform apply\nMutate infrastructure" {shape: rectangle}
+INIT: "INIT" {shape: rectangle}
+PR: "Provider Registry\nregistry.terraform.io" {shape: rectangle}
+MR: "Module Registry\nprivate or public" {shape: rectangle}
+STATE: "State Backend\nS3 / GCS / Azure Blob\n/ Terraform Cloud" {shape: rectangle}
+P1: "AWS Provider\nterraform-provider-aws" {shape: rectangle}
+P2: "Azure Provider\nterraform-provider-azurerm" {shape: rectangle}
+P3: "vSphere Provider\nterraform-provider-vsphere" {shape: rectangle}
+P4: "Other Providers" {shape: rectangle}
+AWS: "AWS APIs" {shape: rectangle}
+AZ: "Azure ARM APIs" {shape: rectangle}
+VS: "vSphere REST / SOAP APIs" {shape: rectangle}
+OTHER: "Other Cloud/SaaS APIs" {shape: rectangle}
+LOCK: "State Lock\nDynamoDB / Storage Account\n/ native backend lock" {shape: rectangle}
 
-    PLAN --> STATE[(State Backend\nS3 / GCS / Azure Blob\n/ Terraform Cloud)]
-    APPLY --> STATE
-
-    PLAN --> P1[AWS Provider\nterraform-provider-aws]
-    PLAN --> P2[Azure Provider\nterraform-provider-azurerm]
-    PLAN --> P3[vSphere Provider\nterraform-provider-vsphere]
-    PLAN --> P4[Other Providers]
-
-    P1 --> AWS[AWS APIs]
-    P2 --> AZ[Azure ARM APIs]
-    P3 --> VS[vSphere REST / SOAP APIs]
-    P4 --> OTHER[Other Cloud/SaaS APIs]
-
-    STATE --> LOCK[State Lock\nDynamoDB / Storage Account\n/ native backend lock]
-
-    style CLI fill:#5c35cc,color:#fff
-    style STATE fill:#1565c0,color:#fff
-    style LOCK fill:#c62828,color:#fff
+DEV -> CLI
+CLI -> PLAN
+CLI -> APPLY
+INIT -> PR
+INIT -> MR
+PLAN -> STATE
+APPLY -> STATE
+PLAN -> P1
+PLAN -> P2
+PLAN -> P3
+PLAN -> P4
+P1 -> AWS
+P2 -> AZ
+P3 -> VS
+P4 -> OTHER
+STATE -> LOCK
 ```
 
 ---

@@ -15,15 +15,19 @@ AWS integration patterns: Active Directory Connector, VPC peering and PrivateLin
 
 ## S3 Object Lifecycle
 
-```mermaid
-flowchart LR
-    upload["Object Upload\nS3 Standard"]
-    ia["S3 Standard-IA\nafter 30 days"]
-    glacier["S3 Glacier\nafter 90 days"]
-    deepArchive["S3 Glacier Deep Archive\nafter 180 days (optional)"]
-    expire["Expiration\ndelete after retention period"]
+```d2
+direction: right
 
-    upload -->|"Lifecycle rule"| ia -->|"Lifecycle rule"| glacier -->|"Lifecycle rule"| deepArchive -->|"Lifecycle rule"| expire
+upload: "Object Upload\nS3 Standard" {shape: rectangle}
+ia: "S3 Standard-IA\nafter 30 days" {shape: rectangle}
+glacier: "S3 Glacier\nafter 90 days" {shape: rectangle}
+deepArchive: "S3 Glacier Deep Archive\nafter 180 days (optional" {shape: rectangle}
+expire: "Expiration\ndelete after retention period" {shape: rectangle}
+
+upload -> ia
+ia -> glacier
+glacier -> deepArchive
+deepArchive -> expire
 ```
 
 **AD Connector** (proxy authentication to on-premises AD without replication):
@@ -83,21 +87,25 @@ aws backup put-backup-vault-access-policy --backup-vault-name prod-vault --polic
 
 ## CloudFormation Stack Lifecycle
 
-```mermaid
-flowchart LR
-    template["Template\nJSON / YAML"]
-    validate["Validate\naws cloudformation validate-template"]
-    createStack["CREATE_IN_PROGRESS\nresource provisioning"]
-    complete["CREATE_COMPLETE\nstack outputs available"]
-    update["UPDATE_IN_PROGRESS\nchange set execution"]
-    rollback["ROLLBACK_IN_PROGRESS\nfailure detected"]
-    deleteStack["DELETE_IN_PROGRESS\nresource teardown"]
+```d2
+direction: right
 
-    template --> validate --> createStack --> complete
-    complete --> update --> complete
-    createStack -->|"error"| rollback
-    update -->|"error"| rollback
-    complete --> deleteStack
+template: "Template\nJSON / YAML" {shape: rectangle}
+validate: "Validate\naws cloudformation validate-template" {shape: rectangle}
+createStack: "CREATE_IN_PROGRESS\nresource provisioning" {shape: rectangle}
+complete: "CREATE_COMPLETE\nstack outputs available" {shape: rectangle}
+update: "UPDATE_IN_PROGRESS\nchange set execution" {shape: rectangle}
+rollback: "ROLLBACK_IN_PROGRESS\nfailure detected" {shape: rectangle}
+deleteStack: "DELETE_IN_PROGRESS\nresource teardown" {shape: rectangle}
+
+template -> validate
+validate -> createStack
+createStack -> complete
+complete -> update
+update -> complete
+createStack -> rollback
+update -> rollback
+complete -> deleteStack
 ```
 
 ## GitHub Actions + OIDC

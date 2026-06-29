@@ -13,44 +13,58 @@ Jira diagnostic commands: check instance health via the /status endpoint and RES
 *Applies to: Jira 9.x / Data Center*
 </div>
 
-```mermaid
-graph TD
-    A([Issue Reported]) --> B[Collect basic info: version, error message, affected users]
-    B --> C[curl status endpoint + grep catalina.out for ERROR OOM Exception]
-    C --> D{Error found in logs?}
-    D -->|Yes| E{Error type?}
-    D -->|No| F[Check HTTP response times: load a Jira project board]
-    E -->|OOM or heap| G[JVM Heap Analysis:\njmap histo and jcmd GC.heap_info]
-    E -->|Thread deadlock or hang| H[Thread Dump Capture:\njcmd Thread.print x3 10s apart]
-    E -->|DB error| I[Database: pg_stat_activity\nand pg_stat_statements slow queries]
-    E -->|Plugin error| J[Plugin: disable plugin in Admin\nand clear index cache]
-    F --> K{Response > 3 seconds?}
-    K -->|Yes| L[DB slow query log + JVM profiling with jstat]
-    K -->|No| M[Data Center: check Hazelcast cluster\nand node heartbeat in Admin > Cluster Nodes]
-    G --> N[Analyse heap dump with Eclipse MAT\nIdentify retained object class]
-    H --> O{Deadlock detected in dump?}
-    O -->|Yes| P[Restart affected node\nCapture support.zip before restart]
-    O -->|No| Q[Check thread pool: count BLOCKED threads\nIdentify lock holder in dump]
-    I --> R[Cancel or terminate long queries\nRequest missing index via DBA]
-    J --> S[Update or remove offending plugin\nClear plugin cache and restart node]
-    L --> T[Add indexes, optimise JQL\nIncrease JVM heap or node count]
-    M --> U[Investigate management network\nRestart affected cluster node]
-    N --> V{Issue resolved?}
-    P --> V
-    Q --> V
-    R --> V
-    S --> V
-    T --> V
-    U --> V
-    V -->|No| W[Collect support.zip\nEscalate to Atlassian Support]
-    V -->|Yes| X([Resolved — document RCA])
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,D,E,K,O,V dark
-    class B,C,F,G,H,I,J,L,M,N,P,Q,R,S,T,U action
-    class W,X escalate
+A: "Issue Reported" {shape: rectangle}
+B: "Collect basic info: version, error message, affected users" {shape: rectangle}
+C: "curl status endpoint + grep catalina.out for ERROR OOM Exception" {shape: rectangle}
+D: "D" {shape: rectangle}
+F: "Check HTTP response times: load a Jira project board" {shape: rectangle}
+E: "E" {shape: rectangle}
+G: "JVM Heap Analysis:\njmap histo and jcmd GC.heap_info" {shape: rectangle}
+H: "Thread Dump Capture:\njcmd Thread.print x3 10s apart" {shape: rectangle}
+I: "Database: pg_stat_activity\nand pg_stat_statements slow queries" {shape: rectangle}
+J: "Plugin: disable plugin in Admin\nand clear index cache" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "DB slow query log + JVM profiling with jstat" {shape: rectangle}
+M: "Data Center: check Hazelcast cluster\nand node heartbeat in Admin > Cluster Nodes" {shape: rectangle}
+N: "Analyse heap dump with Eclipse MAT\nIdentify retained object class" {shape: rectangle}
+O: "O" {shape: rectangle}
+P: "Restart affected node\nCapture support.zip before restart" {shape: rectangle}
+Q: "Check thread pool: count BLOCKED threads\nIdentify lock holder in dump" {shape: rectangle}
+R: "Cancel or terminate long queries\nRequest missing index via DBA" {shape: rectangle}
+S: "Update or remove offending plugin\nClear plugin cache and restart node" {shape: rectangle}
+T: "Add indexes, optimise JQL\nIncrease JVM heap or node count" {shape: rectangle}
+U: "Investigate management network\nRestart affected cluster node" {shape: rectangle}
+V: "V" {shape: rectangle}
+W: "Collect support.zip\nEscalate to Atlassian Support" {shape: rectangle}
+X: "Resolved — document RCA" {shape: rectangle}
+
+A -> B
+B -> C
+D -> F
+E -> G
+E -> H
+E -> I
+E -> J
+K -> L
+K -> M
+G -> N
+O -> P
+O -> Q
+I -> R
+J -> S
+L -> T
+M -> U
+P -> V
+Q -> V
+R -> V
+S -> V
+T -> V
+U -> V
+V -> W
+V -> X
 ```
 
 ```d2

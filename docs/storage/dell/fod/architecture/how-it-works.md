@@ -18,31 +18,22 @@ Dell Flex on Demand (FOD) is a consumption-based capacity model in which additio
 
 ## FOD Licence Lifecycle
 
-```mermaid
-graph TB
-  PORTAL["Dell Portal\n(licensing.dell.com)\nPurchase FOD licence"]
-  KEY["Activation Key\n(emailed to customer)\nalphanumeric string"]
-  CMD["Customer applies key\n`symcfg -auth activate`\nor Unisphere GUI"]
-  ARRAY["PowerMax Array\nFeature enabled\nExpiry date set"]
-  MONITOR["Monitor\nUnisphere dashboard\nor SYMCLI audit report"]
-  RENEW["Renewal\n(before expiry)\nor Deactivation"]
+```d2
+direction: right
 
-  PORTAL -->|"licence purchased\nentitlement generated"| KEY
-  KEY -->|"admin receives key\nvia email"| CMD
-  CMD -->|"key applied to\narray serial number"| ARRAY
-  ARRAY -->|"feature active\nmonitor compliance"| MONITOR
-  MONITOR -->|"approaching expiry\nor no longer needed"| RENEW
-  RENEW -->|"renewed licence key\npurchased"| PORTAL
+PORTAL: "Dell Portal\n(licensing.dell.com)\nPurchase FOD licence" {shape: rectangle}
+KEY: "Activation Key\n(emailed to customer)\nalphanumeric string" {shape: rectangle}
+CMD: "Customer applies key\n`symcfg -auth activate`\nor Unisphere GUI" {shape: rectangle}
+ARRAY: "PowerMax Array\nFeature enabled\nExpiry date set" {shape: rectangle}
+MONITOR: "Monitor\nUnisphere dashboard\nor SYMCLI audit report" {shape: rectangle}
+RENEW: "Renewal\n(before expiry)\nor Deactivation" {shape: rectangle}
 
-  classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef green fill:#15803d,stroke:#166534,color:#fff
-  classDef amber fill:#b45309,stroke:#92400e,color:#fff
-  classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-  class PORTAL blue
-  class ARRAY green
-  class CMD,KEY amber
-  class MONITOR,RENEW purple
+PORTAL -> KEY
+KEY -> CMD
+CMD -> ARRAY
+ARRAY -> MONITOR
+MONITOR -> RENEW
+RENEW -> PORTAL
 ```
 
 ## Metering Model

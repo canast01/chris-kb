@@ -22,16 +22,25 @@ Windows certificate operations use `certutil` for verification, revocation, and 
 
 ## Tool Selection by Task
 
-```mermaid
-graph TD
-    task{"Certificate task"}
-    task -->|"inspect cert fields / SANs"| opensslText["openssl x509 -in cert.pem -noout -text"]
-    task -->|"verify key matches cert"| opensslModulus["openssl x509 / rsa -noout -modulus\n+ md5sum comparison"]
-    task -->|"test live TLS endpoint"| opensslClient["openssl s_client -connect host:443\n-servername host"]
-    task -->|"verify chain"| opensslVerify["openssl verify -CAfile root.pem\n-untrusted intermediate.pem cert.pem"]
-    task -->|"Windows store operations"| certutil["certutil -store My\ncertutil -verify cert.pem\ncertutil -addstore Root ca.crt"]
-    task -->|"PowerShell Windows store"| psStore["Get-ChildItem Cert:\\LocalMachine\\My\nTest-Certificate"]
-    task -->|"generate key + CSR"| csrGen["openssl req -new -newkey rsa:4096\n-keyout key.pem -out csr.pem"]
+```d2
+direction: right
+
+task: "task" {shape: rectangle}
+opensslText: "openssl x509 -in cert.pem -noout -text" {shape: rectangle}
+opensslModulus: "openssl x509 / rsa -noout -modulus\n+ md5sum comparison" {shape: rectangle}
+opensslClient: "openssl s_client -connect host:443\n-servername host" {shape: rectangle}
+opensslVerify: "openssl verify -CAfile root.pem\n-untrusted intermediate.pem cert.pem" {shape: rectangle}
+certutil: "certutil -store My\ncertutil -verify cert.pem\ncertutil -addstore Root ca.crt" {shape: rectangle}
+psStore: "Get-ChildItem Cert:\\LocalMachine\\My\nTest-Certificate" {shape: rectangle}
+csrGen: "openssl req -new -newkey rsa:4096\n-keyout key.pem -out csr.pem" {shape: rectangle}
+
+task -> opensslText
+task -> opensslModulus
+task -> opensslClient
+task -> opensslVerify
+task -> certutil
+task -> psStore
+task -> csrGen
 ```
 
 ---

@@ -7,14 +7,12 @@ search:
 ---
 # FabricOS — Common Issues
 
-
 <div class="kb-summary">
 FabricOS troubleshooting: `porterrshow`, `portlogdump`, `errshow`, ISL link bounce causes, zone merge conflicts, and escalation to Brocade TAC.
 
 *Applies to: Brocade FOS 9.x*
 </div>
 ![FabricOS — Common Issues](../../../../assets/san-brocade-fabric-os-troubleshooting-common-issues.svg)
-
 
 ---
 
@@ -46,31 +44,39 @@ principal_switch_changed_unexpectedl -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A{ISL down or\nfabric split?}
-    S --> B{Port in faulty\nor disabled state?}
-    S --> C{Host cannot\nsee LUNs?}
-    S --> D{MAPS alert\nfiring?}
-    S --> E{Slow drain /\nhigh latency?}
-    A -->|Yes| A1[Check fabricshow · islshow\nVerify domain ID conflict\nCheck SFP and cable]
-    A1 --> A2[Fabric Segmentation]
-    B -->|Yes| B1[porttest suspect port\nCheck sfpshow Rx/Tx power\nRe-seat SFP and cable]
-    B1 --> B2[Port Flapping / High Error Counts]
-    C -->|Yes| C1{WWPN in nsshow?}
-    C1 -->|No| C2[Check HBA login · portlogshow\nVerify cable and SFP]
-    C1 -->|Yes| C3[zoneshow · cfgshow\nVerify zone and alias WWPN]
-    C3 --> C4[Host Cannot See Storage]
-    D -->|Yes| D1[mapsdb --show\nIdentify rule: CRC · ITW · BB zero]
-    D1 --> D2[MAPS Alert Firing]
-    E -->|Yes| E1[bottleneckmon --show\nporterrshow disc_c3\nIdentify slow-drain port]
-    E1 --> E2[Slow Drain Device Detection]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A2,B2,C4,D2,E2 section
-    class A,B,C,C1,D,E decision
-    class S start
+```d2
+direction: right
+
+A: "A" {shape: rectangle}
+A1: "Check fabricshow · islshow\nVerify domain ID conflict\nCheck SFP and cable" {shape: rectangle}
+A2: "Fabric Segmentation" {shape: rectangle}
+B: "B" {shape: rectangle}
+B1: "porttest suspect port\nCheck sfpshow Rx/Tx power\nRe-seat SFP and cable" {shape: rectangle}
+B2: "Port Flapping / High Error Counts" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "Check HBA login · portlogshow\nVerify cable and SFP" {shape: rectangle}
+C3: "zoneshow · cfgshow\nVerify zone and alias WWPN" {shape: rectangle}
+C4: "Host Cannot See Storage" {shape: rectangle}
+D: "D" {shape: rectangle}
+D1: "mapsdb --show\nIdentify rule: CRC · ITW · BB zero" {shape: rectangle}
+D2: "MAPS Alert Firing" {shape: rectangle}
+E: "E" {shape: rectangle}
+E1: "bottleneckmon --show\nporterrshow disc_c3\nIdentify slow-drain port" {shape: rectangle}
+E2: "Slow Drain Device Detection" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+C: "C" {shape: rectangle}
+
+A -> A1
+A1 -> A2
+B -> B1
+B1 -> B2
+C1 -> C2
+C1 -> C3
+C3 -> C4
+D -> D1
+D1 -> D2
+E -> E1
+E1 -> E2
 ```
 
 ---
@@ -87,26 +93,44 @@ graph TD
 
 ## Incident Triage Decision Tree
 
-```mermaid
-flowchart TD
-    incident([Incident Reported]) --> baseline["Fast baseline:\nswitchstatusshow · switchshow\nfabricshow · islshow · porterrshow"]
-    baseline --> healthy{"switchstatusshow\nHEALTHY?"}
-    healthy -->|No| hwCheck["sensorshow · fanshow · psshow\nEnvironmental failure?"]
-    hwCheck -->|Yes| hwAction["Replace fan / PSU\nEscalate to Broadcom TAC"]
-    hwCheck -->|No| portFaulty["porttest suspect port\nHW fault?"]
-    healthy -->|Yes| hostSee{"Host sees storage?"}
-    hostSee -->|No| nsCheck["nsshow — HBA in name server?"]
-    nsCheck -->|No| flogiCheck["portlogshow — FLOGI events?\nCheck cable · SFP · HBA driver"]
-    nsCheck -->|Yes| zoneCheck["zoneshow — WWPN in active zone?"]
-    zoneCheck -->|No| addZone["Create/fix zone\ncfgenable · cfgsave"]
-    zoneCheck -->|Yes| arrayMask["Check array-side LUN masking\n(Pure / PowerMax / ONTAP)"]
-    hostSee -->|Yes| errCheck{"porterrshow\nHigh error counters?"}
-    errCheck -->|Yes| sfpCheck["sfpshow — SFP optical levels\nReplace SFP first"]
-    errCheck -->|No| maps["mapsdb --show\nActive MAPS alerts?"]
-    maps -->|"BB credit zero"| slowDrain["bottleneckmon --show\nDisable slow drain port"]
-    maps -->|"ISL util high"| islAdd["Add ISL capacity\ncheck trunk group"]
-```
+```d2
+direction: right
 
+incident: "Incident Reported" {shape: rectangle}
+baseline: "Fast baseline:\nswitchstatusshow · switchshow\nfabricshow · islshow · porterrshow" {shape: rectangle}
+healthy: "switchstatusshow\nHEALTHY?" {shape: rectangle}
+hwCheck: "sensorshow · fanshow · psshow\nEnvironmental failure?" {shape: rectangle}
+hwAction: "Replace fan / PSU\nEscalate to Broadcom TAC" {shape: rectangle}
+portFaulty: "porttest suspect port\nHW fault?" {shape: rectangle}
+hostSee: "Host sees storage?" {shape: rectangle}
+nsCheck: "nsshow — HBA in name server?" {shape: rectangle}
+flogiCheck: "portlogshow — FLOGI events?\nCheck cable · SFP · HBA driver" {shape: rectangle}
+zoneCheck: "zoneshow — WWPN in active zone?" {shape: rectangle}
+addZone: "Create/fix zone\ncfgenable · cfgsave" {shape: rectangle}
+arrayMask: "Check array-side LUN masking\n(Pure / PowerMax / ONTAP" {shape: rectangle}
+errCheck: "porterrshow\nHigh error counters?" {shape: rectangle}
+sfpCheck: "sfpshow — SFP optical levels\nReplace SFP first" {shape: rectangle}
+maps: "mapsdb --show\nActive MAPS alerts?" {shape: rectangle}
+slowDrain: "bottleneckmon --show\nDisable slow drain port" {shape: rectangle}
+islAdd: "Add ISL capacity\ncheck trunk group" {shape: rectangle}
+
+incident -> baseline
+baseline -> healthy
+healthy -> hwCheck
+hwCheck -> hwAction
+hwCheck -> portFaulty
+healthy -> hostSee
+hostSee -> nsCheck
+nsCheck -> flogiCheck
+nsCheck -> zoneCheck
+zoneCheck -> addZone
+zoneCheck -> arrayMask
+hostSee -> errCheck
+errCheck -> sfpCheck
+errCheck -> maps
+maps -> slowDrain
+maps -> islAdd
+```
 
 **Resolution steps:**
 

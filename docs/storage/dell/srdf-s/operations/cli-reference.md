@@ -27,36 +27,31 @@ All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands requ
 
 ## SRDF/S Operation Decision Map
 
-```mermaid
-flowchart TD
-    goal["What do you need to do?"]
-    monitor["Monitor pair health\nand link state"]
-    maintenance["Planned maintenance\n(suspend replication)"]
-    drTest["DR test\n(non-disruptive)"]
-    failover["Actual failover\n(production use of R2)"]
-    failback["Return to normal\nafter failover"]
+```d2
+direction: right
 
-    cmdQuery["symrdf -sid sid -g grp query\nsymcfg -sid sid list -rdfg\nsymstat -rdf"]
-    cmdSuspend["symrdf -sid sid -g grp suspend -noprompt\n(then resume after maintenance)"]
-    cmdSplit["symrdf -sid sid -g grp split -noprompt\n(R2 accessible for testing)"]
-    cmdFailover["symrdf -sid sid -g grp failover -noprompt"]
-    cmdFailback["symrdf -sid sid -g grp failback -noprompt\nor: restore → establish"]
+goal: "What do you need to do?" {shape: rectangle}
+monitor: "Monitor pair health\nand link state" {shape: rectangle}
+maintenance: "Planned maintenance\n(suspend replication" {shape: rectangle}
+drTest: "DR test\n(non-disruptive" {shape: rectangle}
+failover: "Actual failover\n(production use of R2" {shape: rectangle}
+failback: "Return to normal\nafter failover" {shape: rectangle}
+cmdQuery: "symrdf -sid sid -g grp query\nsymcfg -sid sid list -rdfg\nsymstat -rdf" {shape: rectangle}
+cmdSuspend: "symrdf -sid sid -g grp suspend -noprompt\n(then resume after maintenance" {shape: rectangle}
+cmdSplit: "symrdf -sid sid -g grp split -noprompt\n(R2 accessible for testing" {shape: rectangle}
+cmdFailover: "symrdf -sid sid -g grp failover -noprompt" {shape: rectangle}
+cmdFailback: "symrdf -sid sid -g grp failback -noprompt\nor: restore → establish" {shape: rectangle}
 
-    goal --> monitor
-    goal --> maintenance
-    goal --> drTest
-    goal --> failover
-    goal --> failback
-
-    monitor --> cmdQuery
-    maintenance --> cmdSuspend
-    drTest --> cmdSplit
-    failover --> cmdFailover
-    failback --> cmdFailback
-
-    style goal fill:#2563eb,color:#fff
-    style cmdFailover fill:#be123c,color:#fff
-    style cmdFailback fill:#7c3aed,color:#fff
+goal -> monitor
+goal -> maintenance
+goal -> drTest
+goal -> failover
+goal -> failback
+monitor -> cmdQuery
+maintenance -> cmdSuspend
+drTest -> cmdSplit
+failover -> cmdFailover
+failback -> cmdFailback
 ```
 
 ---

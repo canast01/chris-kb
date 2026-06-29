@@ -33,28 +33,29 @@ encrypting_local_files_with_cryptogr -> encryption_reference: hardens
 
 ## Secrets and Encryption Architecture
 
-```mermaid
-graph TD
-    script["Python Script"]
-    envVars["Environment Variables\n(os.environ)"]
-    awsSM["AWS Secrets Manager\n(boto3 client)"]
-    hashiVault["HashiCorp Vault\n(hvac client)"]
-    secret["Secret Value\n(password / token)"]
-    fernet["Fernet Encryption\n(cryptography library)"]
-    encFile["Encrypted File\n(.enc)"]
-    tlsVerify["TLS Verification\n(requests verify=True)"]
-    apiCall["API Call\n(HTTPS)"]
+```d2
+direction: right
 
-    script --> envVars
-    script --> awsSM
-    script --> hashiVault
-    envVars --> secret
-    awsSM --> secret
-    hashiVault --> secret
-    secret --> fernet
-    fernet --> encFile
-    script --> tlsVerify
-    tlsVerify --> apiCall
+script: "Python Script" {shape: rectangle}
+envVars: "Environment Variables\n(os.environ" {shape: rectangle}
+awsSM: "AWS Secrets Manager\n(boto3 client" {shape: rectangle}
+hashiVault: "HashiCorp Vault\n(hvac client" {shape: rectangle}
+secret: "Secret Value\n(password / token" {shape: rectangle}
+fernet: "Fernet Encryption\n(cryptography library" {shape: rectangle}
+encFile: "Encrypted File\n(.enc" {shape: rectangle}
+tlsVerify: "TLS Verification\n(requests verify=True" {shape: rectangle}
+apiCall: "API Call\n(HTTPS" {shape: rectangle}
+
+script -> envVars
+script -> awsSM
+script -> hashiVault
+envVars -> secret
+awsSM -> secret
+hashiVault -> secret
+secret -> fernet
+fernet -> encFile
+script -> tlsVerify
+tlsVerify -> apiCall
 ```
 
 ## Encrypting Local Files with cryptography

@@ -46,20 +46,27 @@ FlashBlade serves NFS v3/v4.1, SMB 2/3, S3 object, and HDFS natively from a sing
 
 ## Scale-Out Architecture
 
-```mermaid
-graph TB
-  FMM["Fabric Management Module\n(NVMe-oF internal fabric)"]
-  B1["Blade 1"] & B2["Blade 2"] & B3["Blade 3"] & BN["Blade N…"] --> FMM
-  FMM --> ETH["10 / 25 / 100 GbE\nData Ports"]
-  ETH --> NFS(["NFS v3/v4.1 Clients"])
-  ETH --> S3(["S3 / Object Clients"])
-  ETH --> SMB(["SMB Clients"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class FMM,B1,B2,B3,BN ctrl
-  class ETH net
-  class NFS,S3,SMB host
+```d2
+direction: right
+
+B1: "Blade 1" {shape: rectangle}
+B2: "Blade 2" {shape: rectangle}
+B3: "Blade 3" {shape: rectangle}
+BN: "Blade N…" {shape: rectangle}
+FMM: "Fabric Management Module\n(NVMe-oF internal fabric" {shape: rectangle}
+ETH: "10 / 25 / 100 GbE\nData Ports" {shape: rectangle}
+NFS: "NFS v3/v4.1 Clients" {shape: rectangle}
+S3: "S3 / Object Clients" {shape: rectangle}
+SMB: "SMB Clients" {shape: rectangle}
+
+B1 -> B2
+B2 -> B3
+B3 -> BN
+BN -> FMM
+FMM -> ETH
+ETH -> NFS
+ETH -> S3
+ETH -> SMB
 ```
 
 ## HA Topology

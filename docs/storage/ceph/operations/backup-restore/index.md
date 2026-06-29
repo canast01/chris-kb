@@ -11,25 +11,27 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph TD
-    classDef src  fill:#2563eb,color:#fff
-    classDef dest fill:#15803d,color:#fff
-    classDef dr   fill:#b45309,color:#fff
-    classDef cfg  fill:#7c3aed,color:#fff
-    classDef rest fill:#1e3a5f,color:#fff
+```d2
+direction: right
 
-    CLUSTER[Ceph Cluster]:::src
+CLUSTER: "CLUSTER" {shape: rectangle}
+RBD: "RBD Snapshots · VM / block volumes" {shape: rectangle}
+CFS: "CephFS Snapshots · file data" {shape: rectangle}
+RGW: "RGW Bucket Replication · object data cross-cluster" {shape: rectangle}
+CFG: "cephadm config export · cluster configuration" {shape: rectangle}
+RBDR: "Restore: rbd import · or snap rollback" {shape: rectangle}
+CFSR: "Restore: cp from .snap/ · snapshot subtree" {shape: rectangle}
+RGWR: "Restore: sync pull · or re-enable zone" {shape: rectangle}
+CFGR: "Restore: ceph auth import · ceph osd setcrushmap" {shape: rectangle}
 
-    CLUSTER --> RBD[RBD Snapshots<br/>VM / block volumes]:::dest
-    CLUSTER --> CFS[CephFS Snapshots<br/>file data]:::dest
-    CLUSTER --> RGW[RGW Bucket Replication<br/>object data cross-cluster]:::dr
-    CLUSTER --> CFG[cephadm config export<br/>cluster configuration]:::cfg
-
-    RBD --> RBDR[Restore: rbd import<br/>or snap rollback]:::rest
-    CFS --> CFSR[Restore: cp from .snap/<br/>snapshot subtree]:::rest
-    RGW --> RGWR[Restore: sync pull<br/>or re-enable zone]:::rest
-    CFG --> CFGR[Restore: ceph auth import<br/>ceph osd setcrushmap]:::rest
+CLUSTER -> RBD
+CLUSTER -> CFS
+CLUSTER -> RGW
+CLUSTER -> CFG
+RBD -> RBDR
+CFS -> CFSR
+RGW -> RGWR
+CFG -> CFGR
 ```
 
 ```plantuml

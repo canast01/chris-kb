@@ -13,21 +13,6 @@ MySQL initial deployment — installation on RHEL/Ubuntu, post-install hardening
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Install on RHEL / Rocky"]
-    s2["Install on Ubuntu / Debian"]
-    s3["Post-Install Hardening"]
-    s4["Initial Configuration (`/etc/mysql/mysql.c..."]
-    s5["Firewall"]
-    s6["First-Connection Validation"]
-    s7["Create Application User"]
-    s8["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

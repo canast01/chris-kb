@@ -17,26 +17,24 @@ unnecessary data rebuilds while the witness is being restored.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph TD
-    classDef data fill:#1e3a5f,color:#fff
-    classDef witness fill:#7c3aed,color:#fff
-    classDef healthy fill:#15803d,color:#fff
-    classDef degraded fill:#991b1b,color:#fff
-    classDef action fill:#b45309,color:#fff
+```d2
+direction: right
 
-    D1[Data Node A<br/>1× data component per object]:::data
-    D2[Data Node B<br/>1× data component per object]:::data
-    W[Witness Host<br/>witness component per object]:::witness
+D1: "D1" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+W: "W" {shape: rectangle}
+LOST: "Witness partition detected · vSAN health: red" {shape: rectangle}
+RISK: "Risk window: if one data node fails · quorum lost — objects inaccessible" {shape: rectangle}
+ACTION: "Restore witness connectivity · or restart witness VM/host" {shape: rectangle}
+HEAL: "vSAN self-heals on reconnect · o manual rebuild needed" {shape: rectangle}
 
-    D1 -->|vSAN vmkernel| D2
-    D1 -->|witness traffic| W
-    D2 -->|witness traffic| W
-
-    W -->|unreachable| LOST[Witness partition detected<br/>vSAN health: red]:::degraded
-    LOST --> RISK[Risk window: if one data node fails<br/>quorum lost — objects inaccessible]:::degraded
-    LOST --> ACTION[Restore witness connectivity<br/>or restart witness VM/host]:::action
-    ACTION --> HEAL[vSAN self-heals on reconnect<br/>no manual rebuild needed]:::healthy
+D1 -> D2
+D1 -> W
+D2 -> W
+W -> LOST
+LOST -> RISK
+LOST -> ACTION
+ACTION -> HEAL
 ```
 
 ## Symptoms

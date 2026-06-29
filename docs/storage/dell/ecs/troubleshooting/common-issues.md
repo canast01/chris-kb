@@ -7,16 +7,12 @@ search:
 ---
 # Dell ECS — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Incident Triage, Common Symptoms and Resolutions.
 
 *Applies to: ECS 3.x*
 </div>
 ![Dell ECS — Common Issues](../../../../assets/storage-dell-ecs-troubleshooting-common-issues.svg)
-
-
-
 
 ```d2
 direction: down
@@ -40,41 +36,41 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{Node\nunavailable?}
-    S --> B2{Object GET or PUT\nfailing - S3 error?}
-    S --> B3{Bucket policy\nconflict?}
-    S --> B4{Replication\ngeo lag?}
-    S --> B5{Certificate expired\non ECS endpoint?}
+```d2
+direction: right
 
-    B1 -->|Check ECS Portal hardware view| D1{Node in\nDEGRADED state?}
-    D1 -->|Yes| R1[See Incident Triage —\nCheck portal for FAILED or SUSPECT disks]
-    D1 -->|Service down| R2[See Symptoms and Resolutions —\nSSH to node: check storageos service]
+D1: "D1" {shape: rectangle}
+R1: "See Incident Triage —\nCheck portal for FAILED or SUSPECT disks" {shape: rectangle}
+R2: "See Symptoms and Resolutions —\nSSH to node: check storageos service" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Incident Triage —\nCheck IAM user namespace and bucket policy" {shape: rectangle}
+R4: "See Symptoms and Resolutions —\n503: data service process down on nodes" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Symptoms and Resolutions —\nS3 AccessDenied: fix IAM or bucket policy" {shape: rectangle}
+R6: "See Symptoms and Resolutions —\nWORM object deletion blocked by retention" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Incident Triage —\nCheck WAN port 9100 and replication throttle" {shape: rectangle}
+R8: "See Symptoms and Resolutions —\nObject 404: wait for geo-replication" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See Symptoms and Resolutions —\nECS Portal login fails: renew certificate" {shape: rectangle}
+R10: "See Symptoms and Resolutions —\nBucket quota exceeded: increase or expire objects" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Test S3 endpoint with HeadBucket| D2{S3 API\nreturning 403?}
-    D2 -->|AccessDenied| R3[See Incident Triage —\nCheck IAM user namespace and bucket policy]
-    D2 -->|503 Unavailable| R4[See Symptoms and Resolutions —\n503: data service process down on nodes]
-
-    B3 -->|Check bucket policy with ecscli| D3{Policy blocks\ncorrect principal?}
-    D3 -->|Yes - misconfigured| R5[See Symptoms and Resolutions —\nS3 AccessDenied: fix IAM or bucket policy]
-    D3 -->|WORM retention| R6[See Symptoms and Resolutions —\nWORM object deletion blocked by retention]
-
-    B4 -->|Check Geo Monitoring in portal| D4{WAN link\nsaturated?}
-    D4 -->|Yes| R7[See Incident Triage —\nCheck WAN port 9100 and replication throttle]
-    D4 -->|Read-after-write| R8[See Symptoms and Resolutions —\nObject 404: wait for geo-replication]
-
-    B5 -->|Check ECS Portal certificates| D5{Certificate\npast expiry?}
-    D5 -->|Yes| R9[See Symptoms and Resolutions —\nECS Portal login fails: renew certificate]
-    D5 -->|Quota| R10[See Symptoms and Resolutions —\nBucket quota exceeded: increase or expire objects]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---
@@ -93,28 +89,31 @@ graph TD
 
 When S3 writes fail, geo-replication falls behind, or a node goes offline, work through this sequence first.
 
-```mermaid
-graph TD
-  REPORT(["Incident reported"]) --> NODE{Any node\nDEGRADED?}
-  NODE -->|Yes| DISK_CHK["Check Portal → Hardware → Disks\nFAILED or SUSPECT disks?"]
-  DISK_CHK --> DISK_REPL["Initiate disk replacement\nMonitor rebuild"]
-  NODE -->|No| S3TEST{"S3 API\nresponding?"}
-  S3TEST -->|No| SVC["SSH to node\nsystemctl status storageos\nReview /var/log/ecs/"]
-  S3TEST -->|Yes| AUTH_ERR{S3\nAccessDenied?}
-  AUTH_ERR -->|Yes| IAM["Check: IAM user namespace\nBucket policy · addressing style\necscli bucket get --namespace ..."]
-  AUTH_ERR -->|No| GEOREP{Geo-rep lag\ngrowing?}
-  GEOREP -->|Yes| WAN["Check WAN link :9100\nRemote VDC health\nReplication throttle"]
-  GEOREP -->|No| CAP{Quota\nexceeded?}
-  CAP -->|Yes| QUOTA["Increase quota in portal\nor expire old objects"]
-  CAP -->|No| BUNDLE["Collect support bundle\nOpen Dell case"]
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class NODE,S3TEST,AUTH_ERR,GEOREP,CAP decision
-  class DISK_CHK,DISK_REPL,SVC,IAM,WAN,QUOTA,BUNDLE action
-  class START term
-  class REPORT term
+```d2
+direction: right
+
+NODE: "NODE" {shape: rectangle}
+DISK_CHK: "Check Portal → Hardware → Disks\nFAILED or SUSPECT disks?" {shape: rectangle}
+DISK_REPL: "Initiate disk replacement\nMonitor rebuild" {shape: rectangle}
+S3TEST: "S3 API\nresponding?" {shape: rectangle}
+SVC: "SSH to node\nsystemctl status storageos\nReview /var/log/ecs/" {shape: rectangle}
+AUTH_ERR: "AUTH_ERR" {shape: rectangle}
+IAM: "Check: IAM user namespace\nBucket policy · addressing style\necscli bucket get --namespace ..." {shape: rectangle}
+GEOREP: "GEOREP" {shape: rectangle}
+WAN: "Check WAN link :9100\nRemote VDC health\nReplication throttle" {shape: rectangle}
+CAP: "CAP" {shape: rectangle}
+QUOTA: "Increase quota in portal\nor expire old objects" {shape: rectangle}
+BUNDLE: "Collect support bundle\nOpen Dell case" {shape: rectangle}
+REPORT: "Incident reported" {shape: rectangle}
+
+NODE -> DISK_CHK
+DISK_CHK -> DISK_REPL
+NODE -> S3TEST
+S3TEST -> SVC
+AUTH_ERR -> IAM
+GEOREP -> WAN
+CAP -> QUOTA
+CAP -> BUNDLE
 ```
 
 - [ ] Check ECS Portal → Hardware → Nodes immediately — identify any node that has moved to `DEGRADED` or offline state; note when the state change occurred

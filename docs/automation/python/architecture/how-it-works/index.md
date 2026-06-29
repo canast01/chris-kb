@@ -15,21 +15,32 @@ Python is the dominant language for infrastructure automation, data pipelines, a
 
 ## Architecture Model
 
-```mermaid
-flowchart TD
-    A([Script / Service entrypoint]) --> B[Virtual Environment\nvenv / poetry / pipenv]
-    B --> C[Application Code]
-    C --> D[Standard Library\nos, pathlib, subprocess, logging]
-    C --> E[Third-Party Libraries\nrequests, boto3, paramiko, pydantic]
-    C --> F[Internal Packages\nshared utilities, config loaders]
-    D & E & F --> G{Execution Target}
-    G --> H[Cloud APIs\nAWS / Azure / GCP]
-    G --> I[Infrastructure APIs\nvSphere / NetBox / Vault]
-    G --> J[Databases\nPostgreSQL / SQLite / Redis]
-    G --> K[File Systems & OS\nlocal / NFS / S3]
-    G --> L[Remote Hosts\nSSH via paramiko / fabric]
-    style B fill:#1565c0,color:#fff
-    style C fill:#2e7d32,color:#fff
+```d2
+direction: right
+
+A: "Script / Service entrypoint" {shape: rectangle}
+B: "Virtual Environment\nvenv / poetry / pipenv" {shape: rectangle}
+C: "Application Code" {shape: rectangle}
+D: "Standard Library\nos, pathlib, subprocess, logging" {shape: rectangle}
+E: "Third-Party Libraries\nrequests, boto3, paramiko, pydantic" {shape: rectangle}
+F: "Internal Packages\nshared utilities, config loaders" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Cloud APIs\nAWS / Azure / GCP" {shape: rectangle}
+I: "Infrastructure APIs\nvSphere / NetBox / Vault" {shape: rectangle}
+J: "Databases\nPostgreSQL / SQLite / Redis" {shape: rectangle}
+L: "Remote Hosts\nSSH via paramiko / fabric" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+C -> F
+D -> E
+E -> F
+G -> H
+G -> I
+G -> J
+G -> L
 ```
 
 ---

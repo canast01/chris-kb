@@ -40,31 +40,39 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A{Certificate discovery\nnot finding endpoints?}
-    S --> B{Policy violation\nblocking issuance?}
-    S --> C{CA connection\nerror?}
-    S --> D{Workflow approval\nstuck?}
-    S --> E{TPP service\ncrash?}
-    A -->|Yes| A1[Check Edge Proxy registration\nVerify scan range and port list\nCheck firewall from Edge to targets]
-    A1 --> A2[Known Issues]
-    B -->|Yes| B1[Review policy folder in TPP\nIdentify violated rule: CN · SAN · key size\nAdjust CSR or update policy]
-    B1 --> B2[Known Issues]
-    C -->|Yes| C1{CA type: ADCS\nor external?}
-    C1 -->|ADCS| C2[Verify DCOM/RPC to CA\nCheck CA template permissions\nReview VdcLogFile for error]
-    C1 -->|External| C3[Check CA API endpoint reachable\nVerify credential / API key\nCheck TPP CA connector config]
-    C3 --> C4[Known Issues]
-    D -->|Yes| D1[Check workflow approver mailbox\nVerify workflow policy config\nManually advance or escalate]
-    D1 --> D2[Known Issues]
-    E -->|Yes| E1[Verify IIS app pool running\nCheck SQL connectivity\nReview VdcLogFile for exception]
-    E1 --> E2[Known Issues]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A2,B2,C4,D2,E2 section
-    class A,B,C,C1,D,E decision
-    class S start
+```d2
+direction: right
+
+A: "A" {shape: rectangle}
+A1: "Check Edge Proxy registration\nVerify scan range and port list\nCheck firewall from Edge to targets" {shape: rectangle}
+A2: "Known Issues" {shape: rectangle}
+B: "B" {shape: rectangle}
+B1: "Review policy folder in TPP\nIdentify violated rule: CN · SAN · key size\nAdjust CSR or update policy" {shape: rectangle}
+B2: "Known Issues" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "Verify DCOM/RPC to CA\nCheck CA template permissions\nReview VdcLogFile for error" {shape: rectangle}
+C3: "Check CA API endpoint reachable\nVerify credential / API key\nCheck TPP CA connector config" {shape: rectangle}
+C4: "Known Issues" {shape: rectangle}
+D: "D" {shape: rectangle}
+D1: "Check workflow approver mailbox\nVerify workflow policy config\nManually advance or escalate" {shape: rectangle}
+D2: "Known Issues" {shape: rectangle}
+E: "E" {shape: rectangle}
+E1: "Verify IIS app pool running\nCheck SQL connectivity\nReview VdcLogFile for exception" {shape: rectangle}
+E2: "Known Issues" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+C: "C" {shape: rectangle}
+
+A -> A1
+A1 -> A2
+B -> B1
+B1 -> B2
+C1 -> C2
+C1 -> C3
+C3 -> C4
+D -> D1
+D1 -> D2
+E -> E1
+E1 -> E2
 ```
 
 ---

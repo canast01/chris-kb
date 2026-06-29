@@ -25,18 +25,25 @@ Standards reference covering Sizing Considerations, MTree Naming Convention, DD 
 
 ## MTree Naming Convention
 
-```mermaid
-graph TD
-    dd["Data Domain\nFilesystem Root\n/data/col1/"]
+```d2
+direction: right
 
-    dd --> veeamProd["mtree-veeam-prod\n(quota: 10 TiB hard)"]
-    dd --> veeamDev["mtree-veeam-dev\n(quota: 2 TiB hard)"]
-    dd --> nbOracle["mtree-netbackup-ora\n(quota: 5 TiB hard)"]
-    dd --> cvSQL["mtree-commvault-sql\n(quota: 8 TiB hard)"]
+dd: "Data Domain\nFilesystem Root\n/data/col1/" {shape: rectangle}
+veeamProd: "mtree-veeam-prod\n(quota: 10 TiB hard" {shape: rectangle}
+veeamDev: "mtree-veeam-dev\n(quota: 2 TiB hard" {shape: rectangle}
+nbOracle: "mtree-netbackup-ora\n(quota: 5 TiB hard" {shape: rectangle}
+cvSQL: "mtree-commvault-sql\n(quota: 8 TiB hard" {shape: rectangle}
+suVeeam: "Storage Unit: su-veeam-prod\nUser: ddboost-veeam" {shape: rectangle}
+suNB: "Storage Unit: su-netbackup-ora\nUser: ddboost-netbackup" {shape: rectangle}
+suCV: "Storage Unit: su-commvault-sql\nUser: ddboost-commvault" {shape: rectangle}
 
-    veeamProd -->|"DD Boost SU"| suVeeam["Storage Unit: su-veeam-prod\nUser: ddboost-veeam"]
-    nbOracle -->|"DD Boost SU"| suNB["Storage Unit: su-netbackup-ora\nUser: ddboost-netbackup"]
-    cvSQL -->|"DD Boost SU"| suCV["Storage Unit: su-commvault-sql\nUser: ddboost-commvault"]
+dd -> veeamProd
+dd -> veeamDev
+dd -> nbOracle
+dd -> cvSQL
+veeamProd -> suVeeam
+nbOracle -> suNB
+cvSQL -> suCV
 ```
 
 Each storage unit maps to exactly one MTree. Create the MTree first, then create the storage unit pointing at it.

@@ -15,26 +15,28 @@ is frequently misread as a CPU bottleneck.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph TD
-    classDef pressure fill:#991b1b,color:#fff
-    classDef symptom fill:#7c3aed,color:#fff
-    classDef action fill:#b45309,color:#fff
-    classDef ok fill:#15803d,color:#fff
-    classDef check fill:#1e3a5f,color:#fff
+```d2
+direction: right
 
-    PRESS[Host memory overcommitted<br/>Active memory > physical RAM]:::pressure
-    PRESS --> BALLOON[VMkernel inflates balloon driver<br/>inside guest OS]:::symptom
-    BALLOON -->|guest frees pages| BRELIEF[Memory returned to host pool<br/>moderate performance impact]:::check
-    BALLOON -->|guest cannot free enough| SWAP[Host swaps VM pages to .vswp file<br/>severe performance impact]:::pressure
+PRESS: "PRESS" {shape: rectangle}
+BALLOON: "VMkernel inflates balloon driver · inside guest OS" {shape: rectangle}
+BRELIEF: "Memory returned to host pool · moderate performance impact" {shape: rectangle}
+SWAP: "Host swaps VM pages to .vswp file · severe performance impact" {shape: rectangle}
+PRESS2: "PRESS2" {shape: rectangle}
+READY: "VMs queue in CPU ready state · %RDY rises > 5% per vCPU" {shape: rectangle}
+ACTION: "Identify top balloon/swap VMs · esxtop → m view → MCTLSZ / SWPRD" {shape: rectangle}
+ACTION2: "Identify top CPU ready VMs · esxtop → v view → %RDY column" {shape: rectangle}
+RESOLVE: "vMotion to less-loaded host · or reduce vRAM allocation" {shape: rectangle}
+RESOLVE2: "Reduce vCPU count · or migrate VM" {shape: rectangle}
 
-    PRESS2[Host CPU overcommitted<br/>more vCPUs scheduled than pCPUs]:::pressure
-    PRESS2 --> READY[VMs queue in CPU ready state<br/>%RDY rises > 5% per vCPU]:::symptom
-
-    SWAP --> ACTION[Identify top balloon/swap VMs<br/>esxtop → m view → MCTLSZ / SWPRD]:::action
-    READY --> ACTION2[Identify top CPU ready VMs<br/>esxtop → v view → %RDY column]:::action
-    ACTION --> RESOLVE[vMotion to less-loaded host<br/>or reduce vRAM allocation]:::ok
-    ACTION2 --> RESOLVE2[Reduce vCPU count<br/>or migrate VM]:::ok
+PRESS -> BALLOON
+BALLOON -> BRELIEF
+BALLOON -> SWAP
+PRESS2 -> READY
+SWAP -> ACTION
+READY -> ACTION2
+ACTION -> RESOLVE
+ACTION2 -> RESOLVE2
 ```
 
 ```vegalite

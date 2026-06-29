@@ -15,37 +15,41 @@ Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ing
 </div>
 ![Aria Operations for Logs — Diagnostics](../../../../assets/virtualization-vmware-aria-operations-for-logs-troubleshooti.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "Check liagentd on agent host\nsystemctl status liagentd" {shape: rectangle}
+D: "tail -f /var/log/loginsight/runtime.log\nLook for Java exceptions" {shape: rectangle}
+E: "nodetool compactionstats\nCheck Cassandra compaction" {shape: rectangle}
+F: "Check /var/log/loginsight/alerts.log\nCheck notification config" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "systemctl start liagentd\nCheck liagent.log for error" {shape: rectangle}
+I: "nc -zv vRLI-IP 9543\nTest port reachability" {shape: rectangle}
+J: "GET /api/v1/cluster/nodes\nCheck cluster node state" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "Wait for completion\n15-30 min; monitor nodetool" {shape: rectangle}
+M: "nodetool info | grep Heap\nHeap > 90% = problem" {shape: rectangle}
+N: "Check ingestion.log\nfor parse failures or drops" {shape: rectangle}
+O: "Collect VAMI support bundle\nUpload to VMware SR" {shape: rectangle}
+A: "vRLI Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([vRLI Issue]) --> B{What type of problem?}
-    B -->|No data / low EPS| C[Check liagentd on agent host\nsystemctl status liagentd]
-    B -->|UI or API error| D[tail -f /var/log/loginsight/runtime.log\nLook for Java exceptions]
-    B -->|Slow queries| E[nodetool compactionstats\nCheck Cassandra compaction]
-    B -->|Alert not firing| F[Check /var/log/loginsight/alerts.log\nCheck notification config]
-    C --> G{Agent running?}
-    G -->|No| H[systemctl start liagentd\nCheck liagent.log for error]
-    G -->|Yes| I[nc -zv vRLI-IP 9543\nTest port reachability]
-    D --> J[GET /api/v1/cluster/nodes\nCheck cluster node state]
-    E --> K{Compaction active?}
-    K -->|Yes| L[Wait for completion\n15-30 min; monitor nodetool]
-    K -->|No| M[nodetool info | grep Heap\nHeap > 90% = problem]
-    I --> N[Check ingestion.log\nfor parse failures or drops]
-    J --> N
-    F --> N
-    H --> N
-    L --> N
-    M --> N
-    N --> O[Collect VAMI support bundle\nUpload to VMware SR]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,G,K dark
-    class C,D,E,F,H,I,J,L,M,N action
-    class O escalate
+B -> C
+B -> D
+B -> E
+B -> F
+G -> H
+G -> I
+D -> J
+K -> L
+K -> M
+I -> N
+J -> N
+F -> N
+H -> N
+L -> N
+M -> N
+N -> O
 ```
 
 ```d2

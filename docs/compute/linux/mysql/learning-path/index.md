@@ -11,11 +11,19 @@ Recommended reading order for MySQL on Linux. Follow these stages in order to bu
 *Applies to: MySQL 8.x · MariaDB 10.x*
 </div>
 
-```mermaid
-graph LR
-  S1[Architecture] --> S2[Deploy] --> S3[Operations] --> S4[Security] --> S5[Troubleshoot]
-  classDef stage fill:#1e3a5f,stroke:#2563eb,color:#fff
-  class S1,S2,S3,S4,S5 stage
+```d2
+direction: right
+
+S1: "Architecture" {shape: rectangle}
+S2: "Deploy" {shape: rectangle}
+S3: "Operations" {shape: rectangle}
+S4: "Security" {shape: rectangle}
+S5: "Troubleshoot" {shape: rectangle}
+
+S1 -> S2
+S2 -> S3
+S3 -> S4
+S4 -> S5
 ```
 | Stage | Focus | Time investment |
 |-------|-------|----------------|

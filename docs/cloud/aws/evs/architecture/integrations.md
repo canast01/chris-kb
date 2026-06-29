@@ -12,28 +12,25 @@ EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS 
 </div>
 ![Amazon EVS — Integrations](../../../../assets/cloud-aws-evs-architecture-integrations.svg)
 
-```mermaid
-graph LR
-    classDef onprem fill:#1e3a5f,color:#fff
-    classDef aws fill:#b45309,color:#fff
-    classDef evs fill:#15803d,color:#fff
-    classDef spoke fill:#7c3aed,color:#fff
+```d2
+direction: right
 
-    ONPREM["On-Premises DC\n(vSphere + HCX Manager)"]:::onprem
-    DX["Direct Connect\n(Private or Transit VIF)"]:::aws
-    TGW["Transit Gateway\n(Hub-and-Spoke)"]:::aws
-    EVSVPC["EVS VPC\n(Cluster + VCF Stack)"]:::evs
-    SPOKEVPC["Spoke VPCs\n(Workload / Shared Svc)"]:::spoke
-    S3["S3 Endpoint\n(Backup / Cold Data)"]:::aws
-    R53["Route 53\n(Private Hosted Zone)"]:::aws
-    CW["CloudWatch\n(Metrics + Alarms)"]:::aws
+ONPREM: "ONPREM" {shape: rectangle}
+DX: "DX" {shape: rectangle}
+TGW: "TGW" {shape: rectangle}
+EVSVPC: "EVSVPC" {shape: rectangle}
+SPOKEVPC: "SPOKEVPC" {shape: rectangle}
+S3: "S3" {shape: rectangle}
+R53: "R53" {shape: rectangle}
+CW: "CW" {shape: rectangle}
 
-    ONPREM --> DX --> TGW
-    TGW --> EVSVPC
-    TGW --> SPOKEVPC
-    EVSVPC --> S3
-    EVSVPC --> R53
-    EVSVPC --> CW
+ONPREM -> DX
+DX -> TGW
+TGW -> EVSVPC
+TGW -> SPOKEVPC
+EVSVPC -> S3
+EVSVPC -> R53
+EVSVPC -> CW
 ```
 
 ## HCX (VMware Hybrid Cloud Extension)

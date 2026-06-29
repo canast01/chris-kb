@@ -10,20 +10,21 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph LR
-    S["scripts/"]:::root --> CH["cluster-health-check.sh<br/>CO / nodes / etcd /<br/>CoreDNS / ingress"]:::health
-    S --> AC["auto-approve-csrs.sh<br/>poll + approve<br/>every 30s"]:::csr
-    S --> EB["etcd-backup.sh<br/>SSH to master<br/>copy tarball local"]:::backup
-    S --> ND["node-drain.sh<br/>pre-check +<br/>cordon + drain"]:::node
-    S --> PR["pod-restart-detector.sh<br/>find crash-looping<br/>pods by threshold"]:::pod
+```d2
+direction: right
 
-    classDef root fill:#1e3a5f,color:#fff
-    classDef health fill:#2563eb,color:#fff
-    classDef csr fill:#15803d,color:#fff
-    classDef backup fill:#7c3aed,color:#fff
-    classDef node fill:#b45309,color:#fff
-    classDef pod fill:#164e63,color:#fff
+S: "scripts/" {shape: rectangle}
+CH: "cluster-health-check.sh · CO / nodes / etcd / · CoreDNS / ingress" {shape: rectangle}
+AC: "auto-approve-csrs.sh · poll + approve · every 30s" {shape: rectangle}
+EB: "etcd-backup.sh · SSH to master · copy tarball local" {shape: rectangle}
+ND: "node-drain.sh · pre-check + · cordon + drain" {shape: rectangle}
+PR: "pod-restart-detector.sh · find crash-looping · pods by threshold" {shape: rectangle}
+
+S -> CH
+S -> AC
+S -> EB
+S -> ND
+S -> PR
 ```
 
 ## Before you begin

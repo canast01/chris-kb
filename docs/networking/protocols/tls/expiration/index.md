@@ -84,15 +84,25 @@ check_ssl_cert -H <hostname> -p 443 -w 30 -c 7
 
 ## Renewal Workflow
 
-```mermaid
-flowchart LR
-    A[Alert: < 30 days] --> B[Generate new CSR]
-    B --> C[Submit to CA\nor Venafi auto-enrol]
-    C --> D[Receive new cert]
-    D --> E[Test in staging]
-    E --> F[Deploy to production\nnginx/Apache/HAProxy reload]
-    F --> G[Verify new expiry]
-    G --> H[Remove old cert]
+```d2
+direction: right
+
+A: "Alert: < 30 days" {shape: rectangle}
+B: "Generate new CSR" {shape: rectangle}
+C: "Submit to CA\nor Venafi auto-enrol" {shape: rectangle}
+D: "Receive new cert" {shape: rectangle}
+E: "Test in staging" {shape: rectangle}
+F: "Deploy to production\nnginx/Apache/HAProxy reload" {shape: rectangle}
+G: "Verify new expiry" {shape: rectangle}
+H: "Remove old cert" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+E -> F
+F -> G
+G -> H
 ```
 
 ### Venafi Automated Renewal

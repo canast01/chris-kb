@@ -7,16 +7,12 @@ search:
 ---
 # Active Directory — Common Issues
 
-
 <div class="kb-summary">
 AD failures typically trace back to replication, DNS, time sync, or Kerberos. This page covers the most common failure categories with diagnostic commands.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
 ![Active Directory — Common Issues](../../../../assets/compute-windows-server-active-directory-troubleshooting-comm.svg)
-
-
-
 
 ```d2
 direction: down
@@ -46,25 +42,28 @@ kerberos_failures -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> D1{DC replication\nfailing / USN rollback?}
-    S --> D2{User cannot\nlog in / Kerberos error?}
-    S --> D3{SYSVOL not\nsyncing?}
-    S --> D4{DNS resolution\nfailing?}
-    S --> D5{Domain join\nfailing?}
-    D1 --> R1[Replication Errors]
-    D2 --> R2[Kerberos Failures]
-    D3 --> R3[Time Sync Issues]
-    D4 --> R4[Dcdiag Tests]
-    D5 --> R5[Event Log References]
-    R1 --> R6[Common Replication Error Codes]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class D1,D2,D3,D4,D5 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "Replication Errors" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R2: "Kerberos Failures" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R3: "Time Sync Issues" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R4: "Dcdiag Tests" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R5: "Event Log References" {shape: rectangle}
+R6: "Common Replication Error Codes" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+
+D1 -> R1
+D2 -> R2
+D3 -> R3
+D4 -> R4
+D5 -> R5
+R1 -> R6
 ```
 
 ---
@@ -81,25 +80,36 @@ graph TD
 
 ## AD Failure Triage Flowchart
 
-```mermaid
-flowchart TD
-    symptom["AD / authentication failure reported"]
-    symptom --> dnsCheck{"DNS resolving\nDC names correctly?"}
-    dnsCheck -->|"no"| fixDNS["Fix DNS:\nnltest /dsregdns\nipconfig /flushdns\ndcdiag /test:dns"]
-    dnsCheck -->|"yes"| timeCheck{"Time skew > 5 min\nbetween client and DC?"}
-    timeCheck -->|"yes"| fixTime["Fix time:\nw32tm /resync /force\nCheck PDC Emulator NTP source"]
-    timeCheck -->|"no"| kerbCheck{"Kerberos errors\n4768 / 4769 / 4771?"}
-    kerbCheck -->|"yes"| kerbTriage["Check SPNs: setspn -X -F\nPurge tickets: klist purge\nVerify Kerberos enc policy"]
-    kerbCheck -->|"no"| replCheck{"Replication errors\nin dcdiag / repadmin?"}
-    replCheck -->|"yes"| replTriage["repadmin /showrepl\nrepadmin /replsummary\nSee replication error codes"]
-    replCheck -->|"no"| servicesCheck["Check DC services:\nNTDS / Netlogon / DNS / W32Time"]
-    fixDNS --> validate["Validate — retest authentication"]
-    fixTime --> validate
-    kerbTriage --> validate
-    replTriage --> validate
-    servicesCheck --> validate
-```
+```d2
+direction: right
 
+symptom: "AD / authentication failure reported" {shape: rectangle}
+dnsCheck: "DNS resolving\nDC names correctly?" {shape: rectangle}
+fixDNS: "Fix DNS:\nnltest /dsregdns\nipconfig /flushdns\ndcdiag /test:dns" {shape: rectangle}
+timeCheck: "Time skew > 5 min\nbetween client and DC?" {shape: rectangle}
+fixTime: "Fix time:\nw32tm /resync /force\nCheck PDC Emulator NTP source" {shape: rectangle}
+kerbCheck: "Kerberos errors\n4768 / 4769 / 4771?" {shape: rectangle}
+kerbTriage: "Check SPNs: setspn -X -F\nPurge tickets: klist purge\nVerify Kerberos enc policy" {shape: rectangle}
+replCheck: "Replication errors\nin dcdiag / repadmin?" {shape: rectangle}
+replTriage: "repadmin /showrepl\nrepadmin /replsummary\nSee replication error codes" {shape: rectangle}
+servicesCheck: "Check DC services:\nNTDS / Netlogon / DNS / W32Time" {shape: rectangle}
+validate: "Validate — retest authentication" {shape: rectangle}
+
+symptom -> dnsCheck
+dnsCheck -> fixDNS
+dnsCheck -> timeCheck
+timeCheck -> fixTime
+timeCheck -> kerbCheck
+kerbCheck -> kerbTriage
+kerbCheck -> replCheck
+replCheck -> replTriage
+replCheck -> servicesCheck
+fixDNS -> validate
+fixTime -> validate
+kerbTriage -> validate
+replTriage -> validate
+servicesCheck -> validate
+```
 
 ## Replication Errors
 

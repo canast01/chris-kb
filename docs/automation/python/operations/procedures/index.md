@@ -80,23 +80,24 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 
 ## Python Logging Pipeline
 
-```mermaid
-graph TD
-    script["Python Script"]
-    logger["logging.Logger\n(getLogger)"]
-    fileHandler["TimedRotatingFileHandler\n(/var/log/automation/job.log)"]
-    streamHandler["StreamHandler\n(stdout / console)"]
-    syslogHandler["SysLogHandler\n(syslog / journald)"]
-    logFile["Log File\n(rotated daily, 30 days)"]
-    siem["SIEM / Monitoring\n(log shipper / alert rule)"]
+```d2
+direction: right
 
-    script --> logger
-    logger --> fileHandler
-    logger --> streamHandler
-    logger --> syslogHandler
-    fileHandler --> logFile
-    logFile --> siem
-    syslogHandler --> siem
+script: "Python Script" {shape: rectangle}
+logger: "logging.Logger\n(getLogger" {shape: rectangle}
+fileHandler: "TimedRotatingFileHandler\n(/var/log/automation/job.log" {shape: rectangle}
+streamHandler: "StreamHandler\n(stdout / console" {shape: rectangle}
+syslogHandler: "SysLogHandler\n(syslog / journald" {shape: rectangle}
+logFile: "Log File\n(rotated daily, 30 days" {shape: rectangle}
+siem: "SIEM / Monitoring\n(log shipper / alert rule" {shape: rectangle}
+
+script -> logger
+logger -> fileHandler
+logger -> streamHandler
+logger -> syslogHandler
+fileHandler -> logFile
+logFile -> siem
+syslogHandler -> siem
 ```
 
 ```python

@@ -33,28 +33,29 @@ dependency_and_provider_security -> hardening_checklist: hardens
 
 ## Security Scanning Pipeline
 
-```mermaid
-graph LR
-    prOpen["Pull Request\nopened"]
-    tfFmt["terraform fmt -check\n(formatting)"]
-    tfValidate["terraform validate\n(syntax)"]
-    tfsec["tfsec .\n(misconfig scan)"]
-    checkov["checkov -d .\n(policy-as-code)"]
-    tfPlan["terraform plan\n-out=tfplan"]
-    sentinel["Sentinel / OPA\npolicy evaluation"]
-    reviewGate["Human Review\n(plan output in PR)"]
-    tfApply["terraform apply\n(main branch only)"]
+```d2
+direction: right
 
-    prOpen --> tfFmt
-    tfFmt --> tfValidate
-    tfValidate --> tfsec
-    tfsec --> checkov
-    checkov --> tfPlan
-    tfPlan --> sentinel
-    sentinel -->|Pass| reviewGate
-    sentinel -->|Fail| prOpen
-    reviewGate -->|Approved| tfApply
-    reviewGate -->|Changes| prOpen
+prOpen: "Pull Request\nopened" {shape: rectangle}
+tfFmt: "terraform fmt -check\n(formatting" {shape: rectangle}
+tfValidate: "terraform validate\n(syntax" {shape: rectangle}
+tfsec: "tfsec .\n(misconfig scan" {shape: rectangle}
+checkov: "checkov -d .\n(policy-as-code" {shape: rectangle}
+tfPlan: "terraform plan\n-out=tfplan" {shape: rectangle}
+sentinel: "Sentinel / OPA\npolicy evaluation" {shape: rectangle}
+reviewGate: "Human Review\n(plan output in PR" {shape: rectangle}
+tfApply: "terraform apply\n(main branch only" {shape: rectangle}
+
+prOpen -> tfFmt
+tfFmt -> tfValidate
+tfValidate -> tfsec
+tfsec -> checkov
+checkov -> tfPlan
+tfPlan -> sentinel
+sentinel -> reviewGate
+sentinel -> prOpen
+reviewGate -> tfApply
+reviewGate -> prOpen
 ```
 
 ## Dependency and Provider Security

@@ -14,42 +14,50 @@ FlashBlade diagnostic commands: check array health and active alerts with purefb
 </div>
 ![FlashBlade — Diagnostics](../../../../assets/storage-pure-flashblade-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "purefb alert list\npurefb blade list" {shape: rectangle}
+D: "purefb network interface list\nCheck VIP state" {shape: rectangle}
+E: "purefb array list\npurefb fs list --performance" {shape: rectangle}
+F: "purefb replication list\npurefb replication arrayconnection list" {shape: rectangle}
+G: "purefb array --performance\npurefb fs list --performance" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Open Pure SR immediately\nDo not attempt hardware repair" {shape: rectangle}
+J: "purefb hardware list\nCheck component state" {shape: rectangle}
+K: "Check VIP addresses\nTest NFS mount from client" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "purefb network subnet list\nCheck switch port and VLAN" {shape: rectangle}
+N: "Check NFS export policy\npurefb policy list" {shape: rectangle}
+O: "Check used vs provisioned\nCheck thin provisioning ratio" {shape: rectangle}
+P: "Check link latency and throughput\npurefb replication arrayconnection list -verbose" {shape: rectangle}
+Q: "Rank filesystems by throughput\npurefb fs list --performance sort by write_bytes_per_sec" {shape: rectangle}
+R: "Collect diagnostic bundle\npurefb support diag" {shape: rectangle}
+S: "Open Pure Support case\nsupport.purestorage.com" {shape: rectangle}
+A: "FlashBlade Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([FlashBlade Issue]) --> B{What type of problem?}
-    B -->|Alert or hardware fault| C[purefb alert list\npurefb blade list]
-    B -->|NFS or S3 data not accessible| D[purefb network interface list\nCheck VIP state]
-    B -->|Capacity issue / full| E[purefb array list\npurefb fs list --performance]
-    B -->|Replication lag or error| F[purefb replication list\npurefb replication arrayconnection list]
-    B -->|Performance degraded| G[purefb array --performance\npurefb fs list --performance]
-    C --> H{Alert severity?}
-    H -->|Hardware / blade fault| I[Open Pure SR immediately\nDo not attempt hardware repair]
-    H -->|Connectivity or software| J[purefb hardware list\nCheck component state]
-    D --> K[Check VIP addresses\nTest NFS mount from client]
-    K --> L{VIP reachable?}
-    L -->|No| M[purefb network subnet list\nCheck switch port and VLAN]
-    L -->|Yes, still failing| N[Check NFS export policy\npurefb policy list]
-    E --> O[Check used vs provisioned\nCheck thin provisioning ratio]
-    F --> P[Check link latency and throughput\npurefb replication arrayconnection list -verbose]
-    G --> Q[Rank filesystems by throughput\npurefb fs list --performance sort by write_bytes_per_sec]
-    I --> R[Collect diagnostic bundle\npurefb support diag]
-    J --> R
-    M --> R
-    N --> R
-    O --> R
-    P --> R
-    Q --> R
-    R --> S[Open Pure Support case\nsupport.purestorage.com]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H,L dark
-    class C,D,E,F,G,I,J,K,M,N,O,P,Q action
-    class R,S escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+H -> I
+H -> J
+D -> K
+L -> M
+L -> N
+E -> O
+F -> P
+G -> Q
+I -> R
+J -> R
+M -> R
+N -> R
+O -> R
+P -> R
+Q -> R
+R -> S
 ```
 
 ```d2

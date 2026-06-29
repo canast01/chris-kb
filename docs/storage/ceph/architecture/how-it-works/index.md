@@ -11,28 +11,24 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 *Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
 
-```mermaid
-graph TD
-    classDef client fill:#2563eb,color:#fff
-    classDef compute fill:#15803d,color:#fff
-    classDef osd fill:#b45309,color:#fff
-    classDef ack fill:#7c3aed,color:#fff
+```d2
+direction: right
 
-    C[Client / librados]:::client
-    CR[CRUSH Calculation\npool + object name → PG ID]:::compute
-    PG[PG ID → OSD set\nvia CRUSH rule]:::compute
-    PRI[Primary OSD\naccepts write, journals to WAL]:::osd
-    SEC1[Secondary OSD 1\nreplica write]:::osd
-    SEC2[Secondary OSD 2\nreplica write]:::osd
-    ACK[ACK to client\nwhen all replicas confirm]:::ack
+C: "C" {shape: rectangle}
+CR: "CR" {shape: rectangle}
+PG: "PG" {shape: rectangle}
+PRI: "PRI" {shape: rectangle}
+SEC1: "SEC1" {shape: rectangle}
+SEC2: "SEC2" {shape: rectangle}
+ACK: "ACK" {shape: rectangle}
 
-    C --> CR
-    CR --> PG
-    PG --> PRI
-    PRI --> SEC1
-    PRI --> SEC2
-    SEC1 --> ACK
-    SEC2 --> ACK
+C -> CR
+CR -> PG
+PG -> PRI
+PRI -> SEC1
+PRI -> SEC2
+SEC1 -> ACK
+SEC2 -> ACK
 ```
 
 ## Daemon Roles
@@ -50,18 +46,15 @@ graph TD
 
 BlueStore is the default OSD backend since Ceph Nautilus. It writes directly to raw block devices — no filesystem layer.
 
-```mermaid
-graph LR
-    classDef wal fill:#1e3a5f,color:#fff
-    classDef db fill:#15803d,color:#fff
-    classDef data fill:#78350f,color:#fff
+```d2
+direction: right
 
-    WAL[WAL / SSD\nWrite-ahead log\nsmall sequential writes\n~1 GB recommended]:::wal
-    DB[RocksDB / SSD\nObject metadata\nOMAP keys, PG state\n~4 GB per TB OSD]:::db
-    DATA[Object Data / HDD or SSD\nActual object contents\nbulk capacity]:::data
+WAL: "WAL" {shape: rectangle}
+DB: "DB" {shape: rectangle}
+DATA: "DATA" {shape: rectangle}
 
-    WAL --> DB
-    DB --> DATA
+WAL -> DB
+DB -> DATA
 ```
 
 | Component | Device | Size | Purpose |

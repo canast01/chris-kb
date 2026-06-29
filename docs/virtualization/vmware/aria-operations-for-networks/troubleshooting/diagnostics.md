@@ -15,47 +15,57 @@ Aria Operations for Networks (vRNI) diagnostic commands: check platform API heal
 </div>
 ![Aria Operations for Networks — Diagnostics](../../../../assets/virtualization-vmware-aria-operations-for-networks-troublesh.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "curl /api/ni/health\nCheck component health JSON" {shape: rectangle}
+D: "Get data source status via API\nCheck last-sync timestamp" {shape: rectangle}
+E: "tcpdump -i eth0 udp port 2055\nVerify NetFlow arriving at collector" {shape: rectangle}
+F: "SSH collector VM\nsystemctl status collector" {shape: rectangle}
+G: "openssl s_client -connect vrni:443\nCheck cert expiry and CA" {shape: rectangle}
+H: "df -h /data /var/log\nCheck data partition on platform VM" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "SSH platform VM\ntail /var/log/app.log" {shape: rectangle}
+K: "REST: GET /api/ni/data-sources/vcenters\nRead connection_status field" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Test vCenter API from collector\ncurl -sk vcenter-ip/rest/cis/session" {shape: rectangle}
+N: "Check sync interval\nvRNI UI → Sources → Sync Now" {shape: rectangle}
+O: "O" {shape: rectangle}
+P: "Check switch NetFlow config\nVerify collector IP as export destination" {shape: rectangle}
+Q: "Check vRNI data source for collector IP match\nCheck proxy.log drop rate" {shape: rectangle}
+R: "Check collector log\ntail /var/log/proxy.log" {shape: rectangle}
+S: "Replace certificate via vRNI UI\nSettings → SSL Certificates" {shape: rectangle}
+T: "Remove old config backups\nls /data/backup/ then rm old dates" {shape: rectangle}
+U: "Collect support bundle\nSSH: support-bundle generate" {shape: rectangle}
+V: "Open VMware SR\nAttach bundle to GSS case" {shape: rectangle}
+A: "vRNI Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([vRNI Issue]) --> B{What type of problem?}
-    B -->|Platform API or UI error| C[curl /api/ni/health\nCheck component health JSON]
-    B -->|Missing topology data| D[Get data source status via API\nCheck last-sync timestamp]
-    B -->|No flow data / NetFlow missing| E[tcpdump -i eth0 udp port 2055\nVerify NetFlow arriving at collector]
-    B -->|Collector not syncing| F[SSH collector VM\nsystemctl status collector]
-    B -->|Certificate or HTTPS error| G[openssl s_client -connect vrni:443\nCheck cert expiry and CA]
-    B -->|Disk full| H[df -h /data /var/log\nCheck data partition on platform VM]
-    C --> I{API returns OK?}
-    I -->|No| J[SSH platform VM\ntail /var/log/app.log]
-    I -->|Yes| D
-    D --> K[REST: GET /api/ni/data-sources/vcenters\nRead connection_status field]
-    K --> L{Connection status?}
-    L -->|Disconnected| M[Test vCenter API from collector\ncurl -sk vcenter-ip/rest/cis/session]
-    L -->|Connected but stale| N[Check sync interval\nvRNI UI → Sources → Sync Now]
-    E --> O{NetFlow packets arriving?}
-    O -->|No| P[Check switch NetFlow config\nVerify collector IP as export destination]
-    O -->|Yes but missing in UI| Q[Check vRNI data source for collector IP match\nCheck proxy.log drop rate]
-    F --> R[Check collector log\ntail /var/log/proxy.log]
-    G --> S[Replace certificate via vRNI UI\nSettings → SSL Certificates]
-    H --> T[Remove old config backups\nls /data/backup/ then rm old dates]
-    J --> U[Collect support bundle\nSSH: support-bundle generate]
-    M --> U
-    N --> U
-    P --> U
-    Q --> U
-    R --> U
-    S --> U
-    T --> U
-    U --> V[Open VMware SR\nAttach bundle to GSS case]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L,O dark
-    class C,D,E,F,G,H,J,K,M,N,P,Q,R,S,T action
-    class U,V escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> D
+D -> K
+L -> M
+L -> N
+O -> P
+O -> Q
+F -> R
+G -> S
+H -> T
+J -> U
+M -> U
+N -> U
+P -> U
+Q -> U
+R -> U
+S -> U
+T -> U
+U -> V
 ```
 
 ```d2

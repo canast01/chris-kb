@@ -157,21 +157,19 @@ Dell EMC RecoverPoint provides continuous data protection (CDP) and continuous r
 
 ## Topology
 
-```mermaid
-graph LR
-  RPA1["RPA Cluster\nSite A"] --> STG_A[("Storage A\nProduction LUNs")]
-  RPA2["RPA Cluster\nSite B"] --> STG_B[("Storage B\nReplica + Journal")]
-  RPA1 <-->|"WAN — compressed replication"| RPA2
-  STG_A -->|"captured writes"| RPA1
-  H_A(["Production Hosts"]) --> STG_A
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class RPA1 ctrl
-  class RPA2 dr
-  class STG_A,STG_B store
-  class H_A host
+```d2
+direction: right
+
+RPA1: "RPA Cluster\nSite A" {shape: rectangle}
+STG_A: "Storage A\nProduction LUNs" {shape: rectangle}
+RPA2: "RPA Cluster\nSite B" {shape: rectangle}
+STG_B: "Storage B\nReplica + Journal" {shape: rectangle}
+H_A: "Production Hosts" {shape: rectangle}
+
+RPA1 -> STG_A
+RPA2 -> STG_B
+STG_A -> RPA1
+H_A -> STG_A
 ```
 
 | Environment Write Rate | Minimum Journal Size | Recommended Retention |

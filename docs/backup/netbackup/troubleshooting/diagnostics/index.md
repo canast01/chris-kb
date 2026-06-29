@@ -13,38 +13,48 @@ NetBackup diagnostic commands: query failed jobs with bpdbjobs, check storage un
 *Applies to: NetBackup 10.x on Linux master/media servers*
 </div>
 
-```mermaid
-graph TD
-    A([NetBackup Issue]) --> B{What type of problem?}
-    B -->|Backup job failed| C[bpdbjobs -jobid id -report\nRead exit code and error text]
-    B -->|No media available| D[bpstulist -U\nnbdevquery -listdp -stype PureDisk]
-    B -->|Client not backing up| E[Check policy client list\nbppllist policyname -L]
-    B -->|Catalog error| F[bpdbm -consistency -verbose\nCheck PostgreSQL on master]
-    B -->|Restore fails| G[bplist -C client -t 0 -l\nVerify image exists and not expired]
-    C --> H{Exit code?}
-    H -->|196 — network| I[ping media-server\nnetstat -an | grep 1556]
-    H -->|58 — media server| J[Check media server status\nnbemmcmd -listhosts -machinetype media]
-    H -->|13 — client| K[Check bpcd on client\nTest client-server connectivity]
-    H -->|Other| L[vxlogview -o 118 -d 24h\nCheck nbjm log for detail]
-    D --> M[Check MSDP health\ncacontrol --dsstat]
-    E --> N[bpplschedrep policyname\nVerify schedule and backup window]
-    F --> O[Check master disk and PostgreSQL\ndu -sh /usr/openv/netbackup/db]
-    G --> P[Adjust retention or rerun\nbpexpdate to extend if needed]
-    I --> Q[Collect nbsupport bundle\nfor Veritas SR]
-    J --> Q
-    K --> Q
-    L --> Q
-    M --> Q
-    N --> Q
-    O --> Q
-    P --> Q
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H dark
-    class C,D,E,F,G,I,J,K,L,M,N,O,P action
-    class Q escalate
+B: "B" {shape: rectangle}
+C: "bpdbjobs -jobid id -report\nRead exit code and error text" {shape: rectangle}
+D: "bpstulist -U\nnbdevquery -listdp -stype PureDisk" {shape: rectangle}
+E: "Check policy client list\nbppllist policyname -L" {shape: rectangle}
+F: "bpdbm -consistency -verbose\nCheck PostgreSQL on master" {shape: rectangle}
+G: "bplist -C client -t 0 -l\nVerify image exists and not expired" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "ping media-server\nnetstat -an | grep 1556" {shape: rectangle}
+J: "Check media server status\nnbemmcmd -listhosts -machinetype media" {shape: rectangle}
+K: "Check bpcd on client\nTest client-server connectivity" {shape: rectangle}
+L: "vxlogview -o 118 -d 24h\nCheck nbjm log for detail" {shape: rectangle}
+M: "Check MSDP health\ncacontrol --dsstat" {shape: rectangle}
+N: "bpplschedrep policyname\nVerify schedule and backup window" {shape: rectangle}
+O: "Check master disk and PostgreSQL\ndu -sh /usr/openv/netbackup/db" {shape: rectangle}
+P: "Adjust retention or rerun\nbpexpdate to extend if needed" {shape: rectangle}
+Q: "Collect nbsupport bundle\nfor Veritas SR" {shape: rectangle}
+A: "NetBackup Issue" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+H -> I
+H -> J
+H -> K
+H -> L
+D -> M
+E -> N
+F -> O
+G -> P
+I -> Q
+J -> Q
+K -> Q
+L -> Q
+M -> Q
+N -> Q
+O -> Q
+P -> Q
 ```
 
 ```d2

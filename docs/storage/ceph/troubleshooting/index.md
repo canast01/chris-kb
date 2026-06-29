@@ -17,22 +17,19 @@ Ceph troubleshooting: OSD down/out recovery, PG degraded and stuck states, slow 
 
 ![Ceph — Troubleshooting — Diagram](../../../assets/storage-ceph-troubleshooting-diagram.svg)
 
-```mermaid
-graph TD
-    classDef check fill:#2563eb,color:#fff
-    classDef warn fill:#b45309,color:#fff
-    classDef err fill:#991b1b,color:#fff
-    classDef ok fill:#15803d,color:#fff
+```d2
+direction: right
 
-    A([ceph -s]):::check --> B{Health status}:::check
-    B -- HEALTH_OK --> C([Done — no action needed]):::ok
-    B -- HEALTH_WARN --> D[Check specific warning\nceph health detail]:::warn
-    D --> E([Clock skew? OSD nearfull?\nSlow ops? → common-issues/]):::warn
-    B -- HEALTH_ERR --> F{Error type}:::err
-    F -- OSD down --> G([OSD recovery\ncommon-issues/]):::err
-    F -- PG inactive --> H([PG diagnostics\ndiagnostics/]):::err
-    F -- MON quorum lost --> I([MON recovery\ncommon-issues/]):::err
-    F -- Need support --> J([Escalation\nescalation/]):::err
+D: "Check specific warning\nceph health detail" {shape: rectangle}
+E: "Clock skew? OSD nearfull?\nSlow ops? → common-issues/" {shape: rectangle}
+A: "ceph -s" {shape: rectangle}
+C: "Done — no action needed" {shape: rectangle}
+G: "OSD recovery\ncommon-issues/" {shape: rectangle}
+H: "PG diagnostics\ndiagnostics/" {shape: rectangle}
+I: "MON recovery\ncommon-issues/" {shape: rectangle}
+J: "Escalation\nescalation/" {shape: rectangle}
+
+D -> E
 ```
 | Symptom | Start here |
 |---|---|

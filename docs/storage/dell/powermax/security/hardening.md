@@ -333,23 +333,17 @@ SupportAssist enables Dell to proactively monitor the array and create automated
 
 SRS Virtual Edition is a gateway appliance that proxies Dell remote support sessions through your DMZ, avoiding direct inbound internet access to the Unisphere management network:
 
-```mermaid
-flowchart LR
-    DELL_ENG["Dell Support\nEngineer"]
-    DELL_CLOUD["Dell SRS\nCloud Gateway"]
-    SRS_VE["SRS-VE\n(DMZ VM)"]
-    UNI_HOST["Unisphere / SE Host\n(management network)"]
+```d2
+direction: right
 
-    DELL_ENG -->|"authenticated\nsession"| DELL_CLOUD
-    DELL_CLOUD -->|"outbound TLS\n(SRS-VE initiates)"| SRS_VE
-    SRS_VE -->|"proxied session\nto mgmt network"| UNI_HOST
+DELL_ENG: "Dell Support\nEngineer" {shape: rectangle}
+DELL_CLOUD: "Dell SRS\nCloud Gateway" {shape: rectangle}
+SRS_VE: "SRS-VE\n(DMZ VM" {shape: rectangle}
+UNI_HOST: "Unisphere / SE Host\n(management network" {shape: rectangle}
 
-    classDef internet fill:#be123c,stroke:#9f1239,color:#fff
-    classDef dmz fill:#b45309,stroke:#92400e,color:#fff
-    classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
-    class DELL_ENG,DELL_CLOUD internet
-    class SRS_VE dmz
-    class UNI_HOST mgmt
+DELL_ENG -> DELL_CLOUD
+DELL_CLOUD -> SRS_VE
+SRS_VE -> UNI_HOST
 ```
 
 Deploy SRS-VE on a dedicated VM in the DMZ. The SRS-VE makes outbound connections to the Dell SRS cloud and allows inbound sessions only from authenticated Dell support engineers.

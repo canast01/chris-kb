@@ -45,26 +45,26 @@ Network failures must be diagnosed by layer — jumping straight to firewall rul
 
 ## Diagnostic Flowchart
 
-```mermaid
-flowchart TD
-    A[Connectivity Failure Reported] --> B[Can you ping the default gateway?]
-    B -- No --> C[Check local interface: ip link / ip addr]
-    C --> D{Interface UP?}
-    D -- No --> E[Check cable / SFP\nethtool eth0 — link detected?]
-    D -- Yes --> F[Check IP address assigned\nARP for gateway: arping -I eth0 GW]
-    F --> G{ARP reply received?}
-    G -- No --> H[VLAN issue\nCheck switch port VLAN assignment]
-    G -- Yes --> I[Firewall or routing on gateway]
-    B -- Yes --> J[Can you ping destination IP?]
-    J -- No --> K[traceroute / mtr to destination]
-    K --> L{Where does trace stop?}
-    L -- At gateway --> M[Check routing table: ip route\nDefault route present?]
-    L -- Mid-path --> N[Routing or ACL issue in transit\nEngage network team with hop IP]
-    L -- At destination --> O[Host firewall / service not listening\nnc -zv dst port]
-    J -- Yes --> P[Name resolution issue?\ndig / nslookup hostname]
-    P --> Q{Resolves correctly?}
-    Q -- No --> R[See DNS Resolution guide]
-    Q -- Yes --> S[Application-layer issue\nCheck service on destination\nopenssl s_client / curl -v]
+```d2
+direction: right
+
+A: "Connectivity Failure Reported" {shape: rectangle}
+B: "Can you ping the default gateway?" {shape: rectangle}
+C: "Check local interface: ip link / ip addr" {shape: rectangle}
+E: "Check cable / SFP\nethtool eth0 — link detected?" {shape: rectangle}
+F: "Check IP address assigned\nARP for gateway: arping -I eth0 GW" {shape: rectangle}
+H: "VLAN issue\nCheck switch port VLAN assignment" {shape: rectangle}
+I: "Firewall or routing on gateway" {shape: rectangle}
+J: "Can you ping destination IP?" {shape: rectangle}
+K: "traceroute / mtr to destination" {shape: rectangle}
+M: "Check routing table: ip route\nDefault route present?" {shape: rectangle}
+N: "Routing or ACL issue in transit\nEngage network team with hop IP" {shape: rectangle}
+O: "Host firewall / service not listening\nnc -zv dst port" {shape: rectangle}
+P: "Name resolution issue?\ndig / nslookup hostname" {shape: rectangle}
+R: "See DNS Resolution guide" {shape: rectangle}
+S: "Application-layer issue\nCheck service on destination\nopenssl s_client / curl -v" {shape: rectangle}
+
+A -> B
 ```
 
 ---

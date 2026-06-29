@@ -13,38 +13,49 @@ ServiceNow diagnostic tools: check instance health and thread state via stats.do
 *Applies to: ServiceNow Washington / Xanadu*
 </div>
 
-```mermaid
-graph TD
-    A([ServiceNow Issue]) --> B{What type of problem?}
-    B -->|Slow page loads or timeouts| C[stats.do — check thread count and queue depth\nthread_monitor.do — look for blocked threads]
-    B -->|Slow database queries| D[DB Activity Monitor for live queries\nSlow Queries log for historical > 10 sec]
-    B -->|Integration or MID Server failing| E[ECC Queue in UI for error state messages\nMID server: tail agent0.log.0]
-    B -->|Script or Business Rule error| F[System Logs > All — filter by source and time\nSession Debug for per-session BR trace]
-    B -->|Scheduled job or workflow failing| G[System Diagnostics for self-test suite\nCheck failed scheduler jobs: sysauto table]
-    B -->|Unknown platform issue| H[Background Script diagnostic snapshot\nSystem Diagnostics > Diagnostics self-test]
-    C --> I{Thread or queue issue?}
-    I -->|Blocked threads in thread_monitor| J[Identify blocking transaction and table\nDisable offending Business Rule if causing lock]
-    I -->|High queue depth at stats.do| K[Scale check: contact ServiceNow support for node capacity\nIdentify runaway scheduled job or report]
-    D --> L[Identify slow query table and condition\nRequest index via HI portal for cloud instances]
-    E --> M[Check MID server connectivity to instance\nVerify MID server credentials: test connection in UI]
-    F --> N[Session Debug: enable SQL and BR trace\nReproduce issue and check session debug log]
-    G --> O[Sysauto table: filter state=error\nWorkflow Contexts for stuck workflows]
-    H --> P[Run Background Script snapshot\nCapture stats.do output and attach to ticket]
-    J --> Q[Collect stats.do screenshot + thread_monitor + log excerpt\nOpen ServiceNow HI support ticket]
-    K --> Q
-    L --> Q
-    M --> Q
-    N --> Q
-    O --> Q
-    P --> Q
-    Q --> R[Provide: instance name, version, affected node\nRepro steps, log excerpts, stats.do screenshot]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P action
-    class Q,R escalate
+B: "B" {shape: rectangle}
+C: "stats.do — check thread count and queue depth\nthread_monitor.do — look for blocked threads" {shape: rectangle}
+D: "DB Activity Monitor for live queries\nSlow Queries log for historical > 10 sec" {shape: rectangle}
+E: "ECC Queue in UI for error state messages\nMID server: tail agent0.log.0" {shape: rectangle}
+F: "System Logs > All — filter by source and time\nSession Debug for per-session BR trace" {shape: rectangle}
+G: "System Diagnostics for self-test suite\nCheck failed scheduler jobs: sysauto table" {shape: rectangle}
+H: "Background Script diagnostic snapshot\nSystem Diagnostics > Diagnostics self-test" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Identify blocking transaction and table\nDisable offending Business Rule if causing lock" {shape: rectangle}
+K: "Scale check: contact ServiceNow support for node capacity\nIdentify runaway scheduled job or report" {shape: rectangle}
+L: "Identify slow query table and condition\nRequest index via HI portal for cloud instances" {shape: rectangle}
+M: "Check MID server connectivity to instance\nVerify MID server credentials: test connection in UI" {shape: rectangle}
+N: "Session Debug: enable SQL and BR trace\nReproduce issue and check session debug log" {shape: rectangle}
+O: "Sysauto table: filter state=error\nWorkflow Contexts for stuck workflows" {shape: rectangle}
+P: "Run Background Script snapshot\nCapture stats.do output and attach to ticket" {shape: rectangle}
+Q: "Collect stats.do screenshot + thread_monitor + log excerpt\nOpen ServiceNow HI support ticket" {shape: rectangle}
+R: "Provide: instance name, version, affected node\nRepro steps, log excerpts, stats.do screenshot" {shape: rectangle}
+A: "ServiceNow Issue" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+D -> L
+E -> M
+F -> N
+G -> O
+H -> P
+J -> Q
+K -> Q
+L -> Q
+M -> Q
+N -> Q
+O -> Q
+P -> Q
+Q -> R
 ```
 
 ```d2

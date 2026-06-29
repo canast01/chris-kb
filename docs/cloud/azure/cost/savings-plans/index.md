@@ -12,21 +12,17 @@ Azure Compute Savings Plans provide discounts (up to 65%) in exchange for a cons
 
 ## Cost Commitment Options
 
-```mermaid
-flowchart TD
-    decision["Cost Optimisation\nDecision"]
-    stable{"Workload\nstable and predictable?"}
-    singleSKU{"Single VM SKU\nand region?"}
-    reservedInstance["Reserved Instance\nup to 72% discount\nSKU + region locked"]
-    savingsPlan["Savings Plan\nup to 65% discount\nflexible across SKU + region"]
-    paygo["Pay-As-You-Go\nno commitment\nhighest cost"]
+```d2
+direction: right
 
-    decision --> stable
-    stable -- Yes --> singleSKU
-    stable -- No --> savingsPlan
-    singleSKU -- Yes --> reservedInstance
-    singleSKU -- No --> savingsPlan
-    stable -- Unpredictable --> paygo
+decision: "Cost Optimisation\nDecision" {shape: rectangle}
+stable: "stable" {shape: rectangle}
+reservedInstance: "Reserved Instance\nup to 72% discount\nSKU + region locked" {shape: rectangle}
+savingsPlan: "Savings Plan\nup to 65% discount\nflexible across SKU + region" {shape: rectangle}
+paygo: "Pay-As-You-Go\nno commitment\nhighest cost" {shape: rectangle}
+singleSKU: "singleSKU" {shape: rectangle}
+
+decision -> stable
 ```
 
 ## Savings Plan vs Reserved Instances

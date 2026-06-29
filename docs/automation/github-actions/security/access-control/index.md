@@ -5,22 +5,23 @@ tags:
 ---
 # GitHub Actions — Access Control
 
-```mermaid
-flowchart TD
-    wfTrigger(["Workflow triggered"])
-    jobCtx["Job context\nenvironment: production"]
-    envSecret["Environment secret\nRequired reviewers enforced"]
-    repoSecret["Repository secret\nAll workflows in repo"]
-    orgSecret["Organisation secret\nGranted repos only"]
-    secretCtx["${{ secrets.X }}"]
-    step["Step — value masked as *** in logs"]
+```d2
+direction: right
 
-    wfTrigger --> jobCtx
-    jobCtx --> secretCtx
-    envSecret --> secretCtx
-    repoSecret --> secretCtx
-    orgSecret --> secretCtx
-    secretCtx --> step
+wfTrigger: "Workflow triggered" {shape: rectangle}
+jobCtx: "Job context\nenvironment: production" {shape: rectangle}
+secretCtx: "${{ secrets.X }}" {shape: rectangle}
+envSecret: "Environment secret\nRequired reviewers enforced" {shape: rectangle}
+repoSecret: "Repository secret\nAll workflows in repo" {shape: rectangle}
+orgSecret: "Organisation secret\nGranted repos only" {shape: rectangle}
+step: "Step — value masked as *** in logs" {shape: rectangle}
+
+wfTrigger -> jobCtx
+jobCtx -> secretCtx
+envSecret -> secretCtx
+repoSecret -> secretCtx
+orgSecret -> secretCtx
+secretCtx -> step
 ```
 
 ```text

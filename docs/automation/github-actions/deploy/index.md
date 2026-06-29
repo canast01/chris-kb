@@ -13,23 +13,6 @@ self-hosted runners, and enforcing status checks on protected branches.
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Enable GitHub Actions on a Repository"]
-    s2["Create the Workflow Directory"]
-    s3["Write a Basic CI Workflow"]
-    s4["Set Up Repository Secrets"]
-    s5["Configure Environments (Prod/Staging)"]
-    s6["Set Up a Self-Hosted Runner"]
-    s7["Configure Branch Protection with Status Ch..."]
-    s8["✓ Validate the Pipeline"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

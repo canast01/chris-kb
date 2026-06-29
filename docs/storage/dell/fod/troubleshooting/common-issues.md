@@ -7,16 +7,12 @@ search:
 ---
 # FOD — Common Issues
 
-
 <div class="kb-summary">
 Common FOD activation errors, feature entitlement failures, and troubleshooting unlicensed features.
 
 *Applies to: Dell FOD*
 </div>
 ![FOD — Common Issues](../../../../assets/storage-dell-fod-troubleshooting-common-issues.svg)
-
-
-
 
 > Part of the [Flex on Demand](../index.md) reference.
 
@@ -45,31 +41,29 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{Feature activation\nkey not accepted?}
-    S --> B2{Feature not visible\nafter license?}
-    S --> B3{Support contract\nmismatch?}
+```d2
+direction: right
 
-    B1 -->|Verify array SN from GUI| D1{SN in key\nmatches array SN?}
-    D1 -->|No - SN mismatch| R1[See Issue Reference —\nKey rejected: verify SN then re-download]
-    D1 -->|Already applied| R2[See Issue Reference —\nKey duplicate: harmless; check event log]
+D1: "D1" {shape: rectangle}
+R1: "See Issue Reference —\nKey rejected: verify SN then re-download" {shape: rectangle}
+R2: "See Issue Reference —\nKey duplicate: harmless; check event log" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Issue Reference —\nFW too old: upgrade firmware first" {shape: rectangle}
+R4: "See Issue Reference —\nFeature hidden: check Settings > Features" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Issue Reference —\nAccount link: link SN to support account" {shape: rectangle}
+R6: "See Issue Reference —\nWrong feature: verify key description before buy" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
 
-    B2 -->|Check firmware version| D2{Firmware meets\nminimum requirement?}
-    D2 -->|No| R3[See Issue Reference —\nFW too old: upgrade firmware first]
-    D2 -->|Feature hidden| R4[See Issue Reference —\nFeature hidden: check Settings > Features]
-
-    B3 -->|Check SN linked to support account| D3{SN linked to\nDell account?}
-    D3 -->|No| R5[See Issue Reference —\nAccount link: link SN to support account]
-    D3 -->|Wrong feature| R6[See Issue Reference —\nWrong feature: verify key description before buy]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class B1,B2,B3,D1,D2,D3 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
 ```
 
 ---

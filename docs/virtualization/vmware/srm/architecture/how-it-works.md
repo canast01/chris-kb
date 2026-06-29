@@ -6,14 +6,12 @@ tags:
 ---
 # SRM — How It Works (VMware Platform)
 
-
 <div class="kb-summary">
 How It Works (VMware Platform) reference covering Site Topology, Test Failover Workflow, Planned Migration, Disaster Recovery Failover, Failback Process and 2 more sections.
 
 *Applies to: SRM 8.x*
 </div>
 ![SRM — How It Works (VMware Platform)](../../../../assets/virtualization-vmware-srm-architecture-how-it-works.svg)
-
 
 ## Site Topology
 
@@ -52,9 +50,6 @@ SRM operates across two paired sites: a **protected site** (production) and a **
 The two SRM Servers form a **site pair**. Communication between them uses TCP 443 and TCP 9086. The pairing is authenticated via certificate thumbprint exchange — each site must trust the other's SSL certificate.
 
 Protected Site                        Recovery Site
-
-
-
 
 **Per-VM customization** — define exact IP, netmask, gateway, DNS per NIC per VM. Used when target IPs don't follow a simple subnet mapping.
 
@@ -97,35 +92,6 @@ After verifying the test:
 5. Recovery Plan returns to **Ready** state.
 
 Test cleanup must complete before running a real failover or another test.
-
-```mermaid
-flowchart TD
-    A([Operator initiates Recovery Plan]):::green --> B[SRM validates protection groups and mappings]:::blue
-    B --> C{Execution mode?}:::amber
-
-    C -->|Test| D[Snapshot replicated datastore]:::blue
-    D --> E[Connect VMs to bubble network]:::blue
-    E --> F[Power on in priority order]:::blue
-
-    C -->|Planned| G[Graceful shutdown protected VMs]:::blue
-    G --> H[Final replication sync — RPO=0]:::blue
-    H --> I[Power on at recovery site]:::blue
-
-    C -->|Disaster| J[Skip graceful shutdown]:::blue
-    J --> K[Promote replicated datastore]:::blue
-    K --> L[Power on at recovery site]:::blue
-
-    F --> M[Apply IP customization]:::blue
-    I --> M
-    L --> M
-
-    M --> N[Run custom commands]:::blue
-    N --> O([Mark plan Complete]):::green
-
-    classDef green fill:#15803d,stroke:#166534,color:#fff
-    classDef blue  fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef amber fill:#b45309,stroke:#92400e,color:#fff
-```
 
 ---
 
@@ -238,7 +204,6 @@ Network and folder mappings are bidirectional — configuring them in one direct
 
 VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a vCenter plugin on both the protected and recovery sites. It automates VM failover by coordinating storage presentation, VM registration, power-on sequencing, IP customisation, and custom scripts — without manual intervention at the storage or compute layer. SRM supports both array-based replication (via SRAs) and built-in vSphere Replication.
 
-
 ## Topology
 
 ```mermaid
@@ -283,7 +248,6 @@ graph LR
     style RecoveryPlan fill:#7c3aed,stroke:#6d28d9,color:#fff
 ```
 
-
 ## Recovery Plan Modes
 
 | Mode | Description |
@@ -291,7 +255,6 @@ graph LR
 | Test | SRM creates a temporary snapshot of R2/replica; powers on VMs in isolated network; production replication continues; test cleanup removes snapshot |
 | Planned migration | Orderly shutdown of protected VMs, final sync, then power-on at recovery site |
 | Unplanned failover | Protected site unavailable; SRM fails over using most recent replicated state |
-
 
 ## Storage Replication Adapters (SRAs)
 
@@ -303,14 +266,12 @@ graph LR
 
 SRAs must be installed on both sites and must match the same major version.
 
-
 ## Protection Groups
 
 | Type | Granularity | Replication Backend |
 |---|---|---|
 | Array-based | Datastore (all VMs on the datastore) | SRA (vendor-specific) |
 | vSphere Replication | Per-VM | Built-in vSphere Replication appliance |
-
 
 ## vSphere Replication
 

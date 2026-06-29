@@ -14,22 +14,6 @@ Installing PowerCLI, first connection to vCenter, service account setup, certifi
 *Applies to: PowerCLI 13.x*
 </div>
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Install from PowerShell Gallery"]
-    s3["Offline Install (Air-Gapped Environments)"]
-    s4["First Connection"]
-    s5["Service Account Setup"]
-    s6["Certificate Configuration"]
-    s7["Proxy Configuration"]
-    s8["Post-Deploy Validation"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

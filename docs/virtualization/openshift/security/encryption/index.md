@@ -10,24 +10,27 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph TD
-    A([Data at Rest]) --> B[etcd Encryption\nAPIServer CR: aescbc or aesgcm\nSecrets + ConfigMaps encrypted]
-    C([Data in Transit]) --> D[TLS — All API Traffic\nControl plane auto-managed\nIngress: custom wildcard cert]
-    E([Pod-Level Secrets]) --> F[App Secrets in Pods\nVault agent injector\nor Secrets Store CSI]
-    G([Storage]) --> H[CSI Volume Encryption\nProvider-managed keys\nor LUKS on RHCOS]
+```d2
+direction: right
 
-    B --> I([Encryption Layers])
-    D --> I
-    F --> I
-    H --> I
+A: "Data at Rest" {shape: rectangle}
+B: "etcd Encryption\nAPIServer CR: aescbc or aesgcm\nSecrets + ConfigMaps encrypted" {shape: rectangle}
+C: "Data in Transit" {shape: rectangle}
+D: "TLS — All API Traffic\nControl plane auto-managed\nIngress: custom wildcard cert" {shape: rectangle}
+E: "Pod-Level Secrets" {shape: rectangle}
+F: "App Secrets in Pods\nVault agent injector\nor Secrets Store CSI" {shape: rectangle}
+G: "Storage" {shape: rectangle}
+H: "CSI Volume Encryption\nProvider-managed keys\nor LUKS on RHCOS" {shape: rectangle}
+I: "Encryption Layers" {shape: rectangle}
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef layer fill:#7c3aed,color:#fff
-    classDef result fill:#15803d,color:#fff
-    class A,C,E,G dark
-    class B,D,F,H layer
-    class I result
+A -> B
+C -> D
+E -> F
+G -> H
+B -> I
+D -> I
+F -> I
+H -> I
 ```
 
 ```d2

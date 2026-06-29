@@ -17,27 +17,22 @@ Veeam Backup & Replication provides backup, replication, recovery, and disaster 
 
 ## Architecture
 
-```mermaid
-graph LR
-    VMs["VMs / Workloads<br/>vSphere · Hyper-V<br/>Physical · Cloud"]
-    Proxy["Backup Proxy<br/>transport: SAN / HotAdd / NBD<br/>CBT · compression · dedup"]
-    Repo["Backup Repository<br/>local disk · NAS · S3<br/>tape · SOBR tiers"]
-    VeeamONE["Veeam ONE<br/>monitoring · reporting<br/>dashboards · capacity"]
-    Console["Veeam BR Console<br/>admin · REST API<br/>job engine · catalog"]
+```d2
+direction: right
 
-    VMs -->|"backup job"| Proxy
-    Proxy -->|"writes backup chains"| Repo
-    VeeamONE -->|"monitors"| Repo
-    Console -->|"orchestrates"| VMs
-    Console -->|"orchestrates"| Proxy
-    Console -->|"orchestrates"| Repo
-    Console -->|"orchestrates"| VeeamONE
+VMs: "VMs / Workloads · vSphere · Hyper-V · Physical · Cloud" {shape: rectangle}
+Proxy: "Backup Proxy · transport: SAN / HotAdd / NBD · CBT · compression · dedup" {shape: rectangle}
+Repo: "Backup Repository · local disk · NAS · S3 · tape · SOBR tiers" {shape: rectangle}
+VeeamONE: "Veeam ONE · monitoring · reporting · dashboards · capacity" {shape: rectangle}
+Console: "Veeam BR Console · admin · REST API · job engine · catalog" {shape: rectangle}
 
-    style VMs fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style Proxy fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style Repo fill:#15803d,stroke:#166534,color:#fff
-    style VeeamONE fill:#b45309,stroke:#92400e,color:#fff
-    style Console fill:#7c3aed,stroke:#6d28d9,color:#fff
+VMs -> Proxy
+Proxy -> Repo
+VeeamONE -> Repo
+Console -> VMs
+Console -> Proxy
+Console -> Repo
+Console -> VeeamONE
 ```
 
 ## Supported Platforms

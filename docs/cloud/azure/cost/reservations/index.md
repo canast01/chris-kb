@@ -12,21 +12,25 @@ Azure Reserved Instances (RIs) offer significant discounts (up to 72%) over pay-
 
 ## Reservation Discount Application
 
-```mermaid
-flowchart LR
-    purchase["Purchase Reservation\n1-yr or 3-yr commitment"]
-    scope{"Scope"}
-    shared["Shared Scope\napplies across all subscriptions"]
-    single["Single Subscription Scope\napplies to one subscription"]
-    rgScope["Resource Group Scope\nnarrowest"]
-    usage["Matching Resource Usage\nsame SKU · region · OS"]
-    discount["Reservation Discount Applied\n(automatic — no action needed)"]
-    unused["Unused Capacity\nno refund — choose carefully"]
+```d2
+direction: right
 
-    purchase --> scope
-    scope --> shared & single & rgScope
-    shared & single & rgScope --> usage --> discount
-    usage -->|"hours not consumed"| unused
+purchase: "Purchase Reservation\n1-yr or 3-yr commitment" {shape: rectangle}
+scope: "scope" {shape: rectangle}
+shared: "Shared Scope\napplies across all subscriptions" {shape: rectangle}
+single: "Single Subscription Scope\napplies to one subscription" {shape: rectangle}
+rgScope: "Resource Group Scope\nnarrowest" {shape: rectangle}
+usage: "Matching Resource Usage\nsame SKU · region · OS" {shape: rectangle}
+discount: "Reservation Discount Applied\n(automatic — no action needed" {shape: rectangle}
+unused: "Unused Capacity\nno refund — choose carefully" {shape: rectangle}
+
+purchase -> scope
+scope -> shared
+shared -> single
+single -> rgScope
+rgScope -> usage
+usage -> discount
+usage -> unused
 ```
 
 ## RI Purchasing

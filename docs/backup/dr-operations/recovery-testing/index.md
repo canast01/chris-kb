@@ -81,27 +81,36 @@ Recovery testing validates that systems, data, and services can be restored to a
 
 ## Test Execution Procedure
 
-```mermaid
-flowchart TD
-    A[Test Scheduled — 2 Weeks Notice] --> B[Pre-Test Preparation]
-    B --> C[Kick-off Meeting\nBriefing + Roles Assigned]
-    C --> D[Test Execution Window Begins]
-    D --> E[Execute Recovery Steps\nPer Runbook]
-    E --> F{Step Complete?}
-    F -- Yes --> G[Record Timestamp + Result]
-    G --> H{More Steps?}
-    H -- Yes --> E
-    H -- No --> I[Application Verification\nQuery / Login / Health Check]
-    I --> J{All Checks Pass?}
-    J -- No --> K[Document Failure\nAttempt Remediation]
-    K --> I
-    J -- Yes --> L[RTO Measured\nRPO Validated]
-    L --> M[Test Environment Decommissioned]
-    M --> N[Post-Test Debrief — 48 Hours]
-    N --> O[Test Report Drafted]
-    O --> P[Lessons Learned Recorded]
-    P --> Q[Runbook Updated if Required]
-    Q --> R[Report Signed Off\nFiled in GRC System]
+```d2
+direction: right
+
+A: "Test Scheduled — 2 Weeks Notice" {shape: rectangle}
+B: "Pre-Test Preparation" {shape: rectangle}
+C: "Kick-off Meeting\nBriefing + Roles Assigned" {shape: rectangle}
+D: "Test Execution Window Begins" {shape: rectangle}
+E: "Execute Recovery Steps\nPer Runbook" {shape: rectangle}
+K: "Document Failure\nAttempt Remediation" {shape: rectangle}
+I: "Application Verification\nQuery / Login / Health Check" {shape: rectangle}
+L: "RTO Measured\nRPO Validated" {shape: rectangle}
+M: "Test Environment Decommissioned" {shape: rectangle}
+N: "Post-Test Debrief — 48 Hours" {shape: rectangle}
+O: "Test Report Drafted" {shape: rectangle}
+P: "Lessons Learned Recorded" {shape: rectangle}
+Q: "Runbook Updated if Required" {shape: rectangle}
+R: "Report Signed Off\nFiled in GRC System" {shape: rectangle}
+G: "Record Timestamp + Result" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+K -> I
+L -> M
+M -> N
+N -> O
+O -> P
+P -> Q
+Q -> R
 ```
 
 DataLabs is ideal for:

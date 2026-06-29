@@ -22,26 +22,23 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 
 ## Remove a Host
 
-```mermaid
-graph TD
-    A[Pre-check: verify ≥4 hosts remain after removal] --> B[vSphere Maintenance Mode\nwith vSAN full data evacuation]
-    B --> C[vSAN Evacuate Data\nfrom host disk groups]
-    C --> D{BytesToSync = 0?}
-    D -- No --> D
-    D -- Yes --> E[AWS: delete-environment-host]
-    E --> F[Verify host removed\nfrom EVS host list]
-    F --> G[Verify vSAN rebalance\ncompletes on remaining hosts]
-    G --> H[Done — cluster healthy]
+```d2
+direction: right
 
-    classDef check fill:#1e3a5f,color:#fff
-    classDef action fill:#15803d,color:#fff
-    classDef verify fill:#b45309,color:#fff
-    classDef done fill:#7c3aed,color:#fff
+A: "Pre-check: verify ≥4 hosts remain after removal" {shape: rectangle}
+B: "vSphere Maintenance Mode\nwith vSAN full data evacuation" {shape: rectangle}
+C: "vSAN Evacuate Data\nfrom host disk groups" {shape: rectangle}
+E: "AWS: delete-environment-host" {shape: rectangle}
+F: "Verify host removed\nfrom EVS host list" {shape: rectangle}
+G: "Verify vSAN rebalance\ncompletes on remaining hosts" {shape: rectangle}
+H: "Done — cluster healthy" {shape: rectangle}
+D: "D" {shape: rectangle}
 
-    class A,D check
-    class B,C,E action
-    class F,G verify
-    class H done
+A -> B
+B -> C
+E -> F
+F -> G
+G -> H
 ```
 
 ```bash

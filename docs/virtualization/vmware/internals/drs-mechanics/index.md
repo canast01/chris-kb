@@ -11,35 +11,30 @@ DRS evaluates cluster imbalance every 5 minutes using a per-host demand score ag
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph TD
-    classDef decision fill:#2563eb,color:#fff,stroke:none
-    classDef action fill:#15803d,color:#fff,stroke:none
-    classDef block fill:#b45309,color:#fff,stroke:none
-    classDef check fill:#7c3aed,color:#fff,stroke:none
-    classDef skip fill:#374151,color:#fff,stroke:none
+```d2
+direction: right
 
-    A[DRS Invocation\nevery 5 min or on event]:::decision
-    B{Compute imbalance\nscore per host}:::check
-    C{Score exceeds\nthreshold 1-5?}:::decision
-    D[Score migration\ncandidates]:::action
-    E{Automation\nlevel?}:::decision
-    F[Apply migration\nautomatically]:::action
-    G[Generate recommendation\nonly]:::action
-    H{Anti-affinity /\naffinity rules?}:::check
-    I[Apply rule constraints\nbefore selection]:::block
-    J[No action\ncluster balanced]:::skip
+A: "A" {shape: rectangle}
+B: "B" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "D" {shape: rectangle}
+J: "J" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "I" {shape: rectangle}
+E: "E" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "G" {shape: rectangle}
 
-    A --> B
-    B --> C
-    C -->|Yes| D
-    C -->|No| J
-    D --> H
-    H -->|Rules exist| I
-    I --> E
-    H -->|No rules| E
-    E -->|Fully automated| F
-    E -->|Manual / partial| G
+A -> B
+B -> C
+C -> D
+C -> J
+D -> H
+H -> I
+I -> E
+H -> E
+E -> F
+E -> G
 ```
 
 ## Imbalance Score Calculation

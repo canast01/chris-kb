@@ -23,29 +23,44 @@ Authentication in ONTAP controls how administrators and service accounts gain ac
 
 ## Authentication Flow
 
-```mermaid
-flowchart TD
-    user["Administrator / Service Account"] --> accessType{"Access Type"}
-    accessType -->|"SSH CLI"| sshAuth{"Auth Method"}
-    accessType -->|"HTTPS / REST API"| httpsAuth{"Auth Method"}
-    accessType -->|"NFS Data Access"| nfsAuth["NSSwitch → files / LDAP\nUID/GID resolution"]
-    accessType -->|"SMB Data Access"| smbAuth["Kerberos\nAD Domain Join"]
+```d2
+direction: right
 
-    sshAuth -->|"local account"| localCheck["Local credential store\non ONTAP node"]
-    sshAuth -->|"publickey"| keyCheck["SSH key match\nstored in ONTAP"]
-    sshAuth -->|"domain account"| adCheck["AD Kerberos\nvia LDAP lookup"]
-    httpsAuth -->|"password"| localCheck
-    httpsAuth -->|"certificate"| certCheck["Mutual TLS\nclient certificate"]
-    httpsAuth -->|"SAML SSO"| samlFlow["Redirect to IdP\nADFS / Okta / Azure AD"]
-    samlFlow --> mfa["MFA at IdP"]
-    mfa --> token["SAML assertion\nreturned to ONTAP"]
+user: "Administrator / Service Account" {shape: rectangle}
+accessType: "Access Type" {shape: rectangle}
+sshAuth: "Auth Method" {shape: rectangle}
+httpsAuth: "Auth Method" {shape: rectangle}
+nfsAuth: "NSSwitch → files / LDAP\nUID/GID resolution" {shape: rectangle}
+smbAuth: "Kerberos\nAD Domain Join" {shape: rectangle}
+localCheck: "Local credential store\non ONTAP node" {shape: rectangle}
+keyCheck: "SSH key match\nstored in ONTAP" {shape: rectangle}
+adCheck: "AD Kerberos\nvia LDAP lookup" {shape: rectangle}
+certCheck: "Mutual TLS\nclient certificate" {shape: rectangle}
+samlFlow: "Redirect to IdP\nADFS / Okta / Azure AD" {shape: rectangle}
+mfa: "MFA at IdP" {shape: rectangle}
+token: "SAML assertion\nreturned to ONTAP" {shape: rectangle}
+rbac: "RBAC Role\npermission check" {shape: rectangle}
+access: "Access granted\nto cluster or SVM" {shape: rectangle}
 
-    localCheck --> rbac["RBAC Role\npermission check"]
-    keyCheck --> rbac
-    adCheck --> rbac
-    certCheck --> rbac
-    token --> rbac
-    rbac --> access["Access granted\nto cluster or SVM"]
+user -> accessType
+accessType -> sshAuth
+accessType -> httpsAuth
+accessType -> nfsAuth
+accessType -> smbAuth
+sshAuth -> localCheck
+sshAuth -> keyCheck
+sshAuth -> adCheck
+httpsAuth -> localCheck
+httpsAuth -> certCheck
+httpsAuth -> samlFlow
+samlFlow -> mfa
+mfa -> token
+localCheck -> rbac
+keyCheck -> rbac
+adCheck -> rbac
+certCheck -> rbac
+token -> rbac
+rbac -> access
 ```
 
 ## Authentication Methods Summary

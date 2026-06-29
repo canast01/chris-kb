@@ -13,57 +13,65 @@ Git diagnostic techniques: enable GIT_TRACE environment variables for protocol-l
 *Applies to: Git 2.x*
 </div>
 
-```mermaid
-graph TD
-    A([Git command fails]) --> B{Error type?}
-    B -->|Authentication or permission| C{Transport?}
-    B -->|Network or timeout| D[Check network:\ngit ls-remote origin\nping github.com]
-    B -->|Object or repository integrity| E[Run git fsck --full]
-    B -->|Config or merge conflict| F[git config --list --show-origin]
+```d2
+direction: right
 
-    C -->|HTTPS| G[GIT_TRACE_CURL=1 git fetch\nCheck HTTP status code]
-    C -->|SSH| H[ssh -vvvT git@host\nCheck key offered: ssh-add -l]
+B: "B" {shape: rectangle}
+D: "Check network:\ngit ls-remote origin\nping github.com" {shape: rectangle}
+E: "Run git fsck --full" {shape: rectangle}
+F: "git config --list --show-origin" {shape: rectangle}
+C: "C" {shape: rectangle}
+G: "GIT_TRACE_CURL=1 git fetch\nCheck HTTP status code" {shape: rectangle}
+H: "ssh -vvvT git@host\nCheck key offered: ssh-add -l" {shape: rectangle}
+I: "Token expired or wrong scope\nRotate PAT or re-authenticate" {shape: rectangle}
+J: "Check repo permissions\nCheck org SSO enforcement" {shape: rectangle}
+K: "Set git config http.proxy\nor http_proxy env var" {shape: rectangle}
+L: "git config http.sslVerify\nVerify CA bundle: git config http.sslCAInfo" {shape: rectangle}
+M: "M" {shape: rectangle}
+N: "ssh-add ~/.ssh/id_ed25519" {shape: rectangle}
+O: "Key not registered on platform\nAdd public key to account" {shape: rectangle}
+P: "Server key changed or MITM\nVerify fingerprint out-of-band\nssh-keyscan to update known_hosts" {shape: rectangle}
+Q: "Firewall blocking port 22 or 443\nTry SSH over HTTPS: ssh -p 443 git@ssh.github.com" {shape: rectangle}
+R: "Check /etc/resolv.conf\nnslookup github.com" {shape: rectangle}
+S: "CORRUPTION — restore from mirror backup\nContact platform support" {shape: rectangle}
+T: "Normal — safe to prune\ngit prune --expire=2.weeks.ago" {shape: rectangle}
+U: "git remote set-url origin correct-url" {shape: rectangle}
+V: "git mergetool" {shape: rectangle}
+W: "Resolved" {shape: rectangle}
+X: "Escalate to platform support" {shape: rectangle}
+A: "Git command fails" {shape: rectangle}
 
-    G -->|401 Unauthorized| I[Token expired or wrong scope\nRotate PAT or re-authenticate]
-    G -->|403 Forbidden| J[Check repo permissions\nCheck org SSO enforcement]
-    G -->|407 Proxy Auth| K[Set git config http.proxy\nor http_proxy env var]
-    G -->|SSL error| L[git config http.sslVerify\nVerify CA bundle: git config http.sslCAInfo]
-
-    H -->|Permission denied| M{Key in agent?}
-    M -->|No| N[ssh-add ~/.ssh/id_ed25519]
-    M -->|Yes| O[Key not registered on platform\nAdd public key to account]
-
-    H -->|Host key verification failed| P[Server key changed or MITM\nVerify fingerprint out-of-band\nssh-keyscan to update known_hosts]
-
-    D -->|Timeout| Q[Firewall blocking port 22 or 443\nTry SSH over HTTPS: ssh -p 443 git@ssh.github.com]
-    D -->|DNS failure| R[Check /etc/resolv.conf\nnslookup github.com]
-
-    E -->|Missing objects| S[CORRUPTION — restore from mirror backup\nContact platform support]
-    E -->|Dangling only| T[Normal — safe to prune\ngit prune --expire=2.weeks.ago]
-
-    F -->|Wrong remote URL| U[git remote set-url origin correct-url]
-    F -->|Merge conflict| V[git mergetool]
-
-    I --> W([Resolved])
-    J --> W
-    K --> W
-    L --> W
-    N --> W
-    O --> W
-    P --> W
-    Q --> W
-    R --> W
-    S --> X([Escalate to platform support])
-    T --> W
-    U --> W
-    V --> W
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,C,M dark
-    class D,E,F,G,H,I,J,K,L,N,O,P,Q,R,S,T,U,V action
-    class W,X escalate
+B -> D
+B -> E
+B -> F
+C -> G
+C -> H
+G -> I
+G -> J
+G -> K
+G -> L
+M -> N
+M -> O
+H -> P
+D -> Q
+D -> R
+E -> S
+E -> T
+F -> U
+F -> V
+I -> W
+J -> W
+K -> W
+L -> W
+N -> W
+O -> W
+P -> W
+Q -> W
+R -> W
+S -> X
+T -> W
+U -> W
+V -> W
 ```
 
 ```d2

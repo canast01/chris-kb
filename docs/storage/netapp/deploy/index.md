@@ -17,20 +17,6 @@ This guide covers the initial setup of a NetApp ONTAP cluster from first boot th
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Cluster Initial Setup"]
-    s2["SVM Creation"]
-    s3["Volume Provisioning"]
-    s4["Host Connectivity"]
-    s5["SnapMirror"]
-    s6["Monitoring Setup"]
-    s7["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
-    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

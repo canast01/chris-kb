@@ -221,35 +221,45 @@ symdev show <devname> -sid <sid> | grep -A 5 "Host"
 
 End-to-end workflow for provisioning storage on Dell PowerMax: create volumes, add to a storage group, and create (or update) a masking view so the host can see the storage.
 
-```mermaid
-flowchart TD
-    START([Start: New Host Needs Storage]) --> PREREQ{Prerequisites Met?}
-    PREREQ -->|"No: zoning missing\nor HBA not logged in"| FIX_PRE["Fix Fabric Zoning\n+ confirm HBA logins"]
-    FIX_PRE --> PREREQ
-    PREREQ -->|"Yes"| CHK_SG{"SG already\nexists for host?"}
-    CHK_SG -->|"Yes"| USE_SG["Use existing SG"]
-    CHK_SG -->|"No"| CREATE_SG["Step 1 — Create SG\nsymsg create hostname_SG\n-srp SRP_1 -slo Diamond"]
-    CREATE_SG & USE_SG --> CREATE_DEV["Step 2 — Create TDEVs\nsymconfigure: create dev\ncount=N size=XGB sg=hostname_SG"]
-    CREATE_DEV --> VERIFY_DEV["Verify: symsg show hostname_SG"]
-    VERIFY_DEV --> CREATE_IG["Step 3 — Create Initiator Group\nsymaccess create hostname_IG\nAdd host HBA WWNs"]
-    CREATE_IG --> CHK_PG{"Port Group\nexists for fabric?"}
-    CHK_PG -->|"No"| CREATE_PG["Step 4 — Create Port Group\nsymaccess create fabric_PG\nAdd FA dir:port pairs"]
-    CHK_PG -->|"Yes"| USE_PG["Use existing PG"]
-    CREATE_PG & USE_PG --> CREATE_MV["Step 5 — Create Masking View\nsymaccess create view hostname_MV\n-sg hostname_SG -ig hostname_IG -pg fabric_PG"]
-    CREATE_MV --> HOST_SCAN["Step 6 — Host Rescan\nrescan-scsi-bus / multipath -ll"]
-    HOST_SCAN --> VERIFY{Host sees\nall LUNs?}
-    VERIFY -->|"No"| TSHOOT["Troubleshoot:\nsymaccess show view\ncheck zone, WWN, port state"]
-    TSHOOT --> VERIFY
-    VERIFY -->|"Yes"| DONE([Done — Storage Provisioned])
+```d2
+direction: right
 
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    classDef fix fill:#b45309,stroke:#92400e,color:#fff
-    class CREATE_SG,CREATE_DEV,CREATE_IG,CREATE_PG,CREATE_MV,HOST_SCAN,VERIFY_DEV action
-    class PREREQ,CHK_SG,CHK_PG,VERIFY decision
-    class START,DONE terminal
-    class FIX_PRE,TSHOOT fix
+PREREQ: "PREREQ" {shape: rectangle}
+FIX_PRE: "Fix Fabric Zoning\n+ confirm HBA logins" {shape: rectangle}
+CHK_SG: "SG already\nexists for host?" {shape: rectangle}
+USE_SG: "Use existing SG" {shape: rectangle}
+CREATE_SG: "Step 1 — Create SG\nsymsg create hostname_SG\n-srp SRP_1 -slo Diamond" {shape: rectangle}
+CREATE_DEV: "Step 2 — Create TDEVs\nsymconfigure: create dev\ncount=N size=XGB sg=hostname_SG" {shape: rectangle}
+VERIFY_DEV: "Verify: symsg show hostname_SG" {shape: rectangle}
+CREATE_IG: "Step 3 — Create Initiator Group\nsymaccess create hostname_IG\nAdd host HBA WWNs" {shape: rectangle}
+CHK_PG: "Port Group\nexists for fabric?" {shape: rectangle}
+CREATE_PG: "Step 4 — Create Port Group\nsymaccess create fabric_PG\nAdd FA dir:port pairs" {shape: rectangle}
+USE_PG: "Use existing PG" {shape: rectangle}
+CREATE_MV: "Step 5 — Create Masking View\nsymaccess create view hostname_MV\n-sg hostname_SG -ig hostname_IG -pg fabric_PG" {shape: rectangle}
+HOST_SCAN: "Step 6 — Host Rescan\nrescan-scsi-bus / multipath -ll" {shape: rectangle}
+VERIFY: "VERIFY" {shape: rectangle}
+TSHOOT: "Troubleshoot:\nsymaccess show view\ncheck zone, WWN, port state" {shape: rectangle}
+DONE: "Done — Storage Provisioned" {shape: rectangle}
+START: "Start: New Host Needs Storage" {shape: rectangle}
+
+PREREQ -> FIX_PRE
+FIX_PRE -> PREREQ
+PREREQ -> CHK_SG
+CHK_SG -> USE_SG
+CHK_SG -> CREATE_SG
+CREATE_SG -> USE_SG
+USE_SG -> CREATE_DEV
+CREATE_DEV -> VERIFY_DEV
+VERIFY_DEV -> CREATE_IG
+CREATE_IG -> CHK_PG
+CHK_PG -> CREATE_PG
+CHK_PG -> USE_PG
+CREATE_PG -> USE_PG
+USE_PG -> CREATE_MV
+CREATE_MV -> HOST_SCAN
+VERIFY -> TSHOOT
+TSHOOT -> VERIFY
+VERIFY -> DONE
 ```
 
 ### Prerequisites

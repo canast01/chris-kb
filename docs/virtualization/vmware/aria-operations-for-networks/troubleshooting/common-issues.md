@@ -15,10 +15,6 @@ Troubleshooting guide for the most frequent Aria Operations for Networks problem
 </div>
 ![Aria Operations for Networks — Common Issues](../../../../assets/virtualization-vmware-aria-operations-for-networks-troublesh.svg)
 
-
-
-
-
 ```d2
 direction: down
 
@@ -47,39 +43,44 @@ ldap_ad_login_failure -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1[Data source red / collection failed]
-    S --> B2[No flows in Flow Map]
-    S --> B3[Path analysis shows no path]
-    S --> B4[Physical device not discovered]
-    S --> B5[Collector offline in UI]
-    S --> B6[LDAP login failure]
+```d2
+direction: right
 
-    B1 --> D1{API reachable\nand credentials valid?}
-    D1 -->|No| R1[Fix API Connectivity · Update Credentials · Re-accept Cert]
-    D1 -->|Yes| R2[Check Service Account Lock · Run Test Connection]
+S: "What is the symptom?" {shape: rectangle}
+B1: "Data source red / collection failed" {shape: rectangle}
+B2: "No flows in Flow Map" {shape: rectangle}
+B3: "Path analysis shows no path" {shape: rectangle}
+B4: "Physical device not discovered" {shape: rectangle}
+B5: "Collector offline in UI" {shape: rectangle}
+B6: "LDAP login failure" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+R1: "Fix API Connectivity · Update Credentials · Re-accept Cert" {shape: rectangle}
+R2: "Check Service Account Lock · Run Test Connection" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Set IPFIX Target to Collector IP · Enable on vDS" {shape: rectangle}
+R4: "Check UDP 2055 Firewall · Review proxy.log" {shape: rectangle}
+R5: "Verify All Source Devices Discovered · Check NSX Data Source" {shape: rectangle}
+R6: "Add Device via SNMP · Verify Credentials · Check Collector Reachability" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R7: "Power on Collector VM" {shape: rectangle}
+R8: "Restart ni-collector service · Re-register in UI" {shape: rectangle}
+R9: "Test LDAP Bind DN · Check LDAPS Cert · Use LDAP Browser Tool" {shape: rectangle}
 
-    B2 --> D2{IPFIX configured\non source?}
-    D2 -->|No| R3[Set IPFIX Target to Collector IP · Enable on vDS]
-    D2 -->|Yes| R4[Check UDP 2055 Firewall · Review proxy.log]
-
-    B3 --> R5[Verify All Source Devices Discovered · Check NSX Data Source]
-
-    B4 --> R6[Add Device via SNMP · Verify Credentials · Check Collector Reachability]
-
-    B5 --> D3{Collector VM\npowered on?}
-    D3 -->|No| R7[Power on Collector VM]
-    D3 -->|Yes| R8[Restart ni-collector service · Re-register in UI]
-
-    B6 --> R9[Test LDAP Bind DN · Check LDAPS Cert · Use LDAP Browser Tool]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
-    class D1,D2,D3 decision
-    class S start
+S -> B1
+S -> B2
+S -> B3
+S -> B4
+S -> B5
+S -> B6
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+B3 -> R5
+B4 -> R6
+D3 -> R7
+D3 -> R8
+B6 -> R9
 ```
 
 ---
@@ -287,8 +288,6 @@ AON UI → Settings → Infrastructure and Support → Platform Settings
 
 ---
 
-
-
 ---
 
 ## Verify
@@ -297,7 +296,6 @@ AON UI → Settings → Infrastructure and Support → Platform Settings
 - Flow Map displays flows for at least the test VMs / workloads
 - Collector shows Online in Settings → Infrastructure and Support → Collectors
 - AD users can log in if LDAP was the issue; test with a known-good AD account
-
 
 ---
 

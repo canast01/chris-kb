@@ -14,43 +14,52 @@ Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service 
 </div>
 ![Cisco DCNM — Diagnostics](../../../../assets/san-cisco-cisco-dcnm-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "appmgr status\nGET /rest/health" {shape: rectangle}
+D: "grep switch-IP /var/log/dcnm/discovery.log\nTest SSH and SNMP to switch" {shape: rectangle}
+E: "appmgr db-status\nCheck pmdb size and retention" {shape: rectangle}
+F: "Measure REST API response time\nCheck PostgreSQL slow queries" {shape: rectangle}
+G: "dcnm-ha-status.sh\nCheck replication lag on standby" {shape: rectangle}
+H: "curl localhost:9200/_cluster/health\nCheck Elasticsearch shard state" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "journalctl -u dcnm -n 100\nCheck disk space: df -h" {shape: rectangle}
+K: "pg_isready -U postgres\njournalctl -u postgresql -n 50" {shape: rectangle}
+L: "curl localhost:9200/_cluster/health\nCheck if disk is full" {shape: rectangle}
+M: "ssh -v dcnm_mgmt@switch-ip show version\nsnmpget -v3 switch-ip sysDescr.0" {shape: rectangle}
+N: "psql -U postgres pmdb\nSELECT count FROM pmdata; check retention" {shape: rectangle}
+O: "time curl REST /rest/inventory/switches\nSELECT pid,duration,query FROM pg_stat_activity WHERE state != idle" {shape: rectangle}
+P: "psql -U postgres\nSELECT now(" {shape: rectangle}
+Q: "curl localhost:9200/_cluster/health?pretty\nCheck status=red or yellow unassigned shards" {shape: rectangle}
+R: "Collect DCNM support bundle\ncollect-support-bundle.sh" {shape: rectangle}
+S: "Open Cisco TAC case\nAttach bundle and switch show tech-support" {shape: rectangle}
+A: "DCNM Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([DCNM Issue]) --> B{What type of problem?}
-    B -->|DCNM UI or API unresponsive| C[appmgr status\nGET /rest/health]
-    B -->|Switch discovery failing| D[grep switch-IP /var/log/dcnm/discovery.log\nTest SSH and SNMP to switch]
-    B -->|Performance data missing| E[appmgr db-status\nCheck pmdb size and retention]
-    B -->|Slow UI or API timeouts| F[Measure REST API response time\nCheck PostgreSQL slow queries]
-    B -->|HA failover or split-brain| G[dcnm-ha-status.sh\nCheck replication lag on standby]
-    B -->|Analytics or topology wrong| H[curl localhost:9200/_cluster/health\nCheck Elasticsearch shard state]
-    C --> I{Which service down?}
-    I -->|dcnm| J[journalctl -u dcnm -n 100\nCheck disk space: df -h]
-    I -->|postgres| K[pg_isready -U postgres\njournalctl -u postgresql -n 50]
-    I -->|elasticsearch| L[curl localhost:9200/_cluster/health\nCheck if disk is full]
-    D --> M[ssh -v dcnm_mgmt@switch-ip show version\nsnmpget -v3 switch-ip sysDescr.0]
-    E --> N[psql -U postgres pmdb\nSELECT count FROM pmdata; check retention]
-    F --> O[time curl REST /rest/inventory/switches\nSELECT pid,duration,query FROM pg_stat_activity WHERE state != idle]
-    G --> P[psql -U postgres\nSELECT now() - pg_last_xact_replay_timestamp]
-    H --> Q[curl localhost:9200/_cluster/health?pretty\nCheck status=red or yellow unassigned shards]
-    J --> R[Collect DCNM support bundle\ncollect-support-bundle.sh]
-    K --> R
-    L --> R
-    M --> R
-    N --> R
-    O --> R
-    P --> R
-    Q --> R
-    R --> S[Open Cisco TAC case\nAttach bundle and switch show tech-support]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
-    class R,S escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+I -> L
+D -> M
+E -> N
+F -> O
+G -> P
+H -> Q
+J -> R
+K -> R
+L -> R
+M -> R
+N -> R
+O -> R
+P -> R
+Q -> R
+R -> S
 ```
 
 ```d2

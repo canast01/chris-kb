@@ -9,8 +9,6 @@ search:
 # Virtualization Vmware Tanzu — Common Issues
 ![Virtualization Vmware Tanzu — Common Issues](../../../../assets/virtualization-vmware-tanzu-troubleshooting-common-issues.svg)
 
-
-
 ```text
    vCenter → Workload Management → Supervisor → Control Plane VMs
    SSH to a control plane VM → check timedatectl
@@ -56,39 +54,44 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1[Supervisor cluster not ready]
-    S --> B2[TKG cluster create fails]
-    S --> B3[Pod stuck in Pending]
-    S --> B4[ImagePullBackOff error]
-    S --> B5[Service LoadBalancer pending]
-    S --> B6[Namespace provisioning stuck]
+```d2
+direction: right
 
-    B1 --> D1{NSX or AVI\nVIP assigned?}
-    D1 -->|No| R1[Check LB VIP · Content Library Sync\n→ TKG Cluster Create Fails]
-    D1 -->|Yes| R2[Check Control Plane VM NTP · vCenter Creds\n→ TKG Cluster Create Fails]
+S: "What is the symptom?" {shape: rectangle}
+B1: "Supervisor cluster not ready" {shape: rectangle}
+B2: "TKG cluster create fails" {shape: rectangle}
+B3: "Pod stuck in Pending" {shape: rectangle}
+B4: "ImagePullBackOff error" {shape: rectangle}
+B5: "Service LoadBalancer pending" {shape: rectangle}
+B6: "Namespace provisioning stuck" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+R1: "Check LB VIP · Content Library Sync\n→ TKG Cluster Create Fails" {shape: rectangle}
+R2: "Check Control Plane VM NTP · vCenter Creds\n→ TKG Cluster Create Fails" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Check Harbor Cert · Pull Secret Credentials\n→ ImagePullBackOff" {shape: rectangle}
+R4: "Check Namespace CPU/Memory Limit\n→ TKG Cluster Create Fails" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "Scale Nodes · kubectl top nodes\n→ Pod Stuck in Pending" {shape: rectangle}
+R6: "Check CSI Driver Pods · Storage Provisioner\n→ Pod Stuck in Pending" {shape: rectangle}
+R7: "Trust Harbor CA · Refresh imagePullSecret\n→ ImagePullBackOff" {shape: rectangle}
+R8: "Check NSX-T IP Pool Capacity · AVI SE Group\n→ Service Type LoadBalancer Pending" {shape: rectangle}
+R9: "Check vCenter Creds · Namespace Resource Usage\n→ TKG Cluster Create Fails" {shape: rectangle}
 
-    B2 --> D2{Image pull\nor resource quota?}
-    D2 -->|Image pull| R3[Check Harbor Cert · Pull Secret Credentials\n→ ImagePullBackOff]
-    D2 -->|Resource quota| R4[Check Namespace CPU/Memory Limit\n→ TKG Cluster Create Fails]
-
-    B3 --> D3{Insufficient resources\nor PVC unbound?}
-    D3 -->|Resources| R5[Scale Nodes · kubectl top nodes\n→ Pod Stuck in Pending]
-    D3 -->|PVC| R6[Check CSI Driver Pods · Storage Provisioner\n→ Pod Stuck in Pending]
-
-    B4 --> R7[Trust Harbor CA · Refresh imagePullSecret\n→ ImagePullBackOff]
-
-    B5 --> R8[Check NSX-T IP Pool Capacity · AVI SE Group\n→ Service Type LoadBalancer Pending]
-
-    B6 --> R9[Check vCenter Creds · Namespace Resource Usage\n→ TKG Cluster Create Fails]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
-    class D1,D2,D3 decision
-    class S start
+S -> B1
+S -> B2
+S -> B3
+S -> B4
+S -> B5
+S -> B6
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+B4 -> R7
+B5 -> R8
+B6 -> R9
 ```
 
 ---

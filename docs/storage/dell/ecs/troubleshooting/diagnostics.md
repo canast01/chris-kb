@@ -14,34 +14,35 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 </div>
 ![Dell ECS — Diagnostics](../../../../assets/storage-dell-ecs-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "ECS Issue Reported" {shape: rectangle}
+B: "GET /vdc/nodes: cluster health\nGET /vdc/alerts: active alerts" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "SSH to affected node\nsystemctl status storageos caspian" {shape: rectangle}
+E: "E" {shape: rectangle}
+F: "journalctl -u storageos: logs\ndf -h /data/ — disk full?\nRestart only if logs confirm safe" {shape: rectangle}
+G: "nodetool status: Cassandra ring\necho srvr | nc 2181: ZK mode\nlsblk: check for disk errors" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "aws s3api head-bucket: auth check\nCheck IAM user + bucket policy\nVerify addr style and namespace" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "nc -zv remote-node 9100: WAN port\nGET /vdc/nodes: remote VDC health\nMonitor WAN bandwidth" {shape: rectangle}
+L: "Tail ECS logs for transient errors\ntail /var/log/ecs/*.log | grep ERR" {shape: rectangle}
+M: "Collect support bundle\nPOST /vdc/support-bundle or Portal\nOpen Dell support case" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([ECS Issue Reported]) --> B[GET /vdc/nodes: cluster health\nGET /vdc/alerts: active alerts]
-    B --> C{All nodes GOOD?}
-    C -->|No — node DEGRADED| D[SSH to affected node\nsystemctl status storageos caspian]
-    D --> E{Service running?}
-    E -->|No| F[journalctl -u storageos: logs\ndf -h /data/ — disk full?\nRestart only if logs confirm safe]
-    E -->|Yes| G[nodetool status: Cassandra ring\necho srvr | nc 2181: ZK mode\nlsblk: check for disk errors]
-    C -->|Yes| H{S3 API functional?}
-    H -->|No — 403 or 500| I[aws s3api head-bucket: auth check\nCheck IAM user + bucket policy\nVerify addr style and namespace]
-    H -->|Yes| J{Geo-replication lag growing?}
-    J -->|Yes| K[nc -zv remote-node 9100: WAN port\nGET /vdc/nodes: remote VDC health\nMonitor WAN bandwidth]
-    J -->|No| L[Tail ECS logs for transient errors\ntail /var/log/ecs/*.log | grep ERR]
-    F --> M[Collect support bundle\nPOST /vdc/support-bundle or Portal\nOpen Dell support case]
-    G --> M
-    I --> M
-    K --> M
-    L --> M
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,E,H,J dark
-    class B,D,F,G,I,K,L action
-    class M escalate
+A -> B
+C -> D
+E -> F
+E -> G
+H -> I
+J -> K
+J -> L
+F -> M
+G -> M
+I -> M
+K -> M
+L -> M
 ```
 
 ```d2

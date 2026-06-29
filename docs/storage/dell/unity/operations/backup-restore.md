@@ -36,22 +36,29 @@ Dell Unity provides multiple data protection mechanisms that can be used indepen
 
 ## Protection Method Selection
 
-```mermaid
-graph TD
-  FAULT([Recovery scenario]) --> TYPE{What failed?}
-  TYPE -->|"Accidental file delete\nor LUN corruption"| SNAP["Native Snapshot\nRPO = last snap · RTO minutes"]
-  TYPE -->|"Site / array failure"| REP{RPO target?}
-  TYPE -->|"VM backup"| VBR["Veeam Storage Snapshot\nintegration"]
-  TYPE -->|"NAS file backup"| NDMP["NDMP to tape / object"]
-  REP -->|"Zero data loss"| SYNC["Synchronous Replication\nRPO = 0"]
-  REP -->|"Minutes acceptable"| ASYNC["Asynchronous Replication\nRPO = configurable"]
-  SNAP & SYNC & ASYNC & VBR & NDMP --> DONE([Recovery complete])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class TYPE,REP decision
-  class SNAP,SYNC,ASYNC,VBR,NDMP action
-  class FAULT,DONE term
+```d2
+direction: right
+
+TYPE: "TYPE" {shape: rectangle}
+SNAP: "Native Snapshot\nRPO = last snap · RTO minutes" {shape: rectangle}
+VBR: "Veeam Storage Snapshot\nintegration" {shape: rectangle}
+NDMP: "NDMP to tape / object" {shape: rectangle}
+REP: "REP" {shape: rectangle}
+SYNC: "Synchronous Replication\nRPO = 0" {shape: rectangle}
+ASYNC: "Asynchronous Replication\nRPO = configurable" {shape: rectangle}
+DONE: "Recovery complete" {shape: rectangle}
+FAULT: "Recovery scenario" {shape: rectangle}
+
+TYPE -> SNAP
+TYPE -> VBR
+TYPE -> NDMP
+REP -> SYNC
+REP -> ASYNC
+SNAP -> SYNC
+SYNC -> ASYNC
+ASYNC -> VBR
+VBR -> NDMP
+NDMP -> DONE
 ```
 
 ## Native Snapshots

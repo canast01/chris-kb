@@ -13,32 +13,39 @@ GitHub Actions diagnostic commands: enable step-level debug logging, inspect run
 *Applies to: GitHub Actions (Cloud and self-hosted runners)*
 </div>
 
-```mermaid
-graph TD
-    A([Workflow Failure]) --> B[gh run view RUN_ID\nFind failing step]
-    B --> C{Enough log detail?}
-    C -->|No| D[Enable debug secrets\nACTIONS_STEP_DEBUG=true]
-    D --> E[Re-run failed jobs\nwith debug enabled]
-    C -->|Yes| F{Error type?}
-    F -->|Runner offline| G[Check runner status\nSettings → Actions → Runners]
-    F -->|Auth / OIDC| H[Add diagnostic step\nPrint caller identity]
-    F -->|Secret missing| I[Check secret scope\nrepo vs env vs org]
-    F -->|Network error| J[Self-hosted: test network\ncurl https://github.com]
-    G --> K[Read _diag/ logs\non runner host]
-    H --> L[Check workflow\npermissions: id-token: write]
-    I --> M[gh secret list\nVerify secret exists]
-    K --> N[Open GitHub SR\nsupport.github.com]
-    E --> N
-    L --> N
-    M --> N
-    J --> N
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F dark
-    class B,D,E,G,H,I,J,K,L,M action
-    class N escalate
+A: "Workflow Failure" {shape: rectangle}
+B: "gh run view RUN_ID\nFind failing step" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "Enable debug secrets\nACTIONS_STEP_DEBUG=true" {shape: rectangle}
+E: "Re-run failed jobs\nwith debug enabled" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Check runner status\nSettings → Actions → Runners" {shape: rectangle}
+H: "Add diagnostic step\nPrint caller identity" {shape: rectangle}
+I: "Check secret scope\nrepo vs env vs org" {shape: rectangle}
+J: "Self-hosted: test network\ncurl https://github.com" {shape: rectangle}
+K: "Read _diag/ logs\non runner host" {shape: rectangle}
+L: "Check workflow\npermissions: id-token: write" {shape: rectangle}
+M: "gh secret list\nVerify secret exists" {shape: rectangle}
+N: "Open GitHub SR\nsupport.github.com" {shape: rectangle}
+
+A -> B
+C -> D
+D -> E
+F -> G
+F -> H
+F -> I
+F -> J
+G -> K
+H -> L
+I -> M
+K -> N
+E -> N
+L -> N
+M -> N
+J -> N
 ```
 
 ```d2

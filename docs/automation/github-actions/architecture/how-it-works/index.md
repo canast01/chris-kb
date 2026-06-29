@@ -15,20 +15,34 @@ GitHub Actions is an event-driven CI/CD and automation platform embedded directl
 
 ## Core Execution Model
 
-```mermaid
-flowchart TD
-    E[Repository Event] --> W[Workflow Triggered]
-    W --> Q[Job Queue]
-    Q --> R1[Runner 1\nJob A]
-    Q --> R2[Runner 2\nJob B]
-    R1 --> S1[Step 1: Checkout]
-    R1 --> S2[Step 2: Build]
-    R1 --> S3[Step 3: Test]
-    R2 --> S4[Step 1: Lint]
-    R2 --> S5[Step 2: Scan]
-    S3 --> A[Upload Artifact]
-    S5 --> A
-    A --> NOTIFY[Notification / Downstream Jobs]
+```d2
+direction: right
+
+E: "Repository Event" {shape: rectangle}
+W: "Workflow Triggered" {shape: rectangle}
+Q: "Job Queue" {shape: rectangle}
+R1: "Runner 1\nJob A" {shape: rectangle}
+R2: "Runner 2\nJob B" {shape: rectangle}
+S1: "Step 1: Checkout" {shape: rectangle}
+S2: "Step 2: Build" {shape: rectangle}
+S3: "Step 3: Test" {shape: rectangle}
+S4: "Step 1: Lint" {shape: rectangle}
+S5: "Step 2: Scan" {shape: rectangle}
+A: "Upload Artifact" {shape: rectangle}
+NOTIFY: "Notification / Downstream Jobs" {shape: rectangle}
+
+E -> W
+W -> Q
+Q -> R1
+Q -> R2
+R1 -> S1
+R1 -> S2
+R1 -> S3
+R2 -> S4
+R2 -> S5
+S3 -> A
+S5 -> A
+A -> NOTIFY
 ```
 
 | Scope | Registration Level | Shared Across |

@@ -15,44 +15,53 @@ vSphere Replication (VR) diagnostic commands: check VRA service status with syst
 </div>
 ![vSphere Replication — Diagnostics](../../../../assets/virtualization-vmware-vsphere-replication-troubleshooting-di.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "systemctl status hms vrms nginx\njournalctl -u hms -n 100" {shape: rectangle}
+D: "nc -zv target-VRA 31031 from source ESXi\nCheck hbrsvc on source ESXi" {shape: rectangle}
+E: "vCenter → Monitor → Recent Tasks\nFilter for HBR or vSphere Replication" {shape: rectangle}
+F: "openssl s_client -connect VRA:443\nCheck notAfter date" {shape: rectangle}
+G: "Check hbr.log on source ESXi\nRead per-VM replication error" {shape: rectangle}
+H: "Test TCP 443 to vCenter from VRA\nnc -zv vcenter-ip 443" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "systemctl start hms\nCheck disk: df -h /" {shape: rectangle}
+K: "systemctl start vrms\njournalctl -u vrms -n 50 for error" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Check firewall rules between sites\nVerify target VRA IP and routing" {shape: rectangle}
+N: "Check hbr.log for bandwidth or timeout errors\nCheck VMkernel adapter used for replication" {shape: rectangle}
+O: "Cancel stuck task if > 30 min\nvCenter → Recent Tasks → right-click Cancel" {shape: rectangle}
+P: "Check cert via VAMI\nhttps://VRA:5480 → Certificate → Renew" {shape: rectangle}
+Q: "tail /var/log/hbr.log | grep -i error\nCompare replication timestamps" {shape: rectangle}
+R: "Check DNS resolution of vCenter from VRA\nnslookup vcenter-fqdn" {shape: rectangle}
+S: "Collect VRA VAMI support bundle\nhttps://VRA:5480 → Support → Generate" {shape: rectangle}
+T: "Open VMware SR\nAttach bundle and replication task ID" {shape: rectangle}
+A: "vSphere Replication Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([vSphere Replication Issue]) --> B{What type of problem?}
-    B -->|VRA UI or API unreachable| C[systemctl status hms vrms nginx\njournalctl -u hms -n 100]
-    B -->|Replication lag or stuck transfer| D[nc -zv target-VRA 31031 from source ESXi\nCheck hbrsvc on source ESXi]
-    B -->|Replication task stuck in vCenter| E[vCenter → Monitor → Recent Tasks\nFilter for HBR or vSphere Replication]
-    B -->|Certificate error| F[openssl s_client -connect VRA:443\nCheck notAfter date]
-    B -->|VRA services running but replication fails| G[Check hbr.log on source ESXi\nRead per-VM replication error]
-    B -->|VRA can't reach vCenter| H[Test TCP 443 to vCenter from VRA\nnc -zv vcenter-ip 443]
-    C --> I{Which service down?}
-    I -->|hms not running| J[systemctl start hms\nCheck disk: df -h /]
-    I -->|vrms not running| K[systemctl start vrms\njournalctl -u vrms -n 50 for error]
-    D --> L{Port 31031 reachable?}
-    L -->|No| M[Check firewall rules between sites\nVerify target VRA IP and routing]
-    L -->|Yes, still lagging| N[Check hbr.log for bandwidth or timeout errors\nCheck VMkernel adapter used for replication]
-    E --> O[Cancel stuck task if > 30 min\nvCenter → Recent Tasks → right-click Cancel]
-    F --> P[Check cert via VAMI\nhttps://VRA:5480 → Certificate → Renew]
-    G --> Q[tail /var/log/hbr.log | grep -i error\nCompare replication timestamps]
-    H --> R[Check DNS resolution of vCenter from VRA\nnslookup vcenter-fqdn]
-    J --> S[Collect VRA VAMI support bundle\nhttps://VRA:5480 → Support → Generate]
-    K --> S
-    M --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-    S --> T[Open VMware SR\nAttach bundle and replication task ID]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
-    class S,T escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+L -> M
+L -> N
+E -> O
+F -> P
+G -> Q
+H -> R
+J -> S
+K -> S
+M -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
+S -> T
 ```
 
 ```d2

@@ -15,45 +15,54 @@ VMware Cloud Foundation diagnostic commands: check SDDC Manager services and hea
 </div>
 ![VCF — Diagnostics](../../../../assets/virtualization-vmware-vmware-cloud-foundation-troubleshootin.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "systemctl status vmware-vcf-operationsmanager\ntail operationsmanager.log" {shape: rectangle}
+D: "grep precheck lcm-debug.log\nGET /v1/tasks?status=FAILED" {shape: rectangle}
+E: "NSX CLI: get cluster status\nget transport-nodes status" {shape: rectangle}
+F: "vCenter: service-control --status --all\ntail vpxd.log" {shape: rectangle}
+G: "PowerCLI: VsanQueryVcClusterHealthSummary\nesxcli vsan debug on ESXi" {shape: rectangle}
+H: "GET /v1/system/health-summary\nsudo sos --health-check" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "systemctl restart vmware-vcf-operationsmanager\nCheck disk: df -h on SDDC Manager" {shape: rectangle}
+K: "GET /v1/tasks?status=IN_PROGRESS for stuck task IDs\ngrep task-uuid operationsmanager.log" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "curl -v https://depot.vmware.com to test depot connectivity\nCheck proxy: domain-manager.properties" {shape: rectangle}
+N: "grep precheck FAIL lcm-debug.log for check name\nRemediate flagged item and retry" {shape: rectangle}
+O: "grep UPGRADE_STAGE lcm-debug.log\nCheck last stage entry for timeout" {shape: rectangle}
+P: "ESXi: vmkping -I vmk10 -d -s 1572 remote-tep-ip for MTU\nNSX: get bgp neighbor summary on Edge" {shape: rectangle}
+Q: "service-control --restart vpxd if vpxd stopped\nCheck /storage partitions: df -h" {shape: rectangle}
+R: "Get-VsanDiskGroup to check disk group state\nesxcli vsan debug object list on ESXi host" {shape: rectangle}
+S: "Collect SOS bundle\nsudo sos --collect-all-logs" {shape: rectangle}
+T: "Open VMware SR\nUpload SOS bundle + component logs" {shape: rectangle}
+A: "VCF Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([VCF Issue]) --> B{Which component is affected?}
-    B -->|SDDC Manager UI or API| C[systemctl status vmware-vcf-operationsmanager\ntail operationsmanager.log]
-    B -->|LCM upgrade failing or stuck| D[grep precheck lcm-debug.log\nGET /v1/tasks?status=FAILED]
-    B -->|NSX networking| E[NSX CLI: get cluster status\nget transport-nodes status]
-    B -->|vCenter or vSphere| F[vCenter: service-control --status --all\ntail vpxd.log]
-    B -->|vSAN storage| G[PowerCLI: VsanQueryVcClusterHealthSummary\nesxcli vsan debug on ESXi]
-    B -->|Unknown platform issue| H[GET /v1/system/health-summary\nsudo sos --health-check]
-    C --> I{SDDC Manager state?}
-    I -->|Service not running| J[systemctl restart vmware-vcf-operationsmanager\nCheck disk: df -h on SDDC Manager]
-    I -->|Running but task stuck| K[GET /v1/tasks?status=IN_PROGRESS for stuck task IDs\ngrep task-uuid operationsmanager.log]
-    D --> L{LCM failure type?}
-    L -->|Bundle download failed| M[curl -v https://depot.vmware.com to test depot connectivity\nCheck proxy: domain-manager.properties]
-    L -->|Precheck FAIL| N[grep precheck FAIL lcm-debug.log for check name\nRemediate flagged item and retry]
-    L -->|Upgrade stuck in a phase| O[grep UPGRADE_STAGE lcm-debug.log\nCheck last stage entry for timeout]
-    E --> P[ESXi: vmkping -I vmk10 -d -s 1572 remote-tep-ip for MTU\nNSX: get bgp neighbor summary on Edge]
-    F --> Q[service-control --restart vpxd if vpxd stopped\nCheck /storage partitions: df -h]
-    G --> R[Get-VsanDiskGroup to check disk group state\nesxcli vsan debug object list on ESXi host]
-    H --> S[Collect SOS bundle\nsudo sos --collect-all-logs]
-    J --> S
-    K --> S
-    M --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-    S --> T[Open VMware SR\nUpload SOS bundle + component logs]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
-    class S,T escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+L -> M
+L -> N
+L -> O
+E -> P
+F -> Q
+G -> R
+H -> S
+J -> S
+K -> S
+M -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
+S -> T
 ```
 
 ```d2

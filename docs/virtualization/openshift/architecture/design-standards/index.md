@@ -10,27 +10,25 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph TB
-    A[Cluster Sizing Tiers] --> B[Compact\n3 control-plane\n0 dedicated workers]
-    A --> C[Standard\n3 control-plane\n2+ workers]
-    A --> D[Large\n3 control-plane\n100+ workers\n+ infra nodes]
+```d2
+direction: right
 
-    C --> C1[Worker MachineSet\ngeneral compute]
-    D --> D1[Worker MachineSet\ncompute]
-    D --> D2[Infra MachineSet\nrouter / monitoring / registry]
-    D --> D3[Storage MachineSet\nODF / Ceph OSDs]
+A: "Cluster Sizing Tiers" {shape: rectangle}
+B: "Compact\n3 control-plane\n0 dedicated workers" {shape: rectangle}
+C: "Standard\n3 control-plane\n2+ workers" {shape: rectangle}
+D: "Large\n3 control-plane\n100+ workers\n+ infra nodes" {shape: rectangle}
+C1: "Worker MachineSet\ngeneral compute" {shape: rectangle}
+D1: "Worker MachineSet\ncompute" {shape: rectangle}
+D2: "Infra MachineSet\nrouter / monitoring / registry" {shape: rectangle}
+D3: "Storage MachineSet\nODF / Ceph OSDs" {shape: rectangle}
 
-    classDef tier fill:#1e3a5f,color:#fff
-    classDef compact fill:#7c3aed,color:#fff
-    classDef standard fill:#15803d,color:#fff
-    classDef large fill:#2563eb,color:#fff
-    classDef pool fill:#374151,color:#fff
-    class A tier
-    class B compact
-    class C standard
-    class D large
-    class C1,D1,D2,D3 pool
+A -> B
+A -> C
+A -> D
+C -> C1
+D -> D1
+D -> D2
+D -> D3
 ```
 
 ```d2

@@ -88,27 +88,33 @@ wbadmin start backup ^
 
 ## Restore Decision Flowchart
 
-```mermaid
-flowchart TD
-    A([DC Failure / Object Loss]) --> B{What failed?}
+```d2
+direction: right
 
-    B -->|Entire DC unresponsive| C{Is hardware OK?}
-    C -->|Yes| D[Non-authoritative restore\nor promote fresh DC]
-    C -->|No| E[Bare-metal recovery\nfrom BMR backup]
+C: "C" {shape: rectangle}
+D: "Non-authoritative restore\nor promote fresh DC" {shape: rectangle}
+E: "Bare-metal recovery\nfrom BMR backup" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Recover via\nAD Recycle Bin" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Authoritative restore\non isolated DC" {shape: rectangle}
+J: "Objects permanently lost —\nre-create manually" {shape: rectangle}
+B: "B" {shape: rectangle}
+K: "Non-authoritative\nrestore + D4 DFSR" {shape: rectangle}
+Z: "Validate replication" {shape: rectangle}
+A: "DC Failure / Object Loss" {shape: rectangle}
 
-    B -->|Objects deleted in AD| F{AD Recycle Bin\nenabled?}
-    F -->|Yes| G[Recover via\nAD Recycle Bin]
-    F -->|No| H{Is deletion within\ntombstone lifetime?}
-    H -->|Yes| I[Authoritative restore\non isolated DC]
-    H -->|No| J[Objects permanently lost —\nre-create manually]
-
-    B -->|SYSVOL corruption| K[Non-authoritative\nrestore + D4 DFSR]
-
-    D --> Z([Validate replication])
-    E --> Z
-    G --> Z
-    I --> Z
-    K --> Z
+C -> D
+C -> E
+F -> G
+H -> I
+H -> J
+B -> K
+D -> Z
+E -> Z
+G -> Z
+I -> Z
+K -> Z
 ```
 
 ---

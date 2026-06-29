@@ -42,30 +42,6 @@ storage_health -> generate_report
 
 ## Health Check Triage Flow
 
-```mermaid
-graph TD
-    A["Start: scheduled\nhealth check"]:::dark --> B{"CVO status\noc get clusterversion"}:::dark
-    B -->|"Progressing=True\nor Degraded=True"| B1["Investigate CVO\noc describe clusterversion"]:::red
-    B -->|"Available=True"| C{"Cluster Operators\noc get co"}:::blue
-    C -->|"Any Degraded=True"| C1["Investigate CO\noc describe co <name>"]:::red
-    C -->|"All healthy"| D{"Nodes\noc get nodes"}:::blue
-    D -->|"NotReady node"| D1["Describe node\ncheck kubelet/conditions"]:::red
-    D -->|"All Ready"| E{"etcd\nendpoint health"}:::green
-    E -->|"Endpoint unhealthy\nor db > 8 GB"| E1["etcd triage\ncheck leader, defrag"]:::red
-    E -->|"All healthy"| F{"Networking\novn+dns pods"}:::green
-    F -->|"Pods not Running"| F1["Restart pod\ncheck ovn logs"]:::red
-    F -->|"All Running"| G{"Storage\npv/pvc status"}:::orange
-    G -->|"Pending PVCs\nor Failed PVs"| G1["Check CSI driver\ncheck storageclass"]:::red
-    G -->|"All healthy"| H["HEALTHY\nlog result"]:::teal
-
-    classDef dark fill:#374151,color:#fff
-    classDef blue fill:#2563eb,color:#fff
-    classDef green fill:#15803d,color:#fff
-    classDef orange fill:#b45309,color:#fff
-    classDef teal fill:#164e63,color:#fff
-    classDef red fill:#991b1b,color:#fff
-```
-
 ## Cluster Operator Health
 
 `oc get co` output columns: `NAME  VERSION  AVAILABLE  PROGRESSING  DEGRADED  SINCE  MESSAGE`

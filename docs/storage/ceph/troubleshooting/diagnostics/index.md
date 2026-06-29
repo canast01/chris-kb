@@ -13,19 +13,24 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph TD
-    classDef step fill:#2563eb,color:#fff
-    classDef detail fill:#374151,color:#fff
-    classDef support fill:#7c3aed,color:#fff
+```d2
+direction: right
 
-    A([ceph -s — top-level status]):::step --> B[Drill into daemons\nceph daemon osd.id ...]:::step
-    B --> C[Collect crash data\nceph crash ls / info]:::step
-    C --> D[Collect logs\njournalctl / ceph orch daemon logs]:::step
-    D --> E[Run sos report\nfor RHCS cases]:::support
-    E --> F([Open support case\nescalation/]):::support
-    B --> G[PG deep dive\nceph pg query / rados list-inconsistent]:::detail
-    G --> D
+A: "ceph -s — top-level status" {shape: rectangle}
+B: "Drill into daemons\nceph daemon osd.id ..." {shape: rectangle}
+C: "Collect crash data\nceph crash ls / info" {shape: rectangle}
+D: "Collect logs\njournalctl / ceph orch daemon logs" {shape: rectangle}
+E: "Run sos report\nfor RHCS cases" {shape: rectangle}
+F: "Open support case\nescalation/" {shape: rectangle}
+G: "PG deep dive\nceph pg query / rados list-inconsistent" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+E -> F
+B -> G
+G -> D
 ```
 
 ```d2

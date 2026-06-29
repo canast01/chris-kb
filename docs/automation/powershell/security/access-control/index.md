@@ -24,24 +24,25 @@ PowerShell access control: execution policy enforcement, JEA (Just Enough Admini
 
 ## PowerShell Access Control Architecture
 
-```mermaid
-graph TD
-    user["User / Script\n(caller)"]
-    execPolicy["Execution Policy\n(RemoteSigned / AllSigned)"]
-    jea["JEA Endpoint\n(Register-PSSessionConfiguration)"]
-    roleCapability["Role Capability File\n(.psrc — allowed cmdlets)"]
-    sessionConfig["Session Configuration\n(.pssc — restricted)"]
-    adGroup["AD Group Membership\n(RBAC check in code)"]
-    transcript["Start-Transcript\n(audit log)"]
-    svcAccount["Service Account\n(least privilege)"]
+```d2
+direction: right
 
-    user --> execPolicy
-    execPolicy -->|Pass| jea
-    jea --> sessionConfig
-    sessionConfig --> roleCapability
-    user --> adGroup
-    adGroup -->|Member| svcAccount
-    svcAccount --> transcript
+user: "User / Script\n(caller" {shape: rectangle}
+execPolicy: "Execution Policy\n(RemoteSigned / AllSigned" {shape: rectangle}
+jea: "JEA Endpoint\n(Register-PSSessionConfiguration" {shape: rectangle}
+sessionConfig: "Session Configuration\n(.pssc — restricted" {shape: rectangle}
+roleCapability: "Role Capability File\n(.psrc — allowed cmdlets" {shape: rectangle}
+adGroup: "AD Group Membership\n(RBAC check in code" {shape: rectangle}
+svcAccount: "Service Account\n(least privilege" {shape: rectangle}
+transcript: "Start-Transcript\n(audit log" {shape: rectangle}
+
+user -> execPolicy
+execPolicy -> jea
+jea -> sessionConfig
+sessionConfig -> roleCapability
+user -> adGroup
+adGroup -> svcAccount
+svcAccount -> transcript
 ```
 
 ## Least Privilege Reference

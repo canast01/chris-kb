@@ -12,22 +12,21 @@ Azure Cost Management budgets let you set spending thresholds and trigger alerts
 
 ## Budget Alert Flow
 
-```mermaid
-flowchart LR
-    budget["Budget\n(subscription / RG scope)"]
-    forecastActual["Actual or Forecast Spend"]
-    threshold1{"Exceeds\n80% threshold?"}
-    threshold2{"Exceeds\n100% threshold?"}
-    alert80["Alert Notification\nemail · action group"]
-    alert100["Alert Notification\n100% budget reached"]
-    actionGroup["Action Group\nLogic App · webhook · ITSM"]
+```d2
+direction: right
 
-    budget --> forecastActual
-    forecastActual --> threshold1
-    threshold1 -- Yes --> alert80 --> actionGroup
-    threshold1 -- No --> threshold2
-    threshold2 -- Yes --> alert100 --> actionGroup
-    threshold2 -- No --> forecastActual
+budget: "Budget\n(subscription / RG scope" {shape: rectangle}
+forecastActual: "Actual or Forecast Spend" {shape: rectangle}
+threshold1: "threshold1" {shape: rectangle}
+alert80: "Alert Notification\nemail · action group" {shape: rectangle}
+actionGroup: "Action Group\nLogic App · webhook · ITSM" {shape: rectangle}
+alert100: "Alert Notification\n100% budget reached" {shape: rectangle}
+threshold2: "threshold2" {shape: rectangle}
+
+budget -> forecastActual
+forecastActual -> threshold1
+alert80 -> actionGroup
+alert100 -> actionGroup
 ```
 
 ## Creating a Budget

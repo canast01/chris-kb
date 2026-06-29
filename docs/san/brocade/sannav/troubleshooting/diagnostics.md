@@ -14,44 +14,52 @@ SANnav diagnostic commands: check service health with sannav-admin and journalct
 </div>
 ![Brocade SANnav — Diagnostics](../../../../assets/san-brocade-sannav-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "sannav-admin status\ncurl /api/v1/health" {shape: rectangle}
+D: "grep switch-ip /opt/sannav/logs/discovery.log\ncurl -sk switch-ip/rest/loginresult" {shape: rectangle}
+E: "curl localhost:8086/health\nCheck InfluxDB disk usage" {shape: rectangle}
+F: "tcpdump -i eth0 udp port 162\nCheck SNMP trap reception" {shape: rectangle}
+G: "sannav-admin db-status\nCheck PostgreSQL health" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "journalctl -u sannav --since 1h\nFind failing service" {shape: rectangle}
+J: "top + free -h\nCheck CPU and RAM" {shape: rectangle}
+K: "Test HTTPS to switch\ncurl -sk switch-ip/rest/loginresult" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Check switch credentials\nin SANnav Discover menu" {shape: rectangle}
+N: "Check network and firewall\nto switch management IP on HTTPS" {shape: rectangle}
+O: "df -h /opt/sannav/data\ndu -sh influxdb/ vs total" {shape: rectangle}
+P: "Reduce retention policy\nAdmin → System → Data Retention" {shape: rectangle}
+Q: "Q" {shape: rectangle}
+R: "Check switch SNMP config\nsnmpconfig --show snmpv3" {shape: rectangle}
+S: "Check trap source IP\nmust match discovered switch IP" {shape: rectangle}
+T: "Collect support bundle\nSANnav GUI → Admin → Export Logs" {shape: rectangle}
+A: "SANnav Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([SANnav Issue]) --> B{What type of problem?}
-    B -->|UI unavailable or slow| C[sannav-admin status\ncurl /api/v1/health]
-    B -->|Switch not discovered| D[grep switch-ip /opt/sannav/logs/discovery.log\ncurl -sk switch-ip/rest/loginresult]
-    B -->|Performance data missing| E[curl localhost:8086/health\nCheck InfluxDB disk usage]
-    B -->|Alerts not appearing| F[tcpdump -i eth0 udp port 162\nCheck SNMP trap reception]
-    B -->|No data or stale topology| G[sannav-admin db-status\nCheck PostgreSQL health]
-    C --> H{Services healthy?}
-    H -->|No| I[journalctl -u sannav --since 1h\nFind failing service]
-    H -->|Yes but slow| J[top + free -h\nCheck CPU and RAM]
-    D --> K[Test HTTPS to switch\ncurl -sk switch-ip/rest/loginresult]
-    K --> L{HTTP 200 or 401?}
-    L -->|Yes| M[Check switch credentials\nin SANnav Discover menu]
-    L -->|No| N[Check network and firewall\nto switch management IP on HTTPS]
-    E --> O[df -h /opt/sannav/data\ndu -sh influxdb/ vs total]
-    O --> P[Reduce retention policy\nAdmin → System → Data Retention]
-    F --> Q{Traps arriving?}
-    Q -->|No| R[Check switch SNMP config\nsnmpconfig --show snmpv3]
-    Q -->|Yes but missing in SANnav| S[Check trap source IP\nmust match discovered switch IP]
-    G --> I
-    I --> T[Collect support bundle\nSANnav GUI → Admin → Export Logs]
-    J --> T
-    M --> T
-    N --> T
-    P --> T
-    R --> T
-    S --> T
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H,L,Q dark
-    class C,D,E,F,G,I,J,K,M,N,O,P,R,S action
-    class T escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+H -> I
+H -> J
+D -> K
+L -> M
+L -> N
+E -> O
+O -> P
+Q -> R
+Q -> S
+G -> I
+I -> T
+J -> T
+M -> T
+N -> T
+P -> T
+R -> T
+S -> T
 ```
 
 ```d2

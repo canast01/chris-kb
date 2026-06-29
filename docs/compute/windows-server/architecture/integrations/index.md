@@ -13,22 +13,23 @@ Windows Server integration: Active Directory domain join, SCOM agent, SCCM/Confi
 
 ## AD / DNS Dependency Diagram
 
-```mermaid
-flowchart TD
-    client["Windows Client / Server"]
-    dns["DNS Server\n(DC-hosted)"]
-    dc["Domain Controller\nAD DS · Kerberos KDC · LDAP"]
-    gc["Global Catalog\nforest-wide object search"]
-    netlogon["Netlogon Service\nDC locator · secure channel"]
-    sysvol["SYSVOL Share\nGPO files · scripts"]
+```d2
+direction: right
 
-    client -->|"DNS query for DC SRV"| dns
-    dns -->|"returns DC address"| client
-    client -->|"Kerberos / LDAP"| dc
-    dc --- gc
-    dc --- netlogon
-    dc --- sysvol
-    client -->|"GPO download"| sysvol
+client: "Windows Client / Server" {shape: rectangle}
+dns: "DNS Server\n(DC-hosted" {shape: rectangle}
+dc: "Domain Controller\nAD DS · Kerberos KDC · LDAP" {shape: rectangle}
+gc: "Global Catalog\nforest-wide object search" {shape: rectangle}
+netlogon: "Netlogon Service\nDC locator · secure channel" {shape: rectangle}
+sysvol: "SYSVOL Share\nGPO files · scripts" {shape: rectangle}
+
+client -> dns
+dns -> client
+client -> dc
+dc -> gc
+dc -> netlogon
+dc -> sysvol
+client -> sysvol
 ```
 
 Maintenance windows control reboot scheduling:

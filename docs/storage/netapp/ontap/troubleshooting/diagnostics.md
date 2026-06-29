@@ -14,41 +14,46 @@ ONTAP diagnostic commands: check cluster and HA health with <code>cluster show</
 </div>
 ![ONTAP — Diagnostics](../../../../assets/storage-netapp-ontap-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "ONTAP Issue" {shape: rectangle}
+B: "cluster show: node health\nsystem health status show\nstorage failover show: HA state" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "system node show: state and uptime\ncluster ring show: cluster services\nstorage failover interconnect show" {shape: rectangle}
+E: "aggr show -state !online\nstorage disk show -broken\ndisk show -raid-state recon" {shape: rectangle}
+F: "volume show -state !online\nvolume show percent-used > 90%\nvolume efficiency show: dedup" {shape: rectangle}
+G: "net int show -status-oper down\nnet int show -is-home false\ncluster ping-cluster: ICL health" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "nfs connected-client show\nvserver export-policy check-access\nstatistics start -object nfsv3" {shape: rectangle}
+J: "vserver cifs domain info\nvserver cifs session show\nstatistics start -object smb2" {shape: rectangle}
+K: "iscsi session show\nlun mapping show\nlun igroup show" {shape: rectangle}
+L: "fcp adapter show\nfcp initiator show\nfcp topology show" {shape: rectangle}
+M: "snapmirror show -health false\nsnapmirror lag show\nnet int show -role intercluster" {shape: rectangle}
+N: "statistics start -object volume\nqos statistics performance show\nsystem node run sysstat" {shape: rectangle}
+O: "autosupport invoke: all nodes\nOpen NetApp support case" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([ONTAP Issue]) --> B[cluster show: node health\nsystem health status show\nstorage failover show: HA state]
-    B --> C{Symptom scope?}
-    C -->|Cluster or node| D[system node show: state and uptime\ncluster ring show: cluster services\nstorage failover interconnect show]
-    C -->|Storage or disk| E[aggr show -state !online\nstorage disk show -broken\ndisk show -raid-state recon]
-    C -->|Volume or space| F[volume show -state !online\nvolume show percent-used > 90%\nvolume efficiency show: dedup]
-    C -->|Network or LIF| G[net int show -status-oper down\nnet int show -is-home false\ncluster ping-cluster: ICL health]
-    C -->|Protocol| H{Which protocol?}
-    H -->|NFS| I[nfs connected-client show\nvserver export-policy check-access\nstatistics start -object nfsv3]
-    H -->|CIFS/SMB| J[vserver cifs domain info\nvserver cifs session show\nstatistics start -object smb2]
-    H -->|iSCSI| K[iscsi session show\nlun mapping show\nlun igroup show]
-    H -->|FC| L[fcp adapter show\nfcp initiator show\nfcp topology show]
-    C -->|SnapMirror| M[snapmirror show -health false\nsnapmirror lag show\nnet int show -role intercluster]
-    C -->|Performance| N[statistics start -object volume\nqos statistics performance show\nsystem node run sysstat]
-    D --> O[autosupport invoke: all nodes\nOpen NetApp support case]
-    E --> O
-    F --> O
-    G --> O
-    I --> O
-    J --> O
-    K --> O
-    L --> O
-    M --> O
-    N --> O
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,H dark
-    class B,D,E,F,G,I,J,K,L,M,N action
-    class O escalate
+A -> B
+C -> D
+C -> E
+C -> F
+C -> G
+H -> I
+H -> J
+H -> K
+H -> L
+C -> M
+C -> N
+D -> O
+E -> O
+F -> O
+G -> O
+I -> O
+J -> O
+K -> O
+L -> O
+M -> O
+N -> O
 ```
 
 ```d2

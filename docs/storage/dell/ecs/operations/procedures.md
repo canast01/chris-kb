@@ -69,27 +69,33 @@ Run these checks after any change to confirm the ECS cluster is healthy and obje
 
 ## Provisioning Flow: Namespace → Bucket → IAM User
 
-```mermaid
-graph TD
-  START([New application storage request]) --> NS["Create Namespace\necscli namespace create\n+ replication group + hard quota"]
-  NS --> BKT["Create Bucket\nS3 name rules · versioning off by default"]
-  BKT --> LOCK{Compliance\nor WORM?}
-  LOCK -->|Yes| OBJ["Enable Object Lock at\nbucket creation (cannot add later)"]
-  LOCK -->|No| USR
-  OBJ --> USR["Create Object User\necscli user create\n--namespace --name svc-<app>-<env>"]
-  USR --> KEY["Generate Access Key + Secret Key\n(shown once — store in vault immediately)"]
-  KEY --> POL["Apply Bucket Policy\nleast-privilege s3 actions only"]
-  POL --> LC{Versioning\nenabled?}
-  LC -->|Yes| LCP["Add lifecycle policy\nNoncurrentVersionExpiration + MPU abort"]
-  LC -->|No| TEST
-  LCP --> TEST["Functional test:\naws s3 ls s3://bucket --endpoint-url ..."]
-  TEST --> DONE([Bucket ready for application])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class LOCK,LC decision
-  class NS,BKT,OBJ,USR,KEY,POL,LCP,TEST action
-  class START,DONE term
+```d2
+direction: right
+
+START: "New application storage request" {shape: rectangle}
+NS: "Create Namespace\necscli namespace create\n+ replication group + hard quota" {shape: rectangle}
+BKT: "Create Bucket\nS3 name rules · versioning off by default" {shape: rectangle}
+LOCK: "LOCK" {shape: rectangle}
+OBJ: "Enable Object Lock at\nbucket creation (cannot add later" {shape: rectangle}
+USR: "Create Object User\necscli user create\n--namespace --name svc-<app>-<env>" {shape: rectangle}
+KEY: "Generate Access Key + Secret Key\n(shown once — store in vault immediately" {shape: rectangle}
+POL: "Apply Bucket Policy\nleast-privilege s3 actions only" {shape: rectangle}
+LC: "LC" {shape: rectangle}
+LCP: "Add lifecycle policy\nNoncurrentVersionExpiration + MPU abort" {shape: rectangle}
+TEST: "Functional test:\naws s3 ls s3://bucket --endpoint-url ..." {shape: rectangle}
+DONE: "Bucket ready for application" {shape: rectangle}
+
+START -> NS
+NS -> BKT
+LOCK -> OBJ
+LOCK -> USR
+OBJ -> USR
+USR -> KEY
+KEY -> POL
+LC -> LCP
+LC -> TEST
+LCP -> TEST
+TEST -> DONE
 ```
 
 ## Creating a Namespace

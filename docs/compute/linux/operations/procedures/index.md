@@ -104,23 +104,27 @@ chage -l <username>
 visudo -c   # validate sudoers file
 ls -la /etc/sudoers.d/
 ```
-```mermaid
-flowchart TD
-    hardwareInit["hardware.target\ndevice enumeration"]
-    networkOnline["network-online.target\ninterfaces configured"]
-    sysInit["sysinit.target\nfsck · mount · sysctl"]
-    basic["basic.target\ntimers · sockets · paths"]
-    multiUser["multi-user.target\nall services ready"]
-    sshd["sshd.service"]
-    chronyd["chronyd.service"]
-    rsyslog["rsyslog.service"]
-    auditd["auditd.service"]
+```d2
+direction: right
 
-    hardwareInit --> sysInit --> basic --> networkOnline --> multiUser
-    basic --> sshd
-    basic --> chronyd
-    networkOnline --> rsyslog
-    basic --> auditd
+hardwareInit: "hardware.target\ndevice enumeration" {shape: rectangle}
+sysInit: "sysinit.target\nfsck · mount · sysctl" {shape: rectangle}
+basic: "basic.target\ntimers · sockets · paths" {shape: rectangle}
+networkOnline: "network-online.target\ninterfaces configured" {shape: rectangle}
+multiUser: "multi-user.target\nall services ready" {shape: rectangle}
+sshd: "sshd.service" {shape: rectangle}
+chronyd: "chronyd.service" {shape: rectangle}
+rsyslog: "rsyslog.service" {shape: rectangle}
+auditd: "auditd.service" {shape: rectangle}
+
+hardwareInit -> sysInit
+sysInit -> basic
+basic -> networkOnline
+networkOnline -> multiUser
+basic -> sshd
+basic -> chronyd
+networkOnline -> rsyslog
+basic -> auditd
 ```
 ```bash
 # List all running services
@@ -232,21 +236,24 @@ systemd-analyze verify /etc/systemd/system/<service>.service
 # 5. Test ExecStart command manually as the service user
 sudo -u <service-user> /path/to/binary --args
 ```
-```mermaid
-flowchart TD
-    preCheck["Pre-patch checks\nuptime · systemctl --failed · df -h"]
-    captureState["Capture state\npackage list · running kernel"]
-    checkUpdates["Check available updates\ndnf check-update / apt list --upgradable"]
-    apply["Apply patches\ndnf update -y / apt upgrade -y"]
-    rebootNeeded{"Reboot\nrequired?"}
-    reboot["Reboot\nnew kernel"]
-    postValidate["Post-patch validation\nservices · kernel · diff package list"]
-    done["Complete\nClose change record"]
+```d2
+direction: right
 
-    preCheck --> captureState --> checkUpdates --> apply --> rebootNeeded
-    rebootNeeded -- Yes --> reboot --> postValidate
-    rebootNeeded -- No --> postValidate
-    postValidate --> done
+preCheck: "Pre-patch checks\nuptime · systemctl --failed · df -h" {shape: rectangle}
+captureState: "Capture state\npackage list · running kernel" {shape: rectangle}
+checkUpdates: "Check available updates\ndnf check-update / apt list --upgradable" {shape: rectangle}
+apply: "Apply patches\ndnf update -y / apt upgrade -y" {shape: rectangle}
+rebootNeeded: "rebootNeeded" {shape: rectangle}
+reboot: "Reboot\nnew kernel" {shape: rectangle}
+postValidate: "Post-patch validation\nservices · kernel · diff package list" {shape: rectangle}
+done: "Complete\nClose change record" {shape: rectangle}
+
+preCheck -> captureState
+captureState -> checkUpdates
+checkUpdates -> apply
+apply -> rebootNeeded
+reboot -> postValidate
+postValidate -> done
 ```
 ```bash
 # 1. Confirm system is healthy before patching

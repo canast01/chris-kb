@@ -12,27 +12,32 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph TD
-    A([Start: Pod or Node Issue]) --> B{Pod failing?}
-    B -->|CrashLoopBackOff| C[oc logs --previous\ncheck exit code]
-    C -->|exitCode 137| D[OOMKilled\nIncrease memory limit]
-    C -->|exitCode 1| E[App error\nCheck application logs]
-    C -->|exitCode 143| F[SIGTERM timeout\nIncrease terminationGracePeriodSeconds]
-    B -->|ImagePullBackOff| G[oc describe pod Events\ncheck pull secret + image name]
-    B -->|Pending| H[Insufficient resources?\nSCC violation? PVC unbound?]
-    B -->|No — Node failing?| I{Node NotReady?}
-    I -->|Yes| J[kubelet / CRI-O status\nDiskPressure / NTP drift]
-    I -->|No — Operator?| K{CO Degraded?}
-    K -->|Yes| L[oc describe co\ncheck operator pod logs]
-    K -->|No — etcd?| M[etcd high latency\ndisk IOPS saturation]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef issue fill:#991b1b,color:#fff
-    classDef action fill:#78350f,color:#fff
-    class A,B,I,K dark
-    class C,G,H,J,L,M action
-    class D,E,F issue
+B: "B" {shape: rectangle}
+C: "oc logs --previous\ncheck exit code" {shape: rectangle}
+D: "OOMKilled\nIncrease memory limit" {shape: rectangle}
+E: "App error\nCheck application logs" {shape: rectangle}
+F: "SIGTERM timeout\nIncrease terminationGracePeriodSeconds" {shape: rectangle}
+G: "oc describe pod Events\ncheck pull secret + image name" {shape: rectangle}
+H: "Insufficient resources?\nSCC violation? PVC unbound?" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "kubelet / CRI-O status\nDiskPressure / NTP drift" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "oc describe co\ncheck operator pod logs" {shape: rectangle}
+M: "etcd high latency\ndisk IOPS saturation" {shape: rectangle}
+A: "Start: Pod or Node Issue" {shape: rectangle}
+
+B -> C
+C -> D
+C -> E
+C -> F
+B -> G
+B -> H
+I -> J
+K -> L
+K -> M
 ```
 
 ```d2
@@ -63,25 +68,28 @@ node_notready -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> D1{Pod stuck\nCrashLoopBackOff?}
-    S --> D2{Node\nNotReady?}
-    S --> D3{Image pull\nerror — registry auth?}
-    S --> D4{PVC stuck\nPending?}
-    S --> D5{Ingress / route\nreturning 503?}
-    D1 --> R1[CrashLoopBackOff]
-    D2 --> R2[Node NotReady]
-    D3 --> R3[ImagePullBackOff]
-    D4 --> R4[Pending Pods]
-    D5 --> R5[Cluster Operator Degraded]
-    R2 --> R6[etcd High Latency]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class D1,D2,D3,D4,D5 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "CrashLoopBackOff" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R2: "Node NotReady" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R3: "ImagePullBackOff" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R4: "Pending Pods" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R5: "Cluster Operator Degraded" {shape: rectangle}
+R6: "etcd High Latency" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+
+D1 -> R1
+D2 -> R2
+D3 -> R3
+D4 -> R4
+D5 -> R5
+R2 -> R6
 ```
 
 ---

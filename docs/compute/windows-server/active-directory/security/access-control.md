@@ -25,25 +25,25 @@ Access Control reference covering Tiered Administration Model, Core Security Con
 
 Active Directory security is built around the three-tier admin model:
 
-```mermaid
-graph TD
-    tier0["Tier 0\nDCs · ADCS · AAD Connect · CyberArk\n(highest sensitivity — forest boundary)"]
-    tier1["Tier 1\nApp servers · SQL · ESXi · Storage"]
-    tier2["Tier 2\nWorkstations · End-user devices"]
+```d2
+direction: right
 
-    paw0["Tier 0 PAW\n(dedicated — no internet/email)"]
-    jump1["Jump Server / Tier 1 PAW"]
-    stdWs["Standard Workstation"]
+admTier0: "adm0-* accounts" {shape: rectangle}
+paw0: "Tier 0 PAW\n(dedicated — no internet/email" {shape: rectangle}
+tier0: "Tier 0\nDCs · ADCS · AAD Connect · CyberArk\n(highest sensitivity — forest boundary" {shape: rectangle}
+admTier1: "adm1-* accounts" {shape: rectangle}
+jump1: "Jump Server / Tier 1 PAW" {shape: rectangle}
+tier1: "Tier 1\nApp servers · SQL · ESXi · Storage" {shape: rectangle}
+helpdesk: "Helpdesk accounts" {shape: rectangle}
+stdWs: "Standard Workstation" {shape: rectangle}
+tier2: "Tier 2\nWorkstations · End-user devices" {shape: rectangle}
 
-    admTier0["adm0-* accounts"] --> paw0
-    paw0 -->|"only allowed path"| tier0
-    admTier1["adm1-* accounts"] --> jump1
-    jump1 -->|"only allowed path"| tier1
-    helpdesk["Helpdesk accounts"] --> stdWs
-    stdWs --> tier2
-
-    tier0 -. "GPO: Deny log on locally to Tier 1/2" .-> tier1
-    tier1 -. "GPO: Deny log on locally to Tier 2" .-> tier2
+admTier0 -> paw0
+paw0 -> tier0
+admTier1 -> jump1
+jump1 -> tier1
+helpdesk -> stdWs
+stdWs -> tier2
 ```
 
 | Tier | Scope | Examples | Access Restriction |

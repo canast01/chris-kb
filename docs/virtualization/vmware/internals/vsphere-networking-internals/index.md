@@ -11,29 +11,24 @@ vSphere Distributed Switch separates control plane (vCenter) from data plane (ES
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph LR
-    classDef vc fill:#2563eb,color:#fff,stroke:none
-    classDef esxi fill:#15803d,color:#fff,stroke:none
-    classDef nic fill:#b45309,color:#fff,stroke:none
-    classDef sw fill:#7c3aed,color:#fff,stroke:none
-    classDef pg fill:#1e3a5f,color:#fff,stroke:none
+```d2
+direction: right
 
-    VC[vCenter\nDVS Config &\nControl Plane]:::vc
-    KM[ESXi Kernel\nVDS Data Plane\nvdl2 module]:::esxi
-    PG1[VM Port Group\nVLAN 100]:::pg
-    PG2[Uplink Port Group\nactive/standby map]:::pg
-    VMNIC1[vmnic0\n10 GbE]:::nic
-    VMNIC2[vmnic1\n10 GbE]:::nic
-    PHSW[Physical Switch\n802.1Q trunk]:::sw
+VC: "VC" {shape: rectangle}
+KM: "KM" {shape: rectangle}
+PG1: "PG1" {shape: rectangle}
+PG2: "PG2" {shape: rectangle}
+VMNIC1: "VMNIC1" {shape: rectangle}
+VMNIC2: "VMNIC2" {shape: rectangle}
+PHSW: "PHSW" {shape: rectangle}
 
-    VC -->|configuration push\nvmkernel RPC| KM
-    KM --> PG1
-    KM --> PG2
-    PG2 --> VMNIC1
-    PG2 --> VMNIC2
-    VMNIC1 --> PHSW
-    VMNIC2 --> PHSW
+VC -> KM
+KM -> PG1
+KM -> PG2
+PG2 -> VMNIC1
+PG2 -> VMNIC2
+VMNIC1 -> PHSW
+VMNIC2 -> PHSW
 ```
 
 ## DVS Architecture

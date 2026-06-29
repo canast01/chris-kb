@@ -49,19 +49,28 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-flowchart TD
-    A[Host cannot see LUN] --> B{Physical link up?}
-    B -->|No| C[Check SFP, cable, port state]
-    B -->|Yes| D{FLOGI in nameserver?}
-    D -->|No| E[HBA not logged in — driver, speed, SFP]
-    D -->|Yes| F{Zoning correct?}
-    F -->|No| G[Fix zone — add missing WWPN, activate]
-    F -->|Yes| H{LUN mapped in host group?}
-    H -->|No| I[Add host to storage host group]
-    H -->|Yes| J{Multipath sees paths?}
-    J -->|No| K[Rescan HBAs, reload multipath]
-    J -->|Yes| L[Check OS disk/filesystem layer]
+```d2
+direction: right
+
+B: "B" {shape: rectangle}
+C: "Check SFP, cable, port state" {shape: rectangle}
+D: "D" {shape: rectangle}
+E: "HBA not logged in — driver, speed, SFP" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Fix zone — add missing WWPN, activate" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Add host to storage host group" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Rescan HBAs, reload multipath" {shape: rectangle}
+L: "Check OS disk/filesystem layer" {shape: rectangle}
+A: "Host cannot see LUN" {shape: rectangle}
+
+B -> C
+D -> E
+F -> G
+H -> I
+J -> K
+J -> L
 ```
 
 ## Quick Diagnostics

@@ -11,29 +11,32 @@ Ceph operational procedures: add/replace/decommission OSDs, reweight for capacit
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph TD
-    classDef cat  fill:#2563eb,color:#fff
-    classDef step fill:#15803d,color:#fff
-    classDef flag fill:#b45309,color:#fff
-    classDef cap  fill:#7c3aed,color:#fff
+```d2
+direction: right
 
-    OSD[OSD Lifecycle]:::cat
-    OSD --> ADD[Add new OSD<br/>ceph orch daemon add]:::step
-    OSD --> REPL[Replace failed OSD<br/>out → wait → purge → add]:::step
-    OSD --> DECOM[Decommission host<br/>drain all OSDs]:::step
+OSD: "OSD" {shape: rectangle}
+ADD: "Add new OSD · ceph orch daemon add" {shape: rectangle}
+REPL: "Replace failed OSD · out → wait → purge → add" {shape: rectangle}
+DECOM: "Decommission host · drain all OSDs" {shape: rectangle}
+PGM: "PGM" {shape: rectangle}
+REPAIR: "Repair inconsistent PG · ceph pg repair pgid" {shape: rectangle}
+SCRUB: "Scrub scheduling · oscrub / nodeep-scrub flags" {shape: rectangle}
+MAINT: "MAINT" {shape: rectangle}
+NOOUT: "Set noout flag · prevent auto-out during work" {shape: rectangle}
+NORB: "Set norebalance · pause data migration" {shape: rectangle}
+CAP: "CAP" {shape: rectangle}
+RWU: "reweight-by-utilization · move data off full OSDs" {shape: rectangle}
+ADDNODE: "Add new node · ceph orch host add" {shape: rectangle}
 
-    PGM[PG Management]:::cat
-    PGM --> REPAIR[Repair inconsistent PG<br/>ceph pg repair pgid]:::step
-    PGM --> SCRUB[Scrub scheduling<br/>noscrub / nodeep-scrub flags]:::step
-
-    MAINT[Cluster Maintenance]:::cat
-    MAINT --> NOOUT[Set noout flag<br/>prevent auto-out during work]:::flag
-    MAINT --> NORB[Set norebalance<br/>pause data migration]:::flag
-
-    CAP[Capacity Management]:::cap
-    CAP --> RWU[reweight-by-utilization<br/>move data off full OSDs]:::step
-    CAP --> ADDNODE[Add new node<br/>ceph orch host add]:::step
+OSD -> ADD
+OSD -> REPL
+OSD -> DECOM
+PGM -> REPAIR
+PGM -> SCRUB
+MAINT -> NOOUT
+MAINT -> NORB
+CAP -> RWU
+CAP -> ADDNODE
 ```
 
 ## Before you begin

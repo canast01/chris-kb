@@ -7,16 +7,12 @@ search:
 ---
 # APEX Storage as a Service — Common Issues
 
-
 <div class="kb-summary">
 Common APEX Storage as a Service issues — provisioning failures, connectivity errors, and service-level degradation.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
 ![APEX Storage as a Service — Common Issues](../../../../assets/storage-dell-apex-storage-as-a-service-troubleshooting-commo.svg)
-
-
-
 
 > Part of the [APEX Storage as a Service](../index.md) reference.
 
@@ -46,41 +42,41 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{Portal shows\ndegraded capacity?}
-    S --> B2{Snapshot policy\nnot executing?}
-    S --> B3{Host connection\nrequest pending?}
-    S --> B4{Billing or usage\nanomaly?}
-    S --> B5{SLA breach\nalert?}
+```d2
+direction: right
 
-    B1 -->|Check SCG connectivity| D1{SCG appliance\nonline?}
-    D1 -->|No| R1[See Issue Reference —\nAPEX Console shows infrastructure as offline]
-    D1 -->|Hardware fault| R2[See Issue Reference —\nInfrastructure health warning in APEX Console]
+D1: "D1" {shape: rectangle}
+R1: "See Issue Reference —\nAPEX Console shows infrastructure as offline" {shape: rectangle}
+R2: "See Issue Reference —\nInfrastructure health warning in APEX Console" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Issue Reference —\nBurst capacity charges unexpected" {shape: rectangle}
+R4: "See Portal Issues —\nSnap failure: check available burst capacity" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Issue Reference —\nCapacity request delayed: raise SR in console" {shape: rectangle}
+R6: "See Issue Reference —\nCapacity request delayed: review SLA response" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Issue Reference —\nBilling discrepancy: open support case" {shape: rectangle}
+R8: "See Portal Issues —\nCloudIQ gap: check SCG and telemetry" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See Issue Reference —\nInfrastructure health warning: check platform" {shape: rectangle}
+R10: "See Block Issues —\nPath offline: fix physical then rescan" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Check pool burst capacity| D2{Pool above\ncommitted tier?}
-    D2 -->|Yes| R3[See Issue Reference —\nBurst capacity charges unexpected]
-    D2 -->|Schedule miss| R4[See Portal Issues —\nSnap failure: check available burst capacity]
-
-    B3 -->|Check APEX Console SR status| D3{SR raised\nin console?}
-    D3 -->|No| R5[See Issue Reference —\nCapacity request delayed: raise SR in console]
-    D3 -->|SLA window| R6[See Issue Reference —\nCapacity request delayed: review SLA response]
-
-    B4 -->|Allow 24h telemetry sync| D4{Discrepancy after\n24 hours?}
-    D4 -->|Yes| R7[See Issue Reference —\nBilling discrepancy: open support case]
-    D4 -->|No| R8[See Portal Issues —\nCloudIQ gap: check SCG and telemetry]
-
-    B5 -->|Check underlying platform health| D5{Platform alert\nin CloudIQ?}
-    D5 -->|Yes| R9[See Issue Reference —\nInfrastructure health warning: check platform]
-    D5 -->|Network path| R10[See Block Issues —\nPath offline: fix physical then rescan]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---

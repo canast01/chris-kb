@@ -45,25 +45,28 @@ ssh_access_denied -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> D1{SSH refused\nor login fails?}
-    S --> D2{Disk full /\nENOSPC error?}
-    S --> D3{Service will\nnot start?}
-    S --> D4{OOM killer\nkilled process?}
-    S --> D5{Network\nunreachable?}
-    D1 --> R1[SSH Access Denied]
-    D2 --> R2[Disk Full — Emergency]
-    D3 --> R3[Service Not Starting]
-    D4 --> R4[High Disk I/O or Latency]
-    D5 --> R5[Network Connectivity Issues]
-    R1 --> R6[System Crash / Reboot Analysis]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class D1,D2,D3,D4,D5 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "SSH Access Denied" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R2: "Disk Full — Emergency" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R3: "Service Not Starting" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R4: "High Disk I/O or Latency" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R5: "Network Connectivity Issues" {shape: rectangle}
+R6: "System Crash / Reboot Analysis" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+
+D1 -> R1
+D2 -> R2
+D3 -> R3
+D4 -> R4
+D5 -> R5
+R1 -> R6
 ```
 
 ---
@@ -80,29 +83,20 @@ graph TD
 
 ## Network Connectivity Triage
 
-```mermaid
-flowchart TD
-    start["Connectivity issue reported"]
-    linkUp{"ip link: interface\nstate UP?"}
-    hasIP{"ip addr: IP address\npresent?"}
-    gwReach{"ping gateway\nsucceeds?"}
-    dnsOk{"dig resolves\ncorrectly?"}
-    portOpen{"ss -tulnp:\nport listening?"}
-    fwBlock{"firewalld / iptables\nblocking?"}
-    resolved["Issue identified\nand resolved"]
+```d2
+direction: right
 
-    start --> linkUp
-    linkUp -- No --> resolved
-    linkUp -- Yes --> hasIP
-    hasIP -- No --> resolved
-    hasIP -- Yes --> gwReach
-    gwReach -- No --> resolved
-    gwReach -- Yes --> dnsOk
-    dnsOk -- No --> resolved
-    dnsOk -- Yes --> portOpen
-    portOpen -- No --> resolved
-    portOpen -- Yes --> fwBlock
-    fwBlock --> resolved
+start: "Connectivity issue reported" {shape: oval}
+linkUp: "linkUp" {shape: rectangle}
+fwBlock: "fwBlock" {shape: rectangle}
+resolved: "Issue identified\nand resolved" {shape: rectangle}
+hasIP: "hasIP" {shape: rectangle}
+gwReach: "gwReach" {shape: rectangle}
+dnsOk: "dnsOk" {shape: rectangle}
+portOpen: "portOpen" {shape: rectangle}
+
+start -> linkUp
+fwBlock -> resolved
 ```
 
 ## High Disk I/O or Latency
@@ -197,17 +191,19 @@ ausearch -m avc -c sshd --start recent | tail -10
 
 ## SELinux / AppArmor MAC Flow
 
-```mermaid
-flowchart LR
-    subject["Subject\nProcess (e.g. httpd)"]
-    policyCheck["Policy Check\nauditd · SELinux policy DB"]
-    object["Object\nFile · Socket · Port"]
-    allow["Allow\nAccess granted"]
-    deny["Deny\nAVC denial logged\n/var/log/audit/audit.log"]
+```d2
+direction: right
 
-    subject -->|"access request"| policyCheck
-    policyCheck -->|"rule matches"| allow --> object
-    policyCheck -->|"no matching rule"| deny
+subject: "Subject\nProcess (e.g. httpd" {shape: rectangle}
+policyCheck: "Policy Check\nauditd · SELinux policy DB" {shape: rectangle}
+allow: "Allow\nAccess granted" {shape: rectangle}
+object: "Object\nFile · Socket · Port" {shape: rectangle}
+deny: "Deny\nAVC denial logged\n/var/log/audit/audit.log" {shape: rectangle}
+
+subject -> policyCheck
+policyCheck -> allow
+allow -> object
+policyCheck -> deny
 ```
 
 ## Disk Full — Emergency

@@ -15,42 +15,50 @@ Horizon diagnostic commands: read Connection Server debug-*.log and vlsi-*.log l
 </div>
 ![Horizon — Diagnostics](../../../../assets/virtualization-vmware-horizon-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "Horizon Admin UI → Events\nFilter by ERROR and user account" {shape: rectangle}
+D: "Check Horizon Agent in desktop VM\ndebug-*.log and wsnm_*.log" {shape: rectangle}
+E: "Horizon Admin UI → Pools → hover red error\nCheck vlsi-*.log for vCenter API errors" {shape: rectangle}
+F: "curl https://uag:9443/rest/healthcheck\nCheck UAG esmanager.log" {shape: rectangle}
+G: "Blast session: Ctrl+Alt+Shift+P\nCheck client → UAG → desktop network latency" {shape: rectangle}
+H: "Get-WinEvent VMware Application events\nCheck CS debug-*.log" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Check AD connectivity on CS\nTest-NetConnection ad.domain.local -Port 389" {shape: rectangle}
+K: "Verify user is entitled to pool\nvdmadmin -A -d pool -list" {shape: rectangle}
+L: "Check CS certificate in MMC\nCheck UAG certificate via curl" {shape: rectangle}
+M: "Check Horizon Agent service status\nGet-Service VMwareHorizonViewAgent" {shape: rectangle}
+N: "Check vCenter credentials in Horizon\nAdmins → vCenter → Edit → Test Connection" {shape: rectangle}
+O: "SSH to UAG; check gateway.log\ntail /opt/vmware/gateway/logs/gateway.log" {shape: rectangle}
+P: "Test Blast port from client\nnc -vz uag.example.com 8443" {shape: rectangle}
+Q: "Collect Connection Server support bundle\nHorizon Admin → Support → Generate Bundle" {shape: rectangle}
+R: "Open VMware SR\nmysupport.vmware.com" {shape: rectangle}
+A: "Horizon Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([Horizon Issue]) --> B{What type of problem?}
-    B -->|Login failure or no session| C[Horizon Admin UI → Events\nFilter by ERROR and user account]
-    B -->|Black screen after session connects| D[Check Horizon Agent in desktop VM\ndebug-*.log and wsnm_*.log]
-    B -->|Desktop pool not provisioning| E[Horizon Admin UI → Pools → hover red error\nCheck vlsi-*.log for vCenter API errors]
-    B -->|External access not working| F[curl https://uag:9443/rest/healthcheck\nCheck UAG esmanager.log]
-    B -->|Slow session or low frame rate| G[Blast session: Ctrl+Alt+Shift+P\nCheck client → UAG → desktop network latency]
-    B -->|Connection Server health alarm| H[Get-WinEvent VMware Application events\nCheck CS debug-*.log]
-    C --> I{Error type?}
-    I -->|LDAP / auth error| J[Check AD connectivity on CS\nTest-NetConnection ad.domain.local -Port 389]
-    I -->|Entitlement error| K[Verify user is entitled to pool\nvdmadmin -A -d pool -list]
-    I -->|Certificate error| L[Check CS certificate in MMC\nCheck UAG certificate via curl]
-    D --> M[Check Horizon Agent service status\nGet-Service VMwareHorizonViewAgent]
-    E --> N[Check vCenter credentials in Horizon\nAdmins → vCenter → Edit → Test Connection]
-    F --> O[SSH to UAG; check gateway.log\ntail /opt/vmware/gateway/logs/gateway.log]
-    G --> P[Test Blast port from client\nnc -vz uag.example.com 8443]
-    H --> Q[Collect Connection Server support bundle\nHorizon Admin → Support → Generate Bundle]
-    J --> Q
-    K --> Q
-    L --> Q
-    M --> Q
-    N --> Q
-    O --> Q
-    P --> Q
-    Q --> R[Open VMware SR\nmysupport.vmware.com]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P action
-    class Q,R escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+I -> L
+D -> M
+E -> N
+F -> O
+G -> P
+H -> Q
+J -> Q
+K -> Q
+L -> Q
+M -> Q
+N -> Q
+O -> Q
+P -> Q
+Q -> R
 ```
 
 ```d2

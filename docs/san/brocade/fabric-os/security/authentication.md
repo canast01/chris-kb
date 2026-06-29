@@ -25,23 +25,42 @@ FabricOS authentication: RADIUS and LDAP server configuration with `aaaconfig`, 
 
 ## Authentication Flow
 
-```mermaid
-flowchart TD
-    loginAttempt["SSH / HTTPS login attempt"] --> ipCheck{"IPfilter\nsource IP permitted?"}
-    ipCheck -->|Denied| reject["Connection refused"]
-    ipCheck -->|Permitted| authOrder{"Auth order\nRADIUS first?"}
-    authOrder -->|Yes| radiusReach{"RADIUS server\nreachable?"}
-    radiusReach -->|No| localFallback["Fallback to LOCAL\naccounts on switch"]
-    radiusReach -->|Yes| radiusAuth{"RADIUS\nauthentication?"}
-    radiusAuth -->|Fail| reject2["Login denied\n(no local fallback if\nLOCAL not in authorder)"]
-    radiusAuth -->|Success| vsaRole["Map VSA attribute\nto FabricOS role"]
-    authOrder -->|"TACACS+"| tacacsAuth{"TACACS+\nauthentication?"}
-    tacacsAuth -->|Success| tacacsRole["Role from TACACS+\nper-command authz available"]
-    tacacsAuth -->|Fail| localFallback
-    localFallback --> localAuth{"Local account\nvalid credentials?"}
-    localAuth -->|Yes| localRole["Assign local role"]
-    localAuth -->|No| reject3["Login denied"]
-    vsaRole & tacacsRole & localRole --> session["CLI / Web session\nopened with assigned role"]
+```d2
+direction: right
+
+loginAttempt: "SSH / HTTPS login attempt" {shape: rectangle}
+ipCheck: "IPfilter\nsource IP permitted?" {shape: rectangle}
+reject: "Connection refused" {shape: rectangle}
+authOrder: "Auth order\nRADIUS first?" {shape: rectangle}
+radiusReach: "RADIUS server\nreachable?" {shape: rectangle}
+localFallback: "Fallback to LOCAL\naccounts on switch" {shape: rectangle}
+radiusAuth: "RADIUS\nauthentication?" {shape: rectangle}
+reject2: "Login denied\n(no local fallback if\nLOCAL not in authorder" {shape: rectangle}
+vsaRole: "Map VSA attribute\nto FabricOS role" {shape: rectangle}
+tacacsAuth: "TACACS+\nauthentication?" {shape: rectangle}
+tacacsRole: "Role from TACACS+\nper-command authz available" {shape: rectangle}
+localAuth: "Local account\nvalid credentials?" {shape: rectangle}
+localRole: "Assign local role" {shape: rectangle}
+reject3: "Login denied" {shape: rectangle}
+session: "CLI / Web session\nopened with assigned role" {shape: rectangle}
+
+loginAttempt -> ipCheck
+ipCheck -> reject
+ipCheck -> authOrder
+authOrder -> radiusReach
+radiusReach -> localFallback
+radiusReach -> radiusAuth
+radiusAuth -> reject2
+radiusAuth -> vsaRole
+authOrder -> tacacsAuth
+tacacsAuth -> tacacsRole
+tacacsAuth -> localFallback
+localFallback -> localAuth
+localAuth -> localRole
+localAuth -> reject3
+vsaRole -> tacacsRole
+tacacsRole -> localRole
+localRole -> session
 ```
 
 If RADIUS authentication fails, the fallback to `LOCAL` authentication ensures break-glass access remains available. Always test RADIUS before relying on it.

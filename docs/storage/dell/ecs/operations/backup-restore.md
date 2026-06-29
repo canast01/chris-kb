@@ -127,23 +127,23 @@ Object data restore depends on the failure scenario.
 
 ECS automatically rebuilds erasure coding stripes to surviving nodes when a node or disk fails.
 
-```mermaid
-graph TD
-  FAIL(["Node or disk marked FAILED"]) --> AUTO["ECS auto-rebuild begins\nEC fragments reconstructed\nfrom surviving nodes"]
-  AUTO --> MON["Monitor: ECS Portal →\nHardware → Disks\nStatus: REBUILDING → GOOD"]
-  MON --> DONE{Rebuild\ncomplete?}
-  DONE -->|No| WAIT["Wait — rebuild time:\n8–24 h for dense node\nDo NOT run upgrades or\nnode additions during rebuild"]
-  WAIT --> MON
-  DONE -->|Yes| CHK["Confirm node/disk shows GOOD\nCheck cluster capacity headroom"]
-  CHK --> CLEAR(["Cluster redundancy restored"])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class DONE decision
-  class AUTO,MON,CHK action
-  class WAIT warn
-  class FAIL,CLEAR term
+```d2
+direction: right
+
+FAIL: "Node or disk marked FAILED" {shape: rectangle}
+AUTO: "ECS auto-rebuild begins\nEC fragments reconstructed\nfrom surviving nodes" {shape: rectangle}
+MON: "Monitor: ECS Portal →\nHardware → Disks\nStatus: REBUILDING → GOOD" {shape: rectangle}
+DONE: "DONE" {shape: rectangle}
+WAIT: "Wait — rebuild time:\n8–24 h for dense node\nDo NOT run upgrades or\nnode additions during rebuild" {shape: rectangle}
+CHK: "Confirm node/disk shows GOOD\nCheck cluster capacity headroom" {shape: rectangle}
+CLEAR: "Cluster redundancy restored" {shape: rectangle}
+
+FAIL -> AUTO
+AUTO -> MON
+DONE -> WAIT
+WAIT -> MON
+DONE -> CHK
+CHK -> CLEAR
 ```
 
 - No manual restore required

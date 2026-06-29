@@ -14,37 +14,41 @@ APEX Storage as a Service diagnostic commands: check host-side iSCSI and multipa
 </div>
 ![APEX Storage as a Service — Diagnostics](../../../../assets/storage-dell-apex-storage-as-a-service-troubleshooting-diagn.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "multipath -ll\niscsiadm -m session" {shape: rectangle}
+D: "scg status\nscg connectivity --test" {shape: rectangle}
+E: "APEX Console\nSubscription → Capacity" {shape: rectangle}
+F: "Unisphere → Performance\nCheck IOPS and latency" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Check iSCSI/FC login\nCheck zoning / VLAN" {shape: rectangle}
+I: "multipath -ll\nCheck failed paths" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "systemctl status dsagw\nscg log collect" {shape: rectangle}
+L: "APEX Console → Systems\nCheck last data timestamp" {shape: rectangle}
+M: "Verify subscription status\nCheck burst usage alerts" {shape: rectangle}
+N: "Check host queue depth\narray-side performance view" {shape: rectangle}
+O: "Collect host + array diag\nOpen Dell SR" {shape: rectangle}
+A: "APEX STaaS Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([APEX STaaS Issue]) --> B{Issue category?}
-    B -->|Storage not visible to host| C[multipath -ll\niscsiadm -m session]
-    B -->|Console shows no data| D[scg status\nscg connectivity --test]
-    B -->|Capacity / billing| E[APEX Console\nSubscription → Capacity]
-    B -->|Volume performance| F[Unisphere → Performance\nCheck IOPS and latency]
-    C --> G{Paths present?}
-    G -->|No paths| H[Check iSCSI/FC login\nCheck zoning / VLAN]
-    G -->|Paths present but fault| I[multipath -ll\nCheck failed paths]
-    D --> J{SCG healthy?}
-    J -->|No| K[systemctl status dsagw\nscg log collect]
-    J -->|Yes| L[APEX Console → Systems\nCheck last data timestamp]
-    E --> M[Verify subscription status\nCheck burst usage alerts]
-    F --> N[Check host queue depth\narray-side performance view]
-    H --> O[Collect host + array diag\nOpen Dell SR]
-    I --> O
-    K --> O
-    L --> O
-    M --> O
-    N --> O
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,G,J dark
-    class C,D,E,F,H,I,K,L,M,N action
-    class O escalate
+B -> C
+B -> D
+B -> E
+B -> F
+G -> H
+G -> I
+J -> K
+J -> L
+E -> M
+F -> N
+H -> O
+I -> O
+K -> O
+L -> O
+M -> O
+N -> O
 ```
 
 ```d2

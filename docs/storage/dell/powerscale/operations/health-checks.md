@@ -36,22 +36,41 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Health Comm
 
 ![Daily Checks](../../../../assets/storage-dell-powerscale-hc-daily-checks.svg)
 
-```mermaid
-flowchart TD
-    A([Daily Health Check]) --> B["isi status\nAll nodes ONLINE?"]
-    B --> C{"SMARTFAIL\nor DOWN node?"}
-    C -->|Yes| D["Do NOT remove manually\nMonitor Restripe job\nOpen Dell support case"]
-    C -->|No| E["isi storagepool list\nCapacity < 80%?"]
-    E --> F{"Pool > 80%?"}
-    F -->|Yes| G["Identify top consumers\nisi quota quotas list\nPlan expansion or cleanup"]
-    F -->|No| H["isi sync policies list\nSyncIQ all SUCCESS?"]
-    H --> I{"Policy FAILED\nor OVERDUE?"}
-    I -->|Yes| J["isi sync reports list\nInvestigate error\nRestart if needed"]
-    I -->|No| K["isi event list --limit 20\nCRITICAL events?"]
-    K --> L{"Unack'd CRITICAL\nevents?"}
-    L -->|Yes| M["Triage event code\nEscalate if hardware"]
-    L -->|No| N([Checks passed])
-    D & G & J & M --> N
+```d2
+direction: right
+
+A: "Daily Health Check" {shape: rectangle}
+B: "isi status\nAll nodes ONLINE?" {shape: rectangle}
+C: "SMARTFAIL\nor DOWN node?" {shape: rectangle}
+D: "Do NOT remove manually\nMonitor Restripe job\nOpen Dell support case" {shape: rectangle}
+E: "isi storagepool list\nCapacity < 80%?" {shape: rectangle}
+F: "Pool > 80%?" {shape: rectangle}
+G: "Identify top consumers\nisi quota quotas list\nPlan expansion or cleanup" {shape: rectangle}
+H: "isi sync policies list\nSyncIQ all SUCCESS?" {shape: rectangle}
+I: "Policy FAILED\nor OVERDUE?" {shape: rectangle}
+J: "isi sync reports list\nInvestigate error\nRestart if needed" {shape: rectangle}
+K: "isi event list --limit 20\nCRITICAL events?" {shape: rectangle}
+L: "Unack" {shape: rectangle}
+M: "Triage event code\nEscalate if hardware" {shape: rectangle}
+N: "Checks passed" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+E -> F
+F -> G
+F -> H
+H -> I
+I -> J
+I -> K
+K -> L
+L -> M
+L -> N
+D -> G
+G -> J
+J -> M
+M -> N
 ```
 
 | Check | Command | Notes |

@@ -8,7 +8,6 @@ search:
 # Brocade SANnav — Troubleshooting Common Issues
 ![Brocade SANnav — Troubleshooting Common Issues](../../../../assets/san-brocade-sannav-troubleshooting-common-issues.svg)
 
-
 ```bash
 # Step 1: Confirm SANnav IP is the trap destination on the switch (FOS CLI)
 snmpconfig --show trapdest
@@ -90,31 +89,39 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A{Switch not\ndiscovered?}
-    S --> B{Port stats not\npopulating?}
-    S --> C{Performance alert\nnot firing?}
-    S --> D{SANnav service\ncrashed?}
-    S --> E{LDAP auth\nfailing?}
-    A -->|Yes| A1{Ping switch\nMgmt IP?}
-    A1 -->|No| A2[Fix network / firewall\nVerify management VLAN]
-    A1 -->|Yes| A3[Check SNMP v3 creds\nRe-add switch in SANnav]
-    A3 --> A4[Switch Connectivity Issues]
-    B -->|Yes| B1[Check SNMP poll schedule\nVerify SNMPv3 credentials match\nCheck event-engine.log]
-    B1 --> B2[Switch Connectivity Issues]
-    C -->|Yes| C1[Check alert policy rule thresholds\nVerify SNMP trap destination\ntcpdump UDP 162]
-    C1 --> C2[Performance and UI Issues]
-    D -->|Yes| D1[journalctl -u sannav\nCheck disk: df -h\nRestart SANnav service]
-    D1 --> D2[Performance and UI Issues]
-    E -->|Yes| E1[ldapsearch bind test\nopenssl s_client LDAPS 636\nVerify service account not expired]
-    E1 --> E2[Auth and Login Issues]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A4,B2,C2,D2,E2 section
-    class A,A1,B,C,D,E decision
-    class S start
+```d2
+direction: right
+
+A1: "A1" {shape: rectangle}
+A2: "Fix network / firewall\nVerify management VLAN" {shape: rectangle}
+A3: "Check SNMP v3 creds\nRe-add switch in SANnav" {shape: rectangle}
+A4: "Switch Connectivity Issues" {shape: rectangle}
+B: "B" {shape: rectangle}
+B1: "Check SNMP poll schedule\nVerify SNMPv3 credentials match\nCheck event-engine.log" {shape: rectangle}
+B2: "Switch Connectivity Issues" {shape: rectangle}
+C: "C" {shape: rectangle}
+C1: "Check alert policy rule thresholds\nVerify SNMP trap destination\ntcpdump UDP 162" {shape: rectangle}
+C2: "Performance and UI Issues" {shape: rectangle}
+D: "D" {shape: rectangle}
+D1: "journalctl -u sannav\nCheck disk: df -h\nRestart SANnav service" {shape: rectangle}
+D2: "Performance and UI Issues" {shape: rectangle}
+E: "E" {shape: rectangle}
+E1: "ldapsearch bind test\nopenssl s_client LDAPS 636\nVerify service account not expired" {shape: rectangle}
+E2: "Auth and Login Issues" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+A: "A" {shape: rectangle}
+
+A1 -> A2
+A1 -> A3
+A3 -> A4
+B -> B1
+B1 -> B2
+C -> C1
+C1 -> C2
+D -> D1
+D1 -> D2
+E -> E1
+E1 -> E2
 ```
 
 ---

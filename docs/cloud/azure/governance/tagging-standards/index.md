@@ -12,20 +12,21 @@ Azure resource tags are key-value pairs applied to resources and resource groups
 
 ## Tag Governance Flow
 
-```mermaid
-flowchart LR
-    deploy["Resource Deployment\nPortal / IaC / CLI"]
-    policyCheck["Azure Policy\nrequire-tag deny effect"]
-    tagPresent{"Required tags\npresent?"}
-    blocked["Deployment BLOCKED\n400 error — policy deny"]
-    taggedResource["Tagged Resource\ncompliant"]
-    costMgmt["Cost Management\nfilter by tag"]
-    automation["Automation\ntag-based operations"]
+```d2
+direction: right
 
-    deploy --> policyCheck --> tagPresent
-    tagPresent -- No --> blocked
-    tagPresent -- Yes --> taggedResource
-    taggedResource --> costMgmt & automation
+deploy: "Resource Deployment\nPortal / IaC / CLI" {shape: rectangle}
+policyCheck: "Azure Policy\nrequire-tag deny effect" {shape: rectangle}
+tagPresent: "tagPresent" {shape: rectangle}
+taggedResource: "Tagged Resource\ncompliant" {shape: rectangle}
+costMgmt: "Cost Management\nfilter by tag" {shape: rectangle}
+automation: "Automation\ntag-based operations" {shape: rectangle}
+blocked: "Deployment BLOCKED\n400 error — policy deny" {shape: rectangle}
+
+deploy -> policyCheck
+policyCheck -> tagPresent
+taggedResource -> costMgmt
+costMgmt -> automation
 ```
 
 ## Required Tags

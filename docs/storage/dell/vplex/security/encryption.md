@@ -14,20 +14,20 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 
  Management traffic encryption is handled via TLS and SSH on the management plane.
 
-```mermaid
-flowchart LR
-    host["Host\nESXi / Linux"]
-    vplex["VPLEX Directors"]
-    arrays["Back-end Arrays\nPowerMax D@RE\nUnity Encryption"]
-    vms["VMS\nUnisphere / vplexcli"]
-    iclLink["ICL\nMetro cluster-to-cluster"]
+```d2
+direction: right
 
-    host -->|"FC — not encrypted at VPLEX layer\nEnforce via SAN encryption switch if required"| vplex
-    vplex -->|"FC back-end — not encrypted\nEnforce via SAN encryption switch"| arrays
-    arrays -->|"AES-256 Data at Rest\nArray-managed D@RE"| arrays
-    vplex <-->|"ICL — not encrypted at VPLEX\nMACsec / IPsec at network layer"| iclLink
-    vms -->|"SSH TLS — encrypted"| vplex
-    host -->|"HTTPS TLS — encrypted"| vms
+host: "Host\nESXi / Linux" {shape: rectangle}
+vplex: "VPLEX Directors" {shape: rectangle}
+arrays: "Back-end Arrays\nPowerMax D@RE\nUnity Encryption" {shape: rectangle}
+vms: "VMS\nUnisphere / vplexcli" {shape: rectangle}
+iclLink: "ICL\nMetro cluster-to-cluster" {shape: rectangle}
+
+host -> vplex
+vplex -> arrays
+arrays -> arrays
+vms -> vplex
+host -> vms
 ```
 
 ## Before you begin

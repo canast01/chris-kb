@@ -10,28 +10,39 @@ Common operational procedures: node drain and maintenance mode, scaling MachineS
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph TD
-    NM["Node Maintenance"]:::cat --> C["1. cordon node"]:::step
-    C --> D["2. drain --ignore-daemonsets"]:::step
-    D --> V["3. verify pods migrated"]:::step
-    V --> W["4. perform maintenance"]:::step
-    W --> U["5. uncordon"]:::step
-    U --> RD["6. verify Ready + rescheduled"]:::step
+```d2
+direction: right
 
-    OU["Operator Update"]:::cat --> PM["pause MachineConfigPool"]:::step2
-    PM --> UP["trigger update"]:::step2
-    UP --> RM["resume MachineConfigPool"]:::step2
-    RM --> WC["watch MCP UPDATED"]:::step2
+NM: "Node Maintenance" {shape: rectangle}
+C: "1. cordon node" {shape: rectangle}
+D: "2. drain --ignore-daemonsets" {shape: rectangle}
+V: "3. verify pods migrated" {shape: rectangle}
+W: "4. perform maintenance" {shape: rectangle}
+U: "5. uncordon" {shape: rectangle}
+RD: "6. verify Ready + rescheduled" {shape: rectangle}
+OU: "Operator Update" {shape: rectangle}
+PM: "pause MachineConfigPool" {shape: rectangle}
+UP: "trigger update" {shape: rectangle}
+RM: "resume MachineConfigPool" {shape: rectangle}
+WC: "watch MCP UPDATED" {shape: rectangle}
+CR: "Certificate Rotation" {shape: rectangle}
+CE: "check expiry dates" {shape: rectangle}
+RN: "renew / approve CSRs" {shape: rectangle}
+VR: "verify new cert dates" {shape: rectangle}
 
-    CR["Certificate Rotation"]:::cat --> CE["check expiry dates"]:::step3
-    CE --> RN["renew / approve CSRs"]:::step3
-    RN --> VR["verify new cert dates"]:::step3
-
-    classDef cat fill:#1e3a5f,color:#fff
-    classDef step fill:#2563eb,color:#fff
-    classDef step2 fill:#15803d,color:#fff
-    classDef step3 fill:#7c3aed,color:#fff
+NM -> C
+C -> D
+D -> V
+V -> W
+W -> U
+U -> RD
+OU -> PM
+PM -> UP
+UP -> RM
+RM -> WC
+CR -> CE
+CE -> RN
+RN -> VR
 ```
 
 ## Before you begin

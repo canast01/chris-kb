@@ -11,22 +11,21 @@ CephX user accounts, capability syntax for granular permissions, per-pool access
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph TD
-    classDef client fill:#2563eb,color:#fff
-    classDef mon fill:#15803d,color:#fff
-    classDef target fill:#7c3aed,color:#fff
-    classDef action fill:#1e3a5f,color:#fff
+```d2
+direction: right
 
-    A([Client presents keyring]):::client --> B[MON validates shared key\nvia CephX challenge]:::mon
-    B --> C{Key valid?}:::action
-    C -- No --> D([Access denied]):::action
-    C -- Yes --> E[MON issues session ticket\nencrypted with target daemon key]:::mon
-    E --> F([Client presents ticket\nto OSD / MDS / RGW]):::client
-    F --> G[Daemon decrypts ticket\nverifies caps + expiry]:::target
-    G --> H{Caps allow op?}:::action
-    H -- No --> I([Permission denied]):::action
-    H -- Yes --> J([I/O proceeds]):::target
+A: "Client presents keyring" {shape: rectangle}
+B: "MON validates shared key\nvia CephX challenge" {shape: rectangle}
+E: "MON issues session ticket\nencrypted with target daemon key" {shape: rectangle}
+F: "Client presents ticket\nto OSD / MDS / RGW" {shape: rectangle}
+G: "Daemon decrypts ticket\nverifies caps + expiry" {shape: rectangle}
+D: "Access denied" {shape: rectangle}
+I: "Permission denied" {shape: rectangle}
+J: "I/O proceeds" {shape: rectangle}
+
+A -> B
+E -> F
+F -> G
 ```
 
 ## Before you begin

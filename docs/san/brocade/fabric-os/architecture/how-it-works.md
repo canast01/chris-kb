@@ -5,14 +5,12 @@ tags:
 ---
 # Brocade Fabric OS — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, SAN Fabric Topology, Principal Switch and Domain ID, Name Server and Fabric Services, Zoning and 4 more sections.
 
 *Applies to: Brocade FOS 9.x*
 </div>
 ![Brocade Fabric OS — How It Works](../../../../assets/san-brocade-fabric-os-architecture-how-it-works.svg)
-
 
 ```d2
 direction: right
@@ -58,23 +56,6 @@ fabric_b.sw4 -> storage.arr2: F_Port
 Fabric OS (FOS) runs on Brocade/Broadcom SAN switches. Fabrics are deployed in a core-edge topology with ISLs (trunked) connecting edge switches to core directors. One switch per fabric is elected as the **principal switch**, which owns the fabric name server and manages domain ID assignments.
 
 ## SAN Fabric Topology
-
-```mermaid
-graph TB
-  H1(["ESXi-01\nHBA0 · HBA1"]) & H2(["ESXi-02\nHBA0 · HBA1"]) --> DIRA["Brocade Director A\n(Fabric A)"]
-  H1 & H2 --> DIRB["Brocade Director B\n(Fabric B)"]
-  DIRA <-->|"ISL — 10/40 Gbps"| DIRC["Brocade Director C\n(Fabric A — DR)"]
-  DIRB <-->|"ISL — 10/40 Gbps"| DIRD["Brocade Director D\n(Fabric B — DR)"]
-  DIRA & DIRB --> FA[("FlashArray")]
-  DIRC & DIRD --> PM[("PowerMax")]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class DIRA,DIRB,DIRC,DIRD ctrl
-  class FA,PM store
-  class H1,H2 host
-```
-
 
 ## FC Fabric Login Sequence
 

@@ -16,44 +16,53 @@ ESXi diagnostic commands: read vmkernel.log and hostd.log for errors, use esxcli
 </div>
 ![ESXi — Diagnostics](../../../../assets/virtualization-vmware-esxi-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "Check vpxa.log on host\nping vCenter from ESXi" {shape: rectangle}
+D: "Check vmkernel.log\nCheck hostd.log for VM task error" {shape: rectangle}
+E: "esxcli storage core path list\nesxtop -b DAVG check" {shape: rectangle}
+F: "esxcli network ip interface list\nesxcli network vm list" {shape: rectangle}
+G: "esxtop interactive mode\nCheck CPU ready and balloon" {shape: rectangle}
+H: "Check fdm.log\nCheck cluster events in vCenter" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Check vCenter connectivity\nping vcenter-ip from ESXi" {shape: rectangle}
+K: "Restart management agents\n/etc/init.d/hostd restart\n/etc/init.d/vpxa restart" {shape: rectangle}
+L: "tail /var/log/vmkernel.log  grep ERROR" {shape: rectangle}
+M: "M" {shape: rectangle}
+N: "esxcli storage core path list | grep dead\nCheck storage network and switch zoning" {shape: rectangle}
+O: "Check storage array; check esxtop DAVG vs KAVG\nKAVG high = queue depth issue on host" {shape: rectangle}
+P: "esxcli network vm list -w vm-name\nCheck vmkping to test VMkernel adapters" {shape: rectangle}
+Q: "esxtop batch: esxtop -b -d 2 -n 30\nFilter CSV for %RDY > 10 or MCTLSZ > 0" {shape: rectangle}
+R: "tail /var/log/fdm.log | grep -i error\nCheck HA heartbeat datastores" {shape: rectangle}
+S: "Collect vm-support bundle\nvm-support -n -w /tmp/" {shape: rectangle}
+T: "Open VMware SR\nAttach bundle" {shape: rectangle}
+A: "ESXi Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([ESXi Issue]) --> B{What type of problem?}
-    B -->|Host disconnected from vCenter| C[Check vpxa.log on host\nping vCenter from ESXi]
-    B -->|VM won't power on or fails| D[Check vmkernel.log\nCheck hostd.log for VM task error]
-    B -->|Storage I/O errors or latency| E[esxcli storage core path list\nesxtop -b DAVG check]
-    B -->|Network connectivity issue| F[esxcli network ip interface list\nesxcli network vm list]
-    B -->|High CPU or memory on host| G[esxtop interactive mode\nCheck CPU ready and balloon]
-    B -->|HA or vMotion failure| H[Check fdm.log\nCheck cluster events in vCenter]
-    C --> I{Management agent running?}
-    I -->|Yes, but still disconnected| J[Check vCenter connectivity\nping vcenter-ip from ESXi]
-    I -->|No| K[Restart management agents\n/etc/init.d/hostd restart\n/etc/init.d/vpxa restart]
-    D --> L[tail /var/log/vmkernel.log | grep vm-name\ntail /var/log/hostd.log | grep ERROR]
-    E --> M{Path state?}
-    M -->|Dead paths| N[esxcli storage core path list | grep dead\nCheck storage network and switch zoning]
-    M -->|Paths OK, latency high| O[Check storage array; check esxtop DAVG vs KAVG\nKAVG high = queue depth issue on host]
-    F --> P[esxcli network vm list -w vm-name\nCheck vmkping to test VMkernel adapters]
-    G --> Q[esxtop batch: esxtop -b -d 2 -n 30\nFilter CSV for %RDY > 10 or MCTLSZ > 0]
-    H --> R[tail /var/log/fdm.log | grep -i error\nCheck HA heartbeat datastores]
-    J --> S[Collect vm-support bundle\nvm-support -n -w /tmp/]
-    K --> S
-    L --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-    S --> T[Open VMware SR\nAttach bundle]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,M dark
-    class C,D,E,F,G,H,J,K,L,N,O,P,Q,R action
-    class S,T escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+D -> L
+M -> N
+M -> O
+F -> P
+G -> Q
+H -> R
+J -> S
+K -> S
+L -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
+S -> T
 ```
 
 ```d2

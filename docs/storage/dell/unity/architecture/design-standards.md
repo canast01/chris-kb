@@ -14,23 +14,25 @@ Standards reference covering Pool Design Decision Tree, Sizing Guidelines, Namin
 
 ## Pool Design Decision Tree
 
-```mermaid
-graph TD
-  START([New Pool Required]) --> WL{Workload Type?}
-  WL -->|"Random I/O\ndatabases / VMs"| PERF{All-Flash Budget?}
-  WL -->|"Sequential\nbackup / video"| CAP["RAID-5 (8+1)\nNL-SAS · Capacity pool"]
-  PERF -->|Yes| AFF["All-Flash RAID-5\nNVMe · data reduction ON"]
-  PERF -->|No| HYB["Hybrid RAID-10\n10K SAS + FAST Cache"]
-  AFF --> ALERT["Set pool alert\nat 70% and 80%"]
-  HYB --> ALERT
-  CAP --> ALERT
-  ALERT --> DONE([Pool ready for LUN/FS provisioning])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class WL,PERF decision
-  class AFF,HYB,CAP,ALERT action
-  class START,DONE term
+```d2
+direction: right
+
+WL: "WL" {shape: rectangle}
+CAP: "RAID-5 (8+1" {shape: rectangle}
+PERF: "PERF" {shape: rectangle}
+AFF: "All-Flash RAID-5\nNVMe · data reduction ON" {shape: rectangle}
+HYB: "Hybrid RAID-10\n10K SAS + FAST Cache" {shape: rectangle}
+ALERT: "Set pool alert\nat 70% and 80%" {shape: rectangle}
+DONE: "Pool ready for LUN/FS provisioning" {shape: rectangle}
+START: "New Pool Required" {shape: rectangle}
+
+WL -> CAP
+PERF -> AFF
+PERF -> HYB
+AFF -> ALERT
+HYB -> ALERT
+CAP -> ALERT
+ALERT -> DONE
 ```
 
 ## Sizing Guidelines

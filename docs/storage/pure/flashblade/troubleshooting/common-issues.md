@@ -7,15 +7,12 @@ search:
 ---
 # FlashBlade — Common Issues
 
-
 <div class="kb-summary">
 FlashBlade Common Issues reference covering NFS/SMB mount problems, S3 403 errors, capacity expansion, blade hardware faults, ActiveDR replication lag, and snapshot policy failures.
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ![FlashBlade — Common Issues](../../../../assets/storage-pure-flashblade-troubleshooting-common-issues.svg)
-
-
 
 ---
 
@@ -40,32 +37,43 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A[Blade hardware fault]
-    S --> B[NFS or S3 bucket inaccessible]
-    S --> C[Replication policy error]
-    S --> D[Capacity alarm triggered]
-    S --> E[Performance degraded after blade failure]
-    A --> A1{Blade state?}
-    A1 -->|failed| A2[Open Pure Support case immediately — see Common Issues]
-    A1 -->|rebalancing| A3[Normal post-add state; monitor with purefb blade list]
-    B --> B1{NFS or S3?}
-    B1 -->|NFS| B2[Check VIP reachability and export policy — see Common Issues]
-    B1 -->|S3| B3[Regenerate access key with purefb objectstoreuser — see Common Issues]
-    C --> C1{Replication link up?}
-    C1 -->|No| C2[Restore network path between sites — see Common Issues]
-    C1 -->|Yes| C3[Check replication policy configuration and RPO lag]
-    D --> D1{Filesystem at provisioned limit?}
-    D1 -->|Yes| D2[Expand with purefb filesystem update --provisioned — see Common Issues]
-    D1 -->|No| D3[Review snapshot retention and backup tool write rate]
-    E --> E1[Confirm blade replacement underway; monitor rebalancing — see Common Issues]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E1 section
-    class A1,B1,C1,D1 decision
-    class S start
+```d2
+direction: right
+
+S: "What is the symptom?" {shape: rectangle}
+A: "Blade hardware fault" {shape: rectangle}
+B: "NFS or S3 bucket inaccessible" {shape: rectangle}
+C: "Replication policy error" {shape: rectangle}
+D: "Capacity alarm triggered" {shape: rectangle}
+E: "Performance degraded after blade failure" {shape: rectangle}
+A1: "A1" {shape: rectangle}
+A2: "Open Pure Support case immediately — see Common Issues" {shape: rectangle}
+A3: "Normal post-add state; monitor with purefb blade list" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "Check VIP reachability and export policy — see Common Issues" {shape: rectangle}
+B3: "Regenerate access key with purefb objectstoreuser — see Common Issues" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "Restore network path between sites — see Common Issues" {shape: rectangle}
+C3: "Check replication policy configuration and RPO lag" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+D2: "Expand with purefb filesystem update --provisioned — see Common Issues" {shape: rectangle}
+D3: "Review snapshot retention and backup tool write rate" {shape: rectangle}
+E1: "Confirm blade replacement underway; monitor rebalancing — see Common Issues" {shape: rectangle}
+
+S -> A
+S -> B
+S -> C
+S -> D
+S -> E
+A1 -> A2
+A1 -> A3
+B1 -> B2
+B1 -> B3
+C1 -> C2
+C1 -> C3
+D1 -> D2
+D1 -> D3
+E -> E1
 ```
 
 ---

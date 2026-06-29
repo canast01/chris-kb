@@ -11,31 +11,26 @@ vSphere HA uses slot-based or percentage-based admission control to guarantee ca
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph TD
-    classDef decision fill:#2563eb,color:#fff,stroke:none
-    classDef action fill:#15803d,color:#fff,stroke:none
-    classDef fail fill:#b45309,color:#fff,stroke:none
-    classDef check fill:#7c3aed,color:#fff,stroke:none
-    classDef info fill:#1e3a5f,color:#fff,stroke:none
+```d2
+direction: right
 
-    A[VM power-on request]:::decision
-    B{Admission control\npolicy check}:::check
-    C{Available slots\n≥ 1?}:::decision
-    D[VM powers on\nslot consumed]:::action
-    E[VM rejected\ninsufficient capacity]:::fail
-    F[Host failure detected\nby FDM agent]:::info
-    G{Quorum:\nmajority of hosts\nreachable?}:::decision
-    H[Restart VMs\nby priority order]:::action
-    I[Isolation response\ntriggered]:::fail
+A: "A" {shape: rectangle}
+B: "B" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "D" {shape: rectangle}
+E: "E" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "I" {shape: rectangle}
 
-    A --> B
-    B --> C
-    C -->|Yes| D
-    C -->|No| E
-    F --> G
-    G -->|Yes| H
-    G -->|No| I
+A -> B
+B -> C
+C -> D
+C -> E
+F -> G
+G -> H
+G -> I
 ```
 
 ## Slot-Based Admission Control

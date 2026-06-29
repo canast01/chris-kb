@@ -24,22 +24,29 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 
 Verify these items before performing any VPLEX change — GeoSynchrony upgrades, director replacements, back-end storage changes, or storage view modifications.
 
-```mermaid
-flowchart TD
-    startChange(["Maintenance window requested"])
-    ddCheck["ll /distributed-storage/distributed-devices/*/health-indications/\nAll devices health-state: ok?"]
-    witnessChk["ll /metro-node/*/witness/\nWitness connected from both clusters?"]
-    cgChk["ll /distributed-storage/consistency-groups/\nAll CGs operational-status: ok?"]
-    hostPathChk["powermt display dev=all\nmultipath -ll\nHost path counts match baseline?"]
-    arrayChk["Back-end array health check\nPowerMax / Unity"]
-    vmsBackup["VMS VM backup\ncurrent snapshot taken?"]
-    proceed{All checks pass?}
-    holdChange["Do not proceed\nResolve issues first"]
-    doChange(["Execute maintenance\nprocedure"])
+```d2
+direction: right
 
-    startChange --> ddCheck --> witnessChk --> cgChk --> hostPathChk --> arrayChk --> vmsBackup --> proceed
-    proceed -->|No| holdChange
-    proceed -->|Yes| doChange
+startChange: "Maintenance window requested" {shape: rectangle}
+ddCheck: "ll /distributed-storage/distributed-devices/*/health-indications/\nAll devices health-state: ok?" {shape: rectangle}
+witnessChk: "ll /metro-node/*/witness/\nWitness connected from both clusters?" {shape: rectangle}
+cgChk: "ll /distributed-storage/consistency-groups/\nAll CGs operational-status: ok?" {shape: rectangle}
+hostPathChk: "powermt display dev=all\nmultipath -ll\nHost path counts match baseline?" {shape: rectangle}
+arrayChk: "Back-end array health check\nPowerMax / Unity" {shape: rectangle}
+vmsBackup: "VMS VM backup\ncurrent snapshot taken?" {shape: rectangle}
+proceed: "proceed" {shape: rectangle}
+holdChange: "Do not proceed\nResolve issues first" {shape: rectangle}
+doChange: "Execute maintenance\nprocedure" {shape: rectangle}
+
+startChange -> ddCheck
+ddCheck -> witnessChk
+witnessChk -> cgChk
+cgChk -> hostPathChk
+hostPathChk -> arrayChk
+arrayChk -> vmsBackup
+vmsBackup -> proceed
+proceed -> holdChange
+proceed -> doChange
 ```
 
 - [ ] `ll /distributed-storage/distributed-devices/*/health-indications/` — all distributed devices show `health-state: ok`; do not start a change with any device out-of-sync
@@ -180,27 +187,31 @@ VPLEX Metro stretches virtual volumes across two sites with synchronous mirrorin
 - **Distributed Devices** — virtual volumes that span both clusters
 - **Witness** — third-party tiebreaker for split-brain scenarios
 
-```mermaid
-flowchart TD
-    iclFails(["ICL failure detected"])
-    witnessChk["Does Witness contact\nboth clusters?"]
-    witnessGrants["Witness grants quorum\nto first requesting cluster"]
-    survivorIo["Surviving cluster\ncontinues I/O normally"]
-    otherSuspend["Other cluster distributed\ndevice legs suspended"]
-    iclRestore["ICL restored"]
-    autoResync["VPLEX auto-resync\nrebuild-progress → 100%"]
-    inSync(["Distributed device\nin-sync — Metro restored"])
-    noWitness["Both clusters unsure\nof each other's state"]
-    ioSuspend["I/O suspended on\nall CG volumes"]
-    manualRecover["Manual recovery\nidentify active leg\ndevice resume"]
+```d2
+direction: right
 
-    iclFails --> witnessChk
-    witnessChk -->|"Witness reachable"| witnessGrants
-    witnessGrants --> survivorIo
-    witnessGrants --> otherSuspend
-    survivorIo --> iclRestore --> autoResync --> inSync
-    witnessChk -->|"Witness also unreachable"| noWitness
-    noWitness --> ioSuspend --> manualRecover
+iclFails: "ICL failure detected" {shape: rectangle}
+witnessChk: "Does Witness contact\nboth clusters?" {shape: rectangle}
+witnessGrants: "Witness grants quorum\nto first requesting cluster" {shape: rectangle}
+survivorIo: "Surviving cluster\ncontinues I/O normally" {shape: rectangle}
+otherSuspend: "Other cluster distributed\ndevice legs suspended" {shape: rectangle}
+iclRestore: "ICL restored" {shape: rectangle}
+autoResync: "VPLEX auto-resync\nrebuild-progress → 100%" {shape: rectangle}
+inSync: "Distributed device\nin-sync — Metro restored" {shape: rectangle}
+noWitness: "Both clusters unsure\nof each other's state" {shape: rectangle}
+ioSuspend: "I/O suspended on\nall CG volumes" {shape: rectangle}
+manualRecover: "Manual recovery\nidentify active leg\ndevice resume" {shape: rectangle}
+
+iclFails -> witnessChk
+witnessChk -> witnessGrants
+witnessGrants -> survivorIo
+witnessGrants -> otherSuspend
+survivorIo -> iclRestore
+iclRestore -> autoResync
+autoResync -> inSync
+witnessChk -> noWitness
+noWitness -> ioSuspend
+ioSuspend -> manualRecover
 ```
 
 ### Check Distributed Device Status

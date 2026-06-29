@@ -84,20 +84,21 @@ Host HBA (WWN)
                 → Virtual Volume(s) presented to this host
 ```
 
-```mermaid
-flowchart LR
-    hostHBA["Host HBA\n10:00:00:00:c9:ab:cd:ef"]
-    fcZone["FC Zone\nSAN fabric switch"]
-    vplexFE["VPLEX Front-End Port\nA0-FC00 / B0-FC00"]
-    storageView["Storage View\nsv-db-prod-01"]
-    virtualVol1["Virtual Volume\nvv-oracle-prod-01"]
-    virtualVol2["Virtual Volume\nvv-oracle-prod-02"]
+```d2
+direction: right
 
-    hostHBA -->|"FC zone enforced\nat SAN switch"| fcZone
-    fcZone --> vplexFE
-    vplexFE --> storageView
-    storageView --> virtualVol1
-    storageView --> virtualVol2
+hostHBA: "Host HBA\n10:00:00:00:c9:ab:cd:ef" {shape: rectangle}
+fcZone: "FC Zone\nSAN fabric switch" {shape: rectangle}
+vplexFE: "VPLEX Front-End Port\nA0-FC00 / B0-FC00" {shape: rectangle}
+storageView: "Storage View\nsv-db-prod-01" {shape: rectangle}
+virtualVol1: "Virtual Volume\nvv-oracle-prod-01" {shape: rectangle}
+virtualVol2: "Virtual Volume\nvv-oracle-prod-02" {shape: rectangle}
+
+hostHBA -> fcZone
+fcZone -> vplexFE
+vplexFE -> storageView
+storageView -> virtualVol1
+storageView -> virtualVol2
 ```
 
 All three layers must be aligned for a host to access a volume. Missing any layer results in the host not seeing the volume.

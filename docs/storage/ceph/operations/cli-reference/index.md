@@ -11,39 +11,49 @@ Essential Ceph CLI commands: ceph status and health, OSD management, pool operat
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph LR
-    classDef tool fill:#2563eb,color:#fff
-    classDef area fill:#15803d,color:#fff
-    classDef sub  fill:#1e3a5f,color:#fff
+```d2
+direction: right
 
-    CLI[CLI Tools]:::tool
+CLI: "CLI" {shape: rectangle}
+CEPH: "ceph · cluster management" {shape: rectangle}
+RADOS: "rados · object ops" {shape: rectangle}
+RBD: "rbd · block storage" {shape: rectangle}
+RGW: "radosgw-admin · object gateway" {shape: rectangle}
+CV: "ceph-volume · OSD provisioning" {shape: rectangle}
+CADM: "cephadm · orchestration" {shape: rectangle}
+C1: "status / health / log" {shape: rectangle}
+C2: "osd / pool / pg mgmt" {shape: rectangle}
+C3: "auth / config / crash" {shape: rectangle}
+R1: "ls / stat / get / put" {shape: rectangle}
+R2: "bench write/seq/rand" {shape: rectangle}
+B1: "create / resize / rm" {shape: rectangle}
+B2: "snap / clone / export" {shape: rectangle}
+G1: "user / key management" {shape: rectangle}
+G2: "bucket / quota / sync" {shape: rectangle}
+V1: "lvm prepare/activate" {shape: rectangle}
+V2: "zap / list" {shape: rectangle}
+A1: "host add / rm / drain" {shape: rectangle}
+A2: "daemon add / rm / restart" {shape: rectangle}
 
-    CLI --> CEPH[ceph<br/>cluster management]:::area
-    CLI --> RADOS[rados<br/>object ops]:::area
-    CLI --> RBD[rbd<br/>block storage]:::area
-    CLI --> RGW[radosgw-admin<br/>object gateway]:::area
-    CLI --> CV[ceph-volume<br/>OSD provisioning]:::area
-    CLI --> CADM[cephadm<br/>orchestration]:::area
-
-    CEPH --> C1[status / health / log]:::sub
-    CEPH --> C2[osd / pool / pg mgmt]:::sub
-    CEPH --> C3[auth / config / crash]:::sub
-
-    RADOS --> R1[ls / stat / get / put]:::sub
-    RADOS --> R2[bench write/seq/rand]:::sub
-
-    RBD --> B1[create / resize / rm]:::sub
-    RBD --> B2[snap / clone / export]:::sub
-
-    RGW --> G1[user / key management]:::sub
-    RGW --> G2[bucket / quota / sync]:::sub
-
-    CV --> V1[lvm prepare/activate]:::sub
-    CV --> V2[zap / list]:::sub
-
-    CADM --> A1[host add / rm / drain]:::sub
-    CADM --> A2[daemon add / rm / restart]:::sub
+CLI -> CEPH
+CLI -> RADOS
+CLI -> RBD
+CLI -> RGW
+CLI -> CV
+CLI -> CADM
+CEPH -> C1
+CEPH -> C2
+CEPH -> C3
+RADOS -> R1
+RADOS -> R2
+RBD -> B1
+RBD -> B2
+RGW -> G1
+RGW -> G2
+CV -> V1
+CV -> V2
+CADM -> A1
+CADM -> A2
 ```
 
 ## Before you begin

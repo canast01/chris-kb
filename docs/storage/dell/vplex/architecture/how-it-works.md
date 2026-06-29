@@ -53,16 +53,23 @@ Dell VPLEX is a storage federation and virtualisation platform that decouples ph
 
 VPLEX builds virtual volumes from back-end storage through a layered hierarchy:
 
-```mermaid
-flowchart TD
-    arrayLUN["Back-end Array LUN\n(PowerMax / Unity)"]
-    storageVol["Storage Volume\n(VPLEX claims LUN)"]
-    extent["Extent\n(VPLEX claim on storage volume)"]
-    localDev["Local Device\n(RAID-0 or RAID-1 within cluster)"]
-    distDev["Distributed Device\n(RAID-1 across two clusters — Metro only)"]
-    virtVol["Virtual Volume\n(presented to hosts)"]
-    storageView["Storage View\n(Host HBA → FE port → virtual volume)"]
-    arrayLUN --> storageVol --> extent --> localDev --> distDev --> virtVol --> storageView
+```d2
+direction: right
+
+arrayLUN: "Back-end Array LUN\n(PowerMax / Unity" {shape: rectangle}
+storageVol: "Storage Volume\n(VPLEX claims LUN" {shape: rectangle}
+extent: "Extent\n(VPLEX claim on storage volume" {shape: rectangle}
+localDev: "Local Device\n(RAID-0 or RAID-1 within cluster" {shape: rectangle}
+distDev: "Distributed Device\n(RAID-1 across two clusters — Metro only" {shape: rectangle}
+virtVol: "Virtual Volume\n(presented to hosts" {shape: rectangle}
+storageView: "Storage View\n(Host HBA → FE port → virtual volume" {shape: rectangle}
+
+arrayLUN -> storageVol
+storageVol -> extent
+extent -> localDev
+localDev -> distDev
+distDev -> virtVol
+virtVol -> storageView
 ```
 
 ## VPLEX Metro Topology

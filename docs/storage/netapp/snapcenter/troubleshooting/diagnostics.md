@@ -14,37 +14,42 @@ SnapCenter diagnostic commands: query failed jobs with Get-SmJob, inspect job de
 </div>
 ![SnapCenter — Diagnostics](../../../../assets/storage-netapp-snapcenter-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "Get-SmJob Where Status = Failed\nRead ErrorMessage column" {shape: rectangle}
+D: "Get-SmHost - check PlugInStatus\nConnect to host on port 8145" {shape: rectangle}
+E: "Get-SmStorageConnection\nTest ONTAP cluster connectivity" {shape: rectangle}
+F: "Get-SmJobSummaryReport -JobId\nCheck step where failure occurred" {shape: rectangle}
+G: "Get-SmJobSummaryReport -JobId\nGet full step trace" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Check application log\non plug-in host" {shape: rectangle}
+J: "Check SMCore log\nfor ONTAP error code" {shape: rectangle}
+K: "Check SnapMirror/SnapVault\nrelationship on ONTAP" {shape: rectangle}
+L: "Check plug-in service\nGet-Service SnapCenter*" {shape: rectangle}
+M: "Test-NetConnection ONTAP-ip -Port 443\nCheck credentials in storage connection" {shape: rectangle}
+N: "Generate support bundle\nGet-SmSupportBundle" {shape: rectangle}
+O: "Open NetApp SR\nmysupport.netapp.com" {shape: rectangle}
+A: "SnapCenter Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([SnapCenter Issue]) --> B{What type of problem?}
-    B -->|Backup or clone job failed| C[Get-SmJob Where Status = Failed\nRead ErrorMessage column]
-    B -->|Plugin host shows degraded| D[Get-SmHost - check PlugInStatus\nConnect to host on port 8145]
-    B -->|Storage connection error| E[Get-SmStorageConnection\nTest ONTAP cluster connectivity]
-    B -->|Restore failed| F[Get-SmJobSummaryReport -JobId\nCheck step where failure occurred]
-    C --> G[Get-SmJobSummaryReport -JobId\nGet full step trace]
-    G --> H{Error in which step?}
-    H -->|App quiesce step| I[Check application log\non plug-in host]
-    H -->|Snapshot step| J[Check SMCore log\nfor ONTAP error code]
-    H -->|Transfer/vault step| K[Check SnapMirror/SnapVault\nrelationship on ONTAP]
-    D --> L[Check plug-in service\nGet-Service SnapCenter*]
-    E --> M[Test-NetConnection ONTAP-ip -Port 443\nCheck credentials in storage connection]
-    F --> G
-    I --> N[Generate support bundle\nGet-SmSupportBundle]
-    J --> N
-    K --> N
-    L --> N
-    M --> N
-    N --> O[Open NetApp SR\nmysupport.netapp.com]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H dark
-    class C,D,E,F,G,I,J,K,L,M action
-    class N,O escalate
+B -> C
+B -> D
+B -> E
+B -> F
+C -> G
+H -> I
+H -> J
+H -> K
+D -> L
+E -> M
+F -> G
+I -> N
+J -> N
+K -> N
+L -> N
+M -> N
+N -> O
 ```
 
 ```d2

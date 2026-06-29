@@ -10,31 +10,27 @@ tags:
 symcfg list -v | grep "Microcode"
 ```
 
-```mermaid
-flowchart TD
-    preCheck["Verify All Pairs Synchronized\nsymrdf -g rdfg query | grep -v Synchronized"]
-    notifyApps["Notify Application Teams\nTemporary RPO degradation during window"]
-    convertAsync["Convert to SRDF/A\nsymrdf -g rdfg set mode async"]
-    nduSource["NDU on Source Array\n(Dell NDU runbook)"]
-    nduTarget["NDU on Target Array"]
-    convertSync["Re-establish Synchronous Mode\nsymrdf -g rdfg set mode sync"]
-    waitResync["Wait for Synchronized State\n(SyncInProg expected)"]
-    postValidate["Post-Upgrade Validation\nAll pairs Synchronized within 30 min"]
-    closeChange["Close Change Ticket"]
+```d2
+direction: right
 
-    preCheck --> notifyApps
-    notifyApps --> convertAsync
-    convertAsync --> nduSource
-    nduSource --> nduTarget
-    nduTarget --> convertSync
-    convertSync --> waitResync
-    waitResync --> postValidate
-    postValidate --> closeChange
+preCheck: "Verify All Pairs Synchronized\nsymrdf -g rdfg query | grep -v Synchronized" {shape: rectangle}
+notifyApps: "Notify Application Teams\nTemporary RPO degradation during window" {shape: rectangle}
+convertAsync: "Convert to SRDF/A\nsymrdf -g rdfg set mode async" {shape: rectangle}
+nduSource: "NDU on Source Array\n(Dell NDU runbook" {shape: rectangle}
+nduTarget: "NDU on Target Array" {shape: rectangle}
+convertSync: "Re-establish Synchronous Mode\nsymrdf -g rdfg set mode sync" {shape: rectangle}
+waitResync: "Wait for Synchronized State\n(SyncInProg expected" {shape: rectangle}
+postValidate: "Post-Upgrade Validation\nAll pairs Synchronized within 30 min" {shape: rectangle}
+closeChange: "Close Change Ticket" {shape: rectangle}
 
-    style preCheck fill:#7c3aed,color:#fff
-    style convertAsync fill:#b45309,color:#fff
-    style convertSync fill:#2563eb,color:#fff
-    style closeChange fill:#15803d,color:#fff
+preCheck -> notifyApps
+notifyApps -> convertAsync
+convertAsync -> nduSource
+nduSource -> nduTarget
+nduTarget -> convertSync
+convertSync -> waitResync
+waitResync -> postValidate
+postValidate -> closeChange
 ```
 
 ## Before you begin

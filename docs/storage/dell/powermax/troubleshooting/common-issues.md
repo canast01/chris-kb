@@ -7,16 +7,12 @@ search:
 ---
 # PowerMax — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Common Issues, Incident Triage.
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
 ![PowerMax — Common Issues](../../../../assets/storage-dell-powermax-troubleshooting-common-issues.svg)
-
-
-
 
 ```d2
 direction: down
@@ -40,41 +36,41 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{Host connectivity\nlost?}
-    S --> B2{SRDF link\ndegraded?}
-    S --> B3{TimeFinder clone\nsplit failed?}
-    S --> B4{Performance alert\nresponse time spike?}
-    S --> B5{Masking view\nmismatch?}
+```d2
+direction: right
 
-    B1 -->|Check FA port state| D1{Director or\nport faulted?}
-    D1 -->|Yes| R1[See Common Issues —\nDirector port I/O errors]
-    D1 -->|No| R2[See Common Issues —\nHost cannot see LUN]
+D1: "D1" {shape: rectangle}
+R1: "See Common Issues —\nDirector port I/O errors" {shape: rectangle}
+R2: "See Common Issues —\nHost cannot see LUN" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Common Issues —\nSRDF pair in Suspended state" {shape: rectangle}
+R4: "See Incident Triage —\nSRDF link check" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Common Issues —\nSnapVX session count at 256" {shape: rectangle}
+R6: "See Incident Triage —\nEscalate to Dell TAC" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Common Issues —\nPerformance SLO violations" {shape: rectangle}
+R8: "See Incident Triage —\nPerformance path" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See Common Issues —\nHost cannot see LUN after MV creation" {shape: rectangle}
+R10: "See Incident Triage —\nFabric zone check" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Check RDF group state| D2{Pair state\nSuspended / R1 Updated?}
-    D2 -->|Yes| R3[See Common Issues —\nSRDF pair in Suspended state]
-    D2 -->|Link down| R4[See Incident Triage —\nSRDF link check]
-
-    B3 -->|Check SnapVX session count| D3{Session count\nat 256 limit?}
-    D3 -->|Yes| R5[See Common Issues —\nSnapVX session count at 256]
-    D3 -->|No| R6[See Incident Triage —\nEscalate to Dell TAC]
-
-    B4 -->|Check FAST VP tier placement| D4{SLO violation\n>2ms latency?}
-    D4 -->|Yes| R7[See Common Issues —\nPerformance SLO violations]
-    D4 -->|Cache WP high| R8[See Incident Triage —\nPerformance path]
-
-    B5 -->|Verify initiator group| D5{WWN in\ninitiator group?}
-    D5 -->|No| R9[See Common Issues —\nHost cannot see LUN after MV creation]
-    D5 -->|Zone missing| R10[See Incident Triage —\nFabric zone check]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---
@@ -106,33 +102,42 @@ graph TD
 
 When a host reports I/O errors, latency, or a LUN is inaccessible, work through this sequence before escalating.
 
-```mermaid
-flowchart TD
-    SYMPTOM([Host reports I/O error\nor LUN inaccessible]) --> UNI_ALERT{"Unisphere alerts\nin last 30 min?"}
-    UNI_ALERT -->|"Critical alert"| TRIAGE_ALERT["Note component and severity\nProceed to relevant check below"]
-    UNI_ALERT -->|"No alert"| DIR_CHK{"symcfg show\nAll directors healthy?"}
-    TRIAGE_ALERT --> DIR_CHK
-    DIR_CHK -->|"Director faulted"| RAISE_P1["Raise P1 Dell case\nCapture symcfg show\nCheck hardware LEDs"]
-    DIR_CHK -->|"OK"| SRDF_CHK{"symrdf list\nSRDF state normal?"}
-    SRDF_CHK -->|"Suspended / R1 Updated"| SRDF_FIX["Check WAN link\nResume SRDF if safe\nMonitor resync"]
-    SRDF_CHK -->|"OK"| DRIVE_CHK{"sympd list -failed\nFailed drive?"}
-    DRIVE_CHK -->|"Drive failed"| DRIVE_FIX["Check RAID parity\nCapture drive state\nRaise Dell hardware case"]
-    DRIVE_CHK -->|"OK"| PATH_CHK{"powermt display dev=all\nDead paths on host?"}
-    PATH_CHK -->|"Dead paths"| PATH_FIX["Check SAN fabric port\nCheck HBA / cable\nCheck port group config"]
-    PATH_CHK -->|"OK"| PERF_CHK{"symstat -type r2\nLatency spike?"}
-    PERF_CHK -->|"High latency"| PERF_FIX["Check cache WP%\nIdentify hot SGs\nReview FAST VP tier"]
-    PERF_CHK -->|"OK"| MASK_CHK{"symmask list logins\nHost sees LUN in MV?"}
-    MASK_CHK -->|"LUN not visible"| MASK_FIX["Verify masking view\nCheck initiator WWN\nCheck fabric zone active"]
-    MASK_CHK -->|"Yes"| ESCALATE["Collect diagnostics bundle\nOpen Dell TAC case\nP1 if production impacted"]
+```d2
+direction: right
 
-    classDef start fill:#15803d,stroke:#166534,color:#fff
-    classDef decision fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef action fill:#b45309,stroke:#92400e,color:#fff
-    classDef critical fill:#be123c,stroke:#9f1239,color:#fff
-    class SYMPTOM start
-    class UNI_ALERT,DIR_CHK,SRDF_CHK,DRIVE_CHK,PATH_CHK,PERF_CHK,MASK_CHK decision
-    class SRDF_FIX,DRIVE_FIX,PATH_FIX,PERF_FIX,MASK_FIX action
-    class RAISE_P1,TRIAGE_ALERT,ESCALATE critical
+SYMPTOM: "Host reports I/O error\nor LUN inaccessible" {shape: rectangle}
+UNI_ALERT: "Unisphere alerts\nin last 30 min?" {shape: rectangle}
+TRIAGE_ALERT: "Note component and severity\nProceed to relevant check below" {shape: rectangle}
+DIR_CHK: "symcfg show\nAll directors healthy?" {shape: rectangle}
+RAISE_P1: "Raise P1 Dell case\nCapture symcfg show\nCheck hardware LEDs" {shape: rectangle}
+SRDF_CHK: "symrdf list\nSRDF state normal?" {shape: rectangle}
+SRDF_FIX: "Check WAN link\nResume SRDF if safe\nMonitor resync" {shape: rectangle}
+DRIVE_CHK: "sympd list -failed\nFailed drive?" {shape: rectangle}
+DRIVE_FIX: "Check RAID parity\nCapture drive state\nRaise Dell hardware case" {shape: rectangle}
+PATH_CHK: "powermt display dev=all\nDead paths on host?" {shape: rectangle}
+PATH_FIX: "Check SAN fabric port\nCheck HBA / cable\nCheck port group config" {shape: rectangle}
+PERF_CHK: "symstat -type r2\nLatency spike?" {shape: rectangle}
+PERF_FIX: "Check cache WP%\nIdentify hot SGs\nReview FAST VP tier" {shape: rectangle}
+MASK_CHK: "symmask list logins\nHost sees LUN in MV?" {shape: rectangle}
+MASK_FIX: "Verify masking view\nCheck initiator WWN\nCheck fabric zone active" {shape: rectangle}
+ESCALATE: "Collect diagnostics bundle\nOpen Dell TAC case\nP1 if production impacted" {shape: rectangle}
+
+SYMPTOM -> UNI_ALERT
+UNI_ALERT -> TRIAGE_ALERT
+UNI_ALERT -> DIR_CHK
+TRIAGE_ALERT -> DIR_CHK
+DIR_CHK -> RAISE_P1
+DIR_CHK -> SRDF_CHK
+SRDF_CHK -> SRDF_FIX
+SRDF_CHK -> DRIVE_CHK
+DRIVE_CHK -> DRIVE_FIX
+DRIVE_CHK -> PATH_CHK
+PATH_CHK -> PATH_FIX
+PATH_CHK -> PERF_CHK
+PERF_CHK -> PERF_FIX
+PERF_CHK -> MASK_CHK
+MASK_CHK -> MASK_FIX
+MASK_CHK -> ESCALATE
 ```
 
 - [ ] Check Unisphere Dashboard immediately for any active alerts flagged in the last 30 minutes — note alert severity and affected component

@@ -22,33 +22,38 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 
 ## SVM / Volume / LUN Hierarchy
 
-```mermaid
-graph TD
-    cluster["Cluster"] --> nodeA["Node A"]
-    cluster --> nodeB["Node B"]
-    nodeA --> aggrA["Aggregate (aggr1)\nRAID-DP / RAID-TEC"]
-    nodeB --> aggrB["Aggregate (aggr2)\nRAID-DP / RAID-TEC"]
-    aggrA --> svm1["SVM: svm-nas"]
-    aggrA --> svm2["SVM: svm-san"]
-    aggrB --> svm1
-    svm1 --> volNFS["Volume: vol_nfs\njunction-path /nfs"]
-    svm1 --> volSMB["Volume: vol_smb\njunction-path /smb"]
-    svm2 --> volSAN["Volume: vol_iscsi"]
-    volSAN --> lun1["LUN: /vol/vol_iscsi/lun0\nigroup: esxi-cluster"]
-    volNFS --> snap1["Snapshots\n(hourly · daily · weekly)"]
-    volNFS --> nfsExport["NFS Export\n/etc/exports equiv"]
-    volSMB --> smbShare["SMB Share\n\\\\server\\share"]
+```d2
+direction: right
 
-    classDef cluster fill:#1e40af,color:#fff
-    classDef node fill:#2563eb,color:#fff
-    classDef aggr fill:#7c3aed,color:#fff
-    classDef svm fill:#db6004,color:#fff
-    classDef vol fill:#15803d,color:#fff
-    class cluster cluster
-    class nodeA,nodeB node
-    class aggrA,aggrB aggr
-    class svm1,svm2 svm
-    class volNFS,volSMB,volSAN vol
+cluster: "Cluster" {shape: rectangle}
+nodeA: "Node A" {shape: rectangle}
+nodeB: "Node B" {shape: rectangle}
+aggrA: "Aggregate (aggr1" {shape: rectangle}
+aggrB: "Aggregate (aggr2" {shape: rectangle}
+svm1: "SVM: svm-nas" {shape: rectangle}
+svm2: "SVM: svm-san" {shape: rectangle}
+volNFS: "Volume: vol_nfs\njunction-path /nfs" {shape: rectangle}
+volSMB: "Volume: vol_smb\njunction-path /smb" {shape: rectangle}
+volSAN: "Volume: vol_iscsi" {shape: rectangle}
+lun1: "LUN: /vol/vol_iscsi/lun0\nigroup: esxi-cluster" {shape: rectangle}
+snap1: "Snapshots\n(hourly · daily · weekly" {shape: rectangle}
+nfsExport: "NFS Export\n/etc/exports equiv" {shape: rectangle}
+smbShare: "SMB Share\n\\\\server\\share" {shape: rectangle}
+
+cluster -> nodeA
+cluster -> nodeB
+nodeA -> aggrA
+nodeB -> aggrB
+aggrA -> svm1
+aggrA -> svm2
+aggrB -> svm1
+svm1 -> volNFS
+svm1 -> volSMB
+svm2 -> volSAN
+volSAN -> lun1
+volNFS -> snap1
+volNFS -> nfsExport
+volSMB -> smbShare
 ```
 
 ## Change Readiness

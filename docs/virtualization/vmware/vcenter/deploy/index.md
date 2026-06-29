@@ -21,18 +21,25 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Phase 1 — Pre-Deployment Checks"]
-    s2["Phase 2 — VCSA Deployment: Stage 1"]
-    s3["Phase 3 — VCSA Configuration: Stage 2"]
-    s4["Phase 4 — Active Directory Integration"]
-    s5["Phase 5 — Inventory Build"]
-    s6["Phase 6 — Post-Deployment Hardening and Va..."]
-    s7["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
-    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
+```d2
+direction: right
+
+s0: "Before you begin" {shape: rectangle}
+s1: "Phase 1 — Pre-Deployment Checks" {shape: rectangle}
+s2: "Phase 2 — VCSA Deployment: Stage 1" {shape: rectangle}
+s3: "Phase 3 — VCSA Configuration: Stage 2" {shape: rectangle}
+s4: "Phase 4 — Active Directory Integration" {shape: rectangle}
+s5: "Phase 5 — Inventory Build" {shape: rectangle}
+s6: "Phase 6 — Post-Deployment Hardening and Va..." {shape: rectangle}
+s7: "✓ Verify" {shape: oval}
+
+s0 -> s1
+s1 -> s2
+s2 -> s3
+s3 -> s4
+s4 -> s5
+s5 -> s6
+s6 -> s7
 ```
 
 ## Before you begin

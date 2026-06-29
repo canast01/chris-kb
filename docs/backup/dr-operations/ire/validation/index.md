@@ -10,13 +10,21 @@ Validation is the final gate before restored systems return to production. It co
 
 ## Validation Gates
 
-```mermaid
-flowchart LR
-    SCAN["Malware Scan\n(IR team)"] --> TECH["Technical Validation\n(infra team)"]
-    TECH --> BIZ["Business Validation\n(app owners)"]
-    BIZ --> DRTEST["DR Test\n(simulated failover)"]
-    DRTEST --> SIGNOFF["DR Lead Sign-Off\n(written approval)"]
-    SIGNOFF --> PROD["Reintroduce to Production"]
+```d2
+direction: right
+
+SCAN: "Malware Scan\n(IR team" {shape: rectangle}
+TECH: "Technical Validation\n(infra team" {shape: rectangle}
+BIZ: "Business Validation\n(app owners" {shape: rectangle}
+DRTEST: "DR Test\n(simulated failover" {shape: rectangle}
+SIGNOFF: "DR Lead Sign-Off\n(written approval" {shape: rectangle}
+PROD: "Reintroduce to Production" {shape: rectangle}
+
+SCAN -> TECH
+TECH -> BIZ
+BIZ -> DRTEST
+DRTEST -> SIGNOFF
+SIGNOFF -> PROD
 ```
 
 ## RTO / RPO Measurement

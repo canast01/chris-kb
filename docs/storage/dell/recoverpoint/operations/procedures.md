@@ -125,29 +125,25 @@ For planned DR tests, use Image Access. Invoke a full failover only on declared 
 
 ![Bookmark-Based Recovery Flow](../../../../assets/recoverpoint-proc-bookmark-based-recovery-flow.svg)
 
-```mermaid
-flowchart TD
-    listBookmarks["List Available Bookmarks\ngroup list_bookmarks --gname cgname"]
-    selectBookmark["Select Target Bookmark\n(or timestamp)"]
-    enableImageAccess["Enable Image Access\ngroup enable-image-access --gname cgname\n--copy DR_Copy --image bookmark --access-mode virtual"]
-    confirmImageAccess["Confirm Image Access Active\ngroup status --gname cgname"]
-    mountVolumes["Mount DR Volumes\n(host-level step — SAN zoning / masking)"]
-    validateApp["Validate Application Data\n(app team confirms)"]
-    disableImageAccess["Disable Image Access\ngroup disable-image-access --gname cgname"]
-    confirmActive["Confirm CG Returns to ACTIVE\ngroups status"]
+```d2
+direction: right
 
-    listBookmarks --> selectBookmark
-    selectBookmark --> enableImageAccess
-    enableImageAccess --> confirmImageAccess
-    confirmImageAccess --> mountVolumes
-    mountVolumes --> validateApp
-    validateApp --> disableImageAccess
-    disableImageAccess --> confirmActive
+listBookmarks: "List Available Bookmarks\ngroup list_bookmarks --gname cgname" {shape: rectangle}
+selectBookmark: "Select Target Bookmark\n(or timestamp" {shape: rectangle}
+enableImageAccess: "Enable Image Access\ngroup enable-image-access --gname cgname\n--copy DR_Copy --image bookmark --access-mode virtual" {shape: rectangle}
+confirmImageAccess: "Confirm Image Access Active\ngroup status --gname cgname" {shape: rectangle}
+mountVolumes: "Mount DR Volumes\n(host-level step — SAN zoning / masking" {shape: rectangle}
+validateApp: "Validate Application Data\n(app team confirms" {shape: rectangle}
+disableImageAccess: "Disable Image Access\ngroup disable-image-access --gname cgname" {shape: rectangle}
+confirmActive: "Confirm CG Returns to ACTIVE\ngroups status" {shape: rectangle}
 
-    style listBookmarks fill:#2563eb,color:#fff
-    style enableImageAccess fill:#b45309,color:#fff
-    style disableImageAccess fill:#b45309,color:#fff
-    style confirmActive fill:#15803d,color:#fff
+listBookmarks -> selectBookmark
+selectBookmark -> enableImageAccess
+enableImageAccess -> confirmImageAccess
+confirmImageAccess -> mountVolumes
+mountVolumes -> validateApp
+validateApp -> disableImageAccess
+disableImageAccess -> confirmActive
 ```
 
 ### Post-Failover Validation

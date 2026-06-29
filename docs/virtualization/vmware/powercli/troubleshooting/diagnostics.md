@@ -15,43 +15,52 @@ PowerCLI diagnostic techniques: enable verbose and debug output, trace API calls
 </div>
 ![PowerCLI — Diagnostics](../../../../assets/virtualization-vmware-powercli-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "Enable -Verbose\nRead full exception message" {shape: rectangle}
+D: "Add breakpoints\npdb-equivalent: Set-PSBreakpoint" {shape: rectangle}
+E: "Measure-Command timing\nSwitch to Get-View" {shape: rectangle}
+F: "Test-Connection vcenter\ncurl /sdk to verify HTTPS" {shape: rectangle}
+G: "ExtensionData for raw API object\nGet-Member to list all properties" {shape: rectangle}
+H: "Read $_.Exception.Message\nand $_.Exception.InnerException" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Verify credential and domain\nConnect-VIServer -Credential Get-Credential" {shape: rectangle}
+K: "Confirm object exists\nGet-VM -Name name; check typo" {shape: rectangle}
+L: "Check vCenter RBAC role\nfor the connecting account" {shape: rectangle}
+M: "Test TCP 443 to vCenter\ncheck network and certificate" {shape: rectangle}
+N: "Add Write-Debug statements\nor use Get-View for inspection" {shape: rectangle}
+O: "Get-View -ViewType VirtualMachine\n-Filter RuntimePowerState" {shape: rectangle}
+P: "Invoke-WebRequest -Uri vcenter/sdk\nCheck StatusCode = 200" {shape: rectangle}
+Q: "vm.ExtensionData | Get-Member\nAccess Config.Hardware directly" {shape: rectangle}
+R: "Collect module versions\nGet-Module VMware.* -ListAvailable" {shape: rectangle}
+S: "Capture debug output\nVerbose + DebugPreference + Out-File" {shape: rectangle}
+A: "PowerCLI Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([PowerCLI Issue]) --> B{What type of problem?}
-    B -->|Script throws an error| C[Enable -Verbose\nRead full exception message]
-    B -->|Script produces wrong output| D[Add breakpoints\npdb-equivalent: Set-PSBreakpoint]
-    B -->|Slow execution on large inventory| E[Measure-Command timing\nSwitch to Get-View]
-    B -->|Connection or auth error| F[Test-Connection vcenter\ncurl /sdk to verify HTTPS]
-    B -->|Cmdlet missing expected property| G[ExtensionData for raw API object\nGet-Member to list all properties]
-    C --> H[Read $_.Exception.Message\nand $_.Exception.InnerException]
-    H --> I{Error type?}
-    I -->|InvalidLogin or 401| J[Verify credential and domain\nConnect-VIServer -Credential Get-Credential]
-    I -->|NotFound or 404| K[Confirm object exists\nGet-VM -Name name; check typo]
-    I -->|PermissionDenied| L[Check vCenter RBAC role\nfor the connecting account]
-    I -->|Timeout| M[Test TCP 443 to vCenter\ncheck network and certificate]
-    D --> N[Add Write-Debug statements\nor use Get-View for inspection]
-    E --> O[Get-View -ViewType VirtualMachine\n-Filter RuntimePowerState]
-    F --> P[Invoke-WebRequest -Uri vcenter/sdk\nCheck StatusCode = 200]
-    G --> Q[vm.ExtensionData | Get-Member\nAccess Config.Hardware directly]
-    J --> R[Collect module versions\nGet-Module VMware.* -ListAvailable]
-    K --> R
-    L --> R
-    M --> R
-    N --> R
-    O --> R
-    P --> R
-    Q --> R
-    R --> S[Capture debug output\nVerbose + DebugPreference + Out-File]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
-    class R,S escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+C -> H
+I -> J
+I -> K
+I -> L
+I -> M
+D -> N
+E -> O
+F -> P
+G -> Q
+J -> R
+K -> R
+L -> R
+M -> R
+N -> R
+O -> R
+P -> R
+Q -> R
+R -> S
 ```
 
 ```d2

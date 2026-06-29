@@ -11,19 +11,19 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 *Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
 
-```mermaid
-graph TB
-    classDef nvme fill:#2563eb,color:#fff
-    classDef hybrid fill:#15803d,color:#fff
-    classDef hdd fill:#b45309,color:#fff
-    classDef ec fill:#7c3aed,color:#fff
+```d2
+direction: right
 
-    TIERS([Cluster Storage Tiers])
+TIERS: "Cluster Storage Tiers" {shape: rectangle}
+NVMe: "All-NVMe\nLatency-sensitive workloads\nVM boot disks, databases\nHighest cost per TB" {shape: rectangle}
+HYB: "Hybrid — NVMe cache + HDD capacity\nMixed workloads\nNVMe BlueStore WAL/DB\nHDD object data" {shape: rectangle}
+HDD: "All-HDD\nCold / bulk storage\nArchive, backup targets\nLowest cost per TB" {shape: rectangle}
+EC: "Erasure Coded\nCost-efficient bulk\nk=4 m=2 → 1.5x overhead\nNo RBD overwrite support" {shape: rectangle}
 
-    TIERS --> NVMe[All-NVMe\nLatency-sensitive workloads\nVM boot disks, databases\nHighest cost per TB]:::nvme
-    TIERS --> HYB[Hybrid — NVMe cache + HDD capacity\nMixed workloads\nNVMe BlueStore WAL/DB\nHDD object data]:::hybrid
-    TIERS --> HDD[All-HDD\nCold / bulk storage\nArchive, backup targets\nLowest cost per TB]:::hdd
-    TIERS --> EC[Erasure Coded\nCost-efficient bulk\nk=4 m=2 → 1.5x overhead\nNo RBD overwrite support]:::ec
+TIERS -> NVMe
+TIERS -> HYB
+TIERS -> HDD
+TIERS -> EC
 ```
 
 ```d2

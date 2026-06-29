@@ -52,34 +52,33 @@ sequenceDiagram
 
 ### Restore Workflow Decision Tree
 
-```mermaid
-flowchart TD
-    restoreStart(["Restore request received"])
-    restoreStart --> q1{What needs\nto be restored?}
+```d2
+direction: right
 
-    q1 -->|"One or more files"| q2{Windows\nor Linux?}
-    q1 -->|"Entire volume\nor VM disk"| volumeRestore["Volume-level restore\nqoperation restore\n-subclient -topath"]
-    q1 -->|"Full VM"| vmRestore["Full VM restore\n(VSA subclient)\nrestore to alternate location"]
-    q1 -->|"Application data\n(SQL, Oracle, Exchange)"| appRestore["Application-aware restore\nPoint-in-time log replay\nor granular item restore"]
+q1: "q1" {shape: rectangle}
+volumeRestore: "Volume-level restore\nqoperation restore\n-subclient -topath" {shape: rectangle}
+vmRestore: "Full VM restore\n(VSA subclient" {shape: rectangle}
+appRestore: "Application-aware restore\nPoint-in-time log replay\nor granular item restore" {shape: rectangle}
+q2: "q2" {shape: rectangle}
+winFlr: "File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath" {shape: rectangle}
+linFlr: "File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath" {shape: rectangle}
+verifyDest: "Verify destination\nhas sufficient space" {shape: rectangle}
+execute: "Execute restore\nMonitor in Job Controller" {shape: rectangle}
+validate: "Validate restored\ndata integrity" {shape: rectangle}
+restoreStart: "Restore request received" {shape: rectangle}
 
-    q2 -->|"Windows"| winFlr["File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath"]
-    q2 -->|"Linux"| linFlr["File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath"]
-
-    volumeRestore --> verifyDest["Verify destination\nhas sufficient space"]
-    vmRestore --> verifyDest
-    appRestore --> verifyDest
-    winFlr --> verifyDest
-    linFlr --> verifyDest
-
-    verifyDest --> execute["Execute restore\nMonitor in Job Controller"]
-    execute --> validate(["Validate restored\ndata integrity"])
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class volumeRestore,vmRestore,appRestore,winFlr,linFlr,verifyDest,execute action
-    class q1,q2 decision
-    class restoreStart,validate terminal
+q1 -> volumeRestore
+q1 -> vmRestore
+q1 -> appRestore
+q2 -> winFlr
+q2 -> linFlr
+volumeRestore -> verifyDest
+vmRestore -> verifyDest
+appRestore -> verifyDest
+winFlr -> verifyDest
+linFlr -> verifyDest
+verifyDest -> execute
+execute -> validate
 ```
 
 Always verify destination and time range before executing a restore.

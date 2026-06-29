@@ -12,16 +12,21 @@ Management groups provide a level of scope above subscriptions. They enable you 
 
 ## Azure Resource Hierarchy
 
-```mermaid
-flowchart TD
-    tenant["Azure Tenant\nEntra ID boundary"]
-    mgRoot["Tenant Root Group\nManagement Group"]
-    mg["Child Management Group\ne.g. mg-production"]
-    sub["Subscription\nBilling + quota boundary"]
-    rg["Resource Group\nLifecycle + RBAC boundary"]
-    resource["Resource\nVM · Storage · Key Vault · VNet"]
+```d2
+direction: right
 
-    tenant --> mgRoot --> mg --> sub --> rg --> resource
+tenant: "Azure Tenant\nEntra ID boundary" {shape: rectangle}
+mgRoot: "Tenant Root Group\nManagement Group" {shape: rectangle}
+mg: "Child Management Group\ne.g. mg-production" {shape: rectangle}
+sub: "Subscription\nBilling + quota boundary" {shape: rectangle}
+rg: "Resource Group\nLifecycle + RBAC boundary" {shape: rectangle}
+resource: "Resource\nVM · Storage · Key Vault · VNet" {shape: rectangle}
+
+tenant -> mgRoot
+mgRoot -> mg
+mg -> sub
+sub -> rg
+rg -> resource
 ```
 
 Governance controls — Azure Policy and RBAC — applied at any level are inherited by all children.
@@ -36,24 +41,31 @@ A well-designed management group hierarchy mirrors your organisational structure
 
 ## Azure Landing Zone Topology
 
-```mermaid
-flowchart TD
-    tenantRoot["Tenant Root Group"]
-    mgPlatform["mg-platform\nConnectivity · Identity · Management"]
-    mgLandingZones["mg-landingzones\nApplication Workloads"]
-    mgSandbox["mg-sandboxes\nUnrestricted experimentation"]
-    mgDecom["mg-decommissioned"]
-    mgProd["mg-production"]
-    mgStaging["mg-staging"]
-    mgDev["mg-dev"]
-    subConn["sub-connectivity\nExpressRoute · Firewall · DNS"]
-    subIdent["sub-identity\nEntra ID Connect · ADDS"]
-    subProdApp["sub-prod-app1\nWorkload A"]
+```d2
+direction: right
 
-    tenantRoot --> mgPlatform & mgLandingZones & mgSandbox & mgDecom
-    mgPlatform --> subConn & subIdent
-    mgLandingZones --> mgProd & mgStaging & mgDev
-    mgProd --> subProdApp
+tenantRoot: "Tenant Root Group" {shape: rectangle}
+mgPlatform: "mg-platform\nConnectivity · Identity · Management" {shape: rectangle}
+mgLandingZones: "mg-landingzones\nApplication Workloads" {shape: rectangle}
+mgSandbox: "mg-sandboxes\nUnrestricted experimentation" {shape: rectangle}
+mgDecom: "mg-decommissioned" {shape: rectangle}
+subConn: "sub-connectivity\nExpressRoute · Firewall · DNS" {shape: rectangle}
+subIdent: "sub-identity\nEntra ID Connect · ADDS" {shape: rectangle}
+mgProd: "mg-production" {shape: rectangle}
+mgStaging: "mg-staging" {shape: rectangle}
+mgDev: "mg-dev" {shape: rectangle}
+subProdApp: "sub-prod-app1\nWorkload A" {shape: rectangle}
+
+tenantRoot -> mgPlatform
+mgPlatform -> mgLandingZones
+mgLandingZones -> mgSandbox
+mgSandbox -> mgDecom
+mgPlatform -> subConn
+subConn -> subIdent
+mgLandingZones -> mgProd
+mgProd -> mgStaging
+mgStaging -> mgDev
+mgProd -> subProdApp
 ```
 
 ## Managing Management Groups

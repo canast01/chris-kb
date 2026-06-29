@@ -12,19 +12,24 @@ Eyeglass provides the `igls` CLI accessible from the appliance shell via SSH and
 </div>
 ![Superna Eyeglass — CLI Reference](../../../../assets/storage-netapp-superna-eyeglass-operations-cli-reference.svg)
 
-```mermaid
-flowchart LR
-    operator(["Operator /\nAutomation"])
-    ssh["SSH\nadmin@eyeglass-ip"]
-    iglsCLI["igls CLI\n(Eyeglass appliance)"]
-    restAPI["REST API\nhttps://eyeglass-ip/eca/api/v1"]
-    eyeglassSvc["Eyeglass Services\nDR orchestration"]
-    psApi["PowerScale\nOneFS REST API"]
-    synciq["SyncIQ\nReplication engine"]
+```d2
+direction: right
 
-    operator --> ssh --> iglsCLI --> eyeglassSvc
-    operator --> restAPI --> eyeglassSvc
-    eyeglassSvc --> psApi --> synciq
+operator: "Operator /\nAutomation" {shape: rectangle}
+ssh: "SSH\nadmin@eyeglass-ip" {shape: rectangle}
+iglsCLI: "igls CLI\n(Eyeglass appliance" {shape: rectangle}
+eyeglassSvc: "Eyeglass Services\nDR orchestration" {shape: rectangle}
+restAPI: "REST API\nhttps://eyeglass-ip/eca/api/v1" {shape: rectangle}
+psApi: "PowerScale\nOneFS REST API" {shape: rectangle}
+synciq: "SyncIQ\nReplication engine" {shape: rectangle}
+
+operator -> ssh
+ssh -> iglsCLI
+iglsCLI -> eyeglassSvc
+operator -> restAPI
+restAPI -> eyeglassSvc
+eyeglassSvc -> psApi
+psApi -> synciq
 ```
 
 ---

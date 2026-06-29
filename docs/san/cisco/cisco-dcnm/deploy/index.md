@@ -44,22 +44,6 @@ Note: Cisco renamed DCNM to NDFC starting with version 12.x on the Nexus Dashboa
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Deploy DCNM OVA"]
-    s3["Initial Setup Wizard"]
-    s4["Add First Fabric"]
-    s5["Configure LAN Fabric (VXLAN or Classic)"]
-    s6["Deploy Switches"]
-    s7["✓ Validate"]
-    s8["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
-    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 **DCNM VM requirements:**

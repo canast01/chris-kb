@@ -12,14 +12,18 @@ Brings a new physical server, VM, or cloud instance into full production managem
 
 ## Onboarding Stages
 
-```mermaid
-flowchart LR
-    A[Provisioned] --> B[Identity &\nNetworking]
-    B --> C[OS Hardening &\nSecurity Baseline]
-    C --> D[Monitoring &\nLogging]
-    D --> E[Backup & DR]
-    E --> F[CMDB &\nDocumentation]
-    F --> G[Handover to\nApp / Ops Team]
+```d2
+direction: right
+
+F: "F" {shape: rectangle}
+G: "Handover to\nApp / Ops Team" {shape: rectangle}
+A: "Provisioned" {shape: rectangle}
+B: "B" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "D" {shape: rectangle}
+E: "E" {shape: rectangle}
+
+F -> G
 ```
 
 ## 2. OS Hardening and Security Baseline

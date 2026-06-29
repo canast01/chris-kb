@@ -7,16 +7,12 @@ search:
 ---
 # Dell VPLEX — Common Issues
 
-
 <div class="kb-summary">
 Dell VPLEX common issues — path and virtual volume failures, backend LUN errors, Metro cluster connectivity problems, Witness quorum events, and authentication failures. Symptom-to-resolution quick reference with diagnostic steps and escalation path.
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — Common Issues](../../../../assets/storage-dell-vplex-troubleshooting-common-issues.svg)
-
-
-
 
 ```d2
 direction: down
@@ -43,41 +39,41 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{Director\nfault?}
-    S --> B2{Distributed volume\ninaccessible?}
-    S --> B3{Witness\nunreachable - Metro?}
-    S --> B4{Cache invalidation\nerror?}
-    S --> B5{Cluster communication\nlost?}
+```d2
+direction: right
 
-    B1 -->|Check director hardware| D1{Director in\nmajor-failure state?}
-    D1 -->|Yes| R1[See Issue Reference —\nDirector shows major-failure]
-    D1 -->|Port fault| R2[See Issue Reference —\nHost Loses Access to All VPLEX Volumes]
+D1: "D1" {shape: rectangle}
+R1: "See Issue Reference —\nDirector shows major-failure" {shape: rectangle}
+R2: "See Issue Reference —\nHost Loses Access to All VPLEX Volumes" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Issue Reference —\nDistributed Device Out-of-Sync" {shape: rectangle}
+R4: "See Issue Reference —\nSingle Host Loses Access to Volumes" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Issue Reference —\nI/O Suspended on Consistency Group" {shape: rectangle}
+R6: "See Issue Reference —\nWitness Not Reachable from One Cluster" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Issue Reference —\nhealth-check reports warnings" {shape: rectangle}
+R8: "See Issue Reference —\nRecoverPoint CLI Commands Hang" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See Incident Triage —\nICL down: restore network" {shape: rectangle}
+R10: "See Common Issues —\nHigh write latency on Metro volumes" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Check distributed device| D2{Device out\nof sync?}
-    D2 -->|Yes| R3[See Issue Reference —\nDistributed Device Out-of-Sync]
-    D2 -->|Storage view| R4[See Issue Reference —\nSingle Host Loses Access to Volumes]
-
-    B3 -->|Check Witness VM and network| D3{ICL also\ndown?}
-    D3 -->|Yes| R5[See Issue Reference —\nI/O Suspended on Consistency Group]
-    D3 -->|Witness only| R6[See Issue Reference —\nWitness Not Reachable from One Cluster]
-
-    B4 -->|Run health-check full| D4{health-check\nreports warnings?}
-    D4 -->|Yes| R7[See Issue Reference —\nhealth-check reports warnings]
-    D4 -->|RP CLI hang| R8[See Issue Reference —\nRecoverPoint CLI Commands Hang]
-
-    B5 -->|Check ICL between clusters| D5{ICL link\ndown?}
-    D5 -->|Yes| R9[See Incident Triage —\nICL down: restore network]
-    D5 -->|No| R10[See Common Issues —\nHigh write latency on Metro volumes]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---
@@ -96,27 +92,31 @@ graph TD
 
 When hosts report I/O suspension, a distributed device is out-of-sync, or a director is unreachable, work through this sequence first.
 
-```mermaid
-flowchart TD
-    alert(["Host I/O issue /\nAlert received"])
-    clHealth["ll /clusters/*/health-indications/\nCluster non-ok?"]
-    ddHealth["ll /distributed-storage/distributed-devices/*/health-indications/\nDevice out-of-sync?"]
-    witnessHlth["ll /clusters/*/cluster-witness/\nWitness unreachable?"]
-    iclHlth["Check ICL\nll /clusters/*/communication/inter-cluster-links/"]
-    dirHealth["ll /engines/*/directors/*/hardware/\nDirector faulted?"]
-    svCheck["ll /clusters/*/exports/storage-views/\nStorage view intact?"]
-    hcFull["health-check --full\nCapture full output"]
+```d2
+direction: right
 
-    alert --> clHealth --> ddHealth --> witnessHlth --> iclHlth --> dirHealth --> svCheck --> hcFull
+alert: "Host I/O issue /\nAlert received" {shape: rectangle}
+clHealth: "ll /clusters/*/health-indications/\nCluster non-ok?" {shape: rectangle}
+ddHealth: "ll /distributed-storage/distributed-devices/*/health-indications/\nDevice out-of-sync?" {shape: rectangle}
+witnessHlth: "ll /clusters/*/cluster-witness/\nWitness unreachable?" {shape: rectangle}
+iclHlth: "Check ICL\nll /clusters/*/communication/inter-cluster-links/" {shape: rectangle}
+dirHealth: "ll /engines/*/directors/*/hardware/\nDirector faulted?" {shape: rectangle}
+svCheck: "ll /clusters/*/exports/storage-views/\nStorage view intact?" {shape: rectangle}
+hcFull: "health-check --full\nCapture full output" {shape: rectangle}
+iclDown: "Restore ICL\nNetwork team" {shape: rectangle}
+dirFault: "Open Dell Sev-2 case\nDo not reseat without guidance" {shape: rectangle}
+svFix: "Add initiator / volume\nback to storage view" {shape: rectangle}
 
-    iclDown["Restore ICL\nNetwork team"]
-    iclHlth -->|"ICL down"| iclDown
-
-    dirFault["Open Dell Sev-2 case\nDo not reseat without guidance"]
-    dirHealth -->|"Director faulted"| dirFault
-
-    svFix["Add initiator / volume\nback to storage view"]
-    svCheck -->|"View missing objects"| svFix
+alert -> clHealth
+clHealth -> ddHealth
+ddHealth -> witnessHlth
+witnessHlth -> iclHlth
+iclHlth -> dirHealth
+dirHealth -> svCheck
+svCheck -> hcFull
+iclHlth -> iclDown
+dirHealth -> dirFault
+svCheck -> svFix
 ```
 
 - [ ] Run `ll /clusters/*/health-indications/` immediately — identify which cluster has entered a non-ok health state and note when the state change occurred

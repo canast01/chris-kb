@@ -14,33 +14,33 @@ RecoverPoint diagnostic commands: RPA health, consistency group state, journal u
 </div>
 ![RecoverPoint — Diagnostics](../../../../assets/storage-dell-recoverpoint-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "Issue Reported" {shape: rectangle}
+B: "SSH to RPA\nget system status" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "Check alerts\nget alerts" {shape: rectangle}
+E: "Check CG states\nget cg list" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "get cg detailed_state\nIdentify affected CG" {shape: rectangle}
+H: "Monitor sync progress\nget journal stats" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Check link bandwidth\nget link stats" {shape: rectangle}
+K: "Collect support bundle\nsupport collect bundle" {shape: rectangle}
+L: "Open Dell SR\nAttach bundle" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([Issue Reported]) --> B[SSH to RPA\nget system status]
-    B --> C{System errors?}
-    C -->|Yes| D[Check alerts\nget alerts]
-    C -->|No| E[Check CG states\nget cg list]
-    E --> F{Any CG not Active?}
-    F -->|Paused / Error| G[get cg detailed_state\nIdentify affected CG]
-    F -->|Initializing| H[Monitor sync progress\nget journal stats]
-    G --> I{Journal utilization high?}
-    H --> I
-    I -->|Yes| J[Check link bandwidth\nget link stats]
-    I -->|No| K[Collect support bundle\nsupport collect bundle]
-    J --> K
-    D --> K
-    K --> L[Open Dell SR\nAttach bundle]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    classDef ok fill:#15803d,color:#fff
-    class A,C,F,I dark
-    class B,D,E,G,H,J action
-    class K,L escalate
+A -> B
+C -> D
+C -> E
+F -> G
+F -> H
+H -> I
+I -> J
+I -> K
+J -> K
+D -> K
+K -> L
 ```
 
 ```d2

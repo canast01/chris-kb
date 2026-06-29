@@ -22,25 +22,26 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 
 ## Standard Apply Workflow
 
-```mermaid
-graph LR
-    writeCode["Write / Edit\nHCL code"]
-    fmt["terraform fmt\n-recursive"]
-    validate["terraform validate"]
-    plan["terraform plan\n-out=tfplan"]
-    reviewPlan["Review Plan\n(human / PR approval)"]
-    apply["terraform apply tfplan"]
-    postPlan["Post-apply plan\n(zero changes expected)"]
-    stateBackup["State backed up\nin remote backend"]
+```d2
+direction: right
 
-    writeCode --> fmt
-    fmt --> validate
-    validate --> plan
-    plan --> reviewPlan
-    reviewPlan -->|Approved| apply
-    reviewPlan -->|Changes needed| writeCode
-    apply --> postPlan
-    apply --> stateBackup
+writeCode: "Write / Edit\nHCL code" {shape: rectangle}
+fmt: "terraform fmt\n-recursive" {shape: rectangle}
+validate: "terraform validate" {shape: rectangle}
+plan: "terraform plan\n-out=tfplan" {shape: oval}
+reviewPlan: "Review Plan\n(human / PR approval" {shape: rectangle}
+apply: "terraform apply tfplan" {shape: rectangle}
+postPlan: "Post-apply plan\n(zero changes expected" {shape: rectangle}
+stateBackup: "State backed up\nin remote backend" {shape: rectangle}
+
+writeCode -> fmt
+fmt -> validate
+validate -> plan
+plan -> reviewPlan
+reviewPlan -> apply
+reviewPlan -> writeCode
+apply -> postPlan
+apply -> stateBackup
 ```
 
 Use `-target` sparingly — it creates drift between the plan and real state if overused.

@@ -45,36 +45,6 @@ run_this_routine -> 4_scheduled_job_health
 
 ## Health Check Decision Flow
 
-```mermaid
-flowchart TD
-    START(["Daily Health Check\nStart (08:00 local)"])
-    AVAIL{"Instance\nResponding?"}
-    PERF{"Stats Page\nNo Alerts?"}
-    JOBS{"Failed Scheduled\nJobs?"}
-    MID{"All MID Servers\nUp?"}
-    LDAP{"LDAP Last Sync\n< 25 hours ago?"}
-    REPL{"ECC Queue\nError Count = 0?"}
-    OK(["All Systems Healthy\nLog green status"])
-
-    AVAIL -- No --> P1["Raise P1 Incident\nEscalate to ServiceNow Support"]
-    AVAIL -- Yes --> PERF
-
-    PERF -- Alerts present --> INV1["Investigate Stats Page\nAlerts — see Diagnostics"]
-    PERF -- Clear --> JOBS
-
-    JOBS -- Yes --> INV2["Review failed jobs\nRestart or escalate"]
-    JOBS -- No --> MID
-
-    MID -- No --> INV3["Restart MID service\nCheck ECC Queue"]
-    MID -- Yes --> LDAP
-
-    LDAP -- No --> INV4["Trigger manual LDAP import\nCheck LDAP server connectivity"]
-    LDAP -- Yes --> REPL
-
-    REPL -- Errors found --> INV5["Purge stale ECC records\nCheck MID Server logs"]
-    REPL -- Clear --> OK
-```
-
 ## Run This Routine
 
 1. **Instance health** — Open `https://<instance>.service-now.com/api/now/stats` in a browser or run `curl -sk -u "$SN_USER:$SN_PASS" "https://<instance>.service-now.com/api/now/stats"`; confirm the instance is accessible and returns stats data; a login redirect or timeout indicates instance availability issues.

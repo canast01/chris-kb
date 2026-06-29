@@ -11,34 +11,6 @@ Ceph health check routine: cluster status, OSD up/in counts, PG state verificati
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph TD
-    A([ceph health]) --> B{Status?}
-    B -->|HEALTH_OK| C([Done — no action needed])
-    B -->|HEALTH_WARN| D([ceph health detail<br>identify warning code])
-    B -->|HEALTH_ERR| E([Immediate triage<br>OSD down? PG inactive? MON quorum?])
-
-    D --> D1([OSD_NEARFULL<br>add OSDs or reweight])
-    D --> D2([CLOCK_SKEW<br>fix NTP on offending hosts])
-    D --> D3([TOO_MANY/FEW_PGS<br>enable pg_autoscale_mode on])
-    D --> D4([LARGE_OMAP<br>compact RGW buckets])
-    D --> D5([MON_DISK_LOW<br>expand or clean MON disk])
-
-    E --> E1([OSD down count<br>ceph osd stat])
-    E --> E2([PG inactive<br>ceph pg dump_stuck inactive])
-    E --> E3([MON quorum<br>ceph mon stat])
-    E1 & E2 & E3 --> E4([Escalate if quorum lost<br>or > 1/3 OSDs down])
-
-    classDef ok fill:#15803d,color:#fff,stroke:#15803d
-    classDef warn fill:#b45309,color:#fff,stroke:#b45309
-    classDef err fill:#991b1b,color:#fff,stroke:#991b1b
-    classDef check fill:#1e3a5f,color:#fff,stroke:#2563eb
-    class C ok
-    class D,D1,D2,D3,D4,D5 warn
-    class E,E1,E2,E3,E4 err
-    class A,B check
-```
-
 ```d2
 direction: right
 

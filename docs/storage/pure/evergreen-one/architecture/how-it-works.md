@@ -14,18 +14,17 @@ How It Works reference covering STaaS Delivery Model, Components, HA Topology, C
 
 ## STaaS Delivery Model
 
-```mermaid
-graph TB
-  FA["FlashArray / FlashBlade\n(on-premises)"] -->|"telemetry"| PURE1["Pure1 Cloud\n(subscription management)"]
-  PURE1 -->|"capacity orders · firmware · support"| FA
-  ADMIN(["Storage Admin"]) -->|"portal"| PURE1
-  PURE1 -->|"alerts · forecasting · health score"| ADMIN
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class FA ctrl
-  class PURE1 cloud
-  class ADMIN host
+```d2
+direction: right
+
+FA: "FlashArray / FlashBlade\n(on-premises" {shape: rectangle}
+PURE1: "Pure1 Cloud\n(subscription management" {shape: rectangle}
+ADMIN: "Storage Admin" {shape: rectangle}
+
+FA -> PURE1
+PURE1 -> FA
+ADMIN -> PURE1
+PURE1 -> ADMIN
 ```
 
 ## Components

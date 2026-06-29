@@ -10,22 +10,22 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph TD
-    A([API Request]) --> B{AuthN\nWho are you?}
-    B -->|Invalid credentials| C([403 Forbidden])
-    B -->|Valid identity| D{AuthZ\nRBAC Check\nsubject + verb + resource}
-    D -->|No matching rule| E([403 Forbidden])
-    D -->|Rule matched| F{Admission Controllers\nWebhooks + SCC}
-    F -->|Rejected by SCC\nor webhook| G([Admission Denied])
-    F -->|Allowed| H([Persist / Execute])
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef deny fill:#991b1b,color:#fff
-    classDef allow fill:#15803d,color:#fff
-    class A,B,D,F dark
-    class C,E,G deny
-    class H allow
+B: "B" {shape: rectangle}
+C: "403 Forbidden" {shape: rectangle}
+D: "D" {shape: rectangle}
+E: "403 Forbidden" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Admission Denied" {shape: rectangle}
+H: "Persist / Execute" {shape: rectangle}
+A: "API Request" {shape: rectangle}
+
+B -> C
+D -> E
+F -> G
+F -> H
 ```
 
 ## Before you begin

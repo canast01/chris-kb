@@ -14,17 +14,22 @@ Azure VM images are the base OS configurations used to create virtual machines. 
 
 ## Azure Image Lifecycle
 
-```mermaid
-flowchart LR
-    marketplace["Azure Marketplace Image\nPublisher · Offer · SKU"]
-    customise["Customise VM\ninstall software · harden"]
-    generalise["Generalise\nsysprep (Windows) · waagent (Linux)"]
-    captureImage["Capture Image\ncustom image"]
-    acg["Azure Compute Gallery\nimage definition + versions"]
-    deploy["Deploy VMs\nfrom gallery image version"]
+```d2
+direction: right
 
-    marketplace --> customise --> generalise --> captureImage --> acg --> deploy
-    deploy -->|"new customisation cycle"| customise
+marketplace: "Azure Marketplace Image\nPublisher · Offer · SKU" {shape: rectangle}
+customise: "Customise VM\ninstall software · harden" {shape: rectangle}
+generalise: "Generalise\nsysprep (Windows) · waagent (Linux" {shape: rectangle}
+captureImage: "Capture Image\ncustom image" {shape: rectangle}
+acg: "Azure Compute Gallery\nimage definition + versions" {shape: rectangle}
+deploy: "Deploy VMs\nfrom gallery image version" {shape: rectangle}
+
+marketplace -> customise
+customise -> generalise
+generalise -> captureImage
+captureImage -> acg
+acg -> deploy
+deploy -> customise
 ```
 
 ## Marketplace Images

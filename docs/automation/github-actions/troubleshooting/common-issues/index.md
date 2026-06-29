@@ -34,32 +34,38 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1{Workflow not\ntriggering?}
-    S --> B2{Secret not\navailable in step?}
-    S --> B3{Artifact upload\nfailed?}
-    S --> B4{Runner offline\nor busy?}
-    S --> B5{Permission denied\non GITHUB_TOKEN?}
-    B1 -->|Yes| D1{on.branches filter\nmatches branch?}
-    D1 -->|No| R1[Common Failures\n— adjust on.branches or on.paths filter]
-    D1 -->|Yes| R2[Common Failures\n— merge workflow file to default branch]
-    B2 -->|Yes| D2{Secret defined at\ncorrect scope?}
-    D2 -->|No| R3[Common Failures\n— check repo vs env vs org secret scope]
-    D2 -->|Yes| R4[Common Failures\n— verify step can access secrets context]
-    B3 -->|Yes| D3{Working directory\ncorrect?}
-    D3 -->|No| R5[Common Failures\n— add working-directory: or cd in step]
-    D3 -->|Yes| R6[Common Failures\n— check artifact path glob matches files]
-    B4 -->|Yes| D4{Runner labels\nmatch runs-on?}
-    D4 -->|No| R7[Common Failures\n— fix runs-on label or register runner]
-    D4 -->|Yes| R8[Common Failures\n— restart runner service on host]
-    B5 -->|Yes| R9[Common Failures\n— add permissions: block with required scopes]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "Common Failures\n— adjust on.branches or on.paths filter" {shape: rectangle}
+R2: "Common Failures\n— merge workflow file to default branch" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Common Failures\n— check repo vs env vs org secret scope" {shape: rectangle}
+R4: "Common Failures\n— verify step can access secrets context" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "Common Failures\n— add working-directory: or cd in step" {shape: rectangle}
+R6: "Common Failures\n— check artifact path glob matches files" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "Common Failures\n— fix runs-on label or register runner" {shape: rectangle}
+R8: "Common Failures\n— restart runner service on host" {shape: rectangle}
+B5: "B5" {shape: rectangle}
+R9: "Common Failures\n— add permissions: block with required scopes" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+B5 -> R9
 ```
 
 ---
@@ -76,26 +82,27 @@ graph TD
 
 ## Common Failures
 
-```mermaid
-flowchart TD
-    failure(["Workflow failure\nor unexpected behaviour"])
-    noTrigger{"Did the workflow\ntrigger at all?"}
-    checkPaths["Check on.paths filter\nDoes it match the changed files?"]
-    stepFail{"Which step\nfailed?"}
-    permErr["Resource not accessible\n→ Add permissions: block to job"]
-    ctxErr["Context access invalid\n→ Fix ${{ }} expression syntax"]
-    exitErr["Exit code 1\n→ Check step output in logs"]
-    secretErr["Secret is empty\n→ Check repo vs env vs org scope"]
-    wdErr["No such file\n→ Add working-directory: or cd"]
+```d2
+direction: right
 
-    failure --> noTrigger
-    noTrigger -->|No| checkPaths
-    noTrigger -->|Yes| stepFail
-    stepFail --> permErr
-    stepFail --> ctxErr
-    stepFail --> exitErr
-    stepFail --> secretErr
-    stepFail --> wdErr
+failure: "Workflow failure\nor unexpected behaviour" {shape: rectangle}
+noTrigger: "noTrigger" {shape: rectangle}
+checkPaths: "Check on.paths filter\nDoes it match the changed files?" {shape: rectangle}
+stepFail: "stepFail" {shape: rectangle}
+permErr: "Resource not accessible\n→ Add permissions: block to job" {shape: rectangle}
+ctxErr: "Context access invalid\n→ Fix ${{ }} expression syntax" {shape: rectangle}
+exitErr: "Exit code 1\n→ Check step output in logs" {shape: rectangle}
+secretErr: "Secret is empty\n→ Check repo vs env vs org scope" {shape: rectangle}
+wdErr: "No such file\n→ Add working-directory: or cd" {shape: rectangle}
+
+failure -> noTrigger
+noTrigger -> checkPaths
+noTrigger -> stepFail
+stepFail -> permErr
+stepFail -> ctxErr
+stepFail -> exitErr
+stepFail -> secretErr
+stepFail -> wdErr
 ```
 
 ---

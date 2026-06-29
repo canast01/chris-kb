@@ -57,32 +57,6 @@ Each major release includes feature updates, security patches, and bug fixes. **
 
 ## Upgrade Lifecycle
 
-```mermaid
-flowchart TD
-    A["Release Announcement\n(~3 months before GA)"]
-    B["Review Release Notes\n& Upgrade Planner Tool"]
-    C["Identify Breaking Changes\n& Deprecated Features"]
-    D["Update Dev Instance\n(ServiceNow schedules)"]
-    E["Developer Testing\nFix compatibility issues"]
-    F["ATF Regression Suite\nExecute in Dev"]
-    G{ATF Pass?}
-    H["Fix Failures\nRe-run ATF"]
-    I["Upgrade UAT Instance\n(ServiceNow schedules)"]
-    J["UAT / Business Acceptance\nTesting"]
-    K{UAT Sign-off?}
-    L["Raise Issues\nFix & Re-test"]
-    M["Schedule Production Upgrade\nwith ServiceNow (HI portal)"]
-    N["Production Upgrade\n(maintenance window)"]
-    O["Post-Upgrade Validation\n(automated + manual)"]
-    P["Close Upgrade Change Request\nDocument lessons learned"]
-
-    A --> B --> C --> D --> E --> F --> G
-    G -- Fail --> H --> F
-    G -- Pass --> I --> J --> K
-    K -- Fail --> L --> J
-    K -- Pass --> M --> N --> O --> P
-```
-
 ### Upgrading Plugins
 
 Some plugins have their own release cycle independent of the platform. After a major platform upgrade:

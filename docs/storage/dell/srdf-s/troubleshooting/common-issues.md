@@ -7,14 +7,12 @@ search:
 ---
 # SRDF/S — Common Issues
 
-
 <div class="kb-summary">
 SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, host I/O impact during link faults, `symrdf failover` under failure, and escalation.
 
 *Applies to: SRDF/S*
 </div>
 ![SRDF/S — Common Issues](../../../../assets/storage-dell-srdf-s-troubleshooting-common-issues.svg)
-
 
 > Part of the [SRDF/S Troubleshooting](index.md) reference.
 
@@ -50,41 +48,41 @@ unintended_failover_during_maintenan -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{SRDF/S pair\nsuspended?}
-    S --> B2{Write I/O stall\non source?}
-    S --> B3{Link bandwidth\nsaturated?}
-    S --> B4{Failover test\nfailure?}
-    S --> B5{Pair in\nInvalid state?}
+```d2
+direction: right
 
-    B1 -->|Check pair state| D1{State Write\nDisabled or Suspended?}
-    D1 -->|Suspended| R1[See Link-Down Recovery —\nCheck physical link then resume]
-    D1 -->|Partitioned| R2[See Link-Down Recovery —\nResume pair after link restored]
+D1: "D1" {shape: rectangle}
+R1: "See Link-Down Recovery —\nCheck physical link then resume" {shape: rectangle}
+R2: "See Link-Down Recovery —\nResume pair after link restored" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Link-Down Recovery —\nEscalate to network team" {shape: rectangle}
+R4: "See Common Issues —\nPair in Consistent state: monitor" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See ISL / FCIP Link Failure —\nRestore link then resync pair" {shape: rectangle}
+R6: "See Root Causes —\nFCIP MTU mismatch or GRE overhead" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Pair in Split State —\nConfirm authoritative side" {shape: rectangle}
+R8: "See Unintended Failover —\nSuspend before maintenance" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See Invalid State —\nResync R1 to R2" {shape: rectangle}
+R10: "See Invalid State —\nFailback from R2: engage Dell Support" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Check RTT to DR site| D2{RTT above\n5ms?}
-    D2 -->|Yes| R3[See Link-Down Recovery —\nEscalate to network team]
-    D2 -->|Write storm| R4[See Common Issues —\nPair in Consistent state: monitor]
-
-    B3 -->|Check FCIP or dark fibre| D3{Link physically\ndown?}
-    D3 -->|Yes| R5[See ISL / FCIP Link Failure —\nRestore link then resync pair]
-    D3 -->|Bandwidth full| R6[See Root Causes —\nFCIP MTU mismatch or GRE overhead]
-
-    B4 -->|Check pair state before test| D4{Pair in\nSplit state?}
-    D4 -->|Unexpected split| R7[See Pair in Split State —\nConfirm authoritative side]
-    D4 -->|Maintenance trigger| R8[See Unintended Failover —\nSuspend before maintenance]
-
-    B5 -->|Check event log for cause| D5{R1 or R2\nauthoritative?}
-    D5 -->|R1 authoritative| R9[See Invalid State —\nResync R1 to R2]
-    D5 -->|R2 authoritative| R10[See Invalid State —\nFailback from R2: engage Dell Support]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---
@@ -101,57 +99,48 @@ graph TD
 
 ## Link-Down Recovery Decision Tree
 
-```mermaid
-flowchart TD
-    linkAlert["Alert: SRDF/S Link Down\nor Pairs not Synchronized"]
-    checkPairState["Check Pair State\nsymrdf -g dgname -sid sid query"]
-    pairStateVal{"Pair State?"}
-    writeDisabled["Write Disabled\n→ Array stopped writes\nto protect consistency"]
-    invalidState["Invalid State\n→ Possible data divergence"]
-    suspended["Suspended\n→ Link dropped or manual suspend"]
-    partitioned["Partitioned\n→ Link interrupted mid-transfer"]
+```d2
+direction: right
 
-    checkPhysLink["Check Physical Link\nFCIP tunnel / dark fibre state"]
-    linkUp{"Link\nRestored?"}
-    checkRTT["Check RTT\nping -c 20 dr-site-ip"]
-    rttNormal{"RTT ≤ 5ms?"}
-    resumePair["Resume Pair\nsymrdf -g dgname -sid sid resume -noprompt"]
-    resyncPair["Resync Pair\nsymrdf -g dgname -sid sid resync -noprompt"]
-    monitorSync["Monitor SyncInProg\nuntil Synchronized"]
-    checkDataAuth["Identify Authoritative Side\nDo NOT resync without confirming"]
-    engageSupport["Engage Dell Support\nData consistency risk"]
-    escalateNet["Escalate to Network Team\nRTT still elevated"]
+linkAlert: "Alert: SRDF/S Link Down\nor Pairs not Synchronized" {shape: rectangle}
+checkPairState: "Check Pair State\nsymrdf -g dgname -sid sid query" {shape: rectangle}
+pairStateVal: "pairStateVal" {shape: rectangle}
+writeDisabled: "Write Disabled\n→ Array stopped writes\nto protect consistency" {shape: rectangle}
+invalidState: "Invalid State\n→ Possible data divergence" {shape: rectangle}
+suspended: "Suspended\n→ Link dropped or manual suspend" {shape: rectangle}
+partitioned: "Partitioned\n→ Link interrupted mid-transfer" {shape: rectangle}
+checkPhysLink: "Check Physical Link\nFCIP tunnel / dark fibre state" {shape: rectangle}
+linkUp: "linkUp" {shape: rectangle}
+checkRTT: "Check RTT\nping -c 20 dr-site-ip" {shape: rectangle}
+escalateNet: "Escalate to Network Team\nRTT still elevated" {shape: rectangle}
+rttNormal: "rttNormal" {shape: rectangle}
+resyncPair: "Resync Pair\nsymrdf -g dgname -sid sid resync -noprompt" {shape: rectangle}
+resumePair: "Resume Pair\nsymrdf -g dgname -sid sid resume -noprompt" {shape: rectangle}
+monitorSync: "Monitor SyncInProg\nuntil Synchronized" {shape: rectangle}
+checkDataAuth: "Identify Authoritative Side\nDo NOT resync without confirming" {shape: rectangle}
+engageSupport: "Engage Dell Support\nData consistency risk" {shape: rectangle}
 
-    linkAlert --> checkPairState
-    checkPairState --> pairStateVal
-    pairStateVal -->|"Write Disabled"| writeDisabled
-    pairStateVal -->|"Invalid"| invalidState
-    pairStateVal -->|"Suspended"| suspended
-    pairStateVal -->|"Partitioned"| partitioned
-
-    writeDisabled --> checkPhysLink
-    suspended --> checkPhysLink
-    partitioned --> checkPhysLink
-
-    checkPhysLink --> linkUp
-    linkUp -->|"Yes"| checkRTT
-    linkUp -->|"No"| escalateNet
-    checkRTT --> rttNormal
-    rttNormal -->|"Yes — Write Disabled / Suspended"| resyncPair
-    rttNormal -->|"Yes — Partitioned"| resumePair
-    rttNormal -->|"No"| escalateNet
-    resyncPair --> monitorSync
-    resumePair --> monitorSync
-    invalidState --> checkDataAuth
-    checkDataAuth --> engageSupport
-
-    style linkAlert fill:#be123c,color:#fff
-    style monitorSync fill:#15803d,color:#fff
-    style engageSupport fill:#be123c,color:#fff
-    style escalateNet fill:#b45309,color:#fff
-    style checkDataAuth fill:#be123c,color:#fff
+linkAlert -> checkPairState
+checkPairState -> pairStateVal
+pairStateVal -> writeDisabled
+pairStateVal -> invalidState
+pairStateVal -> suspended
+pairStateVal -> partitioned
+writeDisabled -> checkPhysLink
+suspended -> checkPhysLink
+partitioned -> checkPhysLink
+checkPhysLink -> linkUp
+linkUp -> checkRTT
+linkUp -> escalateNet
+checkRTT -> rttNormal
+rttNormal -> resyncPair
+rttNormal -> resumePair
+rttNormal -> escalateNet
+resyncPair -> monitorSync
+resumePair -> monitorSync
+invalidState -> checkDataAuth
+checkDataAuth -> engageSupport
 ```
-
 
 ---
 

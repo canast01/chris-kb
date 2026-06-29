@@ -41,34 +41,45 @@ general_crosscomponent_issues -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A{PSM session\nwon't connect?}
-    S --> B{Password change\nfailed - CPM error?}
-    S --> C{PVWA safe\naccess error?}
-    S --> D{Vault unreachable\nor DR failover?}
-    S --> E{Audit log\ngap detected?}
-    A -->|Yes| A1{RDP reaches\nPSM host?}
-    A1 -->|No| A2[Verify firewall TCP 3389\nCheck PSM service status\nVerify concurrent session limit]
-    A1 -->|Yes| A3[Check PSM recordings Safe perms\nVerify RDS CAL activated\nReview PSM.ini RecordingsPath]
-    A3 --> A4[PSM Issues]
-    B -->|Yes| B1[Check APPAP007E in vault.log\nVerify CPM network to target\nConfirm AD Reset Password right]
-    B1 --> B2[CPM Issues]
-    C -->|Yes| C1{Vault TCP 1858\nreachable from PVWA?}
-    C1 -->|No| C2[Fix firewall\nCheck Vault service]
-    C2 --> C3[Vault Issues]
-    C1 -->|Yes| C4[Restart CyberArk IIS app pool\nCheck WebApplication.log]
-    C4 --> C5[PVWA Issues]
-    D -->|Yes| D1[Check PADR.log on DR host\nVerify DR replication service\nConfirm DR user password matches]
-    D1 --> D2[Vault Issues]
-    E -->|Yes| E1[Check vault.ini SYSLOG section\nVerify SIEM IP and port\nRestart Vault to apply syslog config]
-    E1 --> E2[General and Cross-Component Issues]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A4,B2,C3,C5,D2,E2 section
-    class A,A1,B,C,C1,D,E decision
-    class S start
+```d2
+direction: right
+
+S: "What is the symptom?" {shape: rectangle}
+A: "PSM session\nwon" {shape: rectangle}
+A1: "A1" {shape: rectangle}
+A2: "Verify firewall TCP 3389\nCheck PSM service status\nVerify concurrent session limit" {shape: rectangle}
+A3: "Check PSM recordings Safe perms\nVerify RDS CAL activated\nReview PSM.ini RecordingsPath" {shape: rectangle}
+A4: "PSM Issues" {shape: rectangle}
+B: "B" {shape: rectangle}
+B1: "Check APPAP007E in vault.log\nVerify CPM network to target\nConfirm AD Reset Password right" {shape: rectangle}
+B2: "CPM Issues" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "Fix firewall\nCheck Vault service" {shape: rectangle}
+C3: "Vault Issues" {shape: rectangle}
+C4: "Restart CyberArk IIS app pool\nCheck WebApplication.log" {shape: rectangle}
+C5: "PVWA Issues" {shape: rectangle}
+D: "D" {shape: rectangle}
+D1: "Check PADR.log on DR host\nVerify DR replication service\nConfirm DR user password matches" {shape: rectangle}
+D2: "Vault Issues" {shape: rectangle}
+E: "E" {shape: rectangle}
+E1: "Check vault.ini SYSLOG section\nVerify SIEM IP and port\nRestart Vault to apply syslog config" {shape: rectangle}
+E2: "General and Cross-Component Issues" {shape: rectangle}
+C: "C" {shape: rectangle}
+
+S -> A
+A1 -> A2
+A1 -> A3
+A3 -> A4
+B -> B1
+B1 -> B2
+C1 -> C2
+C2 -> C3
+C1 -> C4
+C4 -> C5
+D -> D1
+D1 -> D2
+E -> E1
+E1 -> E2
 ```
 
 ---

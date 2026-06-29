@@ -22,21 +22,22 @@ Access Control reference covering Least Privilege Access Model, AWS IAM Least Pr
 
 ## Least Privilege Access Model
 
-```mermaid
-graph TD
-    script["Python Script\n(automation job)"]
-    svcAccount["Dedicated Service Account\n(linux: automation user)"]
-    iamRole["IAM Role / API Token\n(scoped to task)"]
-    readOnly["Read-Only Permissions\n(for reporting scripts)"]
-    writePerms["Write Permissions\n(only for change scripts)"]
-    auditLog["Audit Log\n(quarterly review)"]
+```d2
+direction: right
 
-    script --> svcAccount
-    svcAccount --> iamRole
-    iamRole --> readOnly
-    iamRole --> writePerms
-    svcAccount --> auditLog
-    iamRole --> auditLog
+script: "Python Script\n(automation job" {shape: rectangle}
+svcAccount: "Dedicated Service Account\n(linux: automation user" {shape: rectangle}
+iamRole: "IAM Role / API Token\n(scoped to task" {shape: rectangle}
+readOnly: "Read-Only Permissions\n(for reporting scripts" {shape: rectangle}
+writePerms: "Write Permissions\n(only for change scripts" {shape: rectangle}
+auditLog: "Audit Log\n(quarterly review" {shape: rectangle}
+
+script -> svcAccount
+svcAccount -> iamRole
+iamRole -> readOnly
+iamRole -> writePerms
+svcAccount -> auditLog
+iamRole -> auditLog
 ```
 
 ```bash

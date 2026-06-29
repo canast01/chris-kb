@@ -48,23 +48,24 @@ end note
 
 ## Provider Credential Flow — CI/CD
 
-```mermaid
-graph LR
-    ciPipeline["CI/CD Pipeline\n(GitHub Actions / GitLab)"]
-    ciSecrets["CI/CD Secrets\n(repository secrets)"]
-    oidcToken["OIDC Token\n(short-lived)"]
-    iamRole["Cloud IAM Role\n(assume via OIDC)"]
-    envVars["Environment Variables\n(AWS_ / ARM_ / GOOGLE_)"]
-    tfProvider["Terraform Provider\n(aws / azurerm / google)"]
-    cloudAPI["Cloud API\n(EC2 / ARM / GCP)"]
+```d2
+direction: right
 
-    ciPipeline --> ciSecrets
-    ciPipeline --> oidcToken
-    oidcToken -->|Preferred: keyless| iamRole
-    ciSecrets -->|Fallback: static keys| envVars
-    iamRole --> envVars
-    envVars --> tfProvider
-    tfProvider --> cloudAPI
+ciPipeline: "CI/CD Pipeline\n(GitHub Actions / GitLab" {shape: rectangle}
+ciSecrets: "CI/CD Secrets\n(repository secrets" {shape: rectangle}
+oidcToken: "OIDC Token\n(short-lived" {shape: rectangle}
+iamRole: "Cloud IAM Role\n(assume via OIDC" {shape: rectangle}
+envVars: "Environment Variables\n(AWS_ / ARM_ / GOOGLE_" {shape: rectangle}
+tfProvider: "Terraform Provider\n(aws / azurerm / google" {shape: rectangle}
+cloudAPI: "Cloud API\n(EC2 / ARM / GCP" {shape: rectangle}
+
+ciPipeline -> ciSecrets
+ciPipeline -> oidcToken
+oidcToken -> iamRole
+ciSecrets -> envVars
+iamRole -> envVars
+envVars -> tfProvider
+tfProvider -> cloudAPI
 ```
 
 ### Google Cloud

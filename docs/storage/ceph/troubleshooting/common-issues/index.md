@@ -13,27 +13,21 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph TD
-    classDef start fill:#2563eb,color:#fff
-    classDef check fill:#374151,color:#fff
-    classDef warn fill:#b45309,color:#fff
-    classDef err fill:#991b1b,color:#fff
-    classDef ok fill:#15803d,color:#fff
+```d2
+direction: right
 
-    A([Start: ceph -s shows unhealthy]):::start --> B{Down OSDs?}:::check
-    B -- Yes --> C[Check OSD log\nsmartctl + journalctl]:::warn
-    C --> D([Restart OSD or\nreplace disk]):::warn
-    B -- No --> E{Inactive / stuck PGs?}:::check
-    E -- Yes --> F[ceph pg dump_stuck\nFind affected OSDs]:::err
-    F --> G([Bring OSD back up\nor replace]):::err
-    E -- No --> H{Nearfull or full?}:::check
-    H -- Yes --> I[ceph osd set nofull\nor delete/expand]:::err
-    H -- No --> J{MON quorum issues?}:::check
-    J -- Yes --> K([SSH to MON hosts\nrestart failed MONs]):::err
-    J -- No --> L{Slow ops?}:::check
-    L -- Yes --> M[ceph osd perf\niostat on OSD host]:::warn
-    L -- No --> N([Escalate to diagnostics/]):::ok
+C: "Check OSD log\nsmartctl + journalctl" {shape: rectangle}
+D: "Restart OSD or\nreplace disk" {shape: rectangle}
+F: "ceph pg dump_stuck\nFind affected OSDs" {shape: rectangle}
+G: "Bring OSD back up\nor replace" {shape: rectangle}
+A: "Start: ceph -s shows unhealthy" {shape: rectangle}
+I: "ceph osd set nofull\nor delete/expand" {shape: rectangle}
+K: "SSH to MON hosts\nrestart failed MONs" {shape: rectangle}
+M: "ceph osd perf\niostat on OSD host" {shape: rectangle}
+N: "Escalate to diagnostics/" {shape: rectangle}
+
+C -> D
+F -> G
 ```
 
 ```d2
@@ -64,34 +58,46 @@ clock_skew -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A[OSD down / cluster degraded]
-    S --> B[PG stuck — active+undersized]
-    S --> C[RADOS object not found]
-    S --> D[Monitor quorum lost]
-    S --> E[Slow requests / high latency]
-    A --> A1{Disk healthy?}
-    A1 -->|No| A2[Replace OSD disk — see OSD Down]
-    A1 -->|Yes| A3[Restart OSD daemon and check OOM or network issue]
-    B --> B1{Which OSDs map to PG?}
-    B1 -->|OSD down| B2[Bring OSD back up or reweight to 0 — see PG Degraded / Undersized / Stuck]
-    B1 -->|OSD up| B3[Run ceph pg repair and check CRUSH map]
-    C --> C1{Pool accessible?}
-    C1 -->|No| C2[Check PG state — may be inactive; resolve OSD first — see OSD Down]
-    C1 -->|Yes| C3[Run rados stat on object and check for deletion or naming mismatch]
-    D --> D1{MON daemon running?}
-    D1 -->|No| D2[Restart ceph-mon service — see MON Quorum Lost]
-    D1 -->|Yes| D3[Check clock skew with ceph time-sync-status — see Clock Skew]
-    E --> E1{Drive or network?}
-    E1 -->|Drive| E2[Check iostat await; disable scrub temporarily — see Slow Ops / High Latency]
-    E1 -->|Network| E3[Run iperf3 between nodes; check cluster network path]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E2,E3 section
-    class A1,B1,C1,D1,E1 decision
-    class S start
+```d2
+direction: right
+
+S: "What is the symptom?" {shape: rectangle}
+A: "OSD down / cluster degraded" {shape: rectangle}
+B: "PG stuck — active+undersized" {shape: rectangle}
+C: "RADOS object not found" {shape: rectangle}
+D: "Monitor quorum lost" {shape: rectangle}
+E: "Slow requests / high latency" {shape: rectangle}
+A1: "A1" {shape: rectangle}
+A2: "Replace OSD disk — see OSD Down" {shape: rectangle}
+A3: "Restart OSD daemon and check OOM or network issue" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "Bring OSD back up or reweight to 0 — see PG Degraded / Undersized / Stuck" {shape: rectangle}
+B3: "Run ceph pg repair and check CRUSH map" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "Check PG state — may be inactive; resolve OSD first — see OSD Down" {shape: rectangle}
+C3: "Run rados stat on object and check for deletion or naming mismatch" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+D2: "Restart ceph-mon service — see MON Quorum Lost" {shape: rectangle}
+D3: "Check clock skew with ceph time-sync-status — see Clock Skew" {shape: rectangle}
+E1: "E1" {shape: rectangle}
+E2: "Check iostat await; disable scrub temporarily — see Slow Ops / High Latency" {shape: rectangle}
+E3: "Run iperf3 between nodes; check cluster network path" {shape: rectangle}
+
+S -> A
+S -> B
+S -> C
+S -> D
+S -> E
+A1 -> A2
+A1 -> A3
+B1 -> B2
+B1 -> B3
+C1 -> C2
+C1 -> C3
+D1 -> D2
+D1 -> D3
+E1 -> E2
+E1 -> E3
 ```
 
 ---

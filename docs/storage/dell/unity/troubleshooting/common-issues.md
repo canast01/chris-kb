@@ -7,16 +7,12 @@ search:
 ---
 # Unity — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Common Issues Reference, Incident Triage Sequence, Known Behaviours (Not Bugs).
 
 *Applies to: Unity XT*
 </div>
 ![Unity — Common Issues](../../../../assets/storage-dell-unity-troubleshooting-common-issues.svg)
-
-
-
 
 ```d2
 direction: down
@@ -43,41 +39,41 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{SP fault\nor offline?}
-    S --> B2{LUN\ninaccessible?}
-    S --> B3{Snapshot schedule\nfailed?}
-    S --> B4{NAS server\ndown?}
-    S --> B5{Pool space\nalarm?}
+```d2
+direction: right
 
-    B1 -->|Check SP health| D1{Both SPs\nonline?}
-    D1 -->|One offline| R1[See Storage Processors —\nOne SP offline: open Dell case]
-    D1 -->|Both offline| R2[See Storage Processors —\nBoth SPs offline: P1 case]
+D1: "D1" {shape: rectangle}
+R1: "See Storage Processors —\nOne SP offline: open Dell case" {shape: rectangle}
+R2: "See Storage Processors —\nBoth SPs offline: P1 case" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Block Storage —\nLUN not visible to FC host" {shape: rectangle}
+R4: "See Block Storage —\nLUN not visible to iSCSI host" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Pool and Capacity —\nPool capacity alert at 80%" {shape: rectangle}
+R6: "See Replication —\nReplication session in Error state" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See NAS / File Storage —\nNAS server not responding after SP failover" {shape: rectangle}
+R8: "See NAS / File Storage —\nSMB share inaccessible" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See Pool and Capacity —\nPool health Degraded" {shape: rectangle}
+R10: "See Pool and Capacity —\nPool over-subscribed warning" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Check LUN mapping| D2{LUN mapped\nto host?}
-    D2 -->|No| R3[See Block Storage —\nLUN not visible to FC host]
-    D2 -->|Protocol issue| R4[See Block Storage —\nLUN not visible to iSCSI host]
-
-    B3 -->|Check pool utilisation| D3{Pool above\n90% full?}
-    D3 -->|Yes| R5[See Pool and Capacity —\nPool capacity alert at 80%]
-    D3 -->|Protection policy| R6[See Replication —\nReplication session in Error state]
-
-    B4 -->|Check NAS server SP ownership| D4{NAS server\nfailed over?}
-    D4 -->|Yes| R7[See NAS / File Storage —\nNAS server not responding after SP failover]
-    D4 -->|AD issue| R8[See NAS / File Storage —\nSMB share inaccessible]
-
-    B5 -->|Check pool subscription| D5{Pool degraded\nor drive failed?}
-    D5 -->|Drive failed| R9[See Pool and Capacity —\nPool health Degraded]
-    D5 -->|Snapshot growth| R10[See Pool and Capacity —\nPool over-subscribed warning]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---
@@ -160,30 +156,34 @@ graph TD
 
 When a host reports I/O errors or a LUN is inaccessible, work through this sequence:
 
-```mermaid
-graph TD
-  START(["Host reports I/O errors\nor LUN inaccessible"]) --> SP{Both SPs\nonline?}
-  SP -->|No| SPWAIT["Wait 60 sec for\nmultipath re-path\nIf SP stays offline → P1 case"]
-  SP -->|Yes| POOL{Pool and disk\ngroups healthy?}
-  POOL -->|No| DRIVE["Identify faulted drive\nInitiate replacement\nMonitor RAID rebuild"]
-  POOL -->|Yes| ACL{LUN mapped\nto host?}
-  ACL -->|No| ADDACL["uemcli /stor/config/lunacl create\n-lun -host"]
-  ACL -->|Yes| PROTO{Protocol?}
-  PROTO -->|FC| FCCHECK["Verify FC zone:\nhost HBA WWN + Unity port WWN\nboth present"]
-  PROTO -->|iSCSI| ISCSICHECK["Verify host IQN registered\nCheck CHAP credentials\nPing iSCSI portal IP"]
-  FCCHECK & ISCSICHECK --> NIC{Network\ninterface up?}
-  NIC -->|No| NICFIX["Check SP port; restore interface\nuemcli /net/port/fc show"]
-  NIC -->|Yes| ALERTS{Active alerts\nin last 2 hours?}
-  ALERTS -->|Yes| ALINV["Investigate alert details\nin Unisphere event log"]
-  ALERTS -->|No| BUNDLE["Collect support bundle\nOpen Dell case"]
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class SP,POOL,ACL,PROTO,NIC,ALERTS decision
-  class ADDACL,FCCHECK,ISCSICHECK,NICFIX,ALINV,BUNDLE action
-  class SPWAIT,DRIVE warn
-  class START term
+```d2
+direction: right
+
+SP: "SP" {shape: rectangle}
+SPWAIT: "Wait 60 sec for\nmultipath re-path\nIf SP stays offline → P1 case" {shape: rectangle}
+POOL: "POOL" {shape: rectangle}
+DRIVE: "Identify faulted drive\nInitiate replacement\nMonitor RAID rebuild" {shape: rectangle}
+ACL: "ACL" {shape: rectangle}
+ADDACL: "uemcli /stor/config/lunacl create\n-lun -host" {shape: rectangle}
+PROTO: "PROTO" {shape: rectangle}
+FCCHECK: "Verify FC zone:\nhost HBA WWN + Unity port WWN\nboth present" {shape: rectangle}
+ISCSICHECK: "Verify host IQN registered\nCheck CHAP credentials\nPing iSCSI portal IP" {shape: rectangle}
+NIC: "NIC" {shape: rectangle}
+NICFIX: "Check SP port; restore interface\nuemcli /net/port/fc show" {shape: rectangle}
+ALERTS: "ALERTS" {shape: rectangle}
+ALINV: "Investigate alert details\nin Unisphere event log" {shape: rectangle}
+BUNDLE: "Collect support bundle\nOpen Dell case" {shape: rectangle}
+START: "Host reports I/O errors\nor LUN inaccessible" {shape: rectangle}
+
+SP -> SPWAIT
+POOL -> DRIVE
+ACL -> ADDACL
+PROTO -> FCCHECK
+PROTO -> ISCSICHECK
+FCCHECK -> ISCSICHECK
+NIC -> NICFIX
+ALERTS -> ALINV
+ALERTS -> BUNDLE
 ```
 
 ```bash

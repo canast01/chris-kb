@@ -89,21 +89,23 @@ Key terms:
   auth DB        = MON-maintained key-value store mapping identity names to keys and capabilities
 ```
 
-```mermaid
-graph LR
-    classDef step fill:#2563eb,color:#fff
-    classDef mon fill:#15803d,color:#fff
-    classDef dist fill:#b45309,color:#fff
-    classDef done fill:#164e63,color:#fff
+```d2
+direction: right
 
-    A([Generate new key\nceph auth get-or-create]):::step --> B[Add entity to MON\nadd new caps if changed]:::mon
-    B --> C[Export new keyring\nceph auth export]:::step
-    C --> D[Distribute keyring file\nto client hosts]:::dist
-    D --> E[Verify connectivity\nceph --id name -s]:::step
-    E --> F{Old key still\nin use?}:::step
-    F -- Grace period --> G([Old key active\nduring migration]):::done
-    F -- Migration done --> H[Revoke old key\nceph auth del old-entity]:::step
-    H --> I([Verify with\nnew key only]):::done
+A: "Generate new key\nceph auth get-or-create" {shape: rectangle}
+B: "Add entity to MON\nadd new caps if changed" {shape: rectangle}
+C: "Export new keyring\nceph auth export" {shape: rectangle}
+D: "Distribute keyring file\nto client hosts" {shape: rectangle}
+E: "Verify connectivity\nceph --id name -s" {shape: rectangle}
+H: "Revoke old key\nceph auth del old-entity" {shape: rectangle}
+I: "Verify with\nnew key only" {shape: rectangle}
+G: "Old key active\nduring migration" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+H -> I
 ```
 
 ## Key Distribution

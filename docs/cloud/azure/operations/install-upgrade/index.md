@@ -45,21 +45,6 @@ resource_group_expiry_nonproduction -> validate
 
 ## Azure VM Patching Workflow
 
-```mermaid
-flowchart LR
-    assess["Patch Assessment\nidentify available updates"]
-    schedule["Maintenance Configuration\nmonthly schedule · reboot policy"]
-    testVMs["Apply to Test VMs\nvalidate application impact"]
-    prodPatch["Apply to Production VMs\nwithin maintenance window"]
-    reboot{"Reboot\nrequired?"}
-    rebootVM["Reboot VM\nwithin allowed window"]
-    compliance["Update Manager\ncompliance dashboard"]
-
-    assess --> schedule --> testVMs --> prodPatch --> reboot
-    reboot -- Yes --> rebootVM --> compliance
-    reboot -- No --> compliance
-```
-
 ## VM Patching
 
 VM OS images are patched via Azure Update Manager on a monthly schedule:

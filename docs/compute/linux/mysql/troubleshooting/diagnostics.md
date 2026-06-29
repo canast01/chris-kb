@@ -14,43 +14,51 @@ MySQL diagnostic commands: read the error log, inspect active sessions with SHOW
 </div>
 ![MySQL / MariaDB — Diagnostics](../../../../assets/compute-linux-mysql-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "Check error log\ntail /var/log/mysqld.log" {shape: rectangle}
+D: "SHOW FULL PROCESSLIST\nFind State = waiting for lock" {shape: rectangle}
+E: "SHOW ENGINE INNODB STATUS\nCheck buffer pool hit rate" {shape: rectangle}
+F: "SHOW REPLICA STATUS\nCheck Last_IO_Error / Last_SQL_Error" {shape: rectangle}
+G: "Check binary log size\nls -lh /var/lib/mysql/mysql-bin.*" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "df -h and\ncheck binary log accumulation" {shape: rectangle}
+J: "innodb_force_recovery\nCheck MySQL recovery guide" {shape: rectangle}
+K: "ss -tulnp grep 3306\nKill or fix conflict" {shape: rectangle}
+L: "Information_schema.innodb_lock_waits\nFind blocking thread" {shape: rectangle}
+M: "KILL QUERY blocking_thread_id" {shape: rectangle}
+N: "N" {shape: rectangle}
+O: "Increase innodb_buffer_pool_size\nCheck for table scans" {shape: rectangle}
+P: "Enable slow query log\nRun pt-query-digest" {shape: rectangle}
+Q: "Q" {shape: rectangle}
+R: "SHOW REPLICA STATUS\nCheck error and fix position" {shape: rectangle}
+S: "Check replica host load\nand network bandwidth" {shape: rectangle}
+T: "Collect diag bundle\nfor escalation" {shape: rectangle}
+A: "MySQL Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([MySQL Issue]) --> B{What type of problem?}
-    B -->|Service crashed or won't start| C[Check error log\ntail /var/log/mysqld.log]
-    B -->|Queries hanging / timing out| D[SHOW FULL PROCESSLIST\nFind State = waiting for lock]
-    B -->|Slow performance| E[SHOW ENGINE INNODB STATUS\nCheck buffer pool hit rate]
-    B -->|Replication lag / error| F[SHOW REPLICA STATUS\nCheck Last_IO_Error / Last_SQL_Error]
-    B -->|Disk usage growing fast| G[Check binary log size\nls -lh /var/lib/mysql/mysql-bin.*]
-    C --> H{Error type?}
-    H -->|Disk full| I[df -h and\ncheck binary log accumulation]
-    H -->|InnoDB corruption| J[innodb_force_recovery\nCheck MySQL recovery guide]
-    H -->|Port in use| K[ss -tulnp grep 3306\nKill or fix conflict]
-    D --> L[Information_schema.innodb_lock_waits\nFind blocking thread]
-    L --> M[KILL QUERY blocking_thread_id]
-    E --> N{Buffer pool hit rate?}
-    N -->|< 99%| O[Increase innodb_buffer_pool_size\nCheck for table scans]
-    N -->|> 99%| P[Enable slow query log\nRun pt-query-digest]
-    F --> Q{Replica threads running?}
-    Q -->|IO or SQL thread stopped| R[SHOW REPLICA STATUS\nCheck error and fix position]
-    Q -->|Both running but lagging| S[Check replica host load\nand network bandwidth]
-    I --> T[Collect diag bundle\nfor escalation]
-    J --> T
-    M --> T
-    O --> T
-    P --> T
-    R --> T
-    S --> T
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H,N,Q dark
-    class C,D,E,F,G,I,J,K,L,M,O,P,R,S action
-    class T escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+H -> I
+H -> J
+H -> K
+D -> L
+L -> M
+N -> O
+N -> P
+Q -> R
+Q -> S
+I -> T
+J -> T
+M -> T
+O -> T
+P -> T
+R -> T
+S -> T
 ```
 
 ```d2

@@ -13,33 +13,34 @@ Integrations reference covering PowerCLI VM Management Flow, Windows.
 
 ## PowerCLI VM Management Flow
 
-```mermaid
-graph LR
-    connectVC["Connect-VIServer\n(vCenter)"]
-    getVM["Get-VM\n(filter by name / state)"]
-    vmAction{"VM Action"}
-    powerOn["Start-VM"]
-    powerOff["Stop-VM"]
-    snapshot["New-Snapshot\n(pre-patch)"]
-    configure["Set-VM\n(CPU / Memory)"]
-    revert["Set-VM -Snapshot\n(revert)"]
-    removeSnap["Remove-Snapshot\n(post-patch)"]
-    migrateDS["Move-VM -Datastore\n(Storage vMotion)"]
-    disconnect["Disconnect-VIServer"]
+```d2
+direction: right
 
-    connectVC --> getVM
-    getVM --> vmAction
-    vmAction --> powerOn
-    vmAction --> powerOff
-    vmAction --> snapshot
-    vmAction --> configure
-    snapshot --> revert
-    snapshot --> removeSnap
-    vmAction --> migrateDS
-    powerOn --> disconnect
-    powerOff --> disconnect
-    configure --> disconnect
-    migrateDS --> disconnect
+connectVC: "Connect-VIServer\n(vCenter" {shape: rectangle}
+getVM: "Get-VM\n(filter by name / state" {shape: rectangle}
+vmAction: "vmAction" {shape: rectangle}
+powerOn: "Start-VM" {shape: rectangle}
+powerOff: "Stop-VM" {shape: rectangle}
+snapshot: "New-Snapshot\n(pre-patch" {shape: rectangle}
+configure: "Set-VM\n(CPU / Memory" {shape: rectangle}
+revert: "Set-VM -Snapshot\n(revert" {shape: rectangle}
+removeSnap: "Remove-Snapshot\n(post-patch" {shape: rectangle}
+migrateDS: "Move-VM -Datastore\n(Storage vMotion" {shape: rectangle}
+disconnect: "Disconnect-VIServer" {shape: rectangle}
+
+connectVC -> getVM
+getVM -> vmAction
+vmAction -> powerOn
+vmAction -> powerOff
+vmAction -> snapshot
+vmAction -> configure
+snapshot -> revert
+snapshot -> removeSnap
+vmAction -> migrateDS
+powerOn -> disconnect
+powerOff -> disconnect
+configure -> disconnect
+migrateDS -> disconnect
 ```
 
 ### Snapshots

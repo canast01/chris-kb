@@ -232,21 +232,6 @@ visudo -c   # Syntax check, no changes
 
 ## Log Pipeline
 
-```mermaid
-flowchart LR
-    kernel["Kernel\ndmesg · /dev/kmsg"]
-    systemd["systemd units\nstdout/stderr"]
-    journal["journald\n/var/log/journal/"]
-    rsyslog["rsyslog\n/var/log/messages"]
-    auditd["auditd\n/var/log/audit/"]
-    siem["SIEM\nsyslog.example.local:514"]
-
-    kernel --> journal
-    systemd --> journal
-    journal --> rsyslog --> siem
-    auditd --> siem
-```
-
 ## Log Locations
 
 | Log | Path / Command | Content |

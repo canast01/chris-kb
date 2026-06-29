@@ -13,21 +13,25 @@ Dell Unity XT is a mid-range unified storage platform delivering block (FC, iSCS
 
 ![Unity — Architecture — Diagram](../../../../assets/storage-dell-unity-architecture-diagram.svg)
 
-```mermaid
-graph TB
-  SPA["Storage Processor A\n(active for owned LUNs/NAS)"] <-->|"write cache mirror\n+ HA heartbeat"| SPB["Storage Processor B"]
-  SPA & SPB --> POOL[("Drive Pool\nRAID-5 / RAID-10 / NL-SAS")]
-  SPA --> NAS["NFS · SMB · FTP\nData Mover"]
-  SPA --> SAN["iSCSI · FC\nBlock LUNs"]
-  SPB --> NAS & SAN
-  NAS --> NH(["NAS Clients"])
-  SAN --> SH(["SAN Hosts"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class SPA,SPB ctrl
-  class POOL store
-  class NH,SH host
+```d2
+direction: right
+
+SPA: "Storage Processor A\n(active for owned LUNs/NAS" {shape: rectangle}
+SPB: "Storage Processor B" {shape: rectangle}
+POOL: "Drive Pool\nRAID-5 / RAID-10 / NL-SAS" {shape: rectangle}
+NAS: "NFS · SMB · FTP\nData Mover" {shape: rectangle}
+SAN: "iSCSI · FC\nBlock LUNs" {shape: rectangle}
+NH: "NAS Clients" {shape: rectangle}
+SH: "SAN Hosts" {shape: rectangle}
+
+SPA -> SPB
+SPB -> POOL
+SPA -> NAS
+SPA -> SAN
+SPB -> NAS
+NAS -> SAN
+NAS -> NH
+SAN -> SH
 ```
 ![Unity Architecture](../../../../assets/unity-architecture-overview.svg)
 

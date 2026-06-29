@@ -10,18 +10,19 @@ oc command reference: resource management, log collection, exec, adm commands, d
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph LR
-    OC["oc"]:::root --> RES["Resource Ops<br/>get / apply / patch<br/>delete / label / annotate"]:::ops
-    OC --> ADM["Admin Ops<br/>adm drain / cordon<br/>adm policy / inspect"]:::admin
-    OC --> DBG["Debug Ops<br/>debug node/<br/>rsh / exec<br/>must-gather"]:::debug
-    OC --> IMG["Image Ops<br/>image mirror<br/>tag / import-image<br/>registry login"]:::image
+```d2
+direction: right
 
-    classDef root fill:#1e3a5f,color:#fff
-    classDef ops fill:#2563eb,color:#fff
-    classDef admin fill:#15803d,color:#fff
-    classDef debug fill:#7c3aed,color:#fff
-    classDef image fill:#b45309,color:#fff
+OC: "oc" {shape: rectangle}
+RES: "Resource Ops · get / apply / patch · delete / label / annotate" {shape: rectangle}
+ADM: "Admin Ops · adm drain / cordon · adm policy / inspect" {shape: rectangle}
+DBG: "Debug Ops · debug node/ · rsh / exec · must-gather" {shape: rectangle}
+IMG: "Image Ops · image mirror · tag / import-image · registry login" {shape: rectangle}
+
+OC -> RES
+OC -> ADM
+OC -> DBG
+OC -> IMG
 ```
 
 ## Before you begin

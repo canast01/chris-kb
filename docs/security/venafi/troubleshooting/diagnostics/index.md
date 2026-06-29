@@ -13,38 +13,47 @@ Venafi TLS Protect diagnostic commands: check Windows service status, test SQL S
 *Applies to: Venafi TLS Protect (TPP) on Windows Server*
 </div>
 
-```mermaid
-flowchart TD
-    A([Venafi issue reported]) --> B{What is failing?}
-    B -->|Certificate not issuing or renewing| C[Check certificate object in TPP\nTPP UI → certificate → Error field]
-    B -->|UI or API unavailable| D[Get-Service Venafi*\nCheck all services running]
-    B -->|CA connector error| E[TPP → Config → CAs\nTest Connection on the CA]
-    B -->|Automation or API failure| F[Check VedWebSDK service\nTest REST API endpoint]
-    C --> G{Error in certificate object?}
-    G -->|CA error code| E
-    G -->|Policy violation| H[Check policy folder settings\nTPP → Policy → Certificate]
-    G -->|No error, just pending| I[Check VenafiEngine log\nfor queue and renewal state]
-    D --> J[Check SQL connectivity\nTest-SqlConnection + Open]
-    D --> K[Check IIS status\niisreset and event log]
-    E --> L{CA test result?}
-    L -->|Network error| M[Test-NetConnection to CA endpoint\nCheck ADCS CES URL or API URL]
-    L -->|Auth error| N[Check CA template credentials\nService account or API key]
-    F --> O[GET /vedsdk/certificates\nwith Authorization: Bearer token]
-    J --> P[Collect VdcLogFile logs\nfor Venafi support]
-    K --> P
-    H --> P
-    I --> P
-    M --> P
-    N --> P
-    O --> P
-    P --> Q[Open Venafi SR\nmy.venafi.com]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,G,L dark
-    class C,D,E,F,H,I,J,K,M,N,O action
-    class P,Q escalate
+B: "B" {shape: rectangle}
+C: "Check certificate object in TPP\nTPP UI → certificate → Error field" {shape: rectangle}
+D: "Get-Service Venafi*\nCheck all services running" {shape: rectangle}
+E: "TPP → Config → CAs\nTest Connection on the CA" {shape: rectangle}
+F: "Check VedWebSDK service\nTest REST API endpoint" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Check policy folder settings\nTPP → Policy → Certificate" {shape: rectangle}
+I: "Check VenafiEngine log\nfor queue and renewal state" {shape: rectangle}
+J: "Check SQL connectivity\nTest-SqlConnection + Open" {shape: rectangle}
+K: "Check IIS status\niisreset and event log" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Test-NetConnection to CA endpoint\nCheck ADCS CES URL or API URL" {shape: rectangle}
+N: "Check CA template credentials\nService account or API key" {shape: rectangle}
+O: "GET /vedsdk/certificates\nwith Authorization: Bearer token" {shape: rectangle}
+P: "Collect VdcLogFile logs\nfor Venafi support" {shape: rectangle}
+Q: "Open Venafi SR\nmy.venafi.com" {shape: rectangle}
+A: "Venafi issue reported" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+G -> E
+G -> H
+G -> I
+D -> J
+D -> K
+L -> M
+L -> N
+F -> O
+J -> P
+K -> P
+H -> P
+I -> P
+M -> P
+N -> P
+O -> P
+P -> Q
 ```
 
 ```d2

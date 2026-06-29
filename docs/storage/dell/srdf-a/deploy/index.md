@@ -43,22 +43,6 @@ verify_initial_sync -> validate
 
 # SRDF/A — Initial Deployment
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Zone the SRDF Ports"]
-    s3["Create the SRDF Group"]
-    s4["Add Devices to the SRDF Group"]
-    s5["Start Replication"]
-    s6["✓ Verify Initial Sync"]
-    s7["Configure DSE (Dynamic Synchronization Ena..."]
-    s8["✓ Validate the Deployment"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
-    style s6 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 Two PowerMax/VMAX arrays at separate sites, Fibre Channel or IP connectivity between arrays (SRDF WAN links), SRDF licences on both arrays, matching SRDF group numbers agreed between sites, Solutions Enabler or Unisphere for PowerMax on both sites.

@@ -33,18 +33,21 @@ secrets_management -> masking_dynamic_values: hardens
 
 ## Secrets Management
 
-```mermaid
-flowchart LR
-    dev(["Developer\nsets secret"])
-    ghSettings["GitHub Settings\nRepo / Env / Org"]
-    ghEncrypted["GitHub Encrypted Store\nLibSodium public key encryption"]
-    wfRun["Workflow Run\nRunner environment"]
-    step["Step\nenv: VAR=${{ secrets.X }}"]
-    logs["Workflow Logs\nValue masked as ***"]
+```d2
+direction: right
 
-    dev --> ghSettings --> ghEncrypted
-    ghEncrypted -->|"injected at runtime\nnot stored on disk"| wfRun
-    wfRun --> step --> logs
+dev: "Developer\nsets secret" {shape: rectangle}
+ghSettings: "GitHub Settings\nRepo / Env / Org" {shape: rectangle}
+ghEncrypted: "GitHub Encrypted Store\nLibSodium public key encryption" {shape: rectangle}
+wfRun: "Workflow Run\nRunner environment" {shape: rectangle}
+step: "Step\nenv: VAR=${{ secrets.X }}" {shape: rectangle}
+logs: "Workflow Logs\nValue masked as ***" {shape: rectangle}
+
+dev -> ghSettings
+ghSettings -> ghEncrypted
+ghEncrypted -> wfRun
+wfRun -> step
+step -> logs
 ```
 
 ## Masking Dynamic Values

@@ -135,25 +135,28 @@ SRM version must match vCenter version. Always check the Broadcom Product Intero
 
 ### Upgrade Order Dependency Chain
 
-```mermaid
-flowchart TD
-    start(["Start upgrade\nmaintenance window"])
-    start --> vc["1. Upgrade vCenter\nboth protected + recovery sites"]
-    vc --> srmCheck{"Plugins load\ncorrectly?"}
-    srmCheck -->|No| fixVC["Fix vCenter issues\nbefore proceeding"]
-    fixVC --> srmCheck
-    srmCheck -->|Yes| srmUpgrade["2. Upgrade SRM Server\nprotected site first, then recovery"]
-    srmUpgrade --> vrUpgrade["3. Upgrade vSphere\nReplication Appliance\n(VAMI upgrade)"]
-    vrUpgrade --> sraUpdate["4. Update SRA plugins\n(Dell, Pure, NetApp)\non both SRM servers"]
-    sraUpdate --> validate["5. Validate — all PGs show OK\nall VMs show Protected"]
-    validate --> done(["Upgrade complete"])
+```d2
+direction: right
 
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef check fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class vc,srmUpgrade,vrUpgrade,sraUpdate,validate,fixVC action
-    class srmCheck check
-    class start,done terminal
+start: "Start upgrade\nmaintenance window" {shape: oval}
+vc: "1. Upgrade vCenter\nboth protected + recovery sites" {shape: rectangle}
+srmCheck: "Plugins load\ncorrectly?" {shape: rectangle}
+fixVC: "Fix vCenter issues\nbefore proceeding" {shape: rectangle}
+srmUpgrade: "2. Upgrade SRM Server\nprotected site first, then recovery" {shape: rectangle}
+vrUpgrade: "3. Upgrade vSphere\nReplication Appliance\n(VAMI upgrade" {shape: rectangle}
+sraUpdate: "4. Update SRA plugins\n(Dell, Pure, NetApp" {shape: rectangle}
+validate: "5. Validate — all PGs show OK\nall VMs show Protected" {shape: rectangle}
+done: "Upgrade complete" {shape: rectangle}
+
+start -> vc
+vc -> srmCheck
+srmCheck -> fixVC
+fixVC -> srmCheck
+srmCheck -> srmUpgrade
+srmUpgrade -> vrUpgrade
+vrUpgrade -> sraUpdate
+sraUpdate -> validate
+validate -> done
 ```
 
 ---

@@ -33,17 +33,6 @@ go_nogo_signoff -> validate
 
 ## Pre-Upgrade Gate Criteria
 
-```mermaid
-flowchart LR
-    A[Change Approved\nin ITSM] --> B[Backups\nVerified]
-    B --> C[Rollback Plan\nDocumented]
-    C --> D[Health Checks\nPassing]
-    D --> E[Maintenance Window\nCommunicated]
-    E --> F{Go / No-Go\nDecision}
-    F -->|Go| G[Proceed with Upgrade]
-    F -->|No-Go| H[Defer — remediate\nblocker first]
-```
-
 | Health Check | Pass Criteria |
 |---|---|
 | CPU load | < 80% sustained |

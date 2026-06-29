@@ -13,39 +13,49 @@ Ansible diagnostic commands: progressively increase verbosity with -v to -vvvv, 
 *Applies to: Ansible 2.14+; AWX / Ansible Automation Platform 2.x*
 </div>
 
-```mermaid
-graph TD
-    A([Ansible Issue]) --> B{What type of problem?}
-    B -->|Connection error / UNREACHABLE| C[--syntax-check first\nThen ansible host -m ping -vvv]
-    B -->|Task fails or wrong output| D[Add debug var=varname task\nRun with -v to see task result]
-    B -->|Wrong hosts targeted| E[ansible-playbook --list-hosts\nCheck inventory and -l limit]
-    B -->|Variable not resolved| F[ansible-inventory --list\nCheck group_vars and host_vars]
-    B -->|AWX job failed| G[GET /api/v2/jobs/ID/stdout\nCheck event log for task result]
-    B -->|Slow execution| H[ANSIBLE_DEBUG=1 playbook\nProfile with callback_plugins]
-    C --> I{SSH error type?}
-    I -->|Permission denied publickey| J[ssh -vvv to confirm key loaded\ndeploy public key if missing]
-    I -->|Connection refused or timed out| K[Test TCP 22 with nc -zv\nCheck firewall and sshd service]
-    I -->|MODULE FAILURE python not found| L[ansible -m raw -a which python3\nInstall Python on target]
-    I -->|sudo prompt or timeout| M[Check NOPASSWD sudoers\nVerify ansible_become_password]
-    D --> N[ansible-playbook --check --diff\nSee what would change without applying]
-    E --> O[Check -i inventory path and ansible.cfg\nVerify host/group name spelling]
-    F --> P[ansible web01 -m setup -a filter=ansible_network*\nInspect all host facts]
-    G --> Q[kubectl logs -n awx -l app.kubernetes.io/name=task\nCheck AWX task pod errors]
-    J --> R[Collect playbook output with -vvv\nSave to file: 2>&1 | tee ansible-debug.txt]
-    K --> R
-    L --> R
-    M --> R
-    N --> R
-    O --> R
-    P --> R
-    Q --> R
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
-    class R escalate
+B: "B" {shape: rectangle}
+C: "--syntax-check first\nThen ansible host -m ping -vvv" {shape: rectangle}
+D: "Add debug var=varname task\nRun with -v to see task result" {shape: rectangle}
+E: "ansible-playbook --list-hosts\nCheck inventory and -l limit" {shape: rectangle}
+F: "ansible-inventory --list\nCheck group_vars and host_vars" {shape: rectangle}
+G: "GET /api/v2/jobs/ID/stdout\nCheck event log for task result" {shape: rectangle}
+H: "ANSIBLE_DEBUG=1 playbook\nProfile with callback_plugins" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "ssh -vvv to confirm key loaded\ndeploy public key if missing" {shape: rectangle}
+K: "Test TCP 22 with nc -zv\nCheck firewall and sshd service" {shape: rectangle}
+L: "ansible -m raw -a which python3\nInstall Python on target" {shape: rectangle}
+M: "Check NOPASSWD sudoers\nVerify ansible_become_password" {shape: rectangle}
+N: "ansible-playbook --check --diff\nSee what would change without applying" {shape: rectangle}
+O: "Check -i inventory path and ansible.cfg\nVerify host/group name spelling" {shape: rectangle}
+P: "ansible web01 -m setup -a filter=ansible_network*\nInspect all host facts" {shape: rectangle}
+Q: "kubectl logs -n awx -l app.kubernetes.io/name=task\nCheck AWX task pod errors" {shape: rectangle}
+R: "R" {shape: rectangle}
+A: "Ansible Issue" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+I -> L
+I -> M
+D -> N
+E -> O
+F -> P
+G -> Q
+K -> R
+L -> R
+M -> R
+N -> R
+O -> R
+P -> R
+Q -> R
 ```
 
 ```d2

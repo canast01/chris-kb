@@ -14,29 +14,29 @@ SRDF/A diagnostic commands: check pair state with symrdf query, identify lag and
 </div>
 ![SRDF/A — Diagnostics](../../../../assets/storage-dell-srdf-a-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "SRDF/A Issue" {shape: rectangle}
+B: "symrdf query\nCheck pair state" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "Check why suspended\nsymrdf verify" {shape: rectangle}
+E: "symrdf showperf\nCheck DSE_LAG" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Check host IOPS\nvs link capacity" {shape: rectangle}
+H: "Check RF ports\nsymcfg list -rdf" {shape: rectangle}
+I: "Collect Solutions Enabler logs" {shape: rectangle}
+J: "Open Dell TAC SR\nAttach symrdf output" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([SRDF/A Issue]) --> B[symrdf query\nCheck pair state]
-    B --> C{Pair state OK?}
-    C -->|Suspended / Failed| D[Check why suspended\nsymrdf verify]
-    C -->|OK but lag alert| E[symrdf showperf\nCheck DSE_LAG]
-    E --> F{Lag root cause?}
-    F -->|High I/O| G[Check host IOPS\nvs link capacity]
-    F -->|Link issue| H[Check RF ports\nsymcfg list -rdf]
-    D --> I[Collect Solutions Enabler logs]
-    G --> I
-    H --> I
-    I --> J[Open Dell TAC SR\nAttach symrdf output]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F dark
-    class B,D,E,G,H action
-    class I,J escalate
+A -> B
+C -> D
+C -> E
+F -> G
+F -> H
+D -> I
+G -> I
+H -> I
+I -> J
 ```
 
 ```d2

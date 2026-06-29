@@ -13,21 +13,19 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph TD
-    classDef step fill:#2563eb,color:#fff
-    classDef rh fill:#991b1b,color:#fff
-    classDef community fill:#374151,color:#fff
-    classDef escalate fill:#7c3aed,color:#fff
+```d2
+direction: right
 
-    A([Gather diagnostics\nsos report + ceph -s + crash ls]):::step --> B[Check Red Hat KCS\naccess.redhat.com/solutions]:::step
-    B --> C{Solution found?}:::step
-    C -- Yes --> D([Apply fix\nverify cluster health]):::step
-    C -- No --> E[Open RHCS support case\naccess.redhat.com]:::rh
-    E --> F[Red Hat L2/L3 review\nCeph engineering if needed]:::rh
-    F --> G{Upstream bug?}:::escalate
-    G -- Yes --> H([File upstream issue\ntracker.ceph.com]):::community
-    G -- No --> I([Config / fix applied\ncase resolved]):::step
+A: "Gather diagnostics\nsos report + ceph -s + crash ls" {shape: rectangle}
+B: "Check Red Hat KCS\naccess.redhat.com/solutions" {shape: rectangle}
+E: "Open RHCS support case\naccess.redhat.com" {shape: rectangle}
+F: "Red Hat L2/L3 review\nCeph engineering if needed" {shape: rectangle}
+D: "Apply fix\nverify cluster health" {shape: rectangle}
+H: "File upstream issue\ntracker.ceph.com" {shape: rectangle}
+I: "Config / fix applied\ncase resolved" {shape: rectangle}
+
+A -> B
+E -> F
 ```
 
 ```plantuml

@@ -23,20 +23,29 @@ Hardening reference covering AD Hardening Controls Flow, DCSync Attack Detection
 
 ## AD Hardening Controls Flow
 
-```mermaid
-flowchart TD
-    adEnv["Active Directory Environment"]
+```d2
+direction: right
 
-    adEnv --> protUsers["Protected Users Group\n(disable NTLM / RC4 / delegation\nfor privileged accounts)"]
-    adEnv --> ldapSign["LDAP Signing = Require\nChannel Binding = Always\n(Event 2889 for violations)"]
-    adEnv --> kerbEnc["Kerberos AES-256 only\n(RC4 disabled via GPO)"]
-    adEnv --> adminSDHolder["AdminSDHolder\n(propagates ACL every 60 min\nto all privileged accounts)"]
-    adEnv --> mdi["Defender for Identity\n(sensor on all DCs)"]
-    adEnv --> paw["PAW Policy\n(AppLocker / BitLocker / no internet)"]
+adEnv: "Active Directory Environment" {shape: rectangle}
+protUsers: "Protected Users Group\n(disable NTLM / RC4 / delegation\nfor privileged accounts" {shape: rectangle}
+ldapSign: "LDAP Signing = Require\nChannel Binding = Always\n(Event 2889 for violations" {shape: rectangle}
+kerbEnc: "Kerberos AES-256 only\n(RC4 disabled via GPO" {shape: rectangle}
+adminSDHolder: "AdminSDHolder\n(propagates ACL every 60 min\nto all privileged accounts" {shape: rectangle}
+mdi: "Defender for Identity\n(sensor on all DCs" {shape: rectangle}
+paw: "PAW Policy\n(AppLocker / BitLocker / no internet" {shape: rectangle}
+dcsync: "DCSync attack\n(Event 4662 — repl directory changes" {shape: rectangle}
+passHash: "Pass-the-Hash /\nPass-the-Ticket" {shape: rectangle}
+lateralMove: "Lateral movement\nrecon patterns" {shape: rectangle}
 
-    mdi -->|"alerts on"| dcsync["DCSync attack\n(Event 4662 — repl directory changes)"]
-    mdi -->|"alerts on"| passHash["Pass-the-Hash /\nPass-the-Ticket"]
-    mdi -->|"alerts on"| lateralMove["Lateral movement\nrecon patterns"]
+adEnv -> protUsers
+adEnv -> ldapSign
+adEnv -> kerbEnc
+adEnv -> adminSDHolder
+adEnv -> mdi
+adEnv -> paw
+mdi -> dcsync
+mdi -> passHash
+mdi -> lateralMove
 ```
 
 ## DCSync Attack Detection

@@ -13,21 +13,6 @@ SQL Server initial deployment — installation checklist, post-install configura
 *Applies to: Windows Server 2019 / 2022*
 </div>
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Pre-Install Checklist"]
-    s2["Installation"]
-    s3["Post-Install Configuration"]
-    s4["tempdb Configuration"]
-    s5["Firewall"]
-    s6["✓ Validation"]
-    s7["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
-    style s6 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

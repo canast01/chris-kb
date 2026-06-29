@@ -66,20 +66,28 @@ The storage access protocol determines how hosts communicate with the storage ar
 
 **Protocol selection decision guide:**
 
-```mermaid
-flowchart TD
-    A["What is the workload?"]
-    A --> B{Block storage\nrequired?}
-    B -->|Yes| C{Latency < 500 µs\nrequired?}
-    C -->|Yes| D["Fibre Channel (FC)\nor NVMe-oF"]
-    C -->|No| E{Existing FC\ninfrastructure?}
-    E -->|Yes| F["FC — leverage\nexisting SAN fabric"]
-    E -->|No| G["iSCSI on dedicated\n10/25 GbE storage VLAN"]
-    B -->|No - File| H{Windows\nworkloads?}
-    H -->|Yes| I["SMB 3.x (CIFS)\non NAS"]
-    H -->|No - Linux/VMware| J["NFS v3 or v4.1\non NAS"]
-    A --> K{Archive or\ncloud tiering?}
-    K -->|Yes| L["S3 Object Storage\n(Dell ECS, AWS S3, Azure Blob)"]
+```d2
+direction: right
+
+C: "C" {shape: rectangle}
+D: "Fibre Channel (FC" {shape: rectangle}
+E: "E" {shape: rectangle}
+F: "FC — leverage\nexisting SAN fabric" {shape: rectangle}
+G: "iSCSI on dedicated\n10/25 GbE storage VLAN" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "SMB 3.x (CIFS" {shape: rectangle}
+J: "NFS v3 or v4.1\non NAS" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "S3 Object Storage\n(Dell ECS, AWS S3, Azure Blob" {shape: rectangle}
+A: "What is the workload?" {shape: rectangle}
+B: "B" {shape: rectangle}
+
+C -> D
+E -> F
+E -> G
+H -> I
+H -> J
+K -> L
 ```
 ![Storage Design — Diagram](../../assets/storage-storage-design-diagram.svg)
 
@@ -127,15 +135,19 @@ Over-subscription ratio (thin provisioning): PowerMax supports up to 3:1 over-su
 
 Data protection is layered. Each layer addresses a different failure mode; none of the layers alone is sufficient.
 
-```mermaid
-graph TD
-    P1["Layer 1: RAID\n(protects against drive failure)"]
-    P2["Layer 2: Snapshots\n(protects against accidental deletion\nand application errors)"]
-    P3["Layer 3: Replication\n(protects against site failure)"]
-    P4["Layer 4: Backup\n(protects against ransomware,\ncorruption, long-term recovery)"]
-    P5["Layer 5: Immutable Backup Copy\n(protects against backup deletion/encryption)"]
+```d2
+direction: right
 
-    P1 --> P2 --> P3 --> P4 --> P5
+P1: "Layer 1: RAID\n(protects against drive failure" {shape: rectangle}
+P2: "Layer 2: Snapshots\n(protects against accidental deletion\nand application errors" {shape: rectangle}
+P3: "Layer 3: Replication\n(protects against site failure" {shape: rectangle}
+P4: "Layer 4: Backup\n(protects against ransomware,\ncorruption, long-term recovery" {shape: rectangle}
+P5: "Layer 5: Immutable Backup Copy\n(protects against backup deletion/encryption" {shape: rectangle}
+
+P1 -> P2
+P2 -> P3
+P3 -> P4
+P4 -> P5
 ```
 
 | Layer | Technology Examples | Protects Against | Limitations |

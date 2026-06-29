@@ -20,22 +20,27 @@ Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation
 
 ## Certificate Integration Topology
 
-```mermaid
-graph TD
-    venafi["Venafi TPP\n(central policy and lifecycle mgmt)"]
-    adcs["Microsoft ADCS\n(internal CA)"]
-    hashiVault["HashiCorp Vault PKI\n(service-to-service short-lived certs)"]
-    certManager["cert-manager\n(Kubernetes in-cluster automation)"]
-    leAcme["Let's Encrypt ACME\n(public-facing services)"]
+```d2
+direction: right
 
-    venafi -->|"DCOM / RPC"| adcs
-    venafi -->|"REST API"| vsphere["VMware vSphere\n(auto-enrol ESXi / vCenter certs)"]
-    venafi -->|"REST + credential objects"| f5["F5 / NetScaler\n(LB cert deployment)"]
-    venafi -->|"REST API callback"| snow["ServiceNow\n(approval workflow)"]
-    venafi -->|"Syslog"| siem["SIEM\n(issuance / revocation events)"]
-    certManager -->|"ACME issuer"| leAcme
-    certManager -->|"Vault issuer"| hashiVault
-    certManager -->|"ADCS issuer"| adcs
+venafi: "Venafi TPP\n(central policy and lifecycle mgmt" {shape: rectangle}
+adcs: "Microsoft ADCS\n(internal CA" {shape: rectangle}
+vsphere: "VMware vSphere\n(auto-enrol ESXi / vCenter certs" {shape: rectangle}
+f5: "F5 / NetScaler\n(LB cert deployment" {shape: rectangle}
+snow: "ServiceNow\n(approval workflow" {shape: rectangle}
+siem: "SIEM\n(issuance / revocation events" {shape: rectangle}
+certManager: "cert-manager\n(Kubernetes in-cluster automation" {shape: rectangle}
+leAcme: "Let's Encrypt ACME\n(public-facing services" {shape: rectangle}
+hashiVault: "HashiCorp Vault PKI\n(service-to-service short-lived certs" {shape: rectangle}
+
+venafi -> adcs
+venafi -> vsphere
+venafi -> f5
+venafi -> snow
+venafi -> siem
+certManager -> leAcme
+certManager -> hashiVault
+certManager -> adcs
 ```
 
 ## Integration Map

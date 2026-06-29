@@ -42,22 +42,6 @@ This guide covers configuring NetApp SnapMirror replication from initial cluster
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Configure Cluster Peering"]
-    s3["Configure SVM Peering"]
-    s4["Create First SnapMirror Relationship"]
-    s5["Initialize and Verify"]
-    s6["Configure Schedule"]
-    s7["✓ Validate RPO"]
-    s8["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
-    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 **Two ONTAP clusters:**

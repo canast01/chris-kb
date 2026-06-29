@@ -27,16 +27,29 @@ All production safes enforce dual-control to prevent unilateral credential acces
 
 ## Safe Access Hierarchy
 
-```mermaid
-graph TD
-    adGrpAuditor["AD Group\nGG_CyberArk_Auditors"] --> roleAuditor["Vault Role: Auditors\n(read-only all safes)"]
-    adGrpOwner["AD Group\nGG_CyberArk_SafeOwners"] --> roleOwner["Vault Role: Safe Owner\n(manage assigned safes)"]
-    adGrpAdmin["AD Group\nGG_CyberArk_VaultAdmins"] --> roleAdmin["Vault Role: Vault Admins\n(full admin rights)"]
-    roleOwner --> safe1["Safe: PROD-DB-Accounts"]
-    roleOwner --> safe2["Safe: APP-Service-Accounts"]
-    roleAdmin --> allSafes["All Safes + Platform Config"]
-    safe1 --> acct1["Account: db01-svc-app"]
-    safe2 --> acct2["Account: svc-app01"]
+```d2
+direction: right
+
+adGrpAuditor: "AD Group\nGG_CyberArk_Auditors" {shape: rectangle}
+roleAuditor: "Vault Role: Auditors\n(read-only all safes" {shape: rectangle}
+adGrpOwner: "AD Group\nGG_CyberArk_SafeOwners" {shape: rectangle}
+roleOwner: "Vault Role: Safe Owner\n(manage assigned safes" {shape: rectangle}
+adGrpAdmin: "AD Group\nGG_CyberArk_VaultAdmins" {shape: rectangle}
+roleAdmin: "Vault Role: Vault Admins\n(full admin rights" {shape: rectangle}
+safe1: "Safe: PROD-DB-Accounts" {shape: rectangle}
+safe2: "Safe: APP-Service-Accounts" {shape: rectangle}
+allSafes: "All Safes + Platform Config" {shape: rectangle}
+acct1: "Account: db01-svc-app" {shape: rectangle}
+acct2: "Account: svc-app01" {shape: rectangle}
+
+adGrpAuditor -> roleAuditor
+adGrpOwner -> roleOwner
+adGrpAdmin -> roleAdmin
+roleOwner -> safe1
+roleOwner -> safe2
+roleAdmin -> allSafes
+safe1 -> acct1
+safe2 -> acct2
 ```
 
 ---

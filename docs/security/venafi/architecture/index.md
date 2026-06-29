@@ -47,20 +47,22 @@ Enterprise certificate lifecycle management — TPP enforces policy, integrates 
 
 ## Trust Protection Platform Topology
 
-```mermaid
-graph TB
-  TPP["Venafi Trust Protection Platform"]
-  TPP --> DISC["Discovery Engine\n(network scan / agent)"]
-  TPP --> CA1["CA Connector — ADCS"]
-  TPP --> CA2["CA Connector — DigiCert / Entrust"]
-  TPP --> AUTO["Automation\n(renewal / provisioning)"]
-  DISC -->|"found certs"| TPP
-  ADMIN(["Security Admin"]) -->|"portal"| TPP
-  TPP -->|"SIEM / SNMP"| SIEM(["SIEM / Monitoring"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class TPP,DISC ctrl
-  class CA1,CA2,AUTO mgmt
-  class ADMIN,SIEM host
+```d2
+direction: right
+
+TPP: "Venafi Trust Protection Platform" {shape: rectangle}
+DISC: "Discovery Engine\n(network scan / agent" {shape: rectangle}
+CA1: "CA Connector — ADCS" {shape: rectangle}
+CA2: "CA Connector — DigiCert / Entrust" {shape: rectangle}
+AUTO: "Automation\n(renewal / provisioning" {shape: rectangle}
+ADMIN: "Security Admin" {shape: rectangle}
+SIEM: "SIEM / Monitoring" {shape: rectangle}
+
+TPP -> DISC
+TPP -> CA1
+TPP -> CA2
+TPP -> AUTO
+DISC -> TPP
+ADMIN -> TPP
+TPP -> SIEM
 ```

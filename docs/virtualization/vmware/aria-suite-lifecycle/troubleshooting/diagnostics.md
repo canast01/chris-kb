@@ -15,44 +15,53 @@ Aria Suite Lifecycle (vRSLCM) diagnostic commands: check service health, inspect
 </div>
 ![Aria Suite Lifecycle — Diagnostics](../../../../assets/virtualization-vmware-aria-suite-lifecycle-troubleshooting-d.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "systemctl status vmware-vrlcm\njournalctl -u vmware-vrlcm -n 100" {shape: rectangle}
+D: "grep request-ID /var/log/vmware/vrlcm/vlcm.log\nRead installer.log for failed step" {shape: rectangle}
+E: "GET /lcm/api/v1/certificates\nCheck notAfter date per product" {shape: rectangle}
+F: "df -h; du -sh /data/vmware/vrlcm/*\nClean old logs and bundles" {shape: rectangle}
+G: "chronyc tracking\ntimedatectl status" {shape: rectangle}
+H: "GET /lcm/api/v1/environments\nCheck environment health JSON" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "systemctl start vmware-vrlcm\nCheck disk space first" {shape: rectangle}
+K: "Check disk /data for fullness\nCheck DB size du -sh /data/vmware/vrlcm/db" {shape: rectangle}
+L: "grep ERROR vlcm.log | tail -50\nRead install step and failed component" {shape: rectangle}
+M: "M" {shape: rectangle}
+N: "LCM UI → Lifecycle → Certificate Management\nTrigger rotation" {shape: rectangle}
+O: "Rotate immediately\nStop all operations first" {shape: rectangle}
+P: "find /var/log/vmware/vrlcm -name *.log.* -mtime +30 -delete\nRemove old snapshots and content library cache" {shape: rectangle}
+Q: "chronyc makestep\nVerify offset < 5 seconds" {shape: rectangle}
+R: "Check all required ports to product VMs\nnc -zv product-vm 443" {shape: rectangle}
+S: "Collect logscraper bundle\nLCM UI → Support → Logscraper" {shape: rectangle}
+T: "Open VMware SR\nAttach logscraper ZIP" {shape: rectangle}
+A: "LCM Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([LCM Issue]) --> B{What type of problem?}
-    B -->|LCM UI unresponsive or slow| C[systemctl status vmware-vrlcm\njournalctl -u vmware-vrlcm -n 100]
-    B -->|Deploy or upgrade operation failed| D[grep request-ID /var/log/vmware/vrlcm/vlcm.log\nRead installer.log for failed step]
-    B -->|Certificate expiry warning| E[GET /lcm/api/v1/certificates\nCheck notAfter date per product]
-    B -->|Disk space alert| F[df -h; du -sh /data/vmware/vrlcm/*\nClean old logs and bundles]
-    B -->|NTP drift or SSO login failure| G[chronyc tracking\ntimedatectl status]
-    B -->|Product environment shows error| H[GET /lcm/api/v1/environments\nCheck environment health JSON]
-    C --> I{Service state?}
-    I -->|Not running| J[systemctl start vmware-vrlcm\nCheck disk space first]
-    I -->|Running but slow| K[Check disk /data for fullness\nCheck DB size du -sh /data/vmware/vrlcm/db]
-    D --> L[grep ERROR vlcm.log | tail -50\nRead install step and failed component]
-    E --> M{Days to expiry?}
-    M -->|< 30 days| N[LCM UI → Lifecycle → Certificate Management\nTrigger rotation]
-    M -->|Already expired| O[Rotate immediately\nStop all operations first]
-    F --> P[find /var/log/vmware/vrlcm -name *.log.* -mtime +30 -delete\nRemove old snapshots and content library cache]
-    G --> Q[chronyc makestep\nVerify offset < 5 seconds]
-    H --> R[Check all required ports to product VMs\nnc -zv product-vm 443]
-    J --> S[Collect logscraper bundle\nLCM UI → Support → Logscraper]
-    K --> S
-    L --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-    S --> T[Open VMware SR\nAttach logscraper ZIP]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,M dark
-    class C,D,E,F,G,H,J,K,L,N,O,P,Q,R action
-    class S,T escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+D -> L
+M -> N
+M -> O
+F -> P
+G -> Q
+H -> R
+J -> S
+K -> S
+L -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
+S -> T
 ```
 
 ```d2

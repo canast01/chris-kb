@@ -61,14 +61,13 @@ ENG --> SRC: Done
 
 Instance cloning copies the full data and configuration of a source instance to a target instance. The most common use case is refreshing a sub-production instance with a recent production snapshot.
 
-```mermaid
-flowchart LR
-    PROD["Production Instance\n(source)"]
-    UAT["UAT Instance\n(target)"]
-    DEV["Dev Instance\n(target)"]
+```d2
+direction: right
 
-    PROD -- "Scheduled Clone\n(weekly)" --> UAT
-    PROD -- "On-demand Clone\n(before major release)" --> DEV
+PROD: "Production Instance\n(source" {shape: rectangle}
+UAT: "UAT Instance\n(target" {shape: rectangle}
+DEV: "Dev Instance\n(target" {shape: rectangle}
+
 ```
 
 Typical schedule options: daily, weekly, bi-weekly, monthly.

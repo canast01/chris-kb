@@ -71,34 +71,46 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A[Status 25 — client connect refused]
-    S --> B[Media manager volume busy]
-    S --> C[Catalog backup failed]
-    S --> D[Policy class mismatch]
-    S --> E[Master / media server connectivity loss]
-    A --> A1{bpcd running on client?}
-    A1 -->|No| A2[Start bpcd and verify port 13782 open — see Before you begin]
-    A1 -->|Yes| A3[Check bpbrm and bpcd logs for TLS or host ID error]
-    B --> B1{Tape library online?}
-    B1 -->|No| B2[Check ltid process and tpconfig -d — see Before you begin]
-    B1 -->|Yes| B3[Check for volume in use by another job; wait or cancel conflicting job]
-    C --> C1{Storage unit accessible?}
-    C1 -->|No| C2[Check MSDP pool and STU free space — see Before you begin]
-    C1 -->|Yes| C3[Run bpdbm -consistency and force catalog backup with bpbackup]
-    D --> D1{Client OS matches policy type?}
-    D1 -->|No| D2[Correct policy type in NetBackup console to match client OS]
-    D1 -->|Yes| D3[Check schedule type and retention level for the policy]
-    E --> E1{vnetd reachable on port 1556?}
-    E1 -->|No| E2[Restart NetBackup services on master and check firewall rules]
-    E1 -->|Yes| E3[Check NBU CA host ID certificate validity on media server]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E2,E3 section
-    class A1,B1,C1,D1,E1 decision
-    class S start
+```d2
+direction: right
+
+S: "What is the symptom?" {shape: rectangle}
+A: "Status 25 — client connect refused" {shape: rectangle}
+B: "Media manager volume busy" {shape: rectangle}
+C: "Catalog backup failed" {shape: rectangle}
+D: "Policy class mismatch" {shape: rectangle}
+E: "Master / media server connectivity loss" {shape: rectangle}
+A1: "A1" {shape: rectangle}
+A2: "Start bpcd and verify port 13782 open — see Before you begin" {shape: rectangle}
+A3: "Check bpbrm and bpcd logs for TLS or host ID error" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "Check ltid process and tpconfig -d — see Before you begin" {shape: rectangle}
+B3: "Check for volume in use by another job; wait or cancel conflicting job" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "Check MSDP pool and STU free space — see Before you begin" {shape: rectangle}
+C3: "Run bpdbm -consistency and force catalog backup with bpbackup" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+D2: "Correct policy type in NetBackup console to match client OS" {shape: rectangle}
+D3: "Check schedule type and retention level for the policy" {shape: rectangle}
+E1: "E1" {shape: rectangle}
+E2: "Restart NetBackup services on master and check firewall rules" {shape: rectangle}
+E3: "Check NBU CA host ID certificate validity on media server" {shape: rectangle}
+
+S -> A
+S -> B
+S -> C
+S -> D
+S -> E
+A1 -> A2
+A1 -> A3
+B1 -> B2
+B1 -> B3
+C1 -> C2
+C1 -> C3
+D1 -> D2
+D1 -> D3
+E1 -> E2
+E1 -> E3
 ```
 
 ---

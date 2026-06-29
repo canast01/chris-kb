@@ -40,30 +40,35 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1{Execution policy\nblocked?}
-    S --> B2{Module not\ninstalled or found?}
-    S --> B3{Credential prompt\nloop?}
-    S --> B4{PSRemoting\nconnection refused?}
-    S --> B5{RemoteSigned or\nRestricted policy error?}
-    B1 -->|Yes| D1{Scope of\npolicy block?}
-    D1 -->|CurrentUser| R1[Common Error Reference\n— Set-ExecutionPolicy RemoteSigned -Scope CurrentUser]
-    D1 -->|Machine| R2[Common Error Reference\n— Set-ExecutionPolicy -Scope Process for bypass]
-    B2 -->|Yes| D2{PSModulePath\ncorrect?}
-    D2 -->|No| R3[Common Error Reference\n— add module dir to PSModulePath]
-    D2 -->|Yes| R4[Common Error Reference\n— Install-Module -Force -AllowClobber]
-    B3 -->|Yes| D3{Saved credential\nstale?}
-    D3 -->|Yes| R5[Debugging Scripts\n— Get-Credential again or Import-Clixml]
-    D3 -->|No| R6[Debugging Scripts\n— inspect $Error[0] for root cause]
-    B4 -->|Yes| R7[Common Error Reference\n— Enable-PSRemoting -Force on target]
-    B5 -->|Yes| R8[Common Error Reference\n— Set-ExecutionPolicy RemoteSigned]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class B1,B2,B3,B4,B5,D1,D2,D3 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "Common Error Reference\n— Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" {shape: rectangle}
+R2: "Common Error Reference\n— Set-ExecutionPolicy -Scope Process for bypass" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Common Error Reference\n— add module dir to PSModulePath" {shape: rectangle}
+R4: "Common Error Reference\n— Install-Module -Force -AllowClobber" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "Debugging Scripts\n— Get-Credential again or Import-Clixml" {shape: rectangle}
+R6: "Debugging Scripts\n— inspect $Error[0" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+R7: "Common Error Reference\n— Enable-PSRemoting -Force on target" {shape: rectangle}
+B5: "B5" {shape: rectangle}
+R8: "Common Error Reference\n— Set-ExecutionPolicy RemoteSigned" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+B4 -> R7
+B5 -> R8
 ```
 
 ---
@@ -80,21 +85,35 @@ graph TD
 
 ## PowerShell Troubleshooting Decision Flow
 
-```mermaid
-flowchart TD
-    failure["Script Error\nor Unexpected Behaviour"]
-    failure --> errType{"Error type?"}
-    errType -->|Execution policy\nblocked| checkPolicy["Get-ExecutionPolicy -List\ncheck all scopes"]
-    checkPolicy --> setPolicy["Set-ExecutionPolicy RemoteSigned\n-Scope CurrentUser"]
-    errType -->|Module not found| checkModPath["$env:PSModulePath\nmodule path correct?"]
-    checkModPath -->|No| addPath["Add module directory\nto PSModulePath"]
-    checkModPath -->|Yes| reinstallMod["Install-Module -Force\n-AllowClobber"]
-    errType -->|WinRM /\nRemoting failure| testWSMan["Test-WSMan -ComputerName host\nTest-NetConnection port 5985"]
-    testWSMan -->|No response| enableRemoting["Enable-PSRemoting -Force\non target (as admin)"]
-    errType -->|Credential /\nauth failure| checkCred["$Error[0] | Format-List *\ninspect exception"]
-    checkCred --> refreshCred["Get-Credential again\nor Import-Clixml new file"]
-    errType -->|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
-    strictMode --> stepDebug["Set-PSBreakpoint\nstep through execution"]
+```d2
+direction: right
+
+failure: "Script Error\nor Unexpected Behaviour" {shape: rectangle}
+errType: "Error type?" {shape: rectangle}
+checkPolicy: "Get-ExecutionPolicy -List\ncheck all scopes" {shape: rectangle}
+setPolicy: "Set-ExecutionPolicy RemoteSigned\n-Scope CurrentUser" {shape: rectangle}
+checkModPath: "$env:PSModulePath\nmodule path correct?" {shape: rectangle}
+addPath: "Add module directory\nto PSModulePath" {shape: rectangle}
+reinstallMod: "Install-Module -Force\n-AllowClobber" {shape: rectangle}
+testWSMan: "Test-WSMan -ComputerName host\nTest-NetConnection port 5985" {shape: rectangle}
+enableRemoting: "Enable-PSRemoting -Force\non target (as admin" {shape: rectangle}
+checkCred: "$Error[0" {shape: rectangle}
+refreshCred: "Get-Credential again\nor Import-Clixml new file" {shape: rectangle}
+strictMode: "Set-StrictMode -Version Latest\nadd breakpoint(" {shape: rectangle}
+stepDebug: "Set-PSBreakpoint\nstep through execution" {shape: rectangle}
+
+failure -> errType
+errType -> checkPolicy
+checkPolicy -> setPolicy
+errType -> checkModPath
+checkModPath -> addPath
+checkModPath -> reinstallMod
+errType -> testWSMan
+testWSMan -> enableRemoting
+errType -> checkCred
+checkCred -> refreshCred
+errType -> strictMode
+strictMode -> stepDebug
 ```
 
 ## Debugging Scripts

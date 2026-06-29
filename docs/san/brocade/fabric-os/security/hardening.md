@@ -25,25 +25,39 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 
 ## Hardening Sequence — New Switch
 
-```mermaid
-flowchart TD
-    start([New switch deployed]) --> proto["Disable Telnet + HTTP\nEnable HTTPS only"]
-    proto --> snmpHarden["Remove SNMPv1/v2c\nConfigure SNMPv3 SHA+AES"]
-    snmpHarden --> aaa["Configure RADIUS / TACACS+\nauthorder RADIUS;LOCAL"]
-    aaa --> rbac["Assign RBAC roles\nswitchadmin · zoneadmin · operator"]
-    rbac --> ipf["Apply IPfilter policy\nmanagement subnet only"]
-    ipf --> ntp["Configure NTP\n2 internal servers"]
-    ntp --> syslog["Forward syslog to SIEM\nsyslogadmin --add"]
-    syslog --> audit["Enable audit logging\nauditcfg --class 1,2,3,4"]
-    audit --> domainId["Set static domain ID\ninsistDomainId=1"]
-    domainId --> fabricBinding["Enable fabric binding\nfabricbinding --enable"]
-    fabricBinding --> defZone["Disable default zone\ndefzone --noaccess"]
-    defZone --> backup["configupload post-hardening\nto backup server"]
-    backup --> cmdb["Update CMDB\nhostname · serial · domain ID"]
-    cmdb --> done([Switch production-ready])
+```d2
+direction: right
 
-    style done fill:#15803d,color:#fff
-    style start fill:#2563eb,color:#fff
+start: "New switch deployed" {shape: oval}
+proto: "Disable Telnet + HTTP\nEnable HTTPS only" {shape: rectangle}
+snmpHarden: "Remove SNMPv1/v2c\nConfigure SNMPv3 SHA+AES" {shape: rectangle}
+aaa: "Configure RADIUS / TACACS+\nauthorder RADIUS;LOCAL" {shape: rectangle}
+rbac: "Assign RBAC roles\nswitchadmin · zoneadmin · operator" {shape: rectangle}
+ipf: "Apply IPfilter policy\nmanagement subnet only" {shape: rectangle}
+ntp: "Configure NTP\n2 internal servers" {shape: rectangle}
+syslog: "Forward syslog to SIEM\nsyslogadmin --add" {shape: rectangle}
+audit: "Enable audit logging\nauditcfg --class 1,2,3,4" {shape: rectangle}
+domainId: "Set static domain ID\ninsistDomainId=1" {shape: rectangle}
+fabricBinding: "Enable fabric binding\nfabricbinding --enable" {shape: rectangle}
+defZone: "Disable default zone\ndefzone --noaccess" {shape: rectangle}
+backup: "configupload post-hardening\nto backup server" {shape: rectangle}
+cmdb: "Update CMDB\nhostname · serial · domain ID" {shape: rectangle}
+done: "Switch production-ready" {shape: rectangle}
+
+start -> proto
+proto -> snmpHarden
+snmpHarden -> aaa
+aaa -> rbac
+rbac -> ipf
+ipf -> ntp
+ntp -> syslog
+syslog -> audit
+audit -> domainId
+domainId -> fabricBinding
+fabricBinding -> defZone
+defZone -> backup
+backup -> cmdb
+cmdb -> done
 ```
 
 ### Remove Default SNMP Community Strings

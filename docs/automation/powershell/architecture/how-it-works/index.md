@@ -33,21 +33,31 @@ Always target PowerShell 7 for new automation unless a dependency is hard-bound 
 
 The PowerShell execution engine processes input through the **parser** → **AST (Abstract Syntax Tree)** → **runtime** against the active **runspace**.
 
-```mermaid
-flowchart LR
-    A([Input<br/>stdin / script / command]) --> B[Lexer & Parser]
-    B --> C[AST\nAbstract Syntax Tree]
-    C --> D[Binder\nType resolution]
-    D --> E[Compiled Script Block]
-    E --> F{Runspace}
-    F --> G[Command Discovery\nAlias → Function → Cmdlet → Native]
-    G --> H[Parameter Binding]
-    H --> I[Pipeline Processor]
-    I --> J[Output / Objects]
-    J --> K([stdout / next cmdlet / $null])
-    I --> L([Error Stream\n$Error / Write-Error])
-    style F fill:#1565c0,color:#fff
-    style I fill:#2e7d32,color:#fff
+```d2
+direction: right
+
+B: "B" {shape: rectangle}
+C: "AST\nAbstract Syntax Tree" {shape: rectangle}
+D: "Binder\nType resolution" {shape: rectangle}
+E: "Compiled Script Block" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Command Discovery\nAlias → Function → Cmdlet → Native" {shape: rectangle}
+H: "Parameter Binding" {shape: rectangle}
+I: "Pipeline Processor" {shape: rectangle}
+J: "Output / Objects" {shape: rectangle}
+K: "stdout / next cmdlet / $null" {shape: rectangle}
+L: "Error Stream\n$Error / Write-Error" {shape: rectangle}
+A: "Input · stdin / script / command" {shape: rectangle}
+
+B -> C
+C -> D
+D -> E
+F -> G
+G -> H
+H -> I
+I -> J
+J -> K
+I -> L
 ```
 
 ---

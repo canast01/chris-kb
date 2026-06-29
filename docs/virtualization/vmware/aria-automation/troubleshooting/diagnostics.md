@@ -15,41 +15,49 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
 </div>
 ![Aria Automation — Diagnostics](../../../../assets/virtualization-vmware-aria-automation-troubleshooting-diagno.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "GET /deployment/api/deployments\nFilter by status=FAILED" {shape: rectangle}
+D: "GET /catalog/api/requests\nFilter by requestState=FAILED" {shape: rectangle}
+E: "vRA UI → Extensibility → Action Runs\nCheck stderr and error code" {shape: rectangle}
+F: "kubectl logs -n prelude\nLook for Java exceptions" {shape: rectangle}
+G: "Check vIDM connectivity\nGET /csp/gateway/am/api/login" {shape: rectangle}
+H: "GET /deployment/api/deployments/id/events\nRead FAILED event message" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Check vCenter Cloud Account\nvRA → Infrastructure → Cloud Accounts" {shape: rectangle}
+K: "Validate blueprint YAML\nCheck resource property types" {shape: rectangle}
+L: "Check IP range in vRA\nvRA → Infrastructure → Networks" {shape: rectangle}
+M: "GET /catalog/api/requests/id/events\nRead error detail" {shape: rectangle}
+N: "Check ABX action code\nVerify inputs and environment vars" {shape: rectangle}
+O: "kubectl logs -n prelude pod-name --tail=200\nFilter for ERROR and Exception" {shape: rectangle}
+P: "curl -sk vIDM-URL/SAAS/API/1.0/auth/token\nTest vIDM API" {shape: rectangle}
+Q: "Collect support bundle\nLCM logscraper or VAMI bundle" {shape: rectangle}
+R: "Open VMware SR\nmysupport.vmware.com" {shape: rectangle}
+A: "Aria Automation Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([Aria Automation Issue]) --> B{What type of problem?}
-    B -->|Deployment stuck or failed| C[GET /deployment/api/deployments\nFilter by status=FAILED]
-    B -->|Catalog request error| D[GET /catalog/api/requests\nFilter by requestState=FAILED]
-    B -->|ABX action failure| E[vRA UI → Extensibility → Action Runs\nCheck stderr and error code]
-    B -->|UI or API error| F[kubectl logs -n prelude\nLook for Java exceptions]
-    B -->|Authentication failure| G[Check vIDM connectivity\nGET /csp/gateway/am/api/login]
-    C --> H[GET /deployment/api/deployments/id/events\nRead FAILED event message]
-    H --> I{Error source?}
-    I -->|vCenter / infra error| J[Check vCenter Cloud Account\nvRA → Infrastructure → Cloud Accounts]
-    I -->|Blueprint error| K[Validate blueprint YAML\nCheck resource property types]
-    I -->|Network / IP error| L[Check IP range in vRA\nvRA → Infrastructure → Networks]
-    D --> M[GET /catalog/api/requests/id/events\nRead error detail]
-    E --> N[Check ABX action code\nVerify inputs and environment vars]
-    F --> O[kubectl logs -n prelude pod-name --tail=200\nFilter for ERROR and Exception]
-    G --> P[curl -sk vIDM-URL/SAAS/API/1.0/auth/token\nTest vIDM API]
-    J --> Q[Collect support bundle\nLCM logscraper or VAMI bundle]
-    K --> Q
-    L --> Q
-    M --> Q
-    N --> Q
-    O --> Q
-    P --> Q
-    Q --> R[Open VMware SR\nmysupport.vmware.com]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P action
-    class Q,R escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+C -> H
+I -> J
+I -> K
+I -> L
+D -> M
+E -> N
+F -> O
+G -> P
+J -> Q
+K -> Q
+L -> Q
+M -> Q
+N -> Q
+O -> Q
+P -> Q
+Q -> R
 ```
 
 ```d2

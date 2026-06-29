@@ -10,24 +10,27 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph TD
-    A([Cluster Layer]) --> B[API endpoint hardening\nAudit logging enabled\netcd encryption on]
-    C([Node Layer]) --> D[RHCOS immutable OS\nSELinux enforcing\nNo SSH by default]
-    E([Workload Layer]) --> F[SCC restricted-v2\nNetworkPolicy deny-all\nResource limits required]
-    G([Supply Chain Layer]) --> H[Image signing cosign\nImageContentSourcePolicy\nNo :latest in production]
+```d2
+direction: right
 
-    B --> I([Hardened Cluster])
-    D --> I
-    F --> I
-    H --> I
+A: "Cluster Layer" {shape: rectangle}
+B: "API endpoint hardening\nAudit logging enabled\netcd encryption on" {shape: rectangle}
+C: "Node Layer" {shape: rectangle}
+D: "RHCOS immutable OS\nSELinux enforcing\nNo SSH by default" {shape: rectangle}
+E: "Workload Layer" {shape: rectangle}
+F: "SCC restricted-v2\nNetworkPolicy deny-all\nResource limits required" {shape: rectangle}
+G: "Supply Chain Layer" {shape: rectangle}
+H: "Image signing cosign\nImageContentSourcePolicy\nNo :latest in production" {shape: rectangle}
+I: "Hardened Cluster" {shape: rectangle}
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef layer fill:#7c3aed,color:#fff
-    classDef result fill:#15803d,color:#fff
-    class A,C,E,G dark
-    class B,D,F,H layer
-    class I result
+A -> B
+C -> D
+E -> F
+G -> H
+B -> I
+D -> I
+F -> I
+H -> I
 ```
 
 ```d2

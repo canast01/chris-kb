@@ -24,23 +24,24 @@ GitHub Actions procedures: creating workflows, configuring environments, managin
 
 ## Workflows
 
-```mermaid
-flowchart TD
-    trigger(["Trigger Event\npush / pull_request\nschedule / workflow_dispatch"])
-    runner["Runner\nubuntu-24.04\nself-hosted"]
-    jobA["Job: build\nCheckout → Install → Test → Build"]
-    jobB["Job: test\nmatrix: OS × Python version"]
-    artifacts["Artifacts\ndist/ packages\ntest reports"]
-    jobC["Job: publish\nneeds: build\nenvironment: pypi"]
-    deploy["Deploy\n./deploy.sh\nor OIDC cloud publish"]
+```d2
+direction: right
 
-    trigger --> runner
-    runner --> jobA
-    runner --> jobB
-    jobA --> artifacts
-    artifacts --> jobC
-    jobB -->|"all matrix legs pass"| jobC
-    jobC --> deploy
+trigger: "Trigger Event\npush / pull_request\nschedule / workflow_dispatch" {shape: rectangle}
+runner: "Runner\nubuntu-24.04\nself-hosted" {shape: rectangle}
+jobA: "Job: build\nCheckout → Install → Test → Build" {shape: rectangle}
+jobB: "Job: test\nmatrix: OS × Python version" {shape: rectangle}
+artifacts: "Artifacts\ndist/ packages\ntest reports" {shape: rectangle}
+jobC: "Job: publish\nneeds: build\nenvironment: pypi" {shape: rectangle}
+deploy: "Deploy\n./deploy.sh\nor OIDC cloud publish" {shape: rectangle}
+
+trigger -> runner
+runner -> jobA
+runner -> jobB
+jobA -> artifacts
+artifacts -> jobC
+jobB -> jobC
+jobC -> deploy
 ```
 
 ```bash

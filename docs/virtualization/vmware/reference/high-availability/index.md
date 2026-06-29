@@ -65,30 +65,31 @@ The passive node is warm and ready but does not serve traffic until a failover e
 
 A failure domain is the set of components that share a single point of failure. HA design means distributing workloads across independent failure domains so that no single event takes down a complete service.
 
-```mermaid
-graph TD
-    Site["Site Failure Domain"]
-    PDU_A["PDU A"]
-    PDU_B["PDU B"]
-    Rack_A["Rack A"]
-    Rack_B["Rack B"]
-    Rack_C["Rack C (different PDU)"]
-    SW_ToR_A["ToR Switch A"]
-    SW_ToR_B["ToR Switch B"]
-    Host1["ESXi Host 1"]
-    Host2["ESXi Host 2"]
-    Host3["ESXi Host 3"]
+```d2
+direction: right
 
-    Site --> PDU_A
-    Site --> PDU_B
-    PDU_A --> Rack_A
-    PDU_A --> Rack_B
-    PDU_B --> Rack_C
-    Rack_A --> SW_ToR_A
-    Rack_B --> SW_ToR_B
-    SW_ToR_A --> Host1
-    SW_ToR_A --> Host2
-    SW_ToR_B --> Host3
+Site: "Site Failure Domain" {shape: rectangle}
+PDU_A: "PDU A" {shape: rectangle}
+PDU_B: "PDU B" {shape: rectangle}
+Rack_A: "Rack A" {shape: rectangle}
+Rack_B: "Rack B" {shape: rectangle}
+Rack_C: "Rack C (different PDU" {shape: rectangle}
+SW_ToR_A: "ToR Switch A" {shape: rectangle}
+SW_ToR_B: "ToR Switch B" {shape: rectangle}
+Host1: "ESXi Host 1" {shape: rectangle}
+Host2: "ESXi Host 2" {shape: rectangle}
+Host3: "ESXi Host 3" {shape: rectangle}
+
+Site -> PDU_A
+Site -> PDU_B
+PDU_A -> Rack_A
+PDU_A -> Rack_B
+PDU_B -> Rack_C
+Rack_A -> SW_ToR_A
+Rack_B -> SW_ToR_B
+SW_ToR_A -> Host1
+SW_ToR_A -> Host2
+SW_ToR_B -> Host3
 ```
 ```text
 ┌─────────────────────────────── Architecture — High Availability Design ───────────────────────────────┐
@@ -150,26 +151,26 @@ Separate traffic types onto dedicated VMkernel ports with dedicated uplinks:
 
 ### Dual Top-of-Rack Topology
 
-```mermaid
-graph TD
-    Core_A["Core Switch A\n(Cisco Nexus 9504)"]
-    Core_B["Core Switch B\n(Cisco Nexus 9504)"]
-    ToR_A["ToR Switch A\n(Nexus 93180YC-FX)"]
-    ToR_B["ToR Switch B\n(Nexus 93180YC-FX)"]
-    H1["ESXi Host 1\n2×25GbE"]
-    H2["ESXi Host 2\n2×25GbE"]
-    H3["ESXi Host 3\n2×25GbE"]
+```d2
+direction: right
 
-    Core_A <-->|"vPC peer-link\n2×100GbE"| Core_B
-    Core_A --> ToR_A & ToR_B
-    Core_B --> ToR_A & ToR_B
-    ToR_A <-->|"vPC"| ToR_B
-    H1 -->|"NIC 1"| ToR_A
-    H1 -->|"NIC 2"| ToR_B
-    H2 -->|"NIC 1"| ToR_A
-    H2 -->|"NIC 2"| ToR_B
-    H3 -->|"NIC 1"| ToR_A
-    H3 -->|"NIC 2"| ToR_B
+Core_A: "Core Switch A\n(Cisco Nexus 9504" {shape: rectangle}
+ToR_A: "ToR Switch A\n(Nexus 93180YC-FX" {shape: rectangle}
+ToR_B: "ToR Switch B\n(Nexus 93180YC-FX" {shape: rectangle}
+Core_B: "Core Switch B\n(Cisco Nexus 9504" {shape: rectangle}
+H1: "ESXi Host 1\n2×25GbE" {shape: rectangle}
+H2: "ESXi Host 2\n2×25GbE" {shape: rectangle}
+H3: "ESXi Host 3\n2×25GbE" {shape: rectangle}
+
+Core_A -> ToR_A
+ToR_A -> ToR_B
+Core_B -> ToR_A
+H1 -> ToR_A
+H1 -> ToR_B
+H2 -> ToR_A
+H2 -> ToR_B
+H3 -> ToR_A
+H3 -> ToR_B
 ```
 
 Cisco vPC (Virtual Port Channel) enables both ToR switches to present a single logical port channel to each host, eliminating Spanning Tree blocking. Both uplinks carry traffic simultaneously.

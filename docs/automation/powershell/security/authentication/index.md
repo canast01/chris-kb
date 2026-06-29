@@ -49,32 +49,30 @@ end note
 
 ## PowerShell Credential Storage and Flow
 
-```mermaid
-graph TD
-    interactiveUser["Interactive Session\n(user present)"]
-    scheduledJob["Scheduled Task\n(unattended)"]
-    prodScript["Production Script\n(enterprise)"]
+```d2
+direction: right
 
-    getCredential["Get-Credential\n(prompt user)"]
-    exportClixml["Export-Clixml\n(DPAPI encrypted .xml)"]
-    importClixml["Import-Clixml\n(decrypt on same machine)"]
-    secretMgmt["SecretManagement\n(Set-Secret / Get-Secret)"]
-    azKeyVault["Azure Key Vault\n(cross-machine)"]
+interactiveUser: "Interactive Session\n(user present" {shape: rectangle}
+getCredential: "Get-Credential\n(prompt user" {shape: rectangle}
+scheduledJob: "Scheduled Task\n(unattended" {shape: rectangle}
+importClixml: "Import-Clixml\n(decrypt on same machine" {shape: rectangle}
+exportClixml: "Export-Clixml\n(DPAPI encrypted .xml" {shape: rectangle}
+prodScript: "Production Script\n(enterprise" {shape: rectangle}
+secretMgmt: "SecretManagement\n(Set-Secret / Get-Secret" {shape: rectangle}
+azKeyVault: "Azure Key Vault\n(cross-machine" {shape: rectangle}
+psCred: "PSCredential object\n($cred" {shape: rectangle}
+cmdlet: "Cmdlet\n(Connect-VIServer,\nInvoke-Command..." {shape: rectangle}
 
-    psCred["PSCredential object\n($cred)"]
-    cmdlet["Cmdlet\n(Connect-VIServer,\nInvoke-Command...)"]
-
-    interactiveUser --> getCredential
-    scheduledJob --> importClixml
-    exportClixml --> importClixml
-    prodScript --> secretMgmt
-    prodScript --> azKeyVault
-
-    getCredential --> psCred
-    importClixml --> psCred
-    secretMgmt --> psCred
-    azKeyVault --> psCred
-    psCred --> cmdlet
+interactiveUser -> getCredential
+scheduledJob -> importClixml
+exportClixml -> importClixml
+prodScript -> secretMgmt
+prodScript -> azKeyVault
+getCredential -> psCred
+importClixml -> psCred
+secretMgmt -> psCred
+azKeyVault -> psCred
+psCred -> cmdlet
 ```
 
 ## Authentication Reference

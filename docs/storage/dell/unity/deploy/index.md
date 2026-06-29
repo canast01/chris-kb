@@ -47,23 +47,6 @@ This guide covers the initial deployment of a Dell Unity XT array from physical 
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Rack and Cable"]
-    s3["Run Unisphere Initial Configuration Wizard"]
-    s4["Configure Network Interfaces"]
-    s5["Create Storage Pools"]
-    s6["Configure iSCSI or FC Host Access"]
-    s7["Create First LUN or File System"]
-    s8["✓ Validate"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 **Hardware checklist:**

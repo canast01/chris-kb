@@ -47,25 +47,28 @@ azure_storage_access_denied -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> D1{VM unreachable —\nNSG rule blocking?}
-    S --> D2{Storage account\naccess denied?}
-    S --> D3{AKS node\nNotReady?}
-    S --> D4{ExpressRoute\nBGP down?}
-    S --> D5{ARM deployment\nfailed — quota or policy?}
-    D1 --> R1[VM Connectivity Issues]
-    D2 --> R2[Azure Storage Access Denied]
-    D3 --> R3[AKS Pod Not Starting]
-    D4 --> R4[NSG Troubleshooting]
-    D5 --> R5[App Service 502/503]
-    R1 --> R6[Azure AD Authentication Errors]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class D1,D2,D3,D4,D5 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "VM Connectivity Issues" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R2: "Azure Storage Access Denied" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R3: "AKS Pod Not Starting" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R4: "NSG Troubleshooting" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R5: "App Service 502/503" {shape: rectangle}
+R6: "Azure AD Authentication Errors" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+
+D1 -> R1
+D2 -> R2
+D3 -> R3
+D4 -> R4
+D5 -> R5
+R1 -> R6
 ```
 
 ---
@@ -82,26 +85,19 @@ graph TD
 
 ## Azure Connectivity Triage
 
-```mermaid
-flowchart TD
-    connFail["VM / Resource connectivity failure"]
-    nsgCheck{"Effective NSG rules\nallow traffic?"}
-    routeCheck{"Effective routes\ncorrect next hop?"}
-    fwCheck{"Azure Firewall / NVA\nrule allows traffic?"}
-    dnsCheck{"DNS resolution\ncorrect IP?"}
-    vmState{"VM running?\nProvisioning Succeeded?"}
-    resolved["Issue identified\nand resolved"]
+```d2
+direction: right
 
-    connFail --> vmState
-    vmState -- No --> resolved
-    vmState -- Yes --> nsgCheck
-    nsgCheck -- Deny found --> resolved
-    nsgCheck -- OK --> routeCheck
-    routeCheck -- Incorrect --> resolved
-    routeCheck -- OK --> fwCheck
-    fwCheck -- Blocked --> resolved
-    fwCheck -- OK --> dnsCheck
-    dnsCheck --> resolved
+connFail: "VM / Resource connectivity failure" {shape: rectangle}
+vmState: "vmState" {shape: rectangle}
+dnsCheck: "dnsCheck" {shape: rectangle}
+resolved: "Issue identified\nand resolved" {shape: rectangle}
+nsgCheck: "nsgCheck" {shape: rectangle}
+routeCheck: "routeCheck" {shape: rectangle}
+fwCheck: "fwCheck" {shape: rectangle}
+
+connFail -> vmState
+dnsCheck -> resolved
 ```
 
 ## VM Connectivity Issues

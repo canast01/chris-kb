@@ -8,7 +8,6 @@ search:
 # Cisco DCNM — Troubleshooting Common Issues
 ![Cisco DCNM — Troubleshooting Common Issues](../../../../assets/san-cisco-cisco-dcnm-troubleshooting-common-issues.svg)
 
-
 ```bash
 # Step 1: Test SSH from DCNM to the switch
 ssh -o ConnectTimeout=5 -o BatchMode=yes dcnm_mgmt@<switch-ip> 'show version' 2>&1
@@ -114,31 +113,39 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A{Switch not\nreachable in DCNM?}
-    S --> B{Fabric discovery\nfailure?}
-    S --> C{SAN Insights not\ncollecting?}
-    S --> D{Performance chart\nblank?}
-    S --> E{DCNM server\ncrash?}
-    A -->|Yes| A1{SSH and SNMP\nreachable?}
-    A1 -->|No| A2[Fix network / firewall\nVerify mgmt IP and creds]
-    A1 -->|Yes| A3[Re-add switch\nCheck SNMP v3 auth settings]
-    A3 --> A4[Fabric and Switch Issues]
-    B -->|Yes| B1[grep discovery.log\nVerify SSH and SNMP v3 creds\nCheck domain ID conflicts]
-    B1 --> B2[Fabric and Switch Issues]
-    C -->|Yes| C1[systemctl status dcnm-pm\nCheck SNMP poll manually\nRestart PM service]
-    C1 --> C2[Performance Issues]
-    D -->|Yes| D1[Check Elasticsearch disk: df -h\nPrune old performance data\nRestart DCNM if Java heap full]
-    D1 --> D2[Performance Issues]
-    E -->|Yes| E1[journalctl DCNM errors\nCheck DB connections\nReview install.log for migration fail]
-    E1 --> E2[Auth and Platform Issues]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A4,B2,C2,D2,E2 section
-    class A,A1,B,C,D,E decision
-    class S start
+```d2
+direction: right
+
+A1: "A1" {shape: rectangle}
+A2: "Fix network / firewall\nVerify mgmt IP and creds" {shape: rectangle}
+A3: "Re-add switch\nCheck SNMP v3 auth settings" {shape: rectangle}
+A4: "Fabric and Switch Issues" {shape: rectangle}
+B: "B" {shape: rectangle}
+B1: "grep discovery.log\nVerify SSH and SNMP v3 creds\nCheck domain ID conflicts" {shape: rectangle}
+B2: "Fabric and Switch Issues" {shape: rectangle}
+C: "C" {shape: rectangle}
+C1: "systemctl status dcnm-pm\nCheck SNMP poll manually\nRestart PM service" {shape: rectangle}
+C2: "Performance Issues" {shape: rectangle}
+D: "D" {shape: rectangle}
+D1: "Check Elasticsearch disk: df -h\nPrune old performance data\nRestart DCNM if Java heap full" {shape: rectangle}
+D2: "Performance Issues" {shape: rectangle}
+E: "E" {shape: rectangle}
+E1: "journalctl DCNM errors\nCheck DB connections\nReview install.log for migration fail" {shape: rectangle}
+E2: "Auth and Platform Issues" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+A: "A" {shape: rectangle}
+
+A1 -> A2
+A1 -> A3
+A3 -> A4
+B -> B1
+B1 -> B2
+C -> C1
+C1 -> C2
+D -> D1
+D1 -> D2
+E -> E1
+E1 -> E2
 ```
 
 ---

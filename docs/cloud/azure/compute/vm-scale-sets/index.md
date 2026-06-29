@@ -14,23 +14,22 @@ Azure Virtual Machine Scale Sets (VMSS) allow you to deploy and manage a group o
 
 ## VMSS Autoscale Flow
 
-```mermaid
-flowchart LR
-    monitor["Azure Monitor\nCPU · custom metrics"]
-    autoscaleEngine["Autoscale Engine\nevaluates rules every 1 min"]
-    scaleOut{"Scale Out\ncondition met?"}
-    scaleIn{"Scale In\ncondition met?"}
-    addInstances["Add Instances\noverprovision + remove excess"]
-    removeInstances["Remove Instances\ncooldown period applies"]
-    steady["Steady State\ncurrent capacity maintained"]
+```d2
+direction: right
 
-    monitor --> autoscaleEngine
-    autoscaleEngine --> scaleOut
-    autoscaleEngine --> scaleIn
-    scaleOut -- Yes --> addInstances --> steady
-    scaleOut -- No --> steady
-    scaleIn -- Yes --> removeInstances --> steady
-    scaleIn -- No --> steady
+monitor: "Azure Monitor\nCPU · custom metrics" {shape: rectangle}
+autoscaleEngine: "Autoscale Engine\nevaluates rules every 1 min" {shape: rectangle}
+scaleOut: "scaleOut" {shape: rectangle}
+scaleIn: "scaleIn" {shape: rectangle}
+addInstances: "Add Instances\noverprovision + remove excess" {shape: rectangle}
+steady: "Steady State\ncurrent capacity maintained" {shape: rectangle}
+removeInstances: "Remove Instances\ncooldown period applies" {shape: rectangle}
+
+monitor -> autoscaleEngine
+autoscaleEngine -> scaleOut
+autoscaleEngine -> scaleIn
+addInstances -> steady
+removeInstances -> steady
 ```
 
 ## Core Concepts

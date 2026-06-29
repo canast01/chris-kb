@@ -23,21 +23,38 @@ Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths 
 
 ## Incident Triage
 
-```mermaid
-flowchart TD
-    A([Host I/O error or path loss]) --> B["powermt display dev=all\nIdentify dead paths"]
-    B --> C{"Policy = CLAROpt?"}
-    C -->|No| D["powermt set policy=CLAROpt class=all\npowermt save"]
-    C -->|Yes| E["powermt restore\nRetry dead paths"]
-    D --> E
-    E --> F{"Dead paths\nrecovered?"}
-    F -->|Yes| G(["Monitor — issue resolved"])
-    F -->|No| H{"HBA port\nin dead state?"}
-    H -->|Yes| I["Check fabric switch port\nCheck cable / SFP"]
-    H -->|No| J{"paths unlic?"}
-    J -->|Yes| K["powermt check_registration\nRe-apply license key"]
-    J -->|No| L["Verify array LUN masking\nCheck fabric zoning"]
-    I & K & L --> M(["Escalate to SAN/Storage/Dell support"])
+```d2
+direction: right
+
+A: "Host I/O error or path loss" {shape: rectangle}
+B: "powermt display dev=all\nIdentify dead paths" {shape: rectangle}
+C: "Policy = CLAROpt?" {shape: rectangle}
+D: "powermt set policy=CLAROpt class=all\npowermt save" {shape: rectangle}
+E: "powermt restore\nRetry dead paths" {shape: rectangle}
+F: "Dead paths\nrecovered?" {shape: rectangle}
+G: "Monitor — issue resolved" {shape: rectangle}
+H: "HBA port\nin dead state?" {shape: rectangle}
+I: "Check fabric switch port\nCheck cable / SFP" {shape: rectangle}
+J: "paths unlic?" {shape: rectangle}
+K: "powermt check_registration\nRe-apply license key" {shape: rectangle}
+L: "Verify array LUN masking\nCheck fabric zoning" {shape: rectangle}
+M: "Escalate to SAN/Storage/Dell support" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+D -> E
+E -> F
+F -> G
+F -> H
+H -> I
+H -> J
+J -> K
+J -> L
+I -> K
+K -> L
+L -> M
 ```
 
 When a host reports I/O errors, elevated latency, or a block device is inaccessible, work through this sequence first.

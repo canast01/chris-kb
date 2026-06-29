@@ -13,46 +13,58 @@ Certificate diagnostic commands: check expiry and SANs with openssl s_client, ve
 *Applies to: Linux (RHEL/Ubuntu) · Windows Server · OpenSSL 3.x · ADCS*
 </div>
 
-```mermaid
-graph TD
-    A([Certificate Issue]) --> B{What type of problem?}
-    B -->|TLS handshake failure in browser or app| C[openssl s_client -connect host:443 -showcerts\nRead: handshake failure, error code, chain presented]
-    B -->|Certificate expired| D[echo | openssl s_client -connect host:443 2>/dev/null | openssl x509 -noout -dates\nCheck notAfter date]
-    B -->|Wrong hostname / SAN mismatch| E[openssl x509 -in cert.pem -noout -text | grep -A5 'Subject Alternative'\nVerify hostname appears in SAN list]
-    B -->|Chain validation error / untrusted CA| F[openssl s_client -connect host:443 -showcerts\nCount BEGIN CERTIFICATE blocks in output]
-    B -->|Windows cert store issue| G[Get-ChildItem Cert:\LocalMachine\My\nTest-Certificate; certutil -verify]
-    B -->|ADCS CA not issuing certs| H[certutil -ping\nsc query certsvc]
-    B -->|OCSP or CRL check failing| I[openssl s_client -connect host:443 -status\ngrep OCSP Response]
-    C --> J{Error in handshake?}
-    J -->|ssl_error_rx_record_too_long| K[Check if HTTPS app is actually serving plain HTTP\nTry: curl -v http://host:443]
-    J -->|certificate verify failed| L[Check chain and root CA trust\nopenssl verify -CAfile ca-bundle.pem cert.pem]
-    J -->|hostname mismatch| E
-    D --> M{notAfter in the past?}
-    M -->|Yes| N[Replace certificate immediately\nRenew from CA; update on all servers]
-    M -->|Within 30 days| O[Plan rotation now\nSet calendar reminder]
-    F --> P{How many certs?}
-    P -->|Only 1 END CERTIFICATE| Q[Server not sending intermediate\nAdd intermediate to server TLS config]
-    P -->|2+ but still fails| R[Check root CA in client trust store\nopenssl verify -CAfile root.pem -untrusted int.pem cert.pem]
-    G --> S[certutil -verify cert.cer\nCheck chain and revocation in output]
-    H --> T[Check ADCS event log\nEvent Viewer → Application → CertificationAuthority]
-    I --> U[Check CRL freshness\nopenssl crl -in IssuingCA.crl -inform DER -noout -text | grep Next Update]
-    J --> V[Collect diagnostic output\nopenssl s_client -connect host:443 -showcerts > diag.txt 2>&1]
-    K --> V
-    L --> V
-    N --> V
-    O --> V
-    Q --> V
-    R --> V
-    S --> V
-    T --> V
-    U --> V
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,J,M,P dark
-    class C,D,E,F,G,H,I,K,L,N,O,Q,R,S,T,U action
-    class V escalate
+B: "B" {shape: rectangle}
+C: "openssl s_client -connect host:443 -showcerts\nRead: handshake failure, error code, chain presented" {shape: rectangle}
+D: "echo  openssl x509 -noout -dates\nCheck notAfter date" {shape: rectangle}
+E: "openssl x509 -in cert.pem -noout -text | grep -A5" {shape: rectangle}
+F: "openssl s_client -connect host:443 -showcerts\nCount BEGIN CERTIFICATE blocks in output" {shape: rectangle}
+G: "Get-ChildItem Cert:\LocalMachine\My\nTest-Certificate; certutil -verify" {shape: rectangle}
+H: "certutil -ping\nsc query certsvc" {shape: rectangle}
+I: "openssl s_client -connect host:443 -status\ngrep OCSP Response" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Check if HTTPS app is actually serving plain HTTP\nTry: curl -v http://host:443" {shape: rectangle}
+L: "Check chain and root CA trust\nopenssl verify -CAfile ca-bundle.pem cert.pem" {shape: rectangle}
+M: "M" {shape: rectangle}
+N: "Replace certificate immediately\nRenew from CA; update on all servers" {shape: rectangle}
+O: "Plan rotation now\nSet calendar reminder" {shape: rectangle}
+P: "P" {shape: rectangle}
+Q: "Server not sending intermediate\nAdd intermediate to server TLS config" {shape: rectangle}
+R: "Check root CA in client trust store\nopenssl verify -CAfile root.pem -untrusted int.pem cert.pem" {shape: rectangle}
+S: "certutil -verify cert.cer\nCheck chain and revocation in output" {shape: rectangle}
+T: "Check ADCS event log\nEvent Viewer → Application → CertificationAuthority" {shape: rectangle}
+U: "Check CRL freshness\nopenssl crl -in IssuingCA.crl -inform DER -noout -text | grep Next Update" {shape: rectangle}
+V: "V" {shape: rectangle}
+A: "Certificate Issue" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+B -> I
+J -> K
+J -> L
+J -> E
+M -> N
+M -> O
+P -> Q
+P -> R
+G -> S
+H -> T
+I -> U
+K -> V
+L -> V
+N -> V
+O -> V
+Q -> V
+R -> V
+S -> V
+T -> V
+U -> V
 ```
 
 ```d2

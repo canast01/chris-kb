@@ -14,37 +14,41 @@ PowerPath diagnostic commands: check path state and count with <code>powermt dis
 </div>
 ![PowerPath — Diagnostics](../../../../assets/storage-dell-powerpath-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "PowerPath issue or path loss" {shape: rectangle}
+B: "powermt display dev=all\nCount dead vs alive paths" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "powermt check_registration\nConfirm license valid and current" {shape: rectangle}
+E: "powermt display ports class=all\nIdentify HBA ports with dead paths" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "lsmod  grep emcpower: kern log\nSystemctl status PowerPath: service" {shape: rectangle}
+H: "Check fabric layer\nBrocade nsshow: initiator visible?\nCisco: show fcns database" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Reinstall or reload emcp module\nCheck kernel version compatibility\nmodinfo emcp | grep version" {shape: rectangle}
+K: "/sys/class/fc_host: port state\nCheck link_failure_count value" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Check FC zone configuration\nZone must contain initiator WWN\nCheck portlogshow for FLOGI events" {shape: rectangle}
+N: "Check array side\nConfirm FA port is Online\nConfirm host WWN is registered" {shape: rectangle}
+O: "powermt restore\nVerify: powermt display dev=all" {shape: rectangle}
+P: "Collect support bundle\nSee Step 6 for collection script\nOpen Dell support case" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([PowerPath issue or path loss]) --> B[powermt display dev=all\nCount dead vs alive paths]
-    B --> C{Dead paths?}
-    C -->|No dead paths| D[powermt check_registration\nConfirm license valid and current]
-    C -->|Dead paths found| E[powermt display ports class=all\nIdentify HBA ports with dead paths]
-    E --> F{HBA port state?}
-    F -->|Port offline or missing| G[lsmod | grep emcp: module loaded?\ndmesg | grep emcpower: kern log\nSystemctl status PowerPath: service]
-    F -->|Port online| H[Check fabric layer\nBrocade nsshow: initiator visible?\nCisco: show fcns database]
-    G --> I{Module loaded?}
-    I -->|No| J[Reinstall or reload emcp module\nCheck kernel version compatibility\nmodinfo emcp | grep version]
-    I -->|Yes| K[/sys/class/fc_host: port state\nCheck link_failure_count value]
-    H --> L{Initiator in name server?}
-    L -->|No| M[Check FC zone configuration\nZone must contain initiator WWN\nCheck portlogshow for FLOGI events]
-    L -->|Yes| N[Check array side\nConfirm FA port is Online\nConfirm host WWN is registered]
-    J --> O[powermt restore\nVerify: powermt display dev=all]
-    K --> O
-    M --> O
-    N --> O
-    D --> O
-    O --> P[Collect support bundle\nSee Step 6 for collection script\nOpen Dell support case]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F,I,L dark
-    class B,D,E,G,H,J,K,M,N,O action
-    class P escalate
+A -> B
+C -> D
+C -> E
+F -> G
+F -> H
+I -> J
+I -> K
+L -> M
+L -> N
+J -> O
+K -> O
+M -> O
+N -> O
+D -> O
+O -> P
 ```
 
 ```d2

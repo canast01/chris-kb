@@ -40,18 +40,23 @@ WS --> USR: Access granted
 
 Active Directory is organised in a Forest → Domain → OU hierarchy:
 
-```mermaid
-graph TB
-  FOREST["AD Forest\n(security boundary)"] --> ROOT["Forest Root Domain\ncorp.example.com"]
-  ROOT --> DC1["DC-01 Site A\nPDC · RID · Infra Master"]
-  ROOT --> DC2["DC-02 Site A\nGlobal Catalog"]
-  ROOT -->|"AD replication"| DC3["DC-03 · DC-04\nSite B — replica DCs"]
-  ROOT --> CHILD["Child Domain\ndivision.corp.example.com"]
-  CHILD --> CDC["Child DC"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class DC1,DC2,DC3,CDC ctrl
-  class FOREST,ROOT,CHILD mgmt
+```d2
+direction: right
+
+FOREST: "AD Forest\n(security boundary" {shape: rectangle}
+ROOT: "Forest Root Domain\ncorp.example.com" {shape: rectangle}
+DC1: "DC-01 Site A\nPDC · RID · Infra Master" {shape: rectangle}
+DC2: "DC-02 Site A\nGlobal Catalog" {shape: rectangle}
+DC3: "DC-03 · DC-04\nSite B — replica DCs" {shape: rectangle}
+CHILD: "Child Domain\ndivision.corp.example.com" {shape: rectangle}
+CDC: "Child DC" {shape: rectangle}
+
+FOREST -> ROOT
+ROOT -> DC1
+ROOT -> DC2
+ROOT -> DC3
+ROOT -> CHILD
+CHILD -> CDC
 ```
 
 The forest is the ultimate security boundary — Kerberos trust does not cross forest boundaries by default. Child domains share the forest schema and global catalog but have separate administrative boundaries.
@@ -110,33 +115,25 @@ Get-ADForest | Select-Object SchemaMaster, DomainNamingMaster
 
 The KCC (Knowledge Consistency Checker) auto-generates the replication topology. Intra-site replication is frequent and near-real-time; inter-site replication is scheduled via site links.
 
-```mermaid
-graph TD
-    siteA["Site A — London"]
-    siteB["Site B — New York"]
-    siteC["Site C — Singapore"]
+```d2
+direction: right
 
-    dc01["DC-01\nPDC Emulator\nRID Master"]
-    dc02["DC-02\nGlobal Catalog"]
-    dc03["DC-03\nSite A replica"]
-    dc04["DC-04\nGlobal Catalog"]
-    dc05["DC-05\nSite B replica"]
-    dc06["DC-06\nSite C GC"]
+siteA: "Site A — London" {shape: rectangle}
+dc01: "DC-01\nPDC Emulator\nRID Master" {shape: rectangle}
+dc02: "DC-02\nGlobal Catalog" {shape: rectangle}
+dc03: "DC-03\nSite A replica" {shape: rectangle}
+siteB: "Site B — New York" {shape: rectangle}
+dc04: "DC-04\nGlobal Catalog" {shape: rectangle}
+dc05: "DC-05\nSite B replica" {shape: rectangle}
+siteC: "Site C — Singapore" {shape: rectangle}
+dc06: "DC-06\nSite C GC" {shape: rectangle}
 
-    siteA --> dc01
-    siteA --> dc02
-    siteA --> dc03
-    siteB --> dc04
-    siteB --> dc05
-    siteC --> dc06
-
-    dc01 <-->|"intra-site\nRPC — frequent"| dc02
-    dc01 <-->|"intra-site\nRPC — frequent"| dc03
-    dc04 <-->|"intra-site"| dc05
-
-    dc01 <-->|"inter-site link\nscheduled interval"| dc04
-    dc01 <-->|"inter-site link\nscheduled interval"| dc06
-    dc04 <-->|"inter-site link"| dc06
+siteA -> dc01
+siteA -> dc02
+siteA -> dc03
+siteB -> dc04
+siteB -> dc05
+siteC -> dc06
 ```
 
 ```powershell

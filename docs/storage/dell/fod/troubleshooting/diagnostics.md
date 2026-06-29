@@ -14,33 +14,36 @@ Dell Flex on Demand diagnostic commands: inspect the FoD license key file, verif
 </div>
 ![FOD — Diagnostics](../../../../assets/storage-dell-fod-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "FoD Key Issue" {shape: rectangle}
+B: "symlicense -sid SID list\nCheck current licenses" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "grep VENDOR_SN fod-key.lic\nCompare to array SN" {shape: rectangle}
+E: "symlicense preview\nDry-run install check" {shape: rectangle}
+F: "Check ExpiryDate in .lic\nCheck term renewal status" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Contact Dell Licensing\nRequest key re-issue" {shape: rectangle}
+I: "Check firmware version\nsymcfg list -v grep firmware" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Check firmware minimum\nand feature flag state" {shape: rectangle}
+L: "Contact Dell TAC\nwith symlicense output" {shape: rectangle}
+M: "Renew via Dell portal\nlicensing.dell.com" {shape: rectangle}
+N: "Open Dell SR\nsupport.dell.com — route to Licensing" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([FoD Key Issue]) --> B[symlicense -sid SID list\nCheck current licenses]
-    B --> C{Issue type?}
-    C -->|Key rejected on install| D[grep VENDOR_SN fod-key.lic\nCompare to array SN]
-    C -->|Feature not activating| E[symlicense preview\nDry-run install check]
-    C -->|Key expired| F[Check ExpiryDate in .lic\nCheck term renewal status]
-    D --> G{SN match?}
-    G -->|Mismatch| H[Contact Dell Licensing\nRequest key re-issue]
-    G -->|Match| I[Check firmware version\nsymcfg list -v grep firmware]
-    E --> J{Preview result?}
-    J -->|Key valid| K[Check firmware minimum\nand feature flag state]
-    J -->|Preview fails| L[Contact Dell TAC\nwith symlicense output]
-    F --> M[Renew via Dell portal\nlicensing.dell.com]
-    I --> L
-    K --> L
-    H --> N[Open Dell SR\nsupport.dell.com — route to Licensing]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,G,J dark
-    class B,D,E,F,H,I,K,M action
-    class L,N escalate
+A -> B
+C -> D
+C -> E
+C -> F
+G -> H
+G -> I
+J -> K
+J -> L
+F -> M
+I -> L
+K -> L
+H -> N
 ```
 
 ```d2

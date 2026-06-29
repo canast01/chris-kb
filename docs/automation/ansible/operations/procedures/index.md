@@ -82,24 +82,25 @@ Ansible operational procedures: deploying playbooks, managing inventory sources,
 
 ## Ansible Tower / AWX Job Launch Sequence
 
-```mermaid
-graph LR
-    operator["Operator\n(User / API / Schedule)"]
-    jobTemplate["Job Template\n(playbook + inventory + creds)"]
-    awxQueue["AWX/Tower\nJob Queue"]
-    awxExecutor["AWX Executor\n(container/fork)"]
-    inventorySource["Inventory Source\n(dynamic sync)"]
-    vaultCreds["Vault / Machine\nCredentials"]
-    managed["Managed Hosts\n(SSH)"]
-    jobHistory["Job History\n& Artifacts"]
+```d2
+direction: right
 
-    operator --> jobTemplate
-    jobTemplate --> awxQueue
-    awxQueue --> awxExecutor
-    awxExecutor --> inventorySource
-    awxExecutor --> vaultCreds
-    awxExecutor -->|ansible-playbook| managed
-    awxExecutor --> jobHistory
+operator: "Operator\n(User / API / Schedule" {shape: rectangle}
+jobTemplate: "Job Template\n(playbook + inventory + creds" {shape: rectangle}
+awxQueue: "AWX/Tower\nJob Queue" {shape: rectangle}
+awxExecutor: "AWX Executor\n(container/fork" {shape: rectangle}
+inventorySource: "Inventory Source\n(dynamic sync" {shape: rectangle}
+vaultCreds: "Vault / Machine\nCredentials" {shape: rectangle}
+managed: "Managed Hosts\n(SSH" {shape: rectangle}
+jobHistory: "Job History\n& Artifacts" {shape: rectangle}
+
+operator -> jobTemplate
+jobTemplate -> awxQueue
+awxQueue -> awxExecutor
+awxExecutor -> inventorySource
+awxExecutor -> vaultCreds
+awxExecutor -> managed
+awxExecutor -> jobHistory
 ```
 
 ### Tags

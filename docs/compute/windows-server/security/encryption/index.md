@@ -43,33 +43,31 @@ BitLocker provides full-volume encryption for OS and data drives. On servers, it
 
 ### BitLocker Unlock Flow
 
-```mermaid
-flowchart TD
-    powerOn["Server Powers On\nUEFI POST"]
-    tpmCheck{"TPM present\nand healthy?"}
-    pcrMeasure["TPM measures boot components\nUEFI · MBR · bootloader · BCD"]
-    pcrMatch{"PCR values match\nexpected sealed state?"}
-    pinPrompt{"PIN protector\nconfigured?"}
-    pinEntry["Prompt for\nStartup PIN"]
-    networkUnlock{"Network Unlock\nconfigured + on corp network?"}
-    wdsUnlock["WDS server provides\nNetwork Unlock key"]
-    vmkRelease["TPM releases\nVolume Master Key (VMK)"]
-    fvekDecrypt["VMK decrypts\nFull Volume Encryption Key (FVEK)"]
-    driveUnlocked["Drive Unlocked\nOS boots normally"]
-    recoveryPrompt["BitLocker Recovery\nPrompt for 48-digit key"]
-    adEscrow["Retrieve key from\nActive Directory"]
+```d2
+direction: right
 
-    powerOn --> tpmCheck
-    tpmCheck -- No --> recoveryPrompt
-    tpmCheck -- Yes --> pcrMeasure --> pcrMatch
-    pcrMatch -- No --> recoveryPrompt
-    pcrMatch -- Yes --> pinPrompt
-    pinPrompt -- Yes --> pinEntry --> networkUnlock
-    pinPrompt -- No --> networkUnlock
-    networkUnlock -- Yes --> wdsUnlock --> vmkRelease
-    networkUnlock -- No --> vmkRelease
-    vmkRelease --> fvekDecrypt --> driveUnlocked
-    recoveryPrompt --> adEscrow --> driveUnlocked
+powerOn: "Server Powers On\nUEFI POST" {shape: rectangle}
+tpmCheck: "tpmCheck" {shape: rectangle}
+pcrMeasure: "TPM measures boot components\nUEFI · MBR · bootloader · BCD" {shape: rectangle}
+pcrMatch: "pcrMatch" {shape: rectangle}
+pinEntry: "Prompt for\nStartup PIN" {shape: rectangle}
+networkUnlock: "networkUnlock" {shape: rectangle}
+wdsUnlock: "WDS server provides\nNetwork Unlock key" {shape: rectangle}
+vmkRelease: "TPM releases\nVolume Master Key (VMK" {shape: rectangle}
+fvekDecrypt: "VMK decrypts\nFull Volume Encryption Key (FVEK" {shape: rectangle}
+driveUnlocked: "Drive Unlocked\nOS boots normally" {shape: rectangle}
+recoveryPrompt: "BitLocker Recovery\nPrompt for 48-digit key" {shape: rectangle}
+adEscrow: "Retrieve key from\nActive Directory" {shape: rectangle}
+pinPrompt: "pinPrompt" {shape: rectangle}
+
+powerOn -> tpmCheck
+pcrMeasure -> pcrMatch
+pinEntry -> networkUnlock
+wdsUnlock -> vmkRelease
+vmkRelease -> fvekDecrypt
+fvekDecrypt -> driveUnlocked
+recoveryPrompt -> adEscrow
+adEscrow -> driveUnlocked
 ```
 
 ### Enable BitLocker on Data Drives

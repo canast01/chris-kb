@@ -21,19 +21,18 @@ Isolation eliminates these lateral movement paths.
 
 ## Network Isolation Architecture
 
-```mermaid
-graph TB
-    PROD["Production Environment\n(potentially compromised)"]
-    JUMP["Jump Host\n(IRE management access\nMFA required)"]
-    IRE["Isolated Recovery Environment\n(dedicated VLANs / VNet)"]
-    STORE["Immutable Backup Copy\n(air-gapped or vault-locked)"]
-    FW["Perimeter Firewall\n(default deny from PROD)"]
+```d2
+direction: right
 
-    PROD -.->|No direct access| IRE
-    JUMP --> FW
-    FW --> IRE
-    STORE --> IRE
-    IRE -.->|No route back to PROD| PROD
+JUMP: "Jump Host\n(IRE management access\nMFA required" {shape: rectangle}
+FW: "Perimeter Firewall\n(default deny from PROD" {shape: rectangle}
+IRE: "Isolated Recovery Environment\n(dedicated VLANs / VNet" {shape: rectangle}
+STORE: "Immutable Backup Copy\n(air-gapped or vault-locked" {shape: rectangle}
+PROD: "Production Environment\n(potentially compromised" {shape: rectangle}
+
+JUMP -> FW
+FW -> IRE
+STORE -> IRE
 ```
 
 ## Isolation Verification Checklist

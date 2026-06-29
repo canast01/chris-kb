@@ -129,22 +129,41 @@ Health Checks reference covering Daily Checks, Weekly Health Check, Health Check
 
 ![Daily Checks](../../../../assets/storage-dell-data-domain-hc-daily-checks.svg)
 
-```mermaid
-flowchart TD
-    A([Daily Health Check]) --> B["alerts show current\nAny active alerts?"]
-    B --> C{"Critical or\nhardware alert?"}
-    C -->|Yes| D["disk show state\nenclosure show hardware\nOpen Dell support case"]
-    C -->|No| E["filesys show space\nPost-comp < 80%?"]
-    E --> F{"Capacity\n> 80%?"}
-    F -->|Yes| G["filesys clean start\nPlan capacity expansion"]
-    F -->|No| H["replication show\nAll contexts Normal?"]
-    H --> I{"Context in Error\nor high lag?"}
-    I -->|Yes| J["replication show errors\nCheck network\nreplication disable + enable"]
-    I -->|No| K["ddboost show clients\nAll backup servers connected?"]
-    K --> L{"Client\ndisconnected?"}
-    L -->|Yes| M["ddboost status\nReset credentials if needed"]
-    L -->|No| N([All checks passed])
-    D & G & J & M --> N
+```d2
+direction: right
+
+A: "Daily Health Check" {shape: rectangle}
+B: "alerts show current\nAny active alerts?" {shape: rectangle}
+C: "Critical or\nhardware alert?" {shape: rectangle}
+D: "disk show state\nenclosure show hardware\nOpen Dell support case" {shape: rectangle}
+E: "filesys show space\nPost-comp < 80%?" {shape: rectangle}
+F: "Capacity\n> 80%?" {shape: rectangle}
+G: "filesys clean start\nPlan capacity expansion" {shape: rectangle}
+H: "replication show\nAll contexts Normal?" {shape: rectangle}
+I: "Context in Error\nor high lag?" {shape: rectangle}
+J: "replication show errors\nCheck network\nreplication disable + enable" {shape: rectangle}
+K: "ddboost show clients\nAll backup servers connected?" {shape: rectangle}
+L: "Client\ndisconnected?" {shape: rectangle}
+M: "ddboost status\nReset credentials if needed" {shape: rectangle}
+N: "All checks passed" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+E -> F
+F -> G
+F -> H
+H -> I
+I -> J
+I -> K
+K -> L
+L -> M
+L -> N
+D -> G
+G -> J
+J -> M
+M -> N
 ```
 
 ## Run This Routine

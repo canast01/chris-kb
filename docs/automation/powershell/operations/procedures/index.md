@@ -81,29 +81,30 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
 
 ## PowerShell Error Handling Flow
 
-```mermaid
-flowchart TD
-    scriptStart["Script Execution\n($ErrorActionPreference = Stop)"]
-    tryBlock["try { ... }"]
-    cmdRun["Cmdlet / Command\nExecutes"]
-    success["Command succeeds\n(continue)"]
-    termErr["Terminating Error\nthrown"]
-    catchBlock["catch { ... }\n(inspect $_.Exception)"]
-    logError["Write-Error / Out-File\n(log error to file)"]
-    sendAlert["Send-MailMessage\nor webhook alert"]
-    finallyBlock["finally { ... }\n(cleanup / Stop-Transcript)"]
-    exitCode["exit 1\n(non-zero signals failure)"]
+```d2
+direction: right
 
-    scriptStart --> tryBlock
-    tryBlock --> cmdRun
-    cmdRun -->|OK| success
-    cmdRun -->|Error| termErr
-    termErr --> catchBlock
-    catchBlock --> logError
-    logError --> sendAlert
-    sendAlert --> finallyBlock
-    success --> finallyBlock
-    finallyBlock --> exitCode
+scriptStart: "Script Execution\n($ErrorActionPreference = Stop" {shape: rectangle}
+tryBlock: "try { ... }" {shape: rectangle}
+cmdRun: "Cmdlet / Command\nExecutes" {shape: rectangle}
+success: "Command succeeds\n(continue" {shape: rectangle}
+termErr: "Terminating Error\nthrown" {shape: rectangle}
+catchBlock: "catch { ... }\n(inspect $_.Exception" {shape: rectangle}
+logError: "Write-Error / Out-File\n(log error to file" {shape: rectangle}
+sendAlert: "Send-MailMessage\nor webhook alert" {shape: rectangle}
+finallyBlock: "finally { ... }\n(cleanup / Stop-Transcript" {shape: rectangle}
+exitCode: "exit 1\n(non-zero signals failure" {shape: rectangle}
+
+scriptStart -> tryBlock
+tryBlock -> cmdRun
+cmdRun -> success
+cmdRun -> termErr
+termErr -> catchBlock
+catchBlock -> logError
+logError -> sendAlert
+sendAlert -> finallyBlock
+success -> finallyBlock
+finallyBlock -> exitCode
 ```
 
 ### Scheduled Tasks for Automated Reports

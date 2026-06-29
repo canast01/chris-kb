@@ -7,16 +7,12 @@ search:
 ---
 # ONTAP — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Incident Triage Decision Tree, Quick Reference, Volume Full / Write Errors, Aggregate Capacity Critical, SnapMirror Lag / Unhealthy Relationship and 6 more sections.
 
 *Applies to: ONTAP 9.x*
 </div>
 ![ONTAP — Common Issues](../../../../assets/storage-netapp-ontap-troubleshooting-common-issues.svg)
-
-
-
 
 ```d2
 direction: down
@@ -46,34 +42,46 @@ snapmirror_lag_unhealthy_relationshi -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A[Volume offline or write errors]
-    S --> B[NFS/CIFS share inaccessible]
-    S --> C[Aggregate capacity critical]
-    S --> D[SnapMirror lag / broken relationship]
-    S --> E[Node takeover not triggering]
-    A --> A1{Volume state online?}
-    A1 -->|No| A2[Bring online — see Volume Full / Write Errors]
-    A1 -->|Yes| A3[Check autogrow and snapshot reserve]
-    B --> B1{Which protocol?}
-    B1 -->|NFS| B2[Check LIF and export policy — see NFS Mount Hangs]
-    B1 -->|CIFS/SMB| B3[Check AD join and CIFS server — see SMB/CIFS Share Inaccessible]
-    C --> C1{Aggregate above 90%?}
-    C1 -->|Yes| C2[Move volumes or add disks — see Aggregate Capacity Critical]
-    C1 -->|No| C3[Check volume snapshot reserves]
-    D --> D1{Relationship healthy?}
-    D1 -->|No| D2[Resume or resync — see SnapMirror Lag / Unhealthy Relationship]
-    D1 -->|Yes| D3[Check throttle and intercluster LIF]
-    E --> E1{Failover enabled?}
-    E1 -->|No| E2[Re-enable failover — see Storage Failover Not Triggering]
-    E1 -->|Yes| E3[Check cluster interconnect and heartbeat]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E2,E3 section
-    class A1,B1,C1,D1,E1 decision
-    class S start
+```d2
+direction: right
+
+S: "What is the symptom?" {shape: rectangle}
+A: "Volume offline or write errors" {shape: rectangle}
+B: "NFS/CIFS share inaccessible" {shape: rectangle}
+C: "Aggregate capacity critical" {shape: rectangle}
+D: "SnapMirror lag / broken relationship" {shape: rectangle}
+E: "Node takeover not triggering" {shape: rectangle}
+A1: "A1" {shape: rectangle}
+A2: "Bring online — see Volume Full / Write Errors" {shape: rectangle}
+A3: "Check autogrow and snapshot reserve" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "Check LIF and export policy — see NFS Mount Hangs" {shape: rectangle}
+B3: "Check AD join and CIFS server — see SMB/CIFS Share Inaccessible" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "Move volumes or add disks — see Aggregate Capacity Critical" {shape: rectangle}
+C3: "Check volume snapshot reserves" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+D2: "Resume or resync — see SnapMirror Lag / Unhealthy Relationship" {shape: rectangle}
+D3: "Check throttle and intercluster LIF" {shape: rectangle}
+E1: "E1" {shape: rectangle}
+E2: "Re-enable failover — see Storage Failover Not Triggering" {shape: rectangle}
+E3: "Check cluster interconnect and heartbeat" {shape: rectangle}
+
+S -> A
+S -> B
+S -> C
+S -> D
+S -> E
+A1 -> A2
+A1 -> A3
+B1 -> B2
+B1 -> B3
+C1 -> C2
+C1 -> C3
+D1 -> D2
+D1 -> D3
+E1 -> E2
+E1 -> E3
 ```
 
 ---
@@ -90,21 +98,37 @@ graph TD
 
 ## Incident Triage Decision Tree
 
-```mermaid
-flowchart TD
-    incident([Incident Reported]) --> clusterOk{"cluster show\nAll nodes healthy?"}
-    clusterOk -->|No| haCheck["storage failover show\nHA takeover active?"]
-    haCheck -->|Yes| waitGiveback["Wait for auto-giveback\nor run manual giveback"]
-    haCheck -->|No| nodeDown["Node down — check\ncluster ping-cluster\nhardware / power"]
-    clusterOk -->|Yes| diskOk{"storage disk show -broken\nAny broken disks?"}
-    diskOk -->|Yes| diskIssue["Check RAID state\nstorage aggregate show-status\nCheck spares available"]
-    diskOk -->|No| volOk{"volume show -state !online\nAny offline volumes?"}
-    volOk -->|Yes| volIssue["Bring volume online\ncheck aggregate state"]
-    volOk -->|No| protocol{"Which protocol is failing?"}
-    protocol -->|NFS| nfsCheck["network interface show\nnfs connected-client show\ncheck export policy"]
-    protocol -->|SMB| smbCheck["vserver cifs show\nvserver cifs domain info\ncheck AD connectivity"]
-    protocol -->|iSCSI| iscsCheck["iscsi session show\nlun mapping show\nmultipath on host"]
-    protocol -->|SnapMirror| smCheck["snapmirror show -health false\ncheck intercluster LIF\ncheck throttle"]
+```d2
+direction: right
+
+incident: "Incident Reported" {shape: rectangle}
+clusterOk: "cluster show\nAll nodes healthy?" {shape: rectangle}
+haCheck: "storage failover show\nHA takeover active?" {shape: rectangle}
+waitGiveback: "Wait for auto-giveback\nor run manual giveback" {shape: rectangle}
+nodeDown: "Node down — check\ncluster ping-cluster\nhardware / power" {shape: rectangle}
+diskOk: "storage disk show -broken\nAny broken disks?" {shape: rectangle}
+diskIssue: "Check RAID state\nstorage aggregate show-status\nCheck spares available" {shape: rectangle}
+volOk: "volume show -state !online\nAny offline volumes?" {shape: rectangle}
+volIssue: "Bring volume online\ncheck aggregate state" {shape: rectangle}
+protocol: "Which protocol is failing?" {shape: rectangle}
+nfsCheck: "network interface show\nnfs connected-client show\ncheck export policy" {shape: rectangle}
+smbCheck: "vserver cifs show\nvserver cifs domain info\ncheck AD connectivity" {shape: rectangle}
+iscsCheck: "iscsi session show\nlun mapping show\nmultipath on host" {shape: rectangle}
+smCheck: "snapmirror show -health false\ncheck intercluster LIF\ncheck throttle" {shape: rectangle}
+
+incident -> clusterOk
+clusterOk -> haCheck
+haCheck -> waitGiveback
+haCheck -> nodeDown
+clusterOk -> diskOk
+diskOk -> diskIssue
+diskOk -> volOk
+volOk -> volIssue
+volOk -> protocol
+protocol -> nfsCheck
+protocol -> smbCheck
+protocol -> iscsCheck
+protocol -> smCheck
 ```
 
 ## Quick Reference

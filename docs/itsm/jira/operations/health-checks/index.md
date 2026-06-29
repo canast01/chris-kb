@@ -43,49 +43,6 @@ run_this_routine -> 2_log_review
 
 ## Health Check Overview
 
-```mermaid
-flowchart TD
-    START([Start Daily Health Check]) --> SVC[Check Service Status]
-
-    SVC --> SVC_OK{All nodes\nrunning?}
-    SVC_OK -- No --> RESTART[Investigate & restart\nfailed node]
-    RESTART --> ALERT_NODE[Alert: Node down]
-    SVC_OK -- Yes --> LOGS[Review Application Logs]
-
-    LOGS --> LOG_ERR{Errors or\nOOM in logs?}
-    LOG_ERR -- Yes --> INVESTIGATE[Investigate stack traces\ncheck heap usage]
-    INVESTIGATE --> ALERT_LOG[Alert: Log anomalies]
-    LOG_ERR -- No --> DISK[Check Disk Space]
-
-    DISK --> DISK_OK{Shared home &\nDB < 80% full?}
-    DISK_OK -- No --> ALERT_DISK[Alert: Disk capacity]
-    DISK_OK -- Yes --> DB[Check DB Connectivity]
-
-    DB --> DB_OK{DB reachable\n& responsive?}
-    DB_OK -- No --> ALERT_DB[Alert: DB issue]
-    DB_OK -- Yes --> SEARCH[Check Search Index]
-
-    SEARCH --> SEARCH_OK{Index\ncurrent?}
-    SEARCH_OK -- No --> REINDEX[Trigger reindex]
-    SEARCH_OK -- Yes --> CLUSTER[Check Cluster Nodes]
-
-    CLUSTER --> CLUSTER_OK{All nodes\nregistered?}
-    CLUSTER_OK -- No --> ALERT_CLUSTER[Alert: Node missing\nfrom cluster]
-    CLUSTER_OK -- Yes --> PERF[Check Response Time]
-
-    PERF --> PERF_OK{P95 < 3s?}
-    PERF_OK -- No --> ALERT_PERF[Alert: Performance\ndegradation]
-    PERF_OK -- Yes --> DONE([Health Check Passed])
-
-    style DONE fill:#2d8a4e,color:#fff
-    style ALERT_NODE fill:#c0392b,color:#fff
-    style ALERT_LOG fill:#c0392b,color:#fff
-    style ALERT_DISK fill:#e67e22,color:#fff
-    style ALERT_DB fill:#c0392b,color:#fff
-    style ALERT_CLUSTER fill:#c0392b,color:#fff
-    style ALERT_PERF fill:#e67e22,color:#fff
-```
-
 ## Run This Routine
 
 1. **Jira service status** — Run `systemctl status jira` on the app server; confirm the service is `active (running)`; if not, check the process list with `ps aux | grep jira` and review `catalina.out` for the last recorded error before attempting a restart.

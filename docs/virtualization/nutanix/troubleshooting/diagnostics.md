@@ -15,43 +15,52 @@ Nutanix diagnostic commands: run NCC health checks across the cluster, inspect n
 </div>
 ![Nutanix — Diagnostics](../../../assets/virtualization-nutanix-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "ncc health_checks run_all\ncluster status" {shape: rectangle}
+D: "ncli disk ls for disk errors\nallssh links http://0:2009/ for Stargate" {shape: rectangle}
+E: "allssh genesis status\nncli host ls" {shape: rectangle}
+F: "ncli alert ls\nncli events ls limit=100" {shape: rectangle}
+G: "ncli sp ls -- storage pool\nncli ctr ls -- container capacity" {shape: rectangle}
+H: "ncli pd ls -- protection domain status\nCheck remote site reachability" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "ncli disk ls for disk state\nPrism Hardware page for disk details" {shape: rectangle}
+K: "allssh ping peer-cvm-ip\nCheck port 2100 CVM-to-CVM" {shape: rectangle}
+L: "ncli sp ls\ndu -sh /home/nutanix/ on each CVM" {shape: rectangle}
+M: "allssh df -h for CVM disk usage\nRestart Stargate: genesis stop stargate; genesis start" {shape: rectangle}
+N: "allssh uptime to check recent CVM restarts\nIPMI for physical node status" {shape: rectangle}
+O: "ncli alert get id=alert-id for detail\nFollow recommended action in alert message" {shape: rectangle}
+P: "ncli ctr ls for per-container usage\nIdentify top consumer with du on datastore" {shape: rectangle}
+Q: "ncli pd ls for replication status\nTest network to remote site: ping remote-cvm-ip" {shape: rectangle}
+R: "Collect ncc log_collector bundle\nOpen Nutanix support case" {shape: rectangle}
+S: "Upload bundle to Nutanix portal\nProvide: cluster UUID, AOS version, NCC version" {shape: rectangle}
+A: "Nutanix Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([Nutanix Issue]) --> B{What type of problem?}
-    B -->|Cluster health alert or unknown failure| C[ncc health_checks run_all\ncluster status]
-    B -->|VM storage I/O slow or failing| D[ncli disk ls for disk errors\nallssh links http://0:2009/ for Stargate]
-    B -->|Node or CVM not responding| E[allssh genesis status\nncli host ls]
-    B -->|Alert in Prism - investigate| F[ncli alert ls\nncli events ls limit=100]
-    B -->|Storage capacity warning| G[ncli sp ls -- storage pool\nncli ctr ls -- container capacity]
-    B -->|DR or replication failure| H[ncli pd ls -- protection domain status\nCheck remote site reachability]
-    C --> I{NCC result?}
-    I -->|FAIL on hardware check| J[ncli disk ls for disk state\nPrism Hardware page for disk details]
-    I -->|FAIL on network check| K[allssh ping peer-cvm-ip\nCheck port 2100 CVM-to-CVM]
-    I -->|WARN on capacity| L[ncli sp ls\ndu -sh /home/nutanix/ on each CVM]
-    D --> M[allssh df -h for CVM disk usage\nRestart Stargate: genesis stop stargate; genesis start]
-    E --> N[allssh uptime to check recent CVM restarts\nIPMI for physical node status]
-    F --> O[ncli alert get id=alert-id for detail\nFollow recommended action in alert message]
-    G --> P[ncli ctr ls for per-container usage\nIdentify top consumer with du on datastore]
-    H --> Q[ncli pd ls for replication status\nTest network to remote site: ping remote-cvm-ip]
-    J --> R[Collect ncc log_collector bundle\nOpen Nutanix support case]
-    K --> R
-    L --> R
-    M --> R
-    N --> R
-    O --> R
-    P --> R
-    Q --> R
-    R --> S[Upload bundle to Nutanix portal\nProvide: cluster UUID, AOS version, NCC version]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
-    class R,S escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+I -> L
+D -> M
+E -> N
+F -> O
+G -> P
+H -> Q
+J -> R
+K -> R
+L -> R
+M -> R
+N -> R
+O -> R
+P -> R
+Q -> R
+R -> S
 ```
 
 ```d2

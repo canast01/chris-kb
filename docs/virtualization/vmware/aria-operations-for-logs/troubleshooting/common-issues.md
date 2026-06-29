@@ -9,7 +9,6 @@ search:
 # Aria Operations for Logs — Common Issues
 ![Aria Operations for Logs — Common Issues](../../../../assets/virtualization-vmware-aria-operations-for-logs-troubleshooti.svg)
 
-
 ```bash
 # Check ingestion stats from master node
 curl -sk -u 'admin:<password>' \
@@ -127,39 +126,44 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1[Agent not sending logs]
-    S --> B2[Ingestion rate dropped]
-    S --> B3[Syslog source not appearing]
-    S --> B4[Alert not firing]
-    S --> B5[Disk usage over 80 percent]
-    S --> B6[Worker node disconnected]
+```d2
+direction: right
 
-    B1 --> D1{Agent service\nrunning?}
-    D1 -->|No| R1[Restart VMware Log Insight Agent Service\n→ Ingestion Issues]
-    D1 -->|Yes| R2[Check Agent Config · Firewall Port 514 or 9543\n→ Ingestion Issues]
+S: "What is the symptom?" {shape: rectangle}
+B1: "Agent not sending logs" {shape: rectangle}
+B2: "Ingestion rate dropped" {shape: rectangle}
+B3: "Syslog source not appearing" {shape: rectangle}
+B4: "Alert not firing" {shape: rectangle}
+B5: "Disk usage over 80 percent" {shape: rectangle}
+B6: "Worker node disconnected" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+R1: "Restart VMware Log Insight Agent Service\n→ Ingestion Issues" {shape: rectangle}
+R2: "Check Agent Config · Firewall Port 514 or 9543\n→ Ingestion Issues" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Archive and Purge Old Data · Reduce Retention\n→ Disk Usage Over 80 Percent" {shape: rectangle}
+R4: "Check Worker Node Load · Add Worker VM\n→ Ingestion Issues" {shape: rectangle}
+R5: "Check syslog.global.logHost on ESXi · Test logger Command\n→ Ingestion Issues" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R6: "Re-enable Alert · Test Notification Channel\n→ Alert and Cluster Issues" {shape: rectangle}
+R7: "Check Webhook URL · SMTP Connectivity\n→ Alert and Cluster Issues" {shape: rectangle}
+R8: "Reduce Hot Retention · Archive to NFS · Add Worker Disk\n→ Disk Usage Over 80 Percent" {shape: rectangle}
+R9: "Check NTP Skew · Verify Port 16520 · Restart loginsight Service\n→ Alert and Cluster Issues" {shape: rectangle}
 
-    B2 --> D2{Disk near\nfull?}
-    D2 -->|Yes| R3[Archive and Purge Old Data · Reduce Retention\n→ Disk Usage Over 80 Percent]
-    D2 -->|No| R4[Check Worker Node Load · Add Worker VM\n→ Ingestion Issues]
-
-    B3 --> R5[Check syslog.global.logHost on ESXi · Test logger Command\n→ Ingestion Issues]
-
-    B4 --> D3{Alert\nenabled?}
-    D3 -->|No| R6[Re-enable Alert · Test Notification Channel\n→ Alert and Cluster Issues]
-    D3 -->|Yes| R7[Check Webhook URL · SMTP Connectivity\n→ Alert and Cluster Issues]
-
-    B5 --> R8[Reduce Hot Retention · Archive to NFS · Add Worker Disk\n→ Disk Usage Over 80 Percent]
-
-    B6 --> R9[Check NTP Skew · Verify Port 16520 · Restart loginsight Service\n→ Alert and Cluster Issues]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
-    class D1,D2,D3 decision
-    class S start
+S -> B1
+S -> B2
+S -> B3
+S -> B4
+S -> B5
+S -> B6
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+B3 -> R5
+D3 -> R6
+D3 -> R7
+B5 -> R8
+B6 -> R9
 ```
 
 ---

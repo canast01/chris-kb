@@ -41,25 +41,20 @@ DS --> ADM: Capacity forecast
 
 ## Deployment Architecture
 
-```mermaid
-graph LR
-    Clusters["PowerScale Clusters<br/>OneFS management IP<br/>SmartConnect zones<br/>PAPI REST API"]
-    InsightIQ["InsightIQ Appliance<br/>OVA on mgmt cluster<br/>collection engine<br/>TCP 8080 poll"]
-    PostgreSQL["PostgreSQL Database<br/>local on-appliance<br/>30-sec raw samples<br/>5-min rollup buckets"]
-    WebUI["Web Dashboard<br/>HTTP/HTTPS<br/>pre-built + custom views<br/>time-range queries"]
-    Reports["Reports + Alerts<br/>PDF / CSV export<br/>email threshold alerts<br/>SMTP relay"]
+```d2
+direction: right
 
-    Clusters -->|"HTTPS REST API TCP 8080 every 30 sec"| InsightIQ
-    InsightIQ -->|"stores metrics"| PostgreSQL
-    PostgreSQL -->|"on-demand queries"| WebUI
-    WebUI -->|"scheduled reports"| Reports
-    InsightIQ -->|"threshold breach"| Reports
+Clusters: "PowerScale Clusters · OneFS management IP · SmartConnect zones · PAPI REST API" {shape: rectangle}
+InsightIQ: "InsightIQ Appliance · OVA on mgmt cluster · collection engine · TCP 8080 poll" {shape: rectangle}
+PostgreSQL: "PostgreSQL Database · local on-appliance · 30-sec raw samples · 5-min rollup buckets" {shape: rectangle}
+WebUI: "Web Dashboard · HTTP/HTTPS · pre-built + custom views · time-range queries" {shape: rectangle}
+Reports: "Reports + Alerts · PDF / CSV export · email threshold alerts · SMTP relay" {shape: rectangle}
 
-    style Clusters fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style InsightIQ fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style PostgreSQL fill:#b45309,stroke:#92400e,color:#fff
-    style WebUI fill:#15803d,stroke:#166534,color:#fff
-    style Reports fill:#15803d,stroke:#166534,color:#fff
+Clusters -> InsightIQ
+InsightIQ -> PostgreSQL
+PostgreSQL -> WebUI
+WebUI -> Reports
+InsightIQ -> Reports
 ```
 
 ---

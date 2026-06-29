@@ -13,17 +13,23 @@ Scale-out software-defined object storage on commodity x86 nodes. Exposes S3, Sw
 
 ![Dell ECS — Architecture — Diagram](../../../../assets/storage-dell-ecs-architecture-diagram.svg)
 
-```mermaid
-graph TB
-  CLT(["S3 / Swift / Atmos Clients"]) --> GW["Load Balancer\n(optional)"]
-  GW --> N1["ECS Node 1"] & N2["ECS Node 2"] & N3["ECS Node 3"] & NN["Node N…"]
-  N1 & N2 & N3 & NN --> RING[("Object Ring\ndistributed erasure coding")]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class N1,N2,N3,NN ctrl
-  class GW,RING net
-  class CLT host
+```d2
+direction: right
+
+CLT: "S3 / Swift / Atmos Clients" {shape: rectangle}
+GW: "Load Balancer\n(optional" {shape: rectangle}
+N1: "ECS Node 1" {shape: rectangle}
+N2: "ECS Node 2" {shape: rectangle}
+N3: "ECS Node 3" {shape: rectangle}
+NN: "Node N…" {shape: rectangle}
+RING: "Object Ring\ndistributed erasure coding" {shape: rectangle}
+
+CLT -> GW
+GW -> N1
+N1 -> N2
+N2 -> N3
+N3 -> NN
+NN -> RING
 ```
 ![Dell ECS Architecture](../../../../assets/ecs-architecture-overview.svg)
 

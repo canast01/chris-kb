@@ -41,39 +41,49 @@ symrdf -g PROD_RDF_GROUP establish
 # 4. Monitor until synchronized
 symrdf query -g PROD_RDF_GROUP
 ```
-```mermaid
-flowchart TD
-    A([R1 Site Incident Detected]) --> B{R1 Array\nAccessible?}
+```d2
+direction: right
 
-    B --> |Yes - planned DR test| C[Planned Failover\nNo -force needed]
-    B --> |No - unplanned outage| D[Unplanned Failover\nRequires -force]
+B: "B" {shape: rectangle}
+C: "Planned Failover\nNo -force needed" {shape: rectangle}
+D: "Unplanned Failover\nRequires -force" {shape: rectangle}
+E: "symrdf -g <group> failover" {shape: rectangle}
+F: "symrdf -g <group> failover -force" {shape: rectangle}
+G: "Verify R2 devices state = RW" {shape: rectangle}
+H: "Present R2 volumes\nto DR hosts" {shape: rectangle}
+I: "Start workloads on DR site" {shape: rectangle}
+J: "DR Site Running — Monitor RPO/RTO" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "Decide failback strategy" {shape: rectangle}
+M: "M" {shape: rectangle}
+N: "symrdf establish -force" {shape: rectangle}
+O: "symrdf restore -force" {shape: rectangle}
+P: "Monitor sync progress" {shape: rectangle}
+Q: "Q" {shape: rectangle}
+R: "Fail workloads back\nto R1 site" {shape: rectangle}
+S: "Verify SRDF replication\nresumed in normal direction" {shape: rectangle}
+T: "Operations Restored" {shape: rectangle}
+A: "R1 Site Incident Detected" {shape: rectangle}
 
-    C --> E["symrdf -g <group> failover"]
-    D --> F["symrdf -g <group> failover -force"]
-
-    E --> G[Verify R2 devices state = RW]
-    F --> G
-
-    G --> H[Present R2 volumes\nto DR hosts]
-    H --> I[Start workloads on DR site]
-    I --> J([DR Site Running — Monitor RPO/RTO])
-
-    J --> K{R1 site recovered?}
-    K --> |No| J
-    K --> |Yes| L[Decide failback strategy]
-
-    L --> M{Sync direction?}
-    M --> |Resync R1 from R2| N["symrdf establish -force"]
-    M --> |Full restore from R2 to R1| O["symrdf restore -force"]
-
-    N --> P[Monitor sync progress]
-    O --> P
-
-    P --> Q{Sync complete?}
-    Q --> |No| P
-    Q --> |Yes| R[Fail workloads back\nto R1 site]
-    R --> S[Verify SRDF replication\nresumed in normal direction]
-    S --> T([Operations Restored])
+B -> C
+B -> D
+C -> E
+D -> F
+E -> G
+F -> G
+G -> H
+H -> I
+I -> J
+K -> J
+K -> L
+M -> N
+M -> O
+N -> P
+O -> P
+Q -> P
+Q -> R
+R -> S
+S -> T
 ```
 ```bash
 # Detailed query — shows RPO, link state, device state

@@ -42,24 +42,6 @@ pause_worker_machineconfigpool -> validate
 
 ## Upgrade Flow
 
-```mermaid
-graph TD
-    A["oc adm upgrade --to=X.Y.Z\noperator triggers upgrade"]:::dark --> B["CVO fetches\nupgrade graph"]:::dark
-    B --> C["Release image pulled\nfrom channel / mirror"]:::blue
-    C --> D["Cluster Operators\nupdated sequentially"]:::blue
-    D --> E["MCO notifies\ncontrol plane nodes"]:::green
-    E --> F["Master nodes drained\n+ updated one at a time"]:::green
-    F --> G["Worker MachineConfigPool\nupdated per maxUnavailable"]:::orange
-    G --> H["Each worker: drain\n→ reboot → rejoin"]:::orange
-    H --> I["All MCP Updated=True\nUpgrade complete"]:::purple
-
-    classDef dark fill:#374151,color:#fff
-    classDef blue fill:#2563eb,color:#fff
-    classDef green fill:#15803d,color:#fff
-    classDef orange fill:#b45309,color:#fff
-    classDef purple fill:#7c3aed,color:#fff
-```
-
 ## Channel Selection
 
 | Channel | Purpose | Release cadence | Recommended for |

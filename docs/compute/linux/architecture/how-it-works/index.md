@@ -17,38 +17,44 @@ Linux servers run RHEL, Ubuntu, or SLES as the base OS. All services are managed
 
 ## Kernel Subsystem Architecture
 
-```mermaid
-graph TB
-  KERNEL["Linux Kernel\nRHEL / Ubuntu / SLES"]
-  KERNEL --> STORAGE["Storage Stack\nlvm2 · dm-multipath · xfs/ext4"]
-  KERNEL --> NET["Network Stack\nnm · bonding · firewalld"]
-  KERNEL --> SVCS["systemd Services\nsshd · rsyslog · cron"]
-  KERNEL --> SEC["Security\nSELinux / AppArmor · auditd · PAM"]
-  STORAGE --> DISK[("Block Devices\n/dev/sd* / /dev/mapper/*")]
-  NET --> NIC["Physical NICs\neth0 / bond0 / enp*"]
-  ADMIN(["Sysadmin"]) -->|"SSH / console"| KERNEL
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class KERNEL ctrl
-  class STORAGE,SVCS,SEC net
-  class DISK store
-  class NIC,NET net
-  class ADMIN host
+```d2
+direction: right
+
+KERNEL: "Linux Kernel\nRHEL / Ubuntu / SLES" {shape: rectangle}
+STORAGE: "Storage Stack\nlvm2 · dm-multipath · xfs/ext4" {shape: rectangle}
+NET: "Network Stack\nnm · bonding · firewalld" {shape: rectangle}
+SVCS: "systemd Services\nsshd · rsyslog · cron" {shape: rectangle}
+SEC: "Security\nSELinux / AppArmor · auditd · PAM" {shape: rectangle}
+DISK: "Block Devices\n/dev/sd* / /dev/mapper/*" {shape: rectangle}
+NIC: "Physical NICs\neth0 / bond0 / enp*" {shape: rectangle}
+ADMIN: "Sysadmin" {shape: rectangle}
+
+KERNEL -> STORAGE
+KERNEL -> NET
+KERNEL -> SVCS
+KERNEL -> SEC
+STORAGE -> DISK
+NET -> NIC
+ADMIN -> KERNEL
 ```
 
 ## Storage Stack
 
-```mermaid
-flowchart LR
-    appLayer["Application\n(read/write syscall)"]
-    vfsLayer["VFS\nVirtual File System"]
-    fsLayer["Filesystem\nxfs / ext4"]
-    blockLayer["Block Layer\nI/O scheduler"]
-    driverLayer["Device Driver\nscsi / nvme"]
-    diskLayer["Physical Disk\nSSD / HDD / SAN LUN"]
-    appLayer --> vfsLayer --> fsLayer --> blockLayer --> driverLayer --> diskLayer
+```d2
+direction: right
+
+appLayer: "Application\n(read/write syscall" {shape: rectangle}
+vfsLayer: "VFS\nVirtual File System" {shape: rectangle}
+fsLayer: "Filesystem\nxfs / ext4" {shape: rectangle}
+blockLayer: "Block Layer\nI/O scheduler" {shape: rectangle}
+driverLayer: "Device Driver\nscsi / nvme" {shape: rectangle}
+diskLayer: "Physical Disk\nSSD / HDD / SAN LUN" {shape: rectangle}
+
+appLayer -> vfsLayer
+vfsLayer -> fsLayer
+fsLayer -> blockLayer
+blockLayer -> driverLayer
+driverLayer -> diskLayer
 ```
 
 ## Network Stack

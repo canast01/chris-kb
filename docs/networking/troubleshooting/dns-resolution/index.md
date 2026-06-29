@@ -43,30 +43,31 @@ DNS failures cascade rapidly across infrastructure: Kerberos authentication brea
 
 ## Diagnostic Flowchart
 
-```mermaid
-flowchart TD
-    A[DNS Failure Reported] --> B[Identify failure type]
-    B --> C{What does dig/nslookup return?}
-    C -- NXDOMAIN --> D[Record missing?\nCheck zone for A/AAAA record]
-    D --> E{Zone loaded?}
-    E -- No --> F[Check zone file syntax\nReload zone: rndc reload]
-    E -- Yes --> G[Record genuinely missing\nAdd DNS record]
-    C -- SERVFAIL --> H[Check DNS server health\nsystemctl status named]
-    H --> I{Service running?}
-    I -- No --> J[Start service\nCheck named.conf syntax: named-checkconf]
-    I -- Yes --> K[Check forwarder chain\ndig @forwarder hostname]
-    C -- Timeout --> L[Verify UDP 53 open\nnc -zu dnsserver 53]
-    L --> M{Port reachable?}
-    M -- No --> N[Fix firewall rule\nCheck ACL on DNS server]
-    M -- Yes --> O[Check DNS server load\nRestart if overloaded]
-    C -- Wrong record --> P[Check all DNS zones\nSplit-brain DNS?]
-    P --> Q[Compare internal vs external answers\ndig @internal vs dig @8.8.8.8]
-    C -- PTR missing --> R[Identify reverse zone\ndig -x IP]
-    R --> S[Add PTR record to reverse zone\nVerify delegated reverse zone]
-    C -- Conditional forwarder --> T[Test forwarder directly\ndig @forwarder-ip domain]
-    T --> U{Forwarder responds?}
-    U -- No --> V[Fix forwarder IP\nCheck connectivity to remote DNS]
-    U -- Yes --> W[Check local forwarder config\nnslookup -type=SOA domain]
+```d2
+direction: right
+
+A: "DNS Failure Reported" {shape: rectangle}
+B: "Identify failure type" {shape: rectangle}
+P: "Check all DNS zones\nSplit-brain DNS?" {shape: rectangle}
+Q: "Compare internal vs external answers\ndig @internal vs dig @8.8.8.8" {shape: rectangle}
+R: "Identify reverse zone\ndig -x IP" {shape: rectangle}
+S: "Add PTR record to reverse zone\nVerify delegated reverse zone" {shape: rectangle}
+D: "Record missing?\nCheck zone for A/AAAA record" {shape: rectangle}
+F: "Check zone file syntax\nReload zone: rndc reload" {shape: rectangle}
+G: "Record genuinely missing\nAdd DNS record" {shape: rectangle}
+H: "Check DNS server health\nsystemctl status named" {shape: rectangle}
+J: "Start service\nCheck named.conf syntax: named-checkconf" {shape: rectangle}
+K: "Check forwarder chain\ndig @forwarder hostname" {shape: rectangle}
+L: "Verify UDP 53 open\nnc -zu dnsserver 53" {shape: rectangle}
+N: "Fix firewall rule\nCheck ACL on DNS server" {shape: rectangle}
+O: "Check DNS server load\nRestart if overloaded" {shape: rectangle}
+T: "Test forwarder directly\ndig @forwarder-ip domain" {shape: rectangle}
+V: "Fix forwarder IP\nCheck connectivity to remote DNS" {shape: rectangle}
+W: "Check local forwarder config\nnslookup -type=SOA domain" {shape: rectangle}
+
+A -> B
+P -> Q
+R -> S
 ```
 
 ### SRV Records (critical for AD/Kerberos)

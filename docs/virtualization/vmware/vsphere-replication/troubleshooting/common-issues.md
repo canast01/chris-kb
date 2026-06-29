@@ -9,8 +9,6 @@ search:
 # vSphere Replication — Common Issues
 ![vSphere Replication — Common Issues](../../../../assets/virtualization-vmware-vsphere-replication-troubleshooting-co.svg)
 
-
-
 ```text
    Configure Replication → Step 4: Seeds → Use existing data
    ```
@@ -38,37 +36,41 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1[Replication paused or stopped]
-    S --> B2[RPO violation amber or red]
-    S --> B3[Connection refused or initial sync stalled]
-    S --> B4[Site pair disconnected]
-    S --> B5[No datastore available for target]
-    S --> B6[Certificate mismatch between sites]
+```d2
+direction: right
 
-    B1 --> D1{VRA appliance\nreachable?}
-    D1 -->|No| R1[Start HMS/VRMS Services · Check TCP 44046\n→ Replication Fails]
-    D1 -->|Yes| R2[Check Cert Thumbprints · Re-pair Sites\n→ Replication Fails]
+S: "What is the symptom?" {shape: rectangle}
+B1: "Replication paused or stopped" {shape: rectangle}
+B2: "RPO violation amber or red" {shape: rectangle}
+B3: "Connection refused or initial sync stalled" {shape: rectangle}
+B4: "Site pair disconnected" {shape: rectangle}
+B5: "No datastore available for target" {shape: rectangle}
+B6: "Certificate mismatch between sites" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+R1: "Start HMS/VRMS Services · Check TCP 44046\n→ Replication Fails" {shape: rectangle}
+R2: "Check Cert Thumbprints · Re-pair Sites\n→ Replication Fails" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Apply QoS · Raise RPO Value\n→ RPO Violation" {shape: rectangle}
+R4: "Check ESXi CPU Ready · VRA Disk Full\n→ RPO Violation" {shape: rectangle}
+R5: "Check TCP 31031 · Route to VRA · Seed Pre-copy\n→ Replication Fails with Connection Refused" {shape: rectangle}
+R6: "Check VRA Services · Port 44046 · Cert Thumbprints\n→ Site Pair Disconnected" {shape: rectangle}
+R7: "Mount Target Datastore · Free Space\n→ No Datastore Available" {shape: rectangle}
+R8: "Refresh Thumbprints in vCenter · Re-register VRMS\n→ Site Pair Disconnected" {shape: rectangle}
 
-    B2 --> D2{WAN bandwidth\nsaturated?}
-    D2 -->|Yes| R3[Apply QoS · Raise RPO Value\n→ RPO Violation]
-    D2 -->|No| R4[Check ESXi CPU Ready · VRA Disk Full\n→ RPO Violation]
-
-    B3 --> R5[Check TCP 31031 · Route to VRA · Seed Pre-copy\n→ Replication Fails with Connection Refused]
-
-    B4 --> R6[Check VRA Services · Port 44046 · Cert Thumbprints\n→ Site Pair Disconnected]
-
-    B5 --> R7[Mount Target Datastore · Free Space\n→ No Datastore Available]
-
-    B6 --> R8[Refresh Thumbprints in vCenter · Re-register VRMS\n→ Site Pair Disconnected]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8 section
-    class D1,D2 decision
-    class S start
+S -> B1
+S -> B2
+S -> B3
+S -> B4
+S -> B5
+S -> B6
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+B3 -> R5
+B4 -> R6
+B5 -> R7
+B6 -> R8
 ```
 
 ---

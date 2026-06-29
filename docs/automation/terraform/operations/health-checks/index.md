@@ -231,29 +231,6 @@ Obtain the lock ID from the backend error message or by inspecting the lock obje
 
 ## Drift Detection Flow
 
-```mermaid
-flowchart TD
-    schedule["Scheduled Trigger\n(cron / CI weekday 08:00)"]
-    tfInit["terraform init\n-reconfigure"]
-    tfPlan["terraform plan\n-detailed-exitcode\n-refresh=true"]
-    checkExit{"Exit code?"}
-    noDrift["Exit 0: No drift\nInfrastructure matches config"]
-    planError["Exit 1: Error\nCheck provider auth\n& config syntax"]
-    driftFound["Exit 2: Drift detected\nChanges exist"]
-    parsePlan["terraform show -json\nParse resource_changes"]
-    alertOps["Alert Ops Team\n(Slack / email / ticket)"]
-    remediate["Remediate:\nterraform apply\nor update code"]
-
-    schedule --> tfInit
-    tfInit --> tfPlan
-    tfPlan --> checkExit
-    checkExit -->|0| noDrift
-    checkExit -->|1| planError
-    checkExit -->|2| driftFound
-    driftFound --> parsePlan
-    parsePlan --> alertOps
-    alertOps --> remediate
-```
 ### terraform import
 
 Import real resources into state that were created outside Terraform.

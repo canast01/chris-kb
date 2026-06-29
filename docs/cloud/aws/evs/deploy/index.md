@@ -47,36 +47,6 @@ postdeploy_validation_checklist -> validate
 
 ![Amazon EVS — Deploy — Diagram](../../../../assets/cloud-aws-evs-deploy-diagram.svg)
 
-```mermaid
-graph TD
-    A["Prerequisites\nIAM roles · service quotas\nDirect Connect · key pair"]
-    B["VPC Setup\nSubnets · security groups\nDHCP options · internet GW"]
-    C["Cluster Creation\n3× i4i.metal hosts\nAWS EVS API · 90-120 min"]
-    D["VCF Bootstrap\nSDDC Manager config\nNTP · DNS · vSAN policy"]
-    E["HCX Deploy\nOVA on-prem · site pairing\nservice mesh · NE appliances"]
-    F["Validation\nCluster CREATED · vSAN green\nNSX-T stable · HCX Up"]
-
-    A -->|"5 min"| B
-    B -->|"10 min"| C
-    C -->|"90-120 min"| D
-    D -->|"20 min"| E
-    E -->|"15 min"| F
-
-    classDef prereq fill:#1e3a5f,color:#fff
-    classDef vpc fill:#b45309,color:#fff
-    classDef cluster fill:#7c3aed,color:#fff
-    classDef vcf fill:#15803d,color:#fff
-    classDef hcx fill:#1d4ed8,color:#fff
-    classDef validate fill:#374151,color:#fff
-
-    class A prereq
-    class B vpc
-    class C cluster
-    class D vcf
-    class E hcx
-    class F validate
-```
-
 ## Prerequisites
 
 ### AWS Account Prerequisites

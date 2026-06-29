@@ -73,15 +73,19 @@ No direct internet access from production servers — all package traffic via mi
 
 ## OS Component Stack
 
-```mermaid
-flowchart TD
-    hwLayer["Hardware\nCPU · RAM · NIC · Disk"]
-    kernelCore["Linux Kernel\nsyscall interface · drivers · schedulers"]
-    initSys["Init System\nsystemd — units · targets"]
-    sysServices["System Services\nsshd · chronyd · rsyslog · firewalld"]
-    appLayer["Applications\nweb · database · monitoring agents"]
+```d2
+direction: right
 
-    hwLayer --> kernelCore --> initSys --> sysServices --> appLayer
+hwLayer: "Hardware\nCPU · RAM · NIC · Disk" {shape: rectangle}
+kernelCore: "Linux Kernel\nsyscall interface · drivers · schedulers" {shape: rectangle}
+initSys: "Init System\nsystemd — units · targets" {shape: rectangle}
+sysServices: "System Services\nsshd · chronyd · rsyslog · firewalld" {shape: rectangle}
+appLayer: "Applications\nweb · database · monitoring agents" {shape: rectangle}
+
+hwLayer -> kernelCore
+kernelCore -> initSys
+initSys -> sysServices
+sysServices -> appLayer
 ```
 
 ## Software Installation Policy

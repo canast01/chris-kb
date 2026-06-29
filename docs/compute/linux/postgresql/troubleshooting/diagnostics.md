@@ -14,39 +14,45 @@ PostgreSQL diagnostic commands: read the error log, query pg_stat_activity for b
 </div>
 ![PostgreSQL — Diagnostics](../../../../assets/compute-linux-postgresql-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "Check pg_stat_activity\nWhere state != idle" {shape: rectangle}
+D: "Check pg_stat_statements\nTop queries by total_exec_time" {shape: rectangle}
+E: "Check pg_stat_replication\nlag_bytes on primary" {shape: rectangle}
+F: "Check pg_stat_user_tables\nn_dead_tup per table" {shape: rectangle}
+G: "Check error log\ntail /var/log/postgresql/..." {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "pg_blocking_pids pid\nFind blocking session" {shape: rectangle}
+J: "pg_cancel_backend or\npg_terminate_backend" {shape: rectangle}
+K: "EXPLAIN query\nCheck index usage" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Check network\nand WAL send rate" {shape: rectangle}
+N: "Monitor; may be acceptable" {shape: rectangle}
+O: "VACUUM ANALYZE table\nMonitor n_dead_tup" {shape: rectangle}
+P: "Check for OOM or\ndisk full in log" {shape: rectangle}
+Q: "Collect pg_dump diag\nfor escalation" {shape: rectangle}
+A: "PostgreSQL Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([PostgreSQL Issue]) --> B{What type of problem?}
-    B -->|Queries hanging / slow| C[Check pg_stat_activity\nWhere state != idle]
-    B -->|High CPU or I/O| D[Check pg_stat_statements\nTop queries by total_exec_time]
-    B -->|Replication lag| E[Check pg_stat_replication\nlag_bytes on primary]
-    B -->|Table bloat / disk full| F[Check pg_stat_user_tables\nn_dead_tup per table]
-    B -->|Crash or restart| G[Check error log\ntail /var/log/postgresql/...]
-    C --> H{Blocked sessions?}
-    H -->|Yes| I[pg_blocking_pids pid\nFind blocking session]
-    H -->|No, just slow| D
-    I --> J[pg_cancel_backend or\npg_terminate_backend]
-    D --> K[EXPLAIN query\nCheck index usage]
-    E --> L{Lag increasing?}
-    L -->|Yes| M[Check network\nand WAL send rate]
-    L -->|High but stable| N[Monitor; may be acceptable]
-    F --> O[VACUUM ANALYZE table\nMonitor n_dead_tup]
-    G --> P[Check for OOM or\ndisk full in log]
-    J --> Q[Collect pg_dump diag\nfor escalation]
-    K --> Q
-    M --> Q
-    O --> Q
-    P --> Q
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H,L dark
-    class C,D,E,F,G,I,J,K,M,N,O,P action
-    class Q escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+H -> I
+H -> D
+I -> J
+D -> K
+L -> M
+L -> N
+F -> O
+G -> P
+J -> Q
+K -> Q
+M -> Q
+O -> Q
+P -> Q
 ```
 
 ```d2

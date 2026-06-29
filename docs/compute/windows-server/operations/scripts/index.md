@@ -19,16 +19,21 @@ Windows Server PowerShell scripts — remote health checks across multiple serve
 
 ## Script Deployment and Scheduling
 
-```mermaid
-flowchart LR
-    gitRepo["Git Repository\nscripts/windows/"]
-    sccm["SCCM / Ansible\nscript deployment"]
-    servers["Target Servers\nC:\\Scripts\\ops\\"]
-    schedTask["Scheduled Task\nTask Scheduler"]
-    output["Output\nC:\\Logs\\ · Event Log"]
-    monitoring["Monitoring Platform\nZabbix · SCOM"]
+```d2
+direction: right
 
-    gitRepo --> sccm --> servers --> schedTask --> output --> monitoring
+gitRepo: "Git Repository\nscripts/windows/" {shape: rectangle}
+sccm: "SCCM / Ansible\nscript deployment" {shape: rectangle}
+servers: "Target Servers\nC:\\Scripts\\ops\\" {shape: rectangle}
+schedTask: "Scheduled Task\nTask Scheduler" {shape: rectangle}
+output: "Output\nC:\\Logs\\ · Event Log" {shape: rectangle}
+monitoring: "Monitoring Platform\nZabbix · SCOM" {shape: rectangle}
+
+gitRepo -> sccm
+sccm -> servers
+servers -> schedTask
+schedTask -> output
+output -> monitoring
 ```
 
 ## Service Monitor
@@ -149,28 +154,29 @@ Write-Host "Report saved: $OutputPath"
 
 ## Remote Health Check Topology
 
-```mermaid
-graph TD
-    controlHost["Control Host\n(runs the script)"]
-    invokeCmd["Invoke-Command\n(parallel remote execution)"]
-    srv1["Server 1\nWinRM → ScriptBlock"]
-    srv2["Server 2\nWinRM → ScriptBlock"]
-    srv3["Server N\nWinRM → ScriptBlock"]
-    collectResults["Collect Results\n(PSObject list)"]
-    formatTable["Format-Table\n(console output)"]
-    exportCsv["Export-Csv\n(health-report.csv)"]
-    flagIssues["Flag Issues\n(CPU / Memory / Disk\n/ Services / Reboot)"]
+```d2
+direction: right
 
-    controlHost --> invokeCmd
-    invokeCmd --> srv1
-    invokeCmd --> srv2
-    invokeCmd --> srv3
-    srv1 --> collectResults
-    srv2 --> collectResults
-    srv3 --> collectResults
-    collectResults --> formatTable
-    collectResults --> exportCsv
-    collectResults --> flagIssues
+controlHost: "Control Host\n(runs the script" {shape: rectangle}
+invokeCmd: "Invoke-Command\n(parallel remote execution" {shape: rectangle}
+srv1: "Server 1\nWinRM → ScriptBlock" {shape: rectangle}
+srv2: "Server 2\nWinRM → ScriptBlock" {shape: rectangle}
+srv3: "Server N\nWinRM → ScriptBlock" {shape: rectangle}
+collectResults: "Collect Results\n(PSObject list" {shape: rectangle}
+formatTable: "Format-Table\n(console output" {shape: rectangle}
+exportCsv: "Export-Csv\n(health-report.csv" {shape: rectangle}
+flagIssues: "Flag Issues\n(CPU / Memory / Disk\n/ Services / Reboot" {shape: rectangle}
+
+controlHost -> invokeCmd
+invokeCmd -> srv1
+invokeCmd -> srv2
+invokeCmd -> srv3
+srv1 -> collectResults
+srv2 -> collectResults
+srv3 -> collectResults
+collectResults -> formatTable
+collectResults -> exportCsv
+collectResults -> flagIssues
 ```
 
 **Step 5 — Run it**

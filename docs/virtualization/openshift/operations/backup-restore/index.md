@@ -10,19 +10,23 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph TD
-    E["etcd Backup<br/>(daily)"]:::bk --> R["Restore etcd<br/>cluster-restore.sh"]:::rs
-    P["PV Snapshots<br/>(app-level, CSI)"]:::bk --> RP["Restore PVs<br/>PVC from snapshot"]:::rs
-    M["Manifest Export<br/>(git / oc get -o yaml)"]:::bk --> RA["Redeploy Apps<br/>oc apply -f"]:::rs
+```d2
+direction: right
 
-    R --> H["Healthy<br/>Control Plane"]:::ok
-    RP --> H
-    RA --> H
+E: "etcd Backup · (daily" {shape: rectangle}
+R: "Restore etcd · cluster-restore.sh" {shape: rectangle}
+P: "PV Snapshots · (app-level, CSI" {shape: rectangle}
+RP: "Restore PVs · PVC from snapshot" {shape: rectangle}
+M: "Manifest Export · (git / oc get -o yaml" {shape: rectangle}
+RA: "Redeploy Apps · oc apply -f" {shape: rectangle}
+H: "Healthy · Control Plane" {shape: rectangle}
 
-    classDef bk fill:#1e3a5f,color:#fff
-    classDef rs fill:#15803d,color:#fff
-    classDef ok fill:#2563eb,color:#fff
+E -> R
+P -> RP
+M -> RA
+R -> H
+RP -> H
+RA -> H
 ```
 
 ```plantuml

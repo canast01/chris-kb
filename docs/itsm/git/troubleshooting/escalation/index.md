@@ -48,19 +48,20 @@ SUP --> ENG: Case / resolution path
 
 ## Escalation Matrix
 
-```mermaid
-flowchart TD
-    INC([Incident Reported]) --> L1
+```d2
+direction: right
 
-    L1["L1 — Platform Operations\nOn-call / helpdesk\nResponse: 15 min"]
-    L2["L2 — Git Platform Engineering\nSenior infra / platform team\nResponse: 30 min"]
-    L3["L3 — Vendor Support / SRE\nGitHub/GitLab Premier Support\nResponse: per SLA"]
-    EMERG["Emergency Recovery\nRepo rescue / forensics"]
+INC: "Incident Reported" {shape: rectangle}
+L1: "L1 — Platform Operations\nOn-call / helpdesk\nResponse: 15 min" {shape: rectangle}
+L2: "L2 — Git Platform Engineering\nSenior infra / platform team\nResponse: 30 min" {shape: rectangle}
+L3: "L3 — Vendor Support / SRE\nGitHub/GitLab Premier Support\nResponse: per SLA" {shape: rectangle}
+EMERG: "Emergency Recovery\nRepo rescue / forensics" {shape: rectangle}
 
-    L1 -->|Unresolved after 30 min\nor severity critical| L2
-    L2 -->|Unresolved after 60 min\nor data loss suspected| L3
-    L2 -->|Corruption / data loss confirmed| EMERG
-    L3 -->|Vendor escalation| EMERG
+INC -> L1
+L1 -> L2
+L2 -> L3
+L2 -> EMERG
+L3 -> EMERG
 ```
 
 ---
@@ -258,29 +259,36 @@ sudo gitlab-rails runner "Gitlab::CurrentSettings.update!(maintenance_mode: fals
 
 ### Recovery Decision Tree
 
-```mermaid
-flowchart TD
-    CORRUPT([Corruption / Data Loss Confirmed]) --> SCOPE{Scope?}
+```d2
+direction: right
 
-    SCOPE -->|Single branch deleted\nno corruption| REFLOG[Check git reflog\nRecreate branch via API]
-    SCOPE -->|Missing objects\nfsck errors| OBJECTS{Backup available?}
-    SCOPE -->|Full repo gone| FULL{Mirror available?}
+SCOPE: "SCOPE" {shape: rectangle}
+REFLOG: "Check git reflog\nRecreate branch via API" {shape: rectangle}
+OBJECTS: "OBJECTS" {shape: rectangle}
+RSYNC: "Rsync objects from mirror\nRe-verify with fsck" {shape: rectangle}
+RESTORE: "gitlab-backup restore\nFull instance restore" {shape: rectangle}
+PARTIAL: "Attempt partial recovery\nEscalate to vendor immediately" {shape: rectangle}
+FULL: "FULL" {shape: rectangle}
+RECLONE: "Clone --mirror from backup\nSwap repository path" {shape: rectangle}
+LOST: "Data may be unrecoverable\nEscalate to vendor\nNotify stakeholders" {shape: rectangle}
+VALIDATE: "Validate: git fsck\ngit log\nTest clone" {shape: rectangle}
+POSTMORTEM: "Write incident report\nSchedule postmortem" {shape: rectangle}
+ESCALATE: "Escalate to L3 vendor support" {shape: rectangle}
+CORRUPT: "Corruption / Data Loss Confirmed" {shape: rectangle}
 
-    OBJECTS -->|Yes — recent mirror| RSYNC[Rsync objects from mirror\nRe-verify with fsck]
-    OBJECTS -->|Yes — GitLab backup| RESTORE[gitlab-backup restore\nFull instance restore]
-    OBJECTS -->|No backup| PARTIAL[Attempt partial recovery\nEscalate to vendor immediately]
-
-    FULL -->|Yes| RECLONE[Clone --mirror from backup\nSwap repository path]
-    FULL -->|No| LOST[Data may be unrecoverable\nEscalate to vendor\nNotify stakeholders]
-
-    REFLOG --> VALIDATE[Validate: git fsck\ngit log\nTest clone]
-    RSYNC --> VALIDATE
-    RESTORE --> VALIDATE
-    RECLONE --> VALIDATE
-    PARTIAL --> VALIDATE
-
-    VALIDATE -->|Pass| POSTMORTEM([Write incident report\nSchedule postmortem])
-    VALIDATE -->|Fail| ESCALATE([Escalate to L3 vendor support])
+SCOPE -> REFLOG
+OBJECTS -> RSYNC
+OBJECTS -> RESTORE
+OBJECTS -> PARTIAL
+FULL -> RECLONE
+FULL -> LOST
+REFLOG -> VALIDATE
+RSYNC -> VALIDATE
+RESTORE -> VALIDATE
+RECLONE -> VALIDATE
+PARTIAL -> VALIDATE
+VALIDATE -> POSTMORTEM
+VALIDATE -> ESCALATE
 ```
 
 ---

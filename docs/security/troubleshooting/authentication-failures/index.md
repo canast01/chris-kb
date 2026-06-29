@@ -48,30 +48,26 @@ Authentication failures span multiple subsystems: Active Directory (Kerberos and
 
 ## Diagnostic Flowchart
 
-```mermaid
-flowchart TD
-    A[Authentication Failure Reported] --> B{Can user reach DC?}
-    B -- No --> C[Check DNS: nltest /dsgetdc]
-    C --> D{DC resolved?}
-    D -- No --> E[Fix DNS / conditional forwarder]
-    D -- Yes --> F[Check firewall port 88/389/636]
-    B -- Yes --> G{Account locked?}
-    G -- Yes --> H[Identify lockout source\nEvent 4740 on PDC emulator]
-    H --> I[Find rogue process / stale credential\nReset password]
-    G -- No --> J{Clock skew issue?}
-    J -- Yes --> K[Fix NTP / w32tm /resync]
-    J -- No --> L{Kerberos or LDAP?}
-    L -- Kerberos --> M[Run klist / kinit\nCheck SPN with setspn -L]
-    M --> N{Valid TGT obtained?}
-    N -- No --> O[Check KDC connectivity\nVerify pre-auth enabled]
-    N -- Yes --> P[Check service ticket\nSPN misconfiguration?]
-    L -- LDAP --> Q[Test ldp.exe or ldapsearch\nConfirm bind DN and credentials]
-    Q --> R{TLS/SSL required?}
-    R -- Yes --> S[Verify cert chain\nCheck LDAPS port 636]
-    L -- Certificate --> T[Check cert expiry\nopenssl x509 -noout -dates]
-    T --> U{CRL/OCSP reachable?}
-    U -- No --> V[Fix CDP / add OCSP proxy]
-    U -- Yes --> W[Check EKU — Client Auth OID 1.3.6.1.5.5.7.3.2]
+```d2
+direction: right
+
+H: "Identify lockout source\nEvent 4740 on PDC emulator" {shape: rectangle}
+I: "Find rogue process / stale credential\nReset password" {shape: rectangle}
+A: "Authentication Failure Reported" {shape: rectangle}
+C: "Check DNS: nltest /dsgetdc" {shape: rectangle}
+E: "Fix DNS / conditional forwarder" {shape: rectangle}
+F: "Check firewall port 88/389/636" {shape: rectangle}
+K: "Fix NTP / w32tm /resync" {shape: rectangle}
+M: "Run klist / kinit\nCheck SPN with setspn -L" {shape: rectangle}
+O: "Check KDC connectivity\nVerify pre-auth enabled" {shape: rectangle}
+P: "Check service ticket\nSPN misconfiguration?" {shape: rectangle}
+Q: "Test ldp.exe or ldapsearch\nConfirm bind DN and credentials" {shape: rectangle}
+S: "Verify cert chain\nCheck LDAPS port 636" {shape: rectangle}
+T: "Check cert expiry\nopenssl x509 -noout -dates" {shape: rectangle}
+V: "Fix CDP / add OCSP proxy" {shape: rectangle}
+W: "Check EKU — Client Auth OID 1.3.6.1.5.5.7.3.2" {shape: rectangle}
+
+H -> I
 ```
 
 ### 3. Clock Skew Detection

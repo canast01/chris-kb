@@ -25,20 +25,31 @@ Active Directory domain and forest functional levels determine which features ar
 
 ## Domain Functional Level Upgrade Flow
 
-```mermaid
-flowchart TD
-    start["Plan DFL / FFL upgrade"]
-    start --> inventoryDCs["Inventory all DCs\nGet-ADDomainController -Filter *"]
-    inventoryDCs --> checkOS{"All DCs running\ntarget OS version?"}
-    checkOS -->|"no"| upgradeOldDCs["Promote new DCs at target OS\nDecommission old DCs first"]
-    checkOS -->|"yes"| checkSysvol{"SYSVOL using\nDFSR?"}
-    upgradeOldDCs --> checkSysvol
-    checkSysvol -->|"no — still FRS"| migrateDFSR["Run dfsrmig migration\nPrepared → Redirected → Eliminated"]
-    checkSysvol -->|"yes"| runAdprep["Run adprep /forestprep\nthen /domainprep"]
-    migrateDFSR --> runAdprep
-    runAdprep --> raiseDFL["Set-ADDomainMode\n(raise DFL)"]
-    raiseDFL --> raiseFFL["Set-ADForestMode\n(raise FFL — after DFL)"]
-    raiseFFL --> validate["Validate:\ndcdiag /test:all + repadmin /replsummary"]
+```d2
+direction: right
+
+start: "Plan DFL / FFL upgrade" {shape: oval}
+inventoryDCs: "Inventory all DCs\nGet-ADDomainController -Filter *" {shape: rectangle}
+checkOS: "All DCs running\ntarget OS version?" {shape: rectangle}
+upgradeOldDCs: "Promote new DCs at target OS\nDecommission old DCs first" {shape: rectangle}
+checkSysvol: "SYSVOL using\nDFSR?" {shape: rectangle}
+migrateDFSR: "Run dfsrmig migration\nPrepared → Redirected → Eliminated" {shape: rectangle}
+runAdprep: "Run adprep /forestprep\nthen /domainprep" {shape: rectangle}
+raiseDFL: "Set-ADDomainMode\n(raise DFL" {shape: rectangle}
+raiseFFL: "Set-ADForestMode\n(raise FFL — after DFL" {shape: rectangle}
+validate: "Validate:\ndcdiag /test:all + repadmin /replsummary" {shape: rectangle}
+
+start -> inventoryDCs
+inventoryDCs -> checkOS
+checkOS -> upgradeOldDCs
+checkOS -> checkSysvol
+upgradeOldDCs -> checkSysvol
+checkSysvol -> migrateDFSR
+checkSysvol -> runAdprep
+migrateDFSR -> runAdprep
+runAdprep -> raiseDFL
+raiseDFL -> raiseFFL
+raiseFFL -> validate
 ```
 
 ---

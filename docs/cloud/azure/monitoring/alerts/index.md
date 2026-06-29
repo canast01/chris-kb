@@ -12,20 +12,21 @@ Azure Monitor Alerts proactively notify you when conditions in your monitored re
 
 ## Alert Flow
 
-```mermaid
-flowchart LR
-    signal["Signal Source\nMetric · Log · Activity Log"]
-    alertRule["Alert Rule\nthreshold · window · frequency"]
-    fired{"Condition\nmet?"}
-    actionGroup["Action Group\nemail · SMS · webhook · Logic App"]
-    notify["Notification\nOps team notified"]
-    suppress["Suppressed\n(alert processing rule)"]
-    resolved["Alert Resolved\nauto or manual"]
+```d2
+direction: right
 
-    signal --> alertRule --> fired
-    fired -- Yes --> actionGroup --> notify --> resolved
-    fired -- Yes, but suppressed --> suppress
-    fired -- No --> signal
+signal: "Signal Source\nMetric · Log · Activity Log" {shape: rectangle}
+alertRule: "Alert Rule\nthreshold · window · frequency" {shape: rectangle}
+fired: "fired" {shape: rectangle}
+actionGroup: "Action Group\nemail · SMS · webhook · Logic App" {shape: rectangle}
+notify: "Notification\nOps team notified" {shape: rectangle}
+resolved: "Alert Resolved\nauto or manual" {shape: rectangle}
+suppress: "Suppressed\n(alert processing rule" {shape: rectangle}
+
+signal -> alertRule
+alertRule -> fired
+actionGroup -> notify
+notify -> resolved
 ```
 
 ## Alert Rule Types

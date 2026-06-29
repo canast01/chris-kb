@@ -13,42 +13,54 @@ Linux diagnostic commands: query journald for service errors, read dmesg for har
 *Applies to: RHEL 8/9 · Ubuntu 22.04/24.04 LTS*
 </div>
 
-```mermaid
-graph TD
-    A([Linux Issue]) --> B{What type of problem?}
-    B -->|Service crashed or won't start| C[journalctl -u service --since today\nCheck exit code and error message]
-    B -->|Kernel panic or hardware error| D[dmesg -T | grep -i error\nCheck for OOM or SCSI errors]
-    B -->|Permission denied or SELinux| E[ausearch -m avc --start recent\navc: denied = SELinux blocking the action]
-    B -->|Login failure or auth issue| F[journalctl _SYSTEMD_UNIT=sshd.service\nausearch -m USER_AUTH --success no]
-    B -->|High CPU or memory usage| G[vmstat 1 5 / sar -u 1 10\nperf top to find hot function]
-    B -->|High I/O or storage error| H[dmesg -T | grep -i scsi\niostat -x 1 5 to find saturated device]
-    B -->|Process leak or crash loop| I[strace -p PID\nlsof -p PID | wc -l for fd leak]
-    C --> J{Exit code?}
-    J -->|Permission error| E
-    J -->|File not found| K[lsof -p PID at startup\nCheck paths in unit file]
-    J -->|Signal / crash| L[journalctl -b -1 -p err | grep coreclr\nCheck dmesg for OOM kill]
-    D --> M[Check DIMM errors\ndmesg | grep -i ECC\|memory\|MCE]
-    E --> N[sesearch -A -s process_type -t file_type\nAudit2allow to create policy or relabel]
-    F --> O[grep Failed /var/log/secure\nCheck pam_tally lockout]
-    G --> P[perf top --sort comm\nCheck WCHAN for blocked threads: ps -eo pid,wchan | grep D]
-    H --> Q[iostat -x 1 sda: await > 20ms = issue\nCheck dmesg for SCSI timeouts]
-    I --> R[Check /proc/PID/fd count vs ulimit -n\nstrace -c -p PID for syscall summary]
-    J --> S[Collect sosreport or gather-tech-support bundle]
-    K --> S
-    L --> S
-    M --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,J dark
-    class C,D,E,F,G,H,I,K,L,M,N,O,P,Q,R action
-    class S escalate
+B: "B" {shape: rectangle}
+C: "journalctl -u service --since today\nCheck exit code and error message" {shape: rectangle}
+D: "dmesg -T | grep -i error\nCheck for OOM or SCSI errors" {shape: rectangle}
+E: "ausearch -m avc --start recent\navc: denied = SELinux blocking the action" {shape: rectangle}
+F: "journalctl _SYSTEMD_UNIT=sshd.service\nausearch -m USER_AUTH --success no" {shape: rectangle}
+G: "vmstat 1 5 / sar -u 1 10\nperf top to find hot function" {shape: rectangle}
+H: "dmesg -T | grep -i scsi\niostat -x 1 5 to find saturated device" {shape: rectangle}
+I: "strace -p PID\nlsof -p PID | wc -l for fd leak" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "lsof -p PID at startup\nCheck paths in unit file" {shape: rectangle}
+L: "journalctl -b -1 -p err | grep coreclr\nCheck dmesg for OOM kill" {shape: rectangle}
+M: "Check DIMM errors\ndmesg memory\|MCE" {shape: rectangle}
+N: "sesearch -A -s process_type -t file_type\nAudit2allow to create policy or relabel" {shape: rectangle}
+O: "grep Failed /var/log/secure\nCheck pam_tally lockout" {shape: rectangle}
+P: "perf top --sort comm\nCheck WCHAN for blocked threads: ps -eo pid,wchan | grep D" {shape: rectangle}
+Q: "iostat -x 1 sda: await > 20ms = issue\nCheck dmesg for SCSI timeouts" {shape: rectangle}
+R: "Check /proc/PID/fd count vs ulimit -n\nstrace -c -p PID for syscall summary" {shape: rectangle}
+S: "Collect sosreport or gather-tech-support bundle" {shape: rectangle}
+A: "Linux Issue" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+B -> I
+J -> E
+J -> K
+J -> L
+D -> M
+E -> N
+F -> O
+G -> P
+H -> Q
+I -> R
+J -> S
+K -> S
+L -> S
+M -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
 ```
 
 ```d2

@@ -9,7 +9,6 @@ search:
 # Aria Automation — Common Issues
 ![Aria Automation — Common Issues](../../../../assets/virtualization-vmware-aria-automation-troubleshooting-common.svg)
 
-
 ```bash
 # Validate a blueprint via API before publishing
 TOKEN=<your-token>
@@ -71,39 +70,44 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1[Blueprint deployment failed]
-    S --> B2[Cloud account unreachable]
-    S --> B3[IPAM allocation error]
-    S --> B4[Approval workflow stuck]
-    S --> B5[Catalog item not visible]
-    S --> B6[ABX action timeout]
+```d2
+direction: right
 
-    B1 --> D1{Network or\nstorage failure?}
-    D1 -->|Network| R1[Check NSX Segment Creation · Verify NSX Account Perms\n→ Provisioning Failures]
-    D1 -->|Storage| R2[Check Storage Policy Match · Datastore Capacity\n→ Provisioning Failures]
+S: "What is the symptom?" {shape: rectangle}
+B1: "Blueprint deployment failed" {shape: rectangle}
+B2: "Cloud account unreachable" {shape: rectangle}
+B3: "IPAM allocation error" {shape: rectangle}
+B4: "Approval workflow stuck" {shape: rectangle}
+B5: "Catalog item not visible" {shape: rectangle}
+B6: "ABX action timeout" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+R1: "Check NSX Segment Creation · Verify NSX Account Perms\n→ Provisioning Failures" {shape: rectangle}
+R2: "Check Storage Policy Match · Datastore Capacity\n→ Provisioning Failures" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Trigger Manual Data Sync · Check Cloud Acct Log\n→ Integration Failures" {shape: rectangle}
+R4: "Check vIDM SSO Cert · Re-import in VAMI\n→ Integration Failures" {shape: rectangle}
+R5: "Check IPAM Endpoint Connectivity · Verify IP Pool Capacity\n→ Provisioning Failures" {shape: rectangle}
+R6: "Check Approval Policy · Notify Approver · Check Orchestrator Endpoint\n→ Integration Failures" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R7: "Check Project and Catalog Sharing Settings\n→ Diagnostic Steps" {shape: rectangle}
+R8: "Run Blueprint Validator · Fix Syntax Errors\n→ Diagnostic Steps" {shape: rectangle}
+R9: "Increase ABX Action Timeout · Review Action Execution Logs\n→ Integration Failures" {shape: rectangle}
 
-    B2 --> D2{Data collection\nerror?}
-    D2 -->|Yes| R3[Trigger Manual Data Sync · Check Cloud Acct Log\n→ Integration Failures]
-    D2 -->|No| R4[Check vIDM SSO Cert · Re-import in VAMI\n→ Integration Failures]
-
-    B3 --> R5[Check IPAM Endpoint Connectivity · Verify IP Pool Capacity\n→ Provisioning Failures]
-
-    B4 --> R6[Check Approval Policy · Notify Approver · Check Orchestrator Endpoint\n→ Integration Failures]
-
-    B5 --> D3{Entitlement or\nYAML error?}
-    D3 -->|Entitlement| R7[Check Project and Catalog Sharing Settings\n→ Diagnostic Steps]
-    D3 -->|YAML| R8[Run Blueprint Validator · Fix Syntax Errors\n→ Diagnostic Steps]
-
-    B6 --> R9[Increase ABX Action Timeout · Review Action Execution Logs\n→ Integration Failures]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
-    class D1,D2,D3 decision
-    class S start
+S -> B1
+S -> B2
+S -> B3
+S -> B4
+S -> B5
+S -> B6
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+B3 -> R5
+B4 -> R6
+D3 -> R7
+D3 -> R8
+B6 -> R9
 ```
 
 ---

@@ -12,15 +12,19 @@ Azure Service Health provides personalised alerts and guidance for Azure service
 
 ## Service Health Alert Flow
 
-```mermaid
-flowchart LR
-    azureIncident["Azure Incident / Event\nService Issue · Planned Maintenance · Advisory"]
-    serviceHealth["Azure Service Health\npersonalised for your subscriptions + regions"]
-    healthAlert["Service Health Alert Rule\nsubscription · region · service filter"]
-    actionGroup["Action Group\nemail · SMS · webhook · ITSM"]
-    opsTeam["Operations Team\nincident response"]
+```d2
+direction: right
 
-    azureIncident --> serviceHealth --> healthAlert --> actionGroup --> opsTeam
+azureIncident: "Azure Incident / Event\nService Issue · Planned Maintenance · Advisory" {shape: rectangle}
+serviceHealth: "Azure Service Health\npersonalised for your subscriptions + regions" {shape: rectangle}
+healthAlert: "Service Health Alert Rule\nsubscription · region · service filter" {shape: rectangle}
+actionGroup: "Action Group\nemail · SMS · webhook · ITSM" {shape: rectangle}
+opsTeam: "Operations Team\nincident response" {shape: rectangle}
+
+azureIncident -> serviceHealth
+serviceHealth -> healthAlert
+healthAlert -> actionGroup
+actionGroup -> opsTeam
 ```
 
 ## Service Health Components

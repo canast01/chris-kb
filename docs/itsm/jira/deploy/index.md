@@ -13,23 +13,6 @@ Step-by-step guide to installing Jira Data Center, configuring the database conn
 *Applies to: Jira 9.x / Cloud*
 </div>
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Download and Install Jira"]
-    s3["Configure Database Connection"]
-    s4["Configure Application Properties"]
-    s5["Create First Project"]
-    s6["Configure User Authentication (LDAP/SSO)"]
-    s7["Install Required Plugins"]
-    s8["✓ Validate Deployment"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

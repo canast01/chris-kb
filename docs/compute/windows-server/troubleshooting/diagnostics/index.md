@@ -53,30 +53,29 @@ performance_analysis -> resolution
 
 ## Windows Event Log Pipeline
 
-```mermaid
-flowchart LR
-    kernel["Kernel / Drivers"]
-    apps["Applications\n.NET · SQL · IIS"]
-    svcEvents["Services\nstart · stop · crash"]
-    security["Security Subsystem\nauth · privilege · object access"]
+```d2
+direction: right
 
-    sysLog["System Event Log"]
-    appLog["Application Event Log"]
-    secLog["Security Event Log"]
-    psLog["PowerShell Log"]
+kernel: "Kernel / Drivers" {shape: rectangle}
+sysLog: "System Event Log" {shape: rectangle}
+svcEvents: "Services\nstart · stop · crash" {shape: rectangle}
+apps: "Applications\n.NET · SQL · IIS" {shape: rectangle}
+appLog: "Application Event Log" {shape: rectangle}
+security: "Security Subsystem\nauth · privilege · object access" {shape: rectangle}
+secLog: "Security Event Log" {shape: rectangle}
+wef: "WEF Collector\nWindows Event Forwarding" {shape: rectangle}
+psLog: "PowerShell Log" {shape: rectangle}
+siem: "SIEM\nEvent Hub · Splunk" {shape: rectangle}
 
-    siem["SIEM\nEvent Hub · Splunk"]
-    wef["WEF Collector\nWindows Event Forwarding"]
-
-    kernel --> sysLog
-    svcEvents --> sysLog
-    apps --> appLog
-    security --> secLog
-    sysLog --> wef
-    appLog --> wef
-    secLog --> wef
-    psLog --> wef
-    wef --> siem
+kernel -> sysLog
+svcEvents -> sysLog
+apps -> appLog
+security -> secLog
+sysLog -> wef
+appLog -> wef
+secLog -> wef
+psLog -> wef
+wef -> siem
 ```
 
 ## Exporting Logs

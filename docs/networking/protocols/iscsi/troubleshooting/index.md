@@ -51,19 +51,28 @@ kernel_messages_linux -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-flowchart TD
-    A[Host cannot see iSCSI LUN] --> B{TCP 3260 reachable?}
-    B -->|No| C[Check firewall, VLAN, routing]
-    B -->|Yes| D{Target discovered?}
-    D -->|No| E[Run SendTargets discovery, check target IP]
-    D -->|Yes| F{Session established?}
-    F -->|No| G[Check CHAP, initiator IQN, target config]
-    F -->|Yes| H{LUN visible to OS?}
-    H -->|No| I[Check host group / initiator group mapping on array]
-    H -->|Yes| J{Multipath healthy?}
-    J -->|No| K[Check second path — NIC, VLAN, session]
-    J -->|Yes| L[Check filesystem / volume manager layer]
+```d2
+direction: right
+
+B: "B" {shape: rectangle}
+C: "Check firewall, VLAN, routing" {shape: rectangle}
+D: "D" {shape: rectangle}
+E: "Run SendTargets discovery, check target IP" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Check CHAP, initiator IQN, target config" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Check host group / initiator group mapping on array" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Check second path — NIC, VLAN, session" {shape: rectangle}
+L: "Check filesystem / volume manager layer" {shape: rectangle}
+A: "Host cannot see iSCSI LUN" {shape: rectangle}
+
+B -> C
+D -> E
+F -> G
+H -> I
+J -> K
+J -> L
 ```
 
 ## Quick Diagnostics

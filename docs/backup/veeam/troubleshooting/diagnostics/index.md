@@ -13,29 +13,33 @@ Veeam diagnostic commands: check job status and session history with PowerShell,
 *Applies to: Veeam Backup & Replication 12.x*
 </div>
 
-```mermaid
-graph TD
-    A([Veeam Issue]) --> B[Check Dashboard\nFailed jobs list]
-    B --> C{Job failures?}
-    C -->|Yes| D[Get-VBRBackupSession\nLast 20 sessions]
-    C -->|No| E[Check infra health\nProxy / Repo status]
-    D --> F{Error type?}
-    F -->|CBT error| G[Reset CBT\nVMware VADP API]
-    F -->|Network / transport| H[Test-NetConnection\nProxy port 2500]
-    F -->|Repository full| I[Get-VBRBackupRepository\nCheck free space]
-    E --> J{Component offline?}
-    J -->|Yes| H
-    G --> K[Collect support bundle\nVBR Console → Help]
-    H --> K
-    I --> K
-    K --> L[Open Veeam SR\nmy.veeam.com]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F,J dark
-    class B,D,E,G,H,I action
-    class K,L escalate
+A: "Veeam Issue" {shape: rectangle}
+B: "Check Dashboard\nFailed jobs list" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "Get-VBRBackupSession\nLast 20 sessions" {shape: rectangle}
+E: "Check infra health\nProxy / Repo status" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Reset CBT\nVMware VADP API" {shape: rectangle}
+H: "Test-NetConnection\nProxy port 2500" {shape: rectangle}
+I: "Get-VBRBackupRepository\nCheck free space" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Collect support bundle\nVBR Console → Help" {shape: rectangle}
+L: "Open Veeam SR\nmy.veeam.com" {shape: rectangle}
+
+A -> B
+C -> D
+C -> E
+F -> G
+F -> H
+F -> I
+J -> H
+G -> K
+H -> K
+I -> K
+K -> L
 ```
 
 ```d2

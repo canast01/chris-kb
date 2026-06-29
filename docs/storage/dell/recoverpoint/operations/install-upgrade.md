@@ -111,17 +111,17 @@ The array firmware natively splits writes inside the storage controller. No host
 
 Used when hosts access storage through VPLEX (the VPLEX director intercepts the write and forwards a copy to the RPA cluster).
 
-```mermaid
-flowchart LR
-    HOST["Host\n(ESXi / Physical)"]
-    VPLEX["VPLEX Director\n(Splitter embedded)"]
-    PMAX["PowerMax\nBackend"]
-    RPA["RPA Cluster"]
+```d2
+direction: right
 
-    HOST -->|"Write I/O"| VPLEX
-    VPLEX -->|"Split copy"| RPA
-    VPLEX -->|"Pass-through"| PMAX
-    RPA -->|"Replicated write"| REMOTE["Remote RPA\n& Storage"]
+HOST: "Host\n(ESXi / Physical" {shape: rectangle}
+VPLEX: "VPLEX Director\n(Splitter embedded" {shape: rectangle}
+RPA: "RPA Cluster" {shape: rectangle}
+PMAX: "PowerMax\nBackend" {shape: rectangle}
+
+HOST -> VPLEX
+VPLEX -> RPA
+VPLEX -> PMAX
 ```
 
 Key VPLEX splitter requirements:

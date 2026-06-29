@@ -30,16 +30,21 @@ group_policy_baseline -> hostname_convention_and_domain_join: hardens
 
 ## Group Policy Processing Order
 
-```mermaid
-flowchart LR
-    localGPO["Local GPO\n(computer-level)"]
-    siteGPO["Site GPO\n(AD site-linked)"]
-    domainGPO["Domain GPO\n(domain-wide)"]
-    ouParentGPO["Parent OU GPO\nServers OU"]
-    ouChildGPO["Child OU GPO\nProduction\\SQL OU"]
-    applied["Final Applied\nEffective Policy\n(last writer wins)"]
+```d2
+direction: right
 
-    localGPO --> siteGPO --> domainGPO --> ouParentGPO --> ouChildGPO --> applied
+localGPO: "Local GPO\n(computer-level" {shape: rectangle}
+siteGPO: "Site GPO\n(AD site-linked" {shape: rectangle}
+domainGPO: "Domain GPO\n(domain-wide" {shape: rectangle}
+ouParentGPO: "Parent OU GPO\nServers OU" {shape: rectangle}
+ouChildGPO: "Child OU GPO\nProduction\\SQL OU" {shape: rectangle}
+applied: "Final Applied\nEffective Policy\n(last writer wins" {shape: rectangle}
+
+localGPO -> siteGPO
+siteGPO -> domainGPO
+domainGPO -> ouParentGPO
+ouParentGPO -> ouChildGPO
+ouChildGPO -> applied
 ```
 
 WinRM listener configuration:
@@ -84,17 +89,23 @@ New-WSManInstance -ResourceURI winrm/config/Listener `
 
 ## Windows Storage Stack
 
-```mermaid
-flowchart LR
-    appLayer["Application\nWin32 / .NET"]
-    win32api["Win32 API\nCreateFile · ReadFile"]
-    ntfs["NTFS\nfile system driver"]
-    partMgr["Partition Manager\ndisk.sys"]
-    storport["Storport\nstorage driver model"]
-    hba["HBA Driver\nFC / iSCSI / NVMe"]
-    storage["Storage\nSAN / Local Disk"]
+```d2
+direction: right
 
-    appLayer --> win32api --> ntfs --> partMgr --> storport --> hba --> storage
+appLayer: "Application\nWin32 / .NET" {shape: rectangle}
+win32api: "Win32 API\nCreateFile · ReadFile" {shape: rectangle}
+ntfs: "NTFS\nfile system driver" {shape: rectangle}
+partMgr: "Partition Manager\ndisk.sys" {shape: rectangle}
+storport: "Storport\nstorage driver model" {shape: rectangle}
+hba: "HBA Driver\nFC / iSCSI / NVMe" {shape: rectangle}
+storage: "Storage\nSAN / Local Disk" {shape: rectangle}
+
+appLayer -> win32api
+win32api -> ntfs
+ntfs -> partMgr
+partMgr -> storport
+storport -> hba
+hba -> storage
 ```
 
 ## Group Policy Baseline

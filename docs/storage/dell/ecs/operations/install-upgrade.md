@@ -64,26 +64,28 @@ curl -sk -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/alerts"   | python3 -m json.too
 
 ECS upgrades are rolling — the cluster remains online throughout. The ECS Portal handles upgrade orchestration; each node is upgraded sequentially with automatic health validation between each node.
 
-```mermaid
-graph TD
-  PRE([Pre-upgrade checks pass]) --> UPLOAD["Upload bundle to\nECS Portal → Software Update"]
-  UPLOAD --> START["Start Upgrade\n(portal orchestrates)"]
-  START --> NODE1["Upgrade Node 1\n(~15–30 min reboot)"]
-  NODE1 --> CHK1{Node 1\nback GOOD?}
-  CHK1 -->|No| HALT["STOP — do not\ncontinue; investigate\ncall Dell support"]
-  CHK1 -->|Yes| NEXT["Upgrade next node\n(repeat per node)"]
-  NEXT --> ALLDONE{All nodes\nupgraded?}
-  ALLDONE -->|No| NEXT
-  ALLDONE -->|Yes| POSTVAL["Post-upgrade validation:\nGET /vdc/nodes · /vdc/version\ngeo-rep lag at zero\nS3 functional test"]
-  POSTVAL --> DONE([Change record closed])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class CHK1,ALLDONE decision
-  class UPLOAD,START,NODE1,NEXT,POSTVAL action
-  class HALT warn
-  class PRE,DONE term
+```d2
+direction: right
+
+PRE: "Pre-upgrade checks pass" {shape: rectangle}
+UPLOAD: "Upload bundle to\nECS Portal → Software Update" {shape: rectangle}
+START: "Start Upgrade\n(portal orchestrates" {shape: rectangle}
+NODE1: "Upgrade Node 1\n(~15–30 min reboot" {shape: rectangle}
+CHK1: "CHK1" {shape: rectangle}
+HALT: "STOP — do not\ncontinue; investigate\ncall Dell support" {shape: rectangle}
+NEXT: "Upgrade next node\n(repeat per node" {shape: rectangle}
+ALLDONE: "ALLDONE" {shape: rectangle}
+POSTVAL: "Post-upgrade validation:\nGET /vdc/nodes · /vdc/version\ngeo-rep lag at zero\nS3 functional test" {shape: rectangle}
+DONE: "Change record closed" {shape: rectangle}
+
+PRE -> UPLOAD
+UPLOAD -> START
+START -> NODE1
+CHK1 -> HALT
+CHK1 -> NEXT
+ALLDONE -> NEXT
+ALLDONE -> POSTVAL
+POSTVAL -> DONE
 ```
 
 **Upgrade procedure:**
@@ -160,25 +162,27 @@ Adding nodes expands cluster capacity and compute. ECS rebalances erasure coding
 
 When a disk fails, ECS marks it as `FAILED` and begins automatic rebuild. The disk should be physically replaced promptly to restore full redundancy.
 
-```mermaid
-graph TD
-  DISK_FAIL(["Disk shows FAILED\nin ECS Portal"]) --> IDENT["Portal → Hardware → Disks\nNote: node + slot + LED indicator"]
-  IDENT --> BEGIN["Begin Replacement\n(portal guided procedure)"]
-  BEGIN --> SWAP["Hot-swap disk\n(supported hardware)"]
-  SWAP --> AUTO["ECS auto-detects new disk\nRebuild begins: REBUILDING"]
-  AUTO --> PROG["Monitor progress:\nPortal → Hardware → Disks"]
-  PROG --> REBUILT{Status =\nGOOD?}
-  REBUILT -->|No| WAIT["Continue monitoring\nDo not replace additional\ndisks during rebuild"]
-  WAIT --> PROG
-  REBUILT -->|Yes| CLEAR(["Redundancy restored"])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class REBUILT decision
-  class IDENT,BEGIN,SWAP,AUTO,PROG action
-  class WAIT warn
-  class DISK_FAIL,CLEAR term
+```d2
+direction: right
+
+DISK_FAIL: "Disk shows FAILED\nin ECS Portal" {shape: rectangle}
+IDENT: "Portal → Hardware → Disks\nNote: node + slot + LED indicator" {shape: rectangle}
+BEGIN: "Begin Replacement\n(portal guided procedure" {shape: rectangle}
+SWAP: "Hot-swap disk\n(supported hardware" {shape: rectangle}
+AUTO: "ECS auto-detects new disk\nRebuild begins: REBUILDING" {shape: rectangle}
+PROG: "Monitor progress:\nPortal → Hardware → Disks" {shape: rectangle}
+REBUILT: "REBUILT" {shape: rectangle}
+WAIT: "Continue monitoring\nDo not replace additional\ndisks during rebuild" {shape: rectangle}
+CLEAR: "Redundancy restored" {shape: rectangle}
+
+DISK_FAIL -> IDENT
+IDENT -> BEGIN
+BEGIN -> SWAP
+SWAP -> AUTO
+AUTO -> PROG
+REBUILT -> WAIT
+WAIT -> PROG
+REBUILT -> CLEAR
 ```
 
 **Procedure:**

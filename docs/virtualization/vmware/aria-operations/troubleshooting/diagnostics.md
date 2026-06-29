@@ -15,41 +15,49 @@ Aria Operations (vROps) diagnostic commands: check cluster service health with c
 </div>
 ![Aria Operations — Diagnostics](../../../../assets/virtualization-vmware-aria-operations-troubleshooting-diagno.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "GET /suite-api/api/health\ncluster-mgmt-cli status" {shape: rectangle}
+D: "grep adapter-name /var/log/vmware/vcops/collector.log\nTest adapter from vROps UI → Administration → Adapters" {shape: rectangle}
+E: "GET /api/resources?page=0\nCompare count before and after last collection" {shape: rectangle}
+F: "GET /api/alerts?pageSize=10\nCheck analytics.log for alert engine errors" {shape: rectangle}
+G: "cluster-mgmt-cli status\nVAMI → Administration → Cluster Management" {shape: rectangle}
+H: "df -h /storage/db\nCheck analytics partition usage" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "journalctl -u vmware-vcops -n 100\nCheck disk space: df -h /storage/db" {shape: rectangle}
+K: "cluster-mgmt-cli status\nCheck replica node heartbeat" {shape: rectangle}
+L: "grep ERROR collector.log | tail -50\nCheck adapter credential or TLS error" {shape: rectangle}
+M: "Check adapter last collection time in vROps UI\nAdministration → Solutions → Adapter Instances" {shape: rectangle}
+N: "grep ERROR analytics.log | tail -50\nCheck for OOM: grep OutOfMemory analytics.log" {shape: rectangle}
+O: "Check NTP sync on all nodes\ntimedatectl; chronyc tracking" {shape: rectangle}
+P: "Check /storage/db partition\nVAMI → Administration → Disk Usage" {shape: rectangle}
+Q: "Collect vcops-support bundle\nvcops-support gen" {shape: rectangle}
+R: "Open VMware SR\nmysupport.vmware.com" {shape: rectangle}
+A: "Aria Operations Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([Aria Operations Issue]) --> B{What type of problem?}
-    B -->|vROps UI unresponsive or slow| C[GET /suite-api/api/health\ncluster-mgmt-cli status]
-    B -->|Adapter not collecting data| D[grep adapter-name /var/log/vmware/vcops/collector.log\nTest adapter from vROps UI → Administration → Adapters]
-    B -->|Missing resources in inventory| E[GET /api/resources?page=0\nCompare count before and after last collection]
-    B -->|Alerts missing or stale| F[GET /api/alerts?pageSize=10\nCheck analytics.log for alert engine errors]
-    B -->|Cluster node in error state| G[cluster-mgmt-cli status\nVAMI → Administration → Cluster Management]
-    B -->|Disk space warning| H[df -h /storage/db\nCheck analytics partition usage]
-    C --> I{Health status?}
-    I -->|Not running| J[journalctl -u vmware-vcops -n 100\nCheck disk space: df -h /storage/db]
-    I -->|Running but degraded| K[cluster-mgmt-cli status\nCheck replica node heartbeat]
-    D --> L[grep ERROR collector.log | tail -50\nCheck adapter credential or TLS error]
-    E --> M[Check adapter last collection time in vROps UI\nAdministration → Solutions → Adapter Instances]
-    F --> N[grep ERROR analytics.log | tail -50\nCheck for OOM: grep OutOfMemory analytics.log]
-    G --> O[Check NTP sync on all nodes\ntimedatectl; chronyc tracking]
-    H --> P[Check /storage/db partition\nVAMI → Administration → Disk Usage]
-    J --> Q[Collect vcops-support bundle\nvcops-support gen]
-    K --> Q
-    L --> Q
-    M --> Q
-    N --> Q
-    O --> Q
-    P --> Q
-    Q --> R[Open VMware SR\nmysupport.vmware.com]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P action
-    class Q,R escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+D -> L
+E -> M
+F -> N
+G -> O
+H -> P
+J -> Q
+K -> Q
+L -> Q
+M -> Q
+N -> Q
+O -> Q
+P -> Q
+Q -> R
 ```
 
 ```d2

@@ -13,18 +13,23 @@ Windows Server Active Directory forest with multi-site domain controllers, Kerbe
 
 ![Active Directory — Architecture — Diagram](../../../../assets/compute-windows-server-active-directory-architecture-diagram.svg)
 
-```mermaid
-graph TB
-  FOREST["AD Forest\n(security boundary)"] --> ROOT["Forest Root Domain\ncorp.example.com"]
-  ROOT --> DC1["DC-01 Site A\nPDC · RID · Infra Master"]
-  ROOT --> DC2["DC-02 Site A\nGlobal Catalog"]
-  ROOT -->|"AD replication"| DC3["DC-03 · DC-04\nSite B — replica DCs"]
-  ROOT --> CHILD["Child Domain\ndivision.corp.example.com"]
-  CHILD --> CDC["Child DC"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class DC1,DC2,DC3,CDC ctrl
-  class FOREST,ROOT,CHILD mgmt
+```d2
+direction: right
+
+FOREST: "AD Forest\n(security boundary" {shape: rectangle}
+ROOT: "Forest Root Domain\ncorp.example.com" {shape: rectangle}
+DC1: "DC-01 Site A\nPDC · RID · Infra Master" {shape: rectangle}
+DC2: "DC-02 Site A\nGlobal Catalog" {shape: rectangle}
+DC3: "DC-03 · DC-04\nSite B — replica DCs" {shape: rectangle}
+CHILD: "Child Domain\ndivision.corp.example.com" {shape: rectangle}
+CDC: "Child DC" {shape: rectangle}
+
+FOREST -> ROOT
+ROOT -> DC1
+ROOT -> DC2
+ROOT -> DC3
+ROOT -> CHILD
+CHILD -> CDC
 ```
 ![Active Directory Architecture](../../../../assets/active-directory-architecture-overview.svg)
 

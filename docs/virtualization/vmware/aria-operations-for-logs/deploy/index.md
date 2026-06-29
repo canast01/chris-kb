@@ -16,20 +16,6 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Phase 1 — Pre-Deployment Prerequisites"]
-    s2["Phase 2 — Master Node Deployment"]
-    s3["Phase 3 — Worker Node Deployment"]
-    s4["Phase 4 — Log Sources and Agent Installation"]
-    s5["Phase 5 — Content Packs, Alerts, and Forwa..."]
-    s6["Phase 6 — End-to-End Validation"]
-    s7["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
-    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

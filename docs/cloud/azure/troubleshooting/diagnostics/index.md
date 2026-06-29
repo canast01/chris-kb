@@ -13,41 +13,53 @@ Azure diagnostic commands: check account and subscription context with az cli, d
 *Applies to: Microsoft Azure — all core IaaS services*
 </div>
 
-```mermaid
-graph TD
-    A([Azure Issue]) --> B{What type of problem?}
-    B -->|VM not reachable / SSH-RDP fails| C[az vm get-instance-view\nCheck power state and agent health]
-    B -->|Network connectivity error| D[az network nic show-effective-nsg\nFind deny rule]
-    B -->|Recent change caused regression| E[az monitor activity-log list\nFind the change event]
-    B -->|VM boot failure| F[az vm boot-diagnostics get-boot-log\nRead serial console output]
-    B -->|App error / log analysis| G[Log Analytics KQL\nHeartbeat or custom table]
-    B -->|Key Vault access denied| H[az keyvault show\nCheck access policies and firewall]
-    C --> I{Power state?}
-    I -->|Stopped / deallocated| J[az vm start --name vm -g rg\nVerify billing and quota]
-    I -->|Running but agent failed| K[az vm run-command invoke\nRun ipconfig or hostname]
-    D --> L{Rule found?}
-    L -->|Deny rule| M[az network nsg rule update\nor add allow rule with lower priority]
-    L -->|No rule; check UDR| N[az network nic show-effective-route-table\nBlackhole route?]
-    E --> O[Review change: who, what, when\nRoll back if recent deployment]
-    F --> P[Boot error in serial log\nCheck disk, kernel panic, fstab]
-    G --> Q[KQL: Heartbeat | where TimeGenerated > ago 1h\nCount by Computer]
-    H --> R[Check RBAC vs access policies\nCheck network ACLs on Key Vault]
-    J --> S[Collect resource diag\naz vm boot-diagnostics get-boot-log]
-    K --> S
-    M --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-    S --> T[Open Azure support request\nportal.azure.com → Help + support]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
-    class S,T escalate
+B: "B" {shape: rectangle}
+C: "az vm get-instance-view\nCheck power state and agent health" {shape: rectangle}
+D: "az network nic show-effective-nsg\nFind deny rule" {shape: rectangle}
+E: "az monitor activity-log list\nFind the change event" {shape: rectangle}
+F: "az vm boot-diagnostics get-boot-log\nRead serial console output" {shape: rectangle}
+G: "Log Analytics KQL\nHeartbeat or custom table" {shape: rectangle}
+H: "az keyvault show\nCheck access policies and firewall" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "az vm start --name vm -g rg\nVerify billing and quota" {shape: rectangle}
+K: "az vm run-command invoke\nRun ipconfig or hostname" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "az network nsg rule update\nor add allow rule with lower priority" {shape: rectangle}
+N: "az network nic show-effective-route-table\nBlackhole route?" {shape: rectangle}
+O: "Review change: who, what, when\nRoll back if recent deployment" {shape: rectangle}
+P: "Boot error in serial log\nCheck disk, kernel panic, fstab" {shape: rectangle}
+Q: "KQL: Heartbeat | where TimeGenerated > ago 1h\nCount by Computer" {shape: rectangle}
+R: "Check RBAC vs access policies\nCheck network ACLs on Key Vault" {shape: rectangle}
+S: "Collect resource diag\naz vm boot-diagnostics get-boot-log" {shape: rectangle}
+T: "Open Azure support request\nportal.azure.com → Help + support" {shape: rectangle}
+A: "Azure Issue" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+L -> M
+L -> N
+E -> O
+F -> P
+G -> Q
+H -> R
+J -> S
+K -> S
+M -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
+S -> T
 ```
 
 ```d2

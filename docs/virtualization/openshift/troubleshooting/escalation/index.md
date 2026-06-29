@@ -12,31 +12,35 @@ Red Hat support escalation process: severity levels, required data for support c
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph TD
-    A([Issue Not Resolved]) --> B[Collect must-gather\noc adm must-gather]
-    B --> C[Search KCS\naccess.redhat.com/solutions]
-    C -->|Solution found| D([Apply KCS Fix\nResolve Internally])
-    C -->|No KCS match| E[Open Support Case\naccess.redhat.com\nSev 1 or 2]
-    E --> F{Sev 1?}
-    F -->|Yes| G[Call Red Hat immediately\nphone on access.redhat.com]
-    F -->|No| H[Wait for CEE assignment\nAttach must-gather + sos]
-    G --> I{Progress in 2–4h?}
-    H --> I
-    I -->|Yes| J([CEE Working\nMonitor case])
-    I -->|No| K[Request escalation\nAsk for L3 or Eng]
-    K --> L{TAM assigned?}
-    L -->|Yes| M[Contact TAM\nExpedite internally]
-    L -->|No| N[Request CritSit team\nFor data loss or security]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef ok fill:#15803d,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,F,I,L dark
-    class B,C,E,G,H,K action
-    class D,J ok
-    class M,N escalate
+A: "Issue Not Resolved" {shape: rectangle}
+B: "Collect must-gather\noc adm must-gather" {shape: rectangle}
+C: "Search KCS\naccess.redhat.com/solutions" {shape: rectangle}
+D: "Apply KCS Fix\nResolve Internally" {shape: rectangle}
+E: "Open Support Case\naccess.redhat.com\nSev 1 or 2" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Call Red Hat immediately\nphone on access.redhat.com" {shape: rectangle}
+H: "Wait for CEE assignment\nAttach must-gather + sos" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "CEE Working\nMonitor case" {shape: rectangle}
+K: "Request escalation\nAsk for L3 or Eng" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Contact TAM\nExpedite internally" {shape: rectangle}
+N: "Request CritSit team\nFor data loss or security" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+F -> G
+F -> H
+H -> I
+I -> J
+I -> K
+L -> M
+L -> N
 ```
 
 ```plantuml

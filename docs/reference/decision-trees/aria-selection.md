@@ -13,30 +13,37 @@ tags:
 Choose the right Aria product for your need: performance monitoring, log management, infrastructure automation, network visibility, or lifecycle management of the Aria Suite itself.
 </div>
 
-```mermaid
-flowchart TD
-    A([Start: Which Aria product do I need?]) --> B{Primary need?}
+```d2
+direction: right
 
-    B -->|Monitor performance\nalerts · capacity planning| C[Aria Operations\nformerly vROps\nAdapters: vCenter · NSX · storage]
-    B -->|Search and analyse logs\nsyslog · structured events| D[Aria Logs\nformerly Log Insight\nliagent or syslog UDP/514]
-    B -->|Self-service catalog\nIaaS automation · blueprints| E[Aria Automation\nformerly vRA\nCloud accounts: vCenter · AWS · Azure]
-    B -->|Network path analysis\nflow visibility · micro-seg| F[Aria Networks\nformerly vRNI\nData sources: NSX · vCenter · switches]
-    B -->|Install or upgrade\nAria products| G[Aria Suite Lifecycle\nformerly LCM\nDeploys all Aria Suite products]
+B: "B" {shape: rectangle}
+C: "Aria Operations\nformerly vROps\nAdapters: vCenter · NSX · storage" {shape: rectangle}
+D: "Aria Logs\nformerly Log Insight\nliagent or syslog UDP/514" {shape: rectangle}
+E: "Aria Automation\nformerly vRA\nCloud accounts: vCenter · AWS · Azure" {shape: rectangle}
+F: "Aria Networks\nformerly vRNI\nData sources: NSX · vCenter · switches" {shape: rectangle}
+G: "Aria Suite Lifecycle\nformerly LCM\nDeploys all Aria Suite products" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Use Aria Suite Lifecycle\nto deploy and manage all products\nSingle pane for certs and upgrades" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Deploy Workspace ONE Access\nformerly VMware Identity Manager\nSAML IdP for all Aria products" {shape: rectangle}
+L: "Deploy product directly\nLocal admin auth\nOVA or LCM-managed" {shape: rectangle}
+M: "Full Aria Suite stack\nLCM + Workspace ONE Access\n+ chosen Aria products" {shape: rectangle}
+A: "Start: Which Aria product do I need?" {shape: rectangle}
 
-    C --> H{Need multiple Aria products?}
-    D --> H
-    E --> H
-    F --> H
-
-    H -->|Yes — 2 or more| I[Use Aria Suite Lifecycle\nto deploy and manage all products\nSingle pane for certs and upgrades]
-    H -->|No — one product only| J{SSO / federation needed?}
-    G --> J
-    I --> J
-
-    J -->|Yes — multiple Aria UIs\nor LDAP/SAML integration| K[Deploy Workspace ONE Access\nformerly VMware Identity Manager\nSAML IdP for all Aria products]
-    J -->|No — standalone only| L([Deploy product directly\nLocal admin auth\nOVA or LCM-managed])
-
-    K --> M([Full Aria Suite stack\nLCM + Workspace ONE Access\n+ chosen Aria products])
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+D -> H
+E -> H
+F -> H
+H -> I
+G -> J
+I -> J
+J -> K
+J -> L
+K -> M
 ```
 
 ## Product summary

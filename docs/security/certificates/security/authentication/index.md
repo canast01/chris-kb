@@ -45,18 +45,22 @@ end note
 
 ## Root CA Lifecycle — Offline Operation Flow
 
-```mermaid
-flowchart TD
-    rootNormal["Root CA — powered off\n(air-gapped — HSM keys secured)"]
-    rootNormal -->|"trigger: new sub-CA needed\nor Root CA renewal"| powerOn["Power on Root CA\nin secure ceremony room\n(2+ witnesses required)"]
-    powerOn --> submitCSR["Receive Subordinate CA CSR\n(from Issuing CA)"]
-    submitCSR --> signCert["Sign Subordinate CA certificate\n(certreq -submit SubCA template)"]
-    signCert --> publishAD["Publish new CA cert to AD\n(certutil -dspublish SubCA)"]
-    publishAD --> powerOff["Power off Root CA immediately\n(Stop-Computer -Force)"]
-    powerOff --> rootNormal
-    signCert -. "only event type" .-> trigger1["Issue Sub-CA cert"]
-    signCert -. "only event type" .-> trigger2["Renew Root CA cert"]
-    signCert -. "only event type" .-> trigger3["Update Root CA CRL"]
+```d2
+direction: right
+
+rootNormal: "Root CA — powered off\n(air-gapped — HSM keys secured" {shape: rectangle}
+powerOn: "Power on Root CA\nin secure ceremony room\n(2+ witnesses required" {shape: rectangle}
+submitCSR: "Receive Subordinate CA CSR\n(from Issuing CA" {shape: rectangle}
+signCert: "Sign Subordinate CA certificate\n(certreq -submit SubCA template" {shape: rectangle}
+publishAD: "Publish new CA cert to AD\n(certutil -dspublish SubCA" {shape: rectangle}
+powerOff: "Power off Root CA immediately\n(Stop-Computer -Force" {shape: rectangle}
+
+rootNormal -> powerOn
+powerOn -> submitCSR
+submitCSR -> signCert
+signCert -> publishAD
+publishAD -> powerOff
+powerOff -> rootNormal
 ```
 
 ## Root CA Offline Procedure

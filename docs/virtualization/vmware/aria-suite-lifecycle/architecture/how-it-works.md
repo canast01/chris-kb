@@ -44,21 +44,23 @@ Aria Suite Lifecycle (LCM) is a management appliance that deploys, upgrades, and
 
 ## Product Management Topology
 
-```mermaid
-graph TB
-  LCM["Aria Suite Lifecycle\n(LCM appliance)"]
-  LCM --> VROPS["Aria Operations"]
-  LCM --> VRLI["Aria Ops for Logs"]
-  LCM --> VRA["Aria Automation"]
-  LCM --> VRNI["Aria Ops for Networks"]
-  LCM --> REPO["Product Binaries Repo\n(NFS /data)"]
-  ADMIN(["vSphere Admin"]) -->|"web UI"| LCM
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class LCM mgmt
-  class VROPS,VRLI,VRA,VRNI ctrl
-  class ADMIN host
+```d2
+direction: right
+
+LCM: "Aria Suite Lifecycle\n(LCM appliance" {shape: rectangle}
+VROPS: "Aria Operations" {shape: rectangle}
+VRLI: "Aria Ops for Logs" {shape: rectangle}
+VRA: "Aria Automation" {shape: rectangle}
+VRNI: "Aria Ops for Networks" {shape: rectangle}
+REPO: "Product Binaries Repo\n(NFS /data" {shape: rectangle}
+ADMIN: "vSphere Admin" {shape: rectangle}
+
+LCM -> VROPS
+LCM -> VRLI
+LCM -> VRA
+LCM -> VRNI
+LCM -> REPO
+ADMIN -> LCM
 ```
 
 | API Path | Purpose |

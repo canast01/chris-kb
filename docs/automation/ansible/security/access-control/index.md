@@ -24,15 +24,25 @@ Ansible access control: SSH key management, service account scoping, sudo privil
 
 Ansible Automation Platform enforces role-based access control at the organization, team, and object level.
 
-```mermaid
-graph TD
-    ORG[Organization] --> TEAM[Teams]
-    TEAM --> USER[Users]
-    ORG --> CRED[Credentials]
-    ORG --> INV[Inventories]
-    ORG --> PROJ[Projects]
-    ORG --> JT[Job Templates]
-    USER --> ROLE[Role Assignment\nAdmin / Execute / Use / Read]
+```d2
+direction: right
+
+ORG: "Organization" {shape: rectangle}
+TEAM: "Teams" {shape: rectangle}
+USER: "Users" {shape: rectangle}
+CRED: "Credentials" {shape: rectangle}
+INV: "Inventories" {shape: rectangle}
+PROJ: "Projects" {shape: rectangle}
+JT: "Job Templates" {shape: rectangle}
+ROLE: "Role Assignment\nAdmin / Execute / Use / Read" {shape: rectangle}
+
+ORG -> TEAM
+TEAM -> USER
+ORG -> CRED
+ORG -> INV
+ORG -> PROJ
+ORG -> JT
+USER -> ROLE
 ```
 
 ### Sudoers — Scope Privilege Escalation

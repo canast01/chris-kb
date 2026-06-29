@@ -14,32 +14,34 @@ Dell Capacity on Demand diagnostic commands: verify COD license state with symli
 </div>
 ![Dell COD — Diagnostics](../../../../assets/storage-dell-cod-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "COD Activation Issue" {shape: rectangle}
+B: "symlicense -sid SID list\nCheck COD license state" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "symlicense preview\nValidate key file" {shape: rectangle}
+E: "symcfg -sid SID list -capacity\nCheck raw capacity" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "symlicense install -file\nInstall the key" {shape: rectangle}
+H: "Contact Dell Licensing\nRequest key re-issue" {shape: rectangle}
+I: "sympd list -sid SID\nCheck Reserved drives" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "symcfg discover\nTrigger device scan" {shape: rectangle}
+L: "symcfg -pool -dp list\nCheck pool capacity" {shape: rectangle}
+M: "Add drives to pool\nUnisphere → Storage Pools" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([COD Activation Issue]) --> B[symlicense -sid SID list\nCheck COD license state]
-    B --> C{COD feature present?}
-    C -->|No — key not installed| D[symlicense preview\nValidate key file]
-    C -->|Yes — capacity not visible| E[symcfg -sid SID list -capacity\nCheck raw capacity]
-    D --> F{Preview result?}
-    F -->|Valid| G[symlicense install -file\nInstall the key]
-    F -->|SN mismatch| H[Contact Dell Licensing\nRequest key re-issue]
-    E --> I[sympd list -sid SID\nCheck Reserved drives]
-    I --> J{Drives released?}
-    J -->|Still Reserved| K[symcfg discover\nTrigger device scan]
-    J -->|Released| L[symcfg -pool -dp list\nCheck pool capacity]
-    K --> L
-    G --> E
-    L --> M[Add drives to pool\nUnisphere → Storage Pools]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef ok fill:#15803d,color:#fff
-    class A,C,F,J dark
-    class B,D,E,G,H,I,K action
-    class L,M ok
+A -> B
+C -> D
+C -> E
+F -> G
+F -> H
+E -> I
+J -> K
+J -> L
+K -> L
+G -> E
+L -> M
 ```
 
 ```d2

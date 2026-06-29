@@ -14,22 +14,23 @@ Integrations reference covering DD Boost Backup Flow, NetBackup (OST with DD Boo
 
 ## DD Boost Backup Flow
 
-```mermaid
-graph TD
-    backupApp(["Backup Application\nVeeam / NetBackup / CommVault"])
-    ddvdp["DDBoost Client Library\n(DDVDP plug-in / OST plug-in)\ninstalled on backup server"]
-    localDedup["Source-side Dedup\n(DSP — Distributed Segment Processing)\n~50% traffic reduction"]
-    ddReceiver["DD Boost Receiver\non Data Domain"]
-    sisl["SISL Engine\n(unique segments only)"]
-    nvramCache["NVRAM Write Cache"]
-    ddfs["[(DDFS on Disk)]\n(deduplicated + compressed)"]
+```d2
+direction: right
 
-    backupApp --> ddvdp
-    ddvdp --> localDedup
-    localDedup -->|"unique segments only\nover TCP/IP"| ddReceiver
-    ddReceiver --> sisl
-    sisl --> nvramCache
-    nvramCache --> ddfs
+backupApp: "Backup Application\nVeeam / NetBackup / CommVault" {shape: rectangle}
+ddvdp: "DDBoost Client Library\n(DDVDP plug-in / OST plug-in)\ninstalled on backup server" {shape: rectangle}
+localDedup: "Source-side Dedup\n(DSP — Distributed Segment Processing)\n~50% traffic reduction" {shape: rectangle}
+ddReceiver: "DD Boost Receiver\non Data Domain" {shape: rectangle}
+sisl: "SISL Engine\n(unique segments only" {shape: rectangle}
+nvramCache: "NVRAM Write Cache" {shape: rectangle}
+ddfs: "DDFS on Disk)]\n(deduplicated + compressed" {shape: rectangle}
+
+backupApp -> ddvdp
+ddvdp -> localDedup
+localDedup -> ddReceiver
+ddReceiver -> sisl
+sisl -> nvramCache
+nvramCache -> ddfs
 ```
 
 ## CommVault (SISL + DD Boost)

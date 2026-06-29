@@ -12,19 +12,23 @@ An app registration in Microsoft Entra ID creates an identity for an application
 
 ## App Registration to Service Principal Model
 
-```mermaid
-flowchart LR
-    appReg["App Registration\n(Home Tenant)\nApplication Object"]
-    sp["Service Principal\n(Each Tenant where app is used)\nService Principal Object"]
-    creds["Credentials\nClient Secret OR Certificate"]
-    oidc["OIDC Federation\nno stored secret"]
-    apiPerms["API Permissions\nMicrosoft Graph · Azure · custom API"]
-    entraToken["Entra ID Token\nJWT access token"]
-    resource["Protected Resource\nMicrosoft Graph · Azure ARM · custom API"]
+```d2
+direction: right
 
-    appReg -->|"instantiates"| sp
-    appReg --> creds & oidc & apiPerms
-    sp -->|"authenticates"| entraToken --> resource
+appReg: "App Registration\n(Home Tenant)\nApplication Object" {shape: rectangle}
+sp: "Service Principal\n(Each Tenant where app is used)\nService Principal Object" {shape: rectangle}
+creds: "Credentials\nClient Secret OR Certificate" {shape: rectangle}
+oidc: "OIDC Federation\nno stored secret" {shape: rectangle}
+apiPerms: "API Permissions\nMicrosoft Graph · Azure · custom API" {shape: rectangle}
+entraToken: "Entra ID Token\nJWT access token" {shape: rectangle}
+resource: "Protected Resource\nMicrosoft Graph · Azure ARM · custom API" {shape: rectangle}
+
+appReg -> sp
+appReg -> creds
+creds -> oidc
+oidc -> apiPerms
+sp -> entraToken
+entraToken -> resource
 ```
 
 ## Creating an App Registration

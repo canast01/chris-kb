@@ -44,20 +44,23 @@ SnapCenter is a Windows-based centralized data protection platform that orchestr
 
 ## Topology
 
-```mermaid
-graph TB
-  SCW["SnapCenter Server\n(Windows / Linux VM)"]
-  SCW --> PL1["Plug-in for SQL Server"]
-  SCW --> PL2["Plug-in for Oracle"]
-  SCW --> PL3["Plug-in for VMware"]
-  PL1 & PL2 & PL3 --> ONTAP["NetApp ONTAP\nSnapshot · SnapMirror · SnapVault"]
-  ADMIN(["DBA / Storage Admin"]) -->|"web UI / REST API"| SCW
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class SCW,PL1,PL2,PL3 ctrl
-  class ONTAP store
-  class ADMIN host
+```d2
+direction: right
+
+SCW: "SnapCenter Server\n(Windows / Linux VM" {shape: rectangle}
+PL1: "Plug-in for SQL Server" {shape: rectangle}
+PL2: "Plug-in for Oracle" {shape: rectangle}
+PL3: "Plug-in for VMware" {shape: rectangle}
+ONTAP: "NetApp ONTAP\nSnapshot · SnapMirror · SnapVault" {shape: rectangle}
+ADMIN: "DBA / Storage Admin" {shape: rectangle}
+
+SCW -> PL1
+SCW -> PL2
+SCW -> PL3
+PL1 -> PL2
+PL2 -> PL3
+PL3 -> ONTAP
+ADMIN -> SCW
 ```
 
 ## HA Options

@@ -17,42 +17,37 @@ Regular health checks on SRDF/S replication confirm that all device pairs are sy
 
 Health checks cover four layers: pair state, link/director status, performance metrics, and array-level configuration consistency.
 
-```mermaid
-flowchart TD
-    dailyStart["Daily Health Check"]
-    pairState["Check Pair State\nsymrdf query -g dgname"]
-    allSynced{"All Pairs\nSynchronized?"}
-    checkRTT["Check WAN RTT\nping -c 20 dr-site-ip"]
-    rttOk{"RTT ≤ 5ms?"}
-    checkDirector["Check RDF Director\nsymcfg list -dir all -rdf"]
-    dirOnline{"Directors\nOnline?"}
-    checkLink["Check Link Utilization\nsymstat -rdf -dir RF-1F -i 5 -c 3"]
-    linkOk{"Utilization\n< 80%?"}
-    healthy["Health Check PASSED\nDocument results"]
-    investigatePairs["Investigate Pair State\nCheck invalid tracks"]
-    investigateRTT["Report to Network Team\nRTT exceeds SRDF/S budget"]
-    investigateDir["Check Director Port\nPhysical link and configuration"]
-    investigateLink["Investigate Link Saturation\nEngage network team"]
+```d2
+direction: right
 
-    dailyStart --> pairState
-    pairState --> allSynced
-    allSynced -->|"Yes"| checkRTT
-    allSynced -->|"No"| investigatePairs
-    checkRTT --> rttOk
-    rttOk -->|"Yes"| checkDirector
-    rttOk -->|"No"| investigateRTT
-    checkDirector --> dirOnline
-    dirOnline -->|"Yes"| checkLink
-    dirOnline -->|"No"| investigateDir
-    checkLink --> linkOk
-    linkOk -->|"Yes"| healthy
-    linkOk -->|"No"| investigateLink
+dailyStart: "Daily Health Check" {shape: rectangle}
+pairState: "Check Pair State\nsymrdf query -g dgname" {shape: rectangle}
+allSynced: "allSynced" {shape: rectangle}
+checkRTT: "Check WAN RTT\nping -c 20 dr-site-ip" {shape: rectangle}
+investigatePairs: "Investigate Pair State\nCheck invalid tracks" {shape: rectangle}
+rttOk: "rttOk" {shape: rectangle}
+checkDirector: "Check RDF Director\nsymcfg list -dir all -rdf" {shape: rectangle}
+investigateRTT: "Report to Network Team\nRTT exceeds SRDF/S budget" {shape: rectangle}
+dirOnline: "dirOnline" {shape: rectangle}
+checkLink: "Check Link Utilization\nsymstat -rdf -dir RF-1F -i 5 -c 3" {shape: rectangle}
+investigateDir: "Check Director Port\nPhysical link and configuration" {shape: rectangle}
+linkOk: "linkOk" {shape: rectangle}
+healthy: "Health Check PASSED\nDocument results" {shape: rectangle}
+investigateLink: "Investigate Link Saturation\nEngage network team" {shape: rectangle}
 
-    style healthy fill:#15803d,color:#fff
-    style investigatePairs fill:#be123c,color:#fff
-    style investigateRTT fill:#be123c,color:#fff
-    style investigateDir fill:#be123c,color:#fff
-    style investigateLink fill:#b45309,color:#fff
+dailyStart -> pairState
+pairState -> allSynced
+allSynced -> checkRTT
+allSynced -> investigatePairs
+checkRTT -> rttOk
+rttOk -> checkDirector
+rttOk -> investigateRTT
+checkDirector -> dirOnline
+dirOnline -> checkLink
+dirOnline -> investigateDir
+checkLink -> linkOk
+linkOk -> healthy
+linkOk -> investigateLink
 ```
 
 ```vegalite

@@ -33,24 +33,25 @@ powershell_encryption_and_secure_com -> encryption_reference: hardens
 
 ## PowerShell Encryption and Secure Communication
 
-```mermaid
-graph TD
-    plainText["Plaintext Password\n/ API Key"]
-    secureString["SecureString\n(in-memory, encrypted)"]
-    dpapi["ConvertFrom-SecureString\n(DPAPI encrypted string)"]
-    diskFile["Encrypted file\n(api-key.txt)"]
-    clixml["Export-Clixml\n(PSCredential .xml)"]
-    winrmHTTPS["WinRM HTTPS\n(port 5986)"]
-    remoteSession["Remote PSSession\n(encrypted channel)"]
+```d2
+direction: right
 
-    plainText -->|ConvertTo-SecureString| secureString
-    secureString -->|ConvertFrom-SecureString| dpapi
-    dpapi --> diskFile
-    diskFile -->|ConvertTo-SecureString| secureString
-    secureString --> clixml
-    clixml -->|Import-Clixml| secureString
-    secureString -->|New-PSSession -UseSSL| winrmHTTPS
-    winrmHTTPS --> remoteSession
+plainText: "Plaintext Password\n/ API Key" {shape: rectangle}
+secureString: "SecureString\n(in-memory, encrypted" {shape: rectangle}
+dpapi: "ConvertFrom-SecureString\n(DPAPI encrypted string" {shape: rectangle}
+diskFile: "Encrypted file\n(api-key.txt" {shape: rectangle}
+clixml: "Export-Clixml\n(PSCredential .xml" {shape: rectangle}
+winrmHTTPS: "WinRM HTTPS\n(port 5986" {shape: rectangle}
+remoteSession: "Remote PSSession\n(encrypted channel" {shape: rectangle}
+
+plainText -> secureString
+secureString -> dpapi
+dpapi -> diskFile
+diskFile -> secureString
+secureString -> clixml
+clixml -> secureString
+secureString -> winrmHTTPS
+winrmHTTPS -> remoteSession
 ```
 
 ## Encryption Reference

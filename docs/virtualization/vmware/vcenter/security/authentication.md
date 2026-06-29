@@ -78,19 +78,21 @@ echo | openssl s_client -connect <vcenter-fqdn>:443 -servername <vcenter-fqdn> 2
 
 ## Certificate Replacement Process
 
-```mermaid
-graph LR
-    id1["Identify expiring cert\n(VAMI / openssl check)"]
-    id2["Confirm vCenter\nbackup is current"]
-    id3["Schedule maintenance\nwindow"]
-    id4["Replace via\ncertificate-manager"]
-    id5["Restart affected\nservices"]
-    id6["Validate browser,\nSSO, integrations"]
+```d2
+direction: right
 
-    id1 --> id2 --> id3 --> id4 --> id5 --> id6
+id1: "Identify expiring cert\n(VAMI / openssl check" {shape: rectangle}
+id2: "Confirm vCenter\nbackup is current" {shape: rectangle}
+id3: "Schedule maintenance\nwindow" {shape: rectangle}
+id4: "Replace via\ncertificate-manager" {shape: rectangle}
+id5: "Restart affected\nservices" {shape: rectangle}
+id6: "Validate browser,\nSSO, integrations" {shape: rectangle}
 
-    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
-    class id1,id2,id3,id4,id5,id6 step
+id1 -> id2
+id2 -> id3
+id3 -> id4
+id4 -> id5
+id5 -> id6
 ```
 
 1. Identify the certificate and replacement method (VMCA, custom CA, or self-signed)

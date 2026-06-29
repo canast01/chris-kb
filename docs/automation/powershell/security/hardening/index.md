@@ -35,24 +35,25 @@ audit_and_event_log -> hardening_reference: hardens
 
 ## PowerShell Hardening Layers
 
-```mermaid
-graph TD
-    execPolicy["Execution Policy\n(RemoteSigned / AllSigned)"]
-    scriptSigning["Script Signing\n(Set-AuthenticodeSignature)"]
-    clm["Constrained Language Mode\n(WDAC / AppLocker)"]
-    transcripts["Transcript Logging\n(Start-Transcript → \\\\server\\pslogs)"]
-    scriptBlock["Script Block Logging\n(Event ID 4104)"]
-    jea["JEA\n(Just Enough Administration)"]
-    moduleAllow["Module Allow-listing\n(WDAC approved modules)"]
-    siem["SIEM / Log Analysis\n(alert on suspicious blocks)"]
+```d2
+direction: right
 
-    execPolicy --> scriptSigning
-    scriptSigning --> clm
-    clm --> jea
-    jea --> moduleAllow
-    transcripts --> siem
-    scriptBlock --> siem
-    moduleAllow --> siem
+execPolicy: "Execution Policy\n(RemoteSigned / AllSigned" {shape: rectangle}
+scriptSigning: "Script Signing\n(Set-AuthenticodeSignature" {shape: rectangle}
+clm: "Constrained Language Mode\n(WDAC / AppLocker" {shape: rectangle}
+jea: "JEA\n(Just Enough Administration" {shape: rectangle}
+moduleAllow: "Module Allow-listing\n(WDAC approved modules" {shape: rectangle}
+transcripts: "Transcript Logging\n(Start-Transcript → \\\\server\\pslogs" {shape: rectangle}
+siem: "SIEM / Log Analysis\n(alert on suspicious blocks" {shape: rectangle}
+scriptBlock: "Script Block Logging\n(Event ID 4104" {shape: rectangle}
+
+execPolicy -> scriptSigning
+scriptSigning -> clm
+clm -> jea
+jea -> moduleAllow
+transcripts -> siem
+scriptBlock -> siem
+moduleAllow -> siem
 ```
 
 ## Audit and Event Log

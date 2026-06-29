@@ -28,26 +28,33 @@ Ansible is an agentless automation tool — it connects to remote hosts over SSH
 
 ## Control Node and Inventory Topology
 
-```mermaid
-graph TD
-    controlNode["Control Node\n(ansible + python)"]
-    inventoryFile["Inventory\n(INI / YAML / Dynamic)"]
-    vaultSecrets["Vault Secrets\n(ansible-vault)"]
-    galaxyRoles["Galaxy Roles\n& Collections"]
+```d2
+direction: right
 
-    controlNode --> inventoryFile
-    controlNode --> vaultSecrets
-    controlNode --> galaxyRoles
+controlNode: "Control Node\n(ansible + python" {shape: rectangle}
+inventoryFile: "Inventory\n(INI / YAML / Dynamic" {shape: rectangle}
+vaultSecrets: "Vault Secrets\n(ansible-vault" {shape: rectangle}
+galaxyRoles: "Galaxy Roles\n& Collections" {shape: rectangle}
+groupWeb: "Group: webservers\nweb01, web02" {shape: rectangle}
+groupDB: "Group: dbservers\ndb01, db02" {shape: rectangle}
+groupNet: "Group: network_devices\nrouter01" {shape: rectangle}
+web01: "web01" {shape: rectangle}
+web02: "web02" {shape: rectangle}
+db01: "db01" {shape: rectangle}
+db02: "db02" {shape: rectangle}
+router01: "router01" {shape: rectangle}
 
-    inventoryFile --> groupWeb["Group: webservers\nweb01, web02"]
-    inventoryFile --> groupDB["Group: dbservers\ndb01, db02"]
-    inventoryFile --> groupNet["Group: network_devices\nrouter01"]
-
-    groupWeb -->|SSH| web01["web01"]
-    groupWeb -->|SSH| web02["web02"]
-    groupDB -->|SSH| db01["db01"]
-    groupDB -->|SSH| db02["db02"]
-    groupNet -->|SSH| router01["router01"]
+controlNode -> inventoryFile
+controlNode -> vaultSecrets
+controlNode -> galaxyRoles
+inventoryFile -> groupWeb
+inventoryFile -> groupDB
+inventoryFile -> groupNet
+groupWeb -> web01
+groupWeb -> web02
+groupDB -> db01
+groupDB -> db02
+groupNet -> router01
 ```
 
 ---

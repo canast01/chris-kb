@@ -14,36 +14,17 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 </div>
 ![Amazon EVS — Common Issues](../../../../assets/cloud-aws-evs-troubleshooting-common-issues.svg)
 
+```d2
+direction: right
 
+A: "Issue Reported" {shape: rectangle}
+C: "Contact AWS Support\nwith host-id + env-id" {shape: rectangle}
+F: "Wait for resync\ndo not remove hosts" {shape: rectangle}
+G: "Check vSAN health\ncheck ENI MTU" {shape: rectangle}
+I: "Check DX path\nCheck HCX appliance\nhealth + certs" {shape: rectangle}
+K: "Check T0 BGP state\nCheck VPC route table" {shape: rectangle}
+L: "Check vCenter\nand SDDC Manager logs" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([Issue Reported]) --> B{Host FAILED\nor CREATE_FAILED?}
-    B -- Yes --> C([Contact AWS Support\nwith host-id + env-id])
-    B -- No --> D{vSAN degraded\nor inaccessible?}
-    D -- Yes --> E{BytesToSync\nnon-zero?}
-    E -- Yes --> F([Wait for resync\ndo not remove hosts])
-    E -- No --> G([Check vSAN health\ncheck ENI MTU])
-    D -- No --> H{HCX service\nmesh down?}
-    H -- Yes --> I([Check DX path\nCheck HCX appliance\nhealth + certs])
-    H -- No --> J{NSX-T routing\nfailure?}
-    J -- Yes --> K([Check T0 BGP state\nCheck VPC route table])
-    J -- No --> L([Check vCenter\nand SDDC Manager logs])
-
-    classDef issue fill:#1e3a5f,color:#fff
-    classDef host fill:#7c3aed,color:#fff
-    classDef vsan fill:#b45309,color:#fff
-    classDef hcx fill:#15803d,color:#fff
-    classDef nsx fill:#1d4ed8,color:#fff
-    classDef support fill:#374151,color:#fff
-
-    class A issue
-    class B,C host
-    class D,E,F,G vsan
-    class H,I hcx
-    class J,K nsx
-    class L support
 ```
 
 ```d2
@@ -74,25 +55,28 @@ aws_evs_api_errors -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> D1{EVS cluster deployment\nfailed?}
-    S --> D2{ESXi host disconnected\nor FAILED state?}
-    S --> D3{vSAN health\nred / degraded?}
-    S --> D4{NSX Manager\nunreachable?}
-    S --> D5{VPC connectivity\nto on-prem broken?}
-    D1 --> R1[AWS EVS API Errors]
-    D2 --> R2[Host Stuck or FAILED State]
-    D3 --> R3[vSAN Degraded Health]
-    D4 --> R4[NSX-T Routing Failure]
-    D5 --> R5[HCX Service Mesh Down]
-    R2 --> R6[vSAN Degraded Health]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6 section
-    class D1,D2,D3,D4,D5 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "AWS EVS API Errors" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R2: "Host Stuck or FAILED State" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R3: "vSAN Degraded Health" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R4: "NSX-T Routing Failure" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R5: "HCX Service Mesh Down" {shape: rectangle}
+R6: "vSAN Degraded Health" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+
+D1 -> R1
+D2 -> R2
+D3 -> R3
+D4 -> R4
+D5 -> R5
+R2 -> R6
 ```
 
 ---

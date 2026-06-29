@@ -13,17 +13,20 @@ A Private Endpoint is a network interface that uses a private IP from your VNet 
 
 ## Private Endpoint Architecture
 
-```mermaid
-flowchart LR
-    appVM["Application VM\nin VNet"]
-    subnet["VNet Subnet\nprivate-endpoint-network-policies = disabled"]
-    pe["Private Endpoint\nprivate IP from VNet"]
-    privDNS["Private DNS Zone\nprivatelink.vaultcore.azure.net"]
-    paasService["Azure PaaS Service\nKey Vault · Storage · SQL"]
+```d2
+direction: right
 
-    appVM -->|"DNS lookup"| privDNS
-    privDNS -->|"resolves to private IP"| pe
-    appVM --> subnet --> pe -->|"private link"| paasService
+appVM: "Application VM\nin VNet" {shape: rectangle}
+privDNS: "Private DNS Zone\nprivatelink.vaultcore.azure.net" {shape: rectangle}
+pe: "Private Endpoint\nprivate IP from VNet" {shape: rectangle}
+subnet: "VNet Subnet\nprivate-endpoint-network-policies = disabled" {shape: rectangle}
+paasService: "Azure PaaS Service\nKey Vault · Storage · SQL" {shape: rectangle}
+
+appVM -> privDNS
+privDNS -> pe
+appVM -> subnet
+subnet -> pe
+pe -> paasService
 ```
 
 ## Creating a Private Endpoint

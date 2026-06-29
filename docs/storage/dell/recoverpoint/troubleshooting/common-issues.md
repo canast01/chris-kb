@@ -8,7 +8,6 @@ search:
 # RecoverPoint — Common Issues
 ![RecoverPoint — Common Issues](../../../../assets/storage-dell-recoverpoint-troubleshooting-common-issues.svg)
 
-
 ```bash
 # Via boxmgmt SSH to RPA
 boxmgmt cg check_cg <CG-name>
@@ -41,41 +40,41 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{Journal full\nreplication paused?}
-    S --> B2{RPA cluster\ndegraded?}
-    S --> B3{Consistency group\nsuspended?}
-    S --> B4{Failover test\nfailed?}
-    S --> B5{Link bandwidth\nsaturated?}
+```d2
+direction: right
 
-    B1 -->|Check journal capacity| D1{Journal volume\nabove 80 percent?}
-    D1 -->|Yes| R1[See Symptom Table —\nCG suspended: expand journal volume]
-    D1 -->|Splitter offline| R2[See Symptom Table —\nSplitter offline: re-register splitter]
+D1: "D1" {shape: rectangle}
+R1: "See Symptom Table —\nCG suspended: expand journal volume" {shape: rectangle}
+R2: "See Symptom Table —\nSplitter offline: re-register splitter" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Symptom Table —\nHigh lag: check RPA performance and WAN" {shape: rectangle}
+R4: "See Physical Infrastructure —\nRPA virtual appliance: check ESXi host" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Symptom Table —\nImage stuck: force release image access" {shape: rectangle}
+R6: "See Symptom Table —\nExpand journal volume before resuming" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Commands —\nEnable image access via boxmgmt" {shape: rectangle}
+R8: "See Symptom Table —\nCG suspended: resolve before testing" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See Symptom Table —\nHigh lag: throttle or upgrade WAN link" {shape: rectangle}
+R10: "See Commands —\nGet compression stats and enable compression" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Check boxmgmt system status| D2{RPA in\nfault state?}
-    D2 -->|Yes| R3[See Symptom Table —\nHigh lag: check RPA performance and WAN]
-    D2 -->|VM not running| R4[See Physical Infrastructure —\nRPA virtual appliance: check ESXi host]
-
-    B3 -->|Check CG state with boxmgmt| D3{CG suspended\nor in error?}
-    D3 -->|Image stuck| R5[See Symptom Table —\nImage stuck: force release image access]
-    D3 -->|Journal full| R6[See Symptom Table —\nExpand journal volume before resuming]
-
-    B4 -->|Verify image access enabled| D4{Image accessible\nfor test copy?}
-    D4 -->|No| R7[See Commands —\nEnable image access via boxmgmt]
-    D4 -->|CG not consistent| R8[See Symptom Table —\nCG suspended: resolve before testing]
-
-    B5 -->|Check WAN utilisation| D5{Replication lag\ngrowing?}
-    D5 -->|WAN saturated| R9[See Symptom Table —\nHigh lag: throttle or upgrade WAN link]
-    D5 -->|Compression off| R10[See Commands —\nGet compression stats and enable compression]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---

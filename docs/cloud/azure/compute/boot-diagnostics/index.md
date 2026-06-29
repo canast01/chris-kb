@@ -14,18 +14,23 @@ Azure Boot Diagnostics captures the serial console output and a screenshot of th
 
 ## Boot Diagnostics Flow
 
-```mermaid
-flowchart LR
-    vmStart["VM Start / Restart"]
-    firmware["UEFI / BIOS\nfirmware init"]
-    bootloader["Bootloader\nGRUB2 / Windows Boot Mgr"]
-    osInit["OS Initialisation\nkernel · systemd / WinInit"]
-    serialLog["Serial Console Output\ncaptured to storage"]
-    screenshot["Boot Screenshot\nPNG of screen state"]
-    diagnosticsAPI["Boot Diagnostics API\nazure portal · serial console access"]
+```d2
+direction: right
 
-    vmStart --> firmware --> bootloader --> osInit
-    osInit --> serialLog & screenshot --> diagnosticsAPI
+vmStart: "VM Start / Restart" {shape: rectangle}
+firmware: "UEFI / BIOS\nfirmware init" {shape: rectangle}
+bootloader: "Bootloader\nGRUB2 / Windows Boot Mgr" {shape: rectangle}
+osInit: "OS Initialisation\nkernel · systemd / WinInit" {shape: rectangle}
+serialLog: "Serial Console Output\ncaptured to storage" {shape: rectangle}
+screenshot: "Boot Screenshot\nPNG of screen state" {shape: rectangle}
+diagnosticsAPI: "Boot Diagnostics API\nazure portal · serial console access" {shape: rectangle}
+
+vmStart -> firmware
+firmware -> bootloader
+bootloader -> osInit
+osInit -> serialLog
+serialLog -> screenshot
+screenshot -> diagnosticsAPI
 ```
 
 ## Overview

@@ -1165,6 +1165,24 @@ for _md in all_md():
             warn(issues, f'{os.path.relpath(_md, DOCS)}: broken link "{_href}"')
 
 
+# ── Check 54: Mermaid linear TD / subgraph diagrams (should be SVG or D2) ────
+# Mermaid graph TB / flowchart TD render as narrow left-aligned diagrams that
+# don't fill the content width.  Mermaid subgraph layouts cross arrows.
+# Both should be replaced with D2 direction:right or custom SVGs.
+issues = check(54, 'Mermaid linear TD or subgraph diagrams (use D2/SVG instead)')
+_MM_BLOCK = re.compile(r'```mermaid\n(.*?)\n```', re.DOTALL)
+_MM_LINEAR = re.compile(r'^(flowchart|graph)\s+(TD|TB)\b', re.MULTILINE)
+for _md in all_md():
+    _txt = open(_md, errors='replace').read()
+    if '```mermaid' not in _txt:
+        continue
+    for _blk in _MM_BLOCK.findall(_txt):
+        if _MM_LINEAR.search(_blk):
+            _label = 'subgraph' if 'subgraph' in _blk else 'linear TD'
+            warn(issues, f'{os.path.relpath(_md, DOCS)}: Mermaid {_label} — replace with D2 or SVG')
+            break
+
+
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)
 print('KB SITE AUDIT REPORT')

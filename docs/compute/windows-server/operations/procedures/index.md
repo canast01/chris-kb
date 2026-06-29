@@ -22,21 +22,22 @@ Windows Server operational procedures: disk management, role and feature install
 
 ## Key Infrastructure Service Dependencies
 
-```mermaid
-flowchart TD
-    bfe["BFE\nBase Filtering Engine"]
-    mpssvc["mpssvc\nWindows Firewall"]
-    netlogon["Netlogon\nAD secure channel"]
-    w32time["W32Time\nNTP sync"]
-    winrm["WinRM\nPS Remoting"]
-    ntds["NTDS\nAD Database (DC only)"]
-    dns["DNS Server\n(DC only)"]
+```d2
+direction: right
 
-    bfe --> mpssvc
-    netlogon --> ntds
-    ntds --> dns
-    w32time --> netlogon
-    bfe --> winrm
+bfe: "BFE\nBase Filtering Engine" {shape: rectangle}
+mpssvc: "mpssvc\nWindows Firewall" {shape: rectangle}
+netlogon: "Netlogon\nAD secure channel" {shape: rectangle}
+ntds: "NTDS\nAD Database (DC only" {shape: rectangle}
+dns: "DNS Server\n(DC only" {shape: rectangle}
+w32time: "W32Time\nNTP sync" {shape: rectangle}
+winrm: "WinRM\nPS Remoting" {shape: rectangle}
+
+bfe -> mpssvc
+netlogon -> ntds
+ntds -> dns
+w32time -> netlogon
+bfe -> winrm
 ```
 
 ---
@@ -141,18 +142,24 @@ Patch management for Windows Server using Windows Update, WSUS, and SCCM/Intune.
 
 ### Patch Management Flow
 
-```mermaid
-flowchart LR
-    wsus["WSUS Server\nPatch approval"]
-    gpo["GPO / WU Policy\nWUServer registry"]
-    clientWU["Client Windows Update\nwuauclt · UsoClient"]
-    download["Download\npatches"]
-    install["Install\npatches"]
-    reboot["Reboot\n(maintenance window)"]
-    report["Report\ncompliance status"]
+```d2
+direction: right
 
-    wsus -->|"approves updates"| gpo --> clientWU --> download --> install --> reboot --> report
-    report -->|"compliance data"| wsus
+wsus: "WSUS Server\nPatch approval" {shape: rectangle}
+gpo: "GPO / WU Policy\nWUServer registry" {shape: rectangle}
+clientWU: "Client Windows Update\nwuauclt · UsoClient" {shape: rectangle}
+download: "Download\npatches" {shape: rectangle}
+install: "Install\npatches" {shape: rectangle}
+reboot: "Reboot\n(maintenance window" {shape: rectangle}
+report: "Report\ncompliance status" {shape: rectangle}
+
+wsus -> gpo
+gpo -> clientWU
+clientWU -> download
+download -> install
+install -> reboot
+reboot -> report
+report -> wsus
 ```
 
 ### Pre-Patch Checklist

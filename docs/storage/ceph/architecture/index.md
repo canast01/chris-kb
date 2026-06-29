@@ -15,7 +15,6 @@ Ceph architecture: RADOS object store, daemon roles (OSD/MON/MGR/MDS), CRUSH map
 
 ![Ceph — Architecture — Diagram](../../../assets/storage-ceph-architecture-diagram.svg)
 
-
 ![Ceph Architecture Overview](../../../assets/ceph-architecture-overview.svg)
 
 ```text
@@ -31,18 +30,23 @@ Ceph architecture: RADOS object store, daemon roles (OSD/MON/MGR/MDS), CRUSH map
   RGW    = RADOS Gateway; S3 and Swift-compatible object storage REST API frontend
 ```
 
-```mermaid
-graph LR
-    classDef section fill:#2563eb,color:#fff
-    classDef topic fill:#15803d,color:#fff
-    classDef root fill:#1e3a5f,color:#fff
-    ROOT([Ceph Architecture]):::root
-    ROOT --> HIW[How It Works]:::section
-    ROOT --> DS[Design Standards]:::section
-    ROOT --> INT[Integrations]:::section
-    HIW --> H1[RADOS / OSD / PG / CRUSH]:::topic
-    DS --> D1[Sizing / EC / CRUSH map]:::topic
-    INT --> I1[ODF / CSI / Prometheus]:::topic
+```d2
+direction: right
+
+ROOT: "ROOT" {shape: rectangle}
+HIW: "How It Works" {shape: rectangle}
+DS: "Design Standards" {shape: rectangle}
+INT: "Integrations" {shape: rectangle}
+H1: "RADOS / OSD / PG / CRUSH" {shape: rectangle}
+D1: "Sizing / EC / CRUSH map" {shape: rectangle}
+I1: "ODF / CSI / Prometheus" {shape: rectangle}
+
+ROOT -> HIW
+ROOT -> DS
+ROOT -> INT
+HIW -> H1
+DS -> D1
+INT -> I1
 ```
 
 <div class="kb-grid">

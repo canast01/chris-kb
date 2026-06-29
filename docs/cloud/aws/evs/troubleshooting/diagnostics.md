@@ -15,41 +15,49 @@ EVS diagnostic commands: check AWS host and ENI state, inspect CloudTrail for AP
 </div>
 ![Amazon EVS — Diagnostics](../../../../assets/cloud-aws-evs-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "aws evs list-environment-hosts\naws ec2 describe-instance-status" {shape: rectangle}
+D: "aws ec2 describe-route-tables\nVPC Flow Logs for REJECT entries" {shape: rectangle}
+E: "NSX-T Traceflow for DFW path\nvSphere client ping / traceroute from VM" {shape: rectangle}
+F: "aws cloudtrail lookup-events EventSource=evs.amazonaws.com\nFilter for errorCode field" {shape: rectangle}
+G: "vCenter: vmon-cli -l / vpxd.log\nvSAN: vSphere UI Health plugin" {shape: rectangle}
+H: "HCX Manager UI: Interconnect status\nHCX Support > Download Log Bundle" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "aws ec2 describe-instances for i4i host IDs\nCheck ENI attachment: aws ec2 describe-network-interfaces" {shape: rectangle}
+K: "Check VPC route tables and security groups\nVerify management ENI connectivity" {shape: rectangle}
+L: "aws logs start-query on evs-flow-logs group\nFilter REJECT entries by srcAddr and dstPort" {shape: rectangle}
+M: "NSX-T: nsxcli get alarms\nTraceflow in NSX UI: Plan > Traceflow" {shape: rectangle}
+N: "Parse CloudTrailEvent.errorCode from lookup-events\nCheck IAM policy for missing evs: permission" {shape: rectangle}
+O: "vc-support.sh for vCenter bundle\nPowerCLI: Get-VsanView for vSAN health" {shape: rectangle}
+P: "Check HCX Interconnect tunnel state in HCX UI\nSSH to HCX Manager: /opt/vmware/log/ for errors" {shape: rectangle}
+Q: "Collect all layer bundles\nOpen AWS and/or VMware SR" {shape: rectangle}
+R: "AWS case: account ID, environment ID, host IDs, CloudTrail event IDs\nVMware case: vSphere bundle, NSX-T bundle, SDDC Manager bundle" {shape: rectangle}
+A: "EVS Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([EVS Issue]) --> B{Which layer?}
-    B -->|Host unreachable or EC2 status check failing| C[aws evs list-environment-hosts\naws ec2 describe-instance-status]
-    B -->|VPC network connectivity failure| D[aws ec2 describe-route-tables\nVPC Flow Logs for REJECT entries]
-    B -->|VM or workload not reachable inside EVS| E[NSX-T Traceflow for DFW path\nvSphere client ping / traceroute from VM]
-    B -->|AWS API calls failing - error in CloudTrail| F[aws cloudtrail lookup-events EventSource=evs.amazonaws.com\nFilter for errorCode field]
-    B -->|vCenter or vSAN platform issue| G[vCenter: vmon-cli -l / vpxd.log\nvSAN: vSphere UI Health plugin]
-    B -->|HCX migration or extension failing| H[HCX Manager UI: Interconnect status\nHCX Support > Download Log Bundle]
-    C --> I{Host state?}
-    I -->|NOT_AVAILABLE or error| J[aws ec2 describe-instances for i4i host IDs\nCheck ENI attachment: aws ec2 describe-network-interfaces]
-    I -->|All hosts OK but issue persists| K[Check VPC route tables and security groups\nVerify management ENI connectivity]
-    D --> L[aws logs start-query on evs-flow-logs group\nFilter REJECT entries by srcAddr and dstPort]
-    E --> M[NSX-T: nsxcli get alarms\nTraceflow in NSX UI: Plan > Traceflow]
-    F --> N[Parse CloudTrailEvent.errorCode from lookup-events\nCheck IAM policy for missing evs: permission]
-    G --> O[vc-support.sh for vCenter bundle\nPowerCLI: Get-VsanView for vSAN health]
-    H --> P[Check HCX Interconnect tunnel state in HCX UI\nSSH to HCX Manager: /opt/vmware/log/ for errors]
-    J --> Q[Collect all layer bundles\nOpen AWS and/or VMware SR]
-    K --> Q
-    L --> Q
-    M --> Q
-    N --> Q
-    O --> Q
-    P --> Q
-    Q --> R[AWS case: account ID, environment ID, host IDs, CloudTrail event IDs\nVMware case: vSphere bundle, NSX-T bundle, SDDC Manager bundle]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P action
-    class Q,R escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+D -> L
+E -> M
+F -> N
+G -> O
+H -> P
+J -> Q
+K -> Q
+L -> Q
+M -> Q
+N -> Q
+O -> Q
+P -> Q
+Q -> R
 ```
 
 ```d2

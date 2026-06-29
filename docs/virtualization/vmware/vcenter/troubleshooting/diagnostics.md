@@ -16,43 +16,51 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </div>
 ![vCenter — Diagnostics](../../../../assets/virtualization-vmware-vcenter-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "vmon-cli -l to check service state\ndf -h for /storage/db and /storage/log" {shape: rectangle}
+D: "tail ssoAdminServer.log\nCheck NTP: chronyc tracking" {shape: rectangle}
+E: "nslookup vcenter-fqdn from ESXi\nnc -zv vcenter 443 to test port" {shape: rectangle}
+F: "vecs-cli entry list store MACHINE_SSL_CERT\nopenssl s_client -connect vcenter:443 for expiry" {shape: rectangle}
+G: "vpxd.log for task errors\nPostgres: select pg_stat_activity to check stuck queries" {shape: rectangle}
+H: "curl -sk REST API session acquire\nCheck vpxd.log for API error codes" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "journalctl -u vmware-vpxd -n 100\nservice-control --start vpxd" {shape: rectangle}
+K: "df -h /storage/db — check if >80%\nps aux to check vpxd CPU" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "chronyc makestep to force sync\nCheck timedatectl for AD time source" {shape: rectangle}
+N: "ldapsearch -H ldaps://DC:636 to test AD connectivity\nCheck ssoAdminServer.log for bind error" {shape: rectangle}
+O: "ping vcenter-fqdn from ESXi\nCheck management vmk0 vlan and routing" {shape: rectangle}
+P: "vecs-cli entry list store MACHINE_SSL_CERT for expiry\nRenew via VAMI: Certificate Management" {shape: rectangle}
+Q: "grep -i error vpxd.log or tail -200\nCheck /storage/db partition usage" {shape: rectangle}
+R: "Collect vc-support.sh bundle\nOpen Broadcom VMware SR" {shape: rectangle}
+S: "VAMI: Support → Create Support Bundle\nUpload to mysupport.broadcom.com" {shape: rectangle}
+A: "vCenter Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([vCenter Issue]) --> B{What type of problem?}
-    B -->|UI slow or unresponsive| C[vmon-cli -l to check service state\ndf -h for /storage/db and /storage/log]
-    B -->|SSO login failure| D[tail ssoAdminServer.log\nCheck NTP: chronyc tracking]
-    B -->|ESXi host disconnected| E[nslookup vcenter-fqdn from ESXi\nnc -zv vcenter 443 to test port]
-    B -->|Certificate error| F[vecs-cli entry list store MACHINE_SSL_CERT\nopenssl s_client -connect vcenter:443 for expiry]
-    B -->|Task or event missing / slow| G[vpxd.log for task errors\nPostgres: select pg_stat_activity to check stuck queries]
-    B -->|API returning errors| H[curl -sk REST API session acquire\nCheck vpxd.log for API error codes]
-    C --> I{Service state?}
-    I -->|Service STOPPED| J[journalctl -u vmware-vpxd -n 100\nservice-control --start vpxd]
-    I -->|Running but slow| K[df -h /storage/db — check if >80%\nps aux to check vpxd CPU]
-    D --> L{NTP OK?}
-    L -->|Drift > 5 minutes| M[chronyc makestep to force sync\nCheck timedatectl for AD time source]
-    L -->|NTP OK| N[ldapsearch -H ldaps://DC:636 to test AD connectivity\nCheck ssoAdminServer.log for bind error]
-    E --> O[ping vcenter-fqdn from ESXi\nCheck management vmk0 vlan and routing]
-    F --> P[vecs-cli entry list store MACHINE_SSL_CERT for expiry\nRenew via VAMI: Certificate Management]
-    G --> Q[grep -i error vpxd.log or tail -200\nCheck /storage/db partition usage]
-    H --> R[Collect vc-support.sh bundle\nOpen Broadcom VMware SR]
-    J --> R
-    K --> R
-    M --> R
-    N --> R
-    O --> R
-    P --> R
-    Q --> R
-    R --> S[VAMI: Support → Create Support Bundle\nUpload to mysupport.broadcom.com]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q action
-    class R,S escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+L -> M
+L -> N
+E -> O
+F -> P
+G -> Q
+H -> R
+J -> R
+K -> R
+M -> R
+N -> R
+O -> R
+P -> R
+Q -> R
+R -> S
 ```
 
 ```d2

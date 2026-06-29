@@ -14,35 +14,35 @@ Data Domain diagnostic commands: check filesystem state with <code>filesys statu
 </div>
 ![Data Domain — Diagnostics](../../../../assets/storage-dell-data-domain-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "Data Domain Issue" {shape: rectangle}
+B: "alerts show current\nfilesys status\nfilesys show space" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "disk show state: failed or unknown\nenclosure show hardware: fans PSUs\nOpen Dell support case" {shape: rectangle}
+E: "E" {shape: rectangle}
+F: "filesys enable\nMonitor filesys status till Running\nCheck space: filesys show space" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "replication show errors: detail\nnet ping <dst-dd>: connectivity\nreplication disable then re-enable" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "ddboost user list: user exists?\nddboost show clients: connected?\nlog view audit | grep ddboost" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "filesys clean start\nreplication show stats: consumers\nExpire old backups via backup app" {shape: rectangle}
+M: "support bundle generate\nOpen Dell support case" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([Data Domain Issue]) --> B[alerts show current\nfilesys status\nfilesys show space]
-    B --> C{Hardware alert active?}
-    C -->|Yes| D[disk show state: failed or unknown\nenclosure show hardware: fans PSUs\nOpen Dell support case]
-    C -->|No| E{Filesystem not Running?}
-    E -->|Yes| F[filesys enable\nMonitor filesys status till Running\nCheck space: filesys show space]
-    E -->|No| G{Replication in Error?}
-    G -->|Yes| H[replication show errors: detail\nnet ping <dst-dd>: connectivity\nreplication disable then re-enable]
-    G -->|No| I{DDBoost auth failure?}
-    I -->|Yes| J[ddboost user list: user exists?\nddboost show clients: connected?\nlog view audit | grep ddboost]
-    I -->|No| K{Capacity > 80%?}
-    K -->|Yes| L[filesys clean start\nreplication show stats: consumers\nExpire old backups via backup app]
-    K -->|No| M[support bundle generate\nOpen Dell support case]
-    D --> M
-    F --> M
-    H --> M
-    J --> M
-    L --> M
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,E,G,I,K dark
-    class B,D,F,H,J,L action
-    class M escalate
+A -> B
+C -> D
+E -> F
+G -> H
+I -> J
+K -> L
+K -> M
+D -> M
+F -> M
+H -> M
+J -> M
+L -> M
 ```
 
 ```d2

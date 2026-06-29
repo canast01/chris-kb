@@ -20,24 +20,39 @@ Procedures reference covering Certificate Renewal and Revocation Workflow, Renew
 
 ## Certificate Renewal and Revocation Workflow
 
-```mermaid
-flowchart TD
-    renewTrigger["Renewal trigger\n(80% validity elapsed or expiry alert)"]
-    renewTrigger --> checkAuto{"Automated\nrenewal?"}
-    checkAuto -->|"Venafi / ACME / cert-manager"| autoRenew["Automated renewal flow\nNew CSR generated and submitted"]
-    checkAuto -->|"manual"| manualRenew["Generate new key pair + CSR\non target host"]
-    autoRenew --> caIssue["CA issues new certificate"]
-    manualRenew --> submitCA["Submit CSR via Venafi / ADCS portal"]
-    submitCA --> caIssue
-    caIssue --> install["Install on target service\n(verify key matches cert)"]
-    install --> tlsTest["TLS validation:\nopenssl s_client + openssl verify"]
-    tlsTest --> done["Renewal complete\nUpdate inventory"]
+```d2
+direction: right
 
-    revokeTrigger["Revocation trigger\n(key compromise / decommission)"] --> revokeCA["Revoke via ADCS:\ncertutil -revoke serial 1"]
-    revokeCA --> publishCRL["Publish updated CRL:\ncertutil -CRL"]
-    publishCRL --> ocspUpdate["OCSP responder updated\n(auto from CA database)"]
-    ocspUpdate --> replaceCert["Generate new key + cert\non clean host"]
-    replaceCert --> auditDoc["Document incident\nand root cause"]
+renewTrigger: "Renewal trigger\n(80% validity elapsed or expiry alert" {shape: rectangle}
+checkAuto: "Automated\nrenewal?" {shape: rectangle}
+autoRenew: "Automated renewal flow\nNew CSR generated and submitted" {shape: rectangle}
+manualRenew: "Generate new key pair + CSR\non target host" {shape: rectangle}
+caIssue: "CA issues new certificate" {shape: rectangle}
+submitCA: "Submit CSR via Venafi / ADCS portal" {shape: rectangle}
+install: "Install on target service\n(verify key matches cert" {shape: rectangle}
+tlsTest: "TLS validation:\nopenssl s_client + openssl verify" {shape: rectangle}
+done: "Renewal complete\nUpdate inventory" {shape: rectangle}
+revokeTrigger: "Revocation trigger\n(key compromise / decommission" {shape: rectangle}
+revokeCA: "Revoke via ADCS:\ncertutil -revoke serial 1" {shape: rectangle}
+publishCRL: "Publish updated CRL:\ncertutil -CRL" {shape: rectangle}
+ocspUpdate: "OCSP responder updated\n(auto from CA database" {shape: rectangle}
+replaceCert: "Generate new key + cert\non clean host" {shape: rectangle}
+auditDoc: "Document incident\nand root cause" {shape: rectangle}
+
+renewTrigger -> checkAuto
+checkAuto -> autoRenew
+checkAuto -> manualRenew
+autoRenew -> caIssue
+manualRenew -> submitCA
+submitCA -> caIssue
+caIssue -> install
+install -> tlsTest
+tlsTest -> done
+revokeTrigger -> revokeCA
+revokeCA -> publishCRL
+publishCRL -> ocspUpdate
+ocspUpdate -> replaceCert
+replaceCert -> auditDoc
 ```
 
 ---

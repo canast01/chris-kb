@@ -36,20 +36,35 @@ Health Checks reference covering Daily Health Check, Pre-Maintenance Health Chec
 
 ![Daily Health Check](../../../../assets/storage-dell-powerpath-hc-daily-health-check.svg)
 
-```mermaid
-flowchart TD
-    A([Daily Health Check]) --> B["powermt display dev=all\nScan for dead paths"]
-    B --> C{"Any dead paths?"}
-    C -->|No| D["Verify policy = CLAROpt\npowermt display options"]
-    C -->|Yes| E["powermt restore\nForce path retry"]
-    E --> F{"Paths recovered?"}
-    F -->|Yes| G["powermt save\nPersist state"]
-    F -->|No| H{"HBA port\ndead?"}
-    H -->|Yes| I["Check SAN switch port\nCheck cable/SFP"]
-    H -->|No| J["Check array FA port\nVerify LUN masking"]
-    I & J --> K(["Escalate to SAN/Storage team"])
-    D --> G
-    G --> Z([Check complete])
+```d2
+direction: right
+
+A: "Daily Health Check" {shape: rectangle}
+B: "powermt display dev=all\nScan for dead paths" {shape: rectangle}
+C: "Any dead paths?" {shape: rectangle}
+D: "Verify policy = CLAROpt\npowermt display options" {shape: rectangle}
+E: "powermt restore\nForce path retry" {shape: rectangle}
+F: "Paths recovered?" {shape: rectangle}
+G: "powermt save\nPersist state" {shape: rectangle}
+H: "HBA port\ndead?" {shape: rectangle}
+I: "Check SAN switch port\nCheck cable/SFP" {shape: rectangle}
+J: "Check array FA port\nVerify LUN masking" {shape: rectangle}
+K: "Escalate to SAN/Storage team" {shape: rectangle}
+Z: "Check complete" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+C -> E
+E -> F
+F -> G
+F -> H
+H -> I
+H -> J
+I -> J
+J -> K
+D -> G
+G -> Z
 ```
 
 | Check | Command | Notes |

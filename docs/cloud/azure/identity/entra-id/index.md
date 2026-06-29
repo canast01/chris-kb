@@ -12,21 +12,23 @@ Microsoft Entra ID (formerly Azure Active Directory) is the cloud-based identity
 
 ## Entra ID Identity Architecture
 
-```mermaid
-flowchart TD
-    onpremAD["On-Premises AD\nSource of truth"]
-    adConnect["Azure AD Connect\nDelta sync every 30 min"]
-    entraId["Microsoft Entra ID\nCloud identity plane"]
-    sso["SSO\nMicrosoft 365 · SaaS · Azure"]
-    ca["Conditional Access\nMFA · compliant device · location"]
-    pim["PIM\nJIT privileged access"]
-    mfa["MFA\nAuthenticator · FIDO2"]
+```d2
+direction: right
 
-    onpremAD -->|"Hybrid sync"| adConnect --> entraId
-    entraId --> sso
-    entraId --> ca
-    entraId --> pim
-    ca --> mfa
+onpremAD: "On-Premises AD\nSource of truth" {shape: rectangle}
+adConnect: "Azure AD Connect\nDelta sync every 30 min" {shape: rectangle}
+entraId: "Microsoft Entra ID\nCloud identity plane" {shape: rectangle}
+sso: "SSO\nMicrosoft 365 · SaaS · Azure" {shape: rectangle}
+ca: "Conditional Access\nMFA · compliant device · location" {shape: rectangle}
+pim: "PIM\nJIT privileged access" {shape: rectangle}
+mfa: "MFA\nAuthenticator · FIDO2" {shape: rectangle}
+
+onpremAD -> adConnect
+adConnect -> entraId
+entraId -> sso
+entraId -> ca
+entraId -> pim
+ca -> mfa
 ```
 
 ## Tenant Overview

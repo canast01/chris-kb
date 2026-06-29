@@ -121,20 +121,30 @@ Wildcard approval process (external):
 
 ### Certificate Request Decision Flow
 
-```mermaid
-flowchart TD
-    csrSubmit["Requestor submits CSR\n(UI / vcert / REST API)"]
-    csrSubmit --> folderPolicy{"Venafi policy\nvalidation"}
-    folderPolicy -->|"key size below minimum\nSHA-1 / no SAN"| policyFail["Reject — policy violation\nMessage returned to requestor"]
-    folderPolicy -->|"internal production folder"| autoIssue{"Auto-issue\nenabled?"}
-    folderPolicy -->|"external public folder"| manualApproval["Enter Approval Queue"]
-    autoIssue -->|"yes"| caConnector["Submit to CA connector\n(ADCS / DigiCert)"]
-    autoIssue -->|"no"| manualApproval
-    manualApproval --> secReview{"Security team\nreview"}
-    secReview -->|"approve"| caConnector
-    secReview -->|"reject"| policyFail
-    caConnector --> caIssues["CA issues certificate"]
-    caIssues --> tppStores["Venafi stores + notifies requestor"]
+```d2
+direction: right
+
+csrSubmit: "Requestor submits CSR\n(UI / vcert / REST API" {shape: rectangle}
+folderPolicy: "Venafi policy\nvalidation" {shape: rectangle}
+policyFail: "Reject — policy violation\nMessage returned to requestor" {shape: rectangle}
+autoIssue: "Auto-issue\nenabled?" {shape: rectangle}
+manualApproval: "Enter Approval Queue" {shape: rectangle}
+caConnector: "Submit to CA connector\n(ADCS / DigiCert" {shape: rectangle}
+secReview: "Security team\nreview" {shape: rectangle}
+caIssues: "CA issues certificate" {shape: rectangle}
+tppStores: "Venafi stores + notifies requestor" {shape: rectangle}
+
+csrSubmit -> folderPolicy
+folderPolicy -> policyFail
+folderPolicy -> autoIssue
+folderPolicy -> manualApproval
+autoIssue -> caConnector
+autoIssue -> manualApproval
+manualApproval -> secReview
+secReview -> caConnector
+secReview -> policyFail
+caConnector -> caIssues
+caIssues -> tppStores
 ```
 
 ### Internal Production (Auto-Issue)

@@ -58,23 +58,22 @@ disk_full_emergency -> resolution
 4. **What is the resource state?** — CPU, memory, disk, network
 5. **Which services/processes are involved?** — systemctl, ps, journalctl
 
-```mermaid
-flowchart TD
-    alert["Alert / Issue Reported"]
-    reachable{"Host\nreachable?\npingSSH"}
-    hardware{"dmesg errors?\nIPMI SEL?"}
-    changed{"Recent\nchanges?\ndnf history"}
-    resources{"CPU · Memory\nDisk > 80%?"}
-    services{"Failed services?\nsystemctl --failed"}
-    escalate["Escalate to\nvendor / L3"]
-    resolve["Identify root cause\nand resolve"]
+```d2
+direction: right
 
-    alert --> reachable
-    reachable -- No --> escalate
-    reachable -- Yes --> hardware
-    hardware -- Yes --> escalate
-    hardware -- No --> changed
-    changed --> resources --> services --> resolve
+alert: "Alert / Issue Reported" {shape: rectangle}
+reachable: "reachable" {shape: rectangle}
+changed: "changed" {shape: rectangle}
+resources: "resources" {shape: rectangle}
+services: "services" {shape: rectangle}
+resolve: "Identify root cause\nand resolve" {shape: rectangle}
+escalate: "Escalate to\nvendor / L3" {shape: rectangle}
+hardware: "hardware" {shape: rectangle}
+
+alert -> reachable
+changed -> resources
+resources -> services
+services -> resolve
 ```
 
 ## High Disk I/O or Latency

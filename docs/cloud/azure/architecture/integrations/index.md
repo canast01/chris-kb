@@ -13,19 +13,27 @@ Azure Integration reference covering Azure VM Deployment Flow, Azure AD Connect 
 
 ## Azure VM Deployment Flow
 
-```mermaid
-flowchart LR
-    request["Deployment Request\nPortal / CLI / Terraform"]
-    rbacCheck["RBAC Check\nMicrosoft.Compute/virtualMachines/write"]
-    policyCheck["Azure Policy Evaluation\nallowed SKUs · allowed regions"]
-    resourceGroup["Resource Group\nrg-prod-euw-app"]
-    vnetPlace["VNet / Subnet Placement\nsnet-prod-euw-app"]
-    nsgApply["NSG Applied\ndefault rules + custom"]
-    diskAttach["Managed Disk\nOS + data disks attached"]
-    extensions["Extensions Applied\nMonitor Agent · Defender · Custom Script"]
-    running["VM Running\nProvisioning State: Succeeded"]
+```d2
+direction: right
 
-    request --> rbacCheck --> policyCheck --> resourceGroup --> vnetPlace --> nsgApply --> diskAttach --> extensions --> running
+request: "Deployment Request\nPortal / CLI / Terraform" {shape: rectangle}
+rbacCheck: "RBAC Check\nMicrosoft.Compute/virtualMachines/write" {shape: rectangle}
+policyCheck: "Azure Policy Evaluation\nallowed SKUs · allowed regions" {shape: rectangle}
+resourceGroup: "Resource Group\nrg-prod-euw-app" {shape: rectangle}
+vnetPlace: "VNet / Subnet Placement\nsnet-prod-euw-app" {shape: rectangle}
+nsgApply: "NSG Applied\ndefault rules + custom" {shape: rectangle}
+diskAttach: "Managed Disk\nOS + data disks attached" {shape: rectangle}
+extensions: "Extensions Applied\nMonitor Agent · Defender · Custom Script" {shape: rectangle}
+running: "VM Running\nProvisioning State: Succeeded" {shape: rectangle}
+
+request -> rbacCheck
+rbacCheck -> policyCheck
+policyCheck -> resourceGroup
+resourceGroup -> vnetPlace
+vnetPlace -> nsgApply
+nsgApply -> diskAttach
+diskAttach -> extensions
+extensions -> running
 ```
 
 ## Azure AD Connect (Hybrid Identity)

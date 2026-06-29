@@ -30,13 +30,15 @@ ca_key_protection -> crl_availability: hardens
 
 ## CA Key Protection Hierarchy
 
-```mermaid
-graph TD
-    rootCA[("Root CA Private Key\nHSM — FIPS 140-2 Level 3\n(offline / air-gapped)")] --> issuingCA["Issuing CA Private Key\nHSM or TPM-backed\n(online — issues end-entity certs)"]
-    issuingCA --> endEntity["End-Entity Private Key\nSoftware key acceptable\n(generated on target host — never exported)"]
+```d2
+direction: right
 
-    hsmBackup["HSM Key Backup\n(M-of-N quorum cards\n3-of-5 ceremony)"] -. "protects" .-> rootCA
-    cyberArk["CyberArk\n(stores high-value keys:\nwildcard / code signing)"] -. "optional HSM alternative" .-> endEntity
+rootCA: "Root CA Private Key\nHSM — FIPS 140-2 Level 3\n(offline / air-gapped" {shape: rectangle}
+issuingCA: "Issuing CA Private Key\nHSM or TPM-backed\n(online — issues end-entity certs" {shape: rectangle}
+endEntity: "End-Entity Private Key\nSoftware key acceptable\n(generated on target host — never exported" {shape: rectangle}
+
+rootCA -> issuingCA
+issuingCA -> endEntity
 ```
 
 ## CA Key Protection

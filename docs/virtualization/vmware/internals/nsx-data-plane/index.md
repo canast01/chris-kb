@@ -13,31 +13,25 @@ NSX-T data plane consists of per-host kernel modules — N-VDS, Distributed Rout
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph LR
-    classDef vm fill:#2563eb,color:#fff,stroke:none
-    classDef nvds fill:#15803d,color:#fff,stroke:none
-    classDef tep fill:#b45309,color:#fff,stroke:none
-    classDef tunnel fill:#7c3aed,color:#fff,stroke:none
-    classDef phys fill:#374151,color:#fff,stroke:none
+```d2
+direction: right
 
-    VMA[VM-A\nHost-1]:::vm
-    NVDS1[N-VDS\nHost-1\nDR + DFW]:::nvds
-    TEP1[TEP\nHost-1\n10.10.0.1]:::tep
-    GNV[Geneve Tunnel\nUDP 6081\n54-byte overhead]:::tunnel
-    TEP2[TEP\nHost-2\n10.10.0.2]:::tep
-    NVDS2[N-VDS\nHost-2\nDR + DFW]:::nvds
-    VMB[VM-B\nHost-2]:::vm
-    PHSW[Physical Fabric\nMTU ≥ 1600]:::phys
+VMA: "VMA" {shape: rectangle}
+NVDS1: "NVDS1" {shape: rectangle}
+TEP1: "TEP1" {shape: rectangle}
+GNV: "GNV" {shape: rectangle}
+PHYS: "Physical Switch" {shape: rectangle}
+TEP2: "TEP2" {shape: rectangle}
+NVDS2: "NVDS2" {shape: rectangle}
+VMB: "VMB" {shape: rectangle}
 
-    VMA --> NVDS1
-    NVDS1 --> TEP1
-    TEP1 --> GNV
-    GNV --> PHYS[Physical Switch]:::phys
-    PHYS --> TEP2
-    TEP2 --> NVDS2
-    NVDS2 --> VMB
-    PHSW -.->|underlay| PHYS
+VMA -> NVDS1
+NVDS1 -> TEP1
+TEP1 -> GNV
+GNV -> PHYS
+PHYS -> TEP2
+TEP2 -> NVDS2
+NVDS2 -> VMB
 ```
 
 ## N-VDS: NSX Virtual Distributed Switch

@@ -71,28 +71,35 @@ Run these checks after any change to confirm the Unity is healthy and host conne
 
 LUN lifecycle management on Dell Unity — create, map, expand, and manage snapshots.
 
-```mermaid
-graph TD
-  START([Create LUN request]) --> CHK{Health check\npassed?}
-  CHK -->|No| FIX[Resolve faults\nbefore proceeding]
-  FIX --> CHK
-  CHK -->|Yes| POOL{Pool has\n≥ 20% free?}
-  POOL -->|No| EXP[Expand pool\nor free space]
-  EXP --> POOL
-  POOL -->|Yes| CREATE["uemcli /stor/config/lun create\n-name -pool -size"]
-  CREATE --> MAP["uemcli /stor/config/lunacl create\n-lun -host"]
-  MAP --> FC{Protocol?}
-  FC -->|FC| ZONE["Verify FC zone contains\nhost HBA WWN + Unity port WWN"]
-  FC -->|iSCSI| IQN["Verify host IQN registered\nin Unisphere > Hosts"]
-  ZONE & IQN --> HOST["Rescan HBAs on host\n(multipath -ll)"]
-  HOST --> SNAP["Create snapshot schedule\n(optional)"]
-  SNAP --> DONE([LUN ready for use])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class CHK,POOL,FC decision
-  class FIX,EXP,CREATE,MAP,ZONE,IQN,HOST,SNAP action
-  class START,DONE term
+```d2
+direction: right
+
+CHK: "CHK" {shape: rectangle}
+FIX: "Resolve faults\nbefore proceeding" {shape: rectangle}
+POOL: "POOL" {shape: rectangle}
+EXP: "Expand pool\nor free space" {shape: rectangle}
+CREATE: "uemcli /stor/config/lun create\n-name -pool -size" {shape: rectangle}
+MAP: "uemcli /stor/config/lunacl create\n-lun -host" {shape: rectangle}
+FC: "FC" {shape: rectangle}
+ZONE: "Verify FC zone contains\nhost HBA WWN + Unity port WWN" {shape: rectangle}
+IQN: "Verify host IQN registered\nin Unisphere > Hosts" {shape: rectangle}
+HOST: "Rescan HBAs on host\n(multipath -ll" {shape: rectangle}
+SNAP: "Create snapshot schedule\n(optional" {shape: rectangle}
+DONE: "LUN ready for use" {shape: rectangle}
+START: "Create LUN request" {shape: rectangle}
+
+CHK -> FIX
+FIX -> CHK
+POOL -> EXP
+EXP -> POOL
+POOL -> CREATE
+CREATE -> MAP
+FC -> ZONE
+FC -> IQN
+ZONE -> IQN
+IQN -> HOST
+HOST -> SNAP
+SNAP -> DONE
 ```
 
 ### LUN Overview

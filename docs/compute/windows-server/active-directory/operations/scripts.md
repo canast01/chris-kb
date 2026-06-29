@@ -23,22 +23,33 @@ PowerShell automation tools for routine Active Directory health checks, auditing
 
 ## Audit Script Workflow
 
-```mermaid
-flowchart TD
-    trigger["Scheduled Task\n(weekly / monthly)"]
-    trigger --> importMod["Import-Module ActiveDirectory"]
-    importMod --> task{"Audit task"}
-    task -->|"user accounts"| userQuery["Get-ADUser — stale / disabled /\nno-expiry / expiring accounts"]
-    task -->|"privileged groups"| privGroups["Get-ADGroupMember\nDomain Admins / Schema Admins / EA"]
-    task -->|"stale computers"| compQuery["Get-ADComputer — enabled,\nnot logged in 90+ days"]
-    task -->|"replication health"| replHealth["Get-ADReplicationFailure -Scope Forest"]
-    task -->|"GPO backup"| gpoBackup["Backup-GPO -All\ntimestamped folder"]
-    userQuery --> export["Export-Csv\n(report file)"]
-    privGroups --> export
-    compQuery --> export
-    replHealth --> export
-    gpoBackup --> done["Notify ops team\n(email / ticketing)"]
-    export --> done
+```d2
+direction: right
+
+trigger: "Scheduled Task\n(weekly / monthly" {shape: rectangle}
+importMod: "Import-Module ActiveDirectory" {shape: rectangle}
+task: "Audit task" {shape: rectangle}
+userQuery: "Get-ADUser — stale / disabled /\nno-expiry / expiring accounts" {shape: rectangle}
+privGroups: "Get-ADGroupMember\nDomain Admins / Schema Admins / EA" {shape: rectangle}
+compQuery: "Get-ADComputer — enabled,\nnot logged in 90+ days" {shape: rectangle}
+replHealth: "Get-ADReplicationFailure -Scope Forest" {shape: rectangle}
+gpoBackup: "Backup-GPO -All\ntimestamped folder" {shape: rectangle}
+export: "Export-Csv\n(report file" {shape: rectangle}
+done: "Notify ops team\n(email / ticketing" {shape: rectangle}
+
+trigger -> importMod
+importMod -> task
+task -> userQuery
+task -> privGroups
+task -> compQuery
+task -> replHealth
+task -> gpoBackup
+userQuery -> export
+privGroups -> export
+compQuery -> export
+replHealth -> export
+gpoBackup -> done
+export -> done
 ```
 
 ---

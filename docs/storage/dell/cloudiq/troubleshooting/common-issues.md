@@ -8,7 +8,6 @@ search:
 # Dell CloudIQ Common Issues
 ![Dell CloudIQ Common Issues](../../../../assets/storage-dell-cloudiq-troubleshooting-common-issues.svg)
 
-
 ```bash
 # SSH to the SCG appliance
 ssh admin@<scg-mgmt-ip>
@@ -125,41 +124,41 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{System not reporting\nto CloudIQ?}
-    S --> B2{Metric gap in\ntimeline?}
-    S --> B3{Anomaly alert\nincorrect?}
-    S --> B4{Capacity forecast\nwrong?}
-    S --> B5{Connectivity issue\nproxy or firewall?}
+```d2
+direction: right
 
-    B1 -->|Check SCG service| D1{dsagw service\nrunning?}
-    D1 -->|No| R1[See SCG Issues —\nRestart dsagw and watch journal logs]
-    D1 -->|Device not registered| R2[See SCG Issues —\nSystem missing: add device in SCG]
+D1: "D1" {shape: rectangle}
+R1: "See SCG Issues —\nRestart dsagw and watch journal logs" {shape: rectangle}
+R2: "See SCG Issues —\nSystem missing: add device in SCG" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See SCG Issues —\nSCG VM powered off: restart and verify" {shape: rectangle}
+R4: "See Telemetry Issues —\nDevice poll fail: fix credentials" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See CloudIQ API —\nAcknowledge alert with change reference" {shape: rectangle}
+R6: "See Telemetry Issues —\nWrong health score: review alert policy" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See CloudIQ API —\nInsufficient data: wait for more history" {shape: rectangle}
+R8: "See CloudIQ API —\nQuery capacity endpoint to validate" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See SCG Issues —\nFirewall blocked: allow port 443 to Dell" {shape: rectangle}
+R10: "See SCG Issues —\nProxy auth fail: configure proxy creds in SCG" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Check SCG uptime during gap| D2{SCG offline\nduring gap period?}
-    D2 -->|Yes| R3[See SCG Issues —\nSCG VM powered off: restart and verify]
-    D2 -->|Credential expired| R4[See Telemetry Issues —\nDevice poll fail: fix credentials]
-
-    B3 -->|Check anomaly in CloudIQ UI| D3{Alert matches\nknown workload?}
-    D3 -->|Yes - planned event| R5[See CloudIQ API —\nAcknowledge alert with change reference]
-    D3 -->|Threshold wrong| R6[See Telemetry Issues —\nWrong health score: review alert policy]
-
-    B4 -->|Query capacity API and compare| D4{Forecast confidence\nLOW?}
-    D4 -->|Yes| R7[See CloudIQ API —\nInsufficient data: wait for more history]
-    D4 -->|Data mismatch| R8[See CloudIQ API —\nQuery capacity endpoint to validate]
-
-    B5 -->|Run SCG connectivity diagnostic| D5{cloudiq.dell.com\nreachable from SCG?}
-    D5 -->|No| R9[See SCG Issues —\nFirewall blocked: allow port 443 to Dell]
-    D5 -->|Proxy auth| R10[See SCG Issues —\nProxy auth fail: configure proxy creds in SCG]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---

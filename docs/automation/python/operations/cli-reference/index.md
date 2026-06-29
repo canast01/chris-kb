@@ -21,22 +21,23 @@ CLI Reference reference covering Python Script Execution Pipeline, Package Manag
 
 ## Python Script Execution Pipeline
 
-```mermaid
-graph LR
-    readEnv["Read Environment\n(os.environ / .env)"]
-    parseArgs["Parse CLI Args\n(argparse)"]
-    loadConfig["Load Config\n(YAML / JSON / INI)"]
-    runScript["Run Script Logic\n(main function)"]
-    exportOutput["Export Output\n(CSV / JSON / Excel)"]
-    sendReport["Send Report\n(email / webhook)"]
-    logResult["Log Result\n(file / syslog)"]
+```d2
+direction: right
 
-    readEnv --> parseArgs
-    parseArgs --> loadConfig
-    loadConfig --> runScript
-    runScript --> exportOutput
-    exportOutput --> sendReport
-    runScript --> logResult
+readEnv: "Read Environment\n(os.environ / .env" {shape: rectangle}
+parseArgs: "Parse CLI Args\n(argparse" {shape: rectangle}
+loadConfig: "Load Config\n(YAML / JSON / INI" {shape: rectangle}
+runScript: "Run Script Logic\n(main function" {shape: rectangle}
+exportOutput: "Export Output\n(CSV / JSON / Excel" {shape: rectangle}
+sendReport: "Send Report\n(email / webhook" {shape: rectangle}
+logResult: "Log Result\n(file / syslog" {shape: rectangle}
+
+readEnv -> parseArgs
+parseArgs -> loadConfig
+loadConfig -> runScript
+runScript -> exportOutput
+exportOutput -> sendReport
+runScript -> logResult
 ```
 
 ---

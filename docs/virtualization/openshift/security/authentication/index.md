@@ -10,26 +10,30 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph LR
-    A([User / oc login]) --> B[OAuth Server\nopenshift-authentication]
-    B --> C{Identity Provider}
-    C -->|HTPasswd| D[htpasswd file\nin Secret]
-    C -->|LDAP/AD| E[LDAP Bind\nDN lookup]
-    C -->|OIDC| F[External IdP\nOkta / Azure AD]
-    D --> G[Identity verified]
-    E --> G
-    F --> G
-    G --> H[OAuth token issued\n24h default TTL]
-    H --> I[oc login stores token\nin ~/.kube/config]
-    I --> J[API requests\nAuthorization: Bearer token]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef provider fill:#7c3aed,color:#fff
-    classDef action fill:#15803d,color:#fff
-    class A,B,C dark
-    class D,E,F provider
-    class G,H,I,J action
+A: "User / oc login" {shape: rectangle}
+B: "OAuth Server\nopenshift-authentication" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "htpasswd file\nin Secret" {shape: rectangle}
+E: "LDAP Bind\nDN lookup" {shape: rectangle}
+F: "External IdP\nOkta / Azure AD" {shape: rectangle}
+G: "Identity verified" {shape: rectangle}
+H: "OAuth token issued\n24h default TTL" {shape: rectangle}
+I: "oc login stores token\nin ~/.kube/config" {shape: rectangle}
+J: "API requests\nAuthorization: Bearer token" {shape: rectangle}
+
+A -> B
+C -> D
+C -> E
+C -> F
+D -> G
+E -> G
+F -> G
+G -> H
+H -> I
+I -> J
 ```
 
 ```plantuml

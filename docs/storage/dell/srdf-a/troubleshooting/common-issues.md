@@ -7,14 +7,12 @@ search:
 ---
 # SRDF/A — Common Issues
 
-
 <div class="kb-summary">
 SRDF/A troubleshooting: DSE overflow, cycle time violations, SRDF/A suspended due to link fault, SYMAPI errors, and escalation to Dell SRDF Engineering.
 
 *Applies to: SRDF/A*
 </div>
 ![SRDF/A — Common Issues](../../../../assets/storage-dell-srdf-a-troubleshooting-common-issues.svg)
-
 
 > Part of the [SRDF/A](../index.md) reference.
 
@@ -48,41 +46,41 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?])
-    S --> B1{SRDF/A link\ndegraded or suspended?}
-    S --> B2{Cycle time\nexceeded?}
-    S --> B3{Delta set\ntoo large?}
-    S --> B4{RDF group\ninconsistent?}
-    S --> B5{Failover\nblocked?}
+```d2
+direction: right
 
-    B1 -->|Check pair state| D1{State Transmit\nIdle or Suspended?}
-    D1 -->|Transmit Idle| R1[See Lag Alert Triage —\nLink saturation: check DSE and bandwidth]
-    D1 -->|Suspended| R2[See Lag Alert Triage —\nCheck suspend reason then resume]
+D1: "D1" {shape: rectangle}
+R1: "See Lag Alert Triage —\nLink saturation: check DSE and bandwidth" {shape: rectangle}
+R2: "See Lag Alert Triage —\nCheck suspend reason then resume" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "See Lag Alert Triage —\nThrottle R1 write I/O" {shape: rectangle}
+R4: "See Lag Alert Triage —\nCheck network with network team" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "See Lag Alert Triage —\nCheck FCIP tunnel and WAN QoS" {shape: rectangle}
+R6: "See Root Causes —\nWrite I/O spike: schedule batch off-peak" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "See Invalid Pair State —\nConfirm authoritative side before resync" {shape: rectangle}
+R8: "See Target Volume Capacity —\nExpand thin pool on R2" {shape: rectangle}
+D5: "D5" {shape: rectangle}
+R9: "See Lag Alert Triage —\nDo NOT activate R2: engage Dell Support" {shape: rectangle}
+R10: "See Consistency Group Suspended —\nResolve root cause before resuming" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+B5: "B5" {shape: rectangle}
 
-    B2 -->|Check DSE utilisation| D2{DSE above\n70 percent?}
-    D2 -->|Yes| R3[See Lag Alert Triage —\nThrottle R1 write I/O]
-    D2 -->|WAN saturation| R4[See Lag Alert Triage —\nCheck network with network team]
-
-    B3 -->|Check link bandwidth| D3{Link above\n80 percent?}
-    D3 -->|Yes| R5[See Lag Alert Triage —\nCheck FCIP tunnel and WAN QoS]
-    D3 -->|Write burst| R6[See Root Causes —\nWrite I/O spike: schedule batch off-peak]
-
-    B4 -->|Check pair state for Invalid| D4{Pair state\nInvalid?}
-    D4 -->|Yes| R7[See Invalid Pair State —\nConfirm authoritative side before resync]
-    D4 -->|Thin pool| R8[See Target Volume Capacity —\nExpand thin pool on R2]
-
-    B5 -->|Check R2 array health| D5{R2 array\nreachable?}
-    D5 -->|No| R9[See Lag Alert Triage —\nDo NOT activate R2: engage Dell Support]
-    D5 -->|CG suspended| R10[See Consistency Group Suspended —\nResolve root cause before resuming]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
-    class S start
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+D5 -> R9
+D5 -> R10
 ```
 
 ---
@@ -99,57 +97,46 @@ graph TD
 
 ## Lag Alert Triage Decision Tree
 
-```mermaid
-flowchart TD
-    lagAlert["Lag Alert Fires\n(RPO threshold breached)"]
-    checkPairState["Check Pair State\nsymrdf -g grp -sid sid query"]
-    pairState{"Pair State?"}
-    transmitIdle["Transmit Idle\n→ Link saturation"]
-    suspended["Suspended\n→ Manual or auto-suspend"]
-    inconsistent["Inconsistent\n→ Data consistency issue"]
-    transmitting["Transmitting / Awaiting Cycle\n→ Transient or write burst"]
+```d2
+direction: right
 
-    checkDSE["Check DSE Utilization\nsymrdf -g 20 -type A query -detail | grep DSE"]
-    dseHigh{"DSE > 70%?"}
-    checkLinkBW["Check Link Bandwidth\nsymstat -rdf -dir RF-2F -i 5 -c 3"]
-    linkSaturated{"Link > 80%\nUtilization?"}
-    checkNetOps["Check Network with Network Team\nFCIP tunnel state, WAN QoS"]
-    throttleIO["Throttle R1 Write I/O\nIdentify high-write workload"]
-    checkSuspendReason["Check Suspend Reason\nsymevent -sid sid list -last 30 | grep SRDF"]
-    resumeReplication["Resume Replication\nsymrdf -g grp -sid sid resume -noprompt"]
-    doNotActivateR2["Do NOT Activate R2\nEngage Dell Support"]
-    monitorRecovery["Monitor Lag Recovery\nevery 5 minutes"]
+lagAlert: "Lag Alert Fires\n(RPO threshold breached" {shape: rectangle}
+checkPairState: "Check Pair State\nsymrdf -g grp -sid sid query" {shape: rectangle}
+pairState: "pairState" {shape: rectangle}
+transmitIdle: "Transmit Idle\n→ Link saturation" {shape: rectangle}
+suspended: "Suspended\n→ Manual or auto-suspend" {shape: rectangle}
+inconsistent: "Inconsistent\n→ Data consistency issue" {shape: rectangle}
+transmitting: "Transmitting / Awaiting Cycle\n→ Transient or write burst" {shape: rectangle}
+checkDSE: "Check DSE Utilization\nsymrdf -g 20 -type A query -detail | grep DSE" {shape: rectangle}
+dseHigh: "dseHigh" {shape: rectangle}
+throttleIO: "Throttle R1 Write I/O\nIdentify high-write workload" {shape: rectangle}
+checkLinkBW: "Check Link Bandwidth\nsymstat -rdf -dir RF-2F -i 5 -c 3" {shape: rectangle}
+linkSaturated: "linkSaturated" {shape: rectangle}
+checkNetOps: "Check Network with Network Team\nFCIP tunnel state, WAN QoS" {shape: rectangle}
+monitorRecovery: "Monitor Lag Recovery\nevery 5 minutes" {shape: rectangle}
+checkSuspendReason: "Check Suspend Reason\nsymevent -sid sid list -last 30 | grep SRDF" {shape: rectangle}
+resumeReplication: "Resume Replication\nsymrdf -g grp -sid sid resume -noprompt" {shape: rectangle}
+doNotActivateR2: "Do NOT Activate R2\nEngage Dell Support" {shape: rectangle}
 
-    lagAlert --> checkPairState
-    checkPairState --> pairState
-    pairState -->|"Transmit Idle"| transmitIdle
-    pairState -->|"Suspended"| suspended
-    pairState -->|"Inconsistent"| inconsistent
-    pairState -->|"Transmitting"| transmitting
-
-    transmitIdle --> checkDSE
-    checkDSE --> dseHigh
-    dseHigh -->|"Yes"| throttleIO
-    dseHigh -->|"No"| checkLinkBW
-    checkLinkBW --> linkSaturated
-    linkSaturated -->|"Yes"| checkNetOps
-    linkSaturated -->|"No"| monitorRecovery
-
-    suspended --> checkSuspendReason
-    checkSuspendReason --> resumeReplication
-    resumeReplication --> monitorRecovery
-
-    inconsistent --> doNotActivateR2
-
-    transmitting --> monitorRecovery
-
-    style lagAlert fill:#be123c,color:#fff
-    style doNotActivateR2 fill:#be123c,color:#fff
-    style monitorRecovery fill:#15803d,color:#fff
-    style throttleIO fill:#b45309,color:#fff
-    style checkNetOps fill:#b45309,color:#fff
+lagAlert -> checkPairState
+checkPairState -> pairState
+pairState -> transmitIdle
+pairState -> suspended
+pairState -> inconsistent
+pairState -> transmitting
+transmitIdle -> checkDSE
+checkDSE -> dseHigh
+dseHigh -> throttleIO
+dseHigh -> checkLinkBW
+checkLinkBW -> linkSaturated
+linkSaturated -> checkNetOps
+linkSaturated -> monitorRecovery
+suspended -> checkSuspendReason
+checkSuspendReason -> resumeReplication
+resumeReplication -> monitorRecovery
+inconsistent -> doNotActivateR2
+transmitting -> monitorRecovery
 ```
-
 
 **Root causes:**
 

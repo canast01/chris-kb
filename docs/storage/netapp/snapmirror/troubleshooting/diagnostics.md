@@ -14,35 +14,38 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
 </div>
 ![SnapMirror — Diagnostics](../../../../assets/storage-netapp-snapmirror-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "SnapMirror Issue" {shape: rectangle}
+B: "snapmirror show\nfields lag-time,healthy" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "snapmirror show\n-destination-path\nRead Reason field" {shape: rectangle}
+E: "snapmirror show-history\nLast transfer duration" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "network interface show\n-role intercluster" {shape: rectangle}
+H: "event log show\n-message-name snapmirror.*" {shape: rectangle}
+I: "snapmirror mediator show\nCheck mediator connectivity" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Check intercluster\nLIF bandwidth" {shape: rectangle}
+L: "snapmirror abort\nThen retry update" {shape: rectangle}
+M: "ping -lif <ic-lif>\n-destination <dest-lif>" {shape: rectangle}
+N: "Collect AutoSupport\nand EMS for NetApp SR" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([SnapMirror Issue]) --> B[snapmirror show\nfields lag-time,healthy]
-    B --> C{Healthy=false or\nhigh lag?}
-    C -->|Unhealthy| D[snapmirror show\n-destination-path\nRead Reason field]
-    C -->|High lag only| E[snapmirror show-history\nLast transfer duration]
-    D --> F{Error type?}
-    F -->|Network / LIF| G[network interface show\n-role intercluster]
-    F -->|Transfer error| H[event log show\n-message-name snapmirror.*]
-    F -->|SM-BC mediator| I[snapmirror mediator show\nCheck mediator connectivity]
-    E --> J{Transfer slow?}
-    J -->|Yes| K[Check intercluster\nLIF bandwidth]
-    J -->|Aborted / stuck| L[snapmirror abort\nThen retry update]
-    G --> M[ping -lif <ic-lif>\n-destination <dest-lif>]
-    H --> N[Collect AutoSupport\nand EMS for NetApp SR]
-    I --> N
-    K --> N
-    L --> N
-    M --> N
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F,J dark
-    class B,D,E,G,H,I,K,L,M action
-    class N escalate
+A -> B
+C -> D
+C -> E
+F -> G
+F -> H
+F -> I
+J -> K
+J -> L
+G -> M
+H -> N
+I -> N
+K -> N
+L -> N
+M -> N
 ```
 
 ```d2

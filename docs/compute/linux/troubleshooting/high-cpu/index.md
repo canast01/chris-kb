@@ -46,30 +46,26 @@ High CPU utilization causes application latency, request queuing, and service in
 
 ## Diagnostic Flowchart
 
-```mermaid
-flowchart TD
-    A[High CPU Alert] --> B{Platform?}
-    B -- Linux --> C[top / htop — identify PID\nps aux --sort=-%cpu]
-    C --> D{Kernel or user space?}
-    D -- Kernel high sy% --> E[perf top — identify kernel function\nCheck for storage I/O wait driving ksoftirqd]
-    D -- User space --> F{Single PID or many?}
-    F -- Single PID --> G[Identify process\nCheck parent: pstree -p PID]
-    G --> H{Safe to kill?}
-    H -- Yes --> I[kill -15 PID\nMonitor recovery]
-    H -- No --> J[Notify app owner\nCapture thread dump first]
-    F -- Many PIDs --> K[Check if same binary\nPossibly fork bomb or worker threads]
-    B -- Windows --> L[Get-Process sort CPU\nperfmon counter: % Processor Time]
-    L --> M{Service or app?}
-    M -- Service --> N[Check service dependencies\nEvent log for errors]
-    M -- App --> O[Capture process dump\nDebug or rollback]
-    B -- VMware VM --> P[esxtop — check %RDY %CSTP\nFilter: G for group, H for host]
-    P --> Q{%RDY > 5%?}
-    Q -- Yes --> R[Host overcommitted\nDRS / migrate VM / reduce vCPU]
-    Q -- No --> S[CPU issue is inside guest\nFollow Linux or Windows path]
-    B -- Java/JVM --> T[jstack PID — thread dump\nCheck for BLOCKED threads]
-    T --> U{GC overhead high?}
-    U -- Yes --> V[jstat -gcutil PID 1000\nAnalyze heap usage]
-    U -- No --> W[Find CPU-burning thread\nCorrelate thread ID hex to jstack output]
+```d2
+direction: right
+
+A: "High CPU Alert" {shape: rectangle}
+C: "top / htop — identify PID\nps aux --sort=-%cpu" {shape: rectangle}
+E: "perf top — identify kernel function\nCheck for storage I/O wait driving ksoftirqd" {shape: rectangle}
+G: "Identify process\nCheck parent: pstree -p PID" {shape: rectangle}
+I: "kill -15 PID\nMonitor recovery" {shape: rectangle}
+J: "Notify app owner\nCapture thread dump first" {shape: rectangle}
+K: "Check if same binary\nPossibly fork bomb or worker threads" {shape: rectangle}
+L: "Get-Process sort CPU\nperfmon counter: % Processor Time" {shape: rectangle}
+N: "Check service dependencies\nEvent log for errors" {shape: rectangle}
+O: "Capture process dump\nDebug or rollback" {shape: rectangle}
+P: "esxtop — check %RDY %CSTP\nFilter: G for group, H for host" {shape: rectangle}
+R: "Host overcommitted\nDRS / migrate VM / reduce vCPU" {shape: rectangle}
+S: "CPU issue is inside guest\nFollow Linux or Windows path" {shape: rectangle}
+T: "jstack PID — thread dump\nCheck for BLOCKED threads" {shape: rectangle}
+V: "jstat -gcutil PID 1000\nAnalyze heap usage" {shape: rectangle}
+W: "Find CPU-burning thread\nCorrelate thread ID hex to jstack output" {shape: rectangle}
+
 ```
 
 ### perf — Deeper Kernel Analysis

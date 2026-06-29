@@ -12,28 +12,25 @@ Amazon EVS runs VMware Cloud Foundation on dedicated bare-metal EC2 instances in
 </div>
 ![Amazon EVS — How It Works](../../../../assets/cloud-aws-evs-architecture-how-it-works.svg)
 
-```mermaid
-graph LR
-    classDef prem fill:#1e3a5f,color:#fff
-    classDef aws fill:#b45309,color:#fff
-    classDef vcf fill:#15803d,color:#fff
-    classDef nsx fill:#7c3aed,color:#fff
+```d2
+direction: right
 
-    ONPREM["On-Premises DC"]:::prem
-    DX["Direct Connect\n(Private VIF)"]:::aws
-    VPC["AWS VPC\n(EVS Region)"]:::aws
-    MGMT["Management Subnet\nvCenter · SDDC Mgr · NSX Mgr"]:::vcf
-    VTEP["VTEP Subnet\nGeneve Tunnels (ENI per host)"]:::nsx
-    T0["T0 Router\n(BGP to VPC)"]:::nsx
-    T1["T1 Routers\n(per segment)"]:::nsx
-    WL["Workload Segments\n(NSX-T Logical Networks)"]:::nsx
+ONPREM: "ONPREM" {shape: rectangle}
+DX: "DX" {shape: rectangle}
+VPC: "VPC" {shape: rectangle}
+MGMT: "MGMT" {shape: rectangle}
+VTEP: "VTEP" {shape: rectangle}
+T0: "T0" {shape: rectangle}
+T1: "T1" {shape: rectangle}
+WL: "WL" {shape: rectangle}
 
-    ONPREM --> DX --> VPC
-    VPC --> MGMT
-    VPC --> VTEP
-    VPC --> T0
-    T0 --> T1
-    T1 --> WL
+ONPREM -> DX
+DX -> VPC
+VPC -> MGMT
+VPC -> VTEP
+VPC -> T0
+T0 -> T1
+T1 -> WL
 ```
 
 ```plantuml

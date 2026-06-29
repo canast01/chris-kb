@@ -5,14 +5,12 @@ tags:
 ---
 # Cisco MDS — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, SAN Fabric Topology.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
 ![Cisco MDS — How It Works](../../../../assets/san-cisco-mds-architecture-how-it-works.svg)
-
 
 ```d2
 direction: right
@@ -61,26 +59,6 @@ dcnm -> director_b.sup2: SNMP / SSH
 Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC). The core isolation mechanism is the **VSAN (Virtual SAN)** — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.
 
 ## SAN Fabric Topology
-
-```mermaid
-graph TB
-  H1A(["esxi-01 HBA0"]) --> MDSA["MDS-9710 Director A\n2× 48p 32Gb FC"]
-  H2A(["esxi-02 HBA0"]) --> MDSA
-  H1B(["esxi-01 HBA1"]) --> MDSB["MDS-9710 Director B\n2× 48p 32Gb FC"]
-  H2B(["esxi-02 HBA1"]) --> MDSB
-  MDSA <-->|"4× 100G ISL"| MDSB
-  MDSA --> FA_CT0[("FlashArray CT0")]
-  MDSA --> PM_A[("PowerMax Dir A")]
-  MDSB --> FA_CT1[("FlashArray CT1")]
-  MDSB --> PM_B[("PowerMax Dir B")]
-  classDef switch fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class MDSA,MDSB switch
-  class H1A,H2A,H1B,H2B host
-  class FA_CT0,PM_A,FA_CT1,PM_B storage
-```
-
 
 ## FC Fabric Login Sequence
 

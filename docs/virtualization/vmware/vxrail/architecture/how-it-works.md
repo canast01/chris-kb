@@ -44,24 +44,27 @@ VXM --> ADM: Expansion complete
 
 ## Architecture Overview
 
-```mermaid
-graph TB
-  VXM["VxRail Manager\n(VM on first node)"]
-  VXM --> VC["vCenter Server\n(embedded or external)"]
-  VC --> CL["vSphere Cluster"]
-  CL --> N1["VxRail Node 1\nESXi + vSAN Disk Groups"]
-  CL --> N2["VxRail Node 2\nESXi + vSAN Disk Groups"]
-  CL --> N3["VxRail Node 3\nESXi + vSAN Disk Groups"]
-  N1 --> DS["vSAN Datastore\n(distributed across all nodes)"]
-  N2 --> DS
-  N3 --> DS
-  VXM --> DELL["Dell Support APIs\nSYS ID, iDRAC"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef node fill:#15803d,stroke:#166534,color:#fff
-  classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class VXM,VC ctrl
-  class N1,N2,N3 node
-  class DS storage
+```d2
+direction: right
+
+VXM: "VxRail Manager\n(VM on first node" {shape: rectangle}
+VC: "vCenter Server\n(embedded or external" {shape: rectangle}
+CL: "vSphere Cluster" {shape: rectangle}
+N1: "VxRail Node 1\nESXi + vSAN Disk Groups" {shape: rectangle}
+N2: "VxRail Node 2\nESXi + vSAN Disk Groups" {shape: rectangle}
+N3: "VxRail Node 3\nESXi + vSAN Disk Groups" {shape: rectangle}
+DS: "vSAN Datastore\n(distributed across all nodes" {shape: rectangle}
+DELL: "Dell Support APIs\nSYS ID, iDRAC" {shape: rectangle}
+
+VXM -> VC
+VC -> CL
+CL -> N1
+CL -> N2
+CL -> N3
+N1 -> DS
+N2 -> DS
+N3 -> DS
+VXM -> DELL
 ```
 
 ---

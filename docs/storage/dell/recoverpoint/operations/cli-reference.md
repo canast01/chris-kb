@@ -35,36 +35,31 @@ RecoverPoint management interfaces:
 
 ## Image Access Flow
 
-```mermaid
-flowchart TD
-    drTestStart["DR Test or Recovery Initiated"]
-    listCGs["List CG State\ngroupsStatus"]
-    cgHealthy{"CGs ACTIVE\nand Journal < 70%?"}
-    createBookmark["Create Pre-Test Bookmark\ngroup create_bookmark --gname cgname\n--name dr-test-date"]
-    enableAccess["Enable Image Access\ngroup enable-image-access\n--copy DR_Copy --image latest --access-mode virtual"]
-    confirmAccess["Confirm ImageAccess State\ngroup status --gname cgname"]
-    mountVolumes["Mount DR Volumes at DR Site\n(SAN / vSphere step)"]
-    validate["Validate Application Data\n(app team confirms)"]
-    disableAccess["Disable Image Access\ngroup disable-image-access --gname cgname"]
-    confirmActive["Confirm CG ACTIVE\ngroups status"]
-    abortTest["Do Not Proceed\nResolve CG issues first"]
+```d2
+direction: right
 
-    drTestStart --> listCGs
-    listCGs --> cgHealthy
-    cgHealthy -->|"Yes"| createBookmark
-    cgHealthy -->|"No"| abortTest
-    createBookmark --> enableAccess
-    enableAccess --> confirmAccess
-    confirmAccess --> mountVolumes
-    mountVolumes --> validate
-    validate --> disableAccess
-    disableAccess --> confirmActive
+drTestStart: "DR Test or Recovery Initiated" {shape: rectangle}
+listCGs: "List CG State\ngroupsStatus" {shape: rectangle}
+cgHealthy: "cgHealthy" {shape: rectangle}
+createBookmark: "Create Pre-Test Bookmark\ngroup create_bookmark --gname cgname\n--name dr-test-date" {shape: rectangle}
+abortTest: "Do Not Proceed\nResolve CG issues first" {shape: rectangle}
+enableAccess: "Enable Image Access\ngroup enable-image-access\n--copy DR_Copy --image latest --access-mode virtual" {shape: rectangle}
+confirmAccess: "Confirm ImageAccess State\ngroup status --gname cgname" {shape: rectangle}
+mountVolumes: "Mount DR Volumes at DR Site\n(SAN / vSphere step" {shape: rectangle}
+validate: "Validate Application Data\n(app team confirms" {shape: rectangle}
+disableAccess: "Disable Image Access\ngroup disable-image-access --gname cgname" {shape: rectangle}
+confirmActive: "Confirm CG ACTIVE\ngroups status" {shape: rectangle}
 
-    style drTestStart fill:#2563eb,color:#fff
-    style confirmActive fill:#15803d,color:#fff
-    style abortTest fill:#be123c,color:#fff
-    style enableAccess fill:#b45309,color:#fff
-    style disableAccess fill:#b45309,color:#fff
+drTestStart -> listCGs
+listCGs -> cgHealthy
+cgHealthy -> createBookmark
+cgHealthy -> abortTest
+createBookmark -> enableAccess
+enableAccess -> confirmAccess
+confirmAccess -> mountVolumes
+mountVolumes -> validate
+validate -> disableAccess
+disableAccess -> confirmActive
 ```
 
 ### Image Access (CG Operations)

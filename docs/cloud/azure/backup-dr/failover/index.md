@@ -14,23 +14,24 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
 
 ## Failover Decision Flow
 
-```mermaid
-flowchart TD
-    failoverNeeded["Failover Required"]
-    drDrill{"DR Drill /\nTest Only?"}
-    testFailover["Test Failover\nIsolated test VNet\nNo production impact"]
-    planned{"Planned -\nzero data loss?"}
-    plannedFailover["Planned Failover\nClean VM shutdown\nZero RPO"]
-    unplannedFailover["Unplanned Failover\nImmediate cutover\nPossible data loss"]
-    drVMRunning["DR VM Running\nin Recovery Region"]
-    commit["Commit Failover\ncut primary VM"]
-    cleanup["Cleanup\ntest VMs deleted"]
+```d2
+direction: right
 
-    failoverNeeded --> drDrill
-    drDrill -- Yes --> testFailover --> cleanup
-    drDrill -- No --> planned
-    planned -- Yes --> plannedFailover --> drVMRunning --> commit
-    planned -- No --> unplannedFailover --> drVMRunning --> commit
+failoverNeeded: "Failover Required" {shape: rectangle}
+drDrill: "drDrill" {shape: rectangle}
+testFailover: "Test Failover\nIsolated test VNet\nNo production impact" {shape: rectangle}
+cleanup: "Cleanup\ntest VMs deleted" {shape: rectangle}
+plannedFailover: "Planned Failover\nClean VM shutdown\nZero RPO" {shape: rectangle}
+drVMRunning: "DR VM Running\nin Recovery Region" {shape: rectangle}
+commit: "Commit Failover\ncut primary VM" {shape: rectangle}
+unplannedFailover: "Unplanned Failover\nImmediate cutover\nPossible data loss" {shape: rectangle}
+planned: "planned" {shape: rectangle}
+
+failoverNeeded -> drDrill
+testFailover -> cleanup
+plannedFailover -> drVMRunning
+drVMRunning -> commit
+unplannedFailover -> drVMRunning
 ```
 
 ## Failover Types Compared

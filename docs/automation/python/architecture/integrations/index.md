@@ -13,26 +13,26 @@ Python automation integrations: REST API call patterns, retry-with-backoff wrapp
 
 ## API Call and Retry Flow
 
-```mermaid
-graph LR
-    buildReq["Build Request\n(URL + headers + body)"]
-    sendReq["Send HTTP Request\n(requests.get/post)"]
-    checkStatus["Check Response\nStatus Code"]
-    parseBody["Parse JSON\nBody"]
-    returnData["Return Data\nto Caller"]
-    checkRetry["Retry attempt\n< max_retries?"]
-    backoff["Exponential Backoff\n(backoff_factor)"]
-    raiseAlert["Raise Exception\n/ Alert"]
+```d2
+direction: right
 
-    buildReq --> sendReq
-    sendReq --> checkStatus
-    checkStatus -->|2xx OK| parseBody
-    parseBody --> returnData
-    checkStatus -->|429 / 5xx| checkRetry
-    checkRetry -->|Yes| backoff
-    backoff --> sendReq
-    checkRetry -->|No| raiseAlert
-    checkStatus -->|ConnectionError\nTimeout| checkRetry
+buildReq: "Build Request\n(URL + headers + body" {shape: rectangle}
+sendReq: "Send HTTP Request\n(requests.get/post" {shape: rectangle}
+checkStatus: "Check Response\nStatus Code" {shape: rectangle}
+parseBody: "Parse JSON\nBody" {shape: rectangle}
+returnData: "Return Data\nto Caller" {shape: rectangle}
+checkRetry: "Retry attempt\n< max_retries?" {shape: rectangle}
+backoff: "Exponential Backoff\n(backoff_factor" {shape: rectangle}
+raiseAlert: "Raise Exception\n/ Alert" {shape: rectangle}
+
+buildReq -> sendReq
+sendReq -> checkStatus
+checkStatus -> parseBody
+parseBody -> returnData
+checkStatus -> checkRetry
+checkRetry -> backoff
+backoff -> sendReq
+checkRetry -> raiseAlert
 ```
 
 ### Pagination

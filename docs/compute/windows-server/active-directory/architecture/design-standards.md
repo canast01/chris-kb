@@ -16,24 +16,39 @@ Organisational standards for OU structure, naming conventions, group policy desi
 
 ## OU and GPO Hierarchy
 
-```mermaid
-graph TD
-    domain["DC=corp,DC=example,DC=com\n(domain root)"]
-    domain -->|"linked: ALL-USERS-PasswordPolicy"| ouServers["OU=Servers"]
-    domain --> ouWorkstations["OU=Workstations"]
-    domain --> ouUsers["OU=Users"]
-    domain --> ouGroups["OU=Groups"]
-    domain --> ouSvcAccts["OU=Service Accounts"]
-    domain --> ouAdmin["OU=Admin"]
+```d2
+direction: right
 
-    ouServers -->|"linked: PROD-SERVERS-SecBaseline"| ouEMEA["OU=EMEA"]
-    ouServers --> ouAPAC["OU=APAC"]
-    ouServers --> ouAMER["OU=AMER"]
-    ouUsers --> ouStaff["OU=Staff"]
-    ouUsers --> ouContractors["OU=Contractors"]
-    ouAdmin -->|"Tier 0 only — PAW access"| ouTier0["OU=Tier0"]
-    ouAdmin --> ouTier1["OU=Tier1"]
-    ouAdmin --> ouPAW["OU=PAW"]
+domain: "DC=corp,DC=example,DC=com\n(domain root" {shape: rectangle}
+ouServers: "OU=Servers" {shape: rectangle}
+ouWorkstations: "OU=Workstations" {shape: rectangle}
+ouUsers: "OU=Users" {shape: rectangle}
+ouGroups: "OU=Groups" {shape: rectangle}
+ouSvcAccts: "OU=Service Accounts" {shape: rectangle}
+ouAdmin: "OU=Admin" {shape: rectangle}
+ouEMEA: "OU=EMEA" {shape: rectangle}
+ouAPAC: "OU=APAC" {shape: rectangle}
+ouAMER: "OU=AMER" {shape: rectangle}
+ouStaff: "OU=Staff" {shape: rectangle}
+ouContractors: "OU=Contractors" {shape: rectangle}
+ouTier0: "OU=Tier0" {shape: rectangle}
+ouTier1: "OU=Tier1" {shape: rectangle}
+ouPAW: "OU=PAW" {shape: rectangle}
+
+domain -> ouServers
+domain -> ouWorkstations
+domain -> ouUsers
+domain -> ouGroups
+domain -> ouSvcAccts
+domain -> ouAdmin
+ouServers -> ouEMEA
+ouServers -> ouAPAC
+ouServers -> ouAMER
+ouUsers -> ouStaff
+ouUsers -> ouContractors
+ouAdmin -> ouTier0
+ouAdmin -> ouTier1
+ouAdmin -> ouPAW
 ```
 
 ## OU Structure
@@ -145,21 +160,23 @@ Disable RC4 via GPO: **Computer Config > Windows Settings > Security Settings > 
 
 ## Tiered Administration Model
 
-```mermaid
-graph TD
-    tier0["Tier 0 — Identity Infrastructure\nDCs · ADCS · AAD Connect · CyberArk Vault · DNS"]
-    tier1["Tier 1 — Servers and Services\nApp servers · SQL · ESXi hypervisors · Storage"]
-    tier2["Tier 2 — Workstations and End-user Devices\nDesktops · Laptops · VDI"]
+```d2
+direction: right
 
-    admTier0["adm0-* accounts\n(Tier 0 admin)"] -->|"access only from\nTier 0 PAW"| tier0
-    admTier1["adm1-* accounts\n(Tier 1 admin)"] -->|"access from\njump server / Tier 1 PAW"| tier1
-    admTier2["Helpdesk accounts"] -->|"standard workstation"| tier2
+admTier0: "adm0-* accounts\n(Tier 0 admin" {shape: rectangle}
+tier0: "Tier 0 — Identity Infrastructure\nDCs · ADCS · AAD Connect · CyberArk Vault · DNS" {shape: rectangle}
+admTier1: "adm1-* accounts\n(Tier 1 admin" {shape: rectangle}
+tier1: "Tier 1 — Servers and Services\nApp servers · SQL · ESXi hypervisors · Storage" {shape: rectangle}
+admTier2: "Helpdesk accounts" {shape: rectangle}
+tier2: "Tier 2 — Workstations and End-user Devices\nDesktops · Laptops · VDI" {shape: rectangle}
+paw0: "Tier 0 PAW\n(air-gapped, hardened" {shape: rectangle}
+paw1: "Jump Server / Tier 1 PAW" {shape: rectangle}
 
-    paw0["Tier 0 PAW\n(air-gapped, hardened)"] --> tier0
-    paw1["Jump Server / Tier 1 PAW"] --> tier1
-
-    tier0 -. "Tier 0 accounts must NOT\nlog on to Tier 1 or 2" .-> tier1
-    tier1 -. "Tier 1 accounts must NOT\nlog on to Tier 2" .-> tier2
+admTier0 -> tier0
+admTier1 -> tier1
+admTier2 -> tier2
+paw0 -> tier0
+paw1 -> tier1
 ```
 
 ## Privileged Access Model (Tiering)

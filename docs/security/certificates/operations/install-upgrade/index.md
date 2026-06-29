@@ -41,25 +41,6 @@ certificate_renewal -> validate
 
 ## Full Certificate Lifecycle
 
-```mermaid
-flowchart TD
-    enrol["Enrolment\n(service provisioning trigger)"]
-    enrol --> csrGen["CSR generation on target host\nor automated via Venafi / ACME"]
-    csrGen --> issuance["Issuance\n(CA receives and signs CSR)"]
-    issuance -->|"internal — automated"| autoInstall["Auto-installation\n(cert-manager / Venafi driver)"]
-    issuance -->|"external — manual"| manualInstall["Manual installation\n(download + deploy to service)"]
-    autoInstall --> monitor["Monitoring\n(Venafi / Prometheus — 90/30/7 day alerts)"]
-    manualInstall --> monitor
-    monitor --> renewTrigger{"80% of validity\nelapsed?"}
-    renewTrigger -->|"yes"| renewAuto{"Automated\nrenewal?"}
-    renewAuto -->|"Venafi / ACME"| csrGen
-    renewAuto -->|"manual"| ownerNotify["Notify certificate owner\nManual renewal started"]
-    ownerNotify --> csrGen
-    renewTrigger -->|"no"| monitor
-    monitor -->|"compromise / decommission"| revoke["Revocation\n(ADCS / CA portal — immediate for key compromise)"]
-    revoke --> newCert["Issue replacement certificate\non clean host with new key"]
-```
-
 ---
 ## Lifecycle Overview
 

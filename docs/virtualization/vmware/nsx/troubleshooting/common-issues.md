@@ -10,7 +10,6 @@ search:
 # NSX — Common Issues
 ![NSX — Common Issues](../../../../assets/virtualization-vmware-nsx-troubleshooting-common-issues.svg)
 
-
 ```bash
 # Step 1 — Confirm the VM's segment and gateway IP
 # Check segment config in NSX Manager UI or API
@@ -126,36 +125,43 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A[VM cannot reach\nanother VM]
-    S --> B[North-south broken\n/ BGP down]
-    S --> C[Transport node\nconfig failed]
-    S --> D[NSX Manager\nunreachable]
+```d2
+direction: right
 
-    A --> A1[Run Traceflow in NSX UI\nbetween source and dest]
-    A1 --> A2{Where does\nit drop?}
-    A2 -->|DFW on source| A3[→ DFW Rules section\ncheck applied policy]
-    A2 -->|Segment / logical| A4[→ Segment Config section\ncheck port binding]
-    A2 -->|T1 / T0 router| A5[→ Routing section\ncheck route tables]
+S: "What is the symptom?" {shape: rectangle}
+A: "VM cannot reach\nanother VM" {shape: rectangle}
+B: "North-south broken\n/ BGP down" {shape: rectangle}
+C: "Transport node\nconfig failed" {shape: rectangle}
+D: "NSX Manager\nunreachable" {shape: rectangle}
+A1: "Run Traceflow in NSX UI\nbetween source and dest" {shape: rectangle}
+A2: "A2" {shape: rectangle}
+A3: "→ DFW Rules section\ncheck applied policy" {shape: rectangle}
+A4: "→ Segment Config section\ncheck port binding" {shape: rectangle}
+A5: "→ Routing section\ncheck route tables" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "→ Edge Failure section\ncheck HA and BFD" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "→ BGP section\ncheck AS, timers, upstream" {shape: rectangle}
+B5: "Check T0 static routes\nand route redistribution" {shape: rectangle}
+C1: "→ Transport Node section\ncheck VIBs and TEP IP" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+D2: "→ Manager Cluster section" {shape: rectangle}
+D3: "Check API gateway\nand LB VIP" {shape: rectangle}
 
-    B --> B1{Edge node\nstatus?}
-    B1 -->|Edge down| B2[→ Edge Failure section\ncheck HA and BFD]
-    B1 -->|Edge up| B3{BGP peer\nstate?}
-    B3 -->|Idle / Active| B4[→ BGP section\ncheck AS, timers, upstream]
-    B3 -->|Established| B5[Check T0 static routes\nand route redistribution]
-
-    C --> C1[→ Transport Node section\ncheck VIBs and TEP IP]
-    D --> D1{Cluster\nstatus?}
-    D1 -->|Degraded| D2[→ Manager Cluster section]
-    D1 -->|Stable| D3[Check API gateway\nand LB VIP]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A3,A4,A5,B2,B4,B5,C1,D2,D3 section
-    class A2,B1,B3,D1 decision
-    class S start
+S -> A
+S -> B
+S -> C
+S -> D
+A -> A1
+A2 -> A3
+A2 -> A4
+A2 -> A5
+B1 -> B2
+B3 -> B4
+B3 -> B5
+C -> C1
+D1 -> D2
+D1 -> D3
 ```
 
 ---

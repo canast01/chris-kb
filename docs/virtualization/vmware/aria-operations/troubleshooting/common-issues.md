@@ -9,7 +9,6 @@ search:
 # Aria Operations Common Issues
 ![Aria Operations Common Issues](../../../../assets/virtualization-vmware-aria-operations-troubleshooting-common.svg)
 
-
 ```bash
 # SSH to primary node and inspect adapter state
 ssh admin@vrops-prod-01.example.local
@@ -109,39 +108,44 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1[Adapter not collecting data]
-    S --> B2[Dashboard blank or no data]
-    S --> B3[Alert storm]
-    S --> B4[Capacity calculation wrong]
-    S --> B5[vSAN management pack missing metrics]
-    S --> B6[Node offline or cluster issue]
+```d2
+direction: right
 
-    B1 --> D1{Credentials\nor connectivity?}
-    D1 -->|Credentials| R1[Re-test Adapter Connection · Unlock Service Account\n→ Adapter Disconnected]
-    D1 -->|Connectivity| R2[Verify Source Reachability · Check Collector Log\n→ Adapter Disconnected]
+S: "What is the symptom?" {shape: rectangle}
+B1: "Adapter not collecting data" {shape: rectangle}
+B2: "Dashboard blank or no data" {shape: rectangle}
+B3: "Alert storm" {shape: rectangle}
+B4: "Capacity calculation wrong" {shape: rectangle}
+B5: "vSAN management pack missing metrics" {shape: rectangle}
+B6: "Node offline or cluster issue" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+R1: "Re-test Adapter Connection · Unlock Service Account\n→ Adapter Disconnected" {shape: rectangle}
+R2: "Verify Source Reachability · Check Collector Log\n→ Adapter Disconnected" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Resolve Adapter Issue First\n→ Adapter Disconnected" {shape: rectangle}
+R4: "Check Widget Scope · Widen Time Range\n→ No Data in Dashboards" {shape: rectangle}
+R5: "Raise Alert Threshold · Add Wait Cycles · Suppress During Maintenance\n→ Alert Storm" {shape: rectangle}
+R6: "Force Capacity Recalculation via API\n→ Capacity Calculation Wrong" {shape: rectangle}
+R7: "Verify vSAN Management Pack Installed · Check Adapter Log\n→ vSAN Management Pack Missing Metrics" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R8: "Power On Node · Check Inter-node Network\n→ Node Offline / Cluster Issue" {shape: rectangle}
+R9: "Restart vmware-vcops Service · Check VAMI Cluster Status\n→ Node Offline / Cluster Issue" {shape: rectangle}
 
-    B2 --> D2{Adapter status\ngreen?}
-    D2 -->|No| R3[Resolve Adapter Issue First\n→ Adapter Disconnected]
-    D2 -->|Yes| R4[Check Widget Scope · Widen Time Range\n→ No Data in Dashboards]
-
-    B3 --> R5[Raise Alert Threshold · Add Wait Cycles · Suppress During Maintenance\n→ Alert Storm]
-
-    B4 --> R6[Force Capacity Recalculation via API\n→ Capacity Calculation Wrong]
-
-    B5 --> R7[Verify vSAN Management Pack Installed · Check Adapter Log\n→ vSAN Management Pack Missing Metrics]
-
-    B6 --> D3{Node VM\npowered on?}
-    D3 -->|No| R8[Power On Node · Check Inter-node Network\n→ Node Offline / Cluster Issue]
-    D3 -->|Yes| R9[Restart vmware-vcops Service · Check VAMI Cluster Status\n→ Node Offline / Cluster Issue]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
-    class D1,D2,D3 decision
-    class S start
+S -> B1
+S -> B2
+S -> B3
+S -> B4
+S -> B5
+S -> B6
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+B3 -> R5
+B4 -> R6
+B5 -> R7
+D3 -> R8
+D3 -> R9
 ```
 
 ---

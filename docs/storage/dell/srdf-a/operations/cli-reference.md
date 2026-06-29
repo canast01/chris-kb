@@ -33,35 +33,31 @@ Run `symcfg list` to identify your SID. Run `symrdf -sid <sid> list` to identify
 
 ## SRDF/A Command Decision Map
 
-```mermaid
-flowchart TD
-    need["What do you need?"]
-    checkHealth["Check health / pair state"]
-    checkLag["Check lag / cycle time"]
-    maintain["Planned maintenance"]
-    drOps["DR failover / failback"]
-    addRemove["Add or remove devices"]
+```d2
+direction: right
 
-    cmdHealth["symrdf -sid sid -rdfg rdfg list -type srdf_a\nsymrdf -sid sid -rdfg rdfg queryall\nsymcfg -sid sid list -rdfgrp"]
-    cmdLag["symrdf -sid sid -rdfg rdfg list -delta\nsymstat -sid sid -type rdfg -rdfg rdfg"]
-    cmdSuspend["symrdf -sid sid -rdfg rdfg -cg cg suspend\n(then resume after maintenance)"]
-    cmdFailover["symrdf -sid sid -rdfg rdfg -cg cg failover\nor failover -nop for unplanned"]
-    cmdEstablish["symrdf -g dgname -sid sid establish -noprompt\nMonitor SyncInProg → Consistent"]
+need: "What do you need?" {shape: rectangle}
+checkHealth: "Check health / pair state" {shape: rectangle}
+checkLag: "Check lag / cycle time" {shape: rectangle}
+maintain: "Planned maintenance" {shape: rectangle}
+drOps: "DR failover / failback" {shape: rectangle}
+addRemove: "Add or remove devices" {shape: rectangle}
+cmdHealth: "symrdf -sid sid -rdfg rdfg list -type srdf_a\nsymrdf -sid sid -rdfg rdfg queryall\nsymcfg -sid sid list -rdfgrp" {shape: rectangle}
+cmdLag: "symrdf -sid sid -rdfg rdfg list -delta\nsymstat -sid sid -type rdfg -rdfg rdfg" {shape: rectangle}
+cmdSuspend: "symrdf -sid sid -rdfg rdfg -cg cg suspend\n(then resume after maintenance" {shape: rectangle}
+cmdFailover: "symrdf -sid sid -rdfg rdfg -cg cg failover\nor failover -nop for unplanned" {shape: rectangle}
+cmdEstablish: "symrdf -g dgname -sid sid establish -noprompt\nMonitor SyncInProg → Consistent" {shape: rectangle}
 
-    need --> checkHealth
-    need --> checkLag
-    need --> maintain
-    need --> drOps
-    need --> addRemove
-
-    checkHealth --> cmdHealth
-    checkLag --> cmdLag
-    maintain --> cmdSuspend
-    drOps --> cmdFailover
-    addRemove --> cmdEstablish
-
-    style need fill:#2563eb,color:#fff
-    style cmdFailover fill:#be123c,color:#fff
+need -> checkHealth
+need -> checkLag
+need -> maintain
+need -> drOps
+need -> addRemove
+checkHealth -> cmdHealth
+checkLag -> cmdLag
+maintain -> cmdSuspend
+drOps -> cmdFailover
+addRemove -> cmdEstablish
 ```
 
 ---

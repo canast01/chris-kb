@@ -48,21 +48,23 @@ SRDF/A (Asynchronous) replicates data from a source PowerMax to a target PowerMa
 4. The closed delta set is transmitted to R2 in sequence — each delta set applied in order, maintaining consistency.
 5. When R2 confirms receipt, the cycle is complete and RPO resets.
 
-```mermaid
-flowchart TD
-    hostWrite["Host Write to R1"] --> activeDeltaSet["Active Delta Set\n(accumulating writes)"]
-    activeDeltaSet -->|"cycle interval ends\n(default 30s)"| closeDeltaSet["Delta Set Closed\n& Queued"]
-    closeDeltaSet --> newActive["New Active Delta Set\nOpens for Next Cycle"]
-    closeDeltaSet --> transmit["Transmit Delta Set\n→ WAN → R2"]
-    transmit -->|"R2 confirms receipt"| rpoReset["RPO Resets\nCycle Complete"]
-    transmit -->|"link saturated / slow"| dse["DSE Overflow Device\nActivated"]
-    dse -->|"link clears"| transmit
+```d2
+direction: right
 
-    style activeDeltaSet fill:#2563eb,color:#fff
-    style closeDeltaSet fill:#b45309,color:#fff
-    style transmit fill:#7c3aed,color:#fff
-    style dse fill:#be123c,color:#fff
-    style rpoReset fill:#15803d,color:#fff
+hostWrite: "Host Write to R1" {shape: rectangle}
+activeDeltaSet: "Active Delta Set\n(accumulating writes" {shape: rectangle}
+closeDeltaSet: "closeDeltaSet" {shape: rectangle}
+newActive: "New Active Delta Set\nOpens for Next Cycle" {shape: rectangle}
+transmit: "Transmit Delta Set\n→ WAN → R2" {shape: rectangle}
+rpoReset: "RPO Resets\nCycle Complete" {shape: rectangle}
+dse: "DSE Overflow Device\nActivated" {shape: rectangle}
+
+hostWrite -> activeDeltaSet
+closeDeltaSet -> newActive
+closeDeltaSet -> transmit
+transmit -> rpoReset
+transmit -> dse
+dse -> transmit
 ```
 
 ## Lag Reference

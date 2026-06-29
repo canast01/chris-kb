@@ -79,16 +79,18 @@ flowchart TD
 | paused | Policy is paused | Confirm intentional; resume if not |
 | disabled | Policy is disabled | Confirm intentional; enable if DR policy |
 
-```mermaid
-flowchart LR
-    prodCluster["Production PowerScale\nCluster"]
-    egApp["Eyeglass Appliance\negcli drpolicy status"]
-    drCluster["DR PowerScale\nCluster"]
+```d2
+direction: right
 
-    prodCluster -->|"SyncIQ replication\n(continuous / scheduled)"| drCluster
-    egApp -->|"monitors SyncIQ\npolicy state"| prodCluster
-    egApp -->|"checks DR readiness\nvia OneFS API"| drCluster
-    egApp -->|"alert if lag > RPO threshold"| alert["SNMP / Email\nAlert"]
+prodCluster: "Production PowerScale\nCluster" {shape: rectangle}
+drCluster: "DR PowerScale\nCluster" {shape: rectangle}
+egApp: "Eyeglass Appliance\negcli drpolicy status" {shape: rectangle}
+alert: "SNMP / Email\nAlert" {shape: rectangle}
+
+prodCluster -> drCluster
+egApp -> prodCluster
+egApp -> drCluster
+egApp -> alert
 ```
 
 ---
@@ -168,25 +170,26 @@ DR validation for Eyeglass covers three scenarios: pre-failover readiness, DR te
 | Post-failover validation | After every failover | Manual + `egcli` |
 | Post-failback validation | After every failback | Manual + `egcli` |
 
-```mermaid
-flowchart TD
-    trigger(["Trigger: weekly / pre-change"])
-    preflight["egcli drtest preflight\n--cluster dr-cluster"]
-    checks{"All checks\nPASS?"}
-    remediate["Remediate failing\nprerequisites"]
-    drTest["egcli drtest run\n--policy POLICY_NAME"]
-    validate["Validate: NFS mounts\nSMB shares\nDNS resolution"]
-    rollback["Eyeglass auto-rollback\nReturn to Replicating"]
-    doc["Document result\nClose change record"]
+```d2
+direction: right
 
-    trigger --> preflight
-    preflight --> checks
-    checks -->|No| remediate
-    remediate --> preflight
-    checks -->|Yes| drTest
-    drTest --> validate
-    validate --> rollback
-    rollback --> doc
+trigger: "Trigger: weekly / pre-change" {shape: rectangle}
+preflight: "egcli drtest preflight\n--cluster dr-cluster" {shape: rectangle}
+checks: "checks" {shape: rectangle}
+remediate: "Remediate failing\nprerequisites" {shape: rectangle}
+drTest: "egcli drtest run\n--policy POLICY_NAME" {shape: rectangle}
+validate: "Validate: NFS mounts\nSMB shares\nDNS resolution" {shape: rectangle}
+rollback: "Eyeglass auto-rollback\nReturn to Replicating" {shape: rectangle}
+doc: "Document result\nClose change record" {shape: rectangle}
+
+trigger -> preflight
+preflight -> checks
+checks -> remediate
+remediate -> preflight
+checks -> drTest
+drTest -> validate
+validate -> rollback
+rollback -> doc
 ```
 
 ### Eyeglass DR Preflight

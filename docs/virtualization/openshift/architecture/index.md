@@ -12,39 +12,49 @@ OpenShift control plane, node types, networking model, and storage integration. 
 
 ![OpenShift — Architecture — Diagram](../../../assets/virtualization-openshift-architecture-diagram.svg)
 
-
 ![OpenShift Architecture Overview](../../../assets/openshift-architecture-overview.svg)
 
-```mermaid
-graph LR
-    A[OpenShift Architecture] --> B[How It Works]
-    A --> C[Design Standards]
-    A --> D[Integrations]
+```d2
+direction: right
 
-    B --> B1[API Request Flow]
-    B --> B2[etcd Raft Quorum]
-    B --> B3[Operator Pattern]
-    B --> B4[OVN-Kubernetes CNI]
-    B --> B5[MachineConfig MCO]
+A: "OpenShift Architecture" {shape: rectangle}
+B: "How It Works" {shape: rectangle}
+C: "Design Standards" {shape: rectangle}
+D: "Integrations" {shape: rectangle}
+B1: "API Request Flow" {shape: rectangle}
+B2: "etcd Raft Quorum" {shape: rectangle}
+B3: "Operator Pattern" {shape: rectangle}
+B4: "OVN-Kubernetes CNI" {shape: rectangle}
+B5: "MachineConfig MCO" {shape: rectangle}
+C1: "Cluster Sizing Tiers" {shape: rectangle}
+C2: "Node Sizing Table" {shape: rectangle}
+C3: "Network CIDR Planning" {shape: rectangle}
+C4: "StorageClass Standards" {shape: rectangle}
+C5: "Infra Node Placement" {shape: rectangle}
+D1: "vSphere CCM / CSI" {shape: rectangle}
+D2: "LDAP / AD Identity" {shape: rectangle}
+D3: "Harbor / Quay Registry" {shape: rectangle}
+D4: "cert-manager / Vault" {shape: rectangle}
+D5: "ArgoCD / GitOps" {shape: rectangle}
 
-    C --> C1[Cluster Sizing Tiers]
-    C --> C2[Node Sizing Table]
-    C --> C3[Network CIDR Planning]
-    C --> C4[StorageClass Standards]
-    C --> C5[Infra Node Placement]
-
-    D --> D1[vSphere CCM / CSI]
-    D --> D2[LDAP / AD Identity]
-    D --> D3[Harbor / Quay Registry]
-    D --> D4[cert-manager / Vault]
-    D --> D5[ArgoCD / GitOps]
-
-    classDef root fill:#1e3a5f,color:#fff
-    classDef section fill:#2563eb,color:#fff
-    classDef topic fill:#374151,color:#fff
-    class A root
-    class B,C,D section
-    class B1,B2,B3,B4,B5,C1,C2,C3,C4,C5,D1,D2,D3,D4,D5 topic
+A -> B
+A -> C
+A -> D
+B -> B1
+B -> B2
+B -> B3
+B -> B4
+B -> B5
+C -> C1
+C -> C2
+C -> C3
+C -> C4
+C -> C5
+D -> D1
+D -> D2
+D -> D3
+D -> D4
+D -> D5
 ```
 
 <div class="kb-grid">

@@ -11,15 +11,22 @@ Each session can carry multiple connections (TCP streams) for performance.
 
 ```
 
-```mermaid
-flowchart LR
-    A[Discovery] --> B[Login]
-    B --> C[Session Active]
-    C --> D{I/O or Idle}
-    D -->|I/O| C
-    D -->|Logout| E[Session Closed]
-    C -->|Error / timeout| F[Session Recovery]
-    F --> C
+```d2
+direction: right
+
+A: "Discovery" {shape: rectangle}
+B: "Login" {shape: rectangle}
+C: "Session Active" {shape: rectangle}
+D: "D" {shape: rectangle}
+E: "Session Closed" {shape: rectangle}
+F: "Session Recovery" {shape: rectangle}
+
+A -> B
+B -> C
+D -> C
+D -> E
+C -> F
+F -> C
 ```
 
 ## Session Establishment and Multipath Data Flow

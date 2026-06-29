@@ -25,29 +25,23 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 
 ## Status & Devices
 
-```mermaid
-graph TD
-    host(["Host OS"])
-    ppDriver["PowerPath Driver\npseudo device /dev/emcpowerX"]
-    hba0["HBA0\nFabric A"]
-    hba1["HBA1\nFabric B"]
-    spA["Array SP-A\n(active-optimised paths)"]
-    spB["Array SP-B\n(non-optimised paths)"]
+```d2
+direction: right
 
-    host --> ppDriver
-    ppDriver -->|"path 1 — alive"| hba0
-    ppDriver -->|"path 2 — alive"| hba0
-    ppDriver -->|"path 3 — alive"| hba1
-    ppDriver -->|"path 4 — alive"| hba1
-    hba0 -->|"Fabric A"| spA
-    hba0 -->|"Fabric A"| spB
-    hba1 -->|"Fabric B"| spA
-    hba1 -->|"Fabric B"| spB
+host: "Host OS" {shape: rectangle}
+ppDriver: "PowerPath Driver\npseudo device /dev/emcpowerX" {shape: rectangle}
+hba0: "HBA0\nFabric A" {shape: rectangle}
+hba1: "HBA1\nFabric B" {shape: rectangle}
+spA: "Array SP-A\n(active-optimised paths" {shape: rectangle}
+spB: "Array SP-B\n(non-optimised paths" {shape: rectangle}
 
-    classDef alive fill:#15803d,stroke:#166534,color:#fff
-    classDef array fill:#2563eb,stroke:#1d4ed8,color:#fff
-    class hba0,hba1 alive
-    class spA,spB array
+host -> ppDriver
+ppDriver -> hba0
+ppDriver -> hba1
+hba0 -> spA
+hba0 -> spB
+hba1 -> spA
+hba1 -> spB
 ```
 
 The first commands to run when checking on PowerPath. `powermt display` shows you all the storage devices and whether their paths are healthy. Dead paths mean some redundancy is lost — you need to investigate.

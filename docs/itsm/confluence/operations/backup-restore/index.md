@@ -61,21 +61,31 @@ ENG --> SRC: Done
 
 ## Backup Strategy Overview
 
-```mermaid
-flowchart TD
-    A[Backup Approach] --> B[XML Export\nAdmin UI / API]
-    A --> C[Database Backup\npg_dump / snapshot]
-    A --> D[Filesystem Backup\nShared Home + Local Home]
+```d2
+direction: right
 
-    B --> B1[Space-level\nPortable but slow]
-    B --> B2[Site-level XML\nFull content export]
+A: "Backup Approach" {shape: rectangle}
+B: "XML Export\nAdmin UI / API" {shape: rectangle}
+C: "Database Backup\npg_dump / snapshot" {shape: rectangle}
+D: "Filesystem Backup\nShared Home + Local Home" {shape: rectangle}
+B1: "Space-level\nPortable but slow" {shape: rectangle}
+B2: "Site-level XML\nFull content export" {shape: rectangle}
+C1: "pg_dump logical\nCross-version restore" {shape: rectangle}
+C2: "DB snapshot\nFast, version-specific" {shape: rectangle}
+D1: "Attachments" {shape: rectangle}
+D2: "Index" {shape: rectangle}
+D3: "Plugins / Avatars" {shape: rectangle}
 
-    C --> C1[pg_dump logical\nCross-version restore]
-    C --> C2[DB snapshot\nFast, version-specific]
-
-    D --> D1[Attachments]
-    D --> D2[Index]
-    D --> D3[Plugins / Avatars]
+A -> B
+A -> C
+A -> D
+B -> B1
+B -> B2
+C -> C1
+C -> C2
+D -> D1
+D -> D2
+D -> D3
 ```
 
 Naming convention: `backup-<YYYY-MM-DD-HH-MM-SS>.zip`

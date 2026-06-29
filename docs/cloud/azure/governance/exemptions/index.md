@@ -12,23 +12,23 @@ Policy exemptions allow specific resources, resource groups, or subscriptions to
 
 ## Exemption Decision Flow
 
-```mermaid
-flowchart TD
-    nonCompliant["Non-compliant Resource\nidentified by policy"]
-    review{"Can resource\nbe remediated?"}
-    remediate["Remediate\nfix resource config"]
-    compliant["Compliant\n✓"]
-    justification{"Exemption\njustified?"}
-    waiver["Waiver Category\nknown non-compliance"]
-    mitigated["Mitigated Category\nalternative control in place"]
-    exempt["Create Exemption\ntime-bound · documented"]
-    noAction["Accept Risk\ndocument decision"]
+```d2
+direction: right
 
-    nonCompliant --> review
-    review -- Yes --> remediate --> compliant
-    review -- No --> justification
-    justification -- Yes --> waiver & mitigated --> exempt
-    justification -- No --> noAction
+nonCompliant: "Non-compliant Resource\nidentified by policy" {shape: rectangle}
+review: "review" {shape: rectangle}
+remediate: "Remediate\nfix resource config" {shape: rectangle}
+compliant: "Compliant\n✓" {shape: oval}
+waiver: "Waiver Category\nknown non-compliance" {shape: rectangle}
+mitigated: "Mitigated Category\nalternative control in place" {shape: rectangle}
+exempt: "Create Exemption\ntime-bound · documented" {shape: rectangle}
+noAction: "Accept Risk\ndocument decision" {shape: rectangle}
+justification: "justification" {shape: rectangle}
+
+nonCompliant -> review
+remediate -> compliant
+waiver -> mitigated
+mitigated -> exempt
 ```
 
 ## Creating Exemptions

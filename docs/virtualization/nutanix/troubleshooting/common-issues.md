@@ -16,10 +16,6 @@ Troubleshooting guide for the most frequent Nutanix problems: CVM down or unreac
 </div>
 ![Nutanix — Common Issues](../../../assets/virtualization-nutanix-troubleshooting-common-issues.svg)
 
-
-
-
-
 ```d2
 direction: down
 
@@ -48,33 +44,37 @@ vm_cannot_connect_to_network -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([Alert or symptom]) --> A[Run NCC: ncc --health_checks run_all]
-    A --> B{NCC result?}
-    B -->|FAIL - specific check| C[Identify failing check\nread check description]
-    B -->|PASS or inconclusive| D[Check service health\ngenesis status · nodetool status]
+```d2
+direction: right
 
-    C --> C1{Check category}
-    C1 -->|CVM / service| E1[CVM Down: restart via virsh / genesis restart]
-    C1 -->|Storage| E2[Storage Degraded: check disk, RF, rebuild status]
-    C1 -->|Replication| E3[PD Replication: check remote site, ncli remote-site]
-    C1 -->|Network| E4[No network: OVS bridge check, AHV host ping]
+S: "Alert or symptom" {shape: rectangle}
+A: "Run NCC: ncc --health_checks run_all" {shape: rectangle}
+B: "B" {shape: rectangle}
+C: "Identify failing check\nread check description" {shape: rectangle}
+D: "Check service health\ngenesis status · nodetool status" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+E1: "CVM Down: restart via virsh / genesis restart" {shape: rectangle}
+E2: "Storage Degraded: check disk, RF, rebuild status" {shape: rectangle}
+E3: "PD Replication: check remote site, ncli remote-site" {shape: rectangle}
+E4: "No network: OVS bridge check, AHV host ping" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+F1: "genesis restart on CVM · nodetool repair if Cassandra" {shape: rectangle}
+F2: "Read relevant log\nstargate.ERROR · curator.INFO" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Apply fix · verify with NCC" {shape: rectangle}
+I: "Collect support bundle\nlogbay collect · open GSS case" {shape: rectangle}
 
-    D --> D2{Service down?}
-    D2 -->|Yes| F1[genesis restart on CVM · nodetool repair if Cassandra]
-    D2 -->|No| F2[Read relevant log\nstargate.ERROR · curator.INFO]
-
-    F2 --> G{Root cause found?}
-    G -->|Yes| H[Apply fix · verify with NCC]
-    G -->|No| I[Collect support bundle\nlogbay collect · open GSS case]
-
-    classDef action fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class E1,E2,E3,E4,F1,F2,H,I action
-    class B,C1,D2,G decision
-    class S start
+S -> A
+B -> C
+B -> D
+C1 -> E1
+C1 -> E2
+C1 -> E3
+C1 -> E4
+D2 -> F1
+D2 -> F2
+G -> H
+G -> I
 ```
 
 ---
@@ -297,8 +297,6 @@ genesis restart
 
 ---
 
-
-
 ---
 
 ## Verify
@@ -307,7 +305,6 @@ genesis restart
 - `ncc --health_checks run_all` returns no failures related to the resolved issue
 - Prism alert for the issue is cleared or acknowledged
 - If a permanent fix was applied (config change, re-registration), record it in the change ticket
-
 
 ---
 

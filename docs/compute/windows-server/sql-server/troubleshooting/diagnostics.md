@@ -14,43 +14,51 @@ SQL Server diagnostic commands: read sp_readerrorlog, query sys.dm_exec_requests
 </div>
 ![SQL Server — Diagnostics](../../../../assets/compute-windows-server-sql-server-troubleshooting-diagnostic.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "Check error log\nsp_readerrorlog 0 1 error" {shape: rectangle}
+D: "sys.dm_exec_requests\nWhere blocking_session_id > 0" {shape: rectangle}
+E: "sys.dm_hadr_availability_replica_states\nCheck sync state and health" {shape: rectangle}
+F: "Check log file growth\nDBCC SQLPERF LOGSPACE" {shape: rectangle}
+G: "Query Store: sys.query_store_runtime_stats\nCompare plans before and after" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Check sp_readerrorlog for Login failed\nVerify SQL or Windows auth" {shape: rectangle}
+J: "Check SQL Server error log\nand Windows Event Log" {shape: rectangle}
+K: "Windows Event Log\nGet-EventLog Application MSSQLSERVER" {shape: rectangle}
+L: "Find head blocker\nblocking_session_id where no one blocks it" {shape: rectangle}
+M: "KILL blocking_session_id\nOnly if blocking > 300 sec" {shape: rectangle}
+N: "N" {shape: rectangle}
+O: "Check log_send_queue_size\nCheck network between replicas" {shape: rectangle}
+P: "Wait for redo to catch up\nCheck redo_queue_size" {shape: rectangle}
+Q: "Check log reuse wait desc\nALTER DATABASE SET RECOVERY or backup log" {shape: rectangle}
+R: "Force good plan with\nQUERY_STORE FORCE_PLAN" {shape: rectangle}
+S: "Collect diagnostics\nfor Microsoft SR" {shape: rectangle}
+A: "SQL Server Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([SQL Server Issue]) --> B{What type of problem?}
-    B -->|Service or instance down| C[Check error log\nsp_readerrorlog 0 1 error]
-    B -->|Queries slow or hanging| D[sys.dm_exec_requests\nWhere blocking_session_id > 0]
-    B -->|AG replica out of sync| E[sys.dm_hadr_availability_replica_states\nCheck sync state and health]
-    B -->|Disk space growing fast| F[Check log file growth\nDBCC SQLPERF LOGSPACE]
-    B -->|Specific query regressed| G[Query Store: sys.query_store_runtime_stats\nCompare plans before and after]
-    C --> H{Error type?}
-    H -->|Login failed| I[Check sp_readerrorlog for Login failed\nVerify SQL or Windows auth]
-    H -->|Access denied / permission| J[Check SQL Server error log\nand Windows Event Log]
-    H -->|Service crash| K[Windows Event Log\nGet-EventLog Application MSSQLSERVER]
-    D --> L[Find head blocker\nblocking_session_id where no one blocks it]
-    L --> M[KILL blocking_session_id\nOnly if blocking > 300 sec]
-    E --> N{Health state?}
-    N -->|NOT_SYNCHRONIZING| O[Check log_send_queue_size\nCheck network between replicas]
-    N -->|SYNCHRONIZING long| P[Wait for redo to catch up\nCheck redo_queue_size]
-    F --> Q[Check log reuse wait desc\nALTER DATABASE SET RECOVERY or backup log]
-    G --> R[Force good plan with\nQUERY_STORE FORCE_PLAN]
-    I --> S[Collect diagnostics\nfor Microsoft SR]
-    J --> S
-    K --> S
-    M --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,H,N dark
-    class C,D,E,F,G,I,J,K,L,M,O,P,Q,R action
-    class S escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+H -> I
+H -> J
+H -> K
+D -> L
+L -> M
+N -> O
+N -> P
+F -> Q
+G -> R
+I -> S
+J -> S
+K -> S
+M -> S
+O -> S
+P -> S
+Q -> S
+R -> S
 ```
 
 ```d2

@@ -26,13 +26,21 @@ Ansible is an agentless IT automation engine that automates provisioning, config
 | Update surface | Only the control node | Every single managed node |
 | Latency per task | SSH handshake per batch | Persistent connection |
 
-```mermaid
-flowchart LR
-    CN[Control Node\nAnsible installed] -->|SSH| MN1[Linux Host]
-    CN -->|SSH| MN2[Network Device\nCisco / Juniper]
-    CN -->|WinRM or SSH| MN3[Windows Host]
-    CN -->|HTTPS API| MN4[Cloud API\nAWS / Azure / vSphere]
-    CN -->|SSH| MN5[Linux Host]
+```d2
+direction: right
+
+CN: "Control Node\nAnsible installed" {shape: rectangle}
+MN1: "Linux Host" {shape: rectangle}
+MN2: "Network Device\nCisco / Juniper" {shape: rectangle}
+MN3: "Windows Host" {shape: rectangle}
+MN4: "Cloud API\nAWS / Azure / vSphere" {shape: rectangle}
+MN5: "Linux Host" {shape: rectangle}
+
+CN -> MN1
+CN -> MN2
+CN -> MN3
+CN -> MN4
+CN -> MN5
 ```
 
 ---
@@ -79,20 +87,34 @@ Roles provide a structured, reusable packaging format bundling tasks, handlers, 
 
 ## Execution Flow
 
-```mermaid
-flowchart TD
-    A[ansible-playbook site.yml -i inventory/] --> B[Parse Inventory\nResolve hosts and groups]
-    B --> C[Load Variables\ngroup_vars host_vars extra_vars]
-    C --> D[Gather Facts\nsetup module on each host]
-    D --> E[Execute Play 1\nhosts: webservers]
-    E --> F[Task: Install nginx]
-    F --> G{Changed?}
-    G -->|Yes| H[Notify handler: restart nginx]
-    G -->|No| I[Task: Deploy config file]
-    I --> J[Task: Ensure service running]
-    J --> K[Run notified handlers once]
-    K --> L[Execute Play 2\nhosts: databases]
-    L --> M[Playbook complete]
+```d2
+direction: right
+
+A: "ansible-playbook site.yml -i inventory/" {shape: rectangle}
+B: "Parse Inventory\nResolve hosts and groups" {shape: rectangle}
+C: "Load Variables\ngroup_vars host_vars extra_vars" {shape: rectangle}
+D: "Gather Facts\nsetup module on each host" {shape: rectangle}
+E: "Execute Play 1\nhosts: webservers" {shape: rectangle}
+F: "Task: Install nginx" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Notify handler: restart nginx" {shape: rectangle}
+I: "Task: Deploy config file" {shape: rectangle}
+J: "Task: Ensure service running" {shape: rectangle}
+K: "Run notified handlers once" {shape: rectangle}
+L: "Execute Play 2\nhosts: databases" {shape: rectangle}
+M: "Playbook complete" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+E -> F
+G -> H
+G -> I
+I -> J
+J -> K
+K -> L
+L -> M
 ```
 
 ---

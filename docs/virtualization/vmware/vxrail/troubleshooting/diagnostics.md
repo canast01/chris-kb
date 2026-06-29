@@ -15,44 +15,53 @@ VxRail diagnostic commands: tail VxRail Manager mystic.log and lcm.log, grep ESX
 </div>
 ![VxRail — Diagnostics](../../../../assets/virtualization-vmware-vxrail-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "SSH mystic@vxrail-manager\nsudo tail -f /var/log/mystic/mystic.log" {shape: rectangle}
+D: "sudo tail lcm.log grep error\nCheck upgrade phase: PRECHECK DOWNLOAD STAGING UPGRADE" {shape: rectangle}
+E: "vmkernel.log grep LSOM DOM on ESXi\nvSAN Health UI in vCenter" {shape: rectangle}
+F: "vmkernel.log grep APD PDL NMP on ESXi\nesxcli storage core path list" {shape: rectangle}
+G: "racadm getsel filter critical warning\nracadm getsysinfo filter fault" {shape: rectangle}
+H: "hostd.log grep vpxd connect fail\nPing vCenter FQDN from ESXi" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Verify VxRail Manager can reach vCenter: ping vcenter-fqdn\nCheck VxRail Manager service: systemctl status mystic" {shape: rectangle}
+K: "Re-register VxRail plugin in vCenter\nCheck VxRail Manager vCenter credentials" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Check failing check name in lcm.log\nResolve pre-check issue and retry LCM" {shape: rectangle}
+N: "Check TIMEOUT entries in lcm.log\nVerify iDRAC and ESXi host reachability" {shape: rectangle}
+O: "esxcli vsan debug object list on ESXi\nCheck which node hosts the absent component" {shape: rectangle}
+P: "esxcli storage core path list for APD paths\nCheck vmnic link status: esxcli network nic list" {shape: rectangle}
+Q: "racadm getsel tail 50 for SEL history\nracadm storage get pdisks for disk health" {shape: rectangle}
+R: "grep connect refuse /var/log/hostd.log\nCheck management vmk0 IP and gateway" {shape: rectangle}
+S: "Generate Dell VxRail support bundle\nOpen Dell support case" {shape: rectangle}
+T: "VxRail plugin: Support > Generate Support Bundle\nor REST API: POST /rest/vxm/v1/support/bundle" {shape: rectangle}
+A: "VxRail Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([VxRail Issue]) --> B{What type of problem?}
-    B -->|VxRail plugin errors in vCenter| C[SSH mystic@vxrail-manager\nsudo tail -f /var/log/mystic/mystic.log]
-    B -->|LCM pre-check failure or upgrade stuck| D[sudo tail lcm.log grep error\nCheck upgrade phase: PRECHECK DOWNLOAD STAGING UPGRADE]
-    B -->|vSAN object degraded or absent| E[vmkernel.log grep LSOM DOM on ESXi\nvSAN Health UI in vCenter]
-    B -->|Storage path APD or PDL condition| F[vmkernel.log grep APD PDL NMP on ESXi\nesxcli storage core path list]
-    B -->|Hardware alarm: disk PSU fan memory| G[racadm getsel filter critical warning\nracadm getsysinfo filter fault]
-    B -->|ESXi host disconnected from vCenter| H[hostd.log grep vpxd connect fail\nPing vCenter FQDN from ESXi]
-    C --> I{mystic.log error type?}
-    I -->|ConnectionRefused or Timeout| J[Verify VxRail Manager can reach vCenter: ping vcenter-fqdn\nCheck VxRail Manager service: systemctl status mystic]
-    I -->|PluginRegistrationFailed| K[Re-register VxRail plugin in vCenter\nCheck VxRail Manager vCenter credentials]
-    D --> L{LCM phase?}
-    L -->|Precheck FAIL| M[Check failing check name in lcm.log\nResolve pre-check issue and retry LCM]
-    L -->|STAGING or UPGRADE timeout| N[Check TIMEOUT entries in lcm.log\nVerify iDRAC and ESXi host reachability]
-    E --> O[esxcli vsan debug object list on ESXi\nCheck which node hosts the absent component]
-    F --> P[esxcli storage core path list for APD paths\nCheck vmnic link status: esxcli network nic list]
-    G --> Q[racadm getsel tail 50 for SEL history\nracadm storage get pdisks for disk health]
-    H --> R[grep connect refuse /var/log/hostd.log\nCheck management vmk0 IP and gateway]
-    J --> S[Generate Dell VxRail support bundle\nOpen Dell support case]
-    K --> S
-    M --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-    S --> T[VxRail plugin: Support > Generate Support Bundle\nor REST API: POST /rest/vxm/v1/support/bundle]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
-    class S,T escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+L -> M
+L -> N
+E -> O
+F -> P
+G -> Q
+H -> R
+J -> S
+K -> S
+M -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
+S -> T
 ```
 
 ```d2

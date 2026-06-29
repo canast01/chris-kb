@@ -43,30 +43,27 @@ Storage latency is a primary cause of application performance degradation, datab
 
 ## Diagnostic Flowchart
 
-```mermaid
-flowchart TD
-    A[Storage Latency Alert] --> B{Host platform?}
-    B -- Linux --> C[iostat -x 5 3\nCheck await and %util]
-    C --> D{await > threshold?}
-    D -- Yes --> E[Check %util\nIs device saturated?]
-    E -- %util > 80% --> F[Storage device overloaded\nCheck multipath: multipathd show paths]
-    E -- %util low --> G[Queue depth issue or controller latency\nCheck array-side: symstat or Unisphere]
-    D -- No --> H[Latency within range\nCheck application layer]
-    B -- VMware --> I[esxtop → press 'u' for storage\nCheck DAVG KAVG GAVG QAVG]
-    I --> J{DAVG > 20ms?}
-    J -- Yes --> K[Array-side latency\nCheck PowerMax / Unisphere]
-    J -- No --> L{KAVG > 2ms?}
-    L -- Yes --> M[VMkernel overhead\nCheck ESXi storage path / HBA driver]
-    L -- No --> N{QAVG > 0?}
-    N -- Yes --> O[VM queue depth exceeded\nReduce I/O or increase queue depth]
-    N -- No --> P[Latency within ESXi thresholds\nCheck guest OS metrics]
-    K --> Q[Check multipath: dead paths?\nmultipathd show paths]
-    Q --> R{Dead paths?}
-    R -- Yes --> S[Restore dead paths\nCheck SAN zoning / HBA port]
-    R -- No --> T[Check array controller CPU and cache\nUnisphere → Performance Dashboard]
-    T --> U{Cache hit rate < 90%?}
-    U -- Yes --> V[Working set exceeds cache\nTiering or capacity expansion needed]
-    U -- No --> W[Check for snapshot/replication I/O\nSchedule during maintenance window]
+```d2
+direction: right
+
+K: "Array-side latency\nCheck PowerMax / Unisphere" {shape: rectangle}
+Q: "Check multipath: dead paths?\nmultipathd show paths" {shape: rectangle}
+A: "Storage Latency Alert" {shape: rectangle}
+C: "iostat -x 5 3\nCheck await and %util" {shape: rectangle}
+E: "Check %util\nIs device saturated?" {shape: rectangle}
+F: "Storage device overloaded\nCheck multipath: multipathd show paths" {shape: rectangle}
+G: "Queue depth issue or controller latency\nCheck array-side: symstat or Unisphere" {shape: rectangle}
+H: "Latency within range\nCheck application layer" {shape: rectangle}
+I: "esxtop → press" {shape: rectangle}
+M: "VMkernel overhead\nCheck ESXi storage path / HBA driver" {shape: rectangle}
+O: "VM queue depth exceeded\nReduce I/O or increase queue depth" {shape: rectangle}
+P: "Latency within ESXi thresholds\nCheck guest OS metrics" {shape: rectangle}
+S: "Restore dead paths\nCheck SAN zoning / HBA port" {shape: rectangle}
+T: "Check array controller CPU and cache\nUnisphere → Performance Dashboard" {shape: rectangle}
+V: "Working set exceeds cache\nTiering or capacity expansion needed" {shape: rectangle}
+W: "Check for snapshot/replication I/O\nSchedule during maintenance window" {shape: rectangle}
+
+K -> Q
 ```
 
 ### esxtop Storage Threshold Summary

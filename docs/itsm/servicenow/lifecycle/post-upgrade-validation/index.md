@@ -12,16 +12,26 @@ Structured validation procedure to confirm system health and application functio
 
 ## Validation Flow
 
-```mermaid
-flowchart TD
-    A[Upgrade Complete] --> B[Platform Health\nOS / hypervisor / firmware]
-    B --> C[Service Health\nAll services started?]
-    C --> D[Application Health\nApp responds correctly?]
-    D --> E[Monitoring\nAlerts cleared?]
-    E --> F[Performance\nMetrics normal?]
-    F --> G{All checks\npassing?}
-    G -->|Yes| H[Declare success\nRemove snapshot\nClose change ticket]
-    G -->|No| I[Rollback decision\nor targeted fix]
+```d2
+direction: right
+
+A: "Upgrade Complete" {shape: rectangle}
+B: "Platform Health\nOS / hypervisor / firmware" {shape: rectangle}
+C: "Service Health\nAll services started?" {shape: rectangle}
+D: "Application Health\nApp responds correctly?" {shape: rectangle}
+E: "Monitoring\nAlerts cleared?" {shape: rectangle}
+F: "Performance\nMetrics normal?" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Declare success\nRemove snapshot\nClose change ticket" {shape: rectangle}
+I: "Rollback decision\nor targeted fix" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+E -> F
+G -> H
+G -> I
 ```
 
 ### VMware ESXi

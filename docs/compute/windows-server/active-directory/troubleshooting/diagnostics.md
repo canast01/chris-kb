@@ -15,44 +15,53 @@ Active Directory diagnostic commands: run dcdiag tests on domain controllers, ch
 </div>
 ![Active Directory — Diagnostics](../../../../assets/compute-windows-server-active-directory-troubleshooting-diag.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "nltest /sc_query domain\nTest-ComputerSecureChannel -Server DC" {shape: rectangle}
+D: "repadmin /replsummary\nrepadmin /showrepl" {shape: rectangle}
+E: "dcdiag /test:all /v /s:dc-fqdn\ndcdiag /test:dns" {shape: rectangle}
+F: "klist on client\nEvent ID 4771 in Security log on DC" {shape: rectangle}
+G: "gpresult /h gp.html\nDFSR replication state for SYSVOL" {shape: rectangle}
+H: "nslookup _ldap._tcp.dc._msdcs.domain\nnltest /dsregdns to re-register" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Test-ComputerSecureChannel -Repair\nnetdom resetpwd /s:DC /ud:domain\admin /pd:*" {shape: rectangle}
+K: "Event 4625 in Security log on DC\nGet-ADUser to check lockout or disabled" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "repadmin /failcache\nrepadmin /syncall /AdeP to force sync" {shape: rectangle}
+N: "Check tombstone lifetime\nrepadmin /showvector /latency" {shape: rectangle}
+O: "Review FAILED lines in dcdiag output\nFocus on: replications, services, netlogons, dns" {shape: rectangle}
+P: "Check KDC on DCs: Get-Service kdc\nVerify DC time sync: w32tm /query /status" {shape: rectangle}
+Q: "gpresult /scope computer /v\nCheck SYSVOL: dfsrdiag ReplicationState" {shape: rectangle}
+R: "Verify SRV records exist and resolve\nRun ipconfig /registerdns on the DC" {shape: rectangle}
+S: "Collect netlogon.log + dcdiag + repadmin output\nOpen Microsoft support case" {shape: rectangle}
+T: "Provide: dcdiag output, repadmin /replsummary\nDirectory Services event log, netlogon.log" {shape: rectangle}
+A: "AD Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([AD Issue]) --> B{What type of problem?}
-    B -->|Auth failure / users can't log in| C[nltest /sc_query domain\nTest-ComputerSecureChannel -Server DC]
-    B -->|Replication errors or stale data| D[repadmin /replsummary\nrepadmin /showrepl]
-    B -->|DC health failing / dcdiag errors| E[dcdiag /test:all /v /s:dc-fqdn\ndcdiag /test:dns]
-    B -->|Kerberos errors / ticket failures| F[klist on client\nEvent ID 4771 in Security log on DC]
-    B -->|Group Policy not applying| G[gpresult /h gp.html\nDFSR replication state for SYSVOL]
-    B -->|DNS resolution failures| H[nslookup _ldap._tcp.dc._msdcs.domain\nnltest /dsregdns to re-register]
-    C --> I{Secure channel state?}
-    I -->|Broken| J[Test-ComputerSecureChannel -Repair\nnetdom resetpwd /s:DC /ud:domain\admin /pd:*]
-    I -->|OK but auth still fails| K[Event 4625 in Security log on DC\nGet-ADUser to check lockout or disabled]
-    D --> L{Failure count?}
-    L -->|Greater than 0| M[repadmin /failcache\nrepadmin /syncall /AdeP to force sync]
-    L -->|Zero but data stale| N[Check tombstone lifetime\nrepadmin /showvector /latency]
-    E --> O[Review FAILED lines in dcdiag output\nFocus on: replications, services, netlogons, dns]
-    F --> P[Check KDC on DCs: Get-Service kdc\nVerify DC time sync: w32tm /query /status]
-    G --> Q[gpresult /scope computer /v\nCheck SYSVOL: dfsrdiag ReplicationState]
-    H --> R[Verify SRV records exist and resolve\nRun ipconfig /registerdns on the DC]
-    J --> S[Collect netlogon.log + dcdiag + repadmin output\nOpen Microsoft support case]
-    K --> S
-    M --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-    S --> T[Provide: dcdiag output, repadmin /replsummary\nDirectory Services event log, netlogon.log]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
-    class S,T escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+L -> M
+L -> N
+E -> O
+F -> P
+G -> Q
+H -> R
+J -> S
+K -> S
+M -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
+S -> T
 ```
 
 ```d2

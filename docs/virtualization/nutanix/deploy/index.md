@@ -16,18 +16,6 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Phase 1 — Pre-flight Checks"]
-    s2["Phase 2 — Foundation Imaging"]
-    s3["Phase 3 — Cluster Creation"]
-    s4["Phase 4 — Initial Configuration"]
-    s5["Phase 5 — Post-Deploy Validation"]
-    s6["Prism Central Registration (Optional)"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6
-```
-
 ```d2
 direction: right
 

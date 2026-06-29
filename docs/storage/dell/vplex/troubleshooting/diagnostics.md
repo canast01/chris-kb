@@ -14,49 +14,60 @@ VPLEX diagnostic commands: run health-check --full and ll /clusters/*/health-ind
 </div>
 ![Dell VPLEX — Diagnostics](../../../../assets/storage-dell-vplex-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "health-check --full\nll /clusters/*/health-indications/" {shape: rectangle}
+D: "ll /clusters/*/exports/storage-views/\nll /virtual-volumes/ device name" {shape: rectangle}
+E: "ll /distributed-storage/distributed-devices/*/health-indications/\nCheck rebuild-progress attribute" {shape: rectangle}
+F: "ll /engines/*/directors/*/hardware/\nCheck director health state" {shape: rectangle}
+G: "ll /clusters/*/cluster-witness/\nping cluster-2-mgmt-IP from VMS" {shape: rectangle}
+H: "ll /distributed-storage/consistency-groups/\nCheck CG state and suspension reason" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Drill to affected cluster\nll /clusters/cluster-N/health-indications/" {shape: rectangle}
+K: "Check distributed device sync state\nll /distributed-storage/distributed-devices/*/" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Confirm HBA WWN: ll /clusters/*/exports/initiator-ports/\nAdd missing initiator or VV to view" {shape: rectangle}
+N: "Host: multipath -ll or powermt display dev=all\nESXi: esxcli storage core adapter rescan --all" {shape: rectangle}
+O: "O" {shape: rectangle}
+P: "Monitor rebuild-progress until 100%\nDo not interrupt rebuild" {shape: rectangle}
+Q: "Check ICL: ll /clusters/*/communication/inter-cluster-links/\nCheck director health on affected cluster" {shape: rectangle}
+R: "DANGER: confirm active leg with Dell Support\nbefore device resume command" {shape: rectangle}
+S: "Check director pair health state\nminor-failure or major-failure needs TAC" {shape: rectangle}
+T: "Restore ICL if interrupted\nVerify Witness reachable from both clusters" {shape: rectangle}
+U: "Do not resume CG without understanding cause\nCheck ICL and Witness first" {shape: rectangle}
+V: "Collect support bundle and open Dell case" {shape: rectangle}
+W: "collect-support-log -f /var/log/support_bundle.tar.gz\nscp bundle to jump host and attach to Dell GSS SR" {shape: rectangle}
+A: "VPLEX Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([VPLEX Issue]) --> B{What type of problem?}
-    B -->|System health alarm| C[health-check --full\nll /clusters/*/health-indications/]
-    B -->|Host path failure or volume unavailable| D[ll /clusters/*/exports/storage-views/\nll /virtual-volumes/ device name]
-    B -->|Metro device out-of-sync or degraded| E[ll /distributed-storage/distributed-devices/*/health-indications/\nCheck rebuild-progress attribute]
-    B -->|Director hardware fault| F[ll /engines/*/directors/*/hardware/\nCheck director health state]
-    B -->|Witness or quorum issue| G[ll /clusters/*/cluster-witness/\nping cluster-2-mgmt-IP from VMS]
-    B -->|CG suspended — I/O halted| H[ll /distributed-storage/consistency-groups/\nCheck CG state and suspension reason]
-    C --> I{Health indication?}
-    I -->|Cluster non-ok| J[Drill to affected cluster\nll /clusters/cluster-N/health-indications/]
-    I -->|All clusters ok| K[Check distributed device sync state\nll /distributed-storage/distributed-devices/*/]
-    D --> L{Storage view intact?}
-    L -->|View missing initiator or volume| M[Confirm HBA WWN: ll /clusters/*/exports/initiator-ports/\nAdd missing initiator or VV to view]
-    L -->|View correct but host not seeing LUN| N[Host: multipath -ll or powermt display dev=all\nESXi: esxcli storage core adapter rescan --all]
-    E --> O{Device state?}
-    O -->|out-of-sync: rebuild in progress| P[Monitor rebuild-progress until 100%\nDo not interrupt rebuild]
-    O -->|degraded: one cluster leg unreachable| Q[Check ICL: ll /clusters/*/communication/inter-cluster-links/\nCheck director health on affected cluster]
-    O -->|suspended: I/O halted| R[DANGER: confirm active leg with Dell Support\nbefore device resume command]
-    F --> S[Check director pair health state\nminor-failure or major-failure needs TAC]
-    G --> T[Restore ICL if interrupted\nVerify Witness reachable from both clusters]
-    H --> U[Do not resume CG without understanding cause\nCheck ICL and Witness first]
-    J --> V[Collect support bundle and open Dell case]
-    K --> V
-    M --> V
-    N --> V
-    P --> V
-    Q --> V
-    R --> V
-    S --> V
-    T --> V
-    U --> V
-    V --> W[collect-support-log -f /var/log/support_bundle.tar.gz\nscp bundle to jump host and attach to Dell GSS SR]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L,O dark
-    class C,D,E,F,G,H,J,K,M,N,P,Q,R,S,T,U action
-    class V,W escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+L -> M
+L -> N
+O -> P
+O -> Q
+O -> R
+F -> S
+G -> T
+H -> U
+J -> V
+K -> V
+M -> V
+N -> V
+P -> V
+Q -> V
+R -> V
+S -> V
+T -> V
+U -> V
+V -> W
 ```
 
 ```d2

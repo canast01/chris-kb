@@ -247,15 +247,20 @@ security key-manager key query -key-manager-type external
 
 ### Key Manager Decision
 
-```mermaid
-flowchart TD
-    q1{"Multi-cluster\nenvironment?"}
-    q1 -->|Yes| q2{"Compliance mandate\nPCI / HIPAA / FedRAMP?"}
-    q1 -->|No| q3{"External KMS\navailable?"}
-    q2 -->|Yes| extKmip["External KMIP\nThales / IBM / Entrust"]
-    q2 -->|No| extKmip
-    q3 -->|Yes| extKmip
-    q3 -->|No| okm["Onboard Key Manager\nOKM — store passphrase\nin vault"]
+```d2
+direction: right
+
+q1: "q1" {shape: rectangle}
+q2: "Compliance mandate\nPCI / HIPAA / FedRAMP?" {shape: rectangle}
+q3: "External KMS\navailable?" {shape: rectangle}
+extKmip: "External KMIP\nThales / IBM / Entrust" {shape: rectangle}
+okm: "Onboard Key Manager\nOKM — store passphrase\nin vault" {shape: rectangle}
+
+q1 -> q2
+q1 -> q3
+q2 -> extKmip
+q3 -> extKmip
+q3 -> okm
 ```
 
 ### Key Manager Health Checks

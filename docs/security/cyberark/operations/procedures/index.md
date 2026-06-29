@@ -22,17 +22,27 @@ Operational procedures for account management, password rotation, session manage
 
 ## Password Rotation Workflow
 
-```mermaid
-flowchart TD
-    trigger["Rotation trigger\n(scheduled / on-demand / post-checkout)"]
-    trigger --> cpmRetrieve["CPM retrieves current credential\nfrom Vault"]
-    cpmRetrieve --> connectTarget["CPM connects to target system\nusing current credential"]
-    connectTarget --> generatePwd["Generate new password\n(platform plugin policy)"]
-    generatePwd --> setPwd["Set new password on target\n(RDP / SSH / API)"]
-    setPwd --> verify["Verify new password works\n(CPM test logon)"]
-    verify -->|"Success"| storeVault["Store new credential in Vault"]
-    verify -->|"Failure"| rollback["Log failure + alert\nRetry on next cycle"]
-    storeVault --> auditLog["Write audit event to SIEM"]
+```d2
+direction: right
+
+trigger: "Rotation trigger\n(scheduled / on-demand / post-checkout" {shape: rectangle}
+cpmRetrieve: "CPM retrieves current credential\nfrom Vault" {shape: rectangle}
+connectTarget: "CPM connects to target system\nusing current credential" {shape: rectangle}
+generatePwd: "Generate new password\n(platform plugin policy" {shape: rectangle}
+setPwd: "Set new password on target\n(RDP / SSH / API" {shape: rectangle}
+verify: "Verify new password works\n(CPM test logon" {shape: rectangle}
+storeVault: "Store new credential in Vault" {shape: rectangle}
+rollback: "Log failure + alert\nRetry on next cycle" {shape: rectangle}
+auditLog: "Write audit event to SIEM" {shape: rectangle}
+
+trigger -> cpmRetrieve
+cpmRetrieve -> connectTarget
+connectTarget -> generatePwd
+generatePwd -> setPwd
+setPwd -> verify
+verify -> storeVault
+verify -> rollback
+storeVault -> auditLog
 ```
 
 ---

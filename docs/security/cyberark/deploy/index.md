@@ -13,23 +13,6 @@ CyberArk PAM initial deployment: Digital Vault, CPM, PVWA, PSM, initial account 
 *Applies to: CyberArk PAM 12.x / 13.x*
 </div>
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Install the Digital Vault"]
-    s3["Install the CPM (Central Policy Manager)"]
-    s4["Install PVWA (Password Vault Web Access)"]
-    s5["Install PSM (Privileged Session Manager)"]
-    s6["Onboard the First Accounts"]
-    s7["Configure LDAP Directory Integration"]
-    s8["✓ Validate the Deployment"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

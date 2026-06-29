@@ -52,32 +52,38 @@ verify_resolution -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1{Record not\nvisible?}
-    S --> B2{Workflow activity\nstuck?}
-    S --> B3{REST API\nreturning 403?}
-    S --> B4{Scheduled job\nnot running?}
-    S --> B5{Import set\ntransform error?}
-    B1 -->|Yes| D1{ACL or role\nissue?}
-    D1 -->|ACL| R1[Login and Access\n— review ACL conditions in sys_security_acl]
-    D1 -->|Role| R2[Login and Access\n— add required role to user or group]
-    B2 -->|Yes| D2{Approval stuck\nor activity timed out?}
-    D2 -->|Approval| R3[Workflow and ITSM\n— manually reassign stuck approval]
-    D2 -->|Timeout| R4[Workflow and ITSM\n— check SLA timezone and schedule config]
-    B3 -->|Yes| D3{Correct role\nassigned to API user?}
-    D3 -->|No| R5[Integration\n— assign rest_api_explorer or specific role]
-    D3 -->|Yes| R6[Integration\n— check ECC queue for error state messages]
-    B4 -->|Yes| D4{MID server\nonline?}
-    D4 -->|No| R7[Integration\n— restart MID server service]
-    D4 -->|Yes| R8[Workflow and ITSM\n— check scheduled job log in sys_job]
-    B5 -->|Yes| R9[Integration\n— check transform map field mappings]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
-    class B1,B2,B3,B4,B5,D1,D2,D3,D4 decision
-    class S start
+```d2
+direction: right
+
+D1: "D1" {shape: rectangle}
+R1: "Login and Access\n— review ACL conditions in sys_security_acl" {shape: rectangle}
+R2: "Login and Access\n— add required role to user or group" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R3: "Workflow and ITSM\n— manually reassign stuck approval" {shape: rectangle}
+R4: "Workflow and ITSM\n— check SLA timezone and schedule config" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R5: "Integration\n— assign rest_api_explorer or specific role" {shape: rectangle}
+R6: "Integration\n— check ECC queue for error state messages" {shape: rectangle}
+D4: "D4" {shape: rectangle}
+R7: "Integration\n— restart MID server service" {shape: rectangle}
+R8: "Workflow and ITSM\n— check scheduled job log in sys_job" {shape: rectangle}
+B5: "B5" {shape: rectangle}
+R9: "Integration\n— check transform map field mappings" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+B1: "B1" {shape: rectangle}
+B2: "B2" {shape: rectangle}
+B3: "B3" {shape: rectangle}
+B4: "B4" {shape: rectangle}
+
+D1 -> R1
+D1 -> R2
+D2 -> R3
+D2 -> R4
+D3 -> R5
+D3 -> R6
+D4 -> R7
+D4 -> R8
+B5 -> R9
 ```
 
 ---

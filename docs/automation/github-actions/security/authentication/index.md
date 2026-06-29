@@ -32,17 +32,20 @@ jobs:
     repository: myorg/other-repo
     token: ${{ secrets.PAT_TOKEN }}
 ```
-```mermaid
-flowchart LR
-    githubToken["GITHUB_TOKEN\nAuto-generated per run\nScoped to repo"]
-    oidc["OIDC JWT\nShort-lived token\nno stored secrets"]
-    pat["Fine-grained PAT\nStored as repo secret\nDays to years"]
-    classicPat["Classic PAT\nBroad scope\nAvoid — legacy"]
+```d2
+direction: right
 
-    githubToken -->|"best for: default API\npackages write"| ghApi["GitHub API\nGHCR / Releases"]
-    oidc -->|"best for: cloud deploy"| cloudProv["AWS / GCP / Azure"]
-    pat -->|"best for: cross-repo\noperations"| otherRepo["Other repos\nadmin ops"]
-    classicPat -.->|"avoid"| legacy["Legacy only"]
+githubToken: "GITHUB_TOKEN\nAuto-generated per run\nScoped to repo" {shape: rectangle}
+ghApi: "GitHub API\nGHCR / Releases" {shape: rectangle}
+oidc: "OIDC JWT\nShort-lived token\nno stored secrets" {shape: rectangle}
+cloudProv: "AWS / GCP / Azure" {shape: rectangle}
+pat: "Fine-grained PAT\nStored as repo secret\nDays to years" {shape: rectangle}
+otherRepo: "Other repos\nadmin ops" {shape: rectangle}
+classicPat: "Classic PAT\nBroad scope\nAvoid — legacy" {shape: rectangle}
+
+githubToken -> ghApi
+oidc -> cloudProv
+pat -> otherRepo
 ```
 
 ```plantuml

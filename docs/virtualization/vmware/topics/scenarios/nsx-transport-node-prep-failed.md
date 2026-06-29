@@ -17,30 +17,30 @@ host cluster.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph TD
-    classDef mgr fill:#1e3a5f,color:#fff
-    classDef host fill:#15803d,color:#fff
-    classDef fail fill:#991b1b,color:#fff
-    classDef action fill:#b45309,color:#fff
-    classDef ok fill:#2563eb,color:#fff
+```d2
+direction: right
 
-    MGR[NSX Manager<br/>triggers host preparation]:::mgr
-    VC[vCenter<br/>sends task to ESXi]:::mgr
-    ESX[ESXi Host<br/>installs NSX VIBs]:::host
+MGR: "MGR" {shape: rectangle}
+VC: "VC" {shape: rectangle}
+ESX: "ESX" {shape: rectangle}
+CONFLICT: "CONFLICT" {shape: rectangle}
+VIBFAIL: "VIB installation fails · status: Not Configured" {shape: rectangle}
+PORTFAIL: "Messaging bus unreachable · status: Failure" {shape: rectangle}
+SUCCESS: "VIBs installed · Geneve tunnel up · status: Success" {shape: rectangle}
+CLEANUP: "Remove conflicting VIBs · esxcli software vib remove" {shape: rectangle}
+FIREWALL: "Open port 443 and 1235 · host → NSX Manager VIPs" {shape: rectangle}
+RETRY: "Force Sync in NSX Manager" {shape: rectangle}
 
-    MGR --> VC --> ESX
-
-    ESX --> CONFLICT{VIB conflict<br/>or port blocked?}
-    CONFLICT -->|Yes — VIB conflict| VIBFAIL[VIB installation fails<br/>status: Not Configured]:::fail
-    CONFLICT -->|Yes — port 443/1235 blocked| PORTFAIL[Messaging bus unreachable<br/>status: Failure]:::fail
-    CONFLICT -->|No| SUCCESS[VIBs installed<br/>Geneve tunnel up<br/>status: Success]:::ok
-
-    VIBFAIL --> CLEANUP[Remove conflicting VIBs<br/>esxcli software vib remove]:::action
-    PORTFAIL --> FIREWALL[Open port 443 and 1235<br/>host → NSX Manager VIPs]:::action
-    CLEANUP --> RETRY[Force Sync in NSX Manager]:::action
-    FIREWALL --> RETRY
-    RETRY --> SUCCESS
+MGR -> VC
+VC -> ESX
+CONFLICT -> VIBFAIL
+CONFLICT -> PORTFAIL
+CONFLICT -> SUCCESS
+VIBFAIL -> CLEANUP
+PORTFAIL -> FIREWALL
+CLEANUP -> RETRY
+FIREWALL -> RETRY
+RETRY -> SUCCESS
 ```
 
 ## Symptoms

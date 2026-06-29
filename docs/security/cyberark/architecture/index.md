@@ -47,17 +47,20 @@ PAM platform with Digital Vault as the encrypted credential store, CPM for autom
 
 ## PAM Component Topology
 
-```mermaid
-graph TB
-  PVWA["PVWA\n(web interface)"] & PSM["PSM\n(session proxy)"] & CPM["CPM\n(rotation engine)"] --> VAULT["CyberArk Vault\n(encrypted credential store)"]
-  USER(["Privileged User"]) -->|"browser"| PVWA
-  PSM -->|"RDP / SSH proxy\nsession recording"| TARGET(["Target Servers"])
-  CPM -->|"password rotation"| TARGET
-  VAULT -.->|"audit stream"| SIEM(["SIEM"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class VAULT store
-  class PVWA,PSM,CPM ctrl
-  class USER,TARGET,SIEM host
+```d2
+direction: right
+
+PVWA: "PVWA\n(web interface" {shape: rectangle}
+PSM: "PSM\n(session proxy" {shape: rectangle}
+CPM: "CPM\n(rotation engine" {shape: rectangle}
+VAULT: "CyberArk Vault\n(encrypted credential store" {shape: rectangle}
+USER: "Privileged User" {shape: rectangle}
+TARGET: "Target Servers" {shape: rectangle}
+
+PVWA -> PSM
+PSM -> CPM
+CPM -> VAULT
+USER -> PVWA
+PSM -> TARGET
+CPM -> TARGET
 ```

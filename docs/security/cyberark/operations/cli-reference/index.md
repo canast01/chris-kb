@@ -22,16 +22,23 @@ CyberArk's primary programmatic interface is the PVWA REST API v2. The `psPAS` P
 
 ## API Interface Hierarchy
 
-```mermaid
-graph TD
-    operator["Operator / Script\n(automation or admin)"]
-    operator -->|"PowerShell"| psPAS["psPAS Module\n(REST wrapper)"]
-    operator -->|"curl / HTTP client"| restAPI["PVWA REST API v2\nhttps://pvwa/PasswordVault/api"]
-    operator -->|"direct Vault (emergency)"| pacli["PACLI\n(legacy Vault CLI)"]
-    psPAS --> restAPI
-    restAPI --> pvwa["PVWA\n(IIS application)"]
-    pvwa -->|"SDK port 1858"| vault["Digital Vault"]
-    pacli -->|"port 1858"| vault
+```d2
+direction: right
+
+operator: "Operator / Script\n(automation or admin" {shape: rectangle}
+psPAS: "psPAS Module\n(REST wrapper" {shape: rectangle}
+restAPI: "PVWA REST API v2\nhttps://pvwa/PasswordVault/api" {shape: rectangle}
+pacli: "PACLI\n(legacy Vault CLI" {shape: rectangle}
+pvwa: "PVWA\n(IIS application" {shape: rectangle}
+vault: "Digital Vault" {shape: rectangle}
+
+operator -> psPAS
+operator -> restAPI
+operator -> pacli
+psPAS -> restAPI
+restAPI -> pvwa
+pvwa -> vault
+pacli -> vault
 ```
 
 ---

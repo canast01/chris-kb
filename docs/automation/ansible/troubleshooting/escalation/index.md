@@ -13,11 +13,17 @@ Ansible escalation: when to open a Red Hat support case for AAP, how to file a c
 *Applies to: Ansible 2.14+ / AWX / Ansible Automation Platform (AAP)*
 </div>
 
-```mermaid
-flowchart LR
-    L1[L1 Ops\nRun diagnostics\nCheck logs] --> L2[L2 Automation Engineering\nModule-level debug\nvvv trace + stack trace]
-    L2 --> L3[Platform Team / SME\nAWX admin access\nExecution environment rebuild]
-    L3 --> Vendor[Red Hat Support\nor GitHub issue]
+```d2
+direction: right
+
+L1: "L1 Ops\nRun diagnostics\nCheck logs" {shape: rectangle}
+L2: "L2 Automation Engineering\nModule-level debug\nvvv trace + stack trace" {shape: rectangle}
+L3: "Platform Team / SME\nAWX admin access\nExecution environment rebuild" {shape: rectangle}
+Vendor: "Red Hat Support\nor GitHub issue" {shape: rectangle}
+
+L1 -> L2
+L2 -> L3
+L3 -> Vendor
 ```
 
 ```plantuml

@@ -13,34 +13,41 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 *Applies to: Terraform 1.x / OpenTofu 1.x*
 </div>
 
-```mermaid
-graph TD
-    A([Terraform Error]) --> B[terraform validate\nSyntax check]
-    B --> C{Validate OK?}
-    C -->|No| D[Fix HCL syntax\nterraform fmt -recursive]
-    C -->|Yes| E[TF_LOG=DEBUG tf plan\nCapture full trace]
-    E --> F{Error type?}
-    F -->|Provider auth| G[Check env vars\nterraform providers]
-    F -->|State error| H[terraform state list\nInspect state]
-    F -->|Backend error| I[terraform init -reconfigure\nRe-init backend]
-    F -->|Resource drift| J[terraform refresh\nResync state to reality]
-    G --> K{Auth method?}
-    K -->|Env var| L[Check: AWS_ACCESS_KEY_ID\nAZURE_CLIENT_SECRET etc]
-    K -->|File / profile| M[Check: ~/.aws/credentials\nor tf login status]
-    H --> N[terraform state show\ncompare to cloud console]
-    D --> O[Re-run terraform plan]
-    I --> O
-    J --> O
-    L --> O
-    M --> O
-    N --> O
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef ok fill:#15803d,color:#fff
-    class A,C,F,K dark
-    class B,D,E,G,H,I,J,L,M,N action
-    class O ok
+A: "Terraform Error" {shape: rectangle}
+B: "terraform validate\nSyntax check" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "Fix HCL syntax\nterraform fmt -recursive" {shape: rectangle}
+E: "TF_LOG=DEBUG tf plan\nCapture full trace" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Check env vars\nterraform providers" {shape: rectangle}
+H: "terraform state list\nInspect state" {shape: rectangle}
+I: "terraform init -reconfigure\nRe-init backend" {shape: rectangle}
+J: "terraform refresh\nResync state to reality" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "Check: AWS_ACCESS_KEY_ID\nAZURE_CLIENT_SECRET etc" {shape: rectangle}
+M: "Check: ~/.aws/credentials\nor tf login status" {shape: rectangle}
+N: "terraform state show\ncompare to cloud console" {shape: rectangle}
+O: "Re-run terraform plan" {shape: rectangle}
+
+A -> B
+C -> D
+C -> E
+F -> G
+F -> H
+F -> I
+F -> J
+K -> L
+K -> M
+H -> N
+D -> O
+I -> O
+J -> O
+L -> O
+M -> O
+N -> O
 ```
 
 ```d2

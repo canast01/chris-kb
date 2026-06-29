@@ -22,16 +22,17 @@ Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Cont
 
 ## AGDLP Group Design Flow
 
-```mermaid
-graph TD
-    userAccts["User Accounts\n(A — Accounts)"]
-    globalGrp["Global Group\nGG_Server_Admins\n(G — role grouping, same domain)"]
-    domLocalGrp["Domain Local Group\nDL_Servers_RDP_Access\n(DL — resource permission)"]
-    resource["Resource / Server\n(P — NTFS / ACL permission)"]
+```d2
+direction: right
 
-    userAccts -->|"member of"| globalGrp
-    globalGrp -->|"nested in"| domLocalGrp
-    domLocalGrp -->|"assigned to"| resource
+userAccts: "User Accounts\n(A — Accounts" {shape: rectangle}
+globalGrp: "Global Group\nGG_Server_Admins\n(G — role grouping, same domain" {shape: rectangle}
+domLocalGrp: "Domain Local Group\nDL_Servers_RDP_Access\n(DL — resource permission" {shape: rectangle}
+resource: "Resource / Server\n(P — NTFS / ACL permission" {shape: rectangle}
+
+userAccts -> globalGrp
+globalGrp -> domLocalGrp
+domLocalGrp -> resource
 ```
 
 ## Groups

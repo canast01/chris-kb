@@ -10,35 +10,45 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 *Applies to: OpenShift 4.x*
 </div>
 
-```mermaid
-graph LR
-    OCP[OCP Cluster]
+```d2
+direction: right
 
-    OCP --> VS[vSphere\ncloud provider]
-    OCP --> ID[LDAP / AD\nidentity]
-    OCP --> REG[Harbor / Quay\nregistry]
-    OCP --> SEC[Vault / cert-manager\nsecrets + certs]
-    OCP --> LOG[Elasticsearch / Splunk\nlogging]
-    OCP --> MON[Prometheus / Grafana\nmonitoring]
-    OCP --> CD[GitLab / ArgoCD\nCI/CD]
+OCP: "OCP Cluster" {shape: rectangle}
+VS: "vSphere\ncloud provider" {shape: rectangle}
+ID: "LDAP / AD\nidentity" {shape: rectangle}
+REG: "Harbor / Quay\nregistry" {shape: rectangle}
+SEC: "Vault / cert-manager\nsecrets + certs" {shape: rectangle}
+LOG: "Elasticsearch / Splunk\nlogging" {shape: rectangle}
+MON: "Prometheus / Grafana\nmonitoring" {shape: rectangle}
+CD: "GitLab / ArgoCD\nCI/CD" {shape: rectangle}
+VS1: "CCM node lifecycle" {shape: rectangle}
+VS2: "vSphere CSI PVCs" {shape: rectangle}
+ID1: "OAuth CR\nLDAP provider" {shape: rectangle}
+ID2: "oc adm groups sync" {shape: rectangle}
+REG1: "ICSP mirror rules" {shape: rectangle}
+REG2: "oc mirror air-gap" {shape: rectangle}
+SEC1: "ClusterIssuer" {shape: rectangle}
+SEC2: "Certificate CR" {shape: rectangle}
+CD1: "OpenShift GitOps\nArgoCD operator" {shape: rectangle}
+CD2: "AppProject + Application" {shape: rectangle}
 
-    VS --> VS1[CCM node lifecycle]
-    VS --> VS2[vSphere CSI PVCs]
-    ID --> ID1[OAuth CR\nLDAP provider]
-    ID --> ID2[oc adm groups sync]
-    REG --> REG1[ICSP mirror rules]
-    REG --> REG2[oc mirror air-gap]
-    SEC --> SEC1[ClusterIssuer]
-    SEC --> SEC2[Certificate CR]
-    CD --> CD1[OpenShift GitOps\nArgoCD operator]
-    CD --> CD2[AppProject + Application]
-
-    classDef cluster fill:#1e3a5f,color:#fff
-    classDef integration fill:#2563eb,color:#fff
-    classDef detail fill:#374151,color:#fff
-    class OCP cluster
-    class VS,ID,REG,SEC,LOG,MON,CD integration
-    class VS1,VS2,ID1,ID2,REG1,REG2,SEC1,SEC2,CD1,CD2 detail
+OCP -> VS
+OCP -> ID
+OCP -> REG
+OCP -> SEC
+OCP -> LOG
+OCP -> MON
+OCP -> CD
+VS -> VS1
+VS -> VS2
+ID -> ID1
+ID -> ID2
+REG -> REG1
+REG -> REG2
+SEC -> SEC1
+SEC -> SEC2
+CD -> CD1
+CD -> CD2
 ```
 
 ## vSphere IPI Integration

@@ -24,20 +24,24 @@ Day-to-day operational tasks across compute, storage, and networking.
 
 ## Azure Operations Change Flow
 
-```mermaid
-flowchart LR
-    changeReq["Change Request\napproved in ITSM"]
-    preCheck["Pre-change Checks\nResource health · backups · snapshots"]
-    mainWindow["Maintenance Window\nnotify stakeholders"]
-    change["Execute Change\nCLI / Portal / IaC"]
-    validate["Post-change Validation\nhealth · connectivity · metrics"]
-    outcome{"Successful?"}
-    closeChange["Close Change Record\ndocument outcomes"]
-    rollback["Rollback\nrestore snapshot · redeploy"]
+```d2
+direction: right
 
-    changeReq --> preCheck --> mainWindow --> change --> validate --> outcome
-    outcome -- Yes --> closeChange
-    outcome -- No --> rollback --> closeChange
+changeReq: "Change Request\napproved in ITSM" {shape: rectangle}
+preCheck: "Pre-change Checks\nResource health · backups · snapshots" {shape: rectangle}
+mainWindow: "Maintenance Window\nnotify stakeholders" {shape: rectangle}
+change: "Execute Change\nCLI / Portal / IaC" {shape: rectangle}
+validate: "Post-change Validation\nhealth · connectivity · metrics" {shape: rectangle}
+outcome: "outcome" {shape: rectangle}
+rollback: "Rollback\nrestore snapshot · redeploy" {shape: rectangle}
+closeChange: "Close Change Record\ndocument outcomes" {shape: rectangle}
+
+changeReq -> preCheck
+preCheck -> mainWindow
+mainWindow -> change
+change -> validate
+validate -> outcome
+rollback -> closeChange
 ```
 
 ## Runbook Templates

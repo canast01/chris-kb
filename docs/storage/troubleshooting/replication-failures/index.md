@@ -41,34 +41,31 @@ Replication failures degrade DR readiness and can result in RPO breaches. Each r
 
 ## Diagnostic Flowchart
 
-```mermaid
-flowchart TD
-    A[Replication Failure / Lag Alert] --> B{Technology?}
-    B -- SRDF --> C[symrdf -g RDF_GRP query\nCheck PAIR STATE]
-    C --> D{Link state?}
-    D -- Suspended --> E[Check link errors\nsymrdf -g RDF_GRP verify]
-    E --> F{Network issue?}
-    F -- Yes --> G[Engage network team\nCheck SRDF port stats: symrdf -g RDF_GRP -type RDFA list]
-    F -- No --> H[Check RDF group config\nresume if safe: symrdf -g RDF_GRP resume -nop]
-    D -- Split --> I[CRITICAL: failover state\nDo NOT resume without DR assessment]
-    D -- Consistent --> J[Check lag: symrdf -g RDF_GRP query\nRW state = consistent but R1 writing]
-    B -- SnapMirror --> K[snapmirror show -fields lag-time,health]
-    K --> L{Health = false?}
-    L -- Yes --> M[snapmirror show -instance\nReview last-transfer-error]
-    M --> N{Error type?}
-    N -- Network --> O[ping -c4 intercluster-LIF\nCheck intercluster routes]
-    N -- Snapshot conflict --> P[snapmirror abort\nsnapmirror resync]
-    N -- Quota/space --> Q[Check destination volume space\ndf -A]
-    L -- No but lag high --> R[snapmirror show -fields last-transfer-duration\nCheck bandwidth utilisation]
-    B -- RecoverPoint --> S[get_group_status\nCheck journal fullness]
-    S --> T{Journal full?}
-    T -- Yes --> U[Identify cause of high write rate\nExpand journal or reduce retention]
-    T -- No --> V[Check link status\nrpa_mgmt_cli: get_system_status]
-    B -- vSphere Rep --> W[vCenter: Monitor → vSphere Replication\nCheck VM replication status]
-    W --> X{Error shown?}
-    X -- Yes --> Y[Reconfigure replication\nCheck VR appliance health]
-    B -- Veeam Rep --> Z[Get-VBRJob type Replica\nCheck last session result]
-    Z --> AA[Review session log\nCheck network path to replica host]
+```d2
+direction: right
+
+Z: "Get-VBRJob type Replica\nCheck last session result" {shape: rectangle}
+AA: "Review session log\nCheck network path to replica host" {shape: rectangle}
+A: "Replication Failure / Lag Alert" {shape: rectangle}
+C: "symrdf -g RDF_GRP query\nCheck PAIR STATE" {shape: rectangle}
+E: "Check link errors\nsymrdf -g RDF_GRP verify" {shape: rectangle}
+G: "Engage network team\nCheck SRDF port stats: symrdf -g RDF_GRP -type RDFA list" {shape: rectangle}
+H: "Check RDF group config\nresume if safe: symrdf -g RDF_GRP resume -nop" {shape: rectangle}
+I: "CRITICAL: failover state\nDo NOT resume without DR assessment" {shape: rectangle}
+J: "Check lag: symrdf -g RDF_GRP query\nRW state = consistent but R1 writing" {shape: rectangle}
+K: "snapmirror show -fields lag-time,health" {shape: rectangle}
+M: "snapmirror show -instance\nReview last-transfer-error" {shape: rectangle}
+O: "ping -c4 intercluster-LIF\nCheck intercluster routes" {shape: rectangle}
+P: "snapmirror abort\nsnapmirror resync" {shape: rectangle}
+Q: "Check destination volume space\ndf -A" {shape: rectangle}
+R: "snapmirror show -fields last-transfer-duration\nCheck bandwidth utilisation" {shape: rectangle}
+S: "get_group_status\nCheck journal fullness" {shape: rectangle}
+U: "Identify cause of high write rate\nExpand journal or reduce retention" {shape: rectangle}
+V: "Check link status\nrpa_mgmt_cli: get_system_status" {shape: rectangle}
+W: "vCenter: Monitor → vSphere Replication\nCheck VM replication status" {shape: rectangle}
+Y: "Reconfigure replication\nCheck VR appliance health" {shape: rectangle}
+
+Z -> AA
 ```
 
 ### SRDF Error Codes

@@ -49,19 +49,29 @@ stale_file_handle_recovery -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-flowchart TD
-    A[NFS issue reported] --> B{Mount succeeds?}
-    B -->|No| C{TCP 2049 reachable?}
-    C -->|No| D[Firewall / routing issue]
-    C -->|Yes| E{Export visible?}
-    E -->|No| F[Check export on server: showmount / exportfs]
-    E -->|Yes| G[Check permissions: /etc/exports, auth type]
-    B -->|Yes| H{What is the symptom?}
-    H -->|Slow performance| I[Check rsize/wsize, MTU, server load]
-    H -->|Permission denied| J[Check UID/GID mapping, export permissions]
-    H -->|Stale file handle| K[Remount — export path changed on server]
-    H -->|Hanging operations| L[Check server health, network, hard/soft mount]
+```d2
+direction: right
+
+C: "C" {shape: rectangle}
+D: "Firewall / routing issue" {shape: rectangle}
+E: "E" {shape: rectangle}
+F: "Check export on server: showmount / exportfs" {shape: rectangle}
+G: "Check permissions: /etc/exports, auth type" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "Check rsize/wsize, MTU, server load" {shape: rectangle}
+J: "Check UID/GID mapping, export permissions" {shape: rectangle}
+K: "Remount — export path changed on server" {shape: rectangle}
+L: "Check server health, network, hard/soft mount" {shape: rectangle}
+A: "NFS issue reported" {shape: rectangle}
+B: "B" {shape: rectangle}
+
+C -> D
+E -> F
+E -> G
+H -> I
+H -> J
+H -> K
+H -> L
 ```
 
 ## Quick Diagnostics

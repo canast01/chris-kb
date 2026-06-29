@@ -24,24 +24,25 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
 
 ## Secret Rotation Workflow
 
-```mermaid
-graph LR
-    trigger["Trigger\n(manual / schedule)"]
-    backup["Backup current\nvault file"]
-    generate["Generate new\npassword (openssl)"]
-    encrypt["ansible-vault\nencrypt_string"]
-    updateVars["Update\ndb_secrets.yml"]
-    runPlaybook["Run push-db-secret.yml\n(ansible-playbook)"]
-    success["Success:\nRotation complete"]
-    rollback["Rollback:\nRestore backup"]
+```d2
+direction: right
 
-    trigger --> backup
-    backup --> generate
-    generate --> encrypt
-    encrypt --> updateVars
-    updateVars --> runPlaybook
-    runPlaybook -->|exit 0| success
-    runPlaybook -->|exit 1| rollback
+trigger: "Trigger\n(manual / schedule" {shape: rectangle}
+backup: "Backup current\nvault file" {shape: rectangle}
+generate: "Generate new\npassword (openssl" {shape: rectangle}
+encrypt: "ansible-vault\nencrypt_string" {shape: rectangle}
+updateVars: "Update\ndb_secrets.yml" {shape: rectangle}
+runPlaybook: "Run push-db-secret.yml\n(ansible-playbook" {shape: rectangle}
+success: "Success:\nRotation complete" {shape: rectangle}
+rollback: "Rollback:\nRestore backup" {shape: rectangle}
+
+trigger -> backup
+backup -> generate
+generate -> encrypt
+encrypt -> updateVars
+updateVars -> runPlaybook
+runPlaybook -> success
+runPlaybook -> rollback
 ```
 
 **What you should see**

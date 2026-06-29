@@ -44,28 +44,31 @@ Backup failures directly degrade recovery capability. This guide covers failure 
 
 ## Diagnostic Flowchart
 
-```mermaid
-flowchart TD
-    A[Backup Job Failed] --> B[Identify error in job log]
-    B --> C{Error type?}
-    C -- Network/Timeout --> D[Test-NetConnection to repo\nCheck MTU / proxy]
-    D --> E{Reachable?}
-    E -- No --> F[Engage network team\nCheck firewall rules]
-    E -- Yes --> G[Check throughput: iperf3\nVerify backup window]
-    C -- VSS Error --> H[vssadmin list writers\nCheck for Failed state]
-    H --> I{Writers healthy?}
-    I -- No --> J[Restart VSS writers\nnet stop / net start]
-    I -- Yes --> K[Check VSS event log\nApplication Log Event 8193/12293]
-    C -- Snapshot Failure --> L[vSphere client: check VM snapshots\nCheck for delta consolidation needed]
-    L --> M[Consolidate snapshots\nReset CBT if required]
-    C -- Repo Full --> N[Check repo free space\ndf -h / Get-VBRRepository]
-    N --> O[Delete expired restore points\nScale-out repo expansion]
-    C -- Agent Error --> P[Check Veeam agent log\nC:\ProgramData\Veeam\Backup\]
-    P --> Q{Agent version current?}
-    Q -- No --> R[Update agent to match VBR version]
-    Q -- Yes --> S[Re-push agent\nCheck firewall port 2500-3300]
-    C -- Authentication --> T[Check service account in job\nTest-ADServiceAccount]
-    T --> U[Reset password\nVerify AD group membership]
+```d2
+direction: right
+
+A: "Backup Job Failed" {shape: rectangle}
+B: "Identify error in job log" {shape: rectangle}
+L: "vSphere client: check VM snapshots\nCheck for delta consolidation needed" {shape: rectangle}
+M: "Consolidate snapshots\nReset CBT if required" {shape: rectangle}
+N: "Check repo free space\ndf -h / Get-VBRRepository" {shape: rectangle}
+O: "Delete expired restore points\nScale-out repo expansion" {shape: rectangle}
+T: "Check service account in job\nTest-ADServiceAccount" {shape: rectangle}
+U: "Reset password\nVerify AD group membership" {shape: rectangle}
+D: "Test-NetConnection to repo\nCheck MTU / proxy" {shape: rectangle}
+F: "Engage network team\nCheck firewall rules" {shape: rectangle}
+G: "Check throughput: iperf3\nVerify backup window" {shape: rectangle}
+H: "vssadmin list writers\nCheck for Failed state" {shape: rectangle}
+J: "Restart VSS writers\nnet stop / net start" {shape: rectangle}
+K: "Check VSS event log\nApplication Log Event 8193/12293" {shape: rectangle}
+P: "Check Veeam agent log\nC:\ProgramData\Veeam\Backup\" {shape: rectangle}
+R: "Update agent to match VBR version" {shape: rectangle}
+S: "Re-push agent\nCheck firewall port 2500-3300" {shape: rectangle}
+
+A -> B
+L -> M
+N -> O
+T -> U
 ```
 
 ### VSS Error Investigation

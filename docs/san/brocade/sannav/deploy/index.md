@@ -42,22 +42,6 @@ This guide covers deploying Brocade SANnav Management Portal from installation t
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Deploy SANnav OVA or Install"]
-    s3["Initial Configuration"]
-    s4["Add First Fabric"]
-    s5["Configure Alert Notifications"]
-    s6["Set Up Performance Monitoring"]
-    s7["✓ Validate"]
-    s8["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
-    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 **VM requirements (SANnav Management Portal):**

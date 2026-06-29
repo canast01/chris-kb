@@ -149,19 +149,24 @@ iscsiadm --mode session --rescan
 
 ## SAN Multipath Data Path
 
-```mermaid
-flowchart LR
-    app["Application\n/opt/app"]
-    dm["Device Mapper\n/dev/mapper/mpathX"]
-    path1["Path 1\n/dev/sdb (HBA0)"]
-    path2["Path 2\n/dev/sdc (HBA1)"]
-    fab1["FC Fabric A"]
-    fab2["FC Fabric B"]
-    san["SAN Storage\nPowerMax · Pure"]
+```d2
+direction: right
 
-    app --> dm
-    dm --> path1 --> fab1 --> san
-    dm --> path2 --> fab2 --> san
+app: "Application\n/opt/app" {shape: rectangle}
+dm: "Device Mapper\n/dev/mapper/mpathX" {shape: rectangle}
+path1: "Path 1\n/dev/sdb (HBA0" {shape: rectangle}
+fab1: "FC Fabric A" {shape: rectangle}
+san: "SAN Storage\nPowerMax · Pure" {shape: rectangle}
+path2: "Path 2\n/dev/sdc (HBA1" {shape: rectangle}
+fab2: "FC Fabric B" {shape: rectangle}
+
+app -> dm
+dm -> path1
+path1 -> fab1
+fab1 -> san
+dm -> path2
+path2 -> fab2
+fab2 -> san
 ```
 
 ## Multipath Configuration

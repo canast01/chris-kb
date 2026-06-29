@@ -11,25 +11,6 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph TD
-    A([Pre-upgrade checks<br>HEALTH_OK · OSDs up+in · no recovery]) --> B([Backup config + auth<br>ceph config-key dump])
-    B --> C([Update cephadm binary<br>on bootstrap node])
-    C --> D([Start upgrade<br>ceph orch upgrade start --ceph-version x.y.z])
-    D --> E([MGRs upgrade<br>active MGR fails over])
-    E --> F([MONs upgrade<br>one at a time, quorum maintained])
-    F --> G([OSDs upgrade<br>one at a time; noout set automatically])
-    G --> H([MDS + RGW upgrade<br>per-daemon rolling restart])
-    H --> I([Verify all daemons<br>ceph versions · ceph health])
-
-    classDef pre fill:#7c3aed,color:#fff,stroke:#7c3aed
-    classDef upgrade fill:#1e3a5f,color:#fff,stroke:#2563eb
-    classDef verify fill:#15803d,color:#fff,stroke:#15803d
-    class A,B,C pre
-    class D,E,F,G,H upgrade
-    class I verify
-```
-
 ```d2
 direction: right
 

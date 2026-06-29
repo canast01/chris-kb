@@ -76,22 +76,29 @@ Cisco MDS procedures: `show flogi database`, zone member management with `zone n
 
 ![Zone Provisioning Workflow](../../../../assets/cisco-mds-proc-zone-provisioning-workflow.svg)
 
-```mermaid
-flowchart TD
-  A["New host or storage port\nneeds fabric access"] --> B["Get pWWN from host HBA\nor storage port"]
-  B --> C["Create Device Alias\n(device-alias database)"]
-  C --> D["device-alias commit"]
-  D --> E["Create Zone\n(single-initiator / single-target)"]
-  E --> F["Add Zone to Zone Set\n(zoneset name ... member ...)"]
-  F --> G["Activate Zone Set\n(zoneset activate name ... vsan N)"]
-  G --> H["Commit to fabric\n(zone commit vsan N)"]
-  H --> I["Save config\n(copy running-config startup-config)"]
-  I --> J["Verify: show zoneset active vsan N\nshow flogi database vsan N"]
+```d2
+direction: right
 
-  classDef step fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef verify fill:#15803d,stroke:#166534,color:#fff
-  class A,B,C,D,E,F,G,H,I step
-  class J verify
+A: "New host or storage port\nneeds fabric access" {shape: rectangle}
+B: "Get pWWN from host HBA\nor storage port" {shape: rectangle}
+C: "Create Device Alias\n(device-alias database" {shape: rectangle}
+D: "device-alias commit" {shape: rectangle}
+E: "Create Zone\n(single-initiator / single-target" {shape: rectangle}
+F: "Add Zone to Zone Set\n(zoneset name ... member ..." {shape: rectangle}
+G: "Activate Zone Set\n(zoneset activate name ... vsan N" {shape: rectangle}
+H: "Commit to fabric\n(zone commit vsan N" {shape: rectangle}
+I: "Save config\n(copy running-config startup-config" {shape: rectangle}
+J: "Verify: show zoneset active vsan N\nshow flogi database vsan N" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+E -> F
+F -> G
+G -> H
+H -> I
+I -> J
 ```
 
 ### Device Aliases

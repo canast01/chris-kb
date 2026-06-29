@@ -14,34 +14,37 @@ CloudIQ diagnostic commands: check SCG service health, test outbound connectivit
 </div>
 ![CloudIQ — Diagnostics](../../../../assets/storage-dell-cloudiq-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "CloudIQ Issue" {shape: rectangle}
+B: "scg status\nSCG service running?" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "systemctl status dsagw\nCheck service errors" {shape: rectangle}
+E: "scg connectivity --test\nOutbound HTTPS reachable?" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Check proxy settings\nSCG UI → Settings → Proxy" {shape: rectangle}
+H: "scg device list\nIdentify unreporting device" {shape: rectangle}
+I: "scg device test --id\nTest specific device" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Update device credentials\nSCG UI → Devices → Edit" {shape: rectangle}
+L: "curl https://array-mgmt-ip\nVerify array reachable from SCG" {shape: rectangle}
+M: "scg log collect\nCollect diagnostic bundle" {shape: rectangle}
+N: "Open Dell SR\nsupport.dell.com" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([CloudIQ Issue]) --> B[scg status\nSCG service running?]
-    B --> C{SCG healthy?}
-    C -->|No| D[systemctl status dsagw\nCheck service errors]
-    C -->|Yes| E[scg connectivity --test\nOutbound HTTPS reachable?]
-    E --> F{Connectivity OK?}
-    F -->|No| G[Check proxy settings\nSCG UI → Settings → Proxy]
-    F -->|Yes| H[scg device list\nIdentify unreporting device]
-    H --> I[scg device test --id\nTest specific device]
-    I --> J{Device test result?}
-    J -->|Auth failure| K[Update device credentials\nSCG UI → Devices → Edit]
-    J -->|Network error| L[curl https://array-mgmt-ip\nVerify array reachable from SCG]
-    D --> M[scg log collect\nCollect diagnostic bundle]
-    G --> M
-    K --> M
-    L --> M
-    M --> N[Open Dell SR\nsupport.dell.com]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F,J dark
-    class B,D,E,G,H,I,K,L action
-    class M,N escalate
+A -> B
+C -> D
+C -> E
+F -> G
+F -> H
+H -> I
+J -> K
+J -> L
+D -> M
+G -> M
+K -> M
+L -> M
+M -> N
 ```
 
 ```d2

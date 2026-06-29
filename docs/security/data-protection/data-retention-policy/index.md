@@ -21,22 +21,21 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 
 ## Data Lifecycle Overview
 
-```mermaid
-flowchart LR
-    A[Data Created] --> B[Active Use\nHot Storage]
-    B --> C{Retention Period\nActive?}
-    C -- Yes, frequent access --> B
-    C -- Yes, infrequent access --> D[Warm Storage\nNear-line / slower tier]
-    D --> E{Legal Hold\nApplied?}
-    E -- Yes --> F[Legal Hold\nStorage — no deletion]
-    E -- No --> G{Retention Period\nExpired?}
-    F --> G
-    G -- No --> D
-    G -- Yes --> H[Deletion Approved?]
-    H -- No --> D
-    H -- Yes --> I[Secure Deletion\nNIST 800-88]
-    D -- Long-term archive --> J[Cold / Archive Storage\nTape / Object Storage]
-    J --> G
+```d2
+direction: right
+
+A: "Data Created" {shape: rectangle}
+B: "Active Use\nHot Storage" {shape: rectangle}
+F: "Legal Hold\nStorage — no deletion" {shape: rectangle}
+G: "G" {shape: rectangle}
+J: "Cold / Archive Storage\nTape / Object Storage" {shape: rectangle}
+D: "Warm Storage\nNear-line / slower tier" {shape: rectangle}
+H: "Deletion Approved?" {shape: rectangle}
+I: "Secure Deletion\nNIST 800-88" {shape: rectangle}
+
+A -> B
+F -> G
+J -> G
 ```
 
 ---

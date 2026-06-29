@@ -43,19 +43,21 @@ NetApp Keystone is a Storage as a Service (STaaS) subscription that delivers on-
 
 ## STaaS Consumption Model
 
-```mermaid
-graph TB
-  ONTAP["NetApp ONTAP\n(on-premises / colocation)"] -->|"telemetry"| KS["NetApp Keystone\n(STaaS portal)"]
-  KS --> COMMIT["Committed Capacity Tier"]
-  KS --> BURST["Burst Capacity\n(on-demand)"]
-  KS --> BILL["Monthly Billing"]
-  ADMIN(["Customer Admin"]) -->|"portal"| KS
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class ONTAP ctrl
-  class KS,COMMIT,BURST,BILL cloud
-  class ADMIN host
+```d2
+direction: right
+
+ONTAP: "NetApp ONTAP\n(on-premises / colocation" {shape: rectangle}
+KS: "NetApp Keystone\n(STaaS portal" {shape: rectangle}
+COMMIT: "Committed Capacity Tier" {shape: rectangle}
+BURST: "Burst Capacity\n(on-demand" {shape: rectangle}
+BILL: "Monthly Billing" {shape: rectangle}
+ADMIN: "Customer Admin" {shape: rectangle}
+
+ONTAP -> KS
+KS -> COMMIT
+KS -> BURST
+KS -> BILL
+ADMIN -> KS
 ```
 
 ## Service Tiers and Performance SLAs

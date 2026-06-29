@@ -25,24 +25,34 @@ FabricOS backup and restore: `configupload` to FTP/SCP, `firmwaredownload` stagi
 
 ## Backup and Restore Flow
 
-```mermaid
-flowchart TD
-    change([Pre-Change / Scheduled]) --> cfgsave["cfgsave\n(flush zone DB to flash)"]
-    cfgsave --> upload["configupload -all -scp\n(full switch config to backup server)"]
-    upload --> record["Record filename + timestamp\nin change ticket"]
+```d2
+direction: right
 
-    failure([Switch Failure / Rollback]) --> newSwitch["Boot replacement switch\nin isolation"]
-    newSwitch --> domainId["Set static domain ID\n(match original)"]
-    domainId --> download["configdownload -all -scp\n(restore from backup)"]
-    download --> reboot["Reboot if prompted\n(VF changes)"]
-    reboot --> connectISL["Connect ISL cables\nto core switch"]
-    connectISL --> verify["Verify: fabricshow\nnsshow · cfgshow"]
-    verify --> activate["cfgenable zoneset-name\ncfgsave"]
-    activate --> done([Restore Complete])
+change: "Pre-Change / Scheduled" {shape: rectangle}
+cfgsave: "cfgsave\n(flush zone DB to flash" {shape: rectangle}
+upload: "configupload -all -scp\n(full switch config to backup server" {shape: rectangle}
+record: "Record filename + timestamp\nin change ticket" {shape: rectangle}
+failure: "Switch Failure / Rollback" {shape: rectangle}
+newSwitch: "Boot replacement switch\nin isolation" {shape: rectangle}
+domainId: "Set static domain ID\n(match original" {shape: rectangle}
+download: "configdownload -all -scp\n(restore from backup" {shape: rectangle}
+reboot: "Reboot if prompted\n(VF changes" {shape: rectangle}
+connectISL: "Connect ISL cables\nto core switch" {shape: rectangle}
+verify: "Verify: fabricshow\nnsshow · cfgshow" {shape: rectangle}
+activate: "cfgenable zoneset-name\ncfgsave" {shape: rectangle}
+done: "Restore Complete" {shape: rectangle}
 
-    style done fill:#15803d,color:#fff
-    style change fill:#2563eb,color:#fff
-    style failure fill:#dc2626,color:#fff
+change -> cfgsave
+cfgsave -> upload
+upload -> record
+failure -> newSwitch
+newSwitch -> domainId
+domainId -> download
+download -> reboot
+reboot -> connectISL
+connectISL -> verify
+verify -> activate
+activate -> done
 ```
 
 ### Restore Notes

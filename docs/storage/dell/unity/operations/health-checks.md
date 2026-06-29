@@ -198,32 +198,38 @@ uemcli -d <ip> -u admin /net/if show | grep -E "ID|Health|IP"
 
 ![Daily Health Check Sequence](../../../../assets/storage-dell-unity-hc-daily-health-check-sequence.svg)
 
-```mermaid
-graph TD
-  START([Begin daily check]) --> SYS["uemcli /env/health show\n-filter 'health.value ne OK'"]
-  SYS --> SYS_OK{Any non-OK\ncomponents?}
-  SYS_OK -->|Yes| TRIAGE["Triage fault\ncheck Common Issues KB"]
-  SYS_OK -->|No| SP["uemcli /env/sp show\nBoth SPs Active?"]
-  SP --> SP_OK{Both Active?}
-  SP_OK -->|No| SPFAIL["One SP offline —\ncheck fault LEDs\nopen Dell case if hardware"]
-  SP_OK -->|Yes| POOL["uemcli /stor/config/pool show\nPool capacity < 80%?"]
-  POOL --> POOL_OK{Free > 20%?}
-  POOL_OK -->|No| CAPACT["Expand pool or\ndelete snapshots"]
-  POOL_OK -->|Yes| REP["uemcli /prot/rep/session show\nAll sessions Active?"]
-  REP --> REP_OK{All Active?}
-  REP_OK -->|No| REPFIX["Resume or investigate\nreplication session"]
-  REP_OK -->|Yes| DISK["uemcli /stor/config/disk show\nAll disks Normal?"]
-  DISK --> DISK_OK{Any faulted?}
-  DISK_OK -->|Yes| REPLACE["Initiate drive replacement\nmonitor RAID rebuild"]
-  DISK_OK -->|No| DONE([All checks passed])
-  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef warn fill:#b45309,stroke:#92400e,color:#fff
-  classDef term fill:#15803d,stroke:#166534,color:#fff
-  class SYS_OK,SP_OK,POOL_OK,REP_OK,DISK_OK decision
-  class SYS,SP,POOL,REP,DISK action
-  class TRIAGE,SPFAIL,CAPACT,REPFIX,REPLACE warn
-  class START,DONE term
+```d2
+direction: right
+
+START: "Begin daily check" {shape: rectangle}
+SYS: "uemcli /env/health show\n-filter" {shape: rectangle}
+SYS_OK: "SYS_OK" {shape: rectangle}
+TRIAGE: "Triage fault\ncheck Common Issues KB" {shape: rectangle}
+SP: "uemcli /env/sp show\nBoth SPs Active?" {shape: rectangle}
+SP_OK: "SP_OK" {shape: rectangle}
+SPFAIL: "One SP offline —\ncheck fault LEDs\nopen Dell case if hardware" {shape: rectangle}
+POOL: "uemcli /stor/config/pool show\nPool capacity < 80%?" {shape: rectangle}
+POOL_OK: "POOL_OK" {shape: rectangle}
+CAPACT: "Expand pool or\ndelete snapshots" {shape: rectangle}
+REP: "uemcli /prot/rep/session show\nAll sessions Active?" {shape: rectangle}
+REP_OK: "REP_OK" {shape: rectangle}
+REPFIX: "Resume or investigate\nreplication session" {shape: rectangle}
+DISK: "uemcli /stor/config/disk show\nAll disks Normal?" {shape: rectangle}
+DISK_OK: "DISK_OK" {shape: rectangle}
+REPLACE: "Initiate drive replacement\nmonitor RAID rebuild" {shape: rectangle}
+DONE: "All checks passed" {shape: rectangle}
+
+START -> SYS
+SYS_OK -> TRIAGE
+SYS_OK -> SP
+SP_OK -> SPFAIL
+SP_OK -> POOL
+POOL_OK -> CAPACT
+POOL_OK -> REP
+REP_OK -> REPFIX
+REP_OK -> DISK
+DISK_OK -> REPLACE
+DISK_OK -> DONE
 ```
 
 ---

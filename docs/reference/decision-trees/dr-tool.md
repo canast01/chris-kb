@@ -11,33 +11,38 @@ tags:
 Choose the right DR tool for your environment: SRM, vSphere Replication, or backup-based DR — based on RPO, RTO, application requirements, and licensing.
 </div>
 
-```mermaid
-flowchart TD
-    A([Start: Choose DR Tool]) --> B{Required RPO?}
+```d2
+direction: right
 
-    B -->|Near-zero\nunder 5 minutes| C{Array replication available?\nSAN or NAS with rep feature}
-    B -->|5 minutes to 24 hours| D[vSphere Replication\nVM-level replication · no storage dependency\nIncluded with vSphere]
-    B -->|More than 24 hours| E[Backup-based DR\nVeeam · Commvault · NetBackup]
+B: "B" {shape: rectangle}
+D: "vSphere Replication\nVM-level replication · no storage dependency\nIncluded with vSphere" {shape: rectangle}
+E: "Backup-based DR\nVeeam · Commvault · NetBackup" {shape: rectangle}
+C: "C" {shape: rectangle}
+F: "SRM + Array-based Replication\nNearest to zero RPO\nStorage vendor SRA required" {shape: rectangle}
+G: "SRM + vSphere Replication\nRPO minimum 5 minutes\nNo storage dependency" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "SRM Recovery Plan\nPower-on ordering · IP remapping\nNetwork re-mapping at recovery site" {shape: rectangle}
+J: "vSphere Replication standalone\nor backup restore per VM" {shape: rectangle}
+K: "K" {shape: rectangle}
+L: "App-aware backup\nVSS quiesce on Windows\nAgent-based on Linux" {shape: rectangle}
+M: "Hypervisor snapshot backup\nVeeam CBT · agentless\nFastest backup window" {shape: rectangle}
+N: "License check:\nSRM = per-VM license\nvSphere Replication = included with vSphere\nBackup tool = separate license" {shape: rectangle}
+A: "Start: Choose DR Tool" {shape: rectangle}
 
-    C -->|Yes| F[SRM + Array-based Replication\nNearest to zero RPO\nStorage vendor SRA required]
-    C -->|No storage rep| G[SRM + vSphere Replication\nRPO minimum 5 minutes\nNo storage dependency]
-
-    F --> H{Orchestrated failover of\nmultiple VMs in order?}
-    G --> H
-    D --> H
-
-    H -->|Yes — ordered recovery| I[SRM Recovery Plan\nPower-on ordering · IP remapping\nNetwork re-mapping at recovery site]
-    H -->|No — individual VM recovery| J[vSphere Replication standalone\nor backup restore per VM]
-
-    E --> K{Application consistency needed?}
-
-    K -->|Yes — databases · exchange| L[App-aware backup\nVSS quiesce on Windows\nAgent-based on Linux]
-    K -->|Crash-consistent OK| M[Hypervisor snapshot backup\nVeeam CBT · agentless\nFastest backup window]
-
-    I --> N([License check:\nSRM = per-VM license\nvSphere Replication = included with vSphere\nBackup tool = separate license])
-    J --> N
-    L --> N
-    M --> N
+B -> D
+B -> E
+C -> F
+C -> G
+G -> H
+D -> H
+H -> I
+H -> J
+K -> L
+K -> M
+I -> N
+J -> N
+L -> N
+M -> N
 ```
 
 ## Tool comparison

@@ -23,17 +23,20 @@ Encryption reference covering AD Protocol Encryption Overview, Enforcing LDAP Si
 
 ## AD Protocol Encryption Overview
 
-```mermaid
-graph TD
-    clients["AD Clients\n(computers / apps)"]
-    clients -->|"LDAPS port 636\n(TLS 1.2+ required)"| dc["Domain Controller\n(LDAP with Signing + Channel Binding)"]
-    clients -->|"Kerberos port 88\n(AES-256 — RC4 disabled)"| kdc["KDC\n(on DC)"]
-    clients -->|"SMB port 445\n(SMB signing required)"| sysvol["SYSVOL / DFSR"]
-    dc --> ntds["NTDS.DIT\n(AD database — AES encrypted at rest)"]
-    kdc --> ntds
+```d2
+direction: right
 
-    ldapPolicy["GPO: LDAP signing = Require\nChannel Binding = Always"] -. "enforced on" .-> dc
-    kerbPolicy["GPO: Kerberos enc = AES128 + AES256 only\n(DES + RC4 disabled)"] -. "enforced on" .-> kdc
+clients: "AD Clients\n(computers / apps" {shape: rectangle}
+dc: "Domain Controller\n(LDAP with Signing + Channel Binding" {shape: rectangle}
+kdc: "KDC\n(on DC" {shape: rectangle}
+sysvol: "SYSVOL / DFSR" {shape: rectangle}
+ntds: "NTDS.DIT\n(AD database — AES encrypted at rest" {shape: rectangle}
+
+clients -> dc
+clients -> kdc
+clients -> sysvol
+dc -> ntds
+kdc -> ntds
 ```
 
 ## Enforcing LDAP Signing and Channel Binding

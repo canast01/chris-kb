@@ -47,23 +47,6 @@ This guide covers deploying a Brocade SAN switch (running Fabric OS) from physic
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Rack and Cable"]
-    s3["Initial Switch Configuration"]
-    s4["Set Domain ID and Fabric Parameters"]
-    s5["Zone Configuration"]
-    s6["ISL Configuration"]
-    s7["SANnav Integration"]
-    s8["✓ Validate Fabric"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 **Hardware:**

@@ -16,20 +16,6 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Phase 1 — Pre-Deployment Checks"]
-    s2["Phase 2 — VRA Deployment: Source Site"]
-    s3["Phase 3 — VRA Deployment: Target Site and ..."]
-    s4["Phase 4 — Configure VM Replication"]
-    s5["Phase 5 — Monitor RPO Compliance"]
-    s6["Phase 6 — End-to-End Validation"]
-    s7["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
-    style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

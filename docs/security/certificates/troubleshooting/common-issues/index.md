@@ -39,33 +39,42 @@ known_issues -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> A{Certificate expired\nor browser error?}
-    S --> B{Certificate not\ntrusted / chain error?}
-    S --> C{Auto-renewal\nfailed?}
-    S --> D{Wrong SAN or CN\non certificate?}
-    S --> E{Private key\nmismatch?}
-    A -->|Yes| A1{Expired internal\nor external?}
-    A1 -->|External| A2[P1 incident: 1-hour SLA\nEmergency renewal via CA]
-    A1 -->|Internal| A3[certutil -verify\nRenew via ADCS or ACME]
-    A3 --> A4[Expired Certificate Response]
-    B -->|Yes| B1[openssl s_client check chain\nAdd intermediate cert to TLS config\nDistribute root CA via GPO]
-    B1 --> B2[Certificate Issue Triage Flow]
-    C -->|Yes| C1{ACME or\nADCS renewal?}
-    C1 -->|ACME| C2[Check DNS/HTTP challenge\nVerify ACME client logs\nConfirm port 80/443 reachable]
-    C1 -->|ADCS| C3[certutil -pulse\nCheck CA service and CRL\nVerify template permissions]
-    C3 --> C4[Common ADCS Issues]
-    D -->|Yes| D1[openssl x509 -text -in cert.pem\nCompare SAN list to hostname\nRequest new cert with correct SANs]
-    D1 --> D2[Certificate Issue Triage Flow]
-    E -->|Yes| E1[openssl verify cert against key\nIf mismatch: re-issue cert\nor restore correct private key]
-    E1 --> E2[Expired Certificate Response]
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class A4,B2,C4,D2,E2 section
-    class A,A1,B,C,C1,D,E decision
-    class S start
+```d2
+direction: right
+
+A1: "A1" {shape: rectangle}
+A2: "P1 incident: 1-hour SLA\nEmergency renewal via CA" {shape: rectangle}
+A3: "certutil -verify\nRenew via ADCS or ACME" {shape: rectangle}
+A4: "Expired Certificate Response" {shape: rectangle}
+B: "B" {shape: rectangle}
+B1: "openssl s_client check chain\nAdd intermediate cert to TLS config\nDistribute root CA via GPO" {shape: rectangle}
+B2: "Certificate Issue Triage Flow" {shape: rectangle}
+C1: "C1" {shape: rectangle}
+C2: "Check DNS/HTTP challenge\nVerify ACME client logs\nConfirm port 80/443 reachable" {shape: rectangle}
+C3: "certutil -pulse\nCheck CA service and CRL\nVerify template permissions" {shape: rectangle}
+C4: "Common ADCS Issues" {shape: rectangle}
+D: "D" {shape: rectangle}
+D1: "openssl x509 -text -in cert.pem\nCompare SAN list to hostname\nRequest new cert with correct SANs" {shape: rectangle}
+D2: "Certificate Issue Triage Flow" {shape: rectangle}
+E: "E" {shape: rectangle}
+E1: "openssl verify cert against key\nIf mismatch: re-issue cert\nor restore correct private key" {shape: rectangle}
+E2: "Expired Certificate Response" {shape: rectangle}
+S: "What is the symptom?" {shape: rectangle}
+A: "A" {shape: rectangle}
+C: "C" {shape: rectangle}
+
+A1 -> A2
+A1 -> A3
+A3 -> A4
+B -> B1
+B1 -> B2
+C1 -> C2
+C1 -> C3
+C3 -> C4
+D -> D1
+D1 -> D2
+E -> E1
+E1 -> E2
 ```
 
 ---
@@ -82,20 +91,33 @@ graph TD
 
 ## Certificate Issue Triage Flow
 
-```mermaid
-flowchart TD
-    issue["Certificate error reported\n(TLS failure / untrusted / expired)"]
-    issue --> checkExpiry{"Is the certificate\nexpired?"}
-    checkExpiry -->|"yes"| expiredPath["Emergency renewal\n(P1 if external — 1 hour SLA)"]
-    checkExpiry -->|"no"| checkChain{"Chain validation\nfails?"}
-    checkChain -->|"yes"| chainFix["Intermediate not sent by server\nAdd intermediate to TLS config\nopenssl verify to confirm"]
-    checkChain -->|"no"| checkTrust{"Root CA trusted\nby client?"}
-    checkTrust -->|"no"| addRoot["Distribute root CA cert\nvia GPO / system trust store"]
-    checkTrust -->|"yes"| checkRevoke{"Certificate\nrevoked?"}
-    checkRevoke -->|"yes — CRL / OCSP"| replaceRevoked["Replace with new cert\nIssue on clean host"]
-    checkRevoke -->|"no"| checkSAN{"CN / SAN matches\nhostname?"}
-    checkSAN -->|"no"| newCert["Request new cert with\ncorrect CN and SANs"]
-    checkSAN -->|"yes"| deepDiag["Further diagnostics:\nopenssl s_client full output\ncertutil -verify -urlfetch"]
+```d2
+direction: right
+
+issue: "Certificate error reported\n(TLS failure / untrusted / expired" {shape: rectangle}
+checkExpiry: "Is the certificate\nexpired?" {shape: rectangle}
+expiredPath: "Emergency renewal\n(P1 if external — 1 hour SLA" {shape: rectangle}
+checkChain: "Chain validation\nfails?" {shape: rectangle}
+chainFix: "Intermediate not sent by server\nAdd intermediate to TLS config\nopenssl verify to confirm" {shape: rectangle}
+checkTrust: "Root CA trusted\nby client?" {shape: rectangle}
+addRoot: "Distribute root CA cert\nvia GPO / system trust store" {shape: rectangle}
+checkRevoke: "Certificate\nrevoked?" {shape: rectangle}
+replaceRevoked: "Replace with new cert\nIssue on clean host" {shape: rectangle}
+checkSAN: "CN / SAN matches\nhostname?" {shape: rectangle}
+newCert: "Request new cert with\ncorrect CN and SANs" {shape: rectangle}
+deepDiag: "Further diagnostics:\nopenssl s_client full output\ncertutil -verify -urlfetch" {shape: rectangle}
+
+issue -> checkExpiry
+checkExpiry -> expiredPath
+checkExpiry -> checkChain
+checkChain -> chainFix
+checkChain -> checkTrust
+checkTrust -> addRoot
+checkTrust -> checkRevoke
+checkRevoke -> replaceRevoked
+checkRevoke -> checkSAN
+checkSAN -> newCert
+checkSAN -> deepDiag
 ```
 
 ## Common checks

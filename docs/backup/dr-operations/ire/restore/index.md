@@ -10,22 +10,35 @@ Restoration in the IRE follows a staged process: identify the latest clean backu
 
 ## Restore Workflow
 
-```mermaid
-flowchart TD
-    A([Declare IRE activation]) --> B[Identify recovery point\nRTO / RPO target]
-    B --> C[Retrieve backup from immutable store\nto IRE staging]
-    C --> D[Restore VM images / data\nto IRE compute]
-    D --> E[Malware scan in clean room]
-    E --> F{Scan clean?}
-    F --> |No| G[Quarantine\nSelect earlier recovery point]
-    G --> B
-    F --> |Yes| H[Business validation\nApp team testing]
-    H --> I{Validated?}
-    I --> |No| J[Investigate data issues\nSelect earlier point if needed]
-    J --> B
-    I --> |Yes| K[DR lead sign-off]
-    K --> L[Reintroduce to production\nIRE isolation maintained until complete]
-    L --> M([IRE stand-down])
+```d2
+direction: right
+
+A: "Declare IRE activation" {shape: rectangle}
+B: "Identify recovery point\nRTO / RPO target" {shape: rectangle}
+C: "Retrieve backup from immutable store\nto IRE staging" {shape: rectangle}
+D: "Restore VM images / data\nto IRE compute" {shape: rectangle}
+E: "Malware scan in clean room" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Quarantine\nSelect earlier recovery point" {shape: rectangle}
+H: "Business validation\nApp team testing" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Investigate data issues\nSelect earlier point if needed" {shape: rectangle}
+K: "DR lead sign-off" {shape: rectangle}
+L: "Reintroduce to production\nIRE isolation maintained until complete" {shape: rectangle}
+M: "IRE stand-down" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+F -> G
+G -> B
+F -> H
+I -> J
+J -> B
+I -> K
+K -> L
+L -> M
 ```
 
 ### Database Restore

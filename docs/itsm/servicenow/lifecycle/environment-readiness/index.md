@@ -12,16 +12,26 @@ Validates that infrastructure is prepared to receive a new workload, application
 
 ## Readiness Assessment Flow
 
-```mermaid
-flowchart TD
-    A[Workload Requirements\ndefined] --> B[Capacity Check\nCPU · Memory · Storage · Network]
-    B --> C[Network Readiness\nVLAN · Firewall · DNS · NTP]
-    C --> D[Security Readiness\nBaseline · PAM · Certs]
-    D --> E[Monitoring Readiness\nAgent · Alerting · Dashboards]
-    E --> F[Backup Readiness\nJob · Policy · Retention]
-    F --> G{All checks\npassing?}
-    G -->|Yes| H[Ready — proceed\nwith onboarding]
-    G -->|No| I[Remediate blockers\nbefore proceeding]
+```d2
+direction: right
+
+A: "Workload Requirements\ndefined" {shape: rectangle}
+B: "Capacity Check\nCPU · Memory · Storage · Network" {shape: rectangle}
+C: "Network Readiness\nVLAN · Firewall · DNS · NTP" {shape: rectangle}
+D: "Security Readiness\nBaseline · PAM · Certs" {shape: rectangle}
+E: "Monitoring Readiness\nAgent · Alerting · Dashboards" {shape: rectangle}
+F: "Backup Readiness\nJob · Policy · Retention" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Ready — proceed\nwith onboarding" {shape: rectangle}
+I: "Remediate blockers\nbefore proceeding" {shape: rectangle}
+
+A -> B
+B -> C
+C -> D
+D -> E
+E -> F
+G -> H
+G -> I
 ```
 
 ## 2. Network Readiness

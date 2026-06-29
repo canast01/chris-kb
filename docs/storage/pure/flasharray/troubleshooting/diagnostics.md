@@ -14,43 +14,51 @@ FlashArray diagnostic commands: run the first-response sequence (<code>purealert
 </div>
 ![FlashArray — Diagnostics](../../../../assets/storage-pure-flasharray-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "FlashArray Issue" {shape: rectangle}
+B: "purealert list: find failure domain\npurearray list --controller: CTs" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "purearray list --controller: state\npurehw list --type ct: component" {shape: rectangle}
+E: "puredrive list: drive states\npuredrive list --progress: rebuild" {shape: rectangle}
+F: "purehost list --connection: paths\npureport list --type fc: port state" {shape: rectangle}
+G: "purearray monitor: latency\npurevol monitor --latency: volumes" {shape: rectangle}
+H: "purepod list: pod status + mediator\npurepgroup list --replication" {shape: rectangle}
+I: "purearray list --space: capacity\npuresnap list --space: consumers" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Open P1 case immediately\nHold: wait for Pure Support auth" {shape: rectangle}
+L: "Monitor for recovery\nVerify host I/O on surviving CT" {shape: rectangle}
+M: "M" {shape: rectangle}
+N: "Open support case\nHold: wait for Pure Support auth" {shape: rectangle}
+O: "Monitor puredrive list --progress\nDo not interrupt rebuild" {shape: rectangle}
+P: "pureport list --initiator: visible?\nVerify FC zone: correct WWN pair" {shape: rectangle}
+Q: "purevol monitor: noisy neighbour\npurearray list --space: above 90%" {shape: rectangle}
+R: "Check reachability to remote array\npurepod list --mediator: connect" {shape: rectangle}
+S: "purediag --send or --output .tgz\nOpen Pure Support case with bundle" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([FlashArray Issue]) --> B[purealert list: find failure domain\npurearray list --controller: CTs]
-    B --> C{Failure domain?}
-    C -->|Controller fault| D[purearray list --controller: state\npurehw list --type ct: component]
-    C -->|Drive fault| E[puredrive list: drive states\npuredrive list --progress: rebuild]
-    C -->|Host path missing| F[purehost list --connection: paths\npureport list --type fc: port state]
-    C -->|Performance degraded| G[purearray monitor: latency\npurevol monitor --latency: volumes]
-    C -->|Replication issue| H[purepod list: pod status + mediator\npurepgroup list --replication]
-    C -->|Capacity warning| I[purearray list --space: capacity\npuresnap list --space: consumers]
-    D --> J{Controller status?}
-    J -->|offline| K[Open P1 case immediately\nHold: wait for Pure Support auth]
-    J -->|not ready| L[Monitor for recovery\nVerify host I/O on surviving CT]
-    E --> M{Drive state?}
-    M -->|failed| N[Open support case\nHold: wait for Pure Support auth]
-    M -->|recovering| O[Monitor puredrive list --progress\nDo not interrupt rebuild]
-    F --> P[pureport list --initiator: visible?\nVerify FC zone: correct WWN pair]
-    G --> Q[purevol monitor: noisy neighbour\npurearray list --space: above 90%]
-    H --> R[Check reachability to remote array\npurepod list --mediator: connect]
-    K --> S[purediag --send or --output .tgz\nOpen Pure Support case with bundle]
-    L --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-    I --> S
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,J,M dark
-    class B,D,E,F,G,H,I,L,O,P,Q,R action
-    class K,N,S escalate
+A -> B
+C -> D
+C -> E
+C -> F
+C -> G
+C -> H
+C -> I
+J -> K
+J -> L
+M -> N
+M -> O
+F -> P
+G -> Q
+H -> R
+K -> S
+L -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
+I -> S
 ```
 
 ```d2

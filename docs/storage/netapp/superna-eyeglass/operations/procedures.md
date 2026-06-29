@@ -24,25 +24,33 @@ Procedures reference covering Failover, Failback, Day-to-Day Operations.
 
 Eyeglass DR Assistant orchestrates failover of PowerScale (Isilon) access zones from a production cluster to a DR cluster. Failover includes stopping SyncIQ replication, activating DR access zones, and remapping NFS/SMB shares and DNS entries.
 
-```mermaid
-flowchart TD
-    detect(["Detect: Production\ncluster unavailable / event declared"])
-    validateRPO["Validate RPO\nCheck SyncIQ lag vs threshold"]
-    preflight["egcli drtest preflight\nConfirm DR prerequisites"]
-    ready{DR Ready?}
-    noGo["Escalate — prerequisites\nnot met"]
-    triggerFO["egcli drfailover\n--policy POLICY --confirm"]
-    breakSync["Break SyncIQ replication\nDR cluster becomes writable"]
-    activateZones["Activate DR access zones\nReconfigure NFS/SMB shares"]
-    dnsSwitch["DNS cutover\nSmartConnect zone → DR VIP pool"]
-    notify["Notify stakeholders\nSNMP / Email alert"]
-    validate["Validate client access\nNFS mounts, SMB shares, DNS"]
-    done(["DR cluster active\nMonitor and plan failback"])
+```d2
+direction: right
 
-    detect --> validateRPO --> preflight --> ready
-    ready -->|No| noGo
-    ready -->|Yes| triggerFO
-    triggerFO --> breakSync --> activateZones --> dnsSwitch --> notify --> validate --> done
+detect: "Detect: Production\ncluster unavailable / event declared" {shape: rectangle}
+validateRPO: "Validate RPO\nCheck SyncIQ lag vs threshold" {shape: rectangle}
+preflight: "egcli drtest preflight\nConfirm DR prerequisites" {shape: rectangle}
+ready: "ready" {shape: rectangle}
+noGo: "Escalate — prerequisites\nnot met" {shape: rectangle}
+triggerFO: "egcli drfailover\n--policy POLICY --confirm" {shape: rectangle}
+breakSync: "Break SyncIQ replication\nDR cluster becomes writable" {shape: rectangle}
+activateZones: "Activate DR access zones\nReconfigure NFS/SMB shares" {shape: rectangle}
+dnsSwitch: "DNS cutover\nSmartConnect zone → DR VIP pool" {shape: rectangle}
+notify: "Notify stakeholders\nSNMP / Email alert" {shape: rectangle}
+validate: "Validate client access\nNFS mounts, SMB shares, DNS" {shape: rectangle}
+done: "DR cluster active\nMonitor and plan failback" {shape: rectangle}
+
+detect -> validateRPO
+validateRPO -> preflight
+preflight -> ready
+ready -> noGo
+ready -> triggerFO
+triggerFO -> breakSync
+breakSync -> activateZones
+activateZones -> dnsSwitch
+dnsSwitch -> notify
+notify -> validate
+validate -> done
 ```
 
 ### DNS Cutover

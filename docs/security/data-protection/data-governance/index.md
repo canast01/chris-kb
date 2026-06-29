@@ -57,25 +57,33 @@ Data classification is applied at creation via:
 
 ## Governance Process Flowchart
 
-```mermaid
-flowchart TD
-    A[Data Asset Identified / Created] --> B[Data Owner Assigned]
-    B --> C[Classification Applied\nPurview / Manual Label]
-    C --> D{Classification Level}
-    D -- Public --> E[Standard Controls Applied]
-    D -- Internal --> F[RBAC + Audit Logging]
-    D -- Confidential --> G[Encryption + RBAC\n+ DLP Policy]
-    D -- Restricted --> H[BYOK Encryption + Explicit\nApproval Workflow + PAM]
-    E & F & G & H --> I[Catalogued in Data Dictionary / CMDB]
-    I --> J[Quarterly Access Review]
-    J --> K{Access Still Required?}
-    K -- Yes --> L[Access Confirmed — Logged]
-    K -- No --> M[Access Revoked — Logged]
-    L & M --> N[Annual Policy Review]
-    N --> O{Policy Change?}
-    O -- Yes --> P[Update Controls, Notify Owners]
-    O -- No --> J
-    P --> J
+```d2
+direction: right
+
+A: "Data Asset Identified / Created" {shape: rectangle}
+B: "Data Owner Assigned" {shape: rectangle}
+C: "Classification Applied\nPurview / Manual Label" {shape: rectangle}
+E: "Standard Controls Applied" {shape: rectangle}
+F: "RBAC + Audit Logging" {shape: rectangle}
+G: "Encryption + RBAC\n+ DLP Policy" {shape: rectangle}
+H: "BYOK Encryption + Explicit\nApproval Workflow + PAM" {shape: rectangle}
+I: "Catalogued in Data Dictionary / CMDB" {shape: rectangle}
+J: "Quarterly Access Review" {shape: rectangle}
+L: "Access Confirmed — Logged" {shape: rectangle}
+M: "Access Revoked — Logged" {shape: rectangle}
+N: "Annual Policy Review" {shape: rectangle}
+P: "Update Controls, Notify Owners" {shape: rectangle}
+
+A -> B
+B -> C
+E -> F
+F -> G
+G -> H
+H -> I
+I -> J
+L -> M
+M -> N
+P -> J
 ```
 
 2. **Distribute to Data Owners** — send CSV report to relevant Data Owner via secure channel with 5-business-day response deadline.

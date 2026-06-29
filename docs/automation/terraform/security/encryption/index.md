@@ -33,25 +33,26 @@ sensitive_variable_handling -> encryption_reference: hardens
 
 ## Secrets and Encryption Architecture
 
-```mermaid
-graph TD
-    tfConfig[".tf configuration\n(no secrets in code)"]
-    sensitiveVar["variable marked\nsensitive = true"]
-    ssmParam["AWS SSM Parameter Store\n(SecureString / KMS)"]
-    secretsMgr["AWS Secrets Manager\n(JSON secret)"]
-    dataSource["data source block\n(read at plan/apply time)"]
-    tfApply["terraform apply\n(secret resolved at runtime)"]
-    stateFile["State File\n(may contain sensitive values)"]
-    s3Encrypted["S3 Bucket\n(SSE-S3 / SSE-KMS\nencrypt=true)"]
-    logs["Plan logs\n(sensitive values redacted)"]
+```d2
+direction: right
 
-    tfConfig --> sensitiveVar
-    sensitiveVar --> logs
-    ssmParam --> dataSource
-    secretsMgr --> dataSource
-    dataSource --> tfApply
-    tfApply --> stateFile
-    stateFile --> s3Encrypted
+tfConfig: ".tf configuration\n(no secrets in code" {shape: rectangle}
+sensitiveVar: "variable marked\nsensitive = true" {shape: rectangle}
+logs: "Plan logs\n(sensitive values redacted" {shape: rectangle}
+ssmParam: "AWS SSM Parameter Store\n(SecureString / KMS" {shape: rectangle}
+dataSource: "data source block\n(read at plan/apply time" {shape: rectangle}
+secretsMgr: "AWS Secrets Manager\n(JSON secret" {shape: rectangle}
+tfApply: "terraform apply\n(secret resolved at runtime" {shape: rectangle}
+stateFile: "State File\n(may contain sensitive values" {shape: rectangle}
+s3Encrypted: "S3 Bucket\n(SSE-S3 / SSE-KMS\nencrypt=true" {shape: rectangle}
+
+tfConfig -> sensitiveVar
+sensitiveVar -> logs
+ssmParam -> dataSource
+secretsMgr -> dataSource
+dataSource -> tfApply
+tfApply -> stateFile
+stateFile -> s3Encrypted
 ```
 
 ```hcl

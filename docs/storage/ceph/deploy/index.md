@@ -45,23 +45,6 @@ enable_cephfs -> validate
 
 ---
 
-```mermaid
-graph TD
-    A([Prerequisites<br>OS · Network · NTP · SSH keys]) --> B([Install cephadm<br>on bootstrap node])
-    B --> C([cephadm bootstrap<br>first MON + MGR])
-    C --> D([Add hosts<br>ceph orch host add])
-    D --> E([Add OSDs<br>ceph orch apply osd])
-    E --> F([Enable RBD pool<br>ceph osd pool create rbd])
-    F --> G([Enable CephFS<br>ceph fs volume create])
-    G --> H([Enable RGW<br>ceph orch apply rgw])
-    H --> I([Post-deploy validation<br>health · OSDs · PGs · bench])
-
-    classDef default fill:#1e3a5f,color:#fff,stroke:#2563eb
-    classDef done fill:#15803d,color:#fff,stroke:#15803d
-    class A,B default
-    class C,D,E,F,G,H,I done
-```
-
 ![Ceph — Deploy — Diagram](../../../assets/storage-ceph-deploy-diagram.svg)
 
 ## Prerequisites

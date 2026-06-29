@@ -13,43 +13,57 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 *Applies to: AWS CLI v2 · all regions*
 </div>
 
-```mermaid
-graph TD
-    A([AWS Issue]) --> B{What type of problem?}
-    B -->|Something changed unexpectedly| C[CloudTrail lookup-events --lookup-attributes\nFilter by resource type or time window]
-    B -->|Service or endpoint unreachable| D[VPC Reachability Analyzer\nCheck SG rules and NACL for REJECT]
-    B -->|IAM AccessDenied error| E[aws iam simulate-principal-policy\nFind which policy statement denies the action]
-    B -->|EC2 instance unhealthy| F[aws ec2 describe-instance-status\nCheck system and instance status checks]
-    B -->|RDS performance or connection issue| G[CloudWatch metrics: CPUUtilization / DBConnections\nCheck enhanced monitoring and slow query log]
-    B -->|Lambda failure or timeout| H[aws logs filter-log-events /aws/lambda/function\nCheck throttling CloudWatch metric]
-    B -->|EKS node or pod issue| I[kubectl get nodes -o wide\nkubectl get pods -A --field-selector=status.phase!=Running]
-    B -->|CloudFormation deploy failed| J[aws cloudformation describe-stack-events\nRead ResourceStatusReason column]
-    C --> K[aws cloudtrail lookup-events --max-results 50\nFilter for ErrorCode or specific resource]
-    D --> L{Flow Logs show REJECT?}
-    L -->|Yes| M[Identify SG rule or NACL blocking port\nCheck SG for source IP / CIDR]
-    L -->|No, but still fails| N[Check route table: aws ec2 describe-route-tables\nCheck internet gateway and NAT gateway]
-    E --> O[simulate-principal-policy output: implicitDeny or explicitDeny\nImplicit = no allow; Explicit = Deny statement present]
-    F --> P[aws ec2 get-console-output to read serial console\nConnect via SSM Session Manager if SSH fails]
-    G --> Q[Enable Performance Insights\nCheck slow query log /aws/rds/instance/id/slowquery]
-    H --> R[Check ReservedConcurrentExecutions limit\nReview function timeout vs actual execution time]
-    I --> S[kubectl describe node node-name\naws eks describe-nodegroup for health.issues]
-    J --> T[Review ROLLBACK events\nFix the specific resource that caused ROLLBACK_IN_PROGRESS]
-    K --> U[Collect diagnostics for AWS Support\naws support create-case]
-    M --> U
-    N --> U
-    O --> U
-    P --> U
-    Q --> U
-    R --> U
-    S --> U
-    T --> U
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,L dark
-    class C,D,E,F,G,H,I,J,K,M,N,O,P,Q,R,S,T action
-    class U escalate
+B: "B" {shape: rectangle}
+C: "CloudTrail lookup-events --lookup-attributes\nFilter by resource type or time window" {shape: rectangle}
+D: "VPC Reachability Analyzer\nCheck SG rules and NACL for REJECT" {shape: rectangle}
+E: "aws iam simulate-principal-policy\nFind which policy statement denies the action" {shape: rectangle}
+F: "aws ec2 describe-instance-status\nCheck system and instance status checks" {shape: rectangle}
+G: "CloudWatch metrics: CPUUtilization / DBConnections\nCheck enhanced monitoring and slow query log" {shape: rectangle}
+H: "aws logs filter-log-events /aws/lambda/function\nCheck throttling CloudWatch metric" {shape: rectangle}
+I: "kubectl get nodes -o wide\nkubectl get pods -A --field-selector=status.phase!=Running" {shape: rectangle}
+J: "aws cloudformation describe-stack-events\nRead ResourceStatusReason column" {shape: rectangle}
+K: "aws cloudtrail lookup-events --max-results 50\nFilter for ErrorCode or specific resource" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Identify SG rule or NACL blocking port\nCheck SG for source IP / CIDR" {shape: rectangle}
+N: "Check route table: aws ec2 describe-route-tables\nCheck internet gateway and NAT gateway" {shape: rectangle}
+O: "simulate-principal-policy output: implicitDeny or explicitDeny\nImplicit = no allow; Explicit = Deny statement present" {shape: rectangle}
+P: "aws ec2 get-console-output to read serial console\nConnect via SSM Session Manager if SSH fails" {shape: rectangle}
+Q: "Enable Performance Insights\nCheck slow query log /aws/rds/instance/id/slowquery" {shape: rectangle}
+R: "Check ReservedConcurrentExecutions limit\nReview function timeout vs actual execution time" {shape: rectangle}
+S: "kubectl describe node node-name\naws eks describe-nodegroup for health.issues" {shape: rectangle}
+T: "Review ROLLBACK events\nFix the specific resource that caused ROLLBACK_IN_PROGRESS" {shape: rectangle}
+U: "Collect diagnostics for AWS Support\naws support create-case" {shape: rectangle}
+A: "AWS Issue" {shape: rectangle}
+
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+B -> I
+B -> J
+C -> K
+L -> M
+L -> N
+E -> O
+F -> P
+G -> Q
+H -> R
+I -> S
+J -> T
+K -> U
+M -> U
+N -> U
+O -> U
+P -> U
+Q -> U
+R -> U
+S -> U
+T -> U
 ```
 
 ```d2

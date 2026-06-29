@@ -17,24 +17,6 @@ This guide covers deploying a new Windows Server from OS install through network
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Install the OS"]
-    s2["Configure Network"]
-    s3["Configure NTP"]
-    s4["Configure Windows Update (WSUS or Direct)"]
-    s5["Join the Domain"]
-    s6["Configure Windows Firewall"]
-    s7["Configure WinRM for Remote Management"]
-    s8["Enable Windows Defender and Security Baseline"]
-    s9["✓ Validate the Deployment"]
-    s10["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9 --> s10
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s10 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ```d2
 direction: right
 

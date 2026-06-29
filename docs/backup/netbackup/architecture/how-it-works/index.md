@@ -17,23 +17,19 @@ NetBackup operates on a three-tier architecture: a centralized Primary Server (f
 
 ## Three-Tier Topology
 
-```mermaid
-graph TB
-    Primary["Primary Server<br/>catalog · policy engine<br/>nbpem · scheduler · job control"]
-    MediaSrv["Media Servers<br/>proxy I/O · MSDP dedup pools<br/>compression · encryption"]
-    Clients["Clients<br/>NBU agent · bpbkar<br/>Windows · Linux · NAS"]
-    Storage["Storage Units<br/>AdvancedDisk · MSDP pool<br/>tape robot · cloud LSU"]
+```d2
+direction: right
 
-    Primary -->|"schedules + orchestrates"| MediaSrv
-    Primary -->|"schedules + orchestrates"| Clients
-    Clients -->|"data path"| MediaSrv
-    Primary -->|"catalog queries"| Storage
-    MediaSrv -->|"stores backups"| Storage
+Primary: "Primary Server · catalog · policy engine · bpem · scheduler · job control" {shape: rectangle}
+MediaSrv: "Media Servers · proxy I/O · MSDP dedup pools · compression · encryption" {shape: rectangle}
+Clients: "Clients · BU agent · bpbkar · Windows · Linux · NAS" {shape: rectangle}
+Storage: "Storage Units · AdvancedDisk · MSDP pool · tape robot · cloud LSU" {shape: rectangle}
 
-    style Primary fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style MediaSrv fill:#15803d,stroke:#166534,color:#fff
-    style Clients fill:#b45309,stroke:#92400e,color:#fff
-    style Storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+Primary -> MediaSrv
+Primary -> Clients
+Clients -> MediaSrv
+Primary -> Storage
+MediaSrv -> Storage
 ```
 
 Store the DR file off-host (NAS/object storage) and the passphrase in a secure vault — both are required for catalog recovery.

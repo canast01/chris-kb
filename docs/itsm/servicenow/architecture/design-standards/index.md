@@ -118,28 +118,30 @@ Change risk is assessed using ServiceNow's **Change Risk Assessment** questionna
 
 ## Change Advisory Board (CAB) Workflow
 
-```mermaid
-flowchart TD
-    A["Change Request Submitted\n(Normal or Emergency)"]
-    B["Risk Assessment\nCompleted by Submitter"]
-    C{Risk Level}
-    D["Low / Medium:\nDelegate Approval\n(Change Manager)"]
-    E["High / Critical:\nCAB Review Queue"]
-    F["CAB Meeting\n(Weekly - Wednesday 14:00)"]
-    G{CAB Decision}
-    H["Approved:\nSchedule Implementation"]
-    I["Rejected / Deferred:\nReturn to Submitter"]
-    J["Emergency:\nECAB Chair + 2 Members\n(async approval)"]
-    K["Implementation\nin Change Window"]
-    L["Post-Implementation Review\n(PIR within 5 business days)"]
+```d2
+direction: right
 
-    A --> B --> C
-    C -- Low/Medium --> D --> H
-    C -- High/Critical --> E --> F --> G
-    C -- Emergency --> J --> G
-    G -- Approved --> H
-    G -- Rejected --> I
-    H --> K --> L
+A: "Change Request Submitted\n(Normal or Emergency" {shape: rectangle}
+B: "Risk Assessment\nCompleted by Submitter" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "Low / Medium:\nDelegate Approval\n(Change Manager" {shape: rectangle}
+H: "Approved:\nSchedule Implementation" {shape: rectangle}
+E: "High / Critical:\nCAB Review Queue" {shape: rectangle}
+F: "CAB Meeting\n(Weekly - Wednesday 14:00" {shape: rectangle}
+G: "G" {shape: rectangle}
+J: "Emergency:\nECAB Chair + 2 Members\n(async approval" {shape: rectangle}
+K: "Implementation\nin Change Window" {shape: rectangle}
+L: "Post-Implementation Review\n(PIR within 5 business days" {shape: rectangle}
+I: "Rejected / Deferred:\nReturn to Submitter" {shape: rectangle}
+
+A -> B
+B -> C
+D -> H
+E -> F
+F -> G
+J -> G
+H -> K
+K -> L
 ```
 
 | Token | Values | Example |

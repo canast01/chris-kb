@@ -11,25 +11,31 @@ Operational scripts for Ceph: daily health check, OSD replacement workflow, capa
 *Applies to: Ceph Reef / Squid*
 </div>
 
-```mermaid
-graph LR
-    classDef root fill:#2563eb,color:#fff
-    classDef scr  fill:#15803d,color:#fff
-    classDef out  fill:#1e3a5f,color:#fff
+```d2
+direction: right
 
-    S[Scripts]:::root
+S: "S" {shape: rectangle}
+HS: "ceph-health-check.sh · daily cluster health" {shape: rectangle}
+OR: "osd-replace.sh · safe OSD replacement" {shape: rectangle}
+CR: "capacity-report.sh · pool usage report" {shape: rectangle}
+SS: "ceph-health-snapshot.sh · full state capture" {shape: rectangle}
+UR: "osd-utilization-report.sh · OSD over-threshold check" {shape: rectangle}
+RS: "rbd-snapshot-rotate.sh · daily snap + 7-day retention" {shape: rectangle}
+O1: "exit 0 = HEALTH_OK · exit 1 = degraded" {shape: rectangle}
+O2: "exit 0 = all within bounds · exit 1 = OSD over threshold" {shape: rectangle}
+O3: "creates daily snap · removes snaps older than 7 days" {shape: rectangle}
+O4: "/tmp/ceph-snapshot-DATE.txt · full cluster state dump" {shape: rectangle}
 
-    S --> HS[ceph-health-check.sh<br/>daily cluster health]:::scr
-    S --> OR[osd-replace.sh<br/>safe OSD replacement]:::scr
-    S --> CR[capacity-report.sh<br/>pool usage report]:::scr
-    S --> SS[ceph-health-snapshot.sh<br/>full state capture]:::scr
-    S --> UR[osd-utilization-report.sh<br/>OSD over-threshold check]:::scr
-    S --> RS[rbd-snapshot-rotate.sh<br/>daily snap + 7-day retention]:::scr
-
-    HS --> O1[exit 0 = HEALTH_OK<br/>exit 1 = degraded]:::out
-    UR --> O2[exit 0 = all within bounds<br/>exit 1 = OSD over threshold]:::out
-    RS --> O3[creates daily snap<br/>removes snaps older than 7 days]:::out
-    SS --> O4[/tmp/ceph-snapshot-DATE.txt<br/>full cluster state dump]:::out
+S -> HS
+S -> OR
+S -> CR
+S -> SS
+S -> UR
+S -> RS
+HS -> O1
+UR -> O2
+RS -> O3
+SS -> O4
 ```
 
 ## Before you begin

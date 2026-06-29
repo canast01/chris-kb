@@ -22,17 +22,25 @@ Venafi is managed via the `vcert` CLI (Trust Protection Platform and Venafi as a
 
 ## vcert CLI Workflow
 
-```mermaid
-flowchart TD
-    auth["vcert getcred\n(authenticate to TPP or VaaS)"]
-    auth --> action{"Operation"}
-    action -->|"new cert"| enroll["vcert enroll\n--zone policy-folder --cn hostname"]
-    action -->|"renew"| renew["vcert renew\n--thumbprint or --id cert-DN"]
-    action -->|"retrieve"| retrieve["vcert retrieve\n--id cert-DN --format pkcs12"]
-    enroll --> certFiles["cert.pem + key.pem\n+ chain.pem on disk"]
-    renew --> certFiles
-    retrieve --> certFiles
-    certFiles --> deploy["Deploy to target service\n(nginx / IIS / F5 / etc.)"]
+```d2
+direction: right
+
+auth: "vcert getcred\n(authenticate to TPP or VaaS" {shape: rectangle}
+action: "Operation" {shape: rectangle}
+enroll: "vcert enroll\n--zone policy-folder --cn hostname" {shape: rectangle}
+renew: "vcert renew\n--thumbprint or --id cert-DN" {shape: rectangle}
+retrieve: "vcert retrieve\n--id cert-DN --format pkcs12" {shape: rectangle}
+certFiles: "cert.pem + key.pem\n+ chain.pem on disk" {shape: rectangle}
+deploy: "Deploy to target service\n(nginx / IIS / F5 / etc." {shape: rectangle}
+
+auth -> action
+action -> enroll
+action -> renew
+action -> retrieve
+enroll -> certFiles
+renew -> certFiles
+retrieve -> certFiles
+certFiles -> deploy
 ```
 
 ---

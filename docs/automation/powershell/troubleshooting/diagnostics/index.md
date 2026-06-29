@@ -13,33 +13,40 @@ PowerShell diagnostic techniques: inspect the $Error automatic variable for exce
 *Applies to: PowerShell 7.x / Windows PowerShell 5.1*
 </div>
 
-```mermaid
-graph TD
-    A([Script or automation fails]) --> B{Error message available?}
-    B -->|Yes| C[Inspect $Error[0] then Get-Error]
-    B -->|No| D[Enable transcript logging\nStart-Transcript -Path C:\Logs\trace.txt]
-    C --> E{Error type?}
-    E -->|CommandNotFound| F[Check module install, PATH, and execution policy\nImport-Module -Verbose to see search paths]
-    E -->|Remoting or WinRM| G[Test-WSMan -ComputerName srv\nwinrm get winrm/config]
-    E -->|AccessDenied| H[Check permissions and credential delegation\nVerify CredSSP or Kerberos config]
-    E -->|Exception in script| I[Set-PSDebug -Trace 2\nor Trace-Command for targeted subsystem]
-    F --> J[Resolve and retest]
-    G --> J
-    H --> J
-    I --> K[Analyse trace output for failing line]
-    K --> J
-    D --> L[Reproduce with transcript active\nReview transcript for silent errors]
-    L --> C
-    J --> M{Resolved?}
-    M -->|Yes| N([Document root cause])
-    M -->|No| O[Collect Get-PSEnvironmentDiagnostics output\nEscalate with transcript attached]
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,E,M dark
-    class C,D,F,G,H,I,J,K,L action
-    class N,O escalate
+B: "B" {shape: rectangle}
+C: "Inspect $Error[0" {shape: rectangle}
+D: "Enable transcript logging\nStart-Transcript -Path C:\Logs\trace.txt" {shape: rectangle}
+E: "E" {shape: rectangle}
+F: "Check module install, PATH, and execution policy\nImport-Module -Verbose to see search paths" {shape: rectangle}
+G: "Test-WSMan -ComputerName srv\nwinrm get winrm/config" {shape: rectangle}
+H: "Check permissions and credential delegation\nVerify CredSSP or Kerberos config" {shape: rectangle}
+I: "Set-PSDebug -Trace 2\nor Trace-Command for targeted subsystem" {shape: rectangle}
+J: "Resolve and retest" {shape: rectangle}
+K: "Analyse trace output for failing line" {shape: rectangle}
+L: "Reproduce with transcript active\nReview transcript for silent errors" {shape: rectangle}
+M: "M" {shape: rectangle}
+N: "Document root cause" {shape: rectangle}
+O: "Collect Get-PSEnvironmentDiagnostics output\nEscalate with transcript attached" {shape: rectangle}
+A: "Script or automation fails" {shape: rectangle}
+
+B -> C
+B -> D
+E -> F
+E -> G
+E -> H
+E -> I
+F -> J
+G -> J
+H -> J
+I -> K
+K -> J
+D -> L
+L -> C
+M -> N
+M -> O
 ```
 
 ```d2

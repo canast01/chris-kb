@@ -16,41 +16,49 @@ vSAN diagnostic commands: check all vSAN health checks from the Skyline Health U
 </div>
 ![vSAN — Diagnostics](../../../../assets/virtualization-vmware-vsan-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "vSphere Client: Cluster → Monitor → vSAN → Skyline Health\nCheck failed health checks and recommended actions" {shape: rectangle}
+D: "esxcli vsan debug object list on ESXi\nFilter: grep -v Healthy to find problem objects" {shape: rectangle}
+E: "vSphere Client: Monitor → vSAN → Performance\nCheck cluster read/write latency and congestion" {shape: rectangle}
+F: "esxcli vsan debug network test\nvmkping -I vmk2 -d -s 8972 peer-vmk-ip" {shape: rectangle}
+G: "esxcli vsan storage list\nesxcli storage core device smart get -d naa\ngrep LSOM vmkernel.log" {shape: rectangle}
+H: "RVC: vsan.resync_dashboard .\nCheck slack space and bandwidth cap settings" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Follow recommended action in Skyline Health UI\nRe-run health check to confirm fix" {shape: rectangle}
+K: "Step 2: object-level diagnostics\nesxcli vsan debug object list" {shape: rectangle}
+L: "esxcli vsan debug object get -u uuid\nCheck component locations and health state" {shape: rectangle}
+M: "esxcli vsan perf get\nIdentify noisy VM: PowerCLI Get-Stat disk.write.average" {shape: rectangle}
+N: "esxcli vsan network list\nesxcli network nic stats get -n vmnic2" {shape: rectangle}
+O: "Check SMART: Reallocated Pending Uncorrectable sectors\ngrep naa.device vmkernel.log for errors" {shape: rectangle}
+P: "Check slack space: esxcli vsan storage list\nReview resync bandwidth: vSAN config" {shape: rectangle}
+Q: "Collect vCenter and ESXi support bundle\nOpen VMware SR" {shape: rectangle}
+R: "vc-support.sh from VCSA + vm-support --vsan on each ESXi host\nAttach to VMware Support Request" {shape: rectangle}
+A: "vSAN Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([vSAN Issue]) --> B{What type of problem?}
-    B -->|VM I/O errors or performance degraded| C[vSphere Client: Cluster → Monitor → vSAN → Skyline Health\nCheck failed health checks and recommended actions]
-    B -->|Object absent degraded or inaccessible| D[esxcli vsan debug object list on ESXi\nFilter: grep -v Healthy to find problem objects]
-    B -->|High latency or low throughput| E[vSphere Client: Monitor → vSAN → Performance\nCheck cluster read/write latency and congestion]
-    B -->|Network partition or split-brain| F[esxcli vsan debug network test\nvmkping -I vmk2 -d -s 8972 peer-vmk-ip]
-    B -->|Disk group failed or disk fault alarm| G[esxcli vsan storage list\nesxcli storage core device smart get -d naa\ngrep LSOM vmkernel.log]
-    B -->|Rebalancing or resync not completing| H[RVC: vsan.resync_dashboard .\nCheck slack space and bandwidth cap settings]
-    C --> I{Health check result?}
-    I -->|Failed health check with fix action| J[Follow recommended action in Skyline Health UI\nRe-run health check to confirm fix]
-    I -->|Health all green but symptom persists| K[Step 2: object-level diagnostics\nesxcli vsan debug object list]
-    D --> L[esxcli vsan debug object get -u uuid\nCheck component locations and health state]
-    E --> M[esxcli vsan perf get\nIdentify noisy VM: PowerCLI Get-Stat disk.write.average]
-    F --> N[esxcli vsan network list\nesxcli network nic stats get -n vmnic2]
-    G --> O[Check SMART: Reallocated Pending Uncorrectable sectors\ngrep naa.device vmkernel.log for errors]
-    H --> P[Check slack space: esxcli vsan storage list\nReview resync bandwidth: vSAN config]
-    J --> Q[Collect vCenter and ESXi support bundle\nOpen VMware SR]
-    K --> Q
-    L --> Q
-    M --> Q
-    N --> Q
-    O --> Q
-    P --> Q
-    Q --> R[vc-support.sh from VCSA + vm-support --vsan on each ESXi host\nAttach to VMware Support Request]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P action
-    class Q,R escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+D -> L
+E -> M
+F -> N
+G -> O
+H -> P
+J -> Q
+K -> Q
+L -> Q
+M -> Q
+N -> Q
+O -> Q
+P -> Q
+Q -> R
 ```
 
 ```d2

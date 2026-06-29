@@ -65,23 +65,6 @@ FlashArray operational procedures — host and volume provisioning, snapshot and
 
 ## Host Volume Provisioning Flow
 
-```mermaid
-flowchart TD
-  A["Zone FC fabric\n(single-initiator / single-target per zone)\nor configure iSCSI discovery portal"] --> B["Create Host entry\n(purehost create hostname\n --wwnlist wwn1,wwn2)"]
-  B --> C["Create Host Group\n(purehgroup create hgroupname)\n(purehgroup setattr --addhostlist ...)"]
-  C --> D["Create Volume\n(purevol create volname --size 4T)"]
-  D --> E["Connect Volume to Host Group\n(purehgroup connect hgroupname\n --vol volname)"]
-  E --> F["Rescan HBA on host\n(Linux: rescan-scsi-bus.sh\n ESXi: esxcli storage core adapter rescan)"]
-  F --> G["Verify multipath sees volume\n(multipath -ll / mpclaim -s -d)"]
-  G --> H["Add volume to Protection Group\n(purepgroup addvollist pg --vollist volname)"]
-  H --> I["Verify: purehost list --connection\npurepgroup listobj pg --member-type volume"]
-
-  classDef step fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef verify fill:#15803d,stroke:#166534,color:#fff
-  class A,B,C,D,E,F,G,H step
-  class I verify
-```
-
 ## Host Management
 
 Hosts in Pure Storage represent the servers (physical or virtual) that are granted access to volumes via iSCSI IQN or Fibre Channel WWN registration.

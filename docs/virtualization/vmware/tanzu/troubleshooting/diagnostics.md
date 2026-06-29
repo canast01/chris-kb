@@ -15,43 +15,52 @@ VMware Tanzu diagnostic commands: collect the tanzu diagnostics bundle, access S
 </div>
 ![Tanzu — Diagnostics](../../../../assets/virtualization-vmware-tanzu-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "kubectl get events -A --sort-by lastTimestamp\nkubectl describe pod -n namespace pod-name" {shape: rectangle}
+D: "kubectl get pods -n vmware-system-csi\nkubectl logs CSI controller pod" {shape: rectangle}
+E: "tanzu diagnostics collect --management-cluster\nTANZU_LOG_LEVEL=debug tanzu cluster create" {shape: rectangle}
+F: "SSH to supervisor control plane VM\njournalctl -u kube-apiserver -n 100" {shape: rectangle}
+G: "kubectl logs -n pinniped-supervisor\ncheck tanzu cluster kubeconfig get" {shape: rectangle}
+H: "kubectl logs -n harbor harbor-core pod\ndocker-compose logs core registry nginx" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "kubectl get nodes; check taints and resource requests\nDescribe node for allocatable CPU and memory" {shape: rectangle}
+K: "Check image registry URL and imagePullSecrets\nTest pull from node: crictl pull image-url" {shape: rectangle}
+L: "kubectl logs pod-name --previous\nCheck exit code and stderr" {shape: rectangle}
+M: "kubectl get pvc -n namespace\nkubectl describe pvc pvc-name for binding error" {shape: rectangle}
+N: "kubectl cluster-info dump --all-namespaces\ntar czf cluster-dump.tar.gz /tmp/cluster-dump" {shape: rectangle}
+O: "journalctl -u etcd -n 100\nkubectl get pods -n kube-system" {shape: rectangle}
+P: "kubectl get pods -n pinniped-concierge\nCheck OIDC identity provider in Tanzu config" {shape: rectangle}
+Q: "curl -sk https://harbor-fqdn/api/v2.0/health\nCheck Harbor certificate if SSL error" {shape: rectangle}
+R: "Collect full diagnostics bundle\ntanzu diagnostics collect" {shape: rectangle}
+S: "Open VMware SR\nAttach diagnostics bundle" {shape: rectangle}
+A: "Tanzu Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([Tanzu Issue]) --> B{What type of problem?}
-    B -->|Pod stuck in Pending / CrashLoopBackOff| C[kubectl get events -A --sort-by lastTimestamp\nkubectl describe pod -n namespace pod-name]
-    B -->|PVC not bound or volume mount fails| D[kubectl get pods -n vmware-system-csi\nkubectl logs CSI controller pod]
-    B -->|Cluster create or upgrade fails| E[tanzu diagnostics collect --management-cluster\nTANZU_LOG_LEVEL=debug tanzu cluster create]
-    B -->|Supervisor control plane issue| F[SSH to supervisor control plane VM\njournalctl -u kube-apiserver -n 100]
-    B -->|Auth / kubeconfig fails| G[kubectl logs -n pinniped-supervisor\ncheck tanzu cluster kubeconfig get]
-    B -->|Harbor image pull error| H[kubectl logs -n harbor harbor-core pod\ndocker-compose logs core registry nginx]
-    C --> I{Event type?}
-    I -->|FailedScheduling| J[kubectl get nodes; check taints and resource requests\nDescribe node for allocatable CPU and memory]
-    I -->|ImagePullBackOff| K[Check image registry URL and imagePullSecrets\nTest pull from node: crictl pull image-url]
-    I -->|CrashLoopBackOff| L[kubectl logs pod-name --previous\nCheck exit code and stderr]
-    D --> M[kubectl get pvc -n namespace\nkubectl describe pvc pvc-name for binding error]
-    E --> N[kubectl cluster-info dump --all-namespaces\ntar czf cluster-dump.tar.gz /tmp/cluster-dump]
-    F --> O[journalctl -u etcd -n 100\nkubectl get pods -n kube-system]
-    G --> P[kubectl get pods -n pinniped-concierge\nCheck OIDC identity provider in Tanzu config]
-    H --> Q[curl -sk https://harbor-fqdn/api/v2.0/health\nCheck Harbor certificate if SSL error]
-    J --> R[Collect full diagnostics bundle\ntanzu diagnostics collect]
-    K --> R
-    L --> R
-    M --> R
-    N --> R
-    O --> R
-    P --> R
-    Q --> R
-    R --> S[Open VMware SR\nAttach diagnostics bundle]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
-    class R,S escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+I -> L
+D -> M
+E -> N
+F -> O
+G -> P
+H -> Q
+J -> R
+K -> R
+L -> R
+M -> R
+N -> R
+O -> R
+P -> R
+Q -> R
+R -> S
 ```
 
 ```d2

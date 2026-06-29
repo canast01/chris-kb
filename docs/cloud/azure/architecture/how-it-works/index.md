@@ -17,21 +17,24 @@ Microsoft Azure is a hyperscale public cloud platform. Resources are organised i
 
 ## Management Group Hierarchy
 
-```mermaid
-graph TB
-  TENANT["Azure Tenant\n(Entra ID)"] --> MG["Management Groups\nCorp > Prod > Non-Prod"]
-  MG --> SUBP["Production Subscription"]
-  MG --> SUBD["Dev/Test Subscription"]
-  SUBP --> HUB["Hub VNet\nFirewall · Bastion · VPN GW"]
-  SUBP --> SP1["Spoke VNet 1\n(Workload A)"]
-  SUBP --> SP2["Spoke VNet 2\n(Workload B)"]
-  HUB <-->|"VNet peering"| SP1 & SP2
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  class TENANT,MG ctrl
-  class SUBP,SUBD cloud
-  class HUB,SP1,SP2 net
+```d2
+direction: right
+
+TENANT: "Azure Tenant\n(Entra ID" {shape: rectangle}
+MG: "Management Groups\nCorp > Prod > Non-Prod" {shape: rectangle}
+SUBP: "Production Subscription" {shape: rectangle}
+SUBD: "Dev/Test Subscription" {shape: rectangle}
+HUB: "Hub VNet\nFirewall · Bastion · VPN GW" {shape: rectangle}
+SP1: "Spoke VNet 1\n(Workload A" {shape: rectangle}
+SP2: "Spoke VNet 2\n(Workload B" {shape: rectangle}
+
+TENANT -> MG
+MG -> SUBP
+MG -> SUBD
+SUBP -> HUB
+SUBP -> SP1
+SUBP -> SP2
+SP1 -> SP2
 ```
 
 ---

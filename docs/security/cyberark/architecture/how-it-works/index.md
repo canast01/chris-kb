@@ -39,19 +39,22 @@ CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an e
 
 ## PAM Component Topology
 
-```mermaid
-graph TB
-  PVWA["PVWA\n(web interface)"] & PSM["PSM\n(session proxy)"] & CPM["CPM\n(rotation engine)"] --> VAULT["CyberArk Vault\n(encrypted credential store)"]
-  USER(["Privileged User"]) -->|"browser"| PVWA
-  PSM -->|"RDP / SSH proxy\nsession recording"| TARGET(["Target Servers"])
-  CPM -->|"password rotation"| TARGET
-  VAULT -.->|"audit stream"| SIEM(["SIEM"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class VAULT store
-  class PVWA,PSM,CPM ctrl
-  class USER,TARGET,SIEM host
+```d2
+direction: right
+
+PVWA: "PVWA\n(web interface" {shape: rectangle}
+PSM: "PSM\n(session proxy" {shape: rectangle}
+CPM: "CPM\n(rotation engine" {shape: rectangle}
+VAULT: "CyberArk Vault\n(encrypted credential store" {shape: rectangle}
+USER: "Privileged User" {shape: rectangle}
+TARGET: "Target Servers" {shape: rectangle}
+
+PVWA -> PSM
+PSM -> CPM
+CPM -> VAULT
+USER -> PVWA
+PSM -> TARGET
+CPM -> TARGET
 ```
 
 ---
@@ -126,15 +129,25 @@ sequenceDiagram
 
 ## DR Activation Flow
 
-```mermaid
-flowchart TD
-    failure["Primary Vault failure detected"] --> stopSync["Stop replication on DR Vault\n(dbsync.exe service stopped)"]
-    stopSync --> promDR["Change DR Vault to standalone mode\n(PrivateArk Client)"]
-    promDR --> updateIni["Update vault.ini on CPM / PSM / PVWA\nto point to DR Vault IP"]
-    updateIni --> restartSvc["Restart CyberArk services\non CPM, PSM, PVWA"]
-    restartSvc --> validate["Validate connectivity\n(Test-NetConnection :1858)"]
-    validate --> testCred["Test credential retrieval\nfrom DR Vault"]
-    testCred --> ops["Operations resume from DR Vault"]
+```d2
+direction: right
+
+failure: "Primary Vault failure detected" {shape: rectangle}
+stopSync: "Stop replication on DR Vault\n(dbsync.exe service stopped" {shape: rectangle}
+promDR: "Change DR Vault to standalone mode\n(PrivateArk Client" {shape: rectangle}
+updateIni: "Update vault.ini on CPM / PSM / PVWA\nto point to DR Vault IP" {shape: rectangle}
+restartSvc: "Restart CyberArk services\non CPM, PSM, PVWA" {shape: rectangle}
+validate: "Validate connectivity\n(Test-NetConnection :1858" {shape: rectangle}
+testCred: "Test credential retrieval\nfrom DR Vault" {shape: rectangle}
+ops: "Operations resume from DR Vault" {shape: rectangle}
+
+failure -> stopSync
+stopSync -> promDR
+promDR -> updateIni
+updateIni -> restartSvc
+restartSvc -> validate
+validate -> testCred
+testCred -> ops
 ```
 
 DR Vault activation procedure:

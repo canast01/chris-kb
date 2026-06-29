@@ -16,44 +16,53 @@ NSX diagnostic commands: check cluster and transport node health with nsxcli, in
 </div>
 ![NSX — Diagnostics](../../../../assets/virtualization-vmware-nsx-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "nsxcli: get cluster status\nget corfu-cluster status" {shape: rectangle}
+D: "NSX UI: Traceflow — inject packet\nCheck for rule drop or routing gap" {shape: rectangle}
+E: "Edge CLI: vrf then get bgp neighbor summary\nCheck underlay MTU with vmkping -d -s 1572" {shape: rectangle}
+F: "summarize-dvfilter on ESXi host\nvsipioctl getrules -f filter-name" {shape: rectangle}
+G: "get transport-node-status\nCheck TEP vmkernel IP and route" {shape: rectangle}
+H: "get alarms in nsxcli\nGET /api/v1/alarms?status=OPEN severity=CRITICAL" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "Collect manager.log from failed node\nCheck corfu Raft quorum: get corfu-cluster status" {shape: rectangle}
+K: "get services\nCheck disk and memory on the Manager VM" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "vsipioctl getrules -f filter-name on ESXi\nIdentify rule ID and section in NSX policy" {shape: rectangle}
+N: "Edge: vrf then get route\nCheck T0/T1 route redistribution" {shape: rectangle}
+O: "Check Edge interface counters: get interface fp-eth0 counters\nVerify BGP config: get bgp config" {shape: rectangle}
+P: "vsipioctl getstats -f filter-name to see rule hit counts\nvsipioctl getaddrsets for security group members" {shape: rectangle}
+Q: "ESXi: vmkping -I vmk2 remote-tep-ip\nesxcli network ip interface ipv4 get to verify TEP IP" {shape: rectangle}
+R: "Review alarm source and recommended action\nCheck realisation: GET /policy/api/v1/infra/segments" {shape: rectangle}
+S: "Collect NSX support bundle\nOpen VMware SR" {shape: rectangle}
+T: "UI: System > Support Bundle\nAPI: POST /api/v1/node/support-bundles" {shape: rectangle}
+A: "NSX Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([NSX Issue]) --> B{What type of problem?}
-    B -->|Manager cluster health warning| C[nsxcli: get cluster status\nget corfu-cluster status]
-    B -->|VM cannot reach another VM or service| D[NSX UI: Traceflow — inject packet\nCheck for rule drop or routing gap]
-    B -->|BGP not forming on Edge| E[Edge CLI: vrf then get bgp neighbor summary\nCheck underlay MTU with vmkping -d -s 1572]
-    B -->|DFW rule blocking unexpected traffic| F[summarize-dvfilter on ESXi host\nvsipioctl getrules -f filter-name]
-    B -->|Transport node not connected| G[get transport-node-status\nCheck TEP vmkernel IP and route]
-    B -->|Alarms in NSX UI| H[get alarms in nsxcli\nGET /api/v1/alarms?status=OPEN severity=CRITICAL]
-    C --> I{Cluster state?}
-    I -->|Manager node FAILED| J[Collect manager.log from failed node\nCheck corfu Raft quorum: get corfu-cluster status]
-    I -->|Services degraded| K[get services\nCheck disk and memory on the Manager VM]
-    D --> L{Traceflow result?}
-    L -->|Dropped by DFW rule| M[vsipioctl getrules -f filter-name on ESXi\nIdentify rule ID and section in NSX policy]
-    L -->|No route - routing drop| N[Edge: vrf then get route\nCheck T0/T1 route redistribution]
-    E --> O[Check Edge interface counters: get interface fp-eth0 counters\nVerify BGP config: get bgp config]
-    F --> P[vsipioctl getstats -f filter-name to see rule hit counts\nvsipioctl getaddrsets for security group members]
-    G --> Q[ESXi: vmkping -I vmk2 remote-tep-ip\nesxcli network ip interface ipv4 get to verify TEP IP]
-    H --> R[Review alarm source and recommended action\nCheck realisation: GET /policy/api/v1/infra/segments]
-    J --> S[Collect NSX support bundle\nOpen VMware SR]
-    K --> S
-    M --> S
-    N --> S
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
-    S --> T[UI: System > Support Bundle\nAPI: POST /api/v1/node/support-bundles]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I,L dark
-    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
-    class S,T escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+L -> M
+L -> N
+E -> O
+F -> P
+G -> Q
+H -> R
+J -> S
+K -> S
+M -> S
+N -> S
+O -> S
+P -> S
+Q -> S
+R -> S
+S -> T
 ```
 
 ```d2

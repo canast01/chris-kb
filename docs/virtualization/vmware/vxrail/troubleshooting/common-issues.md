@@ -15,9 +15,6 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </div>
 ![VxRail — Common Issues](../../../../assets/virtualization-vmware-vxrail-troubleshooting-common-issues.svg)
 
-
-
-
 ---
 
 ```d2
@@ -48,39 +45,44 @@ vsan_degraded_and_absent_objects -> resolution
 
 ## Diagnostic Flow
 
-```mermaid
-graph TD
-    S([What is the symptom?]) --> B1[VxRail plugin unavailable in vCenter]
-    S --> B2[LCM pre-check failure]
-    S --> B3[LCM upgrade stuck or failed]
-    S --> B4[vSAN health check failure]
-    S --> B5[Node offline in VxRail plugin]
-    S --> B6[Hardware alarm on node]
+```d2
+direction: right
 
-    B1 --> D1{Mystic service\nrunning?}
-    D1 -->|No| R1[Restart Mystic Service\n→ VxRail Plugin Unavailable in vCenter]
-    D1 -->|Yes| R2[Re-register Plugin via API\n→ VxRail Plugin Unavailable in vCenter]
+S: "What is the symptom?" {shape: rectangle}
+B1: "VxRail plugin unavailable in vCenter" {shape: rectangle}
+B2: "LCM pre-check failure" {shape: rectangle}
+B3: "LCM upgrade stuck or failed" {shape: rectangle}
+B4: "vSAN health check failure" {shape: rectangle}
+B5: "Node offline in VxRail plugin" {shape: rectangle}
+B6: "Hardware alarm on node" {shape: rectangle}
+D1: "D1" {shape: rectangle}
+R1: "Restart Mystic Service\n→ VxRail Plugin Unavailable in vCenter" {shape: rectangle}
+R2: "Re-register Plugin via API\n→ VxRail Plugin Unavailable in vCenter" {shape: rectangle}
+R3: "Resolve Failing Check\n→ LCM Pre-Check Failures" {shape: rectangle}
+D2: "D2" {shape: rectangle}
+R4: "Fix Root Cause · Resume LCM\n→ LCM Upgrade Stuck or Failed" {shape: rectangle}
+R5: "Open Dell Support Case\n→ LCM Upgrade Stuck or Failed" {shape: rectangle}
+R6: "Match Health Check to Resolution Table\n→ vSAN Health Check Failures" {shape: rectangle}
+D3: "D3" {shape: rectangle}
+R7: "Check OOB Network · Power State\n→ Node Offline in VxRail Plugin" {shape: rectangle}
+R8: "Check ESXi mgmt · VxRail API\n→ Node Offline in VxRail Plugin" {shape: rectangle}
+R9: "Read iDRAC SEL · Check vCenter HW View\n→ Node Hardware Alarm" {shape: rectangle}
 
-    B2 --> R3[Resolve Failing Check\n→ LCM Pre-Check Failures]
-
-    B3 --> D2{Resume\noption available?}
-    D2 -->|Yes| R4[Fix Root Cause · Resume LCM\n→ LCM Upgrade Stuck or Failed]
-    D2 -->|No| R5[Open Dell Support Case\n→ LCM Upgrade Stuck or Failed]
-
-    B4 --> R6[Match Health Check to Resolution Table\n→ vSAN Health Check Failures]
-
-    B5 --> D3{iDRAC\nreachable?}
-    D3 -->|No| R7[Check OOB Network · Power State\n→ Node Offline in VxRail Plugin]
-    D3 -->|Yes| R8[Check ESXi mgmt · VxRail API\n→ Node Offline in VxRail Plugin]
-
-    B6 --> R9[Read iDRAC SEL · Check vCenter HW View\n→ Node Hardware Alarm]
-
-    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
-    classDef decision fill:#15803d,color:#fff,stroke:#15803d
-    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
-    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
-    class D1,D2,D3 decision
-    class S start
+S -> B1
+S -> B2
+S -> B3
+S -> B4
+S -> B5
+S -> B6
+D1 -> R1
+D1 -> R2
+B2 -> R3
+D2 -> R4
+D2 -> R5
+B4 -> R6
+D3 -> R7
+D3 -> R8
+B6 -> R9
 ```
 
 ---

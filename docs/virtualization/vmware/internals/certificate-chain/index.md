@@ -11,33 +11,27 @@ VMware Certificate Authority (VMCA) issues all vCenter machine SSL and solution 
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```mermaid
-graph TB
-    classDef root fill:#2563eb,color:#fff,stroke:none
-    classDef vmca fill:#7c3aed,color:#fff,stroke:none
-    classDef machine fill:#15803d,color:#fff,stroke:none
-    classDef sol fill:#b45309,color:#fff,stroke:none
-    classDef sts fill:#164e63,color:#fff,stroke:none
-    classDef esxi fill:#374151,color:#fff,stroke:none
+```d2
+direction: right
 
-    ENT[Enterprise CA Root\nor Self-Signed Root]:::root
-    VMCA[VMCA\nVMware Certificate Authority\nembedded in vCenter]:::vmca
-    MSSL[Machine SSL Certificate\nvCenter FQDN SAN\nTLS for port 443]:::machine
-    SOL1[vpxd\nSolution User Cert]:::sol
-    SOL2[vpxd-extension\nSolution User Cert]:::sol
-    SOL3[vsphere-webclient\nSolution User Cert]:::sol
-    SOL4[wcp\nWorkload Control Plane\nSolution User Cert]:::sol
-    STS[STS Signing Certificate\nSAML token signing\nstored in PSC LDAP]:::sts
-    ESXI[ESXi Host Certs\nper-host machine cert\npushed by vCenter]:::esxi
+ENT: "ENT" {shape: rectangle}
+VMCA: "VMCA" {shape: rectangle}
+MSSL: "MSSL" {shape: rectangle}
+SOL1: "SOL1" {shape: rectangle}
+SOL2: "SOL2" {shape: rectangle}
+SOL3: "SOL3" {shape: rectangle}
+SOL4: "SOL4" {shape: rectangle}
+STS: "STS" {shape: rectangle}
+ESXI: "ESXI" {shape: rectangle}
 
-    ENT --> VMCA
-    VMCA --> MSSL
-    VMCA --> SOL1
-    VMCA --> SOL2
-    VMCA --> SOL3
-    VMCA --> SOL4
-    VMCA --> STS
-    VMCA --> ESXI
+ENT -> VMCA
+VMCA -> MSSL
+VMCA -> SOL1
+VMCA -> SOL2
+VMCA -> SOL3
+VMCA -> SOL4
+VMCA -> STS
+VMCA -> ESXI
 ```
 
 ## VMCA: VMware Certificate Authority

@@ -26,22 +26,24 @@ Use this page for practical Python scripts, field-tested commands, known issues,
 
 ## Windows Python Environment Setup Flow
 
-```mermaid
-graph LR
-    checkPython["Check Python 3\ninstalled in PATH"]
-    createVenv["Create venv\n(python -m venv)"]
-    activateVenv["Activate venv\n(Scripts\\activate)"]
-    installPkgs["Install packages\n(pip install)"]
-    runScript["Run Python Script\n(python script.py)"]
-    deactivate["Deactivate venv"]
+```d2
+direction: right
 
-    checkPython -->|Found| createVenv
-    checkPython -->|Not found| installPython["Install Python 3\nfrom python.org"]
-    installPython --> createVenv
-    createVenv --> activateVenv
-    activateVenv --> installPkgs
-    installPkgs --> runScript
-    runScript --> deactivate
+checkPython: "Check Python 3\ninstalled in PATH" {shape: rectangle}
+createVenv: "Create venv\n(python -m venv" {shape: rectangle}
+installPython: "Install Python 3\nfrom python.org" {shape: rectangle}
+activateVenv: "Activate venv\n(Scripts\\activate" {shape: rectangle}
+installPkgs: "Install packages\n(pip install" {shape: rectangle}
+runScript: "Run Python Script\n(python script.py" {shape: rectangle}
+deactivate: "Deactivate venv" {shape: rectangle}
+
+checkPython -> createVenv
+checkPython -> installPython
+installPython -> createVenv
+createVenv -> activateVenv
+activateVenv -> installPkgs
+installPkgs -> runScript
+runScript -> deactivate
 ```
 
 **What you should see**

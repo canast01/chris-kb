@@ -39,21 +39,24 @@ sensitive_task_output -> encryption_standards_summary: hardens
 
 Ansible Vault encrypts sensitive data at rest using AES-256-CBC. Encrypted content lives alongside plaintext YAML in the same repository — safely committed to Git.
 
-```mermaid
-graph LR
-    plainSecret["Plaintext Secret\n(password / API key)"]
-    vaultEncrypt["ansible-vault\nencrypt_string"]
-    vaultFile["vault.yml\n(encrypted at rest)"]
-    vcKeyFile["Vault Password File\n(~/.vault_pass)"]
+```d2
+direction: right
 
-    plainSecret --> vaultEncrypt
-    vcKeyFile --> vaultEncrypt
-    vaultEncrypt --> vaultFile
+plainSecret: "Plaintext Secret\n(password / API key" {shape: rectangle}
+vaultEncrypt: "ansible-vault\nencrypt_string" {shape: rectangle}
+vcKeyFile: "Vault Password File\n(~/.vault_pass" {shape: rectangle}
+vaultFile: "vault.yml\n(encrypted at rest" {shape: rectangle}
+mainYml: "group_vars/all/main.yml\n(references vault_ vars" {shape: rectangle}
+playbook: "Playbook\n(uses db_password" {shape: rectangle}
+managedHost: "Managed Host" {shape: rectangle}
 
-    vaultFile --> mainYml["group_vars/all/main.yml\n(references vault_ vars)"]
-    mainYml --> playbook["Playbook\n(uses db_password)"]
-    vcKeyFile -->|decrypt at runtime| playbook
-    playbook -->|over SSH| managedHost["Managed Host"]
+plainSecret -> vaultEncrypt
+vcKeyFile -> vaultEncrypt
+vaultEncrypt -> vaultFile
+vaultFile -> mainYml
+mainYml -> playbook
+vcKeyFile -> playbook
+playbook -> managedHost
 ```
 
 ### Recommended Layout

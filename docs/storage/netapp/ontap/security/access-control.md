@@ -23,20 +23,31 @@ Access Control reference covering RBAC Scope Model, RBAC, Custom Roles, User Log
 
 ## RBAC Scope Model
 
-```mermaid
-graph TD
-    cluster["Cluster\n(admin SVM)"] -->|"role: admin"| clusterAdmin["Full cluster\nadministration"]
-    cluster -->|"role: readonly"| clusterRO["Read-only\ncluster view"]
+```d2
+direction: right
 
-    svm1["SVM: prod-nas"] -->|"role: vsadmin"| svmFull["Full SVM admin\n(protocols, volumes, LIFs)"]
-    svm1 -->|"role: vsadmin-backup"| svmBackup["Snapshot + SnapMirror\nonly"]
-    svm1 -->|"role: vsadmin-readonly"| svmRO["Read-only\nSVM view"]
+cluster: "Cluster\n(admin SVM" {shape: rectangle}
+clusterAdmin: "Full cluster\nadministration" {shape: rectangle}
+clusterRO: "Read-only\ncluster view" {shape: rectangle}
+svm1: "SVM: prod-nas" {shape: rectangle}
+svmFull: "Full SVM admin\n(protocols, volumes, LIFs" {shape: rectangle}
+svmBackup: "Snapshot + SnapMirror\nonly" {shape: rectangle}
+svmRO: "Read-only\nSVM view" {shape: rectangle}
+svm2: "SVM: prod-san" {shape: rectangle}
+customRole: "Minimum privilege\nservice account\n(monitoring, backup" {shape: rectangle}
+user1: "admin account" {shape: rectangle}
+user2: "vsadmin / svc account" {shape: rectangle}
+note: "Custom roles override built-in roles\nAlways apply least-privilege principle" {shape: rectangle}
 
-    svm2["SVM: prod-san"] -->|"custom role"| customRole["Minimum privilege\nservice account\n(monitoring, backup)"]
-
-    user1["admin account"] --> cluster
-    user2["vsadmin / svc account"] --> svm1 & svm2
-    note["Custom roles override built-in roles\nAlways apply least-privilege principle"]
+cluster -> clusterAdmin
+cluster -> clusterRO
+svm1 -> svmFull
+svm1 -> svmBackup
+svm1 -> svmRO
+svm2 -> customRole
+user1 -> cluster
+user2 -> svm1
+svm1 -> svm2
 ```
 
 ## RBAC

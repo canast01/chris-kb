@@ -15,31 +15,32 @@ SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log f
 </div>
 ![SRM — Diagnostics](../../../../assets/virtualization-vmware-srm-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+A: "SRM Issue" {shape: rectangle}
+B: "Collect SRM support bundle\nSRM UI → Admin → Support" {shape: rectangle}
+C: "C" {shape: rectangle}
+D: "Parse vmware-dr-*.log\nFind failed STEP + error" {shape: rectangle}
+E: "Check SRM service on both sites\nverify certificate trust" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "Check vSphere Rep logs\nhbrsrv.log on vRA" {shape: rectangle}
+H: "Check SRA logs\nC:\SRA\logs" {shape: rectangle}
+I: "Test SRM site connectivity\nTCP 443 between vCenters" {shape: rectangle}
+J: "Check vCenter events\nfilter to SRM events" {shape: rectangle}
+K: "Open VMware SR\nsupport.broadcom.com" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([SRM Issue]) --> B[Collect SRM support bundle\nSRM UI → Admin → Support]
-    B --> C{Plan test/failover failed?}
-    C -->|Yes| D[Parse vmware-dr-*.log\nFind failed STEP + error]
-    C -->|No — site pairing error| E[Check SRM service on both sites\nverify certificate trust]
-    D --> F{Error type?}
-    F -->|Replication not synced| G[Check vSphere Rep logs\nhbrsrv.log on vRA]
-    F -->|SRA / array error| H[Check SRA logs\nC:\SRA\logs]
-    F -->|Network / DNS| I[Test SRM site connectivity\nTCP 443 between vCenters]
-    E --> J[Check vCenter events\nfilter to SRM events]
-    G --> K[Open VMware SR\nsupport.broadcom.com]
-    H --> K
-    I --> K
-    J --> K
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,C,F dark
-    class B,D,E,G,H,I,J action
-    class K escalate
+A -> B
+C -> D
+C -> E
+F -> G
+F -> H
+F -> I
+E -> J
+G -> K
+H -> K
+I -> K
+J -> K
 ```
 
 ```d2

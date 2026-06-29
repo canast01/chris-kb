@@ -10,36 +10,42 @@ tags:
 Choose the right vSAN storage policy: FTT level, RAID type (mirror vs erasure coding), encryption, and dedup/compression based on cluster size and requirements.
 </div>
 
-```mermaid
-flowchart TD
-    A([Start: Configure vSAN Storage Policy]) --> B{Failures to tolerate?}
+```d2
+direction: right
 
-    B -->|FTT = 1| C{Cluster has ≥ 6 hosts?}
-    B -->|FTT = 2| D{Cluster has ≥ 6 hosts?}
-    B -->|FTT = 3| E[RAID-1 Mirror FTT=3\nMinimum 7 hosts\n4× storage overhead]
+B: "B" {shape: rectangle}
+E: "RAID-1 Mirror FTT=3\nMinimum 7 hosts\n4× storage overhead" {shape: rectangle}
+C: "C" {shape: rectangle}
+F: "RAID-5 Erasure Coding\n4 hosts min · 1.33× overhead" {shape: rectangle}
+G: "RAID-1 Mirror FTT=1\n3 hosts min · 2× overhead" {shape: rectangle}
+D: "D" {shape: rectangle}
+H: "RAID-6 Erasure Coding\n6 hosts min · 1.5× overhead" {shape: rectangle}
+I: "RAID-1 Mirror FTT=2\n5 hosts min · 3× overhead" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Enable Data-at-Rest Encryption\nKMIP KMS integration required\nvCenter trust authority or external KMS" {shape: rectangle}
+L: "L" {shape: rectangle}
+M: "Dedup + Compression\nCluster-wide · ESXi 6.6+\nNot compatible with D@RE on OSA" {shape: rectangle}
+N: "Compression only\nPer-object · no dedup on ESA\nCompatible with encryption" {shape: rectangle}
+O: "No dedup/compression\nSimplest configuration\nHighest raw capacity usage" {shape: rectangle}
+P: "Policy defined — apply via SPBM\nin vCenter Storage Policies" {shape: rectangle}
+A: "Start: Configure vSAN Storage Policy" {shape: rectangle}
 
-    C -->|Yes| F[RAID-5 Erasure Coding\n4 hosts min · 1.33× overhead]
-    C -->|No — 3 hosts min| G[RAID-1 Mirror FTT=1\n3 hosts min · 2× overhead]
-
-    D -->|Yes| H[RAID-6 Erasure Coding\n6 hosts min · 1.5× overhead]
-    D -->|No — 5 hosts min| I[RAID-1 Mirror FTT=2\n5 hosts min · 3× overhead]
-
-    F --> J{Encryption at rest needed?}
-    G --> J
-    H --> J
-    I --> J
-    E --> J
-
-    J -->|Yes| K[Enable Data-at-Rest Encryption\nKMIP KMS integration required\nvCenter trust authority or external KMS]
-    J -->|No| L
-
-    K --> L{Dedup and compression?}
-
-    L -->|vSAN OSA all-flash| M[Dedup + Compression\nCluster-wide · ESXi 6.6+\nNot compatible with D@RE on OSA]
-    L -->|vSAN ESA — NVMe only| N[Compression only\nPer-object · no dedup on ESA\nCompatible with encryption]
-    L -->|Hybrid or skip| O([No dedup/compression\nSimplest configuration\nHighest raw capacity usage])
-    M --> P([Policy defined — apply via SPBM\nin vCenter Storage Policies])
-    N --> P
+B -> E
+C -> F
+C -> G
+D -> H
+D -> I
+G -> J
+H -> J
+I -> J
+E -> J
+J -> K
+J -> L
+L -> M
+L -> N
+L -> O
+M -> P
+N -> P
 ```
 
 ## Quick reference

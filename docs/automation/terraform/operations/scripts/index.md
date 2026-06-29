@@ -26,43 +26,44 @@ Use this page for practical Terraform scripts, field-tested commands, known issu
 
 ## Multi-Workspace Deploy Pipeline
 
-```mermaid
-graph LR
-    trigger["Trigger\n(TF_DIR + workspaces)"]
-    selectDev["Select workspace:\ndev"]
-    initDev["terraform init\n-reconfigure"]
-    planDev["terraform plan\n-detailed-exitcode"]
-    approvalDev{"Auto-approve\ndev?"}
-    applyDev["terraform apply"]
-    selectStaging["Select workspace:\nstaging"]
-    planStaging["terraform plan"]
-    approvalStaging{"Operator\napproval?"}
-    applyStaging["terraform apply"]
-    selectProd["Select workspace:\nprod"]
-    planProd["terraform plan"]
-    approvalProd{"Operator\napproval?"}
-    applyProd["terraform apply"]
-    done["All workspaces\ndeployed"]
-    abort["ABORT:\nAlert + stop"]
+```d2
+direction: right
 
-    trigger --> selectDev
-    selectDev --> initDev
-    initDev --> planDev
-    planDev --> approvalDev
-    approvalDev -->|Yes| applyDev
-    approvalDev -->|No| approvalDev
-    applyDev -->|OK| selectStaging
-    applyDev -->|Fail| abort
-    selectStaging --> planStaging
-    planStaging --> approvalStaging
-    approvalStaging -->|yes| applyStaging
-    applyStaging -->|OK| selectProd
-    applyStaging -->|Fail| abort
-    selectProd --> planProd
-    planProd --> approvalProd
-    approvalProd -->|yes| applyProd
-    applyProd -->|OK| done
-    applyProd -->|Fail| abort
+trigger: "Trigger\n(TF_DIR + workspaces" {shape: rectangle}
+selectDev: "Select workspace:\ndev" {shape: rectangle}
+initDev: "terraform init\n-reconfigure" {shape: rectangle}
+planDev: "terraform plan\n-detailed-exitcode" {shape: rectangle}
+approvalDev: "approvalDev" {shape: rectangle}
+applyDev: "terraform apply" {shape: rectangle}
+selectStaging: "Select workspace:\nstaging" {shape: rectangle}
+abort: "ABORT:\nAlert + stop" {shape: rectangle}
+planStaging: "terraform plan" {shape: rectangle}
+approvalStaging: "approvalStaging" {shape: rectangle}
+applyStaging: "terraform apply" {shape: rectangle}
+selectProd: "Select workspace:\nprod" {shape: rectangle}
+planProd: "terraform plan" {shape: rectangle}
+approvalProd: "approvalProd" {shape: rectangle}
+applyProd: "terraform apply" {shape: rectangle}
+done: "All workspaces\ndeployed" {shape: rectangle}
+
+trigger -> selectDev
+selectDev -> initDev
+initDev -> planDev
+planDev -> approvalDev
+approvalDev -> applyDev
+approvalDev -> approvalDev
+applyDev -> selectStaging
+applyDev -> abort
+selectStaging -> planStaging
+planStaging -> approvalStaging
+approvalStaging -> applyStaging
+applyStaging -> selectProd
+applyStaging -> abort
+selectProd -> planProd
+planProd -> approvalProd
+approvalProd -> applyProd
+applyProd -> done
+applyProd -> abort
 ```
 
 **What you should see**

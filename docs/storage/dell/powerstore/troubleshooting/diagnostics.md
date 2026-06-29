@@ -15,41 +15,49 @@ Dell PowerStore diagnostic commands: query cluster and hardware health via the R
 </div>
 ![PowerStore — Diagnostics](../../../../assets/storage-dell-powerstore-troubleshooting-diagnostics.svg)
 
+```d2
+direction: right
 
+B: "B" {shape: rectangle}
+C: "GET /api/rest/cluster\nGET /api/rest/hardware select=name,type,lifecycle_state" {shape: rectangle}
+D: "GET /api/rest/volume select=name,state\nGET /api/rest/host_volume_mapping" {shape: rectangle}
+E: "GET /api/rest/event filter=severity=Critical\nPowerStore Manager Alerts page" {shape: rectangle}
+F: "GET /api/rest/fc_port select=name,current_speed,link_state\nGET /api/rest/eth_port" {shape: rectangle}
+G: "GET /api/rest/nas_server select=name,operational_status\nGET /api/rest/file_system" {shape: rectangle}
+H: "GET /api/rest/replication_session\nCheck replication network path between appliances" {shape: rectangle}
+I: "I" {shape: rectangle}
+J: "GET /api/rest/appliance select=name,model,service_tag,health\nCheck hardware component health" {shape: rectangle}
+K: "GET /api/rest/hardware filter failing components\nCheck physical drive or node LED" {shape: rectangle}
+L: "GET /api/rest/host select=name,os_type,initiators\nVerify host is logged in to correct target ports" {shape: rectangle}
+M: "GET /api/rest/event filter=severity=in.Critical.Major limit=50\nIdentify affected component from event description" {shape: rectangle}
+N: "Check cable and SFP physical state\nVerify FC zone contains both initiator and target WWPNs" {shape: rectangle}
+O: "GET /api/rest/nas_server\nCheck NTP sync: NAS depends on accurate time for Kerberos" {shape: rectangle}
+P: "GET /api/rest/replication_session\nCheck replication Ethernet port and MTU" {shape: rectangle}
+Q: "Collect SupportAssist bundle\nOpen Dell support case" {shape: rectangle}
+R: "Provide: PowerStore OS version, appliance serial\nEvent log export and support bundle" {shape: rectangle}
+A: "PowerStore Issue" {shape: rectangle}
 
-
-```mermaid
-graph TD
-    A([PowerStore Issue]) --> B{What type of problem?}
-    B -->|Cluster health warning or unknown fault| C[GET /api/rest/cluster\nGET /api/rest/hardware select=name,type,lifecycle_state]
-    B -->|I/O errors or volume not accessible| D[GET /api/rest/volume select=name,state\nGET /api/rest/host_volume_mapping]
-    B -->|Critical events in Alerts page| E[GET /api/rest/event filter=severity=Critical\nPowerStore Manager Alerts page]
-    B -->|FC or iSCSI host connectivity| F[GET /api/rest/fc_port select=name,current_speed,link_state\nGET /api/rest/eth_port]
-    B -->|NAS or file share issue| G[GET /api/rest/nas_server select=name,operational_status\nGET /api/rest/file_system]
-    B -->|Replication failure| H[GET /api/rest/replication_session\nCheck replication network path between appliances]
-    C --> I{Cluster state?}
-    I -->|Degraded or error| J[GET /api/rest/appliance select=name,model,service_tag,health\nCheck hardware component health]
-    I -->|OK but component alert| K[GET /api/rest/hardware filter failing components\nCheck physical drive or node LED]
-    D --> L[GET /api/rest/host select=name,os_type,initiators\nVerify host is logged in to correct target ports]
-    E --> M[GET /api/rest/event filter=severity=in.Critical.Major limit=50\nIdentify affected component from event description]
-    F --> N[Check cable and SFP physical state\nVerify FC zone contains both initiator and target WWPNs]
-    G --> O[GET /api/rest/nas_server\nCheck NTP sync: NAS depends on accurate time for Kerberos]
-    H --> P[GET /api/rest/replication_session\nCheck replication Ethernet port and MTU]
-    J --> Q[Collect SupportAssist bundle\nOpen Dell support case]
-    K --> Q
-    L --> Q
-    M --> Q
-    N --> Q
-    O --> Q
-    P --> Q
-    Q --> R[Provide: PowerStore OS version, appliance serial\nEvent log export and support bundle]
-
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,I dark
-    class C,D,E,F,G,H,J,K,L,M,N,O,P action
-    class Q,R escalate
+B -> C
+B -> D
+B -> E
+B -> F
+B -> G
+B -> H
+I -> J
+I -> K
+D -> L
+E -> M
+F -> N
+G -> O
+H -> P
+J -> Q
+K -> Q
+L -> Q
+M -> Q
+N -> Q
+O -> Q
+P -> Q
+Q -> R
 ```
 
 ```d2

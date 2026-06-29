@@ -14,31 +14,34 @@ OpenShift troubleshooting: pod failures, node issues, cluster operator problems,
 
 ![OpenShift — Troubleshooting — Diagram](../../../assets/virtualization-openshift-troubleshooting-diagram.svg)
 
-```mermaid
-graph TD
-    A([Start: Issue Reported]) --> B{Check CVO\noc get clusterversion}
-    B -->|Upgrade stuck| C[Review CO conditions\noc get co]
-    B -->|No upgrade issue| D{Check Operators\noc get co}
-    D -->|Degraded CO found| E[Review operator pod logs\noc describe co and oc logs]
-    D -->|All operators OK| F{Check Nodes\noc get nodes}
-    F -->|NotReady node| G[kubelet / CRI-O / disk\noc debug node]
-    F -->|All nodes Ready| H{Check Pods\noc get pods -A}
-    H -->|CrashLoop / Pending| I[oc logs --previous\noc describe pod]
-    H -->|All pods running| J{Check Networking\nDNS / connectivity}
-    J -->|DNS failure| K[Check openshift-dns pods\nnslookup from debug pod]
-    J -->|Network timeout| L[OVN-K status\nNetworkPolicy review]
-    E --> M([Open support case\nwith must-gather])
-    G --> M
-    I --> M
-    K --> M
-    L --> M
+```d2
+direction: right
 
-    classDef dark fill:#1e3a5f,color:#fff
-    classDef action fill:#78350f,color:#fff
-    classDef escalate fill:#991b1b,color:#fff
-    class A,B,D,F,H,J dark
-    class C,E,G,I,K,L action
-    class M escalate
+B: "B" {shape: rectangle}
+C: "Review CO conditions\noc get co" {shape: rectangle}
+D: "D" {shape: rectangle}
+E: "Review operator pod logs\noc describe co and oc logs" {shape: rectangle}
+F: "F" {shape: rectangle}
+G: "kubelet / CRI-O / disk\noc debug node" {shape: rectangle}
+H: "H" {shape: rectangle}
+I: "oc logs --previous\noc describe pod" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Check openshift-dns pods\nnslookup from debug pod" {shape: rectangle}
+L: "OVN-K status\nNetworkPolicy review" {shape: rectangle}
+M: "Open support case\nwith must-gather" {shape: rectangle}
+A: "Start: Issue Reported" {shape: rectangle}
+
+B -> C
+D -> E
+F -> G
+H -> I
+J -> K
+J -> L
+E -> M
+G -> M
+I -> M
+K -> M
+L -> M
 ```
 
 ```d2

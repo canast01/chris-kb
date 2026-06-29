@@ -242,21 +242,6 @@ ps aux | grep Runner.Listener
 
 ## Daily Checks
 
-```mermaid
-flowchart TD
-    start(["Daily health check"]) --> workflowList
-
-    workflowList["gh workflow list\nAll workflows enabled?"]
-    runList["gh run list --limit 20\nFailed runs in last 24h?"]
-    secretList["gh secret list\nExpected secrets present?"]
-    runnerCheck["gh api /repos/OWNER/REPO/actions/runners\nRunners online?"]
-    branchProt["Confirm branch protection rules\nmain: required checks + reviews"]
-
-    workflowList --> runList --> secretList --> runnerCheck --> branchProt
-    branchProt --> result{Issues found?}
-    result -->|No| ok(["Health check passed"])
-    result -->|Yes| investigate(["Investigate and remediate"])
-```
 ```bash
 # Validate using ajv-cli against the schema
 npm install -g ajv-cli

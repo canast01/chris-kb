@@ -12,20 +12,22 @@ Azure Policy compliance reviews evaluate the current state of resources against 
 
 ## Compliance Review Cycle
 
-```mermaid
-flowchart LR
-    trigger["Compliance Scan\nscheduled daily or on-demand"]
-    evaluate["Policy Evaluation\nall resources vs all assignments"]
-    dashboard["Compliance Dashboard\n% compliant per assignment"]
-    nonCompliant{"Non-compliant\nresources found?"}
-    remediate["Create Remediation Task\nor manual fix"]
-    exempt["Create Exemption\nif justified"]
-    report["Compliance Report\nexport for audit"]
+```d2
+direction: right
 
-    trigger --> evaluate --> dashboard --> nonCompliant
-    nonCompliant -- Yes --> remediate & exempt
-    nonCompliant -- No --> report
-    remediate --> trigger
+trigger: "Compliance Scan\nscheduled daily or on-demand" {shape: rectangle}
+evaluate: "Policy Evaluation\nall resources vs all assignments" {shape: rectangle}
+dashboard: "Compliance Dashboard\n% compliant per assignment" {shape: rectangle}
+nonCompliant: "nonCompliant" {shape: rectangle}
+remediate: "Create Remediation Task\nor manual fix" {shape: rectangle}
+exempt: "Create Exemption\nif justified" {shape: rectangle}
+report: "Compliance Report\nexport for audit" {shape: rectangle}
+
+trigger -> evaluate
+evaluate -> dashboard
+dashboard -> nonCompliant
+remediate -> exempt
+remediate -> trigger
 ```
 
 ## Compliance Dashboard

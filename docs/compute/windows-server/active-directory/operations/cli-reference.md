@@ -23,21 +23,35 @@ Active Directory management uses native tools (`repadmin`, `dcdiag`, `nltest`, `
 
 ## Replication Health Triage Flow
 
-```mermaid
-flowchart TD
-    issue["Suspected replication issue"] --> replSummary["repadmin /replsummary\n(high-level success/failure)"]
-    replSummary --> errorsFound{"Errors\nfound?"}
-    errorsFound -->|"yes"| showRepl["repadmin /showrepl *\n(identify failing partner)"]
-    errorsFound -->|"no"| done["Replication healthy"]
-    showRepl --> errorCode{"Error code"}
-    errorCode -->|"1722 RPC unavailable"| checkFw["Check firewall / DNS\nbetween DCs"]
-    errorCode -->|"8453 access denied"| checkPerms["Check replication\npermissions on NC head"]
-    errorCode -->|"8614 quarantine"| checkTombstone["DC offline too long\nCheck tombstone lifetime"]
-    errorCode -->|"-2146893022 SPN error"| checkTime["Check time skew\nw32tm /stripchart"]
-    checkFw --> forceSync["repadmin /syncall /AdeP\n(force full sync after fix)"]
-    checkPerms --> forceSync
-    checkTombstone --> dcdiag["dcdiag /test:replications /v"]
-    checkTime --> forceSync
+```d2
+direction: right
+
+issue: "Suspected replication issue" {shape: rectangle}
+replSummary: "repadmin /replsummary\n(high-level success/failure" {shape: rectangle}
+errorsFound: "Errors\nfound?" {shape: rectangle}
+showRepl: "repadmin /showrepl *\n(identify failing partner" {shape: rectangle}
+done: "Replication healthy" {shape: rectangle}
+errorCode: "Error code" {shape: rectangle}
+checkFw: "Check firewall / DNS\nbetween DCs" {shape: rectangle}
+checkPerms: "Check replication\npermissions on NC head" {shape: rectangle}
+checkTombstone: "DC offline too long\nCheck tombstone lifetime" {shape: rectangle}
+checkTime: "Check time skew\nw32tm /stripchart" {shape: rectangle}
+forceSync: "repadmin /syncall /AdeP\n(force full sync after fix" {shape: rectangle}
+dcdiag: "dcdiag /test:replications /v" {shape: rectangle}
+
+issue -> replSummary
+replSummary -> errorsFound
+errorsFound -> showRepl
+errorsFound -> done
+showRepl -> errorCode
+errorCode -> checkFw
+errorCode -> checkPerms
+errorCode -> checkTombstone
+errorCode -> checkTime
+checkFw -> forceSync
+checkPerms -> forceSync
+checkTombstone -> dcdiag
+checkTime -> forceSync
 ```
 
 ---

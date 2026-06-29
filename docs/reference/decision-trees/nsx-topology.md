@@ -10,36 +10,41 @@ tags:
 Design your NSX topology: overlay vs VLAN transport, T0/T1 gateway placement, Edge cluster sizing, HA model, and north-south routing type.
 </div>
 
-```mermaid
-flowchart TD
-    A([Start: Design NSX Topology]) --> B{Deployment model?}
+```d2
+direction: right
 
-    B -->|Multi-tenant\ndifferent teams or BUs| C{Isolation requirement?}
-    B -->|Single tenant\none org / one team| D[Single T0 gateway\nMultiple T1s per workload zone]
+B: "B" {shape: rectangle}
+D: "Single T0 gateway\nMultiple T1s per workload zone" {shape: rectangle}
+C: "C" {shape: rectangle}
+E: "VRF-Lite on shared T0\nOne routing table per VRF" {shape: rectangle}
+F: "Dedicated T0 per tenant\nSeparate Edge cluster per tenant" {shape: rectangle}
+G: "G" {shape: rectangle}
+H: "Static routes on T0\nNo BGP · manual route config" {shape: rectangle}
+I: "eBGP on T0 uplinks\nPeer with ToR switches\nBFD for fast failover" {shape: rectangle}
+J: "J" {shape: rectangle}
+K: "Edge VM — Small\n2 vCPU · 4 GB RAM" {shape: rectangle}
+L: "Edge VM — Large\n8 vCPU · 32 GB RAM" {shape: rectangle}
+M: "Bare-metal Edge node\nDPDK · SR-IOV NIC required" {shape: rectangle}
+N: "N" {shape: rectangle}
+O: "Active/Standby T0\nOne active Edge at a time\nFast failover via BFD" {shape: rectangle}
+P: "ECMP Active/Active\n2–8 equal-cost paths\nRequires BGP · stateless DFW" {shape: rectangle}
+A: "Start: Design NSX Topology" {shape: rectangle}
 
-    C -->|Shared infra\nlogical separation OK| E[VRF-Lite on shared T0\nOne routing table per VRF]
-    C -->|Strict isolation\nseparate Edge required| F[Dedicated T0 per tenant\nSeparate Edge cluster per tenant]
-
-    D --> G{North-south routing?}
-    E --> G
-    F --> G
-
-    G -->|Lab or simple| H[Static routes on T0\nNo BGP · manual route config]
-    G -->|Production| I[eBGP on T0 uplinks\nPeer with ToR switches\nBFD for fast failover]
-
-    H --> J{Edge throughput?}
-    I --> J
-
-    J -->|Less than 10 Gbps| K[Edge VM — Small\n2 vCPU · 4 GB RAM]
-    J -->|10 to 25 Gbps| L[Edge VM — Large\n8 vCPU · 32 GB RAM]
-    J -->|More than 25 Gbps| M[Bare-metal Edge node\nDPDK · SR-IOV NIC required]
-
-    K --> N{T0 HA model?}
-    L --> N
-    M --> N
-
-    N -->|Simpler — active/standby| O([Active/Standby T0\nOne active Edge at a time\nFast failover via BFD])
-    N -->|Higher throughput| P([ECMP Active/Active\n2–8 equal-cost paths\nRequires BGP · stateless DFW])
+B -> D
+C -> E
+C -> F
+E -> G
+F -> G
+G -> H
+G -> I
+I -> J
+J -> K
+J -> L
+J -> M
+L -> N
+M -> N
+N -> O
+N -> P
 ```
 
 ## Key design decisions

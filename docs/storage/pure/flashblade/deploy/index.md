@@ -44,23 +44,6 @@ This guide covers deploying a Pure Storage FlashBlade (//S or //E series) from p
 
 ---
 
-```mermaid
-flowchart TD
-    s0["Before you begin"]
-    s1["Prerequisites"]
-    s2["Rack and Cable Chassis"]
-    s3["Run Purity//FB Initial Setup"]
-    s4["Configure Network Interfaces"]
-    s5["Create First File System (NFS) or Bucket (S3)"]
-    s6["Configure Replication"]
-    s7["Register with Pure1"]
-    s8["✓ Validate"]
-    s9["✓ Verify"]
-    s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8 --> s9
-    style s8 fill:#2e7d32,color:#fff,stroke:#1b5e20
-    style s9 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
 ## Prerequisites
 
 **Hardware:**

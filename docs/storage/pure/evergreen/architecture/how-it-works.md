@@ -51,15 +51,17 @@ Evergreen//One (STaaS consumption model) is covered in a separate section.
 
 ## Controller Refresh Model
 
-```mermaid
-graph LR
-  A["FlashArray Gen N\n(current)"] -->|"Non-disruptive\nhardware swap"| B["FlashArray Gen N+1\n(upgraded controllers)"]
-  B -->|"Evergreen//Forever"| C["FlashArray Gen N+2"]
-  A & B & C --> DATA[("Data — always online\nno migration required")]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class A,B,C ctrl
-  class DATA store
+```d2
+direction: right
+
+A: "FlashArray Gen N\n(current" {shape: rectangle}
+B: "FlashArray Gen N+1\n(upgraded controllers" {shape: rectangle}
+C: "FlashArray Gen N+2" {shape: rectangle}
+DATA: "Data — always online\nno migration required" {shape: rectangle}
+
+A -> B
+B -> C
+C -> DATA
 ```
 
 ## HA Topology

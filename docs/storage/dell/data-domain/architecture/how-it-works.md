@@ -42,20 +42,19 @@ Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance built aro
 
 ## Architecture
 
-```mermaid
-graph TB
-  BU(["Backup Servers\nNetBackup / Commvault / Veeam"]) -->|"DDBoost / NFS / CIFS / VTL"| DD["Dell Data Domain\n(dedup + compression)"]
-  DD -->|"DD Replicator\nTCP 2051"| DDDR["Remote Data Domain\n(DR copy)"]
-  DD --> CLOUD["Cloud Tier\nS3 / Azure Blob — long-term"]
-  DD --> VTL["Virtual Tape Library\n(optional — FC)"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  class DD ctrl
-  class BU host
-  class CLOUD cloud
-  class DDDR dr
+```d2
+direction: right
+
+BU: "Backup Servers\nNetBackup / Commvault / Veeam" {shape: rectangle}
+DD: "Dell Data Domain\n(dedup + compression" {shape: rectangle}
+DDDR: "Remote Data Domain\n(DR copy" {shape: rectangle}
+CLOUD: "Cloud Tier\nS3 / Azure Blob — long-term" {shape: rectangle}
+VTL: "Virtual Tape Library\n(optional — FC" {shape: rectangle}
+
+BU -> DD
+DD -> DDDR
+DD -> CLOUD
+DD -> VTL
 ```
 
 DDBoost reduces network traffic by ~50% via source-side deduplication — only unique segments are sent to the DD appliance.

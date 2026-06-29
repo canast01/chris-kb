@@ -22,23 +22,24 @@ Access Control reference covering Terraform RBAC and Backend Access Model, Least
 
 ## Terraform RBAC and Backend Access Model
 
-```mermaid
-graph TD
-    ciRunner["CI/CD Runner\n(GitHub Actions / GitLab)"]
-    tfRole["IAM Role:\nterraform-automation\n(least privilege)"]
-    s3State["S3 State Bucket\n(private + encrypted)"]
-    dynamoLock["DynamoDB Lock Table"]
-    targetResources["Target Resources\n(EC2, RDS, VPC...)"]
-    humanReview["Human Reviewer\n(read-only credentials)"]
-    auditLog["CloudTrail / Audit Log"]
+```d2
+direction: right
 
-    ciRunner -->|OIDC assume role| tfRole
-    tfRole -->|GetObject PutObject| s3State
-    tfRole -->|PutItem GetItem| dynamoLock
-    tfRole -->|provision| targetResources
-    humanReview -->|read-only| s3State
-    tfRole --> auditLog
-    humanReview --> auditLog
+ciRunner: "CI/CD Runner\n(GitHub Actions / GitLab" {shape: rectangle}
+tfRole: "IAM Role:\nterraform-automation\n(least privilege" {shape: rectangle}
+s3State: "S3 State Bucket\n(private + encrypted" {shape: rectangle}
+dynamoLock: "DynamoDB Lock Table" {shape: rectangle}
+targetResources: "Target Resources\n(EC2, RDS, VPC..." {shape: rectangle}
+humanReview: "Human Reviewer\n(read-only credentials" {shape: rectangle}
+auditLog: "CloudTrail / Audit Log" {shape: rectangle}
+
+ciRunner -> tfRole
+tfRole -> s3State
+tfRole -> dynamoLock
+tfRole -> targetResources
+humanReview -> s3State
+tfRole -> auditLog
+humanReview -> auditLog
 ```
 
 ## Workspace and Environment Separation

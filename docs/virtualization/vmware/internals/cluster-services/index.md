@@ -122,19 +122,21 @@ DRS balances CPU and memory load across the hosts in a cluster by live-migrating
 - Conservative → DRS only moves VMs when the imbalance is severe (large benefit)
 - Aggressive → DRS moves VMs for smaller improvements
 
-```mermaid
-flowchart TD
-    A[DRS runs every 5 min] --> B{Calculate DRS Score\nfor each VM}
-    B --> C{Any VM score\nbelow threshold?}
-    C -- No --> D[No action needed\nCluster balanced]
-    C -- Yes --> E[Identify target host\nwith spare capacity]
-    E --> F{Automation level?}
-    F -- Fully Automated --> G[vMotion VM automatically]
-    F -- Partially Automated --> H[Generate recommendation]
-    F -- Manual --> H
-    H --> I[Admin reviews and\napplies recommendation]
-    G --> J[Re-evaluate cluster score]
-    I --> J
+```d2
+direction: right
+
+H: "Generate recommendation" {shape: rectangle}
+I: "Admin reviews and\napplies recommendation" {shape: rectangle}
+G: "vMotion VM automatically" {shape: rectangle}
+J: "Re-evaluate cluster score" {shape: rectangle}
+A: "DRS runs every 5 min" {shape: rectangle}
+B: "B" {shape: rectangle}
+D: "No action needed\nCluster balanced" {shape: rectangle}
+E: "Identify target host\nwith spare capacity" {shape: rectangle}
+
+H -> I
+G -> J
+I -> J
 ```
 
 ### Affinity and Anti-Affinity Rules
