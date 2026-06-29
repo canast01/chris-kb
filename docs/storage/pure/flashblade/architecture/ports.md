@@ -98,6 +98,25 @@ curl -sk -o /dev/null -w "%{http_code}" http://<flashblade-s3-vip>:9000/
 purealertalert test
 ```
 
+
+```text title="Expected output"
+200
+Export list for 192.168.10.45:
+/data/nfs-share	192.168.1.0/24
+/data/backup     192.168.1.0/24
+mount.nfs: mounting 192.168.10.45:/data/nfs-share on /mnt/test
+200
+Name: purealertalert
+Enabled: true
+Last Test: 2024-01-15T14:32:18Z
+Status: Connected to Pure1 Metadata Service
+Test Result: PASSED
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error occurs, verify HTTPS is enabled on management interface).
+    **`mount.nfs: access denied by server while mounting 192.168.10.45:/data/nfs-share`** — Verify the client IP is in the NFS export ACL and that the export path exists on FlashBlade.
+    **`purealertalert: command not found`** — Ensure you are logged into the FlashBlade CLI via SSH or console; this command only runs in Purity//FB shell, not on external hosts.
 ## See also
 
 - [Pure Storage FlashBlade — Architecture](../how-it-works/)

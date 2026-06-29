@@ -127,6 +127,38 @@ purefb fs destroy <fs_name>
 purefb fs eradicate <fs_name>
 ```
 
+
+```text title="Expected output"
+# purefb fs list
+Name                    Size      Provisioned   Used       NFS v3    NFS v4.1  SMB
+data-prod               10.0T     10.0T         2.3T       enabled   enabled   disabled
+backup-share            5.0T      5.0T          1.8T       enabled   disabled  disabled
+archive-old             20.0T     20.0T         18.5T      disabled  disabled  enabled
+
+# purefb fs create --name nfs-export --size 10T --nfs-v3-enabled true --nfs-v4-1-enabled true
+Name                    Size      Provisioned   NFS v3    NFS v4.1
+nfs-export              10.0T     10.0T         enabled   enabled
+
+# purefb fs update nfs-export --nfs-rules "*(rw,no_root_squash)" --nfs-v4-1-enabled true
+Name                    Size      NFS Rules
+nfs-export              10.0T     *(rw,no_root_squash)
+
+# mount -t nfs 192.168.1.50:/nfs-export /mnt/nfs-export
+(no output — command completes silently)
+
+# purefb fs update nfs-export --size 20T
+Name                    Size      Provisioned
+nfs-export              20.0T     20.0T
+
+# purefb fs destroy nfs-export
+Name                    Destroyed
+nfs-export              true
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid filesystem name '<fs_name>'`** — Replace `<fs_name>` with an actual filesystem name (e.g., `purefb fs create --name my-nfs-fs --size 10T --nfs-v3-enabled true`).
+    **`mount.nfs: access denied by server while mounting 192.168.1.50:/nfs-export`** — Verify NFS export rules are correctly set and the client IP is included in the rules (e.g., `purefb fs update nfs-export --nfs-rules "192.168.1.0/24(rw)"`).
+    **`Error: Filesystem nfs-export not found`** — Confirm the filesystem exists with `purefb fs list` before attempting to update or destroy it.
 ## Object Services (S3)
 
 FlashBlade provides S3-compatible object storage through accounts, buckets, and access keys.
@@ -144,6 +176,27 @@ aws s3 ls --endpoint-url https://<flashblade_s3_vip>/
 aws s3 cp local_file.txt s3://<bucket_name>/ --endpoint-url https://<flashblade_s3_vip>/
 ```
 
+
+```text title="Expected output"
+Name                          Account                       Created
+test-bucket-01                prod-account                  2024-01-15T09:23:44Z
+archive-bucket-02             dev-account                   2024-01-14T16:45:12Z
+backup-bucket-03              prod-account                  2024-01-10T11:02:33Z
+
+Account created successfully: prod-account
+User created successfully: s3-user
+Access Key created successfully
+Access Key ID: PKABC123DEF456GHI789
+Secret Access Key: +jK9mL2nOpQrStUvWxYz1aB3cD4eF5gH6iJ7kL8m
+
+2024-01-15 14:32:18       1024 local_file.txt
+upload: ./local_file.txt to s3://test-bucket-01/local_file.txt
+```
+
+!!! warning "Common errors"
+    **`error: account '<account_name>' does not exist`** — Create the object-store-account before creating users with `purefb object-store-account create --name <account_name>`.
+    **`An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.`** — Verify the AWS credentials are set correctly with `aws configure` and match the access key created via `purefb object-store-access-key create`.
+    **`error: unable to connect to https://<flashblade_s3_vip>/: certificate verify failed`** — Add `--no-verify-ssl` flag to the aws s3 command or configure your environment to trust the FlashBlade's self-signed certificate.
 ## Purity//FB Data Services
 
 | Component | Description |
@@ -170,6 +223,53 @@ purefb replication list        # ActiveDR links and lag
 purefb network interface list  # data and replication interface status
 ```
 
+
+```text title="Expected output"
+Name          Status    Version           Capacity
+flashblade-1  Optimal   5.3.2             365.3 TB
+flashblade-2  Optimal   5.3.2             365.3 TB
+
+Name     Status    Capacity      Used       Health
+blade-1  Optimal   365.3 TB      142.8 TB   OK
+blade-2  Optimal   365.3 TB      156.2 TB   OK
+blade-3  Optimal   365.3 TB      128.5 TB   OK
+
+Name     Type       Status    Count
+FM-1     Controller Optimal   2
+PSU-1    Power      Optimal   4
+FAN-1    Cooling    Optimal   8
+
+Severity  Code    Message                              Time
+Warning   PFA001  Disk predictive failure imminent     2024-01-15T09:42:31Z
+Critical  TEMP02  Blade-2 temperature threshold high   2024-01-15T08:15:22Z
+
+Name              Provisioned  Used       Snapshots
+data-prod         50.0 TB      38.2 TB    12
+archive-backup    100.0 TB     67.5 TB    8
+logs-retention    25.0 TB      19.3 TB    4
+
+Name              Owner        Size       Created
+backup-archive    eng-team     2.3 TB     2024-01-10T14:22:00Z
+metrics-store     ops-team     5.8 TB     2024-01-12T09:15:00Z
+
+Name                           Type       Created              Size
+data-prod.20240115-0200       Filesystem 2024-01-15T02:00:00Z 38.2 TB
+backup-archive.20240114-2300  Object     2024-01-14T23:00:00Z 2.3 TB
+
+Source Array      Target Array      Status    Lag (ms)
+flashblade-1      flashblade-dr     Active    45
+flashblade-1      flashblade-dr2    Active    128
+
+Name      IP Address       Status    Role
+eth0      10.21.100.45     Up        Data
+eth1      10.21.100.46     Up        Data
+eth2      10.22.50.10      Up        Replication
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused (10.21.100.45:443)`** — Verify the FlashBlade management IP is reachable and the REST API service is running with `purefb network interface list`.
+    **`Error: Invalid credentials`** — Confirm your API token is valid and not expired by re-authenticating with `purefb login`.
+    **`Error: Array not found`** — Ensure the array name or IP is correctly configured in your purefb connection settings.
 ---
 
 ## See also

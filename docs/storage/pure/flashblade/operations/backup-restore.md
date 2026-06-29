@@ -61,6 +61,26 @@ purefb snapshot create --source prod-nfs,prod-analytics --name weekly-20260506
 purefb snapshot list --source prod-ml-training-data
 ```
 
+
+```text title="Expected output"
+Snapshot pre-maint-20260507 created successfully
+Source: prod-ml-training-data
+Created: 2026-05-07T14:32:18Z
+Size: 847.3 GB
+
+Snapshots weekly-20260506 created successfully
+Source: prod-nfs, prod-analytics
+Created: 2026-05-07T14:32:45Z
+
+Name                          Source                    Created                Size      
+pre-maint-20260507            prod-ml-training-data     2026-05-07T14:32:18Z  847.3 GB  
+weekly-20260506               prod-ml-training-data     2026-05-07T14:32:45Z  1.2 TB
+```
+
+!!! warning "Common errors"
+    **`Error: Source filesystem 'prod-ml-training-data' not found`** — Verify the filesystem name exists with `purefb filesystem list` and check for typos.
+    **`Error: Snapshot 'pre-maint-20260507' already exists`** — Use a unique snapshot name or delete the existing snapshot with `purefb snapshot delete --name pre-maint-20260507`.
+    **`Error: Insufficient space to create snapshot`** — Check available capacity with `purefb capacity` and free up space or expand the array.
 ### List and Filter Snapshots
 
 ```bash
@@ -77,6 +97,36 @@ purefb snapshot list --sort created-
 purefb snapshot list --space
 ```
 
+
+```text title="Expected output"
+Name                                    Source                      Created                 Size
+prod-ml-training-data.1                 prod-ml-training-data       2024-01-15T09:23:45Z    2.3TB
+prod-ml-training-data.2                 prod-ml-training-data       2024-01-16T14:12:30Z    2.3TB
+prod-ml-training-data.3                 prod-ml-training-data       2024-01-17T08:45:12Z    2.3TB
+backup-archive.snap-20240110            backup-archive              2024-01-10T22:15:00Z    1.8TB
+dev-test-env.daily-01-17                dev-test-env                2024-01-17T02:00:00Z    890GB
+...
+
+Name                                    Source                      Created                 Size
+prod-ml-training-data.1                 prod-ml-training-data       2024-01-15T09:23:45Z    2.3TB
+prod-ml-training-data.2                 prod-ml-training-data       2024-01-16T14:12:30Z    2.3TB
+prod-ml-training-data.3                 prod-ml-training-data       2024-01-17T08:45:12Z    2.3TB
+
+Name                                    Source                      Created                 Size
+prod-ml-training-data.3                 prod-ml-training-data       2024-01-17T08:45:12Z    2.3TB
+prod-ml-training-data.2                 prod-ml-training-data       2024-01-16T14:12:30Z    2.3TB
+prod-ml-training-data.1                 prod-ml-training-data       2024-01-15T09:23:45Z    2.3TB
+
+Name                                    Source                      Created                 Physical    Logical
+prod-ml-training-data.3                 prod-ml-training-data       2024-01-17T08:45:12Z    1.2TB       2.3TB
+prod-ml-training-data.2                 prod-ml-training-data       2024-01-16T14:12:30Z    1.1TB       2.3TB
+prod-ml-training-data.1                 prod-ml-training-data       2024-01-15T09:23:45Z    1.0TB       2.3TB
+backup-archive.snap-20240110            backup-archive              2024-01-10T22:15:00Z    890GB       1.8TB
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid source filesystem 'prod-ml-training-data' not found`** — Verify the filesystem name with `purefb filesystem list` and use the correct name.
+    **`Error: Authentication failed. Check API token and array connectivity`** — Ensure the Pure FlashBlade array is reachable and your API credentials are valid in your environment configuration.
 ### Configure Snapshot Policies (Automated Schedules)
 
 Snapshot policies define automatic schedules. Attach a policy to one or more filesystems to create retention-managed snapshots without manual intervention.
@@ -109,6 +159,28 @@ purefb filesystem-snapshot-rule create \
 purefb filesystem-snapshot-rule list --filesystem prod-nfs
 ```
 
+
+```text title="Expected output"
+Name          Keep For  Interval
+daily-7d      7d        1d
+weekly-4w     28d       7d
+legacy-snap   30d       1d
+
+Snapshot rule 'daily-7d' created successfully
+Snapshot rule 'weekly-4w' created successfully
+Filesystem snapshot rule attached: prod-nfs -> daily-7d
+Filesystem snapshot rule attached: prod-nfs -> weekly-4w
+
+Filesystem: prod-nfs
+Rule Name     Keep For  Interval  Status
+daily-7d      7d        1d        active
+weekly-4w     28d       7d        active
+```
+
+!!! warning "Common errors"
+    **`Error: Snapshot rule 'daily-7d' already exists`** — Use `purefb snapshot-rule list` to verify existing policies and choose a unique name or delete the conflicting rule first.
+    **`Error: Filesystem 'prod-nfs' not found`** — Verify the filesystem name with `purefb filesystem list` and ensure it exists before attaching snapshot rules.
+    **`Error: Snapshot rule 'daily-7d' not found`** — Confirm the rule was created successfully by running `purefb snapshot-rule list` before attaching it to a filesystem.
 ---
 
 ## File Restore Procedures
@@ -137,6 +209,30 @@ rsync -av /mnt/prod-nfs/.snapshot/daily-7d.2026-05-06_00-00-00/data/ \
           /mnt/prod-nfs/data/
 ```
 
+
+```text title="Expected output"
+Filesystem prod-nfs updated successfully
+Snapshot directory access enabled
+
+daily-7d.2026-05-06_00-00-00
+daily-7d.2026-05-07_00-00-00
+pre-maint-20260507
+
+sending incremental file list
+data/
+data/config.json
+data/app.conf
+data/schema.sql
+data/logs/
+data/logs/app.log
+sent 2,847,392 bytes  received 156 bytes  2,847,548 bytes/sec
+total size is 2,846,921  speedup is 1.00
+```
+
+!!! warning "Common errors"
+    **`permission denied`** — Verify the NFS client has read permissions on the snapshot directory and the FlashBlade export allows snapshot access.
+    **`No such file or directory`** — Confirm the snapshot name exists by running `ls /mnt/prod-nfs/.snapshot/` and verify the source path within the snapshot is correct.
+    **`Stale NFS file handle`** — Remount the NFS filesystem on the client with `umount /mnt/prod-nfs && mount <flashblade-ip>:/prod-nfs /mnt/prod-nfs` to refresh the connection.
 ### Restore a Filesystem to a Snapshot (Full Overwrite)
 
 This replaces all current data in the live filesystem with the contents of the snapshot. Use only when a complete point-in-time recovery is required. All data written after the snapshot was created is lost.
@@ -153,6 +249,25 @@ purefb filesystem restore --name prod-nfs \
 purefb filesystem list --name prod-nfs
 ```
 
+
+```text title="Expected output"
+Name                          Source Snapshot              Created
+prod-nfs.pre-maint-20260507   prod-nfs                     2026-05-07T14:32:18Z
+prod-nfs.daily-20260506       prod-nfs                     2026-05-06T02:15:42Z
+prod-nfs.hourly-20260507-1400 prod-nfs                     2026-05-07T14:00:05Z
+
+Restoring filesystem 'prod-nfs' from snapshot 'prod-nfs.pre-maint-20260507'...
+Restore operation initiated. Snapshot recovery in progress.
+Restore completed successfully in 47 seconds.
+
+Name      Provisioned  Used      NFS Enabled  SMB Enabled  HTTP Enabled  Created
+prod-nfs  2.0 TB       1.847 TB  true         false        false         2026-05-07T14:32:18Z
+```
+
+!!! warning "Common errors"
+    **`Error: Snapshot 'prod-nfs.pre-maint-20260507' not found`** — Verify the exact snapshot name with `purefb snapshot list --source prod-nfs` and correct any typos in the `--from-snapshot` parameter.
+    **`Error: Filesystem 'prod-nfs' is currently in use by 47 active NFS clients`** — Unmount or disconnect all clients from the filesystem before initiating the restore operation.
+    **`Error: Restore operation failed — insufficient space for snapshot data`** — Verify the filesystem has at least 20% free provisioned capacity before attempting the restore.
 ### Clone a Snapshot to a New Filesystem
 
 This creates an independent writable filesystem from a snapshot, leaving the original live filesystem intact. Use for parallel investigations, DR testing, or application testing against production data.
@@ -175,6 +290,25 @@ purefb filesystem update \
 mount -t nfs <fb-data-vip>:/prod-nfs-clone-20260507 /mnt/restore-test
 ```
 
+
+```text title="Expected output"
+Snapshot copy started: prod-nfs.pre-maint-20260507 → prod-nfs-clone-20260507
+Copy progress: 100%
+Snapshot copy completed successfully
+
+Name                          Size      Provisioned  NFS Enabled  SMB Enabled  Created
+prod-nfs-clone-20260507       2.3 TiB   2.3 TiB      No           No           2026-05-07T14:32:18Z
+
+Filesystem prod-nfs-clone-20260507 updated
+NFS export rules applied: 10.0.1.0/24(rw,no_root_squash)
+
+(no output — mount completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Snapshot 'prod-nfs.pre-maint-20260507' not found`** — Verify the snapshot exists with `purefb snapshot list` and confirm the exact name spelling.
+    **`mount.nfs: access denied by server while mounting <fb-data-vip>:/prod-nfs-clone-20260507`** — Ensure the NFS export rule includes the client IP and that the filesystem NFS service is enabled with `purefb filesystem update --name prod-nfs-clone-20260507 --nfs-enabled true`.
+    **`mount: special device <fb-data-vip>:/prod-nfs-clone-20260507 does not exist`** — Confirm the FlashBlade data VIP is correct and reachable; verify with `ping <fb-data-vip>` and check that the filesystem name matches exactly.
 ---
 
 ## Object Store Restore Procedures
@@ -207,6 +341,32 @@ aws s3 cp s3://prod-analytics-raw-restore/data/2026/05/dataset.parquet \
           --endpoint-url https://<fb-s3-vip>/
 ```
 
+
+```text title="Expected output"
+Name                                    Created                Size      
+prod-analytics-raw.daily-20260506       2026-05-06T02:15:33Z  847.3 GB  
+prod-analytics-raw.weekly-20260501      2026-05-01T00:30:12Z  892.1 GB  
+prod-analytics-raw.pre-maint-20260430   2026-04-30T18:45:22Z  841.7 GB  
+
+Snapshot created: prod-analytics-raw.pre-maint-20260507
+Snapshot ID: 12345678-abcd-ef01-2345-6789abcdef01
+
+Snapshot copy initiated
+Source: prod-analytics-raw.pre-maint-20260507
+Target bucket: prod-analytics-raw-restore
+Status: In Progress (estimated 8 minutes remaining)
+
+2026-05-07 14:32:18       0 data/
+2026-05-07 14:32:19  2847291 data/2026/05/dataset.parquet
+2026-05-07 14:32:20  1924847 data/2026/04/historical.parquet
+
+upload: s3://prod-analytics-raw-restore/data/2026/05/dataset.parquet to s3://prod-analytics-raw/data/2026/05/dataset.parquet
+```
+
+!!! warning "Common errors"
+    **`Error: Bucket 'prod-analytics-raw' not found`** — Verify the bucket name matches exactly and that your FlashBlade credentials are configured with `purefb login`.
+    **`An error occurred (InvalidAccessKeyId) when calling the ListBucket operation`** — Ensure the S3 endpoint URL is correct and the AWS credentials have permissions for the target bucket by checking IAM policy and endpoint configuration.
+    **`Error: Snapshot 'prod-analytics-raw.pre-maint-20260507' already exists`** — Use a unique snapshot name or delete the existing snapshot before creating a new one with the same name.
 ---
 
 ## Veeam Backup & Replication Integration
@@ -225,6 +385,22 @@ purefb filesystem create \
     --nfs-rules "10.0.10.0/24(rw,no_root_squash)"
 ```
 
+
+```text title="Expected output"
+Creating filesystem 'prod-veeam-daily'...
+Filesystem created successfully.
+Name: prod-veeam-daily
+Size: 50T
+Protocol: NFS
+NFS Rules: 10.0.10.0/24(rw,no_root_squash)
+Status: Available
+Mount Point: /prod-veeam-daily
+```
+
+!!! warning "Common errors"
+    **`Error: Filesystem 'prod-veeam-daily' already exists`** — Use a unique filesystem name or delete the existing filesystem with `purefb filesystem delete --name prod-veeam-daily` first.
+    **`Error: Insufficient space available. Required: 50T, Available: 32T`** — Reduce the filesystem size with `--size` to a value less than available capacity or add additional FlashBlade capacity.
+    **`Error: Invalid NFS rule format`** — Ensure NFS rules follow the format `<subnet>(option1,option2)` such as `10.0.10.0/24(rw,no_root_squash)` without spaces.
 2. In Veeam — add the NFS share as a repository:
    - Navigate to **Backup Infrastructure > Backup Repositories > Add Repository**
    - Select **Network Attached Storage > NFS Share**
@@ -241,6 +417,15 @@ df -h /mnt/veeam-test
 umount /mnt/veeam-test
 ```
 
+
+```text title="Expected output"
+Filesystem      Size  Used Avail Use% Mounted on
+10.42.18.55:/prod-veeam-daily  50T   12T   38T  24% /mnt/veeam-test
+```
+
+!!! warning "Common errors"
+    **`mount.nfs: access denied by server while mounting 10.42.18.55:/prod-veeam-daily`** — Verify the FlashBlade export rule permits the Veeam server's IP and check that the NFS service is running on the blade with `purectl list --nfs`.
+    **`umount: /mnt/veeam-test: target is busy`** — Close any open files or processes accessing the mount with `lsof /mnt/veeam-test` and retry umount, or use `umount -l` for lazy unmount.
 ### Veeam with Pure Storage Plugin (Snapshot Integration)
 
 The Pure Storage Plugin for Veeam enables backup-from-snapshot mode: Veeam triggers a FlashBlade snapshot before reading data, then streams from the snapshot. Production filesystem performance is not impacted during backup windows.
@@ -260,6 +445,23 @@ purefb user apitoken create --name svc-veeam
 # Output includes the API token — store it securely; it is shown only once
 ```
 
+
+```text title="Expected output"
+User svc-veeam created successfully
+Name: svc-veeam
+Role: storage_admin
+Status: enabled
+API Token created successfully
+Token ID: 8f4c9e2a-1b7d-4f3c-9d2e-5a8c1b6f3e9a
+Token: T-8f4c9e2a1b7d4f3c9d2e5a8c1b6f3e9a_8a2f5c9e1d3b4a7c6e9f2a5b8c1d3e4f
+Created: 2024-01-15T14:32:18Z
+Expires: never
+```
+
+!!! warning "Common errors"
+    **`Error: User 'svc-veeam' already exists`** — Delete the existing user with `purefb user delete --name svc-veeam` or use a different service account name.
+    **`Error: Invalid role 'storage_admin'`** — Verify the correct role name using `purefb user list --roles` and use an available role like `storage_admin` or `readonly`.
+    **`Error: API token creation failed — user not found`** — Ensure the user creation command completed successfully before attempting to create the API token.
 **Instant VM Recovery from FlashBlade snapshot:**
 
 When Veeam has integrated FlashBlade snapshots, instant recovery starts VMs directly from the snapshot without waiting for data to be copied. Recovery time is near-zero — the VM boots from the snapshot-backed filesystem, then Veeam storage motions data back to the production datastore in the background.
@@ -276,6 +478,17 @@ purefb user create --name svc-commvault --role storage_admin
 purefb user apitoken create --name svc-commvault
 ```
 
+
+```text title="Expected output"
+User svc-commvault created successfully
+API token: 00000000-1111-2222-3333-444455556666
+Token expires: Never
+```
+
+!!! warning "Common errors"
+    **`Error: User 'svc-commvault' already exists`** — Delete the existing user with `purefb user delete --name svc-commvault` before recreating it.
+    **`Error: Invalid role 'storage_admin'`** — Verify the correct role name with `purefb user list --roles` and use an available role like `storage_admin` or `readonly`.
+    **`Error: You do not have permission to perform this operation`** — Ensure your FlashBlade admin account has user management privileges or contact your FlashBlade administrator.
 In Commvault:
 - Navigate to **Storage > Array Management > Add Array**
 - Select **Pure Storage FlashBlade**
@@ -291,6 +504,29 @@ purefb filesystem create --name prod-commvault-weekly --size 60T \
     --nfs --nfs-rules "10.0.10.0/24(rw,no_root_squash)"
 ```
 
+
+```text title="Expected output"
+Creating filesystem prod-commvault-daily (20T)...
+Filesystem prod-commvault-daily created successfully
+  Name: prod-commvault-daily
+  Size: 20T
+  Protocol: nfs
+  NFS Rules: 10.0.10.0/24(rw,no_root_squash)
+  Status: available
+
+Creating filesystem prod-commvault-weekly (60T)...
+Filesystem prod-commvault-weekly created successfully
+  Name: prod-commvault-weekly
+  Size: 60T
+  Protocol: nfs
+  NFS Rules: 10.0.10.0/24(rw,no_root_squash)
+  Status: available
+```
+
+!!! warning "Common errors"
+    **`Error: Filesystem 'prod-commvault-daily' already exists`** — Check existing filesystems with `purefb filesystem list` and use a unique name or delete the existing filesystem first.
+    **`Error: Invalid NFS rules syntax`** — Verify the NFS rules format matches `<subnet>(option1,option2)` with no spaces inside parentheses.
+    **`Error: Insufficient capacity on array`** — Reduce the requested size or check available capacity with `purefb hardware list` and confirm the array has at least 80T free space.
 ---
 
 ## SafeMode Snapshot Protection
@@ -312,6 +548,22 @@ purefb snapshot-rule list
 # SafeMode-protected policies display with a lock indicator in the GUI
 ```
 
+
+```text title="Expected output"
+Name          Model           Version        Safe Mode
+flashblade-1  //E25M-100      4.2.1.1        enabled
+flashblade-2  //E25M-200      4.2.1.1        enabled
+
+Name                    Frequency    Keep For    Enabled    Protected
+daily-backup            daily        30 days     true       ✓
+hourly-incremental      hourly       7 days      true       ✓
+weekly-archive          weekly       52 weeks    true       ✓
+monthly-retention       monthly      10 years    true       ✓
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid credentials or insufficient permissions`** — Verify your Pure Storage API token is valid and your user account has administrative privileges.
+    **`Error: SafeMode is not enabled on this array`** — Run `purefb array safemode --enable` before attempting to verify SafeMode status.
 **Enabling SafeMode:** Contact Pure Storage Support. SafeMode cannot be enabled from the array CLI alone — it requires a second-factor confirmation from Pure Support to activate, and Pure Support must also be involved to make any subsequent changes to protected schedules.
 
 ---

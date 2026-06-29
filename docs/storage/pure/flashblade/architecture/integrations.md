@@ -86,6 +86,18 @@ FlashBlade phones home to Pure1 automatically over HTTPS once registered.
 ```bash
 purefb array list --phonehome
 ```
+
+```text title="Expected output"
+Name                          Status    Phonehome  Model          Version
+flashblade-prod-01            Online    Enabled    FB20012        4.10.5
+flashblade-dr-02              Online    Enabled    FB60012        4.10.5
+flashblade-test-03            Offline   Disabled   FB20012        4.9.8
+flashblade-backup-04          Online    Enabled    FB60012        4.10.5
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid credentials or unable to connect to management IP`** — Verify the FlashBlade management IP is reachable and your API token is valid via `purefb list --help` to confirm authentication setup.
+    **`Error: Command 'purefb' not found`** — Install the Pure Storage Python SDK with `pip install purestorage` and ensure it is in your system PATH.
 ```bash
 ## Log in and obtain a session token
 curl -s -k -X POST "https://<fb_ip>/api/login" \
@@ -101,10 +113,43 @@ curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" \
 curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" \
   -H "x-auth-token: <api_token>" | jq .
 ```
+
+```text title="Expected output"
+{
+  "items": [
+    {
+      "id": "5483e4f8-1234-5678-abcd-ef1234567890",
+      "name": "flashblade-prod-01",
+      "status": "healthy",
+      "version": "4.2.1",
+      "capacity": {
+        "total": 107374182400,
+        "used": 42949672960
+      }
+    }
+  ],
+  "continuation_token": null
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in examples, but ensure it's not removed).
+    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is correct and the authentication token/cookie is valid; test with `curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" -H "x-auth-token: <api_token>"` without piping to jq first.
+    **`curl: (401) Unauthorized`** — Confirm the API token or username/password credentials are correct and the user has sufficient permissions on the FlashBlade system.
 ```bash
 ## On the array CLI
 purefb admin apitoken create <username>
 ```
+
+```text title="Expected output"
+API Token created for user 'admin'
+Token: 2b813e4a-7f2c-4d91-b8e3-9c1a5f7d2e6b
+Expires: 2025-12-31T23:59:59Z
+```
+
+!!! warning "Common errors"
+    **`Error: User '<username>' does not exist`** — Verify the username exists on the array with `purefb admin list` before creating a token.
+    **`Error: API token limit reached for user`** — Delete an existing token with `purefb admin apitoken delete <username> --token=<token_id>` before creating a new one.
 ```bash
 ## Get array status and version
 GET /api/2.x/arrays
@@ -125,6 +170,85 @@ GET /api/2.x/buckets
 GET /api/2.x/array-connections
 ```
 
+
+```text title="Expected output"
+GET /api/2.x/arrays
+{
+  "items": [
+    {
+      "id": "0b2a3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+      "name": "flashblade-prod-01",
+      "version": "4.2.1",
+      "status": "healthy",
+      "capacity": 107374182400,
+      "used": 53687091200
+    }
+  ]
+}
+
+GET /api/2.x/file-systems?space=true
+{
+  "items": [
+    {
+      "name": "data-tier-1",
+      "provisioned": 10995116277760,
+      "used": 5497558138880,
+      "available": 5497558138880
+    },
+    {
+      "name": "archive-fs",
+      "provisioned": 5497558138880,
+      "used": 2748779069440,
+      "available": 2748779069440
+    }
+  ]
+}
+
+GET /api/2.x/blades
+{
+  "items": [
+    {"name": "blade-1", "status": "healthy", "model": "FB20-4U"},
+    {"name": "blade-2", "status": "healthy", "model": "FB20-4U"},
+    {"name": "blade-3", "status": "healthy", "model": "FB20-4U"}
+  ]
+}
+
+GET /api/2.x/alerts?filter=state%3D%27unflagged%27
+{
+  "items": [
+    {
+      "id": "alert-8472",
+      "severity": "warning",
+      "message": "Blade-2 temperature elevated",
+      "created": "2024-01-15T09:23:45Z"
+    }
+  ]
+}
+
+GET /api/2.x/buckets
+{
+  "items": [
+    {"name": "backup-bucket", "versioning": "enabled"},
+    {"name": "archive-bucket", "versioning": "disabled"}
+  ]
+}
+
+GET /api/2.x/array-connections
+{
+  "items": [
+    {
+      "id": "repl-001",
+      "local_array": "flashblade-prod-01",
+      "remote_array": "flashblade-dr-02",
+      "status": "synced"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`401 Unauthorized`** — Verify API token is valid and included in the Authorization header with format `Authorization: Bearer <token>`.
+    **`404 Not Found`** — Confirm the FlashBlade API version matches your array version; use `/api/2.x/` for 4.x firmware or adjust the endpoint path accordingly.
 ---
 
 ## See also

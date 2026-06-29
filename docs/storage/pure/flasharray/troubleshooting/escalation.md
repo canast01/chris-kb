@@ -86,6 +86,16 @@ purearray list
 # flasharray1  6.4.10      <uuid>         FA-X70R4  ready
 ```
 
+
+```text title="Expected output"
+Name         Version     ID                                   Model     Status
+flasharray1  6.4.10      8b3e4c2a-91f7-4d2e-b8a1-7c5d9e2f1a3b FA-X70R4  ready
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Ensure you are SSH'd directly to the array management IP (not a controller host) and the Pure CLI tools are installed.
+    **`Connection refused`** — Verify the management IP is reachable with `ping` and that SSH is enabled on the array (check array network settings in the GUI).
+    **`Authentication failed`** — Confirm you are using the correct credentials and that your SSH key or password is valid for the pureuser account.
 Note the **Version** field (e.g. `6.4.10`) and the **Serial** field — both required for the support case.
 
 ### 2. Capture current array state
@@ -113,6 +123,46 @@ purehost list --connection
 purearray list --space
 ```
 
+
+```text title="Expected output"
+Name                             Severity  Code  Description                          Created
+vol-backup-20240115             critical  230   Volume has failed                    2024-01-15T09:23:14Z
+cache-tier-01                   warning   120   Controller temperature elevated      2024-01-15T08:47:22Z
+repl-lag-prod                   warning   105   Replication lag exceeds threshold    2024-01-15T07:12:09Z
+
+Name  Status   Model              Speed
+CT0   healthy  FlashArray//X70-2  7.2.0.1234
+CT1   healthy  FlashArray//X70-2  7.2.0.1234
+
+Name        Status     Capacity  Serial
+SSD-0.0     healthy    1.92TB    PUREFC191234567
+SSD-0.1     healthy    1.92TB    PUREFC191234568
+SSD-1.0     degraded   1.92TB    PUREFC191234569
+SSD-1.1     failed     1.92TB    PUREFC191234570
+
+Name                  Size      Provisioned  Data Reduction
+prod-db-01            500GB     1.2TB        3.8:1
+backup-archive        2TB       4.5TB        2.1:1
+dev-test-vol          100GB     250GB        1.5:1
+
+Name      Wwn                Port  Speed  Status
+CT0.FC0   50:00:14:40:1a:2b:3c:4d  0      16Gb   online
+CT0.FC1   50:00:14:40:1a:2b:3c:4e  1      16Gb   online
+CT1.iSCSI 50:00:14:40:1a:2b:3c:4f  2      10Gb   online
+
+Name           Iqn                                    Volumes
+host-esx-01    iqn.1991-05.com.example:esx-01        prod-db-01, dev-test-vol
+host-esx-02    iqn.1991-05.com.example:esx-02        prod-db-01
+host-backup    iqn.1991-05.com.example:backup-srv    backup-archive
+
+Capacity      Used       Data Reduction  Snapshots  Replication
+10TB          6.2TB      2.3:1           1.8TB      0.9TB
+```
+
+!!! warning "Common errors"
+    **`purealert: command not found`** — Verify the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureapp/bin`).
+    **`Error: Array unreachable at <ip_address>`** — Confirm network connectivity to the array management IP and verify credentials are set via `pureconfig` or environment variables.
+    **`Error: Invalid credentials`** — Re-authenticate using `pureconfig --username <user> --password` or check that the API token in your session has not expired.
 Save all CLI output to a text file for pasting into the case.
 
 ### 3. Check ActiveCluster pod state (if ActiveCluster is configured)
@@ -128,6 +178,28 @@ purepod list --mediator
 purepod list --member-type volume
 ```
 
+
+```text title="Expected output"
+Name                          Status    Mediator Status    Replication Status
+pod-prod-01                   Online    Connected         Synchronized
+pod-prod-02                   Online    Connected         Synchronized
+pod-dr-backup                 Online    Connected         Synchronized
+
+Name                          Status    Mediator IP       Mediator Status
+pod-prod-01                   Online    10.45.12.88       Connected
+pod-prod-02                   Online    10.45.12.88       Connected
+pod-dr-backup                 Online    10.45.12.89       Disconnected
+
+Name                          Pod Name              Volume Count
+pod-prod-01                   flasharray-1          847
+pod-prod-01                   flasharray-2          847
+pod-prod-02                   flasharray-3          923
+pod-dr-backup                 flasharray-4          612
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid option '--mediator'`** — Use `purepod list --mediator-status` or check your Pure OS version supports this flag.
+    **`Error: Pod 'pod-name' status is Offline`** — Verify network connectivity between array members and check mediator connectivity with `purepod list --mediator`.
 ### 4. Generate and send the diagnostic bundle
 
 ```bash
@@ -141,6 +213,28 @@ purediag --output /tmp/diag_$(hostname)_$(date +%Y%m%d_%H%M).tgz
 scp pureuser@<array-mgmt-ip>:/tmp/diag_*.tgz /tmp/
 ```
 
+
+```text title="Expected output"
+Generating diagnostic bundle...
+Connecting to Pure TAC...
+Bundle size: 2.3 GB
+Uploading: ████████████████████ 100%
+Upload complete. Case #: CS-2024-0847392
+Transmission time: 47 seconds
+
+Generating diagnostic bundle...
+Bundle written to: /tmp/diag_flasharray-prod-01_20240215_1423.tgz
+Size: 2.3 GB
+Generation time: 89 seconds
+
+pureuser@192.168.1.45's password: 
+diag_flasharray-prod-01_20240215_1423.tgz          100% 2342MB   18.5MB/s   02:06
+```
+
+!!! warning "Common errors"
+    **`purediag: command not found`** — Ensure you are running this command on the FlashArray management interface or install the Pure CLI tools on your management host.
+    **`Permission denied (publickey,password)`** — Verify the pureuser account credentials and that SSH key-based authentication is configured, or use `ssh-keyscan` to add the array to your known_hosts file first.
+    **`No such file or directory`** — The diagnostic bundle may still be generating; wait 2-3 minutes and retry the scp command, or check available disk space on the array with `ssh pureuser@<array-mgmt-ip> df -h`.
 Note: `purediag --send` ties the bundle to the array's Pure1 account. When you open the case, Pure support can retrieve the bundle from Pure1 directly using the array serial number.
 
 ### 5. Write the timeline
@@ -255,6 +349,61 @@ purearray monitor
 purediag --send
 ```
 
+
+```text title="Expected output"
+Name             Status      Version      Model
+flasharray-prod  Online      6.4.2        FA-405
+flasharray-prod  Online      6.4.2        FA-405
+
+AlertId  Severity  Code           Message                          Timestamp
+12847    warning   DRIVE_WEAR     Drive nearing end of life        2024-01-15T09:23:14Z
+12891    critical  CTRL_TEMP      Controller temperature elevated  2024-01-15T10:45:22Z
+
+Name       Status     Capacity   Used       Type
+SSD.1      Healthy    1.92TB     1.54TB     SSD
+SSD.2      Healthy    1.92TB     1.68TB     SSD
+SSD.3      Healthy    1.92TB     1.71TB     SSD
+SSD.4      Degraded   1.92TB     1.89TB     SSD
+...
+
+Name                Status     Size       Provisioned
+prod-db-vol-01     Online     500GB      450GB
+prod-db-vol-02     Online     1TB        950GB
+backup-vol-03      Online     2TB        1.8TB
+...
+
+Name          Status    Speed    Enabled
+CT0.ETH0      Online    10Gbps   Yes
+CT0.ETH1      Online    10Gbps   Yes
+CT1.ETH0      Online    10Gbps   Yes
+CT1.ETH1      Online    10Gbps   Yes
+
+HostName              IQN/WWN                    Connection
+esx-host-01          iqn.1991-05.com.emc:...    Connected
+esx-host-02          iqn.1991-05.com.emc:...    Connected
+db-server-prod       iqn.1991-05.com.emc:...    Connected
+...
+
+Name          Status    Replication  Mediator
+pod-primary   Online    Active       mediator-01
+pod-secondary Online    Active       mediator-01
+
+Name                Status    Direction    Lag
+pg-prod-to-dr      Synced    Outbound     0ms
+pg-backup-sync     Synced    Outbound     2ms
+
+Timestamp            Read_Latency  Write_Latency  Throughput_Read  Throughput_Write
+2024-01-15T10:50:00  1.2ms         2.1ms          4.2GB/s          3.8GB/s
+
+Diagnostic bundle generated: diag_flasharray-prod_20240115_105234.tar.gz
+Uploading to Pure1... [████████████████████] 100%
+Upload complete. Case reference: CS-2024-0847291
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`).
+    **`Error: Array unreachable at 192.168.1.100`** — Verify network connectivity to the array management IP and confirm firewall rules allow access to port 443.
+    **`purediag: Authentication failed`** — Confirm your Pure1 API token is valid and has not expired; regenerate credentials in Pure1 if necessary.
 ---
 
 ## Support SLA Reference
