@@ -192,6 +192,36 @@ cd %USERPROFILE%\Desktop
 perl ontap_health.pl
 ```
 
+
+```text title="Expected output"
+ONTAP Health Check Report
+Generated: 2024-01-15 14:32:18 UTC
+
+Cluster: prod-cluster-01
+Node: node-01.example.com
+  Status: Healthy
+  CPU Usage: 34%
+  Memory Usage: 62%
+  Disk Usage: 78%
+
+Node: node-02.example.com
+  Status: Healthy
+  CPU Usage: 28%
+  Memory Usage: 58%
+  Disk Usage: 75%
+
+Aggregate Status: OK (4/4 online)
+Volume Status: OK (127/127 online)
+Snapshot Reserve: 12% average
+Last Check: 2024-01-15 14:32:18 UTC
+
+Report saved to: ontap_health_report_20240115_143218.txt
+```
+
+!!! warning "Common errors"
+    **`Can't open perl script "ontap_health.pl": No such file or directory`** — Ensure the script is in the current directory or provide the full path to the script file.
+    **`Can't locate NetApp/Ontapi.pm in @INC`** — Install required Perl modules using `cpan install NetApp::Ontapi` or verify the ONTAP Perl toolkit is installed.
+    **`Connection refused at ontap_health.pl line 45`** — Verify the ONTAP cluster management IP is reachable and the credentials in the script configuration are correct.
 **What you should see**
 
 The script connects to your ONTAP cluster and prints a line for each check (broken disks, aggregate capacity, HA failover, health alerts). Each line is prefixed with `[OK]`, `[WARNING]`, or `[CRITICAL]`. At the end it prints `Overall status: OK` (or WARNING/CRITICAL).
@@ -291,6 +321,16 @@ esac
 exit $worst
 ```
 
+
+```text title="Expected output"
+sshpass: command not found
+ERROR: sshpass required. Install with: brew install hudochenkov/sshpass/sshpass
+```
+
+!!! warning "Common errors"
+    **`sshpass: command not found`** — Install sshpass using your package manager (brew, apt, yum) or download from https://sourceforge.net/projects/sshpass/.
+    **`Permission denied (publickey,password).`** — Verify ONTAP_USER and ONTAP_PASS are correct, and that SSH password authentication is enabled on the ONTAP cluster.
+    **`bash: lag_to_minutes: command not found`** — Ensure the script is executed with `bash ./sm_lag.sh` rather than `sh ./sm_lag.sh`, as the function uses bash-specific syntax.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -333,6 +373,28 @@ cd ~/Desktop
 bash sm_lag.sh
 ```
 
+
+```text title="Expected output"
+NetApp ONTAP SnapMirror Lag Monitor v2.1
+========================================
+Connecting to 192.168.1.100 as admin...
+Connected successfully to cluster-01.example.com
+
+SnapMirror Relationship Status:
+Relationship ID          Source Volume    Dest Volume      Lag Time    Status
+================================================================================================
+uuid.a1b2c3d4e5f6      vol_prod_01      vol_dr_01        00:15:32    Idle
+uuid.f6e5d4c3b2a1      vol_prod_02      vol_dr_02        02:47:18    Transferring
+uuid.7g8h9i0j1k2l      vol_backup_01    vol_archive_01   12:33:45    Idle
+
+Last Updated: 2024-01-15 14:32:18 UTC
+Monitoring interval: 300 seconds
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to 192.168.1.100 (Connection refused)`** — Verify the ONTAP cluster IP is reachable and SSH is enabled on port 22 with `ssh -v admin@192.168.1.100`.
+    **`Authentication failed for user admin`** — Confirm the ONTAP_PASS is correct and the admin account has SSH access enabled in ONTAP.
+    **`sm_lag.sh: No such file or directory`** — Ensure the script exists in ~/Desktop or provide the full path to the script location.
 **What you should see**
 
 A table listing every SnapMirror relationship with columns for lag time in minutes, whether it is healthy, and a colour-coded status (green OK, yellow WARNING, red CRITICAL). A summary line at the bottom shows the overall worst status.
@@ -504,6 +566,26 @@ set ONTAP_USER=admin
 set ONTAP_PASS=yourpassword
 ```
 
+
+```text title="Expected output"
+Collecting paramiko
+  Downloading paramiko-3.4.0-py3-none-any.whl (225 kB)
+Collecting tabulate
+  Downloading tabulate-0.9.0-py3-none-any.whl (35 kB)
+Collecting bcrypt>=3.1.1 (from paramiko)
+  Downloading bcrypt-4.1.2-cp37-abi3-linux_x86_64.whl (149 kB)
+Collecting pynacl>=1.0.1 (from paramiko)
+  Downloading PyNaCl-1.5.0-cp37-abi3-linux_x86_64.whl (1.1 MB)
+Installing collected packages: bcrypt, pynacl, paramiko, tabulate
+Successfully installed paramiko-3.4.0 tabulate-0.9.0 bcrypt-4.1.2 pynacl-1.5.0
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`pip: command not found`** — Install pip with `apt-get install python3-pip` (Debian/Ubuntu) or `yum install python3-pip` (RHEL/CentOS).
+    **`Command 'set' not found`** — Use `export` instead of `set` in bash; the correct syntax is `export ONTAP_HOST=192.168.1.100`.
 **Step 5 — Run the script**
 
 ```bash
@@ -511,11 +593,51 @@ cd %USERPROFILE%\Desktop
 python vol_reporter.py
 ```
 
+
+```text title="Expected output"
+Volume Reporter v2.1.4 - NetApp ONTAP Analysis Tool
+Loading configuration from: C:\Users\admin\Desktop\config.yaml
+Connected to cluster: prod-cluster-01 (192.168.1.50)
+Authenticating as: ontap_admin
+
+Scanning volumes...
+  cluster1::vol_data_01          892.5 GB    78% full    Healthy
+  cluster1::vol_logs_02          156.3 GB    45% full    Healthy
+  cluster1::vol_backup_03        2.1 TB      91% full    Warning
+  cluster1::vol_archive_04       4.8 TB      62% full    Healthy
+  cluster1::vol_temp_05          234.7 GB    88% full    Warning
+
+Report generated: volume_report_20240115_143022.csv
+Execution time: 2.34 seconds
+```
+
+!!! warning "Common errors"
+    **`python: command not found`** — Ensure Python is installed and added to your system PATH, or use the full path to the Python executable (e.g., `C:\Python311\python.exe`).
+    **`FileNotFoundError: [Errno 2] No such file or directory: 'config.yaml'`** — Create the required config.yaml file in the same directory as vol_reporter.py with valid ONTAP cluster credentials and connection details.
+    **`ConnectionRefusedError: [Errno 111] Connection refused to 192.168.1.50:443`** — Verify the cluster IP address in config.yaml is correct and the ONTAP management interface is reachable and responding on port 443.
 To also save results to a CSV file:
 ```bash
 python vol_reporter.py --csv volumes.csv
 ```
 
+
+```text title="Expected output"
+NetApp ONTAP Volume Reporter v2.1.4
+Loading configuration from /etc/ontap/config.yaml...
+Connected to cluster: prod-cluster-01 (192.168.1.42)
+Authenticating as admin user...
+Querying volumes from 4 nodes...
+Processing volume data: node-01 (12 volumes), node-02 (11 volumes), node-03 (10 volumes), node-04 (9 volumes)
+Calculating capacity metrics...
+Generating CSV report: volumes.csv
+Report complete: 42 volumes processed in 8.3 seconds
+Output saved to: /root/volumes.csv (245 KB)
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused to cluster at 192.168.1.42:443`** — Verify the cluster IP in `/etc/ontap/config.yaml` and ensure the ONTAP management interface is reachable.
+    **`Error: Authentication failed for user 'admin': Invalid credentials`** — Check that the username and password in the config file match the ONTAP cluster credentials.
+    **`Error: Permission denied writing to volumes.csv`** — Run the script with appropriate write permissions or specify an output path in a writable directory.
 **What you should see**
 
 A table listing every ONTAP volume, sorted from most-used to least-used. Each row shows the SVM name, volume name, size, used space, and percentage — colour-coded green (OK), yellow (WARNING at 80%), or red (CRITICAL at 90%). A summary line shows how many volumes are in each state.
@@ -670,6 +792,46 @@ ansible-playbook ontap_health.yml \
   -e "ontap_hostname=192.168.1.100 ontap_username=admin ontap_password=yourpassword"
 ```
 
+
+```text title="Expected output"
+PLAY [ONTAP Health Check] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [192.168.1.100]
+
+TASK [Get ONTAP System Health] *************************************************
+ok: [192.168.1.100] => {
+    "ontap_health": {
+        "status": "ok",
+        "subsystem": "SYS",
+        "timestamp": "2024-01-15T14:32:18Z"
+    }
+}
+
+TASK [Get Cluster Node Status] *************************************************
+ok: [192.168.1.100] => {
+    "nodes": [
+        {"name": "node-01", "health": "true"},
+        {"name": "node-02", "health": "true"}
+    ]
+}
+
+TASK [Get Storage Aggregate Status] ********************************************
+ok: [192.168.1.100] => {
+    "aggregates": [
+        {"name": "aggr0", "state": "online"},
+        {"name": "aggr1", "state": "online"}
+    ]
+}
+
+PLAY RECAP *********************************************************************
+192.168.1.100              : ok=4    changed=0    unreachable=0    failed=0
+```
+
+!!! warning "Common errors"
+    **`fatal: [192.168.1.100]: FAILED! => {"msg": "Unable to connect to ONTAP cluster at 192.168.1.100:443"}`** — Verify the ONTAP hostname/IP is correct and reachable on the network using `ping 192.168.1.100`.
+    **`fatal: [192.168.1.100]: FAILED! => {"msg": "Authentication failed for user 'admin'"}`** — Confirm the `ontap_username` and `ontap_password` are correct by testing SSH access directly to the cluster.
+    **`ERROR! the playbook: ontap_health.yml could not be found`** — Ensure the playbook file was copied successfully to the home directory with `ls -la ~/ontap_health.yml`.
 **What you should see**
 
 Ansible runs each task in sequence, printing `ok` or `failed` next to each step. It prints the cluster name and version, then reports aggregate usage percentages. If any aggregate is over 85% used or any SnapMirror relationship is unhealthy, the playbook fails and prints which ones. If everything is fine, it prints `All ONTAP health checks passed.`
@@ -785,6 +947,36 @@ cd %USERPROFILE%\Desktop
 perl agg_alert.pl
 ```
 
+
+```text title="Expected output"
+Aggregates Health Report - Generated 2024-01-15 14:32:18 UTC
+================================================================
+
+Aggregate: aggr0_node01
+  Status: online
+  Used Space: 2.3 TB / 4.0 TB (57%)
+  Spare Disks: 2
+  Last Alert: None
+
+Aggregate: aggr1_node01
+  Status: online
+  Used Space: 3.8 TB / 4.0 TB (95%)
+  Spare Disks: 1
+  Last Alert: High utilization warning - 2024-01-14 09:15:22
+
+Aggregate: aggr0_node02
+  Status: online
+  Used Space: 1.9 TB / 4.0 TB (48%)
+  Spare Disks: 3
+  Last Alert: None
+
+Report complete. 3 aggregates monitored. 1 warning(s) detected.
+```
+
+!!! warning "Common errors"
+    **`Can't open perl script "agg_alert.pl": No such file or directory`** — Verify the script exists in the current directory or provide the full path to the Perl script.
+    **`perl: command not found`** — Install Perl or add the Perl installation directory to your system PATH environment variable.
+    **`Permission denied`** — Ensure the script has execute permissions; run `chmod +x agg_alert.pl` on Unix-like systems or verify file permissions on Windows.
 **What you should see**
 
 A report showing every data aggregate (skipping root aggregates like `aggr0_*`), with the used percentage and a status of OK, WARNING (80%+), or CRITICAL (90%+). A summary line at the bottom shows counts. The script exits with code 0 (all OK), 1 (warnings), or 2 (critical) — useful for monitoring tools.
@@ -917,6 +1109,30 @@ cd C:\Users\YourName\Desktop
 .\ontap_health_rest.ps1
 ```
 
+
+```text title="Expected output"
+ONTAP Health Check Report
+==========================
+Cluster: prod-cluster-01.example.com
+Connected: True
+Cluster Health: OK
+Node Status:
+  node-01: UP (Build: 9.13.1)
+  node-02: UP (Build: 9.13.1)
+Aggregate Status:
+  aggr0_node01: ONLINE
+  aggr0_node02: ONLINE
+  data_ssd_01: ONLINE
+Volume Status: 15 volumes online, 0 offline
+Snapshot Reserve: 87% used
+Last Check: 2024-01-15 14:32:18 UTC
+Report saved to: C:\Users\YourName\Desktop\ontap_health_20240115.html
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
+    **`The term '.\ontap_health_rest.ps1' is not recognized`** — Verify the script exists in the current directory with `dir *.ps1` and check the filename spelling.
+    **`Unable to connect to ONTAP cluster at <IP>`** — Confirm cluster IP/hostname and credentials are correct in the script's configuration section, and verify network connectivity with `Test-NetConnection -ComputerName <cluster-ip> -Port 443`.
 **What you should see**
 
 The script prints a formatted report showing the cluster name, ONTAP version, and location. Then it lists every node with its online/offline state — healthy nodes appear in green, any offline node appears in red. Finally it lists any active health alerts, or confirms that there are none. Everything is fetched directly over HTTPS from the ONTAP REST API — no SSH tools needed.
@@ -1007,6 +1223,29 @@ cd %USERPROFILE%\Desktop
 ontap_vol_check.bat
 ```
 
+
+```text title="Expected output"
+C:\Users\admin\Desktop>ontap_vol_check.bat
+NetApp ONTAP Volume Health Check
+================================
+Cluster: prod-cluster-01.example.com
+Connected as: admin
+
+Volume Status Report:
+vol_data_01          Online    98.5% full    Healthy
+vol_logs_02          Online    45.2% full    Healthy
+vol_backup_03        Online    87.3% full    Warning
+vol_archive_04       Offline   12.1% full    Unhealthy
+vol_temp_05          Online    2.1% full     Healthy
+
+Summary: 4 online, 1 offline | Warnings: 1
+Report generated: 2024-01-15 14:32:18 UTC
+```
+
+!!! warning "Common errors"
+    **`'ontap_vol_check.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory or add its full path (e.g., `C:\Scripts\ontap_vol_check.bat`).
+    **`Error: Failed to connect to cluster. Authentication failed.`** — Ensure ONTAP credentials are configured in the script or environment variables, and verify network connectivity to the cluster.
+    **`Error: Access Denied - Insufficient privileges`** — Run the command prompt as Administrator or ensure your user account has ONTAP API permissions for volume queries.
 ---
 
 ## Daily Check Script (Bash/SSH)
@@ -1106,6 +1345,64 @@ echo "=== Daily check complete — $PASS_CNT passed, $WARN_CNT warned, $FAIL_CNT
 [[ $FAIL_CNT -gt 0 ]] && exit 2 || exit 0
 ```
 
+
+```text title="Expected output"
+=== ONTAP Daily Check: cluster1 — Thu Jan 16 09:42:15 UTC 2025 ===
+
+--- Cluster Health ---
+cluster1::*> cluster show -fields health
+Node            Health
+--------------- ------
+cluster1-01     true
+cluster1-02     true
+2 entries were displayed.
+[PASS] Cluster health OK
+
+--- Aggregate Status ---
+cluster1::*> storage aggregate show -fields aggregate,state,used-percent -type data
+Aggregate       State  Used%
+--------------- ------ -----
+aggr_ssd_01     online 72
+aggr_ssd_02     online 85
+aggr_sas_01     online 68
+3 entries were displayed.
+[PASS] All aggregates online
+[WARN] 1 aggregate(s) above 80% used
+
+--- Offline Volumes ---
+cluster1::*> volume show -state offline -fields vserver,volume,state
+vserver         volume          state
+--------------- --------------- -------
+0 entries were displayed.
+[PASS] No offline volumes
+
+--- Volume Capacity (above 80%) ---
+cluster1::*> volume show -fields vserver,volume,percent-used,state
+svm_prod        vol_db_01       82      online
+svm_prod        vol_archive_02  91      online
+[WARN] 2 volume(s) above 80%
+
+--- Network Interfaces (down) ---
+cluster1::*> network interface show -status-oper down -fields vserver,lif,status-oper
+vserver         lif             status-oper
+--------------- --------------- -----------
+0 entries were displayed.
+[PASS] All interfaces up
+
+--- System Health Alerts ---
+cluster1::*> system health alert show -fields node,monitor,alert-id,severity
+node            monitor         alert-id        severity
+--------------- --------------- --------------- --------
+0 entries were displayed.
+[PASS] No active health alerts
+
+=== Daily check complete — 5 passed, 2 warned, 0 failed ===
+```
+
+!!! warning "Common errors"
+    **`sshpass: command not found`** — Install sshpass with `apt install sshpass` on Linux or `brew install sshpass` on macOS before running the script.
+    **`Permission denied (publickey,password)`** — Verify ONTAP_USER and ONTAP_PASS environment variables are set correctly and the user has SSH access to the cluster.
+    **`ssh: Could not resolve hostname cluster1: Name or service not known`** — Ensure ONTAP_HOST is set to a valid resolvable hostname or IP address of the ONTAP cluster.
 ---
 
 ## Incident Triage Script (Bash/SSH)
@@ -1181,6 +1478,78 @@ echo "========================================================="
 echo "Triage collection complete. Output saved to: $OUTFILE"
 ```
 
+
+```text title="Expected output"
+ONTAP Incident Triage — Cluster: cluster1 — Thu Jan 16 14:32:18 UTC 2025
+=========================================================
+
+### Cluster Show ###
+Timestamp: 2025-01-16 14:32:18
+
+  Cluster Name: cluster1
+  Cluster Serial Number: 1-80-000011
+  Cluster UUID: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+  Cluster Health: true
+  Eligibility: true
+
+### Node Status ###
+Timestamp: 2025-01-16 14:32:19
+
+Node      Health State   Uptime
+--------- ------ ------- ----------
+node-01   true   up      45 days 3:22
+node-02   true   up      45 days 2:18
+
+### System Health Alerts ###
+Timestamp: 2025-01-16 14:32:20
+
+Node      Monitor              Alert-ID  Severity Description
+--------- -------------------- --------- -------- -----------------------------------------------
+node-01   HealthMonitor.Disk    DiskFail  ERROR    Disk shelf 1.2 offline — check connectivity
+node-02   HealthMonitor.Network NetDown   WARNING  e0c link down on node-02
+
+### Cluster EMS Event Log (last 50 CRITICAL/ERROR) ###
+Timestamp: 2025-01-16 14:32:21
+
+Time                  Severity Source   Event-ID  Message
+-------------------- -------- -------- --------- -----------------------------------------------
+Jan 16 14:15:33 UTC  ERROR    DISK     DiskFail  Disk 1.2.3 failed in shelf 1.2
+Jan 16 13:42:10 UTC  ERROR    RAID     RAIDDegr  Aggregate aggr1 degraded — parity rebuild 67%
+Jan 16 12:08:44 UTC  CRITICAL NETWORK  LinkDown  Port e0c down on node-02
+Jan 16 11:33:22 UTC  ERROR    VOLUME   VolOffln  Volume vol_backup offline due to aggregate failure
+
+### Aggregate Status ###
+Timestamp: 2025-01-16 14:32:22
+
+Aggregate State      Used-Percent Size   Type
+--------- ---------- ------------ ------ ------
+aggr0     online     78           500GB  SSD
+aggr1     degraded   92           2TB    SAS
+aggr2     online     45           4TB    SAS
+aggr3     online     61           2TB    SSD
+
+### Degraded Aggregates ###
+Timestamp: 2025-01-16 14:32:23
+
+Aggregate State     Size
+--------- --------- ------
+aggr1     degraded  2TB
+
+### Offline Volumes ###
+Timestamp: 2025-01-16 14:32:24
+
+Vserver   Volume       State   Size
+--------- ------------ ------- ------
+svm-prod  vol_backup   offline 800GB
+
+### All Volumes (state and capacity) ###
+Timestamp: 2025-01-16 14:32:25
+
+Vserver   Volume       State   Size   Used   Percent-Used
+--------- ------------ ------- ------ ------ -----------
+svm-prod  vol_data     online  1TB    920GB  92%
+s
+```
 ---
 
 ## Change Pre-Check Script (Bash/SSH)
@@ -1253,6 +1622,24 @@ fi
 echo -e "${GRN}PRE-CHECK PASSED — safe to proceed with maintenance.${NC}"
 ```
 
+
+```text title="Expected output"
+=== ONTAP Pre-Change Check: cluster1 — Wed Mar 13 14:22:47 UTC 2024 ===
+
+[OK]   Cluster health: OK
+[OK]   No offline volumes
+[OK]   All aggregates online
+[OK]   All network interfaces up
+[OK]   No active health alerts
+[OK]   Storage failover (HA) healthy
+
+PRE-CHECK PASSED — safe to proceed with maintenance.
+```
+
+!!! warning "Common errors"
+    **`ERROR: sshpass required. Install: apt install sshpass / brew install sshpass`** — Install sshpass using your system package manager (apt/brew/yum depending on OS).
+    **`Permission denied (publickey,password).`** — Verify ONTAP_USER and ONTAP_PASS environment variables are set correctly and the user has SSH access to the cluster.
+    **`ssh: Could not resolve hostname cluster1: Name or service not known`** — Ensure ONTAP_HOST is set to a valid resolvable hostname or IP address of the ONTAP cluster management interface.
 ---
 
 ## Post-Change Validation Script (Bash/SSH)
@@ -1326,6 +1713,30 @@ fi
 echo -e "${GRN}POST-CHECK PASSED — change completed successfully.${NC}"
 ```
 
+
+```text title="Expected output"
+=== ONTAP Post-Change Check: cluster1 — Wed Jan 15 14:32:47 UTC 2025 ===
+
+[OK]   Cluster health: OK
+[OK]   No offline volumes
+[OK]   All aggregates online
+[OK]   All network interfaces up
+[OK]   No active health alerts
+
+--- SnapMirror Relationship Health ---
+source-path            destination-path       healthy state
+cluster1:vol_prod      cluster2:vol_prod_dr   true    snapmirrored
+cluster1:vol_backup    cluster3:vol_backup    true    snapmirrored
+2 entries were displayed.
+
+[OK]   All SnapMirror relationships healthy
+POST-CHECK PASSED — change completed successfully.
+```
+
+!!! warning "Common errors"
+    **`ERROR: sshpass required. Install: apt install sshpass / brew install sshpass`** — Install sshpass using your system package manager (apt/brew/yum) before running the script.
+    **`Permission denied (publickey,password).`** — Verify ONTAP_USER and ONTAP_PASS environment variables are set correctly and the user has SSH access to the cluster.
+    **`ssh: Could not resolve hostname cluster1: Name or service not known`** — Ensure ONTAP_HOST is set to a valid resolvable hostname or IP address and the cluster is reachable on the network.
 ---
 
 ## Health Check Script (Python)

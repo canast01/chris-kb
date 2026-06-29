@@ -95,6 +95,18 @@ volume create \
 volume show -vserver <svm> -volume <vol_name> -fields encrypt,encryption-state
 ```
 
+
+```text title="Expected output"
+Volume "prod_data" created successfully.
+
+Vserver     Volume      Encrypt  Encryption State
+----------- ----------- -------- -----------------
+svm_prod    prod_data   true     encrypted
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: Encryption is not licensed on this cluster`** — Verify NetApp Volume Encryption (NVE) license is installed with `system license show -package VE`.
+    **`Error: command failed: Cannot create volume on aggregate aggr1: aggregate does not support encryption`** — Use an aggregate with Self-Encrypting Drives (SEDs) or enable software encryption; check aggregate encryption capability with `storage aggregate show -fields encrypt`.
 ### Enabling NVE on an Existing Volume
 
 Encrypting an existing volume requires re-keying — ONTAP rewrites the volume data with the new DEK. This is an online, non-disruptive operation for most workloads but runs in the background and affects I/O performance temporarily.
@@ -111,6 +123,24 @@ volume show -vserver <svm> -volume <vol_name> -fields encryption-state
 # Expected: full (fully encrypted)
 ```
 
+
+```text title="Expected output"
+cluster1::> volume encryption conversion start -vserver svm1 -volume data_vol01
+[Job 1234] Job is queued
+cluster1::> volume encryption conversion show -vserver svm1 -volume data_vol01
+Vserver Volume                  Conversion Progress State
+------- ----------------------- ------------------- ----------
+svm1    data_vol01              87%                 in_progress
+cluster1::> volume show -vserver svm1 -volume data_vol01 -fields encryption-state
+Vserver Volume      Encryption State
+------- ----------- ----------------
+svm1    data_vol01  full
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: volume encryption conversion is not supported on this volume`** — Verify the volume is not a SnapMirror destination, MetroCluster volume, or using an unsupported aggregate encryption type with `storage aggregate show -fields encrypt`.
+    **`Error: Vserver "svm1" does not exist`** — Confirm the SVM name is correct and exists by running `vserver show`.
+    **`Error: Volume "data_vol01" does not exist`** — Check the volume name spelling and verify it exists in the target SVM with `volume show -vserver svm1`.
 ### NVE Key Operations
 
 ```bash
@@ -125,6 +155,32 @@ volume encryption rekey start -vserver <svm> -volume <vol_name>
 volume encryption rekey show -vserver <svm> -volume <vol_name>
 ```
 
+
+```text title="Expected output"
+Vserver   Volume            Encrypt  Encryption-State
+--------- ----------------- -------- -----------------
+svm_prod  vol_data_01       true     encrypted
+svm_prod  vol_data_02       true     encrypted
+svm_prod  vol_backup        false    none
+svm_dev   vol_test          true     encrypted
+svm_dev   vol_logs          false    none
+
+Key ID protecting volume vol_data_01:
+Vserver: svm_prod
+Volume: vol_data_01
+Key ID: 47a8c9f2-1b3d-4e5f-9a2c-8d7e6f5g4h3i
+
+Rekey operation started for volume vol_data_01.
+
+Vserver   Volume            Rekey-State  Rekey-Progress
+--------- ----------------- ------------ ---------------
+svm_prod  vol_data_01       in-progress  45%
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: Invalid volume name <vol_name>`** — Replace `<vol_name>` with an actual volume name and verify it exists with `volume show`.
+    **`Error: This operation is not supported on unencrypted volumes`** — Ensure the volume has encryption enabled; enable it first with `volume encryption enable -vserver <svm> -volume <vol_name>`.
+    **`Error: Rekey operation already in progress for this volume`** — Wait for the current rekey to complete by checking status with `volume encryption rekey show`, or contact NetApp support if stuck.
 ---
 
 ## NetApp Aggregate Encryption (NAE)
@@ -145,6 +201,20 @@ storage aggregate create \
 storage aggregate show -aggregate <aggr_name> -fields encrypt-with-aggr-key
 ```
 
+
+```text title="Expected output"
+Aggregate creation initiated for aggregate "aggr1" on node "cluster1-01".
+Aggregate "aggr1" has been created successfully.
+
+Aggregate Name: aggr1
+Node: cluster1-01
+Encrypt With Aggr Key: true
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: 24 disks are not available on node cluster1-01`** — Verify available spare disks with `storage aggregate show-space` and reduce the `-diskcount` value or add more disks to the node.
+    
+    **`Error: NAE (NetApp Aggregate Encryption) is not licensed on this cluster`** — Ensure the NVE/NAE license is installed with `system license show` and add the license if missing.
 ### Converting an Existing Aggregate to NAE
 
 ```bash
@@ -155,6 +225,17 @@ storage aggregate encryption rekey start -aggregate <aggr_name>
 storage aggregate encryption rekey show -aggregate <aggr_name>
 ```
 
+
+```text title="Expected output"
+Aggregate encryption rekey operation started for aggregate "aggr_ssd_01".
+
+Aggregate         Rekey Status      Progress  Estimated Time Remaining
+aggr_ssd_01       In Progress       45%       2h 15m
+```
+
+!!! warning "Common errors"
+    **`Error: aggregate <aggr_name> not found`** — Verify the aggregate name with `storage aggregate show` and use the correct name.
+    **`Error: Rekey operation already in progress on aggregate <aggr_name>`** — Wait for the current rekey to complete or cancel it with `storage aggregate encryption rekey abort` before starting a new one.
 ### NAE vs NVE Decision
 
 | Consideration | NVE | NAE |
@@ -182,6 +263,31 @@ storage encryption disk show
 storage encryption disk modify -disk <disk_id> -data-key-id <key_id>
 ```
 
+
+```text title="Expected output"
+Disk            Is-Fips-Compliant Drive-Protection-Mode
+--------------- ----------------- --------------------
+1.0.0           true              encrypted
+1.0.1           true              encrypted
+1.0.2           true              encrypted
+1.0.3           true              encrypted
+1.0.4           true              encrypted
+...
+
+Disk       Key ID                               Key Status
+---------- ------------------------------------ ---------------
+1.0.0      550e8400-e29b-41d4-a716-446655440000 available
+1.0.1      550e8400-e29b-41d4-a716-446655440001 available
+1.0.2      550e8400-e29b-41d4-a716-446655440002 available
+1.0.3      550e8400-e29b-41d4-a716-446655440003 available
+1.0.4      550e8400-e29b-41d4-a716-446655440004 available
+
+Disk 1.0.0: Key assignment successful
+```
+
+!!! warning "Common errors"
+    **`Error: disk 1.0.5 not found`** — Verify the disk ID exists with `storage disk show` and correct any typos in the disk identifier.
+    **`Error: key ID 550e8400-e29b-41d4-a716-446655440999 is not available`** — Confirm the key ID is valid and provisioned in the key management system using `storage encryption disk show`.
 ---
 
 ## Key Management
@@ -209,6 +315,31 @@ security key-manager key query -key-manager-type onboard
 security key-manager onboard sync
 ```
 
+
+```text title="Expected output"
+Enter a passphrase for onboard key management: ****
+Re-enter the passphrase: ****
+Onboard Key Management has been enabled successfully.
+
+Cluster: prod-cluster-01
+Onboard Key Management Status: enabled
+Key Manager Type: onboard
+Passphrase Set: yes
+Last Key Rotation: 2024-01-15 09:32:15
+
+Key ID                                    Key Type      Status
+----------------------------------------  -----------   --------
+550e8400-e29b-41d4-a716-446655440000     NSE-256       available
+550e8400-e29b-41d4-a716-446655440001     NSE-256       available
+550e8400-e29b-41d4-a716-446655440002     NSE-256       available
+
+Synchronizing OKM keys to node2...
+Node2: Key synchronization completed successfully (3 keys synced)
+```
+
+!!! warning "Common errors"
+    **`Error: Onboard Key Management is already enabled on this cluster`** — Run `security key-manager onboard show` first to verify current status before attempting re-enablement.
+    **`Error: Failed to synchronize keys to node2: Authentication failed`** — Ensure the node is fully joined to the cluster with `cluster show` and that network connectivity exists between nodes.
 ### External KMIP Key Manager
 
 KMIP (Key Management Interoperability Protocol) integrates ONTAP with an enterprise KMS such as Thales CipherTrust, IBM SKLM, Entrust KeyControl, or HashiCorp Vault (via KMIP adapter). External key management is required for:
@@ -245,6 +376,47 @@ security key-manager external check
 security key-manager key query -key-manager-type external
 ```
 
+
+```text title="Expected output"
+Installing client certificate...
+Certificate installed successfully.
+
+Installing server CA certificate for kmip-server.example.com...
+Certificate installed successfully.
+
+Enabling external KMIP key manager...
+External key manager enabled successfully.
+
+Adding secondary KMS server...
+Secondary key server added successfully.
+
+Vserver: cluster1-admin
+Key Servers:
+  10.45.12.88:5696 (Primary)
+  10.45.12.89:5696 (Secondary)
+Client Certificate: ontap-kmip-client
+Server CA Certificates: kmip-server-ca
+Status: configured
+
+Checking KMS connectivity...
+Key Server: 10.45.12.88:5696
+  Connectivity: available
+Key Server: 10.45.12.89:5696
+  Connectivity: available
+
+Vserver: cluster1-admin
+Key Manager Type: external
+Key ID                           Status
+-------------------------------- --------
+550e8400-e29b-41d4-a716-446655440001  available
+550e8400-e29b-41d4-a716-446655440002  available
+550e8400-e29b-41d4-a716-446655440003  available
+```
+
+!!! warning "Common errors"
+    **`Error: Certificate not found: <client-cert-name>`** — Verify the certificate exists using `security certificate show` and use the exact certificate name from the output.
+    **`Error: Key server <kmip-server-ip>:5696 is not reachable`** — Confirm network connectivity to the KMIP server with `ping <kmip-server-ip>` and verify the firewall allows port 5696.
+    **`Error: KMIP server certificate validation failed`** — Ensure the server CA certificate was installed correctly and matches the KMIP server's actual CA using `security certificate show -type server-ca`.
 ### Key Manager Decision
 
 ```d2
@@ -280,6 +452,44 @@ security key-manager external show
 security key-manager external check
 ```
 
+
+```text title="Expected output"
+Key Manager Status:
+  Key Manager Type: onboard
+  Key Manager Status: available
+  Node: cluster1-01
+  Key Store Status: available
+  Key Store Type: NSE
+
+Key Manager Configuration:
+  Key Manager Type: onboard
+  Status: available
+  Nodes: 2
+  Node cluster1-01: available
+  Node cluster1-02: available
+
+Onboard Key Manager Status:
+  Status: available
+  Backup Status: completed
+  Backup Date: 2024-01-15 14:32:18 UTC
+  Node cluster1-01: available
+  Node cluster1-02: available
+
+External Key Manager (KMIP) Configuration:
+  Status: not configured
+  KMIP Server: not configured
+  Connection Status: N/A
+
+External Key Manager Check:
+  KMIP Server: not configured
+  Status: N/A
+  Last Check: never
+```
+
+!!! warning "Common errors"
+    **`Error: Key manager is not configured`** — Run `security key-manager onboard create` to initialize onboard key management or configure KMIP servers with `security key-manager external add-servers`.
+    **`Error: Connection failed to KMIP server <ip>:5696`** — Verify network connectivity to the KMIP server, confirm firewall rules allow port 5696, and check that the KMIP server certificate is valid with `security key-manager external check`.
+    **`Error: Backup status is failed`** — Manually trigger an onboard key manager backup with `security key-manager onboard create-backup` and verify sufficient disk space is available.
 ---
 
 ## TLS and SSH Hardening
@@ -298,6 +508,48 @@ openssl s_client -connect <cluster-mgmt-ip>:443 -tls1_1
 # Should fail (connection rejected) if TLS 1.2 minimum is enforced
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+
+Interface: HTTPS
+Min Protocol Version: TLSv1.2
+Max Protocol Version: TLSv1.3
+Ciphers: DEFAULT
+Certificate: cluster-cert-20240115
+
+CONNECTED(00000003)
+depth=0 /C=US/ST=California/L=San Jose/O=NetApp/CN=cluster-mgmt.example.com
+verify error:num=20:unable to get local issuer certificate
+verify return:1
+---
+Certificate chain
+ 0 s:/C=US/ST=California/L=San Jose/O=NetApp/CN=cluster-mgmt.example.com
+   i:/C=US/ST=California/L=San Jose/O=NetApp/CN=cluster-mgmt.example.com
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+MIIDazCCAlOgAwIBAgIUK7x8z9pQ2k5vR8mJ3xL9z4kL2+0wDQYJKoZIhvcNAQEL
+...
+-----END CERTIFICATE-----
+---
+SSL-Session:
+    Protocol  : TLSv1.1
+    Cipher    : ECDHE-RSA-AES256-SHA
+    Session-ID: A1B2C3D4E5F6...
+    Session-ID-ctx: 
+    Master-Key: 00112233445566778899AABBCCDDEEFF...
+    Key-Arg   : None
+    Compression: None
+    Start Time: 1705334400
+    Timeout   : 300 (sec)
+    Verify return code: 20 (unable to get local issuer certificate)
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid value for min-protocol-version`** — Verify the cluster supports the specified TLS version; use `security config show` to see available options.
+    **`unable to get local issuer certificate`** — This is expected when testing with openssl against a self-signed cluster certificate; add `-CAfile <cert-path>` or use `-showcerts` to view the full chain.
+    **`Connection refused` or `Connection reset by peer`** — Confirm the cluster management IP is correct and HTTPS port 443 is reachable with `ping <cluster-mgmt-ip>` and `nc -zv <cluster-mgmt-ip> 443`.
 ### Restrict SSH Ciphers and MACs
 
 ```bash
@@ -315,6 +567,25 @@ security ssh modify -vserver <cluster-name> \
     -key-exchange-algorithms ecdh-sha2-nistp256,ecdh-sha2-nistp384,diffie-hellman-group14-sha256
 ```
 
+
+```text title="Expected output"
+cluster1::> security ssh modify -vserver cluster1 -ciphers aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com -macs hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
+(no output — command completes silently)
+
+cluster1::> security ssh show -vserver cluster1
+Vserver: cluster1
+Ciphers: aes256-ctr,aes192-ctr,aes128-ctr,aes256-gcm@openssh.com,aes128-gcm@openssh.com
+MAC Algorithms: hmac-sha2-256,hmac-sha2-512,hmac-sha2-256-etm@openssh.com
+Key Exchange Algorithms: ecdh-sha2-nistp256,ecdh-sha2-nistp384,diffie-hellman-group14-sha1
+Server Host Key Algorithms: ssh-rsa,rsa-sha2-256,rsa-sha2-512,ecdsa-sha2-nistp256
+
+cluster1::> security ssh modify -vserver cluster1 -key-exchange-algorithms ecdh-sha2-nistp256,ecdh-sha2-nistp384,diffie-hellman-group14-sha256
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: "cluster-name" is not a valid vserver name`** — Replace `<cluster-name>` with the actual cluster or SVM name (e.g., `cluster1` or `svm-prod`).
+    **`Error: This command is not supported on this release of Data ONTAP`** — Verify ONTAP version is 9.10 or later for key-exchange-algorithms parameter; use `system node image show` to check.
 ### Disable Telnet and RSH
 
 These protocols must not be enabled on production clusters:
@@ -329,6 +600,27 @@ security protocol modify -application telnet -enabled false
 security protocol modify -application rsh -enabled false
 ```
 
+
+```text title="Expected output"
+Application     Enabled
+------------    -------
+ssh             true
+telnet          false
+rsh             false
+snmp            true
+http            false
+https           true
+ntp             true
+nfs             true
+cifs            true
+
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: "telnet" is not a valid application name`** — Use the exact application identifier from `security protocol show` output (e.g., `telnet` vs `Telnet`); verify case sensitivity.
+    **`Error: This operation is not permitted: insufficient privileges`** — Ensure you are logged in with admin-level credentials or a role with security protocol modification permissions.
 ### FIPS 140-2 Mode
 
 ONTAP supports a FIPS 140-2 compliance mode that restricts cryptographic algorithms to FIPS-approved ciphers and disallows non-compliant algorithms for all management interfaces.
@@ -343,6 +635,24 @@ security config modify -is-fips-enabled true
 security config show -fields is-fips-enabled
 ```
 
+
+```text title="Expected output"
+Warning: Enabling FIPS 140-2 mode will disconnect SSH sessions using non-FIPS ciphers.
+Do you want to continue? {y|n}: y
+
+Processing FIPS mode enablement...
+FIPS 140-2 compliance mode has been enabled successfully.
+Note: SSH service will restart. Active sessions may be disconnected.
+
+Vserver Cluster
+------- -------
+is-fips-enabled true
+```
+
+!!! warning "Common errors"
+    **`Error: Command failed: FIPS mode cannot be enabled while non-compliant ciphers are active in SSH configuration`** — Run `security ssh modify -vserver <vserver> -ciphers fips` to restrict SSH to FIPS-approved ciphers before enabling FIPS mode.
+    **`Error: This operation requires cluster administrator privileges`** — Verify your user account has the "admin" role by running `security login show -user-or-group-name <username>`.
+    **`Warning: Some management clients may lose connectivity after FIPS enablement`** — Test FIPS compatibility with your management tools (e.g., SSH clients, API clients) on a non-production cluster first, or ensure they support only FIPS-approved algorithms (AES, SHA-2, ECDSA).
 FIPS mode implications:
 - SSLv3, TLSv1.0, TLSv1.1 are disabled
 - SSH ciphers are restricted to AES-128-CTR, AES-192-CTR, AES-256-CTR
@@ -368,6 +678,32 @@ security certificate show -fields common-name,expiration-date | \
     awk 'NR>1 {print}' | sort -k2
 ```
 
+
+```text title="Expected output"
+Vserver     Certificate Name                       Expiration Date
+----------- -------------------------------------- -------------------
+cluster1    cluster1-ca                            2025-08-14
+cluster1    cluster1-self-signed                   2026-03-22
+svm-prod    svm-prod-server-cert                   2025-02-18
+svm-prod    svm-prod-client-cert                   2025-11-30
+svm-dr      svm-dr-server-cert                     2025-01-28
+
+Common Name                    Expiration Date        Type
+------------------------------ ---------------------- --------------------
+cluster1-ca                    2025-08-14             root-ca
+svm-prod-server-cert           2025-02-18             server
+svm-prod-client-cert           2025-11-30             client
+svm-dr-server-cert             2025-01-28             server
+
+svm-dr-server-cert             2025-01-28
+svm-prod-server-cert           2025-02-18
+cluster1-ca                    2025-08-14
+```
+
+!!! warning "Common errors"
+    **`Error: This command requires cluster administrative privileges.`** — Run the command with cluster admin credentials or use `set -privilege advanced` if already authenticated.
+    **`Error: Vserver "<svm>" does not exist.`** — Verify the SVM name with `vserver show` and use the correct vserver name in the `-vserver` parameter.
+    **`Error: Invalid field name "common-name".`** — Use the correct field name `common_name` (underscore instead of hyphen) in the `-fields` parameter.
 ### Generating a CSR and Installing a Signed Certificate
 
 ```bash
@@ -392,6 +728,29 @@ security certificate install -vserver <svm> -type server-ca
 # Paste the CA chain PEM when prompted
 ```
 
+
+```text title="Expected output"
+Certificate Signing Request (CSR) generated successfully.
+
+-----BEGIN CERTIFICATE REQUEST-----
+MIICljCCAX4CAQAwQDELMAkGA1UEBhMCVVMxETAPBgNVBAgMCE5ldyBZb3JrMREw
+DwYDVQQHDAhOZXcgWW9yazELMAkGA1UECgwCQ0ExDDAKBgNVBAsMA0lUUzCCASIw
+DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALk2p9vK8mR3Q7xJ2vF4nK9pZqKH
+5mN8vR6xJ2vF4nK9pZqKH5mN8vR6xJ2vF4nK9pZqKH5mN8vR6xJ2vF4nK9pZqKH
+5mN8vR6xJ2vF4nK9pZqKH5mN8vR6xJ2vF4nK9pZqKH5mN8vR6xJ2vF4nK9pZqKH
+-----END CERTIFICATE REQUEST-----
+
+Server certificate installed successfully on SVM "svm-prod-01".
+Certificate serial number: 01:A2:B3:C4:D5:E6:F7:08
+Expiration date: 2026-03-15
+
+CA chain certificate installed successfully on SVM "svm-prod-01".
+Certificate serial number: 02:F8:E7:D6:C5:B4:A3:91
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid FQDN format for common-name`** — Ensure the cluster FQDN is a valid fully-qualified domain name (e.g., cluster.example.com, not just "cluster").
+    **`Error: Certificate installation failed - certificate does not match private key`** — Verify that the PEM certificate pasted matches the CSR that was generated; if not, request a new signed certificate from the CA.
 ### Certificate Rotation for System Manager (HTTPS)
 
 ```bash
@@ -407,6 +766,28 @@ security ssl modify -vserver <svm> -certificate-name <new-cert-common-name>
 security ssl show -vserver <svm>
 ```
 
+
+```text title="Expected output"
+cluster1::> security certificate delete -vserver svm1 -common-name ontap.example.com -type server
+(no output — command completes silently)
+
+cluster1::> security ssl modify -vserver svm1 -certificate-name ontap.example.com
+(no output — command completes silently)
+
+cluster1::> security ssl show -vserver svm1
+Vserver: svm1
+Common Name: ontap.example.com
+Serial Number: 01A2B3C4D5E6F7G8H9I0
+Issuer: CN=ontap.example.com,O=Example Corp,C=US
+Validity Start: Mon Jan 15 08:22:14 2024
+Validity End: Tue Jan 14 08:22:14 2025
+Certificate Type: server
+Hash Function: sha256
+```
+
+!!! warning "Common errors"
+    **`Error: certificate "ontap.example.com" does not exist`** — Verify the exact common name of the certificate to delete using `security certificate show -vserver <svm>` before attempting deletion.
+    **`Error: Cannot modify SSL certificate: certificate not found`** — Ensure the new certificate has been installed first using `security certificate install` and use the exact certificate common name in the modify command.
 ### Certificate Monitoring
 
 Set up EMS alerting for certificate expiry:
@@ -422,6 +803,23 @@ event notification create -filter-name cert-filter -destinations cert-alerts
 event filter create -filter-name cert-filter -type include -messagename sslcert.*
 ```
 
+
+```text title="Expected output"
+There are no entries matching your query.
+
+There are no entries matching your query.
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: "cert-alerts" already exists.`** — Use `event notification destination show` to list existing destinations and choose a unique name or delete the existing one with `event notification destination delete -name cert-alerts`.
+    
+    **`Error: "cert-filter" already exists.`** — Verify the filter name is unique with `event filter show` or use `event filter delete -filter-name cert-filter` before recreating it.
 ---
 
 ## See also

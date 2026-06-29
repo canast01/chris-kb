@@ -121,6 +121,51 @@ security login unlock -username <user> -vserver <svm>
 security login delete -username <user> -application ssh -vserver <svm>
 ```
 
+
+```text title="Expected output"
+cluster1::> security login show
+Vserver: cluster1
+                                                                   Is-SU-
+User/Group                 Application                 Method    Locked
+-------------------------- --------------------------- ---------- ------
+admin                      console                     password  false
+admin                      http                        password  false
+admin                      ontapi                      password  false
+admin                      ssh                         password  false
+cluster1::> security login show -vserver svm-prod
+Vserver: svm-prod
+                                                                   Is-SU-
+User/Group                 Application                 Method    Locked
+-------------------------- --------------------------- ---------- ------
+dataadmin                  ssh                         password  false
+monitor                    ssh                         publickey false
+cluster1::> security login show -fields username,application,authmethod,role,is-account-locked
+Vserver   Username   Application   Authmethod   Role              Is-Account-Locked
+--------- ---------- ------------- ------------ ----------------- ------------------
+cluster1  admin      ssh           password     admin             false
+cluster1  backup-svc ssh           publickey    backup            false
+svm-prod  dataadmin  ssh           password     vsadmin           false
+svm-prod  monitor    ssh           publickey    monitor-role      false
+cluster1::> security login create -username svc-backup -application ssh -authentication-method password -role admin -vserver cluster1
+Enter a password for user "svc-backup":
+Confirm the password:
+(no output — command completes silently)
+cluster1::> security login password -username dataadmin -vserver svm-prod
+Enter a password for user "dataadmin":
+Confirm the password:
+(no output — command completes silently)
+cluster1::> security login lock -username monitor -vserver svm-prod
+(no output — command completes silently)
+cluster1::> security login unlock -username monitor -vserver svm-prod
+(no output — command completes silently)
+cluster1::> security login delete -username svc-backup -application ssh -vserver cluster1
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: "svc-monitor" is not a valid user name for Vserver "cluster1".`** — Verify the username exists with `security login show` before attempting to modify it.
+    **`Error: Failed to set password: Account is locked.`** — Unlock the account first using `security login unlock -username <user> -vserver <svm>`.
+    **`Error: Cannot delete user "admin" from application "ssh": Admin user cannot be deleted.`** — Create an alternative admin account before attempting to remove the default admin user.
 ### Built-in Accounts
 
 | Account | Default State | Notes |
@@ -135,6 +180,14 @@ Always lock the `diag` account on production clusters:
 security login lock -username diag -vserver <cluster-name>
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: "diag" is not a valid user on vserver "cluster-prod"`** — Verify the username exists with `security login show` before locking.
+    **`Error: This operation is not permitted: user "admin" cannot lock built-in user "diag"`** — Use a cluster admin account or check if the user role permits lock operations.
 ---
 
 ## SSH Public Key Authentication
@@ -163,6 +216,28 @@ security login publickey show
 security login publickey show -username admin
 ```
 
+
+```text title="Expected output"
+Public Key created.
+
+Public Key created.
+
+Index Username                   Algorithm  Fingerprint
+----- -------------------------- ---------- ----------------------------------------
+0     admin                      rsa        SHA256:KxZ9pL2mN8vQ3rT5wY7aB1cD4eF6gH9jK0lM2nO4pQ
+1     admin                      rsa        SHA256:9mK8lJ7iH6gF5dE4cR3bQ2aP1oN0mL9kJ8iH7gF6e
+0     svc-ansible                ed25519    SHA256:TpQ1rS2tU3vW4xY5zA6bB7cC8dD9eE0fF1gG2hH3iI
+0     diag                       rsa        SHA256:MnO9pQ0rR1sS2tT3uU4vV5wW6xX7yY8zA9bB0cC1dD
+
+Index Username                   Algorithm  Fingerprint
+----- -------------------------- ---------- ----------------------------------------
+0     admin                      rsa        SHA256:KxZ9pL2mN8vQ3rT5wY7aB1cD4eF6gH9jK0lM2nO4pQ
+1     admin                      rsa        SHA256:9mK8lJ7iH6gF5dE4cR3bQ2aP1oN0mL9kJ8iH7gF6e
+```
+
+!!! warning "Common errors"
+    **`Error: Entry already exists at index 0`** — Use a different index number (e.g., `-index 1`) or delete the existing key first with `security login publickey delete`.
+    **`Error: Invalid public key format`** — Ensure the key string is complete and properly formatted (starts with `ssh-rsa`, `ssh-ed25519`, or `ecdsa-sha2-nistp256`).
 ### Requiring Key-Only Authentication
 
 After confirming key authentication works, disable password auth for the admin account:
@@ -176,6 +251,19 @@ security login delete -username admin -application ssh -authentication-method pa
 security login show -username admin
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+
+Vserver Name: cluster1
+UserName                Vserver Name            Authentication Methods
+-------                 -------                 ----------------------
+admin                   cluster1                publickey
+```
+
+!!! warning "Common errors"
+    **`Error: entry doesn't exist`** — Verify the admin user exists and the authentication method is currently set to password using `security login show -username admin` before deletion.
+    **`Error: Cannot delete the last authentication method`** — Ensure key-based authentication is already configured and tested for admin before removing the password method, or use a different user account for the deletion command.
 ### Key Rotation
 
 ```bash
@@ -189,6 +277,16 @@ security login publickey delete -username admin -index 0
 security login publickey modify -username admin -index 1 -new-index 0
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: entry already exists`** — Verify the public key doesn't already exist for this user with `security login publickey show -username admin`.
+    **`Error: cannot delete the last public key for user`** — Ensure at least one valid public key remains; create the new key and test SSH access before deleting the old one.
 ---
 
 ## Active Directory / CIFS Authentication
@@ -216,6 +314,30 @@ vserver cifs show -vserver <svm> -fields ad-status
 vserver cifs domain discovered-servers show -vserver <svm>
 ```
 
+
+```text title="Expected output"
+Vserver: svm_prod_01
+CIFS Server Name: NAS-PROD-01
+Domain: domain.corp
+Organizational Unit: OU=StorageServers,DC=domain,DC=corp
+Domain Workgroup: DOMAIN
+Status: joined
+
+Vserver            AD-Status
+------------------ ----------
+svm_prod_01        joined
+
+Server Name          Address         Preferred
+-------------------- --------------- ---------
+dc01.domain.corp     192.168.10.45   true
+dc02.domain.corp     192.168.10.46   false
+dc03.domain.corp     192.168.10.47   false
+```
+
+!!! warning "Common errors"
+    **`CIFS server "NAS-PROD-01" already exists on Vserver "svm_prod_01".`** — Verify the SVM is not already domain-joined using `vserver cifs show -vserver <svm>` before attempting to create a new CIFS server.
+    **`Failed to join domain "domain.corp": Authentication failed (Kerberos error 24)`** — Confirm Domain Admin credentials are correct and the SVM has network connectivity to at least one domain controller on port 389 (LDAP) and 88 (Kerberos).
+    **`Failed to join domain "domain.corp": The specified organizational unit does not exist.`** — Verify the OU path exists in Active Directory and use the correct DN format (e.g., `OU=StorageServers,DC=domain,DC=corp`).
 ### Domain Account Management Login
 
 Domain accounts can be granted ONTAP management access without requiring a local account:
@@ -241,6 +363,28 @@ security login create \
 security login show -authentication-method domain
 ```
 
+
+```text title="Expected output"
+cluster1::> security login create -username "DOMAIN\admin-user" -application ssh -authentication-method domain -role admin -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login create -username "DOMAIN\StorageAdmins" -application ssh -authentication-method domain -role admin -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login show -authentication-method domain
+Vserver: cluster1
+                                                 Authentication             Acct
+User/Group Name              Application Method    Locked Role Name
+---------------------------- ----------- --------- ------ ----------------
+DOMAIN\admin-user            ssh         domain     false  admin
+DOMAIN\StorageAdmins         ssh         domain     false  admin
+2 entries were displayed.
+```
+
+!!! warning "Common errors"
+    **`Error: "DOMAIN\admin-user" is not a valid user name`** — Escape the backslash properly in your shell context or use single quotes around the username string.
+    **`Error: This user already exists`** — The login entry already exists; use `security login modify` to change its role or authentication method instead.
+    **`Error: Domain authentication is not configured`** — Configure LDAP or Active Directory on the cluster first using `security config modify -authentication-method domain`.
 ---
 
 ## LDAP Integration
@@ -273,6 +417,34 @@ vserver services name-service ldap show -vserver <svm>
 vserver services name-service ldap check -vserver <svm>
 ```
 
+
+```text title="Expected output"
+LDAP client configuration created successfully.
+
+LDAP configuration applied to SVM.
+
+Vserver: svm-prod-01
+Client Config: ldap-corp-primary
+Servers: 10.50.12.45
+Base DN: DC=domain,DC=corp
+Bind DN: CN=svc-ontap-ldap,OU=Service Accounts,DC=domain,DC=corp
+Schema: RFC-2307
+Client Enabled: true
+Query Timeout: 3 seconds
+Bind Timeout: 3 seconds
+
+LDAP connectivity check results:
+Server: 10.50.12.45
+Port: 389
+Status: up
+Response Time: 142ms
+Bind Status: successful
+```
+
+!!! warning "Common errors"
+    **`Error: "LDAP client config <ldap-config-name> already exists"`** — Use a unique client configuration name or delete the existing config with `vserver services name-service ldap client delete`.
+    **`Error: "LDAP server <ldap-server-ip> is unreachable"`** — Verify network connectivity to the LDAP server, check firewall rules for port 389/636, and confirm the IP address is correct.
+    **`Error: "Invalid bind DN or password"`** — Verify the bind account credentials and DN format match your Active Directory structure using `ldapsearch` from a test client.
 ### Name Service Switch
 
 The name service switch defines the order in which ONTAP resolves user and group information:
@@ -290,6 +462,31 @@ vserver services name-service ns-switch modify -vserver <svm> \
     -database netgroup -sources files,ldap
 ```
 
+
+```text title="Expected output"
+Vserver: svm-prod-01
+Database    Sources
+----------  ----------------
+hosts       files,dns
+passwd      files,ldap
+group       files,ldap
+netgroup    files,ldap
+services    files
+netmasks    files
+protocols   files
+rpc         files
+ethers      files
+bootparams  files
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: "svm-prod-01" is not a valid vserver name`** — Verify the SVM name exists with `vserver show` and use the correct name in the `-vserver` parameter.
+    **`Error: Invalid value specified for option "sources": "files,ldap"`** — Ensure LDAP is configured on the SVM first with `vserver services name-service ldap client create` before adding it to ns-switch sources.
+    **`Error: Access denied. Insufficient privileges to perform the requested operation`** — Run the commands with cluster admin credentials or ensure your role has `vserver-admin` privileges.
 ---
 
 ## SNMPv3 Authentication
@@ -321,6 +518,32 @@ system snmp community show
 # Expected: no entries
 ```
 
+
+```text title="Expected output"
+SNMPv3 user "snmpv3monitor" created successfully.
+Trap host 192.168.45.120 added for user snmpv3monitor.
+
+SNMP Status:
+  Status: enabled
+  Auth Traps Enabled: true
+  Contact: 
+  Location: 
+
+SNMPv3 Users:
+  User Name: snmpv3monitor
+  Engine ID: 800007E5A1A2B3C4D5E6F7A8B9C0D1E2F3
+  Auth Protocol: sha
+  Privacy Protocol: aes128
+  Access Level: admin
+
+SNMPv1/v2c Communities:
+  (no entries)
+```
+
+!!! warning "Common errors"
+    **`Error: SNMP user "snmpv3monitor" already exists`** — Delete the existing user with `system snmp user delete -username snmpv3monitor` before recreating it.
+    **`Error: Invalid IP address <monitoring-host-ip>`** — Replace `<monitoring-host-ip>` with a valid IPv4 address (e.g., 192.168.45.120) and ensure the monitoring host is reachable from the cluster.
+    **`Error: Community string "public" does not exist`** — Verify the community name exists first by running `system snmp community show` before attempting deletion.
 Recommended SNMPv3 security levels:
 
 | Parameter | Recommended Value | Notes |
@@ -350,6 +573,28 @@ security saml-sp show
 security saml-sp idp show
 ```
 
+
+```text title="Expected output"
+SAML Service Provider created successfully.
+
+Vserver: cluster
+IdP URI: https://idp.example.com/metadata.xml
+SP Host: cluster-mgmt.example.com
+Enabled: true
+Binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
+NameID Format: urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
+
+Vserver: cluster
+IdP URI: https://idp.example.com/metadata.xml
+IdP Cert Issuer: CN=idp.example.com,O=Example Corp,C=US
+IdP Cert Serial: 4A:B2:C3:D4:E5:F6:7A:8B
+IdP Cert Expiry: 2026-03-15
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid IdP metadata URL format`** — Verify the `-idp-uri` parameter is a valid HTTPS URL and the metadata endpoint is accessible from the cluster.
+    **`Error: SAML SP already exists on vserver "cluster"`** — Delete the existing SAML SP configuration with `security saml-sp delete` before creating a new one.
+    **`Error: Cannot resolve cluster management FQDN`** — Ensure the `-sp-host` parameter matches the cluster's management interface FQDN and is resolvable in DNS.
 SAML configuration requires:
 1. Download the ONTAP SP metadata from `https://<cluster-mgmt>/saml-service-provider-metadata.xml`
 2. Register the SP in your IdP (ADFS, Okta, or Azure AD) using the SP metadata
@@ -367,6 +612,21 @@ SAML enforcement locks out password-based System Manager login. Maintain a local
 security login show -username admin -application ssh
 ```
 
+
+```text title="Expected output"
+Vserver: cluster1
+Username: admin
+Application: ssh
+Authentication-method: publickey
+Role: admin
+Locked: false
+Expire-time: -
+Comment: -
+```
+
+!!! warning "Common errors"
+    **`Error: "admin" is not a valid username for Vserver "cluster1"`** — Verify the username exists with `security login show` and use the correct Vserver name with `-vserver` parameter if in a multi-Vserver environment.
+    **`Error: entry doesn't exist`** — Ensure an SSH public key is already configured for the admin user with `security login publickey load-from-uri` or `security login publickey create` before enabling SAML.
 ---
 
 ## Kerberos for NFS
@@ -397,6 +657,41 @@ vserver nfs kerberos realm create \
     -adserver-name <dc-hostname>
 ```
 
+
+```text title="Expected output"
+Vserver: svm-prod-01
+LIF: nfs_lif_01
+Kerberos Enabled: true
+SPN: nfs/nfs-prod-01.corp.local@CORP.LOCAL
+Realm: CORP.LOCAL
+
+Vserver: svm-prod-01
+LIF: nfs_lif_01
+SPN: nfs/nfs-prod-01.corp.local@CORP.LOCAL
+Status: enabled
+
+Vserver: svm-prod-01
+Realm: CORP.LOCAL
+KDC Vendor: Microsoft
+KDC IP: 192.168.1.50
+KDC Port: 88
+AD Server IP: 192.168.1.50
+AD Server Name: dc-01.corp.local
+
+Vserver: svm-prod-01
+Realm: CORP.LOCAL
+KDC Vendor: Microsoft
+KDC IP: 192.168.1.50
+KDC Port: 88
+AD Server IP: 192.168.1.50
+AD Server Name: dc-01.corp.local
+Status: created
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: Kerberos realm CORP.LOCAL already exists`** — Check existing realms with `vserver nfs kerberos realm show` before creating a new one.
+    **`Error: command failed: LIF nfs_lif_01 is not configured for NFS`** — Ensure the LIF has NFS protocol enabled using `vserver nfs create` or `network interface modify`.
+    **`Error: command failed: Cannot resolve KDC hostname or IP address unreachable`** — Verify network connectivity to the domain controller IP and confirm the KDC port 88 is open in firewall rules.
 Kerberos security flavors for NFS exports:
 
 | Flavor | Authentication | Integrity | Encryption |
@@ -416,6 +711,15 @@ vserver export-policy rule modify \
     -rwrule krb5p \
     -superuser krb5p
 ```
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: "krb5p" is not a valid value for this parameter`** — Use valid authentication methods like `krb5`, `krb5i`, `sys`, or `none` instead of `krb5p`.
+    **`Error: policy <policy> does not exist`** — Verify the policy name is correct and exists on the SVM using `vserver export-policy show -vserver <svm>`.
+    **`Error: rule index 1 does not exist in policy <policy>`** — Check available rule indices with `vserver export-policy rule show -vserver <svm> -policyname <policy>` before modifying.
 ---
 
 ## Related Reference
