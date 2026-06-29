@@ -116,6 +116,27 @@ FOD itself has no software maintenance requirement. However, any planned workloa
 symcfg -sid <sid> list -fod -v
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000296900111
+
+FOD Feature                          Status          Expiry Date
+================================================================================
+SRDF/A                               Licensed        2025-06-15
+SRDF/S                               Licensed        2025-06-15
+TimeFinder/Clone                      Licensed        2025-06-15
+TimeFinder/Snap                       Licensed        2025-06-15
+RecoverPoint                          Not Licensed    N/A
+VMAX All Flash                        Licensed        2025-12-31
+Thin Provisioning                     Licensed        Perpetual
+Replication Manager                   Licensed        2025-06-15
+...
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Ensure the Symmetrix CLI package is installed and the PATH includes the bin directory (typically `/opt/emc/SYMCLI/bin`).
+    **`symcfg: Cannot connect to the Symmetrix`** — Verify the Symmetrix ID is correct, the array is reachable on the network, and the Solutions Enabler daemon is running on the management host.
+    **`SYMAPI_C_ARRAY_NOT_FOUND (SYM-00019457)`** — Confirm the SID exists in the Symmetrix configuration file and matches the actual array serial number.
 The output includes feature name, licence state (Active / Inactive / Expired), and expiry date. Use this output as the basis for quarterly licence audits and renewals.
 
 ## Deactivate an Unused FOD Feature

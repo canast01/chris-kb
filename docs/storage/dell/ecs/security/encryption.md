@@ -116,6 +116,33 @@ openssl s_client -connect <ecs-node>:9021 -tls1 </dev/null 2>&1 | grep -E "CONNE
 openssl s_client -connect <ecs-node>:9021 -tls1_2 </dev/null 2>&1 | grep -E "CONNECTED|Protocol"
 ```
 
+
+```text title="Expected output"
+Starting Nmap 7.80 ( https://nmap.org ) at 2024-01-15 14:32:22 UTC
+Nmap scan report for ecs-node-01.prod.local (10.42.8.15)
+Host is up (0.0042s latency).
+
+PORT     STATE SERVICE
+9021/tcp open  unknown
+
+TLSv1.2:
+  ciphers:
+    TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+    TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+    TLS_RSA_WITH_AES_256_GCM_SHA384 - A
+  least strength: A
+
+CONNECTED
+140735289855680:error:1409E0E5:SSL routines:SSL_CONNECT_EX:ssl/tls alert handshake failure:../ssl/statem/connections.c:571:
+
+CONNECTED
+Protocol  : TLSv1.2
+Cipher    : ECDHE-RSA-AES256-GCM-SHA384
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify the ECS node is running and port 9021 is accessible; check firewall rules and that the management service is listening with `netstat -tlnp | grep 9021`.
+    **`error:1409E0E5:SSL routines:SSL_CONNECT_EX:ssl/tls alert handshake failure`** — This is expected output when TLS 1.0 is correctly rejected; it confirms the security policy is working as intended.
 ### HTTP Disablement
 
 Disable HTTP (port 9021 plain HTTP) in production. Only HTTPS should be accessible for S3 clients.
@@ -156,6 +183,30 @@ curl -s -k -X POST \
   }' | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "compliance-data",
+  "link": {
+    "rel": "self",
+    "href": "/object/namespaces/compliance-data"
+  },
+  "creation_time": 1704067200000,
+  "vpool": "urn:storageos:ReplicationGroupInfo/rg-prod-001",
+  "is_encryption_enabled": true,
+  "is_compliance_enabled": true,
+  "is_stale_allowed": false,
+  "default_retention": 0,
+  "namespace_admins": [],
+  "quota": -1,
+  "quota_warn_threshold": 80
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's not removed).
+    **`{"error_code":401,"error_message":"Invalid or expired authentication token"}`** — Regenerate the authentication token with `curl -s -k -X GET -H "Authorization: Basic $(echo -n 'root:PASSWORD' | base64)" https://<ecs-node>:4443/login` and export it to `$TOKEN`.
+    **`{"error_code":400,"error_message":"Invalid replication group ID"}`** — Verify the replication group ID exists by running `curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" https://<ecs-node>:4443/object/replication-groups | python3 -m json.tool` and use a valid `id` from the output.
 ### Key Management
 
 **Internal ECS KMS:**
@@ -225,6 +276,19 @@ echo "Certificate expires in $DAYS_LEFT days"
 [[ $DAYS_LEFT -lt 30 ]] && echo "WARNING: Certificate renewal required"
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 10:23:45 2023 GMT
+notAfter=Jan 15 10:23:45 2025 GMT
+notBefore=Jan 15 10:23:45 2023 GMT
+notAfter=Jan 15 10:23:45 2025 GMT
+Certificate expires in 287 days
+```
+
+!!! warning "Common errors"
+    **`unable to connect to <ecs-node>:4443`** — Verify the ECS node hostname/IP is correct and the Management API port 4443 is accessible from your client (check firewall rules and node status).
+    **`date: invalid date '<date-string>'`** — Ensure your system's `date` command supports the `-d` flag (use `date -j` on macOS, or install GNU coreutils on BSD systems).
+    **`error in x509 parsing`** — Confirm the certificate chain is valid by running `openssl s_client -connect <ecs-node>:4443 -showcerts` to inspect the full certificate output.
 ---
 
 ## See also

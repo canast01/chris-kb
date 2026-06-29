@@ -135,6 +135,88 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
 curl -sk -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/logout" > /dev/null
 ```
 
+
+```text title="Expected output"
+X-SDS-AUTH-TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzeXNhZG1pbiIsImV4cCI6MTcwOTMzNDU2MH0.a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
+{
+  "totalProvisioned_gb": 50000,
+  "usedCapacity_gb": 34567,
+  "availableCapacity_gb": 15433,
+  "percentageUsed": 69.1
+}
+{
+  "nodes": [
+    {
+      "id": "ecs-node-01",
+      "nodestatus": "GOOD",
+      "ip": "192.168.1.101",
+      "version": "3.6.1.1.0.20240101"
+    },
+    {
+      "id": "ecs-node-02",
+      "nodestatus": "GOOD",
+      "ip": "192.168.1.102",
+      "version": "3.6.1.1.0.20240101"
+    },
+    {
+      "id": "ecs-node-03",
+      "nodestatus": "DEGRADED",
+      "ip": "192.168.1.103",
+      "version": "3.6.1.1.0.20240101"
+    }
+  ]
+}
+{
+  "id": "ecs-node-03",
+  "nodestatus": "DEGRADED",
+  "cpuUsage": 78.5,
+  "memoryUsage": 82.3,
+  "diskUsage": 91.2,
+  "replicationFactor": 3,
+  "activeAlerts": 2
+}
+{
+  "alerts": [
+    {
+      "id": "alert-8472",
+      "severity": "WARNING",
+      "message": "Disk usage on ecs-node-03 exceeds 90%",
+      "timestamp": "2024-01-15T09:23:45Z"
+    },
+    {
+      "id": "alert-8471",
+      "severity": "CRITICAL",
+      "message": "Replication lag detected on vpool-prod: 2.5GB behind",
+      "timestamp": "2024-01-15T08:15:22Z"
+    }
+  ]
+}
+{
+  "version": "3.6.1.1.0.20240101",
+  "buildNumber": "20240101.001",
+  "releaseDate": "2024-01-01"
+}
+{
+  "geoReplicationStatus": "HEALTHY",
+  "sites": [
+    {
+      "name": "dc-primary",
+      "status": "ACTIVE",
+      "lag_bytes": 0
+    },
+    {
+      "name": "dc-secondary",
+      "status": "ACTIVE",
+      "lag_bytes": 1048576
+    }
+  ]
+}
+{
+  "vpools": [
+    {
+      "id": "vpool-prod",
+      "name": "Production",
+```
 ---
 
 ## Step 2 — S3 API diagnostics
@@ -177,6 +259,35 @@ curl -sv --max-time 10 "https://<ecs-s3-endpoint>:9021/" \
   --insecure 2>&1 | grep -E "< HTTP|Connected|SSL|certificate"
 ```
 
+
+```text title="Expected output"
+2024-01-15 10:23:45 prod-bucket-01
+2024-01-15 10:24:12 prod-bucket-02
+2024-01-15 10:24:33 archive-bucket
+(no output — command completes silently)
+(no output — command completes silently)
+2024-01-15 10:25:01       4096 backup/
+2024-01-15 10:25:02    1048576 data-export-2024-01.tar.gz
+2024-01-15 10:25:03     512000 config.json
+(no output — command completes silently)
+Status: ENABLED
+MFADelete: DISABLED
+(no output — command completes silently)
+(no output — command completes silently)
+notBefore=Jan 15 08:30:00 2024 GMT
+notAfter=Jan 15 08:30:00 2025 GMT
+subject=CN=ecs-s3-node01.prod.local
+issuer=CN=ECS-CA,O=Dell EMC,C=US
+* Connected to ecs-s3-node01.prod.local (192.168.1.45) port 9021 (#0)
+< HTTP/1.1 200 OK
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* Server certificate: subject name 'ecs-s3-node01.prod.local' matched
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.`** — Verify the AWS profile credentials in ~/.aws/credentials are correct and the ECS user has S3 access permissions.
+    **`An error occurred (NoSuchBucket) when calling the HeadBucket operation: The specified bucket does not exist.`** — Confirm the bucket name is spelled correctly and exists in the ECS cluster by listing all buckets first.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `--insecure` flag to curl or import the ECS CA certificate into your system trust store to bypass SSL verification.
 ### Workflow: S3 Access Denied
 
 1. Confirm the access key and secret key are correct (secret keys cannot be retrieved from ECS — if lost, rotate)
@@ -215,6 +326,57 @@ viprexec -v -cmd "free -h"
 ps aux | grep -E "storageos|caspian|java" | grep -v grep
 ```
 
+
+```text title="Expected output"
+admin@ecs-node-01:~$ systemctl status storageos
+● storageos.service - Dell EMC ECS StorageOS Service
+     Loaded: loaded (/etc/systemd/system/storageos.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 45min ago
+   Main PID: 2847 (java)
+      Tasks: 87 (limit: 4915)
+     Memory: 2.3G
+     CGroup: /system.slice/storageos.service
+             └─2847 /usr/lib/jvm/java-11-openjdk/bin/java -Xmx4g...
+
+admin@ecs-node-01:~$ systemctl status caspian
+● caspian.service - ECS Fabric Agent
+     Loaded: loaded (/etc/systemd/system/caspian.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:31:55 UTC; 46min ago
+   Main PID: 1923 (caspian)
+      Tasks: 12 (limit: 4915)
+     Memory: 156.2M
+
+admin@ecs-node-01:~$ viprexec -v -cmd "systemctl is-active storageos"
+ecs-node-01: active
+ecs-node-02: active
+ecs-node-03: active
+
+admin@ecs-node-01:~$ df -h /data/
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda3       2.7T  1.8T  847G  68% /data
+
+admin@ecs-node-01:~$ lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,STATE
+NAME    SIZE FSTYPE MOUNTPOINT STATE
+sda     2.7T
+├─sda1  512M vfat   /boot      live
+├─sda2  100G ext4   /          live
+└─sda3  2.6T ext4   /data      live
+sdb     1.8T
+└─sdb1  1.8T ext4   /archive   live
+
+admin@ecs-node-01:~$ uptime
+ 14:58:22 up 12 days, 3:14, 2 users, load average: 2.34, 2.18, 2.41
+
+admin@ecs-node-01:~$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:           31Gi       18Gi       8.2Gi       512Mi       4.8Gi       12Gi
+Swap:          8.0Gi      1.2Gi       6.8Gi
+
+admin@ecs-node-01:~$ viprexec -v -cmd "free -h"
+ecs-node-01: Mem: 31Gi used: 18Gi free: 8.2Gi
+ecs-node-02: Mem: 31Gi used: 19Gi free: 7.1Gi
+ecs-node-03: Mem: 31Gi used: 17Gi free: 9.3Gi
+```
 ### Cassandra (metadata store)
 
 ```bash
@@ -234,6 +396,44 @@ ps aux | grep -E "storageos|caspian|java" | grep -v grep
 /opt/storageos/tools/nodetool ring
 ```
 
+
+```text title="Expected output"
+Datacenter: DC1
+===============
+Status=Up/Normal
+|/ State=Normal/Leaving/Joining/Moving
+--  Address          Load       Tokens  Owns (effective)  Host ID                               Rack
+UN  192.168.1.45     156.82 GB  256     33.3%             a7f2c8d1-9e4b-42f3-8c1a-5d6e9f2b3c4d  RAC1
+UN  192.168.1.46     149.21 GB  256     33.3%             b8e3d9e2-af5c-53g4-9d2b-6e7f0a3c4d5e  RAC1
+UN  192.168.1.47     152.65 GB  256     33.4%             c9f4eaf3-bg6d-64h5-ae3c-7f8g1b4d5e6f  RAC2
+DN  192.168.1.48     0 B        256     0.0%              d0g5fbg4-ch7e-75i6-bf4d-8g9h2c5e6f7g  RAC2
+
+pending tasks: 2
+- compaction: 1
+- validation: 1
+Compaction from [default] sstable(s)
+Estimated remaining time : 2m45s
+Active : 1 (147.2 MB)
+
+Heap Memory (MB) : 8192.00 / 16384.00
+Non Heap Memory (MB) : 128.45 / -1.00
+Load : 156.82 GB
+
+Token            : 85070591730234615865843651857942052864
+Datacenter       : DC1
+Rack             : RAC1
+Status           : Up/Normal
+State             : Normal
+Load              : 156.82 GB
+Owns              : 33.3%
+Host ID          : a7f2c8d1-9e4b-42f3-8c1a-5d6e9f2b3c4d
+...
+```
+
+!!! warning "Common errors"
+    **`nodetool: command not found`** — Verify the ECS node is running and `/opt/storageos/tools/` exists; if missing, reinstall the ECS package or check the installation path.
+    **`Connection refused`** — Ensure the Cassandra/ECS metadata service is running with `systemctl status storageos` and restart if needed.
+    **`Flush operation timed out`** — Increase the nodetool timeout with `-Dcom.sun.jndi.rmi.factory.socket.timeout=30000` or reduce concurrent flushes by checking `nodetool compactionstats` for stuck operations.
 ### ZooKeeper (cluster coordination)
 
 ```bash
@@ -250,6 +450,20 @@ echo "stat" | nc localhost 2181 | grep connections
 echo "conf" | nc localhost 2181
 ```
 
+
+```text title="Expected output"
+Mode: leader
+Outstanding: 0
+Connections: 4
+server.1=zk-node-1.internal:2888:3888
+server.2=zk-node-2.internal:2888:3888
+server.3=zk-node-3.internal:2888:3888
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify ZooKeeper is running with `systemctl status zookeeper` and listening on port 2181.
+    **`Mode: follower` on the expected leader node** — Check cluster quorum status with `echo "stat" | nc localhost 2181` and review ZooKeeper logs at `/var/log/zookeeper/zookeeper.log` for election failures.
+    **`Outstanding: <high number>` (e.g., Outstanding: 847)** — Identify slow clients with `echo "cons" | nc localhost 2181` and check for network latency or client-side processing delays.
 ### NTP and clock sync
 
 ```bash
@@ -259,6 +473,39 @@ timedatectl status
 viprexec -v -cmd "date"
 ```
 
+
+```text title="Expected output"
+reference ID    : 91.189.89.198 (ntp.ubuntu.com)
+stratum         : 2
+ref time (UTC)  : Fri Nov 17 14:32:18 2023
+system time     : 0.000234567 seconds fast of NTP time
+latest offset   : +0.000156 seconds
+rms offset      : 0.000089 seconds
+frequency       : -2.341 ppm
+residual freq   : +0.002 ppm
+skew            : 0.087 ppm
+root delay      : 0.035682 seconds
+root dispersion : 0.012456 seconds
+max_distance    : 0.050138 seconds
+leap status     : Normal
+
+               Local time: Fri 2023-11-17 14:32:18 UTC
+           Universal time: Fri 2023-11-17 14:32:18 UTC
+                 RTC time: Fri 2023-11-17 14:32:18
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+                 RTC in UTC: yes
+
+node-01: Fri Nov 17 14:32:18 UTC 2023
+node-02: Fri Nov 17 14:32:19 UTC 2023
+node-03: Fri Nov 17 14:32:18 UTC 2023
+```
+
+!!! warning "Common errors"
+    **`chronyc: command not found`** — Install chrony with `apt-get install chrony` or `yum install chrony` depending on your OS.
+    **`viprexec: command not found or not in PATH`** — Source the ECS environment setup script or add the viprexec binary directory to your PATH.
+    **`node-02: Fri Nov 17 14:32:28 UTC 2023` (10+ second drift detected)** — Restart the chronyd service on the drifted node with `systemctl restart chronyd` and verify NTP connectivity.
 ### Network connectivity
 
 ```bash
@@ -272,6 +519,25 @@ nc -zv <remote-vdc-node> 9100
 nc -zv <kmip-server> 5696
 ```
 
+
+```text title="Expected output"
+PING 10.50.12.45 (10.50.12.45) 56(84) bytes of data.
+64 bytes from 10.50.12.45: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 10.50.12.45: icmp_seq=2 ttl=64 time=2.41 ms
+64 bytes from 10.50.12.45: icmp_seq=3 ttl=64 time=2.38 ms
+64 bytes from 10.50.12.45: icmp_seq=4 ttl=64 time=2.39 ms
+
+--- 10.50.12.45 statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/stddev = 2.34/2.38/2.41/0.03 ms
+Connection to 172.16.8.92 9100 port [tcp] succeeded!
+Connection to 203.0.113.54 5696 port [tcp] succeeded!
+```
+
+!!! warning "Common errors"
+    **`connect to 172.16.8.92 port 9100 (tcp) failed: Connection refused`** — Verify the remote VDC node's replication service is running with `systemctl status ecs-replication` on the target node.
+    **`PING: sendto: No route to host`** — Confirm the data network interface is up and the subnet routing is correct with `ip route show` and `ip link show`.
+    **`connect to 203.0.113.54 port 5696 (tcp) failed: Connection timed out`** — Check firewall rules and network ACLs allow port 5696 from the ECS node to the KMIP server, and verify the KMIP server IP/hostname is correct.
 ### Workflow: Node Marked DEGRADED
 
 1. `GET /vdc/nodes` — identify which node is DEGRADED and its node ID
@@ -298,6 +564,58 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
   "$ECS/vdc/data-service/vpools" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "replication_groups": [
+    {
+      "id": "urn:storageos:ReplicationGroupInfo:8f3c9e2a-1b4d-4e7f-9c2b-5d8a1f6e3c9a:vdc1",
+      "name": "us-west-prod",
+      "status": "HEALTHY",
+      "replication_lag_ms": 245,
+      "last_sync": "2024-01-15T14:32:18Z",
+      "peer_vdc": "eu-central-prod"
+    },
+    {
+      "id": "urn:storageos:ReplicationGroupInfo:3d7e2c1f-9a4b-4c6e-8d1a-2f5b9e3c7a1d:vdc1",
+      "name": "us-east-dr",
+      "status": "HEALTHY",
+      "replication_lag_ms": 512,
+      "last_sync": "2024-01-15T14:32:05Z",
+      "peer_vdc": "us-west-prod"
+    }
+  ],
+  "total_groups": 2
+}
+{
+  "vpools": [
+    {
+      "id": "urn:storageos:VirtualPool:4a2f8c1e-7b3d-4f9a-1c5e-8d2b6f3a9c1e",
+      "name": "tier1-ssd",
+      "description": "High-performance SSD pool",
+      "protocols": ["S3", "SWIFT"],
+      "replication_group": "us-west-prod",
+      "capacity_gb": 5242880,
+      "used_gb": 2097152
+    },
+    {
+      "id": "urn:storageos:VirtualPool:9e1c3f7a-2d5b-4a8c-6f1d-3e9a2c5b7f4a",
+      "name": "tier2-sata",
+      "description": "Standard capacity SATA pool",
+      "protocols": ["S3"],
+      "replication_group": "us-east-dr",
+      "capacity_gb": 10485760,
+      "used_gb": 4194304
+    }
+  ],
+  "total_vpools": 2
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 10.20.30.40 port 443: Connection refused`** — Verify the ECS management endpoint is running and accessible; check `curl -v https://$ECS:4443/` to confirm connectivity.
+    **`error: 401 Unauthorized`** — Ensure the authentication token in `$TOKEN` is valid and not expired; regenerate it with the login endpoint.
+    **`json.tool: No JSON object could be decoded`** — Confirm the API endpoint URL is correct and the response is valid JSON; test with `curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/geo-replication/status"` without piping to verify raw output.
 ### Workflow: Geo-Replication Lag Growing
 
 1. **ECS Portal → Geo Monitoring** — identify which replication group has growing lag and which VDC is behind
@@ -317,6 +635,35 @@ viprexec -v -cmd "date"
 chronyc tracking
 ```
 
+
+```text title="Expected output"
+/var/log/ecs/replication-service.log:2024-01-15T09:23:44.521Z [ERROR] Replication failed for bucket-prod-01: Connection timeout after 30s to vdc-site-2.example.com
+/var/log/ecs/replication-service.log:2024-01-15T09:24:12.103Z [ERROR] Replication queue overflow: 2847 pending objects in vdc-site-1
+/var/log/ecs/replication-service.log:2024-01-15T09:25:33.891Z [WARN] Replication retry attempt 3/5 for object uuid-a4c2-9f1e-7b3d
+/var/log/ecs/geo-replication.log:2024-01-15T09:26:01.445Z [ERROR] Failed to replicate metadata: clock skew detected (drift: 2.847s)
+/var/log/ecs/replication-service.log:2024-01-15T09:27:15.662Z [ERROR] Replication timeout on vdc-site-3: no response from 10.42.18.55:4443
+
+viprexec -v -cmd "date"
+2024-01-15 09:28:47.123456 UTC
+
+chronyc tracking
+Reference ID    : 169.254.169.123 (ntp.aws.amazon.com)
+Stratum         : 2
+Ref time (UTC)  : Mon Jan 15 09:28:45 2024
+System time     : 0.000234567 seconds slow of NTP time
+Frequency       : -12.456 ppm
+Residual freq   : +0.123 ppm
+Skew            : 0.089 ppm
+Root delay      : 0.031234 seconds
+Root dispersion : 0.087654 seconds
+Update interval : 64.2 seconds
+Leap status     : Normal
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/ecs/: No such file or directory`** — Verify ECS service is running with `systemctl status ecs-replication-service` and check the correct log path with `find /var/log -name "*replication*" -type f`.
+    **`viprexec: command not found`** — Source the ECS environment setup script with `source /opt/emc/ecs/bin/ecs-env.sh` or verify viprexec is in PATH with `which viprexec`.
+    **`Stratum         : 16`** — NTP is not synchronized; restart chrony with `systemctl restart chrony` and verify NTP server reachability with `chronyc sources`.
 ---
 
 ## Step 5 — Support bundle collection
@@ -354,6 +701,100 @@ curl -s -k -X POST \
 # Alternatively: ECS Portal → Support → Collect Logs
 ```
 
+
+```text title="Expected output"
+{
+  "version": "3.6.1.0.20240115",
+  "build": "r20240115-release",
+  "release_date": "2024-01-15T00:00:00Z"
+}
+{
+  "nodes": [
+    {
+      "id": "10.50.1.101",
+      "name": "ecs-node-01",
+      "status": "GOOD",
+      "cpu_usage": 42.3,
+      "memory_usage": 58.7
+    },
+    {
+      "id": "10.50.1.102",
+      "name": "ecs-node-02",
+      "status": "GOOD",
+      "cpu_usage": 39.1,
+      "memory_usage": 61.2
+    },
+    {
+      "id": "10.50.1.103",
+      "name": "ecs-node-03",
+      "status": "DEGRADED",
+      "cpu_usage": 78.9,
+      "memory_usage": 85.4
+    }
+  ]
+}
+{
+  "alerts": [
+    {
+      "id": "alert-2024-0847",
+      "severity": "WARNING",
+      "message": "Node ecs-node-03 CPU utilization above 75%",
+      "timestamp": "2024-01-15T14:32:18Z"
+    },
+    {
+      "id": "alert-2024-0846",
+      "severity": "INFO",
+      "message": "Replication lag detected on vpool-prod: 2.3GB",
+      "timestamp": "2024-01-15T13:45:02Z"
+    }
+  ]
+}
+{
+  "capacity": {
+    "total_gb": 102400,
+    "used_gb": 87654,
+    "available_gb": 14746,
+    "utilization_percent": 85.6
+  }
+}
+{
+  "vpools": [
+    {
+      "id": "vpool-prod",
+      "name": "Production",
+      "replication_factor": 3,
+      "status": "HEALTHY",
+      "nodes": 3
+    },
+    {
+      "id": "vpool-archive",
+      "name": "Archive",
+      "replication_factor": 2,
+      "status": "HEALTHY",
+      "nodes": 3
+    }
+  ]
+}
+Namespace: prod-ns
+Namespace: archive-ns
+Namespace: test-ns
+
+Bucket: app-data-prod (Size: 2.4TB, Objects: 1847293)
+Bucket: logs-archive (Size: 8.7TB, Objects: 12456789)
+Bucket: temp-cache (Size: 156GB, Objects: 89234)
+
+{
+  "name": "app-data-prod",
+  "namespace": "prod-ns",
+  "created": "2023-06-10T09:15:22Z",
+  "size_gb": 2457.3,
+  "object_count": 1847293,
+  "versioning": "ENABLED",
+  "encryption": "AES-256"
+}
+{
+  "bundle_id": "support-bundle-20240115-143521
+```
 **Information to prepare before the call:**
 
 | Item | Detail |
@@ -396,6 +837,29 @@ journalctl -u caspian -f --no-pager
 journalctl -u cassandra --since "1 hour ago" | grep -iE "error|exception|heap"
 ```
 
+
+```text title="Expected output"
+==> /var/log/ecs/data-service.log <==
+2024-01-15T14:32:18.445Z ERROR [DataService] Failed to replicate chunk 0x7f2a3c9e to node-03: Connection timeout
+2024-01-15T14:33:02.112Z EXCEPTION [ReplicationManager] java.io.IOException: Disk space critical on /data/chunks (92% full)
+2024-01-15T14:34:45.667Z ERROR [ObjectStore] Degraded read performance detected: avg latency 450ms (threshold: 200ms)
+
+==> /opt/emc/caspian/fabric/agent/logs/agent.log <==
+[2024-01-15 14:35:12] INFO: Fabric agent started on 10.42.1.15
+[2024-01-15 14:36:01] ERROR: Failed to register with orchestrator at 10.42.0.5:8443 - retrying in 30s
+[2024-01-15 14:36:31] INFO: Successfully registered with orchestrator
+
+Jan 15 14:37:22 ecs-node-02 storageos[4521]: ERROR: vpool-001 health check failed - 2 replicas unavailable
+Jan 15 14:37:45 ecs-node-02 caspian[5847]: INFO: Rebalancing initiated for bucket redistribution
+
+Jan 15 14:38:10 ecs-node-01 cassandra[3294]: ERROR [StorageProxy] Read timeout from replica 10.42.1.18 after 5000ms
+Jan 15 14:38:22 ecs-node-01 cassandra[3294]: EXCEPTION [CassandraDaemon] java.lang.OutOfMemoryError: Java heap space
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/var/log/ecs/*.log' for reading: No such file or directory`** — Verify ECS is installed and running with `systemctl status storageos`, then check actual log path with `find /var/log -name "*ecs*" -o -name "*data*service*"`.
+    **`Unit cassandra.service could not be found.`** — Confirm Cassandra is installed and enabled with `systemctl list-units --type=service | grep cassandra`, or use the correct service name for your ECS version.
+    **`Permission denied`** — Run commands with `sudo` or ensure your user is in the `storageos` or `caspian` group with `groups $USER`.
 ---
 
 ## See also

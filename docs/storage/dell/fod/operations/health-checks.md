@@ -68,6 +68,24 @@ curl -s -k \
   jq '{srp: .srpId, reserved_cap_percent: .reserved_cap_percent, total_usable_cap_gb: .srp_capacity.usable_total_tb}'
 ```
 
+
+```text title="Expected output"
+{
+  "sid": "000297900001",
+  "total_usable_cap_gb": 524288,
+  "total_subscribed_cap_gb": 387291
+}
+{
+  "srp": "SRP_1",
+  "reserved_cap_percent": 10,
+  "total_usable_cap_gb": 512
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl (already present in the code; if still failing, verify Unisphere SSL certificate is valid or use `--cacert` with the proper CA bundle).
+    **`jq: error (at <stdin>:1): Cannot index null with string "symmetrixId"`** — Verify the TOKEN variable was populated successfully by checking authentication credentials and Unisphere connectivity with `echo $TOKEN`.
+    **`curl: (7) Failed to connect to <unisphere_ip> port 8443: Connection refused`** — Confirm Unisphere IP address is correct, the service is running (`systemctl status unisphereapi` on the Unisphere host), and port 8443 is accessible from your client.
 ## Change Readiness
 
 - [ ] Estimate expected capacity growth from the planned workload increase (in TB)

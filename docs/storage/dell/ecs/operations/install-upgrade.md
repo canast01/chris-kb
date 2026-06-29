@@ -60,6 +60,55 @@ curl -sk -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/capacity" | python3 -m json.too
 curl -sk -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/alerts"   | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "version": "3.6.1.0.0.4639821",
+  "buildDate": "2024-01-15T09:42:33Z",
+  "releaseDate": "2024-01-10"
+}
+{
+  "node": [
+    {
+      "id": "ecs-node-01.example.com",
+      "ip": "192.168.1.45",
+      "version": "3.6.1.0.0.4639821",
+      "status": "healthy",
+      "uptime": 2592000
+    },
+    {
+      "id": "ecs-node-02.example.com",
+      "ip": "192.168.1.46",
+      "version": "3.6.1.0.0.4639821",
+      "status": "healthy",
+      "uptime": 2592000
+    }
+  ]
+}
+{
+  "capacity": {
+    "totalCapacity": 107374182400,
+    "usedCapacity": 53687091200,
+    "availableCapacity": 53687091200,
+    "percentUsed": 50.0
+  }
+}
+{
+  "alert": [
+    {
+      "id": "alert-8472",
+      "severity": "warning",
+      "message": "Node disk usage above 75%",
+      "timestamp": "2024-01-20T14:32:15Z"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but verify it's not being stripped by shell escaping).
+    **`X-SDS-AUTH-TOKEN: command not found`** — Ensure the TOKEN variable is properly set by checking `echo $TOKEN` returns a non-empty value; if empty, verify the login credentials and ECS node hostname are correct.
+    **`jq: command not found`** — Install `python3-json` or use `python3 -m json.tool` instead (already used in the example, but if `jq` is preferred, install it with `apt-get install jq`).
 ## Upgrade and Update Paths
 
 ECS upgrades are rolling — the cluster remains online throughout. The ECS Portal handles upgrade orchestration; each node is upgraded sequentially with automatic health validation between each node.
@@ -135,6 +184,57 @@ curl -sk -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/geo-replication/status" | pytho
 aws s3 ls --endpoint-url https://<ecs-s3-endpoint>:9021 --no-verify-ssl --profile ecs
 ```
 
+
+```text title="Expected output"
+{
+  "currentVersion": "3.6.1.0.0.4639",
+  "buildDate": "2024-01-15T08:42:33Z",
+  "releaseNotes": "Security patches and performance improvements"
+}
+{
+  "nodes": [
+    {
+      "id": "10.50.10.11",
+      "name": "ecs-node-01",
+      "status": "HEALTHY",
+      "version": "3.6.1.0.0.4639",
+      "uptime": 432000
+    },
+    {
+      "id": "10.50.10.12",
+      "name": "ecs-node-02",
+      "status": "HEALTHY",
+      "version": "3.6.1.0.0.4639",
+      "uptime": 431998
+    },
+    {
+      "id": "10.50.10.13",
+      "name": "ecs-node-03",
+      "status": "HEALTHY",
+      "version": "3.6.1.0.0.4639",
+      "uptime": 431995
+    }
+  ]
+}
+{
+  "alerts": []
+}
+{
+  "status": "HEALTHY",
+  "replicationGroups": 3,
+  "bytesReplicated": 2847291392000,
+  "lastSyncTime": "2024-01-15T14:22:18Z",
+  "lag": 0
+}
+2024-01-15 14:25:33       0 
+2024-01-15 14:25:34  524288 backup-bucket/
+2024-01-15 14:25:35 1048576 prod-data/
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip SSL verification, or import the ECS certificate into your system's CA bundle.
+    **`jq: command not found`** — Install `python3-json.tool` or use `python3 -m json.tool` instead of `jq` for JSON formatting.
+    **`Unable to locate credentials`** — Ensure AWS credentials are configured in `~/.aws/credentials` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables for the ECS profile.
 ## Adding a New Node to an Existing VDC
 
 Adding nodes expands cluster capacity and compute. ECS rebalances erasure coding stripes in the background after a new node is added.

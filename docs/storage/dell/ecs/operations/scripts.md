@@ -371,6 +371,28 @@ echo "========================================"
 [[ "$FAIL" -eq 0 ]] && exit 0 || exit 1
 ```
 
+
+```text title="Expected output"
+========================================
+  ECS S3 Connectivity Check
+  Endpoint : https://ecs01.example.com:9021
+  Bucket   : s3-check-bucket
+  2024-01-15 14:32:47
+========================================
+  List bucket                    PASS
+  Put test object                PASS
+  Get test object (content match) PASS
+  Delete test object             PASS
+
+========================================
+  Results: 4 passed, 0 failed
+========================================
+```
+
+!!! warning "Common errors"
+    **`Unable to locate credentials`** — Ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are exported before running the script.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The --no-verify-ssl flag is already set; if the error persists, verify the ECS endpoint URL is correct and the certificate chain is valid on the ECS appliance.
+    **`NoSuchBucket`** — Create the test bucket on the ECS system using `aws s3 mb s3://s3-check-bucket --endpoint-url https://ecs01.example.com:9021 --no-verify-ssl` or set TEST_BUCKET to an existing bucket name.
 ---
 
 ## Daily Check Script
@@ -446,6 +468,26 @@ echo "  PASS: $PASS   FAIL: $FAIL"
 [[ "$FAIL" -eq 0 ]] && echo "  STATUS: OK" && exit 0 || echo "  STATUS: DEGRADED" && exit 1
 ```
 
+
+```text title="Expected output"
+========================================
+  ECS Daily Check — ecs01.example.com
+  2024-01-15 09:47:23
+========================================
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       500G  387G  113G  77% /data/
+  zone health                                        PASS
+  nodes (all GOOD)                                   PASS
+  data disk usage (<80%)                             PASS
+========================================
+  PASS: 3   FAIL: 0
+  STATUS: OK
+```
+
+!!! warning "Common errors"
+    **`ERROR: Failed to authenticate to ECS management API.`** — Verify ECS_MGMT_USER and ECS_MGMT_PASS are correct, and that the management API is responding on port 4443.
+    **`ssh: connect to host ecs01.example.com port 22: Connection timed out`** — Confirm SSH_USER and ECS_HOST are correct, SSH is enabled on the target node, and network connectivity exists.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag in the curl commands already ignores SSL verification; if this error persists, check that the management API is accessible and not behind a firewall.
 ---
 
 ## Pre-Change Validation Script
@@ -517,6 +559,24 @@ echo "  PRE-CHECK PASSED — Safe to proceed."
 exit 0
 ```
 
+
+```text title="Expected output"
+========================================
+  ECS Pre-Change Check — ecs01.example.com
+  2024-01-15 14:32:47
+========================================
+  PASS: zone healthy
+  PASS: all nodes up
+  PASS: no active alerts
+  PASS: data disk usage < 80%
+========================================
+  PRE-CHECK PASSED — Safe to proceed.
+```
+
+!!! warning "Common errors"
+    **`ERROR: Authentication failed.`** — Verify ECS_MGMT_USER and ECS_MGMT_PASS are correct and the management API is accessible on port 4443.
+    **`ssh: connect to host ecs01.example.com port 22: Connection timed out`** — Ensure SSH_USER has key-based authentication configured or add password auth; verify network connectivity and firewall rules allow port 22 to the ECS host.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag in the curl commands already ignores SSL verification, but if curl is not found, install it via your package manager.
 ---
 
 ## Verify

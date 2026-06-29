@@ -148,6 +148,95 @@ ecscli bucket list --namespace <namespace>
 ecscli bucket get --namespace <namespace> --name <bucket>
 ```
 
+
+```text title="Expected output"
+X-SDS-AUTH-TOKEN: b7d4f8a2-c1e9-4b3f-8e2d-9f5a6c7b8e1d
+
+{
+  "nodes": [
+    {
+      "id": "ecs-node-01.lab.local",
+      "nodestatus": "GOOD",
+      "version": "3.6.1.0.0.20240115",
+      "ipv4_addr": "192.168.1.10"
+    },
+    {
+      "id": "ecs-node-02.lab.local",
+      "nodestatus": "GOOD",
+      "version": "3.6.1.0.0.20240115",
+      "ipv4_addr": "192.168.1.11"
+    },
+    {
+      "id": "ecs-node-03.lab.local",
+      "nodestatus": "GOOD",
+      "version": "3.6.1.0.0.20240115",
+      "ipv4_addr": "192.168.1.12"
+    }
+  ]
+}
+
+{
+  "totalProvisioned_gb": 102400,
+  "usedCapacity_gb": 45230,
+  "availableCapacity_gb": 57170,
+  "percentUsed": 44.1
+}
+
+{
+  "alerts": []
+}
+
+{
+  "replication_groups": [
+    {
+      "id": "urn:storageos:ReplicationGroupInfo:geo-1",
+      "name": "geo-1",
+      "status": "HEALTHY",
+      "vdc_count": 3
+    }
+  ]
+}
+
+{
+  "vpools": [
+    {
+      "id": "urn:storageos:VirtualPool:vpool-1",
+      "name": "default",
+      "replication_type": "SYNC",
+      "node_count": 3,
+      "status": "ACTIVE"
+    }
+  ]
+}
+
+2024-01-15 10:42:33 prod-bucket-01
+2024-01-15 10:41:12 prod-bucket-02
+2024-01-15 10:39:47 archive-bucket-01
+
+(no output — command completes silently)
+
+Namespaces:
+  - namespace: production
+    id: urn:storageos:Namespace:production
+  - namespace: archive
+    id: urn:storageos:Namespace:archive
+
+Buckets in production:
+  - prod-bucket-01
+  - prod-bucket-02
+  - prod-bucket-03
+
+Bucket: prod-bucket-01
+  Owner: s3user-prod
+  Versioning: Enabled
+  Replication: SYNC
+  Capacity: 12500 GB
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the ECS certificate into your system CA bundle.
+    **`jq: command not found`** — Install `python3-json.tool` or `jq` package; the script uses `python3 -m json.tool` for JSON formatting.
+    **`The AWS Access Key Id you provided does not exist in our records.
 ## Node-Level Diagnostic Checks
 
 ![Node-Level Diagnostic Checks](../../../../assets/storage-dell-ecs-hc-node-level-diagnostic-checks.svg)
@@ -196,6 +285,57 @@ chronyc tracking
 timedatectl status
 ```
 
+
+```text title="Expected output"
+admin@ecsnode01:~$ df -h /data/
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda3       7.3T  5.8T  1.5T  79% /data
+
+admin@ecsnode01:~$ lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,STATE
+NAME    SIZE FSTYPE MOUNTPOINT STATE
+sda     7.3T                   running
+├─sda1  512M vfat   /boot      running
+├─sda2  100G swap   [SWAP]     running
+└─sda3  7.2T ext4   /data      running
+sdb     3.6T ext4   /mnt/ssd   running
+
+admin@ecsnode01:~$ systemctl status storageos
+● storageos.service - StorageOS Data Service
+   Loaded: loaded (/etc/systemd/system/storageos.service; enabled; vendor preset: enabled)
+   Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+   Main PID: 4821 (storageos)
+   Memory: 2.3G
+   CGroup: /systemd/system.slice/storageos.service
+
+admin@ecsnode01:~$ systemctl status caspian
+● caspian.service - ECS Fabric Agent
+   Loaded: loaded (/etc/systemd/system/caspian.service; enabled; vendor preset: enabled)
+   Active: active (running) since Wed 2024-01-17 14:32:25 UTC; 2 days ago
+   Main PID: 5104 (caspian)
+   Memory: 1.1G
+
+admin@ecsnode01:~$ viprexec -v -cmd "systemctl is-active storageos"
+ecsnode01: active
+ecsnode02: active
+ecsnode03: active
+
+admin@ecsnode01:~$ /opt/storageos/tools/nodetool status
+Datacenter: us-east-1
+===============================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address         Load       Tokens  Owns (effective)  Host ID                               Rack
+UN  10.20.30.41    1.28 TB    256     33.3%             a7f2c1e9-4d8b-11ee-b8e0-0242ac110002  rack1
+UN  10.20.30.42    1.31 TB    256     33.4%             b8e3d2f0-5e9c-12ff-c9f1-1353bd221113  rack1
+UN  10.20.30.43    1.29 TB    256     33.3%             c9f4e3g1-6f0d-13gg-d0g2-2464ce332224  rack1
+
+admin@ecsnode01:~$ /opt/storageos/tools/nodetool compactionstats
+pending tasks: 0
+Active compaction remaining time :   0h0m0s
+
+admin@ecsnode01:~$ /opt/storageos/tools/nodetool info | grep -i heap
+Heap Memory (MB)        : 4
+```
 ## Capacity Planning Checks
 
 ![Capacity Planning Checks](../../../../assets/storage-dell-ecs-hc-capacity-planning-checks.svg)
@@ -223,6 +363,43 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
   "$ECS/object/bucket?namespace=<namespace>" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+Total: 50000 GB | Used: 34250 GB | Utilisation: 68.5%
+
+Namespace                          NsId                                 CreationTime
+prod-data                          urn:storageos:NamespaceId:a1b2c3d4   2023-11-15T09:22:18Z
+staging-test                       urn:storageos:NamespaceId:e5f6g7h8   2023-10-02T14:45:32Z
+archive-cold                       urn:storageos:NamespaceId:i9j0k1l2   2023-08-21T11:18:05Z
+
+{
+  "bucket_list": [
+    {
+      "name": "backup-prod-001",
+      "namespace": "prod-data",
+      "size_gb": 12500,
+      "object_count": 2847361
+    },
+    {
+      "name": "media-assets",
+      "namespace": "prod-data",
+      "size_gb": 8750,
+      "object_count": 156842
+    },
+    {
+      "name": "logs-archive",
+      "namespace": "archive-cold",
+      "size_gb": 5200,
+      "object_count": 89234
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <ECS_IP>: Connection refused`** — Verify the $ECS variable is set correctly and the ECS management API endpoint is reachable on port 443.
+    **`error: Invalid authentication token`** — Regenerate the authentication token using `ecscli authenticate` and ensure $TOKEN is exported in the current shell session.
+    **`jq: error (at <stdin>:1): Cannot index number with string "totalProvisioned_gb"`** — Check that the API response is valid JSON and the ECS version supports the capacity endpoint; use `curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/capacity" | python3 -m json.tool` to inspect the actual response structure.
 ## Pre-Change Checklist
 
 Complete all items before any planned maintenance. Do not proceed if any item is unresolved.

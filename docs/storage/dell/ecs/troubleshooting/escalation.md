@@ -104,6 +104,93 @@ ecscli namespace list
 ecscli bucket get --namespace <namespace> --name <bucket>
 ```
 
+
+```text title="Expected output"
+{
+  "version": "3.6.1.0.20240115",
+  "build_number": "r20240115-001",
+  "release_date": "2024-01-15"
+}
+{
+  "nodes": [
+    {
+      "id": "ecs-node-01.lab.local",
+      "ip": "192.168.1.101",
+      "status": "UP",
+      "version": "3.6.1.0.20240115",
+      "disk_usage_percent": 67.3
+    },
+    {
+      "id": "ecs-node-02.lab.local",
+      "ip": "192.168.1.102",
+      "status": "UP",
+      "version": "3.6.1.0.20240115",
+      "disk_usage_percent": 71.8
+    },
+    {
+      "id": "ecs-node-03.lab.local",
+      "ip": "192.168.1.103",
+      "status": "UP",
+      "version": "3.6.1.0.20240115",
+      "disk_usage_percent": 65.2
+    }
+  ]
+}
+{
+  "alerts": [
+    {
+      "id": "alert-8472",
+      "severity": "WARNING",
+      "message": "Disk usage on ecs-node-02 exceeds 70%",
+      "timestamp": "2024-01-20T14:32:15Z"
+    },
+    {
+      "id": "alert-8471",
+      "severity": "INFO",
+      "message": "Replication lag detected on vpool-prod: 2.3 seconds",
+      "timestamp": "2024-01-20T13:45:22Z"
+    }
+  ]
+}
+{
+  "total_capacity_gb": 102400,
+  "used_capacity_gb": 68971,
+  "available_capacity_gb": 33429,
+  "usage_percent": 67.3
+}
+{
+  "vpools": [
+    {
+      "id": "vpool-prod",
+      "name": "Production",
+      "replication_group": "us-east-1",
+      "status": "HEALTHY",
+      "replicas": 3
+    },
+    {
+      "id": "vpool-dr",
+      "name": "Disaster Recovery",
+      "replication_group": "us-west-2",
+      "status": "HEALTHY",
+      "replicas": 2
+    }
+  ]
+}
+Namespace: ns-prod (active)
+Namespace: ns-archive (active)
+Namespace: ns-test (active)
+
+Bucket: prod-data
+  Namespace: ns-prod
+  Versioning: enabled
+  Size: 2.4 TB
+  Object Count: 1847293
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the ECS node's certificate into your CA bundle.
+    **`error: invalid_token or X-SDS-AUTH-TOKEN: Unauthorized`** — Regenerate the authentication token using `ecscli authentication login` and ensure the token has not expired.
+    **`command not
 Also provide:
 - ECS Portal → Support → Collect Logs (per-node support bundle — mandatory for Severity 1/2 cases)
 - VDC topology diagram (number of sites, nodes per VDC, replication group configuration)

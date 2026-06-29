@@ -121,6 +121,10 @@ ssh admin@<ecs-node> "grep PermitRootLogin /etc/ssh/sshd_config"
 # Expected: PermitRootLogin no
 ```
 
+
+```text title="Expected output"
+ssh_rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDk7vJ9mK2xL4pQ8nR5tZ1wX3yH6jK9lM0oP2qS3uV4wX5yZ6aB7cD8eF9gH0iJ1kL2mN3oP4qR5sT6uV7wX8yZ9aB0cD1eF2gH3iJ4kL5mN6oP7qR8sT9uV0wX1yZ2aB3cD4eF5gH6iJ7kL8mN9oP8qR9sU0vW1xY2yZ3aB4cD5eF6gH7iJ8kL9mN0oP9qR0sU1vW2xY3yZ4aB5cD6eF7gH8iJ9kL0mO1pQ0rV2wX3yZ5aB6cD7eF8gH9iJ0kL1mO2pQ1rV3wX4yZ6aB7cD8eF9gH0iJ1kL2mO3pQ2rV4wX5yZ7aB8cD9eF0gH1iJ2kL3mO4pQ3rV5wX6yZ8aB9cD0eF1gH2iJ3kL4mO5pQ4rV6wX7yZ9aB0cD1eF2gH3iJ4kL5mO6pQ5rV7wX8yZ0aB1cD2eF3gH4iJ5kL6mO7pQ6rV8wX9yZ1aB2cD3eF4gH5iJ6kL7mO8pQ7rV9wX0yZ2aB3cD4eF5gH6iJ7kL8mO9pQ8rV0wX1yZ3aB4cD5eF6gH7iJ8kL9mO0pQ9rV1wX2yZ4aB5cD6eF7gH8iJ9kL0mP1pQ0rV2wX3yZ5aB6cD7eF8gH9iJ0kL1mP2pQ1rV3wX4yZ6aB7cD8eF9gH0iJ1kL2mP3pQ2rV4wX5yZ7aB8cD9eF0gH1iJ2kL3mP4pQ3rV5wX6yZ8aB9cD0eF1gH2iJ3kL4mP5pQ4rV6wX7yZ9aB0cD1eF2gH3iJ4kL5mP6pQ5rV7wX8yZ0aB1cD2eF3gH4iJ5kL6mP7pQ6rV8wX9yZ1aB2c
+```
 ## Object Lock (WORM) Hardening
 
 | Control | Compliance Mode | Governance Mode |
@@ -158,6 +162,27 @@ aws s3api get-object-lock-configuration \
   --profile ecs
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+
+{
+    "ObjectLockConfiguration": {
+        "ObjectLockEnabled": "Enabled",
+        "Rule": {
+            "DefaultRetention": {
+                "Mode": "COMPLIANCE",
+                "Days": 2557
+            }
+        }
+    }
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (ObjectLockConfigurationNotFoundError) when calling the PutObjectLockConfiguration operation: Object Lock configuration does not exist`** — Ensure the bucket was created with Object Lock enabled using the `--object-lock-enabled-for-bucket` flag during bucket creation.
+    **`An error occurred (InvalidArgument) when calling the PutObjectLockConfiguration operation: Invalid retention period`** — Set `Days` to a positive integer between 1 and 36500 (100 years); 2557 days is valid, but verify the value matches your compliance requirements.
+    **`Unable to locate credentials for profile 'ecs'`** — Verify the `ecs` profile exists in `~/.aws/credentials` or `~/.aws/config` with valid access key and secret key configured.
 ## Secrets Management Integration
 
 Do not embed ECS credentials (management passwords, S3 access keys/secret keys, KMIP certificates) in configuration files, scripts, or source code.
@@ -183,6 +208,23 @@ aws s3 ls s3://analytics-prod-raw \
   --no-verify-ssl
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:47:23Z [INFO] Vault client initialized
+2024-01-15T09:47:24Z [INFO] Auth method token has 720h remaining
+                           PRE analytics-prod-raw-2024/
+                           PRE analytics-prod-raw-2023/
+                           PRE analytics-prod-raw-archive/
+2024-01-15 09:47:25        0 .keep
+2024-01-15 09:47:25   4521984 manifest.json
+2024-01-15 09:47:25  15728640 data-partition-001.parquet
+...
+```
+
+!!! warning "Common errors"
+    **`Error reading secret/ecs/svc-spark-prod: permission denied`** — Verify your Vault token has read permissions on the secret path using `vault policy read` and ensure the token hasn't expired.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is present but the endpoint certificate may still be invalid; confirm the ECS endpoint hostname matches the certificate CN or use a valid CA bundle instead of disabling verification.
+    **`InvalidAccessKeyId`** — The credentials retrieved from Vault are stale or the service account was rotated; rotate the secret in Vault using `vault kv put secret/ecs/svc-spark-prod access_key=<new_key> secret_key=<new_secret>`.
 ## Security Validation
 
 Run these checks at each quarterly security review and after any security-relevant configuration change:
@@ -219,6 +261,39 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
   "https://<ecs-node>:4443/user/users.json" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+connect:errno=104
+140735289937728:error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure:../ssl/record/rec_read_c.c:205:SSL alert number 40
+Protocol  : TLSv1.2
+issuer=CN=InternalCA-01,O=Acme Corp,C=US
+issuer=CN=InternalCA-01,O=Acme Corp,C=US
+notAfter=Mar 15 09:42:17 2025 GMT
+Blocked — OK
+Namespace: ns-prod-01
+  Quota: 10737418240
+Namespace: ns-dev-02
+  Quota: 5368709120
+Namespace: ns-archive
+  Quota: (unlimited)
+[
+  {
+    "uid": "admin@internal.local",
+    "name": "Administrator",
+    "created": "2024-01-10T14:22:33Z"
+  },
+  {
+    "uid": "svc-backup@internal.local",
+    "name": "Backup Service",
+    "created": "2024-02-05T08:15:12Z"
+  }
+]
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <ecs-node>:4443: Connection refused`** — Verify the management API port is open and the ECS node is reachable; check firewall rules and node status with `ecscli node list`.
+    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add the corporate CA certificate to your system trust store with `sudo cp ca-cert.pem /etc/pki/ca-trust/source/anchors/ && sudo update-ca-trust`.
+    **`error: invalid token`** — Regenerate the authentication token by running `curl -k -u admin:password https://<ecs-node>:4443/login` and export the returned token to `$TOKEN`.
 ---
 
 ## See also

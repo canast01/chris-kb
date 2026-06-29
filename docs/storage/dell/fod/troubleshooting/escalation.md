@@ -93,6 +93,37 @@ uemcli -d <mgmt-ip> /sys/general show
 # Photo the label — include in the case if there is any mismatch concern
 ```
 
+
+```text title="Expected output"
+# PowerMax (via Unisphere for PowerMax or Solutions Enabler)
+Symmetrix ID: 000297900001
+Symmetrix Version: PowerMax 2000
+Model: PowerMax 2000
+Director Count: 4
+Symmetrix State: Ready
+Cache (MB): 131072
+
+# Unity / PowerStore (via CLI)
+Storage System Information
+    ID: APM00123456789
+    Name: Unity-SAN-01
+    Model: Unity 550F
+    Serial Number: APM00123456789
+    System Version: 5.1.0.0.5.123
+    Health State: OK
+    Capacity (GB): 102400
+
+# PowerFlex (via Gateway)
+# See PowerFlex admin guide for system ID retrieval
+
+# Physical label: the SN is printed on a label on the front of the array chassis
+# Photo the label — include in the case if there is any mismatch concern
+```
+
+!!! warning "Common errors"
+    **`symcfg: command not found`** — Install Solutions Enabler or verify the symcli package is in your PATH.
+    **`Error: Connection refused (port 443)`** — Verify the management IP is reachable and Unisphere/REST API service is running on the array.
+    **`uemcli: Authentication failed`** — Confirm credentials and that the management IP is correct for the Unity/PowerStore system.
 ### 2. Collect the error from the failed key import
 
 ```bash
@@ -108,6 +139,30 @@ symlicense -sid <SID> install -file /path/to/fod-key.lic 2>&1 | tee /tmp/fod-ins
 uemcli -d <mgmt-ip> /event/alert show -filter "severity eq error" > /tmp/unity-alerts.txt
 ```
 
+
+```text title="Expected output"
+Installing license file: /path/to/fod-key.lic
+Symmetrix ID: 000297900001
+License Key: EMC-SYMM-POWERMAX-FOD-2024
+Installation Status: SUCCESS
+License Expiration Date: 2025-12-31
+Features Enabled: SRDF, RecoverPoint, TimeFinder
+Symmetrix Capacity: 500 TB
+Installation completed successfully on 2024-01-15 14:32:47
+Log file saved to: /tmp/fod-install-2024-01-15.txt
+
+uemcli -d 192.168.1.50 /event/alert show -filter "severity eq error"
+ID    | Timestamp           | Severity | Source    | Message
+------|---------------------|----------|-----------|------------------------------------------
+1247  | 2024-01-15 10:22:15 | Error    | Licensing | License expiration warning: 30 days
+1248  | 2024-01-15 11:45:33 | Error    | Licensing | FOD key validation failed
+1249  | 2024-01-15 13:12:09 | Error    | System    | Storage pool capacity threshold exceeded
+```
+
+!!! warning "Common errors"
+    **`symlicense: command not found`** — Ensure Solutions Enabler is installed and the `$PATH` includes the Solutions Enabler bin directory (typically `/opt/emc/SYMCLI/bin`).
+    **`License Key validation failed: Invalid signature`** — Verify the FOD license file is not corrupted by comparing its checksum against the vendor-provided value and re-download if necessary.
+    **`uemcli: Unable to connect to management IP 192.168.1.50`** — Confirm the management IP is reachable with `ping` and that the Unity/PowerStore system is online and accessible from your network.
 ### 3. Collect currently active licenses
 
 ```bash
@@ -122,6 +177,28 @@ symlicense -sid <SID> list
 symlicense -sid <SID> list 2>&1 > /tmp/fod-active-licenses.txt
 ```
 
+
+```text title="Expected output"
+License Information for Symmetrix ID: 000297900001
+
+Product                          Status      Expiration Date    Capacity
+─────────────────────────────────────────────────────────────────────────
+VMAX All Flash                   Licensed    2025-12-31         Unlimited
+Snapshots                        Licensed    2025-12-31         Unlimited
+Replication                      Licensed    2025-12-31         Unlimited
+Fast Cache                       Licensed    2025-12-31         Unlimited
+Thin Provisioning                Licensed    2025-12-31         Unlimited
+RecoverPoint                     Licensed    2025-12-31         Unlimited
+SRDF/Metro                       Licensed    2025-12-31         Unlimited
+Unisphere for PowerMax           Licensed    2025-12-31         Unlimited
+
+License file exported to: /tmp/fod-active-licenses.txt
+```
+
+!!! warning "Common errors"
+    **`symlicense: Command not found`** — Install the EMC Solutions Enabler package or ensure the Symmetrix CLI tools are in your PATH (verify with `which symlicense`).
+    **`Error: Invalid SID <SID>`** — Replace `<SID>` with the actual Symmetrix ID (e.g., `000297900001`) and verify connectivity to the array with `symcfg list`.
+    **`Permission denied`** — Run the command with appropriate privileges (use `sudo` or ensure your user is in the `symadmin` group).
 ### 4. Collect the FoD license file details
 
 ```bash
@@ -138,6 +215,16 @@ grep -E "VENDOR_SN|SN|SERIAL" /path/to/fod-key.lic
 # If the licensing team requests the key file, upload only through the secure case attachment
 ```
 
+
+```text title="Expected output"
+VENDOR_SN=SN123456789ABCDEF
+SN=SN123456789ABCDEF
+SERIAL=ABC-123-DEF-456
+```
+
+!!! warning "Common errors"
+    **`grep: /path/to/fod-key.lic: No such file or directory`** — Replace `/path/to/fod-key.lic` with the actual path to your license file (e.g., `/opt/dell/fod/licenses/array.lic`).
+    **`grep: /path/to/fod-key.lic: Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the license file.
 ### 5. Write the timeline and case info
 
 ```text
@@ -240,6 +327,37 @@ uemcli -d <mgmt-ip> /sys/general show
 uemcli -d <mgmt-ip> /event/alert show -filter "severity eq error" | head -20
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000296900001
+Symmetrix Model: PowerMax 2000
+Microcode Version: 5978.1221.1221
+Symmetrix ID: 000296900001
+License Status: Valid
+Capacity License: 500 TB
+Installed Features: SRDF/Metro, RecoverPoint, TimeFinder
+Symmetrix ID: 000296900001
+License Preview: Valid
+Capacity: 500 TB
+Effective Date: 2024-01-15
+Expiration Date: 2026-01-14
+Microcode Version: 5978.1221.1221
+Firmware Version: T253U8P1Q1
+System Information
+    Health: OK
+    Name: UNITY-SN-APM00123456789
+    Model: Unity 380
+    Serial Number: APM00123456789
+    System Version: 5.1.0.0.5.1
+Alert Summary
+    ID: 1847293 | Severity: Error | Source: SPA | Message: Battery backup unit degraded
+    ID: 1847291 | Severity: Error | Source: SPB | Message: Disk 0_0_0 predictive failure
+```
+
+!!! warning "Common errors"
+    **`symlicense: Command not found`** — Verify the Symmetrix CLI package is installed and /opt/emc/SYMCLI/bin is in your PATH.
+    **`Error: Invalid SID <SID>`** — Replace `<SID>` with the actual Symmetrix ID from `symcfg list` output.
+    **`uemcli: Connection refused on <mgmt-ip>:443`** — Confirm the management IP is reachable and the Unisphere service is running with `systemctl status unisphere`.
 ---
 
 ## Verify resolution

@@ -115,6 +115,18 @@ curl -sk -o /dev/null -w "%{http_code}" https://<powermax-mgmt-ip>:8443/univmax/
 iscsiadm -m discovery -t sendtargets -p <powermax-iscsi-ip>:3260
 ```
 
+
+```text title="Expected output"
+200
+10.100.50.25:3260,1 iqn.1992-04.com.emc:60000970000195701234567890abcdef
+10.100.50.26:3260,1 iqn.1992-04.com.emc:60000970000195701234567890abcdef
+10.100.50.25:3260,2 iqn.1992-04.com.emc:60000970000195702345678901bcdefg
+10.100.50.26:3260,2 iqn.1992-04.com.emc:60000970000195702345678901bcdefg
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if still failing, verify Unisphere is running with `systemctl status unisphere` on the array).
+    **`iscsiadm: No records found`** — Verify the iSCSI portal IP is correct and reachable with `ping <powermax-iscsi-ip>`, and confirm iSCSI service is enabled on the PowerMax array.
 ## See also
 
 - [Dell PowerMax — Architecture](../how-it-works/)

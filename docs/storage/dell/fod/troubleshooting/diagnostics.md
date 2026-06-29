@@ -96,6 +96,28 @@ symlicense -sid <SID> show -feature <feature-name>
 # Shows: installed date, expiry, key ID, and SN the key is bound to
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+License Name                Feature              Status      Expiry
+-----------                -------              ------      ------
+Dell EMC Symmetrix         COD                  Enabled     2025-12-31
+Dell EMC Symmetrix         CLOUD_TIERING       Enabled     2026-06-15
+Dell EMC Symmetrix         SRDF_ASYNC          Enabled     2024-09-30
+Dell EMC Symmetrix         SRDF_SYNC           Missing     N/A
+Dell EMC Symmetrix         REPLICATION         Expired     2023-11-20
+
+Feature Name: COD
+Installed Date: 2022-03-15
+Expiry Date: 2025-12-31
+License Key ID: LK-8F9E2D1C4B7A6
+Serial Number Bound: 000123456789012
+Status: Active
+```
+
+!!! warning "Common errors"
+    **`License feature <feature-name> is not found`** — Verify the feature name spelling against the list output and use the exact name shown in the Feature column.
+    **`Symmetrix ID <SID> is not recognized`** — Confirm the SID is correct by running `symcfg list` to display all available array IDs on the system.
 ---
 
 ## Step 2 — Check array serial number
@@ -121,6 +143,34 @@ symcfg -sid <SID> list -v
 # Photo the label if there is any mismatch concern
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+Array Name: PROD-ARRAY-01
+Microcode: 5978.669.669
+Model: PowerMax 8000
+Size: 50.0 TB
+
+Symmetrix ID: 000987654321098
+Array Name: DR-ARRAY-02
+Microcode: 5978.668.668
+Model: PowerMax 2000
+Size: 12.5 TB
+
+---
+
+System Serial Number: 070123456789ABC
+Array Serial Number: 070123456789ABC
+Microcode Version: 5978.669.669
+Model: PowerMax 8000
+Symmetrix ID (SID): 000123456789012
+Total Usable Capacity: 50.0 TB
+...
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Install the EMC Solutions Enabler package or add the Symmetrix CLI bin directory to your PATH environment variable.
+    **`A Symmetrix ID must be supplied`** — Replace `<SID>` with an actual array ID from the `symcfg list` output (e.g., `symcfg -sid 000123456789012 list -v`).
 ---
 
 ## Step 3 — Inspect the FoD key file
@@ -146,6 +196,24 @@ grep -i "feature\|increment" /path/to/fod-key.lic
 # License files have cryptographic signatures — edited files will always be rejected
 ```
 
+
+```text title="Expected output"
+VENDOR_SN=CX480-SN-A7K9M2L5
+SERIAL=CX480-SN-A7K9M2L5
+VENDOR_ID=DELL_EMC
+EXPIRY_DATE=2026-12-31
+FEATURE_CLOUD_TIERING=enabled
+FEATURE_SRDF_ASYNC=enabled
+FEATURE_COD_CAPACITY=enabled
+INCREMENT_CLOUD_TIERING=1
+INCREMENT_SRDF_ASYNC=1
+INCREMENT_COD_CAPACITY=5
+```
+
+!!! warning "Common errors"
+    **`grep: /path/to/fod-key.lic: No such file or directory`** — Replace `/path/to/fod-key.lic` with the actual path to your license file (typically `/opt/emc/fod/license.lic` or similar).
+    **`VENDOR_SN=CX480-SN-DIFFERENT`** — The serial number in the license does not match your array; request a new license key from Dell Account team with your correct array serial number.
+    **`EXPIRY_DATE=2023-06-15`** — The license has expired; contact Dell Account team immediately to renew the term license before features are disabled.
 ---
 
 ## Step 4 — Dry-run the key install (preview)
@@ -168,6 +236,24 @@ symlicense -sid <SID> preview -file /path/to/fod-key.lic
 symlicense -sid <SID> preview -file /path/to/fod-key.lic 2>&1 | tee /tmp/fod-preview-$(date +%F).txt
 ```
 
+
+```text title="Expected output"
+Feature: CLOUD_TIERING
+Status: Will be enabled
+Expiry: 2025-12-31
+Ready to install.
+(no output — command completes silently)
+Feature: CLOUD_TIERING
+Status: Will be enabled
+Expiry: 2025-12-31
+Ready to install.
+---OUTPUT---
+```
+
+!!! warning "Common errors"
+    **`SYMAPI_C_INVALID_LICENSE`** — Verify the key file SN matches the array SN with `symlicense -sid <SID> show_license` and request a re-issue from Dell Licensing if they do not match.
+    **`symlicense: command not found`** — Ensure the Symmetrix CLI tools are installed and the `$PATH` includes the installation directory (typically `/opt/emc/SYMCLI/bin`).
+    **`No such file or directory: /path/to/fod-key.lic`** — Verify the key file path is correct and readable with `ls -l /path/to/fod-key.lic`.
 ---
 
 ## Step 5 — Check firmware version compatibility
@@ -182,6 +268,22 @@ uemcli -d <mgmt-ip> /sys/general show
 # Look for: "Model", "Software version", and "Serial Number"
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+Microcode Version: 5978.669.669
+Enginuity Version: 5978
+Firmware Level: T10.1
+
+Model: Dell EMC PowerStore 500T
+Software version: 3.0.0.0 (Build 1.2.3456.7)
+Serial Number: PS-ABC123XYZ789
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Ensure Symmetrix Tools are installed and the `$PATH` includes the installation directory (typically `/opt/emc/SYMCLI/bin`).
+    **`Error: Invalid SID or array not responding`** — Verify the SID is correct with `symcfg list` and confirm the array is reachable on the management network.
+    **`uemcli: unable to connect to <mgmt-ip>`** — Check that the management IP is correct, the array is online, and your user account has sufficient permissions on the Unisphere interface.
 ---
 
 ## Step 6 — Collect diagnostic output for Dell SR
@@ -205,6 +307,35 @@ uemcli -d <mgmt-ip> /sys/general show
 # Include: Dell order number, SN from chassis label, expected feature name
 ```
 
+
+```text title="Expected output"
+=== Array list ===
+Symmetrix ID: 000123456789ABC
+Symmetrix Model: PowerMax 2000
+=== Current licenses ===
+Product                          Status      Capacity
+SRDF/Metro                       Licensed    Unlimited
+Thin Provisioning                Licensed    Unlimited
+=== Firmware version ===
+Microcode Version: 5978.1234.1234
+Firmware Version: T253_R010_M001_1A00
+=== Key preview (if key available) ===
+License Key File: /path/to/fod-key.lic
+Symmetrix Serial Number: 000123456789ABC
+Feature: PowerMax_Replication
+Expiration Date: 2025-12-31
+Status: Valid
+=== Key file SN field ===
+VENDOR_SN=000123456789ABC
+SN=000123456789ABC
+
+Diagnostic snapshot saved to: /tmp/fod-diag-2024-01-15-1430.txt
+```
+
+!!! warning "Common errors"
+    **`symlicense: Command not found`** — Ensure the EMC Solutions Enabler package is installed and `/opt/emc/SYMCLI/bin` is in your PATH.
+    **`License Key File: Invalid or corrupted`** — Verify the key file path is correct and readable with `file /path/to/fod-key.lic`, and confirm it matches your array's serial number.
+    **`Symmetrix Serial Number mismatch between key and array`** — Cross-check the SN on your chassis label against the VENDOR_SN in the key file and Dell's order documentation.
 ---
 
 ## See also

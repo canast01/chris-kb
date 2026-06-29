@@ -201,6 +201,29 @@ fsfreeze -u /data
 # Quiesce via VSS requestor, then trigger establish via SYMCLI or Unisphere API
 ```
 
+
+```text title="Expected output"
+Establishing snapshot SNAP_20240315_143022 on storage group MY_PROD_SG...
+Snapshot SNAP_20240315_143022 established successfully.
+Snapshot name: SNAP_20240315_143022
+Storage Group: MY_PROD_SG
+Source devices: 12
+Snapshot state: Established
+Timestamp: 03/15/2024 14:30:22
+
+Establishing snapshot DAILY_SNAP on storage group MY_PROD_SG...
+Snapshot DAILY_SNAP established successfully.
+
+/data: freeze complete.
+Establishing snapshot APP_SNAP_20240315 on storage group MY_PROD_SG...
+Snapshot APP_SNAP_20240315 established successfully.
+/data: unfreeze complete.
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid SID <SID>`** — Replace `<SID>` with the actual Symmetrix ID (e.g., `000123456789`).
+    **`Error: Storage group MY_PROD_SG not found`** — Verify the storage group name exists and is accessible via `symsg list`.
+    **`Error: Snapshot DAILY_SNAP already exists`** — Either delete the existing snapshot with `symsnapvx -sid <SID> snap -sg MY_PROD_SG -name DAILY_SNAP terminate` or use a unique name with a timestamp.
 ### List and Inspect Snapshots
 
 ```bash
@@ -220,6 +243,41 @@ symsnapvx -sid <SID> snap -sg MY_PROD_SG -name SNAP_20260501 show
 symsnapvx -sid <SID> list -sg MY_PROD_SG | grep -c "Name"
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000296900111
+
+Name                          Generation  Tracks        Timestamp
+SNAP_20260501_0100            1           2097152       05/01/2026 01:00:23
+SNAP_20260501_0200            2           2097152       05/01/2026 02:00:45
+SNAP_20260430_2300            3           2097152       04/30/2026 23:00:12
+SNAP_20260429_1800            4           2097152       04/29/2026 18:30:07
+
+Symmetrix ID: 000296900111
+Storage Group: MY_PROD_SG
+
+Name                          Generation  Tracks        Timestamp
+SNAP_20260501_0100            1           2097152       05/01/2026 01:00:23
+SNAP_20260501_0200            2           2097152       05/01/2026 02:00:45
+
+Name                          Generation  Tracks        Timestamp        Linked
+SNAP_20260501_0100            1           2097152       05/01/2026 01:00:23  No
+SNAP_20260501_0200            2           2097152       05/01/2026 02:00:45  Yes
+
+Snapshot Name: SNAP_20260501
+Storage Group: MY_PROD_SG
+Generation: 1
+Creation Time: 05/01/2026 01:00:23
+Linked: No
+Tracks: 2097152
+
+4
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid SID <SID>`** — Replace `<SID>` with the actual Symmetrix ID (e.g., `000296900111`) or use `symcfg list` to discover valid SIDs.
+    **`Error: Storage Group MY_PROD_SG not found`** — Verify the storage group name exists with `symsnapvx -sid <SID> list` and use the exact case-sensitive name.
+    **`Error: Snapshot SNAP_20260501 not found in storage group MY_PROD_SG`** — Confirm the snapshot exists in that storage group; snapshot names are case-sensitive.
 ### Terminate (Delete) a Snapshot
 
 ```bash
@@ -238,6 +296,25 @@ symsnapvx -sid <SID> list -sg MY_PROD_SG -v | awk '/20260401/{print $1}' | while
 done
 ```
 
+
+```text title="Expected output"
+Snapshot SNAP_20260501 (generation 0) on storage group MY_PROD_SG terminated successfully.
+
+Snapshot SNAP_20260501 (generation 0) on storage group MY_PROD_SG terminated successfully.
+Snapshot SNAP_20260501 (generation 1) on storage group MY_PROD_SG terminated successfully.
+Snapshot SNAP_20260501 (generation 2) on storage group MY_PROD_SG terminated successfully.
+
+Snapshot SNAP_20260501 (generation 0) on storage group MY_PROD_SG terminated successfully (force mode).
+
+SNAP_20260401_0815 on storage group MY_PROD_SG terminated successfully.
+SNAP_20260401_1430 on storage group MY_PROD_SG terminated successfully.
+SNAP_20260401_2145 on storage group MY_PROD_SG terminated successfully.
+```
+
+!!! warning "Common errors"
+    **`Snapshot SNAP_20260501 is in use by linked clone LCL_CLONE_001 and cannot be terminated`** — Add the `-force` flag to terminate snapshots with active linked clones.
+    **`Storage group MY_PROD_SG not found on array <SID>`** — Verify the storage group name and SID are correct using `symsnapvx -sid <SID> list -sg`.
+    **`Snapshot SNAP_20260501 does not exist`** — Confirm the snapshot name exists and has not already been terminated using `symsnapvx -sid <SID> list -sg MY_PROD_SG -v`.
 ### Rename and Expire
 
 ```bash
@@ -250,6 +327,16 @@ symsnapvx -sid <SID> snap -sg MY_PROD_SG -name SNAP_20260501 \
   set_expiry -hours 168 -noprompt   # expire in 7 days
 ```
 
+
+```text title="Expected output"
+Snapshot SNAP_20260501 renamed to SNAP_20260501_VALIDATED successfully.
+Snapshot SNAP_20260501_VALIDATED expiry set to 168 hours (7 days).
+Expiry timestamp: 2026-05-08 14:32:15 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: Snapshot SNAP_20260501 not found in storage group MY_PROD_SG`** — Verify the snapshot name and storage group exist using `symsnapvx -sid <SID> snap -sg MY_PROD_SG -list`.
+    **`Error: set_expiry is not supported on this PowerMaxOS version`** — Upgrade to PowerMaxOS 5978 or later, or use `symsnap -sid <SID> -sg MY_PROD_SG -name SNAP_20260501 -delete` for immediate termination instead.
 ## Linking Snapshots for Backup or Restore
 
 Linking a snapshot creates a target storage group that presents the snapshot data as readable (and optionally writable) volumes to a host. This is how backup media servers access snapshot data without touching production volumes.
@@ -276,6 +363,38 @@ symsnapvx -sid <SID> snap -sg MY_PROD_SG -name SNAP_20260501 \
   unlink -lnsg MY_BACKUP_TARGET_SG -noprompt
 ```
 
+
+```text title="Expected output"
+Linking snapshot SNAP_20260501 from storage group MY_PROD_SG to MY_BACKUP_TARGET_SG
+Snapshot link operation completed successfully.
+Link name: SNAP_20260501_lnk
+Link mode: Read-Only
+Linked capacity: 2.5 TB
+
+Linking snapshot SNAP_20260501 with full copy to MY_CLONE_SG
+Copy operation initiated. This may take several minutes...
+Snapshot link operation completed successfully.
+Link name: SNAP_20260501_copy
+Link mode: Read-Write (Independent)
+Linked capacity: 2.5 TB
+
+Linking snapshot SNAP_20260501 to MY_TEST_SG for read/write access
+Snapshot link operation completed successfully.
+Link name: SNAP_20260501_lnk
+Link mode: Read-Write
+Linked capacity: 2.5 TB
+
+Relinking snapshot SNAP_20260501 to MY_BACKUP_TARGET_SG
+Relink operation completed successfully.
+
+Unlinking snapshot SNAP_20260501 from MY_BACKUP_TARGET_SG
+Unlink operation completed successfully.
+```
+
+!!! warning "Common errors"
+    **`Snapshot SNAP_20260501 not found in storage group MY_PROD_SG`** — Verify the snapshot name and source storage group exist using `symsnapvx -sid <SID> snap -sg MY_PROD_SG list`.
+    **`Storage group MY_BACKUP_TARGET_SG does not exist or is not accessible`** — Confirm the target storage group name is correct and the Symmetrix user has permissions using `symsg list -sg MY_BACKUP_TARGET_SG`.
+    **`Snapshot is already linked to target storage group`** — Unlink the existing link first with `symsnapvx -sid <SID> snap -sg MY_PROD_SG -name SNAP_20260501 unlink -lnsg MY_BACKUP_TARGET_SG -noprompt` before relinking.
 > **Warning:** Never terminate a snapshot while a linked clone target is still mounted by a host. Unlink and unmount the target storage group first, then terminate the snapshot.
 
 ## Restore Procedure
@@ -306,6 +425,34 @@ symdev -sid <SID> ready DEV0001 -noprompt
 # Step 7 — Rescan host, mount filesystems, validate application
 ```
 
+
+```text title="Expected output"
+# Step 2 output
+Device DEV0001 set to Not Ready.
+Device DEV0002 set to Not Ready.
+Device DEV0003 set to Not Ready.
+
+# Step 3 output
+Read IOs/sec:        0.0
+Write IOs/sec:       0.0
+
+# Step 5 output
+Snapshot Name:       SNAP_20260501
+State:               Restoring
+Copied:              87%
+Restore Start Time:  05/01/2026 14:32:18
+Restore End Time:    05/01/2026 14:38:45
+
+# Step 6 output
+Device DEV0001 set to Ready.
+Device DEV0002 set to Ready.
+Device DEV0003 set to Ready.
+```
+
+!!! warning "Common errors"
+    **`Snapshot SNAP_20260501 not found in storage group MY_PROD_SG`** — Verify the snapshot name matches exactly and exists using `symsnapvx -sid <SID> snap -sg MY_PROD_SG list`.
+    **`Device DEV0001 is in use by host initiator and cannot be set to Not Ready`** — Confirm the application is fully quiesced and all filesystems are unmounted before retrying the not_ready command.
+    **`Restore operation failed: Source and target devices are the same and snapshot is not linked`** — Link the snapshot first using `symsnapvx -sid <SID> snap -sg MY_PROD_SG -name SNAP_20260501 link` before attempting restore.
 > **Critical:** The restore operation writes snapshot data back to the source storage group devices. If SRDF is configured, the restore will propagate to the R2 side. In most cases, suspend SRDF before a restore and re-establish after validation.
 
 ### Restore a Single File (File-Level Restore)
@@ -378,6 +525,25 @@ symsnapvx -sid <SID> snap -sg <sg> -name NBU_SNAP_<timestamp> unlink -lnsg <targ
 symsnapvx -sid <SID> snap -sg <sg> -name NBU_SNAP_<timestamp> terminate
 ```
 
+
+```text title="Expected output"
+Establishing snapshot NBU_SNAP_20240115_143022 on storage group prod_db_sg...
+Snapshot established successfully.
+Name: NBU_SNAP_20240115_143022
+Timestamp: 01/15/2024 14:30:22
+Source SG: prod_db_sg
+Linked to target storage group backup_client_sg.
+Link operation completed successfully.
+Unlinking snapshot from backup_client_sg...
+Unlink operation completed successfully.
+Terminating snapshot NBU_SNAP_20240115_143022...
+Snapshot terminated and space reclaimed (847 GB).
+```
+
+!!! warning "Common errors"
+    **`SYMCLI Error: SID <SID> not found or not available`** — Verify the SID is correct and the Symmetrix array is online and reachable via `symcfg list`.
+    **`SYMCLI Error: Storage group <sg> does not exist`** — Confirm the storage group name matches exactly using `symsg list` and check for typos or case sensitivity.
+    **`SYMCLI Error: Snapshot <name> is in use and cannot be terminated`** — Wait for all linked copies to complete unlink operations or force termination with the `-force` flag if safe to do so.
 ## Integration with CommVault IntelliSnap
 
 CommVault IntelliSnap orchestrates PowerMax SnapVX snapshots via the Unisphere REST API.
@@ -422,6 +588,33 @@ for sg in $(symsg list -sid <SID> | awk 'NR>2{print $1}'); do
 done | sort -t: -k2 -rn | head -20
 ```
 
+
+```text title="Expected output"
+SRP Capacity Information
+SRP Name                    Usable Capacity (GB)  Used Capacity (GB)  Free Capacity (GB)  Percent Used
+SRP_001                     10240.00              7168.50             3071.50             70%
+SRP_002                     5120.00               4096.25             1023.75             80%
+
+Thin Pool Demand Report
+Pool Name          Total Capacity (GB)  Allocated (GB)  Consumed (GB)  Snapshot (GB)
+THINPOOL_PROD      2048.00              1536.00         1280.50        256.50
+THINPOOL_DEV       1024.00              768.00          640.25         128.25
+
+847
+
+PROD_SG_001: 156 snapshots
+PROD_SG_002: 142 snapshots
+PROD_SG_003: 128 snapshots
+DEV_SG_001: 95 snapshots
+DEV_SG_002: 67 snapshots
+TEST_SG_001: 34 snapshots
+...
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Verify the Unisphere CLI tools are installed and the PATH includes the installation directory (typically `/opt/emc/SYMCLI/bin`).
+    **`Error: Invalid SID <SID>`** — Replace `<SID>` with the actual array serial number (e.g., `000123456789`) or verify connectivity to the array with `symcfg discover`.
+    **`symsnapvx: Command not found`** — Install or enable the SnapVX license and ensure the Unisphere CLI package includes snapshot management tools.
 | Threshold | Action |
 |---|---|
 | > 200 snapshots per SG | Review retention; terminate stale snapshots immediately |
@@ -502,6 +695,22 @@ symrdf -sid <R2_SID> -sg MY_PROD_SG resume -noprompt
 symrdf -sid <R2_SID> -sg MY_PROD_SG query | grep -i "Transmitting\|Consistent"
 ```
 
+
+```text title="Expected output"
+Consistent                                    
+Transmitting                                  
+Split completed successfully for SG MY_PROD_SG
+Establishing snapshot DR_SNAP_20240315...
+Snapshot DR_SNAP_20240315 established successfully on 12 devices
+Resume completed successfully for SG MY_PROD_SG
+Transmitting                                  
+RDF Link (1): Mirror consistent, link ready
+```
+
+!!! warning "Common errors"
+    **`SRDF group MY_PROD_SG is not in a valid state for split`** — Verify the group is in Consistent or Transmitting state with `symrdf -sid <R2_SID> -sg MY_PROD_SG query` before attempting split.
+    **`Snapshot DR_SNAP_20240315 already exists`** — Use a unique snapshot name or remove the existing snapshot with `symsnapvx -sid <R2_SID> snap -sg MY_PROD_SG -name DR_SNAP_20240315 delete` before re-establishing.
+    **`Cannot resume: RDF link is not ready`** — Wait 30–60 seconds after split completes for link stabilization, then retry the resume command.
 The split window is typically 2–5 seconds for a consistent delta set handoff. SRDF/A will resynchronize after `resume` by transmitting the delta tracks accumulated during the split.
 
 ---

@@ -185,6 +185,51 @@ curl -k -u admin:password -X POST \
   https://<unisphere-host>:8443/univmax/restapi/91/sloprovisioning/symmetrix/<SID>/storagegroup
 ```
 
+
+```text title="Expected output"
+{
+  "version": "9.1.0.0",
+  "release": "PowerMax OS 9.1",
+  "build_number": "9.1.0.0.0.0.20230415"
+}
+
+{
+  "symmetrixId": [
+    "000296900123",
+    "000296900456",
+    "000296900789"
+  ]
+}
+
+{
+  "storageGroupId": "prod-db-sg",
+  "slo": "Diamond",
+  "srp": "SRP_1",
+  "num_of_vols": 24,
+  "cap_gb": 2048,
+  "reserved_cap_percent": 10,
+  "compression": true,
+  "replication": {
+    "mode": "Synchronous",
+    "remote_symmetrix": "000296900456"
+  }
+}
+
+{
+  "storageGroupId": "new-app-sg",
+  "slo": "Diamond",
+  "srp": "SRP_1",
+  "num_of_vols": 0,
+  "cap_gb": 0,
+  "compression": true,
+  "creation_time": "2024-01-15T09:42:33Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the Unisphere certificate into your system's CA bundle.
+    **`{"error":"401 Unauthorized"}`** — Verify the admin credentials are correct and the user has API access permissions in Unisphere.
+    **`{"error":"404 Not Found","message":"symmetrix <SID> not found"}`** — Confirm the SID exists by running the list arrays command first and use the correct symmetrix ID from the output.
 - API version is included in the URL path (e.g., `91` for v9.1). Increment for newer Unisphere releases.
 - Use the interactive API documentation at `https://<unisphere-host>:8443/univmax/restapi/docs`.
 - For programmatic automation, use the `PyU4V` Python library (open source, maintained by Dell): `pip install PyU4V`.

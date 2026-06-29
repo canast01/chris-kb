@@ -134,6 +134,35 @@ curl -s -k -X POST \
 ecscli namespace get --name analytics-prod
 ```
 
+
+```text title="Expected output"
+{
+  "id": "analytics-prod",
+  "link": {
+    "rel": "self",
+    "href": "/object/namespaces/namespace/analytics-prod"
+  },
+  "creation_time": 1699564823000,
+  "vpool": "urn:storageos:ReplicationGroupInfo:d4c8f2a1-9e3b-4c7f-b1d2-8f5e3a2c9b7d:global",
+  "is_stale_allowed": true,
+  "is_compliance_enabled": false,
+  "namespace_quota": {
+    "blockSize": 10240,
+    "notificationSize": 9216
+  }
+}
+Namespace: analytics-prod
+  ID: analytics-prod
+  VPool: urn:storageos:ReplicationGroupInfo:d4c8f2a1-9e3b-4c7f-b1d2-8f5e3a2c9b7d:global
+  Created: 2024-11-10T14:47:03Z
+  Compliance Enabled: false
+  Stale Allowed: true
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <ecs-node>:4443: Connection refused`** — Replace `<ecs-node>` with the actual ECS management node hostname or IP address.
+    **`{"errorCode":1003,"description":"Invalid authentication token"}`** — Ensure `$TOKEN` is set by running `export TOKEN=$(ecscli login -u <user> -p <password> -m <mgmt-node>)` first.
+    **`error: namespace 'analytics-prod' not found`** — Wait 5-10 seconds for replication across the cluster before running the verify command, or check that the POST request returned HTTP 201 status.
 **Namespace configuration parameters:**
 
 | Parameter | Description | Recommendation |
@@ -192,6 +221,38 @@ ecscli bucket update \
 ecscli bucket get --namespace analytics-prod --name analytics-prod-raw
 ```
 
+
+```text title="Expected output"
+Bucket created successfully.
+Bucket Name: analytics-prod-raw
+Namespace: analytics-prod
+Replication Group: rg-ecs-prod-01
+Versioning: disabled
+Created: 2024-01-15T09:42:18Z
+
+make_bucket: analytics-prod-raw
+Bucket created with endpoint https://ecs-s3-endpoint.corp.local:9021
+
+make_bucket: compliance-immutable
+Bucket created with endpoint https://ecs-s3-endpoint.corp.local:9021
+
+Bucket quota updated successfully.
+Quota: 5000 GB
+
+Bucket: analytics-prod-raw
+  Namespace: analytics-prod
+  Replication Group: rg-ecs-prod-01
+  Versioning: disabled
+  Object Lock: disabled
+  Quota: 5000 GB
+  Used: 0 GB
+  Created: 2024-01-15T09:42:18Z
+```
+
+!!! warning "Common errors"
+    **`error: bucket 'analytics-prod-raw' already exists`** — Drop the bucket with `ecscli bucket delete --namespace analytics-prod --name analytics-prod-raw` or choose a unique bucket name.
+    **`Unable to locate credentials for profile 'ecs'`** — Configure AWS CLI credentials with `aws configure --profile ecs` or ensure `~/.aws/credentials` contains the ECS endpoint profile.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is present but not working; verify the endpoint URL is correct and accessible, or use a valid certificate if `--no-verify-ssl` is removed.
 **Bucket configuration parameters:**
 
 | Parameter | Description | Default | Recommendation |
@@ -254,6 +315,31 @@ ecscli user secret-key delete \
   --secret-key <old-key-id>
 ```
 
+
+```text title="Expected output"
+User svc-spark-prod created successfully in namespace analytics-prod
+
+Access Key ID: 8F7C2A9E1B4D5K6L
+Secret Access Key: wJx9mK2pL8qR3sT4uV5wX6yZ7aB8cD9eF0gH1iJ2kL3mN4oP5qR6sT7uV8wX9yZ0
+
+Object Users in namespace analytics-prod:
+  svc-spark-prod
+  svc-kafka-prod
+  svc-elasticsearch-prod
+
+Access Keys for user svc-spark-prod:
+  8F7C2A9E1B4D5K6L
+  7E6D5C4B3A2Z1Y0X
+
+Access Key ID: 3M9N8O7P6Q5R4S3T
+Secret Access Key: aB1cD2eF3gH4iJ5kL6mN7oP8qR9sT0uV1wX2yZ3aB4cD5eF6gH7iJ8kL9mN0oP1
+
+Secret key 7E6D5C4B3A2Z1Y0X deleted successfully
+```
+
+!!! warning "Common errors"
+    **`Error: user 'svc-spark-prod' already exists in namespace 'analytics-prod'`** — Use `ecscli user delete` to remove the existing user first, or choose a different username.
+    **`Error: secret key '<old-key-id>' not found for user 'svc-spark-prod'`** — Verify the correct key ID using `ecscli user secret-key list` before attempting deletion.
 ## Configuring Bucket Lifecycle Policies
 
 Lifecycle policies automate object expiration and version cleanup. Always attach a lifecycle policy to versioned buckets.
@@ -291,6 +377,40 @@ aws s3api get-bucket-lifecycle-configuration \
   --profile ecs
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+
+{
+    "Rules": [
+        {
+            "ID": "expire-noncurrent-versions",
+            "Status": "Enabled",
+            "Filter": {
+                "Prefix": ""
+            },
+            "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 90
+            }
+        },
+        {
+            "ID": "abort-incomplete-mpu",
+            "Status": "Enabled",
+            "Filter": {
+                "Prefix": ""
+            },
+            "AbortIncompleteMultipartUpload": {
+                "DaysAfterInitiation": 7
+            }
+        }
+    ]
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (NoSuchBucket) when calling the PutBucketLifecycleConfiguration operation: The specified bucket does not exist`** — Verify the bucket name is correct and exists on the ECS endpoint using `aws s3api list-buckets --endpoint-url https://<ecs-s3-endpoint>:9021 --profile ecs`.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Ensure `--no-verify-ssl` flag is present in the command, or add the ECS endpoint certificate to your system's CA bundle.
+    **`Unable to locate credentials for profile 'ecs'`** — Verify the `ecs` profile exists in `~/.aws/credentials` and contains valid access key and secret key for the ECS S3 endpoint.
 ## Applying Bucket Policies (S3 IAM)
 
 Bucket policies restrict which object users can perform which S3 actions on a bucket.
@@ -337,6 +457,17 @@ aws s3api get-bucket-policy \
   --profile ecs
 ```
 
+
+```text title="Expected output"
+{
+    "Policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"AllowAppRW\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"urn:ecs:iam::analytics-prod:user/svc-spark-prod\"},\"Action\":[\"s3:GetObject\",\"s3:PutObject\",\"s3:DeleteObject\",\"s3:ListBucket\"],\"Resource\":[\"arn:aws:s3:::analytics-prod-raw\",\"arn:aws:s3:::analytics-prod-raw/*\"]}]}"
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (NoSuchBucket) when calling the PutBucketPolicy operation: The specified bucket does not exist`** — Verify the bucket name matches exactly and exists in the ECS cluster with `aws s3api list-buckets --endpoint-url https://<ecs-s3-endpoint>:9021 --profile ecs`.
+    **`An error occurred (InvalidArgument) when calling the PutBucketPolicy operation: Invalid principal in policy`** — Ensure the Principal ARN format matches your ECS IAM namespace; replace `urn:ecs:iam::analytics-prod:user/svc-spark-prod` with the correct user path from `aws iam list-users --profile ecs`.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is already present; if still failing, verify the endpoint URL is correct and the ECS S3 service is responding on port 9021.
 ## Cleaning Up Incomplete Multipart Uploads
 
 Incomplete multipart uploads (MPUs) consume capacity without contributing accessible objects. Clean them up regularly on buckets with high-throughput upload workloads.
@@ -359,6 +490,13 @@ aws s3api abort-multipart-upload \
   --profile ecs
 ```
 
+
+```text title="Expected output"
+{
+    "Uploads": [
+        {
+            "UploadId": "AAABaWQtMTcwMjQwNTYwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwM
+```
 A lifecycle policy rule with `AbortIncompleteMultipartUpload` (7 days) is the preferred long-term solution over manual cleanup.
 
 ## Bucket Management
@@ -403,6 +541,39 @@ aws s3api get-object-lock-configuration \
   --profile ecs
 ```
 
+
+```text title="Expected output"
+2024-01-15 09:23:44 backup-prod-01
+2024-01-15 09:18:12 archive-tier-02
+2024-01-15 08:47:33 logs-retention-90d
+2024-01-15 07:52:19 temp-staging
+2024-01-15 06:15:08 compliance-locked
+
+remove_bucket: status_code: 204, request_id: req-a1b2c3d4e5f6g7h8
+
+{
+    "Owner": {
+        "DisplayName": "ecs-admin",
+        "ID": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p"
+    },
+    "Grants": [
+        {
+            "Grantee": {
+                "Type": "CanonicalUser",
+                "ID": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p"
+            },
+            "Permission": "FULL_CONTROL"
+        }
+    ]
+}
+
+An error occurred (ObjectLockConfigurationNotFoundError) when calling the GetObjectLockConfiguration operation: The Object Lock configuration does not exist
+```
+
+!!! warning "Common errors"
+    **`An error occurred (NoSuchBucket) when calling the ListBuckets operation: The specified bucket does not exist`** — Verify the bucket name spelling and confirm the ECS endpoint URL and profile credentials are correct.
+    **`An error occurred (BucketNotEmpty) when calling the DeleteBucket operation: The bucket you tried to delete is not empty`** — Use the `--force` flag to delete the bucket and all objects, or manually empty the bucket first with `aws s3 rm s3://<bucket-name> --recursive`.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Ensure `--no-verify-ssl` flag is included or add the ECS certificate to your system's trusted CA store.
 ### Capacity Monitoring
 
 ![Capacity Monitoring](../../../../assets/ecs-proc-capacity-monitoring.svg)

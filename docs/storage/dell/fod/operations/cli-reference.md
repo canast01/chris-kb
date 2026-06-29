@@ -105,6 +105,65 @@ symcfg list -v -sid <sid> | awk -v base="${BASE_TB}" -v warn="${WARN_PCT}" '
   }'
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+Symmetrix ID: 000987654321098
+
+Symmetrix ID: 000123456789012
+Licensed Capacity: 104857600 MB
+Configured Capacity: 89128960 MB
+Allocated Capacity: 78643200 MB
+Free Capacity: 26214400 MB
+
+Pool ID: SRP_1
+Pool Name: SRP_1
+Subscribed Capacity: 92274688 MB
+Usable Capacity: 104857600 MB
+Snapshot Capacity: 5242880 MB
+
+Device ID: 0001
+Size: 1048576 MB
+Allocated: 987654 MB
+Provisioned: 1048576 MB
+Device ID: 0002
+Size: 2097152 MB
+Allocated: 1835008 MB
+Provisioned: 2097152 MB
+...
+
+Service Level: Diamond
+SRP: SRP_1
+Capacity: 52428800 MB
+Service Level: Gold
+SRP: SRP_1
+Capacity: 31457280 MB
+
+Disk Group: DG001 (Base)
+Capacity: 52428800 MB
+Disk Group: DG002 (Burst)
+Capacity: 52428800 MB
+
+Storage Group: PROD_OLTP_SG
+Device Count: 24
+Storage Group: DEV_TEST_SG
+Device Count: 8
+
+Storage Group Name: PROD_OLTP_SG
+Device ID: 0001
+Size: 1048576 MB
+Device ID: 0002
+Size: 2097152 MB
+...
+
+Licensed: 100.0 TB  Configured: 85.0 TB  Used: 85.0%
+WARNING: Usage exceeds 85% of licensed capacity!
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Install EMC Solutions Enabler or add the Symmetrix CLI bin directory to your PATH environment variable.
+    **`Symmetrix ID: <sid> — Could not be found`** — Verify the SID is correct and the array is discoverable; run `symcfg discover` first to refresh the device list.
+    **`Permission denied`** — Run the command with appropriate privileges (sudo or as a user in the symcfg group) or configure passwordless sudo for Symmetrix CLI commands.
 ---
 
 ## Unisphere REST API
@@ -163,6 +222,49 @@ if pct > 80:
 "
 ```
 
+
+```text title="Expected output"
+{
+  "symmetrix": [
+    {
+      "symmetrixId": "000297900001",
+      "model": "PowerMax 8000",
+      "ucode": "5978.669.669",
+      "license_capability": "FOD",
+      "local_user_name": "smc"
+    }
+  ]
+}
+{
+  "system_capacity": {
+    "usable_total_tb": 450.5,
+    "usable_used_tb": 312.8,
+    "subscribed_total_tb": 680.2,
+    "subscribed_allocated_tb": 298.5,
+    "snapshot_total_tb": 14.3
+  }
+}
+{
+  "srp": [
+    "SRP_1",
+    "SRP_2"
+  ]
+}
+{
+  "srp_capacity": {
+    "srp_id": "SRP_1",
+    "usable_total_tb": 450.5,
+    "usable_used_tb": 312.8,
+    "reserved_cap_percent": 10
+  }
+}
+Licensed: 450.50 TB  Used: 312.80 TB  (69.4%)
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present in example; verify Unisphere host is reachable and certificate is valid).
+    **`jq: command not found` or `python3: command not found`** — Install the missing tool (`apt-get install python3` or `yum install python3`) or use the built-in `python3 -m json.tool` as shown in the example.
+    **`401 Unauthorized`** — Verify SMC user credentials are correct and the account has REST API permissions in Unisphere; check password expiration and reset if needed.
 ---
 
 ## Monitoring Burst Threshold
@@ -207,6 +309,16 @@ else:
 "
 ```
 
+
+```text title="Expected output"
+FOD capacity snapshot saved to /var/log/fod-reports/capacity_2024-01-15.txt
+OK: FOD capacity usage nominal (67.3 TB / 120 TB ceiling)
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Ensure the EMC/Dell Unisphere CLI package is installed and `/usr/symcli/bin` is in your PATH, or use the full path `/usr/symcli/bin/symcfg`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the Unisphere server's CA certificate into your system trust store to avoid the `-k` workaround.
+    **`jq: command not found` or `python3: No module named json`** — Install Python 3 and verify the json module is available, or replace the JSON parser with `jq` if preferred.
 ---
 
 ## License Key Management
@@ -239,6 +351,44 @@ symcfg list -v -sid <sid> | grep -E "Licensed|FOD|Configured"
 symcfg -version
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000297900001
+
+License Feature                          Capacity    Installed   Expiration
+================================================================================
+PowerMax FOD Base Capacity               10.0 TB     10.0 TB     2025-12-31
+PowerMax FOD Burst Capacity              5.0 TB      5.0 TB      2025-12-31
+VMAX3 Flex on Demand Base                0.0 TB      0.0 TB      N/A
+
+License Management Report
+Generated: 2024-01-15 14:32:18 UTC
+Symmetrix ID: 000297900001
+Report saved to: /tmp/fod_license_report_20240115.txt
+
+License Feature                          Status      Capacity    Days Remaining
+================================================================================
+PowerMax FOD Base Capacity               VALID       10.0 TB     350
+PowerMax FOD Burst Capacity              VALID       5.0 TB      350
+
+Importing license file: /tmp/new_fod_license.dat
+License import completed successfully.
+Updated entitlements:
+  PowerMax FOD Base Capacity: 10.0 TB → 15.0 TB
+  PowerMax FOD Burst Capacity: 5.0 TB → 8.0 TB
+
+Licensed Capacity:     15.0 TB
+Configured Capacity:   14.8 TB
+FOD Base:              15.0 TB
+FOD Burst Enabled:     Yes
+
+Solutions Enabler Version: 9.2.3.0 (Build 2024.01.15)
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Ensure Solutions Enabler is installed and the `$SYMCLI_PATH` environment variable is set, or add the bin directory to `$PATH`.
+    **`License import failed: File not found or invalid format`** — Verify the license file path is correct and the file was downloaded from the Dell License Management portal in the proper `.dat` format.
+    **`Error: Symmetrix ID <sid> not found or not responding`** — Confirm the Symmetrix array is online, the correct SID is specified, and the management station has network connectivity to the array's management port.
 ---
 
 ## Monthly Usage Tracking and Reporting
@@ -283,6 +433,49 @@ OUT="/var/log/fod-reports/monthly_${MONTH}.csv"
 echo "Monthly FOD report written to ${OUT}"
 ```
 
+
+```text title="Expected output"
+{
+  "symmetrixId": [
+    "000297900001",
+    "000297900002",
+    "000297900003"
+  ]
+}
+{
+  "resultList": {
+    "result": [
+      {
+        "symmetrixId": "000297900001",
+        "timestamp": 1704067200000,
+        "HostIOs": 45823.5,
+        "HostMBs": 1247.3,
+        "PercentBusy": 67.2
+      },
+      {
+        "symmetrixId": "000297900001",
+        "timestamp": 1704153600000,
+        "HostIOs": 52104.2,
+        "HostMBs": 1389.7,
+        "PercentBusy": 71.8
+      },
+      {
+        "symmetrixId": "000297900001",
+        "timestamp": 1704240000000,
+        "HostIOs": 48956.1,
+        "HostMBs": 1156.4,
+        "PercentBusy": 69.1
+      }
+    ]
+  }
+}
+Monthly FOD report written to /var/log/fod-reports/monthly_2024-01.csv
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command (already present in the code; if still failing, verify UNISPHERE variable points to correct Unisphere hostname).
+    **`jq: command not found`** — Install `python3-json` or use `python3 -m json.tool` as shown; if json.tool fails, verify Python 3.6+ is installed with `python3 --version`.
+    **`No such file or directory: /var/log/fod-reports/capacity_2024-01-*.txt`** — Ensure capacity snapshot files exist in `/var/log/fod-reports/` and match the naming pattern `capacity_YYYY-MM-DD.txt` before running the report generation loop.
 ---
 
 ## Verify

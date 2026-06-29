@@ -49,6 +49,33 @@ symlmf -sid <sid> import -file /tmp/new_fod_license.dat
 symcfg -sid <sid> list -license
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000297123456789
+
+License Information:
+Feature Name                          Capacity    Expiration Date
+PowerMax FOD Base Capacity            50.00 TB    2025-12-31
+PowerMax FOD Burst Capacity           25.00 TB    2025-12-31
+VMAX3 Flex on Demand Base             0.00 TB     Expired
+
+License file /tmp/new_fod_license.dat imported successfully.
+Import timestamp: 2024-01-15 14:32:47 UTC
+License ID: LIC-4A9F2E8B1C7D5F3A
+
+Symmetrix ID: 000297123456789
+
+License Information:
+Feature Name                          Capacity    Expiration Date
+PowerMax FOD Base Capacity            75.00 TB    2026-12-31
+PowerMax FOD Burst Capacity           40.00 TB    2026-12-31
+VMAX3 Flex on Demand Base             0.00 TB     Expired
+```
+
+!!! warning "Common errors"
+    **`symcfg: Cannot open Symmetrix <sid>`** — Verify the SID is correct and the array is reachable via `symcfg -sid <sid> list -director`.
+    **`symlmf: License file format invalid or corrupted`** — Ensure the license file is not truncated and was obtained directly from Dell EMC licensing portal.
+    **`symlmf: Permission denied on /tmp/new_fod_license.dat`** — Run the import command with appropriate privileges (sudo) or move the file to a readable location.
 ---
 
 ## Verify

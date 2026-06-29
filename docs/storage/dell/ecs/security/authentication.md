@@ -83,6 +83,26 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
   "https://<ecs-node>:4443/logout"
 ```
 
+
+```text title="Expected output"
+{
+  "user": "svc-ecs-mgmt",
+  "uid": "urn:storageos:Identity:00a1b2c3-d4e5-6f7g-8h9i-0j1k2l3m4n5o:1",
+  "common_name": "svc-ecs-mgmt",
+  "distinguished_name": "cn=svc-ecs-mgmt,ou=service-accounts,dc=ecs,dc=local",
+  "groups": [
+    "ecs-admins",
+    "ecs-operators"
+  ],
+  "is_system_admin": true,
+  "is_audit_admin": false
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl commands to skip SSL verification (already present in the example, but ensure it's not removed).
+    **`jq: command not found`** — Use `python3 -m json.tool` instead of `jq` for JSON formatting, or install jq with `apt-get install jq` / `yum install jq`.
+    **`grep: X-SDS-AUTH-TOKEN: No such file or directory`** — Ensure the `-D -` flag is present in the login curl command to write headers to stdout; verify the ECS node hostname/IP is correct and port 4443 is accessible.
 ## LDAP / Active Directory
 
 ECS can delegate management user authentication to an external LDAP or Active Directory service for namespace-level access. This is configured per namespace and enables existing AD groups to be mapped to ECS roles without creating individual local accounts.
@@ -147,6 +167,26 @@ ecscli user secret-key delete \
   --secret-key <old-key-id>
 ```
 
+
+```text title="Expected output"
+Creating new secret key for user svc-spark-prod in namespace analytics-prod...
+Access Key ID: AKIAIOSFODNN7EXAMPLE
+Secret Access Key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Key created successfully at 2024-01-15T09:42:17Z
+
+Secret Keys for svc-spark-prod:
+Key ID                          Created                 Status
+----                            -------                 ------
+AKIAIOSFODNN7EXAMPLE            2024-01-15T09:42:17Z    Active
+AKIAIOSFODNN6OLDKEY             2023-11-20T14:28:03Z    Active
+
+Deleting secret key AKIAIOSFODNN6OLDKEY...
+Secret key deleted successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: user 'svc-spark-prod' not found in namespace 'analytics-prod'`** — Verify the namespace and username exist by running `ecscli user list --namespace analytics-prod`.
+    **`Error: secret key <old-key-id> is currently in use and cannot be deleted`** — Confirm the new key is actively being used by the application before attempting deletion, or wait for in-flight requests to complete.
 **Object user restrictions:**
 
 | Restriction | Detail |
