@@ -114,6 +114,86 @@ curl -c cookie.txt -b cookie.txt -k \
   -X GET "https://<sp-ip>/api/types/lun/instances?fields=name,sizeTotal,pool,health"
 ```
 
+
+```text title="Expected output"
+{
+  "content": [
+    {
+      "id": "0",
+      "model": "Unity 380",
+      "serialNumber": " UNIDOS1234567890",
+      "softwareVersion": "5.1.0.0.5.007",
+      "health": {
+        "value": 0
+      }
+    }
+  ]
+}
+{
+  "content": [
+    {
+      "id": "pool_1",
+      "name": "pool_ssd_tier1",
+      "sizeTotal": 10995116277760,
+      "sizeUsed": 7516192522240,
+      "health": {
+        "value": 0
+      }
+    },
+    {
+      "id": "pool_2",
+      "name": "pool_sata_tier2",
+      "sizeTotal": 54975581388800,
+      "sizeUsed": 32985348923392,
+      "health": {
+        "value": 0
+      }
+    }
+  ]
+}
+{
+  "content": [
+    {
+      "id": "sv_1",
+      "name": "lun_prod_db01",
+      "sizeTotal": 1099511627776,
+      "pool": {
+        "id": "pool_1"
+      },
+      "health": {
+        "value": 0
+      }
+    },
+    {
+      "id": "sv_2",
+      "name": "lun_prod_db02",
+      "sizeTotal": 549755813888,
+      "pool": {
+        "id": "pool_1"
+      },
+      "health": {
+        "value": 0
+      }
+    },
+    {
+      "id": "sv_3",
+      "name": "lun_archive_tier2",
+      "sizeTotal": 10995116277760,
+      "pool": {
+        "id": "pool_2"
+      },
+      "health": {
+        "value": 0
+      }
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification, or import the Unity's certificate into your system trust store.
+    **`{"error":401,"message":"Unauthorized"}`** — Verify the admin credentials and ensure the password does not contain special characters that need escaping; use single quotes around the password string.
+    **`curl: (7) Failed to connect to <sp-ip> port 443: Connection refused`** — Confirm the SP IP address is correct and reachable on the network, and verify the Unity management interface is running with `telnet <sp-ip> 443`.
 The API supports basic auth and session (cookie) auth. Use session auth for scripts that make multiple API calls to avoid authenticating on each request. The full API reference is available in Unisphere under **Help > REST API Reference**.
 
 ---

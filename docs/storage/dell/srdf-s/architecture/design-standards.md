@@ -55,6 +55,29 @@ Measure peak write throughput:
 symstat -sid <SID> -type rdf -i 5 -c 12   # 5-second samples, 12 cycles = 1 minute
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+                                    RA Group Statistics
+                                    
+Time         Read_Reqs  Write_Reqs  Read_MB/s  Write_MB/s  Queue_Depth  Util%
+12:34:56           1247        3891       156.2       287.4           8     72
+12:35:01           1156        3654       148.9       271.3           6     68
+12:35:06           1289        4012       162.1       298.7          11     78
+12:35:11           1198        3745       151.4       279.2           7     71
+12:35:16           1334        4156       168.5       309.1          13     82
+12:35:21           1267        3923       159.8       292.4           9     75
+12:35:26           1211        3812       152.3       284.6           8     73
+12:35:31           1345        4089       169.2       304.8          12     80
+12:35:36           1289        3967       162.7       296.1          10     76
+12:35:41           1223        3834       154.1       286.3           7     72
+12:35:46           1298        4124       163.9       307.2          14     81
+12:35:51           1276        3901       160.5       290.7           9     74
+```
+
+!!! warning "Common errors"
+    **`symstat: Error: Invalid SID <SID>`** — Replace `<SID>` with an actual Symmetrix ID (e.g., `000123456789012`).
+    **`symstat: Error: RDF group not found or not configured`** — Verify the array has SRDF/S configured and the RDF group is online using `symcfg list -rdf`.
 Sizing must be validated at peak (end-of-month batch, backup window) — not average load.
 
 ---
@@ -70,6 +93,17 @@ Verify before establishing:
 symdev show -sid <target_SID> <dev_id> | grep -E "Size|Emulation|Track"
 ```
 
+
+```text title="Expected output"
+Device Name           : 000FA
+        Size          : 1048576 tracks
+        Emulation     : FBA
+        Track Size    : 128 KB
+```
+
+!!! warning "Common errors"
+    **`symdev: Command not found`** — Install the EMC Solutions Enabler package or ensure the Symmetrix management tools are in your PATH.
+    **`symdev: Cannot connect to the Symmetrix array <target_SID>`** — Verify the target SID is correct and the Symmetrix engine is accessible via the management network.
 ---
 
 ## Test Frequency

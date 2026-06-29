@@ -56,6 +56,29 @@ symrdf -g <rdfg-number> query | grep -E "State|Mode|Status"
 symcfg list -rdfg all -detail | grep -i latency
 ```
 
+
+```text title="Expected output"
+State                                    Synchronized
+Mode                                     Synchronous
+Status                                   Ready
+RDF Link State                            OK
+RDF Link Latency                          2.3 ms
+RDF Link Health                           Optimal
+Pair State                                Consistent
+Remote Symmetrix ID                       000297900111
+Local Symmetrix ID                        000297900110
+SRDF Group Number                         4
+Replication Direction                     Local-to-Remote
+Average Link Latency                      2.1 ms
+Maximum Link Latency                      3.8 ms
+Configured Latency Threshold              5.0 ms
+Current Latency Status                    Within Tolerance
+```
+
+!!! warning "Common errors"
+    **`symrdf: Command not found`** — Ensure the PowerMax management tools are installed and the `$PATH` includes the Symmetrix CLI bin directory (typically `/opt/emc/SYMCLI/bin`).
+    **`SRDF group <rdfg-number> not found`** — Verify the RDF group number is correct by running `symrdf list` to display all configured SRDF groups.
+    **`RDF Link Latency: 12.4 ms — exceeds threshold of 5.0 ms`** — Check network connectivity and WAN link utilization between the local and remote PowerMax arrays; consider increasing the latency threshold if the link is intentionally long-distance.
 ## See also
 
 - [Dell SRDF/S — Architecture](../how-it-works/)

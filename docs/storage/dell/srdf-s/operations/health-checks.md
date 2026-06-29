@@ -202,6 +202,54 @@ symstat -sid 000123456789 -type rdfg -rdfg 10
 watch -n 60 'symrdf -sid 000123456789 -rdfg 10 list -v | grep -E "Latency|WriteResp|State"'
 ```
 
+
+```text title="Expected output"
+PING 192.168.100.45 (192.168.100.45) 56(84) bytes of data.
+64 bytes from 192.168.100.45: icmp_seq=1 time=8.234 ms
+64 bytes from 192.168.100.45: icmp_seq=2 time=8.156 ms
+64 bytes from 192.168.100.45: icmp_seq=3 time=8.412 ms
+64 bytes from 192.168.100.45: icmp_seq=4 time=8.289 ms
+64 bytes from 192.168.100.45: icmp_seq=5 time=8.367 ms
+...
+--- 192.168.100.45 statistics ---
+60 packets transmitted, 60 received, 0% packet loss, time 299456ms
+rtt min/avg/max/stddev = 8.156/8.301/9.847/0.412 ms
+
+{
+  "resultList": {
+    "result": [
+      {
+        "symmetrixId": "000123456789",
+        "rdfgNumber": 10,
+        "MBSentPerSec": 245.67,
+        "MBReceivedPerSec": 238.92,
+        "WriteResponseTime": 12.34,
+        "AvgIOServiceTime": 11.89
+      }
+    ]
+  }
+}
+
+Symmetrix ID: 000123456789
+RDFG Number: 10
+State: Synchronized
+Write Pending: 0
+Read Pending: 0
+Latency (ms): 12.34
+WriteResponseTime (ms): 12.34
+MBSentPerSec: 245.67
+MBReceivedPerSec: 238.92
+
+Every 60s: symrdf -sid 000123456789 -rdfg 10 list -v | grep -E "Latency|WriteResp|State"
+State: Synchronized
+WriteResponseTime: 12.34 ms
+Latency: 12.34 ms
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `--insecure` flag or import the Unisphere CA certificate into your system trust store.
+    **`symstat: Command not found`** — Ensure the Symmetrix CLI (Solutions Enabler) is installed and the `$PATH` includes `/opt/emc/SYMCLI/bin` or equivalent.
+    **`Authentication failed: Invalid credentials`** — Verify the SMC user credentials in the `AUTH` variable match the Unisphere account and that the account has RDF metrics API permissions.
 **Thresholds:**
 
 | Metric | Normal | Investigate | Escalate | Why |
@@ -234,6 +282,35 @@ symcfg list -rdfg 10 -detail | grep "SRDF Mode"
 symcfg list -rdfg all
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000296802151
+RDFG Number: 10
+Local SymmID: 000296802151
+Remote SymmID: 000296802152
+SRDF Mode: Synchronous
+RDF Link: RF-1A (Online)
+RDF Link: RF-1B (Online)
+Local Device Count: 42
+Remote Device Count: 42
+
+OLPAIRS: 42
+Pair State: Synchronized
+Link State: Online
+
+SRDF Mode: Synchronous
+
+Symmetrix ID: 000296802151
+  RDFG 10: Remote SymmID 000296802152
+
+Symmetrix ID: 000296802152
+  RDFG 10: Remote SymmID 000296802151
+```
+
+!!! warning "Common errors"
+    **`RDFG 10 not found`** — Verify the RDFG number exists with `symrdf list` and confirm it matches your configuration.
+    **`RDF Link: RF-1A (Offline)`** — Check physical RDF cable connections and run `symrdf -g 10 check` to diagnose link failures.
+    **`Pair State: Out-of-Sync`** — Resume replication with `symrdf -g 10 resume` after verifying no data corruption occurred.
 ---
 
 ## Health Check Summary Table
@@ -294,6 +371,45 @@ symcfg list -dir all -rdf >> /tmp/rdfg_inventory_$(date +%Y%m%d).txt
 symcfg list -rdfg 10 -detail >> /tmp/rdfg_inventory_$(date +%Y%m%d).txt
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000296701234
+RDFG #10: RDF1
+  Symmetrix ID: 000296701234
+  Remote Symmetrix ID: 000296705678
+  RDFG Number: 10
+  RDFG Type: Synchronous
+  Number of Pairs: 48
+  Number of Devices: 48
+
+RDFG #11: RDF2
+  Symmetrix ID: 000296701234
+  Remote Symmetrix ID: 000296709012
+  RDFG Number: 11
+  RDFG Type: Asynchronous
+  Number of Pairs: 32
+  Number of Devices: 32
+
+RDF Director Status:
+  Director 4e: Online, RDF Link: Optimal
+  Director 4f: Online, RDF Link: Optimal
+  Director 5e: Online, RDF Link: Optimal
+  Director 5f: Online, RDF Link: Optimal
+
+RDFG 10 Configuration:
+  Symmetrix ID: 000296701234
+  Remote Symmetrix ID: 000296705678
+  RDFG Number: 10
+  RDFG Type: Synchronous
+  Number of Pairs: 48
+  Number of Devices: 48
+  Pair State: Synchronized
+```
+
+!!! warning "Common errors"
+    **`SYMCFG-00001: Symmetrix ID not found or not responding`** — Verify the Symmetrix array is online and accessible by running `symcfg discover` and confirm the array ID matches your environment.
+    **`SYMRDF-00015: RDFG group 10 not found`** — Confirm the RDFG group number exists on this array by running `symcfg list -rdfg all` to list all configured groups.
+    **`Permission denied: /tmp/rdfg_inventory_*.txt`** — Ensure the user running the script has write permissions to /tmp or specify an alternate writable directory like `/var/tmp`.
 ### Pair State and Data Consistency Validation
 
 ![Pair State and Data Consistency Validation](../../../../assets/storage-dell-srdf-s-hc-pair-state-and-data-consistency-validation.svg)
@@ -315,6 +431,22 @@ symrdf -g 10 list -v | grep -c "R1"
 symrdf -sid 0002 -g 10 list -v | grep -c "R2"
 ```
 
+
+```text title="Expected output"
+Pair State                                    Synchronized
+Invalid Tracks                                0
+Pair State                                    Synchronized
+Invalid Tracks                                0
+SRDF Mode                                     Synchronous
+(no output — all devices in expected states)
+47
+47
+```
+
+!!! warning "Common errors"
+    **`symrdf: Command not found`** — Ensure the Symmetrix CLI tools are installed and the `$PATH` includes the Solutions Enabler bin directory (typically `/opt/emc/SYMCLI/bin`).
+    **`SRDF group 10 not found`** — Verify the RDF group number with `symrdf list` and confirm the group exists on both R1 and R2 arrays.
+    **`Device count mismatch between R1 and R2`** — Run `symrdf -g 10 query -detail` to identify which devices are out of sync, then resynchronize using `symrdf -g 10 -i set -state synchronized`.
 ### Simulated Failover Validation (Non-Disruptive)
 
 ![Simulated Failover Validation (Non-Disruptive)](../../../../assets/storage-dell-srdf-s-hc-simulated-failover-validation-non-disruptive.svg)
@@ -335,6 +467,33 @@ symrdf -g 10 -type S resume -noprompt
 symrdf -g 10 query -detail | grep "Invalid Tracks"
 ```
 
+
+```text title="Expected output"
+Suspend all pairs (simulates loss of sync link — non-destructive)
+Suspending RDF pair(s)...
+RDF pair(s) successfully suspended.
+
+Confirm Suspended state
+Group Number: 10
+   Pair#  LocalDev   RemoteDev  Status      RDF Mode  Tracks
+   0      000EF     000EF      Suspended   Synchronous  0
+   1      000F0     000F0      Suspended   Synchronous  0
+   2      000F1     000F1      Suspended   Synchronous  0
+
+Resume and verify re-synchronization completes
+Resuming RDF pair(s)...
+RDF pair(s) successfully resumed.
+
+Wait for Synchronized and confirm 0 tracks
+   Invalid Tracks: 0
+   Invalid Tracks: 0
+   Invalid Tracks: 0
+```
+
+!!! warning "Common errors"
+    **`SYMAPI_C_PROC_FAILURE (29) — Symmetrix device not responding`** — Verify the Symmetrix array is online and accessible via `symcfg list -v`, and confirm network connectivity to the array.
+    **`RDF pair(s) could not be suspended — Pair(s) in Invalid state`** — Check pair status with `symrdf -g 10 query` and resolve any failed pairs before attempting suspend operations.
+    **`symrdf: Command authorization failed`** — Ensure your user account has appropriate SYMAPI permissions; contact your storage administrator to grant RDF management privileges.
 For a full DR test failover, follow the DR test runbook and use the SRM test failover workflow to isolate impact to the test bubble network.
 
 ### Post-Change Validation
@@ -357,6 +516,35 @@ symrdf -g 10 query | grep -iv "synchronized\|syncInProg"
 symrdf -g 10 query -detail | grep OLPAIRS
 ```
 
+
+```text title="Expected output"
+Group ID: 10
+Device Name           Index  Symmetrix ID       R1 Cap   R2 Cap   State
+DEV001               0000   000123456789ABCD   100 GB   100 GB   Synchronized
+DEV002               0001   000123456789ABCD   100 GB   100 GB   Synchronized
+DEV003               0002   000123456789ABCD   100 GB   100 GB   Synchronized
+DEV004               0003   000123456789ABCD   100 GB   100 GB   Synchronized
+DEV005               0004   000123456789ABCD   100 GB   100 GB   Synchronized
+
+Group ID: 10, Symmetrix ID: 000123456789ABCD
+Device Name           Index  R1 State          R2 State          RDF Mode   Consistency
+DEV001               0000   Synchronized      Synchronized      Synchronous   Yes
+DEV002               0001   Synchronized      Synchronized      Synchronous   Yes
+DEV003               0002   Synchronized      Synchronized      Synchronous   Yes
+DEV004               0003   Synchronized      Synchronized      Synchronous   Yes
+DEV005               0004   Synchronized      Synchronized      Synchronous   Yes
+
+(no output — all devices in expected state)
+
+OLPAIRS Configuration: Enabled
+OLPAIRS Mode: Active
+OLPAIRS Consistency: Maintained
+```
+
+!!! warning "Common errors"
+    **`symrdf: Command not found`** — Verify SymCLI is installed and the Symmetrix CLI bin directory is in your $PATH.
+    **`Group ID 10 not found`** — Confirm the RDF group number exists with `symrdf list` and verify you have permissions to access the Symmetrix array.
+    **`SYMAPI_CONNECT_ERROR: Cannot connect to the Symmetrix`** — Ensure the Symmetrix array is reachable and the SYMAPI_SERVER environment variable is correctly configured.
 ### Validation Checklist Table
 
 ![Validation Checklist Table](../../../../assets/storage-dell-srdf-s-hc-validation-checklist-table.svg)

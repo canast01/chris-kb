@@ -156,6 +156,35 @@ Verify pool status:
 uemcli /stor/config/pool show -detail
 ```
 
+
+```text title="Expected output"
+Pool ID: pool_1
+Pool Name: SSD_Pool_01
+Pool Type: RAID 5
+Total Capacity: 10.73 TB
+Available Capacity: 7.42 TB
+Consumed Capacity: 3.31 TB
+Health Status: OK
+RAID Type: RAID 5 (4+1)
+Disk Count: 5
+Stripe Width: 4
+Block Size: 4 KB
+Thin Provisioning: Enabled
+Snapshots: 12
+Replication: Enabled
+Pool ID: pool_2
+Pool Name: NL_SAS_Pool_02
+Pool Type: RAID 6
+Total Capacity: 45.28 TB
+Available Capacity: 38.91 TB
+Consumed Capacity: 6.37 TB
+Health Status: OK
+...
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid command or syntax`** — Verify the uemcli binary is installed and in your PATH, or use the full path `/opt/emc/uemcli/uemcli`.
+    **`Error: Connection refused to management interface`** — Ensure the Unity array management IP is reachable and uemcli is configured with correct credentials via `-u` and `-p` flags or environment variables.
 ---
 
 ## Configure iSCSI or FC Host Access
@@ -168,6 +197,19 @@ uemcli /stor/config/pool show -detail
 cat /etc/iscsi/initiatorname.iscsi
 ```
 
+
+```text title="Expected output"
+## DO NOT EDIT OR REMOVE THIS FILE.
+## If you remove this file, the iSCSI daemon will not start.
+## If you change the InitiatorName, existing access control lists
+## may reject this initiator.  The InitiatorName must be unique
+## for each iSCSI initiator.  Do NOT duplicate iSCSI InitiatorNames.
+InitiatorName=iqn.1993-08.org.debian:01:a4c2f8e9d5b2
+```
+
+!!! warning "Common errors"
+    **`cat: /etc/iscsi/initiatorname.iscsi: No such file or directory`** — Install open-iscsi package with `apt-get install open-iscsi` or `yum install iscsi-initiator-utils`.
+    **`cat: /etc/iscsi/initiatorname.iscsi: Permission denied`** — Run the command with `sudo` or as root user.
 2. In Unisphere, navigate to **Hosts > Create Host**.
 3. Enter the host name and select **iSCSI** as the initiator type.
 4. Add the host's IQN to the host object.
@@ -197,6 +239,35 @@ rescan-scsi-bus.sh
 multipath -ll
 ```
 
+
+```text title="Expected output"
+Scanning for SCSI devices...
+Host 0 Channel 00 Id 00 Lun 00: Direct-Access-RDisk DELL UNITY 450F S/N D1A2B3C4D5E6F7G8 PQ: 0 ANSI: 5
+Host 1 Channel 00 Id 00 Lun 00: Direct-Access-RDisk DELL UNITY 450F S/N D1A2B3C4D5E6F7G9 PQ: 0 ANSI: 5
+Host 2 Channel 00 Id 00 Lun 00: Direct-Access-RDisk DELL UNITY 450F S/N D1A2B3C4D5E6F7GA PQ: 0 ANSI: 5
+Scanning for new LUNs... done
+
+mpatha (360060e8012a0000012a0000000001a1) dm-0 DELL,UNITY 450F
+size=500G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 0:0:0:0 sda 8:0 active ready running
+| `- 1:0:0:0 sdb 8:16 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 2:0:0:0 sdc 8:32 active ready running
+  `- 3:0:0:0 sdd 8:48 active ready running
+
+mpathb (360060e8012a0000012a0000000001a2) dm-1 DELL,UNITY 450F
+size=1T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| `- 4:0:0:0 sde 8:64 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  `- 5:0:0:0 sdf 8:80 active ready running
+```
+
+!!! warning "Common errors"
+    **`bash: rescan-scsi-bus.sh: command not found`** — Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`.
+    **`multipath: command not found`** — Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
+    **`multipathd is not running`** — Start the multipath daemon with `systemctl start multipathd` and enable it with `systemctl enable multipathd`.
 **NFS File System:**
 
 1. Navigate to **Storage > File Storage > File Systems > Create**.
@@ -208,6 +279,15 @@ multipath -ll
 mount -t nfs <NAS_VIP>:/export/fs01 /mnt/unity_nfs
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`mount.nfs: access denied by server while mounting <NAS_VIP>:/export/fs01`** — Verify the NAS export policy allows the client IP and check firewall rules between client and NAS.
+    **`mount.nfs: No such file or directory`** — Confirm the export path `/export/fs01` exists on the NAS and the mount point `/mnt/unity_nfs` exists locally.
+    **`mount: only root can use "--options" option`** — Run the command with `sudo` or as the root user.
 ---
 
 ## Validate
@@ -222,6 +302,29 @@ uemcli /sys/time show
 uemcli /sys/health show
 ```
 
+
+```text title="Expected output"
+System Time
+  Timezone: UTC
+  Current Time: 2024-01-15 14:32:47
+  NTP Server: 10.20.50.1
+  NTP Status: synchronized
+
+System Health
+  Overall Health: OK
+  CPU Health: OK
+  Memory Health: OK
+  Disk Health: OK
+  Temperature: 42°C (Normal)
+  Power Supply 1: OK
+  Power Supply 2: OK
+  Battery Backup Unit: OK
+  SSD Health: OK
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused (111)`** — Verify the Unity array is reachable and uemcli service is running with `systemctl status uemcli`.
+    **`Error: Authentication failed`** — Ensure you have valid credentials configured in `/etc/uemcli/credentials` or pass `-u` and `-p` flags to authenticate.
 **Verify LUN path count from host:**
 
 ```bash
@@ -229,6 +332,29 @@ multipath -ll
 # Each LUN should show 4 active paths (2 per SP) for dual-fabric iSCSI or FC
 ```
 
+
+```text title="Expected output"
+mpatha (36006016054d02700ca44a9d9d4e8e111) dm-0 DELL,UNITY
+size=500G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:0:1 sda 8:0   active ready running
+| `- 3:0:0:1 sdb 8:16  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 4:0:0:1 sdc 8:32  active ready running
+  `- 5:0:0:1 sdd 8:48  active ready running
+mpathb (36006016054d02700ca44a9d9d4e8e222) dm-1 DELL,UNITY
+size=250G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:1:1 sde 8:64  active ready running
+| `- 3:0:1:1 sdf 8:80  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 4:0:1:1 sdg 8:96  active ready running
+  `- 5:0:1:1 sdh 8:112 active ready running
+```
+
+!!! warning "Common errors"
+    **`mpatha: No such file or directory`** — Ensure the `device-mapper-multipath` package is installed and the `multipathd` service is running with `systemctl start multipathd`.
+    **`the following lines in the output show failed paths: ... failed faulty offline`** — Check fabric connectivity and SAN switch zoning; verify both FC/iSCSI initiators are logged in with `iscsiadm -m session` or `fcinfo fcportlogin`.
 **Confirm pool statistics:**
 
 1. Navigate to **Performance > Storage Pools** and verify I/O latency is normal (sub-1ms for SSD pools under light load).

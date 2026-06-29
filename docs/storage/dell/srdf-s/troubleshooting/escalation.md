@@ -89,6 +89,21 @@ symcfg -sid <R1-SID> show | grep -i microcode
 symcfg -sid <R2-SID> show | grep -i microcode
 ```
 
+
+```text title="Expected output"
+Symmetrix ID               Microcode Version
+000123456789012           5978.669.669
+000198765432109           5978.669.669
+
+Solutions Enabler Version: 9.2.1.0 (Build 123)
+
+Microcode Version: 5978.669.669
+Microcode Version: 5978.669.669
+```
+
+!!! warning "Common errors"
+    **`symcfg: Cannot find a Symmetrix`** — Verify the R1-SID and R2-SID values are correct and the arrays are online and discoverable via `symcfg discover`.
+    **`symcli: command not found`** — Ensure Solutions Enabler is installed and the bin directory is in your PATH, or use the full path `/opt/emc/SYMCLI/bin/symcli -version`.
 ### 2. Capture SRDF group and pair state from both arrays
 
 ```bash
@@ -105,6 +120,37 @@ symrdf query -g <group-number> -v > /tmp/srdf-s-detail-$(date +%Y%m%d%H%M).txt
 symrdf query -g <group-number> -v | grep -iE "Synchronized|Partitioned|Consistent|Invalid|pair state"
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+                                SRDF/S Group Information
+Group #  Type  R1 Dev Count  R2 Dev Count  R1 SID         R2 SID         State
+1        RDF   100           100           000123456789012 000987654321098 Synchronized
+2        RDF   50            50            000123456789012 000987654321098 Synchronized
+3        RDF   75            75            000123456789012 000987654321098 Partitioned
+Symmetrix ID: 000987654321098
+                                SRDF/S Group Information
+Group #  Type  R1 Dev Count  R2 Dev Count  R1 SID         R2 SID         State
+1        RDF   100           100           000123456789012 000987654321098 Synchronized
+2        RDF   50            50            000123456789012 000987654321098 Synchronized
+3        RDF   75            75            000123456789012 000987654321098 Partitioned
+
+Pair State for Group 3:
+  Pair State: Partitioned
+  Last Synchronized: 2024-01-15 14:32:18
+  Consistency State: Inconsistent
+  RDF Link State: Down
+
+Synchronized
+Partitioned
+Inconsistent
+pair state: Partitioned
+```
+
+!!! warning "Common errors"
+    **`SRDF group <group-number> not found`** — Verify the group number exists on the specified array using `symdf list -sid <SID>` first.
+    **`Symmetrix ID <R1-SID> does not exist or is not accessible`** — Confirm the SID is correct and the array is reachable via `symcfg list -v`.
+    **`RDF Link Down - Cannot query pair state`** — Check physical RDF link connectivity and restart the RDF daemon with `symrdf start -g <group-number>` after verifying cable connections.
 ### 3. Capture RDF director and link state
 
 ```bash
@@ -121,6 +167,38 @@ symcfg -sid <R1-SID> list -ra all -v | grep -iE "port|status|online|offline"
 symrdf -sid <R1-SID> -g <group-number> perf summary
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+Director Information:
+  Director 4a (RDF): Online, Port 0: Online, Port 1: Online
+  Director 4b (RDF): Online, Port 0: Online, Port 1: Offline
+  Director 5a (RDF): Online, Port 0: Online, Port 1: Online
+  Director 5b (RDF): Online, Port 0: Online, Port 1: Online
+
+Symmetrix ID: 000198765432109
+Director Information:
+  Director 3a (RDF): Online, Port 0: Online, Port 1: Online
+  Director 3b (RDF): Online, Port 0: Online, Port 1: Online
+
+Director 4a, Port 0: Online, Status: Ready
+Director 4a, Port 1: Online, Status: Ready
+Director 4b, Port 0: Online, Status: Ready
+Director 4b, Port 1: Offline, Status: Link Down
+Director 5a, Port 0: Online, Status: Ready
+Director 5a, Port 1: Online, Status: Ready
+
+SRDF Group 1 Performance Summary:
+  Write Pending: 2048 tracks
+  Average Latency: 12.3 ms
+  Bandwidth: 487.5 MB/s
+  RDF Link Status: Synchronized
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to the Symmetrix array <R1-SID>`** — Verify the SID is correct and the Symmetrix management port is reachable via `symcfg -sid <R1-SID> list -v`.
+    **`Error: RDF group <group-number> not found`** — Confirm the group number exists with `symrdf -sid <R1-SID> list -g all` and use the correct group identifier.
+    **`Error: Permission denied`** — Run the command with appropriate privileges using `sudo` or ensure your user is in the `symaccess` group.
 ### 4. Capture event log from both arrays
 
 ```bash
@@ -134,6 +212,26 @@ symevent -sid <R2-SID> list -last 500 > /tmp/srdf-s-events-r2-$(date +%Y%m%d).tx
 grep -iE "SRDF|RDF|partition|fault|link" /tmp/srdf-s-events-r1-$(date +%Y%m%d).txt | head -50
 ```
 
+
+```text title="Expected output"
+/tmp/srdf-s-events-r1-20240115.txt
+/tmp/srdf-s-events-r2-20240115.txt
+01/15/2024 14:32:18 - SRDF Link State Change: R1 to R2 - Status: Synchronized
+01/15/2024 14:28:45 - RDF Port 4 Link Up - Speed: 8Gbps
+01/15/2024 14:15:22 - SRDF Partition Detected on R1 - Recovery in progress
+01/15/2024 13:52:10 - RDF Link Fault: Transient error on Port 3 - Auto-recovery enabled
+01/15/2024 13:45:33 - SRDF Replication Resumed - 2.3 TB synchronized
+01/15/2024 13:22:17 - RDF Port 2 Link Down - Failover to alternate path
+01/15/2024 12:58:04 - SRDF Consistency Group Update - 156 devices in sync
+01/15/2024 12:34:51 - RDF Link State Change: R2 to R1 - Status: Synchronized
+01/15/2024 12:10:19 - SRDF Partition Fault: Network isolation detected
+01/15/2024 11:47:33 - RDF Port 1 Link Up - Replication resumed
+```
+
+!!! warning "Common errors"
+    **`symevent: command not found`** — Ensure Symmetrix CLI tools are installed and the PATH includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`).
+    **`grep: /tmp/srdf-s-events-r1-20240115.txt: No such file or directory`** — Verify the symevent commands completed successfully and check that `/tmp` has write permissions.
+    **`ERROR: Invalid SID <R1-SID>`** — Replace `<R1-SID>` and `<R2-SID>` with actual Symmetrix array serial numbers (e.g., `000123456789`).
 ### 5. Write the timeline
 
 ```text
@@ -236,6 +334,44 @@ symcfg -sid <R2-SID> list -ra all | grep -E "ONLINE|OFFLINE"
 symevent -sid <R1-SID> list -last 20 | grep -iE "SRDF|RDF|partition|fault"
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+                                SRDF/S Group Information
+Group  Pair  R1 State  R2 State  Synchronized  Mode      BW(MB/s)  Latency(ms)
+1      1     Ready     Ready     Yes           Sync      850       12.3
+1      2     Ready     Ready     Yes           Sync      850       12.1
+
+Pair State Detail for Group 1:
+Pair State: Synchronized
+R1 State: Ready
+R2 State: Ready
+Synchronized: Yes
+Partitioned: No
+
+RDF Director States (R1 - SID 000123456789012):
+Dir  Port  Status    Link State  Frames In   Frames Out
+4a   0     ONLINE    Up          1847293     1847291
+4a   1     ONLINE    Up          1847293     1847291
+4b   0     ONLINE    Up          1847294     1847292
+
+RDF Director States (R2 - SID 000198765432109):
+Dir  Port  Status    Link State  Frames In   Frames Out
+5a   0     ONLINE    Up          1847291     1847293
+5a   1     ONLINE    Up          1847291     1847293
+
+Recent SRDF Events (Last 20):
+Timestamp             Severity  Event Type        Message
+2024-01-15 14:32:18   INFO      SRDF              Group 1 synchronized
+2024-01-15 13:47:02   WARNING   RDF Link Fault    Port 4b:1 link recovered
+2024-01-15 13:46:58   CRITICAL  RDF Partition     R1-R2 link down, failover initiated
+2024-01-15 13:46:45   INFO      SRDF              Replication resumed
+```
+
+!!! warning "Common errors"
+    **`symdf: Command not found`** — Install EMC Solutions Enabler package or verify PATH includes /opt/emc/SYMCLI/bin.
+    **`Error: Invalid SID <R1-SID>`** — Replace `<R1-SID>` with actual 12-digit Symmetrix ID (e.g., `000123456789012`).
+    **`symrdf query: Group <group-number> not found`** — Verify the group number exists with `symrdf list` and confirm R1 and R2 arrays are both accessible.
 ---
 
 ## Support SLA Reference
