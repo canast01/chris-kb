@@ -72,6 +72,44 @@ aws s3 cp localfile.tar.gz s3://<bucket>/path/ $PROFILE
 aws s3 sync /local/backup/ s3://<bucket>/backups/ $PROFILE
 ```
 
+
+```text title="Expected output"
+{
+    "Buckets": [
+        {
+            "Name": "backup-prod-001",
+            "CreationDate": "2024-01-15T08:32:14.000Z"
+        },
+        {
+            "Name": "archive-data",
+            "CreationDate": "2024-02-03T14:22:47.000Z"
+        },
+        {
+            "Name": "logs-retention",
+            "CreationDate": "2024-01-28T11:05:22.000Z"
+        }
+    ],
+    "Owner": {
+        "DisplayName": "object_user",
+        "ID": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+    }
+}
+upload: ./localfile.tar.gz to s3://backup-prod-001/path/localfile.tar.gz
+Completed 1.2 GiB/1.2 GiB (45.3 MiB/s) with 1 file(s) remaining
+upload: ./localfile.tar.gz to s3://backup-prod-001/path/localfile.tar.gz
+
+Completed 1.2 GiB/1.2 GiB (45.3 MiB/s) with 1 file(s) remaining
+Completed 1.2 GiB/1.2 GiB (45.3 MiB/s) with 1 file(s) remaining
+upload: /local/backup/db_backup_20240315.sql to s3://backup-prod-001/backups/db_backup_20240315.sql
+upload: /local/backup/config.tar to s3://backup-prod-001/backups/config.tar
+upload: /local/backup/logs/ to s3://backup-prod-001/backups/logs/
+Completed 3 files, 2.8 GiB total
+```
+
+!!! warning "Common errors"
+    **`Unable to locate credentials`** — Run `aws configure --profile ecs` first and ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are set or credentials file exists at ~/.aws/credentials.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is already included in the PROFILE variable; if still failing, verify the ECS endpoint certificate is valid or use `export AWS_CA_BUNDLE=/path/to/ca-cert.pem` before running commands.
+    **`NoSuchBucket`** — Verify the bucket name in the s3:// path matches exactly (case-sensitive) and that the configured user has s3:GetObject and s3:PutObject permissions on that bucket.
 ECS supports S3 multipart upload, S3 Object Lock (WORM), presigned URLs, bucket versioning, and lifecycle policies. Virtual-hosted-style (`<bucket>.<ecs-endpoint>`) requires DNS configuration pointing `*.ecs.example.com` to the ECS load balancer VIP; path-style (`<ecs-endpoint>/<bucket>`) works without DNS changes and is easier to configure in most clients.
 
 **s3cmd configuration:**
@@ -99,6 +137,26 @@ s3cmd put localfile.tar.gz s3://<bucket>/path/
 s3cmd sync /local/path/ s3://<bucket>/
 ```
 
+
+```text title="Expected output"
+2024-01-15 09:23:14        0   s3://backup-prod
+2024-01-15 09:18:47        0   s3://archive-2024
+2024-01-15 08:45:22        0   s3://logs-retention
+2024-01-15 07:12:33        0   s3://dr-replica
+
+upload: 'localfile.tar.gz' -> 's3://backup-prod/path/localfile.tar.gz'  [1 of 1]
+ 1234567890 of 1234567890   100% in 45s    27.43 MB/s  done
+
+sync: '/local/path/app.conf' -> 's3://backup-prod/app.conf'
+sync: '/local/path/data.json' -> 's3://backup-prod/data.json'
+sync: '/local/path/logs/' -> 's3://backup-prod/logs/'
+Done. Synced 3 files.
+```
+
+!!! warning "Common errors"
+    **`ERROR: S3 error: 403 Forbidden`** — Verify AWS credentials are configured correctly in `~/.s3cfg` and the IAM user has s3:GetObject and s3:ListBucket permissions.
+    **`ERROR: Unable to open file 'localfile.tar.gz'`** — Confirm the file exists and the current user has read permissions with `ls -l localfile.tar.gz`.
+    **`ERROR: S3 error: 404 Not Found`** — Verify the bucket name is correct and exists in the ECS cluster with `s3cmd ls`.
 ## Veeam Object Repository
 
 ECS is a certified S3-compatible target for Veeam Backup & Replication object repositories (Scale-out Backup Repository offload and Capacity Tier).
@@ -163,6 +221,23 @@ aws s3 ls s3://veeam-prod-offload/ \
   --profile ecs
 ```
 
+
+```text title="Expected output"
+2024-01-15 09:47:32    1.2 GiB veeam-prod-offload/vm-backups/prod-vm-001/full-backup-20240115.vbk
+2024-01-15 10:22:18  856.4 MiB veeam-prod-offload/vm-backups/prod-vm-002/incremental-20240115.vbk
+2024-01-15 11:05:44    2.1 GiB veeam-prod-offload/vm-backups/prod-vm-003/full-backup-20240115.vbk
+2024-01-15 11:33:09  512.3 MiB veeam-prod-offload/vm-backups/prod-vm-004/incremental-20240115.vbk
+2024-01-15 12:15:22    3.4 GiB veeam-prod-offload/vm-backups/prod-db-cluster/full-backup-20240115.vbk
+...
+
+Total Objects: 47
+Total Size: 18.9 GiB
+```
+
+!!! warning "Common errors"
+    **`Unable to locate credentials`** — Ensure the `ecs` profile exists in `~/.aws/credentials` with valid access key and secret key for the ECS S3 endpoint.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is already present; if the error persists, verify the ECS endpoint hostname matches the certificate or update the CA bundle with `export AWS_CA_BUNDLE=/path/to/ca-cert.pem`.
+    **`NoSuchBucket`** — Confirm the bucket name `veeam-prod-offload` exists on the ECS cluster by running `aws s3 ls --endpoint-url https://<ecs-endpoint>:9021 --profile ecs` without the bucket path.
 ## Commvault Integration
 
 Commvault supports ECS as an S3-compatible cloud library target for secondary copy and archival. Configuration is performed in the Commvault Command Center.
@@ -264,6 +339,15 @@ aws s3api put-object \
   --profile ecs
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidAccessKeyId) when calling the PutObject operation: The Access Key Id you provided does not exist in our records.`** — Verify the AWS credentials in your `ecs` profile match the ECS S3 user account with `aws configure --profile ecs`.
+    **`An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist.`** — Confirm the bucket `analytics-prod-raw` exists on the ECS endpoint with `aws s3 ls --endpoint-url https://<ecs-endpoint>:9021 --profile ecs`.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is present but still failing; verify the ECS endpoint URL is correct and reachable with `curl -k https://<ecs-endpoint>:9021`.
 **Query objects by metadata tag (ECS Query API):**
 
 ```bash
@@ -276,6 +360,47 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
 # Multiple conditions: key1=value1 AND key2=value2 -> key1%3Dvalue1%20AND%20key2%3Dvalue2
 ```
 
+
+```text title="Expected output"
+{
+  "objects": [
+    {
+      "name": "dataset-alpha-2024-01-15.parquet",
+      "size": 2147483648,
+      "mtime": 1705276800000,
+      "metadata": {
+        "project": "alpha",
+        "owner": "data-eng",
+        "version": "1.2.3"
+      }
+    },
+    {
+      "name": "alpha-metrics-hourly.csv",
+      "size": 536870912,
+      "mtime": 1705363200000,
+      "metadata": {
+        "project": "alpha",
+        "owner": "analytics"
+      }
+    },
+    {
+      "name": "alpha-config-prod.json",
+      "size": 8192,
+      "mtime": 1705449600000,
+      "metadata": {
+        "project": "alpha"
+      }
+    }
+  ],
+  "query_time_ms": 342,
+  "total_objects": 3
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify ECS node certificate or use `--cacert` with proper CA bundle).
+    **`{"error":"Invalid query syntax","code":400}`** — Ensure metadata search is enabled on the namespace with `ecs object namespace metadata-search enable` and verify query parameters are properly URL-encoded (spaces as `%20`, equals as `%3D`).
+    **`{"error":"Unauthorized","code":401}`** — Verify `$TOKEN` variable is set with a valid authentication token from `curl -k -u <user>:<pass> https://<ecs-node>:4443/login` and has not expired.
 ## External Authentication (LDAP/AD)
 
 ECS can delegate IAM user authentication to an external LDAP or Active Directory service for namespace-level management access. Configure under ECS Portal → Namespace → Edit → Authentication Domain.

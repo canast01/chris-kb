@@ -37,6 +37,16 @@ curl -sk -X POST \
   -d '{"reason": "FALSE_POSITIVE", "comment": "Caused by planned backup job"}'
 ```
 
+
+```text title="Expected output"
+{"alertId":"alert-7f3c9e2a-b14d-4821-9f2e-d8c1a5b9e3f1","status":"acknowledged","timestamp":"2024-01-15T14:32:18Z","comment":"Under investigation - ticket INC0099123","acknowledgedBy":"admin@company.com"}
+{"alertId":"alert-7f3c9e2a-b14d-4821-9f2e-d8c1a5b9e3f1","status":"dismissed","timestamp":"2024-01-15T14:32:45Z","reason":"FALSE_POSITIVE","comment":"Caused by planned backup job","dismissedBy":"admin@company.com"}
+```
+
+!!! warning "Common errors"
+    **`{"error":"Unauthorized","message":"Invalid or expired access token"}`** — Regenerate the access token using your CloudIQ API credentials and update the `<access_token>` placeholder.
+    **`{"error":"NotFound","message":"Alert alert-7f3c9e2a-b14d-4821-9f2e-d8c1a5b9e3f1 not found"}`** — Verify the `<alertId>` exists and is still active by listing alerts with a GET request to the `/alerts` endpoint.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if connecting to a trusted endpoint, or ensure your CA bundle is current with `curl --cacert /path/to/ca-bundle.crt`.
 ## Common AI Alert Issues
 
 | Issue | Likely Cause | Fix |

@@ -40,6 +40,38 @@ curl -sk -X GET \
   -H "Accept: application/json" | jq '.results[] | {noisy_volume, affected_volumes, impact_percent}'
 ```
 
+
+```text title="Expected output"
+{
+  "noisy_volume": "volume-prod-db-01",
+  "affected_volumes": [
+    "volume-app-tier-02",
+    "volume-app-tier-03",
+    "volume-cache-01"
+  ],
+  "impact_percent": 34.2
+}
+{
+  "noisy_volume": "volume-backup-nightly",
+  "affected_volumes": [
+    "volume-prod-db-01",
+    "volume-prod-db-02"
+  ],
+  "impact_percent": 18.7
+}
+{
+  "noisy_volume": "volume-analytics-scan",
+  "affected_volumes": [
+    "volume-app-tier-01",
+    "volume-app-tier-04"
+  ],
+  "impact_percent": 22.5
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if using a valid certificate, or ensure your CA bundle is current with `update-ca-certificates`.
+    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is accessible and the Bearer token is valid by testing with `curl -sk https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/insights -H "Authorization: Bearer <access_token>" | head -20`.
 ## Common Insight Issues
 
 | Issue | Likely Cause | Fix |

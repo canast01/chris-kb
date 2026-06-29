@@ -76,6 +76,15 @@ curl -sk -o /dev/null -w "%{http_code}" https://<ecs-data-ip>:9021/
 curl -sk -o /dev/null -w "%{http_code}" https://<ecs-mgmt-ip>/login
 ```
 
+
+```text title="Expected output"
+200
+200
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <ecs-data-ip> port 9021: Connection refused`** — Verify the ECS data node is running and port 9021 is listening with `netstat -tlnp | grep 9021` on the ECS node.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should suppress this; if it persists, ensure you're using curl with SSL support (`curl --version | grep SSL`).
 ## See also
 
 - [Dell ECS — Architecture](../how-it-works/)

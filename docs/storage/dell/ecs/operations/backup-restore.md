@@ -119,6 +119,23 @@ curl -sk -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/logout" > /dev/null
 echo "Configuration exported to $OUTDIR"
 ```
 
+
+```text title="Expected output"
+Configuration exported to ./ecs-config-20240115
+$ ls -lh ./ecs-config-20240115/
+total 284K
+-rw-r--r-- 1 admin admin  45K Jan 15 10:23 vdc_capacity.json
+-rw-r--r-- 1 admin admin  12K Jan 15 10:23 vdc_nodes.json
+-rw-r--r-- 1 admin admin  28K Jan 15 10:23 replication_groups.json
+-rw-r--r-- 1 admin admin  8.2K Jan 15 10:23 namespaces.json
+-rw-r--r-- 1 admin admin  156K Jan 15 10:23 buckets_prod-ns.json
+-rw-r--r-- 1 admin admin  35K Jan 15 10:23 buckets_archive-ns.json
+```
+
+!!! warning "Common errors"
+    **`ERROR: Authentication failed.`** — Verify ECS_HOST, ECS_USER, and ECS_PASS environment variables are set correctly and the ECS management interface is reachable on port 4443.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the ECS certificate into your system CA bundle; if persisting, check that curl was compiled with SSL support.
+    **`jq: command not found`** — Install python3-json or use the existing Python JSON parser in the script; the script already uses Python for namespace parsing instead of jq.
 ## Restoring Object Data
 
 Object data restore depends on the failure scenario.
@@ -161,6 +178,62 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
   "https://<ecs-node>:4443/vdc/capacity" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "node": [
+    {
+      "id": "urn:storageos:Node:node-01",
+      "name": "node-01",
+      "ip": "192.168.1.45",
+      "version": "3.6.1.0.20240115",
+      "status": "UP",
+      "disk_count": 12,
+      "disk_raw_gb": 144000,
+      "disk_used_gb": 98560,
+      "disk_available_gb": 45440
+    },
+    {
+      "id": "urn:storageos:Node:node-02",
+      "name": "node-02",
+      "ip": "192.168.1.46",
+      "version": "3.6.1.0.20240115",
+      "status": "UP",
+      "disk_count": 12,
+      "disk_raw_gb": 144000,
+      "disk_used_gb": 102340,
+      "disk_available_gb": 41660
+    },
+    {
+      "id": "urn:storageos:Node:node-03",
+      "name": "node-03",
+      "ip": "192.168.1.47",
+      "version": "3.6.1.0.20240115",
+      "status": "DEGRADED",
+      "disk_count": 11,
+      "disk_raw_gb": 132000,
+      "disk_used_gb": 105280,
+      "disk_available_gb": 26720
+    }
+  ]
+}
+{
+  "capacity": {
+    "total_capacity_gb": 420000,
+    "used_capacity_gb": 306180,
+    "available_capacity_gb": 113820,
+    "provisioned_capacity_gb": 385000,
+    "free_capacity_percent": 27.1,
+    "replication_factor": 3,
+    "minimum_required_gb": 95000
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the ECS node's certificate into your CA bundle.
+    **`error: 401 Unauthorized`** — Verify the `$TOKEN` variable is set correctly with a valid authentication token from `POST /login`.
+    **`jq: command not found`** — Install `python3-json.tool` or use `jq` instead; if using jq, replace `python3 -m json.tool` with `jq '.'`.
 ### VDC Failure (Geo-Replication Configured)
 
 When a VDC becomes unavailable:
@@ -210,6 +283,54 @@ aws s3api copy-object \
   --profile ecs
 ```
 
+
+```text title="Expected output"
+{
+    "Versions": [
+        {
+            "ETag": "\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"",
+            "Size": 2048576,
+            "StorageClass": "STANDARD",
+            "Key": "documents/report-2024.pdf",
+            "VersionId": "g8X9Y0Z1A2B3C4D5E6F7G8H9I0J1K2L3",
+            "IsLatest": false,
+            "LastModified": "2024-01-15T10:23:45+00:00"
+        },
+        {
+            "ETag": "\"b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7\"",
+            "Size": 2048576,
+            "StorageClass": "STANDARD",
+            "Key": "documents/report-2024.pdf",
+            "VersionId": "h9Y0Z1A2B3C4D5E6F7G8H9I0J1K2L3M4",
+            "IsLatest": true,
+            "LastModified": "2024-01-20T14:56:32+00:00"
+        },
+        {
+            "ETag": "\"c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8\"",
+            "Key": "documents/report-2024.pdf",
+            "VersionId": "delete-marker-i0Z1A2B3C4D5E6F7G8H9I0J1K2L3M4N5",
+            "IsLatest": true,
+            "LastModified": "2024-01-22T09:12:18+00:00",
+            "DeleteMarker": true
+        }
+    ],
+    "RequestId": "tx8a9b0c1d2e3f4g5h6i7j8k9l0m1n2o3"
+}
+
+(no output — command completes silently)
+
+{
+    "CopyObjectResult": {
+        "ETag": "\"b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7\"",
+        "LastModified": "2024-01-22T10:05:42+00:00"
+    },
+    "VersionId": "h9Y0Z1A2B3C4D5E6F7G8H9I0J1K2L3M4"
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidAccessKeyId) when calling the ListObjectVersions operation: The Access Key Id you provided does not exist in our records.`** — Verify the AWS profile `ecs` is configured correctly with valid credentials in `~/.aws/credentials`.
+    **`An error occurred (InvalidBucketName) when calling the ListObjectVersions operation: The specified bucket is not valid.`** — Confirm the bucket name is correct and that the ECS endpoint URL and profile have access to it.
 **Without versioning enabled:**
 - The object is unrecoverable unless it exists on a remote VDC with replication lag less than the time of deletion
 - Immediately check the remote VDC:
@@ -284,6 +405,22 @@ aws s3api list-objects-v2 \
   --profile ecs
 ```
 
+
+```text title="Expected output"
+2024-01-15 08:32:14    4.2 GiB veeam-prod-offload/vm-backup-prod-01/2024-01-15T06:30:00Z/full.vbk
+2024-01-15 08:45:22    2.1 GiB veeam-prod-offload/vm-backup-prod-02/2024-01-15T06:45:00Z/full.vbk
+2024-01-15 09:12:08    1.8 GiB veeam-prod-offload/vm-backup-prod-03/2024-01-15T07:00:00Z/incr.vbk
+2024-01-15 09:28:41    892 MiB veeam-prod-offload/vm-backup-prod-01/2024-01-15T06:30:00Z/incr.vbk
+2024-01-15 10:01:33    567 MiB veeam-prod-offload/vm-backup-prod-02/2024-01-15T06:45:00Z/incr.vbk
+...
+
+Total Objects: 247
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidEndpointAddress) when calling the ListBuckets operation: Could not connect to the endpoint URL: https://<ecs-endpoint>:9021`** — Replace `<ecs-endpoint>` with the actual ECS node hostname or IP address (e.g., `ecs-node-01.internal`).
+    **`An error occurred (AccessDenied) when calling the ListObjectsV2 operation: Access Denied`** — Verify the AWS profile `ecs` has valid credentials configured in `~/.aws/credentials` and the ECS access key has ListBucket permissions.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Confirm `--no-verify-ssl` flag is present in both commands; if SSL errors persist, verify the ECS certificate is valid or use HTTP instead of HTTPS.
 ## Validation After Restore or Failover
 
 After any restore or VDC failover, validate the following before declaring recovery complete:

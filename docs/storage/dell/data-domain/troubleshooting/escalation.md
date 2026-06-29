@@ -90,6 +90,35 @@ system show version
 system show serialno
 ```
 
+
+```text title="Expected output"
+sysadmin@dd-mgmt01.example.com's password: 
+Last login: Wed Mar 15 14:22:31 UTC 2024 from 10.45.12.88
+
+Data Domain OS (DDOS) 7.15.1.10
+Copyright (c) 2024 Dell Technologies, Inc. All rights reserved.
+
+dd-mgmt01> system show
+System Information
+  Model: DD9900
+  Serial Number: DD-SN-A4F7K2M9X1
+  DDOS Version: 7.15.1.10
+  System Uptime: 45 days, 3 hours, 22 minutes
+  Hostname: dd-mgmt01
+  Management IP: 10.45.12.45
+
+dd-mgmt01> system show version
+DDOS Version: 7.15.1.10
+Build: 7.15.1.10-20240301
+
+dd-mgmt01> system show serialno
+Serial Number: DD-SN-A4F7K2M9X1
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host <dd-ip> port 22: Connection timed out`** — Verify the DD appliance IP is correct and reachable by pinging it first, then check firewall rules allow SSH on port 22.
+    **`Permission denied (publickey,password)`** — Confirm the sysadmin account credentials are correct and that SSH key-based auth is not enforced; try using password authentication explicitly.
+    **`dd-mgmt01> system show: command not found`** — Ensure you are in the DD CLI context (not a standard bash shell); type `exit` and reconnect, or verify the DD appliance is fully booted and responsive.
 ### 2. Capture filesystem and capacity status
 
 ```bash
@@ -106,6 +135,36 @@ filesys show compression
 mtree list
 ```
 
+
+```text title="Expected output"
+Filesystem Status: ENABLED
+Filesystem State: RUNNING
+Last Status Check: 2024-01-15 14:32:18 UTC
+
+Filesystem Space Usage:
+Total Capacity: 50.0 TB
+Used Space: 38.2 TB
+Available Space: 11.8 TB
+Used Percentage: 76.4%
+
+Compression Statistics:
+Global Compression Ratio: 2.34:1
+Deduplication Ratio: 3.12:1
+Combined Efficiency: 7.28:1
+Compressed Data Size: 5.24 TB
+Uncompressed Data Size: 38.2 TB
+
+MTree List and Usage:
+Name                    Size        Used        Available   Quota
+backup-prod             20.0 TB     18.5 TB     1.5 TB      20.0 TB
+archive-2023            15.0 TB     12.1 TB     2.9 TB      15.0 TB
+replication-staging     10.0 TB     7.6 TB      2.4 TB      10.0 TB
+```
+
+!!! warning "Common errors"
+    **`filesys: command not found`** — Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-hostname>`) rather than the host shell.
+    **`Error: Filesystem is DISABLED`** — Enable the filesystem with `filesys enable` and verify licensing is active.
+    **`Error: Cannot access MTree list - insufficient permissions`** — Confirm your user account has admin or operator role using `user show`.
 ### 3. Capture alert and event state
 
 ```bash
@@ -119,6 +178,41 @@ alerts show history
 log show syslog | tail -200
 ```
 
+
+```text title="Expected output"
+All current (active) alerts
+================================================================================
+Alert ID    Severity  Component        Message                          Timestamp
+--------    --------  ---------        -------                          ---------
+ALR-2847    WARNING   Replication      Replication lag detected         2024-01-15 14:32:18
+ALR-2891    CRITICAL  Disk             Disk capacity threshold exceeded 2024-01-15 13:47:52
+ALR-2756    INFO      Network          NTP sync lost on eth1            2024-01-15 12:15:33
+
+Alert history (last 72 hours)
+================================================================================
+Alert ID    Severity  Component        Message                          Timestamp
+--------    --------  ---------        -------                          ---------
+ALR-2847    WARNING   Replication      Replication lag detected         2024-01-15 14:32:18
+ALR-2891    CRITICAL  Disk             Disk capacity threshold exceeded 2024-01-15 13:47:52
+ALR-2756    INFO      Network          NTP sync lost on eth1            2024-01-15 12:15:33
+ALR-2701    WARNING   Memory           Memory utilization at 87%        2024-01-14 09:22:41
+ALR-2645    INFO      Backup           Incremental backup completed     2024-01-13 23:18:05
+...
+
+System event log
+Jan 15 14:32:18 dd-system-01 kernel: [replication] lag threshold exceeded: 4521 seconds
+Jan 15 13:47:52 dd-system-01 mtree: [disk_monitor] capacity alert: /data1 at 94.2%
+Jan 15 12:15:33 dd-system-01 ntpd: NTP synchronization lost on interface eth1
+Jan 15 11:44:09 dd-system-01 replication: [sync_engine] checkpoint 847293 completed
+Jan 15 10:33:21 dd-system-01 kernel: [memory] page cache reclaim triggered
+Jan 15 09:18:47 dd-system-01 backup: [scheduler] daily backup job started (job_id: bkp-2847-dd01)
+Jan 15 08:52:15 dd-system-01 network: [eth0] link status changed to UP
+Jan 15 07:41:33 dd-system-01 syslog-ng: log rotation completed for /var/log/messages
+```
+
+!!! warning "Common errors"
+    **`command not found: alerts`** — Verify you are logged into the Data Domain CLI (SSH to the management IP) and not a standard Linux shell.
+    **`Permission denied`** — Ensure your user account has sufficient privileges; use `sysadmin` account or request elevated role access.
 ### 4. Capture disk and hardware health
 
 ```bash
@@ -132,6 +226,42 @@ disk show hardware
 disk show reconstruction
 ```
 
+
+```text title="Expected output"
+Disk State Summary:
+Disk    State      Capacity    Used        Available   Health
+disk.0  NORMAL     10.9TB      8.2TB       2.7TB       GOOD
+disk.1  NORMAL     10.9TB      7.9TB       3.0TB       GOOD
+disk.2  NORMAL     10.9TB      8.5TB       2.4TB       GOOD
+disk.3  FAILED     10.9TB      N/A         N/A         BAD
+disk.4  NORMAL     10.9TB      8.1TB       2.8TB       GOOD
+disk.5  ABSENT     10.9TB      N/A         N/A         OFFLINE
+...
+
+Physical Disk Hardware Status:
+Disk    Enclosure  Slot  Model              Serial         Temp(C)  Status
+disk.0  ENC-1      0     DELL MD1400        6XN7K82        32       OK
+disk.1  ENC-1      1     DELL MD1400        6XN7K83        31       OK
+disk.2  ENC-1      2     DELL MD1400        6XN7K84        33       OK
+disk.3  ENC-1      3     DELL MD1400        6XN7K85        FAILED   FAILED
+disk.4  ENC-1      4     DELL MD1400        6XN7K86        32       OK
+disk.5  ENC-1      5     DELL MD1400        6XN7K87        N/A      ABSENT
+...
+
+RAID Reconstruction Status:
+Pool: pool-01
+  RAID Group: rg-0
+    Status: REBUILDING
+    Progress: 45%
+    Estimated Time Remaining: 2h 15m
+    Failed Disk: disk.3
+    Rebuild Rate: 850 MB/s
+```
+
+!!! warning "Common errors"
+    **`disk show: command not found`** — Verify you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell; use `ssh admin@<dd-ip>` to connect.
+    **`Error: No disks detected`** — Check that the storage enclosures are powered on and connected; run `system show hardware` to verify enclosure connectivity.
+    **`RAID reconstruction stalled at 45%`** — Check system logs with `log show -filter 'RAID'` to identify I/O errors, and verify no additional disk failures occurred during rebuild.
 ### 5. Capture replication status (if replication is involved)
 
 ```bash
@@ -145,6 +275,36 @@ replication status
 replication show context=<context-name>
 ```
 
+
+```text title="Expected output"
+Replication Contexts:
+  Context Name          State      Remote Host          Last Update
+  prod-backup-01        ACTIVE     10.50.12.45          2024-01-15 14:32:18
+  dr-sync-secondary     ACTIVE     192.168.100.88       2024-01-15 14:31:55
+  archive-weekly        IDLE       10.50.12.200         2024-01-14 09:15:42
+  test-repl-context    ERROR      10.50.13.5           2024-01-15 12:47:03
+
+Replication Statistics:
+  Context Name          Lag (sec)  Bytes Transferred    Status
+  prod-backup-01        45         2.3 TB               In Progress
+  dr-sync-secondary     12         5.8 TB               Completed
+  archive-weekly        0          1.2 TB               Idle
+  test-repl-context    N/A        0 B                  Failed
+
+Context: prod-backup-01
+  State: ACTIVE
+  Remote Host: 10.50.12.45
+  Remote Port: 7144
+  Bandwidth Limit: 100 Mbps
+  Last Successful Sync: 2024-01-15 14:32:18
+  Bytes Pending: 512 MB
+  Estimated Time to Sync: 41 seconds
+```
+
+!!! warning "Common errors"
+    **`replication: command not found`** — Ensure you are logged into the Data Domain CLI (via SSH or console) and have appropriate admin privileges.
+    **`Error: context '<context-name>' does not exist`** — Verify the exact context name using `replication show` and check for typos or spaces in the context name.
+    **`Error: replication service is not running`** — Restart the replication service with `replication restart` or contact Dell support if the service fails to start.
 ### 6. Generate the support bundle
 
 ```bash
@@ -162,6 +322,25 @@ autosupport send <case-number>
 # scp sysadmin@<dd-ip>:/ddr/var/support/<bundle-file>.tar /tmp/
 ```
 
+
+```text title="Expected output"
+Generating support bundle...
+Bundle generation completed successfully.
+Bundle file: ddve-support-20250114-143022.tar.gz
+
+total 1.2G
+-rw-r--r-- 1 root root 1.2G Jan 14 10:30 ddve-support-20250114-143022.tar.gz
+-rw-r--r-- 1 root root 892M Jan 13 09:15 ddve-support-20250113-091547.tar.gz
+-rw-r--r-- 1 root root 1.1G Jan 12 14:22 ddve-support-20250112-142201.tar.gz
+
+AutoSupport case number not configured or case <case-number> not found.
+Proceeding with manual bundle transfer.
+```
+
+!!! warning "Common errors"
+    **`support bundle generate: command not found`** — Verify you are logged into the Data Domain CLI (not the Linux shell); use `ssh sysadmin@<dd-ip>` to access the DD OS prompt.
+    **`autosupport send: case number invalid or AutoSupport not configured`** — Confirm the case number format and that AutoSupport is enabled via `autosupport show`; if unconfigured, skip to manual SCP transfer.
+    **`scp: Permission denied (publickey,password)`** — Ensure SSH key is installed on the Data Domain or add `-u sysadmin` flag and provide the password when prompted.
 ### 7. Write the timeline
 
 ```text
@@ -261,6 +440,44 @@ filesys show space
 replication show
 ```
 
+
+```text title="Expected output"
+System Information
+  Model: Dell EMC Data Domain DD3300
+  Serial Number: DD3300-001A2B3C4D5E
+  System Version: 7.15.1.10
+  Uptime: 45 days 12 hours 23 minutes
+
+Filesystem Status
+  /data: HEALTHY
+  /var: HEALTHY
+  /boot: HEALTHY
+
+Current Alerts
+  Alert ID: 1847 | Severity: WARNING | Message: Disk 3.4 predictive failure detected
+  Alert ID: 1846 | Severity: INFO | Message: Replication lag detected on peer-dd3300-02
+
+Disk State
+  Disk 1.1: HEALTHY (1.8TB)
+  Disk 1.2: HEALTHY (1.8TB)
+  Disk 2.1: HEALTHY (1.8TB)
+  Disk 3.4: PREDICTIVE_FAILURE (1.8TB)
+  Disk 4.1: HEALTHY (1.8TB)
+
+Filesystem Space Usage
+  /data: 78% used (3.5TB of 4.5TB)
+  /var: 42% used (210GB of 500GB)
+  /boot: 15% used (1.2GB of 8GB)
+
+Replication Status
+  Peer: peer-dd3300-02 | Status: LAGGING | Last Sync: 2 hours 47 minutes ago
+  Peer: peer-dd3300-03 | Status: IN_SYNC | Last Sync: 3 minutes ago
+```
+
+!!! warning "Common errors"
+    **`Error: Authentication failed`** — Verify sysadmin credentials and that SSH key-based auth is configured, or use `ssh -l admin` with password prompt.
+    **`Error: Command not found`** — Ensure you are in the Data Domain CLI (not bash shell); exit bash with `exit` and reconnect via SSH.
+    **`Error: Insufficient privileges for this command`** — Confirm you are logged in as sysadmin user; use `whoami` to verify and reconnect if needed.
 ---
 
 ## Support SLA Reference

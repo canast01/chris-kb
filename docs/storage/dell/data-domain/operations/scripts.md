@@ -68,6 +68,56 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+########################################
+  Data Domain Health Check
+  Host : dd01.example.com
+  Date : 2024-01-15 09:42:17
+########################################
+
+========================================
+  FILESYSTEM SPACE
+========================================
+Filesystem          Size      Used    Available  %Used
+/data              100.0TB   87.3TB    12.7TB     87%
+/var                50.0GB   23.4GB    26.6GB     47%
+
+========================================
+  COMPRESSION RATIO
+========================================
+Compression Ratio: 3.2:1
+Deduplication Ratio: 5.8:1
+Overall Efficiency: 18.6:1
+
+========================================
+  SYSTEM UPTIME
+========================================
+System Uptime: 287 days, 14 hours, 33 minutes
+
+========================================
+  REPLICATION STATE
+========================================
+Replication Status: Active
+Last Successful Sync: 2024-01-15 09:15:42 UTC
+Bytes Replicated: 2.4TB
+
+========================================
+  ACTIVE ALERTS
+========================================
+  1  WARNING  Disk utilization above 85%  2024-01-15 08:30:00
+  2  INFO     Backup window completed     2024-01-15 07:45:22
+
+========================================
+  SUMMARY
+========================================
+STATUS: DEGRADED — 2 active alert(s) found.
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host dd01.example.com port 22: Connection refused`** — Verify the Data Domain appliance is reachable and SSH is enabled; check firewall rules and network connectivity.
+    **`Permission denied (publickey,password).`** — Ensure the SSH key is properly configured for the DD_USER account or add password authentication to the SSH command.
+    **`ERROR: DD_HOST is not set.`** — Export the DD_HOST environment variable before running the script: `export DD_HOST=dd01.example.com`.
 ```bash
 #!/bin/bash
 # dd_ddboost_check.sh — Check DDBoost client connectivity on a Data Domain appliance
@@ -135,6 +185,38 @@ else
   exit 0
 fi
 ```
+
+```text title="Expected output"
+========================================
+  DDBoost Client Check — dd01.example.com
+  2024-01-15 14:32:47
+========================================
+
+--- DDBoost Status ---
+DDBoost Status: Enabled
+Active Connections: 7
+Total Data Transferred (24h): 2.3 TB
+Replication Status: Healthy
+
+--- Client Table ---
+CLIENT                         IP/HOSTNAME      STATE
+--------------------------------------------------------------
+backup-srv-01                  192.168.10.45    connected
+backup-srv-02                  192.168.10.46    connected
+archive-node-03                192.168.10.52    disconnected  <<< DISCONNECTED
+backup-srv-04                  192.168.10.48    connected
+repl-partner-dd02              10.20.5.18       connected
+backup-srv-05                  192.168.10.50    connected
+archive-node-06                192.168.10.53    connected
+
+========================================
+STATUS: DEGRADED — 1 disconnected DDBoost client(s).
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or configure password authentication; ensure `DD_USER` has SSH access to the Data Domain appliance.
+    **`ddboost: command not found`** — Confirm you are connected to a Data Domain CLI (not a standard Linux host) and that DDBoost is licensed and enabled with `ddboost show status`.
+    **`ERROR: DD_HOST is not set.`** — Export the environment variable before running the script: `export DD_HOST=dd01.example.com`.
 ```bash
 cd ~/Desktop
 chmod +x dd_ddboost_check.sh
@@ -280,6 +362,36 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 cd C:\Users\YourName\Desktop
 .\dd_health_rest.ps1
 ```
+
+```text title="Expected output"
+Dell Data Domain Health Check Script v2.1.4
+============================================
+
+Connecting to Data Domain system...
+System: dd-prod-01.corp.local (192.168.1.45)
+Connected successfully.
+
+Health Status Report
+====================
+Overall System Health: GOOD
+CPU Usage: 34%
+Memory Usage: 62%
+Disk Capacity: 78% (4.2TB of 5.4TB used)
+
+Replication Status: ACTIVE
+Last Backup: 2024-01-15 03:45:22 UTC
+Backup Duration: 2h 14m
+
+Alerts: None
+Last Updated: 2024-01-15 14:32:10 UTC
+
+Script execution completed successfully.
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
+    **`The term '.\dd_health_rest.ps1' is not recognized`** — Verify the script file exists in the current directory and use the full path or ensure you are in the correct Desktop folder with `pwd`.
+    **`Unable to connect to Data Domain system at <IP>`** — Check network connectivity to the Data Domain appliance and verify the hostname/IP address is correct in the script configuration.
 ```bash
 #!/bin/bash
 # dd_daily_check.sh — Daily operations check for Dell Data Domain
@@ -356,6 +468,41 @@ echo "========================================"
 echo "  PASS: $PASS   FAIL: $FAIL"
 [[ "$FAIL" -eq 0 ]] && echo "  STATUS: OK" && exit 0 || echo "  STATUS: DEGRADED" && exit 1
 ```
+
+```text title="Expected output"
+========================================
+  Data Domain Daily Check — dd01.example.com
+  2024-01-15 09:47:23
+========================================
+No current alerts.
+  alerts (clean)                                     PASS
+State of all disks:
+  Disk 0.0: OK
+  Disk 0.1: OK
+  Disk 1.0: OK
+  Disk 1.1: OK
+Filesystem space usage:
+  /data: 72.3%
+  /metadata: 18.9%
+  /logs: 5.2%
+  filesystem space (<80%)                            PASS
+Replication status:
+  Target: dd02.example.com Status: OK Last sync: 2024-01-15 09:30:12
+  replication state (OK)                            PASS
+Compression statistics:
+  Average ratio: 2.8:1
+  Total compressed: 18.5 TB
+  [INFO] compression output above
+  compression stats retrieved                        PASS
+========================================
+  PASS: 5   FAIL: 0
+  STATUS: OK
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname dd01.example.com: Name or service not known`** — Verify the DD_HOST value and ensure DNS resolution is working or use an IP address instead.
+    **`Permission denied (publickey,password).`** — Confirm SSH_USER has valid key-based authentication configured on the Data Domain system and the key is loaded in ssh-agent.
+    **`ddsh: command not found`** — Ensure the SSH user's shell profile includes the Data Domain CLI path (typically `/opt/dd/bin` or similar) in PATH.
 ```bash
 #!/bin/bash
 # dd_triage.sh — Incident triage data capture for Dell Data Domain
@@ -399,6 +546,71 @@ section "REPLICATION";      ddcmd "replication show all"      >> "$OUTFILE" 2>&1
 
 echo "Triage data written to: $OUTFILE"
 ```
+
+```text title="Expected output"
+Data Domain Triage Capture
+Host : dd01.example.com
+Date : 2024-01-15 14:32:47
+
+========================================
+  VERSION
+========================================
+Data Domain OS 7.14.1.20 (build 4552.1)
+Firmware Version: 2.8.4
+
+========================================
+  HOSTNAME
+========================================
+dd01.example.com
+
+========================================
+  SYSTEM STATS
+========================================
+System Uptime: 287 days 14 hours 32 minutes
+CPU Usage: 18%
+Memory Usage: 62%
+Active Sessions: 12
+
+========================================
+  ALERTS
+========================================
+Alert ID 2847: WARNING - Replication lag exceeds 2 hours on context prod-backup
+Alert ID 2851: INFO - Scheduled maintenance window completed successfully
+
+========================================
+  DISK STATE
+========================================
+Disk 0.0: HEALTHY
+Disk 0.1: HEALTHY
+Disk 1.0: HEALTHY
+Disk 1.1: HEALTHY
+...
+
+========================================
+  FILESYSTEM SPACE
+========================================
+Filesystem: /data1 - Used: 87.3 TB / 100 TB (87%)
+Filesystem: /data2 - Used: 92.1 TB / 100 TB (92%)
+
+========================================
+  COMPRESSION
+========================================
+Global Compression Ratio: 3.2:1
+Compression Enabled: Yes
+
+========================================
+  REPLICATION
+========================================
+Context: prod-backup - Status: ACTIVE - Last Update: 2024-01-15 14:28:15
+Context: dr-sync - Status: ACTIVE - Last Update: 2024-01-15 14:31:42
+
+Triage data written to: dd_triage_20240115_143247.txt
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey).`** — Verify SSH_USER has valid key-based authentication configured and the Data Domain SSH service is running.
+    **`ssh: connect to host dd01.example.com port 22: Connection timed out`** — Confirm DD_HOST is reachable on the network and SSH port 22 is not blocked by firewall rules.
+    **`ddsh: command not found`** — Ensure you are connecting to a Data Domain system (not a generic Linux host) where the ddsh shell is available.
 ```bash
 #!/bin/bash
 # dd_precheck.sh — Pre-change validation for Dell Data Domain
@@ -459,6 +671,24 @@ fi
 echo "  PRE-CHECK PASSED — Safe to proceed."
 exit 0
 ```
+
+```text title="Expected output"
+========================================
+  Data Domain Pre-Change Check — dd01.example.com
+  2024-01-15 14:32:47
+========================================
+  PASS: no critical alerts
+  PASS: all disks healthy
+  PASS: filesystem below 85%
+  PASS: replication sessions active
+========================================
+  PRE-CHECK PASSED — Safe to proceed.
+```
+
+!!! warning "Common errors"
+    **`ERROR: DD_HOST is not set.`** — Export DD_HOST before running the script: `export DD_HOST=dd01.example.com`
+    **`ssh: connect to host dd01.example.com port 22: Connection timed out`** — Verify network connectivity and SSH access to the Data Domain appliance, and confirm the hostname/IP is correct.
+    **`Permission denied (publickey,password).`** — Ensure the SSH_USER account has passwordless SSH key authentication configured on the Data Domain, or use `ssh-copy-id` to install your public key.
 ```bash
 #!/bin/bash
 # dd_postcheck.sh — Post-change validation for Dell Data Domain
@@ -531,6 +761,25 @@ fi
 echo "  POST-CHECK PASSED — All checks healthy."
 exit 0
 ```
+
+```text title="Expected output"
+========================================
+  Data Domain Post-Change Validation — dd01.example.com
+  2024-01-15 14:32:47
+========================================
+  PASS: no critical alerts
+  PASS: all disks healthy
+  PASS: filesystem below 85%
+  PASS: replication active
+  PASS: DD OS version matches 7.13.0.0
+========================================
+  POST-CHECK PASSED — All checks healthy.
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host dd01.example.com port 22: Connection timed out`** — Verify DD_HOST is reachable and SSH service is running; check firewall rules and network connectivity.
+    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid credentials configured and public key authentication is set up on the Data Domain system.
+    **`ddsh: command not found`** — Confirm the SSH user has shell access to ddsh; verify the user is not restricted to a limited shell or that ddsh is in the PATH.
 ```bash
 #!/bin/bash
 # dd_health.sh — Cron-safe health check for Dell Data Domain
@@ -596,6 +845,21 @@ echo "OVERALL: ${LABELS[$STATE]}"
 exit "$STATE"
 ```
 
+
+```text title="Expected output"
+Data Domain Health — dd01.example.com — 2024-01-15 14:32:18
+  [INFO] uptime: 287 days, 14 hours, 23 minutes
+  [OK] all disks healthy
+  [OK] filesystem space OK
+  [INFO] dedup/compression ratio: 12.4x
+  [OK] replication active
+OVERALL: OK
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host dd01.example.com port 22: Connection timed out`** — Verify DD_HOST is correct and SSH connectivity exists; check firewall rules and Data Domain network interface status.
+    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid key-based authentication configured on the Data Domain system and the public key is in the authorized_keys file.
+    **`ddsh: command not found`** — Confirm the SSH_USER account has shell access enabled on the Data Domain and ddsh is in the system PATH.
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

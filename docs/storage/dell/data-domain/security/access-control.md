@@ -17,6 +17,23 @@ authentication roles assign role backup-operator group <ldap-group-name>
 user show
 ```
 
+
+```text title="Expected output"
+User <username> added successfully
+Role backup-operator assigned to group <ldap-group-name>
+
+Username                Role                  Status
+admin                   system-admin          active
+backup-svc              backup-operator       active
+<username>              backup-operator       active
+restore-user            restore-operator      active
+audit-admin             audit-admin           active
+```
+
+!!! warning "Common errors"
+    **`Error: User <username> already exists`** — Choose a different username or delete the existing user with `user remove <username>` first.
+    **`Error: Role backup-operator not found`** — Verify the role name is correct; use `authentication roles show` to list available roles.
+    **`Error: LDAP group <ldap-group-name> not found or not configured`** — Ensure LDAP authentication is configured and the group exists in your directory with `authentication show`.
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

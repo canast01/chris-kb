@@ -133,6 +133,53 @@ ecscli user secret-key delete \
   --secret-key <key_id>
 ```
 
+
+```text title="Expected output"
+Collecting ecscli
+  Downloading ecscli-2.4.1-py3-none-any.whl (156 kB)
+Installing collected packages: ecscli
+Successfully installed ecscli-2.4.1
+Login successful. Session token stored in ~/.ecscli/session
+Currently authenticated as: sysadmin
+Logout successful. Session token invalidated.
+Namespace List:
+  app_team_ns          (replication_group: rg-prod-01, stale_allowed: true)
+  backup_ns            (replication_group: rg-prod-01, stale_allowed: false)
+  archive_ns           (replication_group: rg-dr-02, stale_allowed: true)
+Namespace Details for 'app_team_ns':
+  Name: app_team_ns
+  Replication Group: rg-prod-01
+  Retention: 0 days
+  Quota: unlimited
+Namespace 'app_team_ns' created successfully.
+Bucket List (namespace: app_team_ns):
+  app-data-bucket      (size: 2.3 TB, versioning: false)
+  logs-bucket          (size: 156 GB, versioning: true)
+Bucket Details for 'app-data-bucket':
+  Name: app-data-bucket
+  Owner: sysadmin
+  Versioning: false
+  Quota: 5000 GB
+  Replication Group: rg-prod-01
+Bucket 'app-data-bucket' created successfully.
+Bucket 'app-data-bucket' updated: versioning enabled.
+Bucket 'app-data-bucket' quota set to 5000 GB.
+Bucket 'app-data-bucket' deleted successfully.
+Object Users (namespace: app_team_ns):
+  svc_app_backup       (created: 2024-01-15, uid: 3a8f2c91-d4e1-4b7f-9e2a-1c5d8f3b2a9e)
+  svc_monitoring       (created: 2024-01-10, uid: 7b2e9f1a-c3d5-4a8e-8f1b-2d6c9a4e3f7b)
+Object user 'svc_app_backup' created successfully.
+Secret key created for user 'svc_app_backup':
+  Access Key ID: 8F7C2A9E1B4D5F3C
+  Secret Access Key: xK9mL2pQ7vW5nR8sT1uY4zX6cV3bN0jH (save this securely)
+Secret Keys for user 'svc_app_backup':
+  8F7C2A9E1B4D5F3C    (created: 2024-01-20, status: active)
+  3D6E9F2A1C4B7E5H    (created: 2024-01-10, status: active)
+Secret key '8F7C2A9E1B4D5F3C' deleted successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Authentication failed. Invalid credentials or ECS node unreachable.`** — Verify the ECS node hostname/IP is correct, the user exists, and the password is accurate;
 ---
 
 ## S3 API (aws cli / s3cmd)
