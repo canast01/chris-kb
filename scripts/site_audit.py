@@ -964,6 +964,207 @@ for _md in all_md():
                 warn(issues, f'{os.path.relpath(_md, DOCS)}: [{_lm.group(1)}]({_href})')
 
 
+# ── Check 43: SVG missing viewBox ────────────────────────────────────────────
+# Without viewBox, CSS max-width:100% clips instead of scales the SVG,
+# causing text near the right edge to appear truncated.
+issues = check(43, 'SVG assets missing viewBox (causes text clipping on narrow screens)')
+if os.path.isdir(ASSETS):
+    for _fname in sorted(os.listdir(ASSETS)):
+        if not _fname.endswith('.svg'):
+            continue
+        _first = open(os.path.join(ASSETS, _fname), errors='replace').readline()
+        if 'viewBox' not in _first:
+            warn(issues, f'assets/{_fname}: no viewBox on <svg> element')
+
+
+# ── Check 44: TODO / placeholder text in published pages ─────────────────────
+_TODO_PATTERNS = [
+    (re.compile(r'\bTODO\b|\bFIXME\b', re.IGNORECASE), 'TODO/FIXME marker'),
+    (re.compile(r'\bLorem ipsum\b', re.IGNORECASE), 'Lorem ipsum placeholder'),
+    (re.compile(r'\[Content to be added\]|\[TBD\]|\[WIP\]', re.IGNORECASE), 'TBD/WIP marker'),
+    # "Coming soon" only as a standalone line/heading, not inside paragraphs
+    (re.compile(r'^#+\s*Coming soon\s*$|^Coming soon\.?\s*$', re.IGNORECASE | re.MULTILINE), 'Coming soon stub heading'),
+]
+# Skip pages that intentionally discuss historical changes, meta-docs, etc.
+_TODO_SKIP = {'docs/tags.md', 'docs/site-map.md', 'docs/whats-new.md'}
+issues = check(44, 'TODO / placeholder text in published pages')
+for _path in all_md():
+    _rel_doc = os.path.relpath(_path, REPO)
+    if _rel_doc in _TODO_SKIP:
+        continue
+    _lines = open(_path, errors='replace').readlines()
+    _in_fence = False
+    for _i, _line in enumerate(_lines, 1):
+        if _line.strip().startswith('```') or _line.strip().startswith('~~~'):
+            _in_fence = not _in_fence
+        if _in_fence:
+            continue
+        for _pat, _label in _TODO_PATTERNS:
+            if _pat.search(_line):
+                warn(issues, f'{os.path.relpath(_path, DOCS)}:{_i}: {_label}: {_line.strip()[:80]}')
+                break
+
+
+# ── Check 45: Missing "Applies to:" version marker ────────────────────────────
+# Every content page (non-landing) should declare which product version it covers.
+_APPLIES_PAT = re.compile(r'\*Applies to:', re.IGNORECASE)
+_APPLIES_SKIP = {
+    'tags.md', 'site-map.md', 'usage-metrics.md', 'site-quality.md',
+    'index.md',
+}
+issues = check(45, 'Missing "*Applies to:*" version marker on content pages')
+_missing_applies = []
+for _path in all_md():
+    _fname = os.path.basename(_path)
+    if _fname in _APPLIES_SKIP:
+        continue
+    _c = open(_path, errors='replace').read()
+    if 'kb-grid' in _c or 'kb-card' in _c:
+        continue  # landing pages don't need version markers
+    if len(_c.splitlines()) < 10:
+        continue  # stubs
+    if not _APPLIES_PAT.search(_c):
+        _missing_applies.append(os.path.relpath(_path, DOCS))
+if _missing_applies:
+    for _p in (_missing_applies if FULL else _missing_applies[:12]):
+        warn(issues, f'Missing *Applies to:*: {_p}')
+    if not FULL and len(_missing_applies) > 12:
+        warn(issues, f'... and {len(_missing_applies)-12} more (run --full)')
+
+
+# ── Check 46: Health-check pages missing bash command blocks ─────────────────
+issues = check(46, 'Health-check pages missing executable bash command blocks')
+_missing_bash = []
+for _path in all_md():
+    if os.path.basename(_path) != 'health-checks.md':
+        continue
+    _c = open(_path, errors='replace').read()
+    if 'kb-grid' in _c or len(_c.splitlines()) < 20:
+        continue
+    if not re.search(r'```(bash|shell|sh)\b', _c):
+        _missing_bash.append(os.path.relpath(_path, DOCS))
+if _missing_bash:
+    for _p in (_missing_bash if FULL else _missing_bash[:12]):
+        warn(issues, f'No bash block: {_p}')
+    if not FULL and len(_missing_bash) > 12:
+        warn(issues, f'... and {len(_missing_bash)-12} more (run --full)')
+
+
+# ── Check 47: Overly long pages (>500 lines — candidates for splitting) ───────
+issues = check(47, 'Overly long pages (>800 lines — split candidates)')
+_LONG_SKIP = {'docs/tags.md', 'docs/site-map.md'}
+for _path in all_md():
+    if os.path.relpath(_path, REPO) in _LONG_SKIP:
+        continue
+    _lc = sum(1 for _ in open(_path, errors='replace'))
+    if _lc > 800:
+        warn(issues, f'{os.path.relpath(_path, DOCS)}: {_lc} lines')
+
+
+# ── Check 48: FAQ pages without Q/A format ────────────────────────────────────
+issues = check(48, 'FAQ pages without Q/A heading format')
+_missing_qa = []
+for _path in all_md():
+    if os.path.basename(_path) != 'faq.md':
+        continue
+    _c = open(_path, errors='replace').read()
+    if 'kb-grid' in _c or len(_c.splitlines()) < 10:
+        continue
+    # FAQ pages need either ### headings (question form) or **Q:** markers
+    if not re.search(r'^### .+\?', _c, re.MULTILINE) and '**Q:**' not in _c:
+        _missing_qa.append(os.path.relpath(_path, DOCS))
+if _missing_qa:
+    for _p in (_missing_qa if FULL else _missing_qa[:12]):
+        warn(issues, f'No Q/A format: {_p}')
+    if not FULL and len(_missing_qa) > 12:
+        warn(issues, f'... and {len(_missing_qa)-12} more (run --full)')
+
+
+# ── Check 49: Unclosed code fences ────────────────────────────────────────────
+issues = check(49, 'Unclosed code fences (odd number of triple-backtick lines)')
+for _path in all_md():
+    _lines = open(_path, errors='replace').readlines()
+    _depth = 0
+    _open_line = None
+    for _i, _line in enumerate(_lines, 1):
+        _s = _line.strip()
+        if _s.startswith('```') or _s.startswith('~~~'):
+            if _depth == 0:
+                _depth = 1
+                _open_line = _i
+            else:
+                _depth = 0
+                _open_line = None
+    if _depth > 0:
+        _rel = os.path.relpath(_path, DOCS)
+        warn(issues, f'{_rel}: unclosed fence opened at line {_open_line}')
+
+
+# ── Check 50: Known-issues pages without a table ─────────────────────────────
+issues = check(50, 'Known-issues pages without a Markdown table')
+_missing_table = []
+for _path in all_md():
+    if os.path.basename(_path) != 'known-issues.md':
+        continue
+    _c = open(_path, errors='replace').read()
+    if 'kb-grid' in _c or len(_c.splitlines()) < 10:
+        continue
+    if not re.search(r'^\|.+\|', _c, re.MULTILINE):
+        _missing_table.append(os.path.relpath(_path, DOCS))
+if _missing_table:
+    for _p in (_missing_table if FULL else _missing_table[:12]):
+        warn(issues, f'No table: {_p}')
+    if not FULL and len(_missing_table) > 12:
+        warn(issues, f'... and {len(_missing_table)-12} more (run --full)')
+
+
+# ── Check 51: D2 node labels that are likely to overflow their boxes ──────────
+# Labels longer than 40 chars at typical font-size will clip inside D2 shapes.
+issues = check(51, 'D2 node labels >40 chars (likely to overflow rendered box)')
+_D2_LABEL = re.compile(r'```d2\n(.*?)\n```', re.DOTALL)
+# Flag labels >55 chars — at typical D2 font-size these overflow most node shapes
+_D2_NODE_LABEL = re.compile(r'^\w[\w_.-]*\s*:\s*"([^"]{56,})"', re.MULTILINE)
+for _md in all_md():
+    _txt = open(_md, errors='replace').read()
+    if '```d2' not in _txt:
+        continue
+    for _blk in _D2_LABEL.findall(_txt):
+        for _lm in _D2_NODE_LABEL.finditer(_blk):
+            warn(issues, f'{os.path.relpath(_md, DOCS)}: label "{_lm.group(1)[:55]}..."')
+            break  # one warning per file is enough
+
+
+# ── Check 52: PlantUML blocks without @startuml / @enduml ────────────────────
+issues = check(52, 'PlantUML blocks missing @startuml / @enduml markers')
+_PU_BLOCK = re.compile(r'```plantuml\n(.*?)\n```', re.DOTALL)
+for _md in all_md():
+    _txt = open(_md, errors='replace').read()
+    if '```plantuml' not in _txt:
+        continue
+    for _blk in _PU_BLOCK.findall(_txt):
+        if '@startuml' not in _blk or '@enduml' not in _blk:
+            warn(issues, os.path.relpath(_md, DOCS))
+            break
+
+
+# ── Check 53: Broken all internal markdown links (not just See also) ──────────
+# Checks every [text](href) link in every .md file where href is a relative
+# path that ends with .md — the most common cause of 404s after page moves.
+issues = check(53, 'Broken relative .md links anywhere in content (not only See also)')
+_ALL_MD_LINK = re.compile(r'\[(?:[^\]]+)\]\(([^)#?]+\.md)\)')
+for _md in all_md():
+    _txt = open(_md, errors='replace').read()
+    _src_dir = os.path.dirname(_md)
+    for _lm in _ALL_MD_LINK.finditer(_txt):
+        _href = _lm.group(1)
+        if _href.startswith('http'):
+            continue
+        _tgt = os.path.normpath(os.path.join(_src_dir, _href[:-3]))
+        if not (os.path.exists(_tgt + '.md')
+                or os.path.exists(os.path.join(_tgt, 'index.md'))):
+            warn(issues, f'{os.path.relpath(_md, DOCS)}: broken link "{_href}"')
+
+
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)
 print('KB SITE AUDIT REPORT')
