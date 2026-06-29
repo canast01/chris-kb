@@ -153,6 +153,27 @@ event log show -severity error -time-range 24h
 snapmirror show -fields state,lag-time,healthy,relationship-status
 ```
 
+
+```text title="Expected output"
+Time                Node             Severity Event
+------------------ ---------------- -------- ----------------------------------------
+11/15/2024 14:32:15 cluster-01-01    ERROR    WAFL.vol.autoGrow.aborted
+11/15/2024 13:18:42 cluster-01-02    ERROR    SHELF.fcal.loop.down
+11/15/2024 12:05:09 cluster-01-01    ERROR    SNAPMIRROR.transferAborted
+11/15/2024 09:47:33 cluster-01-02    ERROR    CIFS.vserver.auth.failure
+11/15/2024 08:22:18 cluster-01-01    ERROR    RAID.disk.lifeExpectancy.warning
+
+Source Destination                   State    Lag-Time Healthy Relationship-Status
+------ -------------------------------- -------- -------- ------- --------------------
+svm1:vol_prod svm2:vol_prod_mirror    Snapmirrored 00:15:32 true    Idle
+svm1:vol_data svm3:vol_data_dr        SnapMirrored 02:47:18 false   Transferring
+svm1:vol_logs svm2:vol_logs_backup    Uninitialized 00:00:00 false   Broken-off
+```
+
+!!! warning "Common errors"
+    **`Error: command not found`** — Verify you are connected to the ONTAP cluster CLI (ssh admin@<cluster-mgmt-ip>) and not the local shell.
+    **`Error: Access denied for command "event log show"`** — Ensure your ONTAP user role has "admin" or equivalent privileges; check with `security login show -user-or-group-name <username>`.
+    **`Error: No SnapMirror relationships found`** — This is expected if no replication is configured; verify relationships exist with `snapmirror list-destinations` before troubleshooting lag-time issues.
 ### 6. Write the timeline
 
 ```text

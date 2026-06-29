@@ -187,6 +187,38 @@ grep -i "error\|exception\|fail" /var/opt/snapcenter/spl/logs/spl.log | tail -50
 curl -sk https://<snapcenter-server>:8146/api/3.0/version
 ```
 
+
+```text title="Expected output"
+● spl.service - SnapCenter Plug-in for Linux
+     Loaded: loaded (/etc/systemd/system/spl.service; enabled; vendor preset: disabled)
+     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+   Main PID: 4521 (java)
+      Tasks: 45 (limit: 4915)
+     Memory: 512.3M
+     CGroup: /system.slice/spl.service
+             └─4521 /usr/lib/jvm/java-11-openjdk-11.0.21.0.9-1.el7_9.x86_64/bin/java -Xmx1024m...
+
+2024-01-18 14:32:18 spl-host01 spl[4521]: INFO: SnapCenter Plug-in for Linux v5.0.1 started successfully
+2024-01-18 14:32:45 spl-host01 spl[4521]: INFO: Registered with SnapCenter server 192.168.1.50:8146
+2024-01-18 15:47:22 spl-host01 spl[4521]: INFO: Backup job SCH_DB_PROD_001 completed successfully
+2024-01-18 16:15:33 spl-host01 spl[4521]: WARN: Heartbeat response delayed by 2.3 seconds
+
+2024-01-18 14:32:18 spl-host01 spl[4521]: ERROR: Failed to load custom plugin module: oracle_custom_v2.jar
+2024-01-18 15:22:10 spl-host01 spl[4521]: EXCEPTION: java.net.SocketTimeoutException: Connection timeout to 192.168.1.50:8146
+2024-01-18 16:01:45 spl-host01 spl[4521]: FAIL: Certificate validation failed for peer host snapcenter.example.com
+
+{
+  "version": "5.0.1",
+  "build": "20240115.001",
+  "api_version": "3.0",
+  "status": "operational"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification or import the SnapCenter server's CA certificate into the plug-in host's trust store.
+    **`curl: (7) Failed to connect to <snapcenter-server>:8146: Connection refused`** — Verify the SnapCenter server is running (`systemctl status snapcenter` on the server) and that port 8146 is not blocked by firewall rules between the plug-in host and server.
+    **`ERROR: Failed to load custom plugin module`** — Check that custom plugin JAR files exist in `/opt/snapcenter/spl/plugins/custom/` and have correct permissions (644), then restart SPL with `systemctl restart spl`.
 ---
 
 ## Step 5 — Inspect component logs on the SnapCenter server

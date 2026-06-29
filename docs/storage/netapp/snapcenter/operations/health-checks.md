@@ -82,6 +82,58 @@ Get-SmBackup -ResourceName <resource_name> | Select BackupName, BackupTime, Stat
 Get-SmPolicy | Select PolicyName, PluginType, BackupType
 ```
 
+
+```text title="Expected output"
+Name                             Value
+----                             -----
+SmSbaseUrl                       https://snapcenter-server.corp.local:8146
+IsConnected                      True
+UserName                         CORP\snapadmin
+
+JobId JobType                Status       StartDateTime           EndDateTime
+----- -------                ------       -------------           -----------
+1247  BackupResources        Completed    11/14/2024 02:15:33 AM  11/14/2024 02:47:22 AM
+1246  BackupResources        Completed    11/13/2024 14:30:15 PM  11/13/2024 15:02:44 PM
+1245  VerifyBackup           Completed    11/13/2024 08:22:10 AM  11/13/2024 08:35:18 AM
+1244  BackupResources        Failed       11/12/2024 22:15:00 PM  11/12/2024 22:18:33 PM
+1243  RestoreResources       Completed    11/12/2024 16:45:22 PM  11/12/2024 17:12:55 PM
+
+JobId JobType                Status       StartDateTime
+----- -------                ------       -------------
+1251  BackupResources        Running      11/14/2024 08:30:22 AM
+1250  VerifyBackup           Queued       11/14/2024 08:15:10 AM
+
+HostName                    HostType      PlugInStatus  OverallStatus
+--------                    --------      ------------  --------------
+db-prod-01.corp.local       Windows       Available     Normal
+db-prod-02.corp.local       Linux         Available     Normal
+nas-01.corp.local           Storage       Available     Normal
+app-server-03.corp.local    Windows       Unavailable   Warning
+
+ResourceGroupName             PluginCode  Status
+-----------------             ----------  ------
+MSSQL_Daily_Backup            MSSQL       Protected
+Oracle_Hourly_RG              Oracle      Protected
+MySQL_Weekly_Backup           MySQL       Unprotected
+VMware_VMs_RG                 VMware      Protected
+
+BackupName                                    BackupTime              Status
+----------                                    ----------              ------
+MSSQL_DB_20241114_023000                      11/14/2024 02:30:00 AM  Completed
+MSSQL_DB_20241113_143000                      11/13/2024 14:30:00 PM  Completed
+MSSQL_DB_20241112_223000                      11/12/2024 22:30:00 PM  Completed
+
+PolicyName                    PluginType  BackupType
+----------                    ----------  ----------
+Daily_Full_Backup             MSSQL       Full
+Hourly_Log_Backup             MSSQL       Log
+Weekly_Full_Backup            Oracle      Full
+Monthly_Archive               MySQL       Full
+```
+
+!!! warning "Common errors"
+    **`Open-SmConnection : Cannot find a promo provider 'SnapCenter' for PowerShell version 5.1`** — Install the SnapCenter PowerShell toolkit matching your PowerShell version, or run the script from a SnapCenter server with the toolkit pre-installed.
+    **`Get-SmJob : The term 'Get-
 ---
 
 ## Verify

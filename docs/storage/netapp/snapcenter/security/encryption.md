@@ -193,6 +193,25 @@ security config show
 security config modify -interface HTTPS -min-protocol-version TLSv1.2
 ```
 
+
+```text title="Expected output"
+Vserver: cluster1
+Interface: HTTPS
+Min Protocol Version: TLSv1.2
+Max Protocol Version: TLSv1.3
+Supported Protocols: TLSv1.2,TLSv1.3
+Is FIPS Enabled: false
+Cipher Suites: DEFAULT
+Certificate Common Name: cluster1.example.com
+Certificate Expiration Date: 2026-03-15
+
+security config modify -interface HTTPS -min-protocol-version TLSv1.2
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: "HTTPS" is not a valid interface. Valid interfaces are: SSL`** — Use `SSL` instead of `HTTPS` in the security config command.
+    **`Error: "TLSv1.2" is not a valid protocol version for this ONTAP version`** — Verify ONTAP version supports TLSv1.2 with `system node image show` and upgrade if necessary.
 ---
 
 ## Encryption of SnapCenter Agent Communication

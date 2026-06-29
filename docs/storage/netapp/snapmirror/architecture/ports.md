@@ -72,6 +72,42 @@ snapmirror show -fields state,healthy,lag-time
 network interface show -role intercluster
 ```
 
+
+```text title="Expected output"
+PING <dest-intercluster-lif-ip> from <source-intercluster-lif>: 56 data bytes
+64 bytes from <dest-intercluster-lif-ip>: icmp_seq=0 ttl=64 time=2.45 ms
+64 bytes from <dest-intercluster-lif-ip>: icmp_seq=1 ttl=64 time=2.31 ms
+64 bytes from <dest-intercluster-lif-ip>: icmp_seq=2 ttl=64 time=2.38 ms
+64 bytes from <dest-intercluster-lif-ip>: icmp_seq=3 ttl=64 time=2.42 ms
+64 bytes from <dest-intercluster-lif-ip>: icmp_seq=4 ttl=64 time=2.29 ms
+
+Peer Cluster Name         Cluster UUID                 Availability
+------------------------- ---------------------------- ---------------
+dest-cluster-01           4a3c8e9f-2b1d-11ed-9c4a-... Available
+
+Cluster peer health status
+Source Cluster Name       Destination Cluster Name     Cluster UUID                 Health Status
+------------------------- ---------------------------- ---------------------------- ---------------
+source-cluster-01         dest-cluster-01              4a3c8e9f-2b1d-11ed-9c4a-... Connected
+
+Source Destination Path Type State Healthy Lag Time
+------ ----------- ---- ---- ----- ------- --------
+svm1 dest-svm1 /vol/data DP Snapmirrored true 0s
+svm2 dest-svm2 /vol/logs DP Snapmirrored true 45s
+svm3 dest-svm3 /vol/archive DP Snapmirrored true 2m15s
+
+Vserver     Interface       Role         Status  Data Protocol
+----------- --------------- ------------ ------- ----------------
+source-cluster-01 ic_lif_01 intercluster up      none
+source-cluster-01 ic_lif_02 intercluster up      none
+dest-cluster-01   ic_lif_01 intercluster up      none
+dest-cluster-01   ic_lif_02 intercluster up      none
+```
+
+!!! warning "Common errors"
+    **`PING <dest-intercluster-lif-ip> from <source-intercluster-lif>: no answer`** — Verify network connectivity and firewall rules allow port 10001 (ONTAP cluster communication) between intercluster LIFs.
+    **`Error: command failed: Cluster peer relationship does not exist`** — Establish cluster peering first using `cluster peer create -peer-addrs <dest-cluster-mgmt-ip>` before attempting SnapMirror operations.
+    **`Error: command failed: SnapMirror relationship not initialized`** — Initialize the SnapMirror relationship with `snapmirror initialize -source-path <source-svm>:<volume> -destination-path <dest-svm>:<volume>`.
 ## See also
 
 - [NetApp ONTAP — Ports](../../ontap/architecture/ports.md)

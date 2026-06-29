@@ -34,6 +34,15 @@ security login role create -role snapmirror-monitor -cmddirname "snapmirror show
 security login role create -role snapmirror-monitor -cmddirname "snapmirror show-history" -access readonly
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: "snapmirror-monitor" already exists.`** — Delete the existing role with `security login role delete -role snapmirror-monitor` before recreating it, or use a different role name.
+    **`Error: Invalid command directory name "snapmirror show"`** — Use the correct command directory name `snapmirror` instead of `snapmirror show`, then assign specific command restrictions via `security login role create -role snapmirror-monitor -cmddirname "snapmirror" -access readonly`.
 ## Destination Volume Protection
 
 Destination (DP) volumes are read-only by design — the replication engine enforces this at the WAFL layer. No client or user can write to a destination volume while a SnapMirror relationship is active. This eliminates the risk of accidental data modification on the replication target. Access to the destination volume is restricted to the replication engine and cluster admin operations; no data LIFs serve the destination volume until a `snapmirror break` is explicitly run.
@@ -52,6 +61,29 @@ event log show -message-name snapmirror.*
 security audit log show
 ```
 
+
+```text title="Expected output"
+Time                             Source           Event
+-------------------------------- ---------------- ---------------------------
+2024-01-15 14:32:18 -05:00       cluster1-01      snapmirror.resync.complete
+2024-01-15 14:28:45 -05:00       cluster1-02      snapmirror.transfer.start
+2024-01-15 14:15:22 -05:00       cluster1-01      snapmirror.abort.success
+2024-01-15 13:52:10 -05:00       cluster1-02      snapmirror.initialize.complete
+2024-01-15 13:41:33 -05:00       cluster1-01      snapmirror.policy.change
+...
+
+Vserver     User              Timestamp                  Event
+----------- ----------------- -------------------------- --------------------------------
+cluster1    admin             2024-01-15 14:32:18 -05:00 snapmirror_relationship_create
+cluster1    backup_user       2024-01-15 14:28:45 -05:00 snapmirror_relationship_modify
+cluster1    admin             2024-01-15 14:15:22 -05:00 snapmirror_policy_update
+cluster1    replication_svc   2024-01-15 13:52:10 -05:00 snapmirror_relationship_delete
+cluster1    admin             2024-01-15 13:41:33 -05:00 snapmirror_schedule_change
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: event`** — Ensure you are connected to the ONTAP cluster with `cluster show` and have appropriate admin privileges.
+    **`Error: No matching events found`** — Expand the search pattern or check event log retention settings with `event log show -fields message-name | grep snapmirror`.
 ---
 
 ## See also

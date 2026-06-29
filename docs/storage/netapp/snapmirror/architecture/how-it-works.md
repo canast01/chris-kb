@@ -122,6 +122,43 @@ snapmirror quiesce -destination-path svm_dst:vol_dst
 snapmirror show-history -destination-path svm_dst:vol_dst
 ```
 
+
+```text title="Expected output"
+Source Destination Lag Time Healthy Last Transfer End Timestamp
+svm_src:vol_src svm_dst:vol_dst 00:15:32 true 2024-01-15 14:32:18 +00:00
+svm_prod:vol_data svm_dr:vol_data 00:08:47 true 2024-01-15 14:39:05 +00:00
+svm_app:vol_logs svm_backup:vol_logs 02:43:21 false 2024-01-15 12:04:33 +00:00
+
+Source Destination Policy Type Healthy Lag Time
+svm_dst:vol_dst svm_dst:vol_dst MirrorAllSnapshots XDP true 00:15:32
+Last Transfer Size: 2.5GB
+Last Transfer Duration: 8m 22s
+Last Transfer End Timestamp: 2024-01-15 14:32:18 +00:00
+Unhealthy Reason: -
+
+Source Destination Relationship Status
+svm_app:vol_logs svm_backup:vol_logs broken-off
+
+Operation succeeded: SnapMirror update started for destination svm_dst:vol_dst
+
+Operation succeeded: SnapMirror resync started for destination svm_dst:vol_dst
+
+Operation succeeded: SnapMirror break completed for destination svm_dst:vol_dst
+
+Operation succeeded: SnapMirror initialize started for destination svm_dst:vol_dst
+
+Operation succeeded: SnapMirror quiesce completed for destination svm_dst:vol_dst
+
+Source Destination Snapshot Timestamp Transfer Status
+svm_dst:vol_dst svm_dst:vol_dst sm_daily.0 2024-01-15 14:32:18 +00:00 Success
+svm_dst:vol_dst svm_dst:vol_dst sm_daily.1 2024-01-14 14:15:42 +00:00 Success
+svm_dst:vol_dst svm_dst:vol_dst sm_daily.2 2024-01-13 14:08:09 +00:00 Success
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: destination path is not a SnapMirror destination`** — Verify the destination SVM and volume exist and are properly configured as a SnapMirror destination with `snapmirror show`.
+    **`Error: SnapMirror relationship is not in a state that allows this operation`** — Ensure the relationship is healthy and not already in a transitional state (quiesced, transferring, or broken-off) before attempting the operation.
+    **`Error: transfer is already in progress for this destination`** — Wait for the current transfer to complete or abort it with `snapmirror abort -destination-path <path>` before issuing a new update command.
 ## DR Failover Sequence
 
 1. **Detect RPO breach or site failure** — identify that the source is unavailable or lag has exceeded the RPO threshold
@@ -151,6 +188,25 @@ snapmirror break -destination-path svm_dst:
 vserver start -vserver svm_dst
 ```
 
+
+```text title="Expected output"
+Operation succeeded: SnapMirror relationship created.
+[Job 123] Job is running.
+[Job 123] Job succeeded: transfer queued for SnapMirror relationship of type "XDP".
+Operation succeeded: SnapMirror relationship initialized.
+[Job 124] Job is running.
+[Job 124] Job succeeded: SnapMirror baseline transfer completed. Transfer size: 847.3GB. Elapsed time: 18m42s.
+Operation succeeded: SnapMirror relationship updated.
+[Job 125] Job is running.
+[Job 125] Job succeeded: SnapMirror update transfer completed. Transfer size: 2.1GB. Elapsed time: 3m15s.
+Operation succeeded: SnapMirror relationship broken.
+Vserver "svm_dst" started successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: Relationship does not exist.`** — Verify the source and destination SVM names are correct and the relationship was created successfully with `snapmirror show`.
+    **`Error: command failed: SnapMirror relationship is not idle.`** — Wait for the previous transfer to complete or abort it with `snapmirror abort -destination-path svm_dst:` before breaking the relationship.
+    **`Error: command failed: Vserver is already running.`** — Check the current state with `vserver show -vserver svm_dst` and skip the start command if the vserver is already online.
 ---
 
 ## See also

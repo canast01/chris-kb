@@ -51,6 +51,47 @@ event log show -severity error -time ">24h"
 system health subsystem show
 ```
 
+
+```text title="Expected output"
+Active Health Alerts:
+Node: cluster1-01
+  Alertname: NetAppClusterLowDiskSpace
+  Severity: warning
+  Description: Aggregate aggr1 is 89% full
+  Time: 2024-01-15 14:32:18
+
+Node: cluster1-02
+  Alertname: DegradedRAIDStatus
+  Severity: critical
+  Description: RAID group rg0 has 1 failed disk
+  Time: 2024-01-15 13:45:02
+
+Events (Critical):
+Time                 Node         Event Code    Message
+2024-01-15 13:45:02  cluster1-02  RAID.disk.fail  Disk SN:ABC123XYZ failed in rg0
+2024-01-15 12:15:33  cluster1-01  NVRAM.battery.low  NVRAM battery at 45% capacity
+
+Events (Error - Last 24h):
+Time                 Node         Event Code    Message
+2024-01-15 10:22:15  cluster1-01  LUN.offline    LUN /vol/data/lun0 went offline
+2024-01-15 08:19:47  cluster1-02  Fan.speed.low  Fan module 3 running at 60% speed
+2024-01-15 06:55:12  cluster1-01  Temp.sensor.high  Temperature sensor PSU-1 reading 78°C
+
+Subsystem Health:
+Subsystem              Status    Details
+SFO                    ok        -
+Storage                warning   Aggregate aggr1: 89% full
+NVMe                   ok        -
+CIFS                   ok        -
+NFS                    ok        -
+iSCSI                  ok        -
+Cluster                ok        -
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: system health alert show`** — Verify you are connected to the NetApp cluster with `cluster show` and have appropriate admin privileges.
+    **`Error: Access denied. Insufficient privileges for this command.`** — Ensure your user account has the "admin" or "security-admin" role assigned via `security login show`.
+    **`Error: No events found matching the specified criteria.`** — Adjust the time filter (e.g., use `-time ">7d"` for the last 7 days) or remove severity filters to broaden results.
 ## AutoSupport Notifications
 
 AutoSupport triggers automatic case creation with NetApp support for critical events. Verify it is configured:
@@ -59,6 +100,18 @@ AutoSupport triggers automatic case creation with NetApp support for critical ev
 system node autosupport show -fields state,support,transport,mail-hosts
 ```
 
+
+```text title="Expected output"
+Node                                   State      Support    Transport      Mail Hosts
+------------------------------------   ---------- ---------- -------------- --------------------------------
+cluster1-01                            enabled    full       https          mail.example.com
+cluster1-02                            enabled    full       https          mail.example.com
+2 entries were displayed.
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: system`** — Ensure you are connected to the NetApp cluster CLI (SSH to the cluster management IP) rather than a local shell.
+    **`Error: This operation is not permitted: insufficient access rights`** — Verify your user account has admin-level privileges; contact your NetApp administrator to grant the required role.
 Expected: `state: enable`, `support: true`.
 
 ## SNMP Alerting
@@ -69,6 +122,31 @@ system snmp show
 system snmp traphost show
 ```
 
+
+```text title="Expected output"
+SNMP is enabled
+
+Community: public
+    Access Level: ro
+    Authentication Protocol: none
+
+Community: netapp-monitor
+    Access Level: ro
+    Authentication Protocol: sha
+    Privacy Protocol: aes128
+
+Trap Host: 192.168.1.100
+    Port: 162
+    Community: public
+
+Trap Host: 10.20.30.40
+    Port: 162
+    Community: netapp-monitor
+```
+
+!!! warning "Common errors"
+    **`Error: This command requires admin or vsadmin privileges`** — Run the command with appropriate cluster admin credentials or from a node with sufficient permissions.
+    **`Error: SNMP is not configured on this cluster`** — Enable SNMP first using `system snmp modify -enabled true` before querying trap hosts.
 Verify trap destinations are configured to route to your monitoring platform (SCOM, Zabbix, etc.).
 
 ## BlueXP Alerts (Keystone / Cloud Manager)
@@ -99,6 +177,35 @@ system health alert modify -node <node> -alert-id <id> -acknowledge true
 system health alert delete -node <node> -alert-id <id>
 ```
 
+
+```text title="Expected output"
+Cluster Name: prod-cluster-01
+Node: node-01
+Alert ID: DiskShelfPowerSupply.5.1a2b3c4d
+Severity: Major
+Description: Power supply failure detected in disk shelf SH-01
+Status: New
+Triggered Time: 2024-01-15 14:32:18
+
+Node: node-02
+Alert ID: HighCPUUtilization.2.5e6f7g8h
+Severity: Minor
+Description: CPU utilization above 85% threshold
+Status: New
+Triggered Time: 2024-01-15 14:28:45
+
+Node: node-01
+Alert ID: DiskShelfPowerSupply.5.1a2b3c4d
+Status: Acknowledged
+Acknowledged by: admin
+Acknowledged Time: 2024-01-15 14:35:22
+
+Alert DiskShelfPowerSupply.5.1a2b3c4d deleted successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Node "<node>" not found in cluster`** — Verify the node name matches output from `cluster show` and use the correct node identifier.
+    **`Error: Alert ID "<id>" does not exist or has already been deleted`** — Confirm the alert ID is still active using `system health alert show` before attempting deletion.
 ## Common Alerts
 
 | Alert | Cause | Resolution |

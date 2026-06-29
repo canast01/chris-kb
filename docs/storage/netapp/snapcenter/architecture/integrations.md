@@ -88,6 +88,45 @@ curl -sk -X GET "https://<snapcenter-server>:8146/api/3.0/resourcegroups" \
   -H "token: <auth-token>" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwMjQwMTIzNCwiZXhwIjoxNzAyNDA0ODM0fQ.kX9mZ2pL5nQ8vR3wT6yJ2aB4cD7eF9gH1iK3lM5nO7p",
+  "UserName": "admin",
+  "Rolename": "SnapCenter Admin"
+}
+{
+  "ResourceGroups": [
+    {
+      "Id": "rg-001",
+      "Name": "prod-db-backup",
+      "Description": "Production database daily backups",
+      "HostNames": ["db-server-01.corp.local", "db-server-02.corp.local"],
+      "ResourceType": "SQL Server Database"
+    },
+    {
+      "Id": "rg-002",
+      "Name": "vmware-vms",
+      "Description": "VMware virtual machines",
+      "HostNames": ["esx-host-03.corp.local"],
+      "ResourceType": "VMware"
+    },
+    {
+      "Id": "rg-003",
+      "Name": "oracle-prod",
+      "Description": "Oracle production databases",
+      "HostNames": ["oracle-db-01.corp.local"],
+      "ResourceType": "Oracle Database"
+    }
+  ],
+  "TotalResourceGroups": 3
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's included if removed).
+    **`{"Error":"Invalid token or token expired"}`** — Regenerate the auth token by re-running the login command and ensure the token value is copied exactly without extra whitespace.
+    **`{"Error":"User 'admin' does not have permission to access resourcegroups"}`** — Verify the user account has the SnapCenter Admin role assigned in the SnapCenter UI under Settings > Users.
 ## Oracle Plugin Integration
 
 The SnapCenter Plug-in for Oracle communicates with the Oracle database via OS authentication (SYSDBA) to quiesce the database before snapshot. Requirements:

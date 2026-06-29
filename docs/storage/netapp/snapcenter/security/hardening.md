@@ -111,6 +111,92 @@ security login show -username svc-snapcenter
 security login role show -role sc-backup-role
 ```
 
+
+```text title="Expected output"
+cluster1::> security login role create -role sc-backup-role -cmddirname "DEFAULT" \
+    -access none -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login role create -role sc-backup-role -cmddirname "volume" \
+    -access all -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login role create -role sc-backup-role -cmddirname "snapshot" \
+    -access all -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login role create -role sc-backup-role -cmddirname "snapmirror" \
+    -access all -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login role create -role sc-backup-role -cmddirname "lun" \
+    -access all -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login role create -role sc-backup-role -cmddirname "lun igroup" \
+    -access all -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login role create -role sc-backup-role -cmddirname "vserver export-policy" \
+    -access all -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login role create -role sc-backup-role -cmddirname "storage aggregate" \
+    -access readonly -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login role create -role sc-backup-role -cmddirname "network interface" \
+    -access readonly -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login role create -role sc-backup-role -cmddirname "event log" \
+    -access readonly -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login create \
+    -username svc-snapcenter \
+    -application ontapi \
+    -authentication-method password \
+    -role sc-backup-role \
+    -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login create \
+    -username svc-snapcenter \
+    -application http \
+    -authentication-method password \
+    -role sc-backup-role \
+    -vserver cluster1
+(no output — command completes silently)
+
+cluster1::> security login show -username svc-snapcenter
+Vserver: cluster1
+User Name: svc-snapcenter
+Application: ontapi
+Authentication Method: password
+Role Name: sc-backup-role
+Account Locked: false
+Vserver: cluster1
+User Name: svc-snapcenter
+Application: http
+Authentication Method: password
+Role Name: sc-backup-role
+Account Locked: false
+
+cluster1::> security login role show -role sc-backup-role
+Role Name: sc-backup-role
+Vserver: cluster1
+Command/Directory Name: DEFAULT
+Access Level: none
+Role Name: sc-backup-role
+Vserver: cluster1
+Command/Directory Name: volume
+Access Level: all
+Role Name: sc-backup-role
+Vserver: cluster1
+Command/Directory Name: snapshot
+Access Level:
+```
 ---
 
 ## Windows Server Hardening Baseline (SnapCenter Host)

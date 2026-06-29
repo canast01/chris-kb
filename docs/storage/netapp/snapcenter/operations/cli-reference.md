@@ -132,6 +132,25 @@ TOKEN=$(curl -sk -X POST https://snapcenter.example.com/api/4.9/auth/login \
   | jq -r '.Token')
 ```
 
+
+```text title="Expected output"
+{
+  "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTMxNjU0MiwiZXhwIjoxNzA5MzIwMTQyfQ.kX9mZ2pQrL5vN8wJqK3hY7bX4cD6eF9gH2jM1nO5sT",
+  "UserOperationContext": {
+    "User": {
+      "Name": "admin",
+      "Rolename": "SnapCenterAdmin"
+    }
+  },
+  "ServerVersion": "4.9.0.24680",
+  "Timestamp": "2024-03-01T14:42:22.156Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify snapcenter.example.com hostname matches certificate CN).
+    **`jq: parse error: Cannot index string with string "Token"`** — Ensure the login request succeeds and returns valid JSON; check credentials and SnapCenter API endpoint availability with `curl -sk https://snapcenter.example.com/api/4.9/auth/login -X OPTIONS`.
+    **`command not found: jq`** — Install jq with `apt-get install jq` (Ubuntu/Debian) or `yum install jq` (RHEL/CentOS), or use `python3 -m json.tool` to parse JSON instead.
 ### Jobs
 
 ```bash
@@ -144,6 +163,43 @@ curl -sk -X GET "https://snapcenter.example.com/api/4.9/jobs/12345" \
   -H "token: $TOKEN" | jq .
 ```
 
+
+```text title="Expected output"
+{
+  "JobId": 12345,
+  "JobType": "Backup",
+  "Status": "Completed",
+  "StartTime": "2024-01-15T08:30:22Z"
+}
+{
+  "JobId": 12346,
+  "JobType": "Restore",
+  "Status": "Running",
+  "StartTime": "2024-01-15T09:15:45Z"
+}
+{
+  "JobId": 12344,
+  "JobType": "Verification",
+  "Status": "Failed",
+  "StartTime": "2024-01-15T07:45:10Z"
+}
+{
+  "JobId": 12345,
+  "JobType": "Backup",
+  "Status": "Completed",
+  "StartTime": "2024-01-15T08:30:22Z",
+  "EndTime": "2024-01-15T08:45:33Z",
+  "Duration": "PT15M11S",
+  "ResourceName": "prod-db-01",
+  "PluginType": "SQL",
+  "ErrorMessage": null
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the SnapCenter certificate into your CA bundle.
+    **`{"error":"Invalid or expired token"}`** — Regenerate the authentication token using SnapCenter's token API and ensure `$TOKEN` variable is properly exported before running the command.
+    **`jq: parse error: Invalid JSON`** — Verify the API endpoint is accessible and responding with valid JSON; check SnapCenter service status with `systemctl status snapcenter`.
 ### Backups via API
 
 ```bash
@@ -162,6 +218,32 @@ curl -sk -X POST "https://snapcenter.example.com/api/4.9/backups" \
   }' | jq '{JobId: .JobId}'
 ```
 
+
+```text title="Expected output"
+{
+  "BackupName": "AdventureWorks_20240115_093045",
+  "BackupTime": "2024-01-15T09:30:45Z",
+  "BackupStatus": "Completed"
+}
+{
+  "BackupName": "AdventureWorks_20240114_093022",
+  "BackupTime": "2024-01-14T09:30:22Z",
+  "BackupStatus": "Completed"
+}
+{
+  "BackupName": "AdventureWorks_20240113_093015",
+  "BackupTime": "2024-01-13T09:30:15Z",
+  "BackupStatus": "Completed"
+}
+{
+  "JobId": "job-8472-5c3e-11ef-a4b2-0050569b8d4c"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the SnapCenter CA certificate into your system trust store.
+    **`jq: error (at <stdin>:1): Cannot index null with string "Backups"`** — Verify the `$TOKEN` variable is set correctly with `echo $TOKEN` and that the SnapCenter API is responding with valid JSON.
+    **`{"error":"Invalid resource name","statusCode":400}`** — Confirm the resource name "AdventureWorks" exists in SnapCenter by listing available resources with `curl -sk -X GET "https://snapcenter.example.com/api/4.9/resources" -H "token: $TOKEN"`.
 ---
 
 ## Verify

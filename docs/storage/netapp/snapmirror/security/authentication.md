@@ -43,6 +43,23 @@ cluster peer show
 # Expected: Auth-Status: ok, Availability: Available
 ```
 
+
+```text title="Expected output"
+cluster peer create -generate-passphrase -offer-expiration 2days -peer-addrs 192.168.1.50
+Passphrase: XK9mL2pQ7vN4rT8wJ5bH6cF3dE1sA9gK
+
+cluster peer create -peer-addrs 192.168.1.40 -passphrase XK9mL2pQ7vN4rT8wJ5bH6cF3dE1sA9gK
+(no output — command completes silently)
+
+cluster peer show
+Peer Cluster Name         Cluster UUID                 Availability   Authentication Status
+------------------------- ---------------------------- -------------- ----------------------
+dst-cluster-02            4a3c5e8b-9f2d-11ed-a1eb-00505682f89e Available      ok
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: Cluster peer create failed. Reason: Connection refused to peer address 192.168.1.50`** — Verify the destination intercluster LIF IP is correct and reachable by pinging it from the source cluster.
+    **`Error: command failed: Cluster peer create failed. Reason: Authentication failed. Invalid passphrase`** — Ensure the passphrase was copied exactly without whitespace and that it matches the one generated on the source cluster.
 ### Establishing an SVM Peer Relationship
 
 SVM peering is required before any volume-level relationship can be created. It uses the already-authenticated cluster peer channel and adds SVM-scope trust.
@@ -57,6 +74,29 @@ vserver peer show -vserver svm_prod
 # Expected: Peer State: peered
 ```
 
+
+```text title="Expected output"
+Vserver Peer: svm_prod
+           Peer Vserver: svm_dr
+           Peer Cluster: dr-cluster
+           Peer State: peered
+           Peer Applications: snapmirror
+           State Description: -
+           First Seen: 2024-01-15 09:23:14 -05:00
+
+Vserver Peer: svm_prod
+           Peer Vserver: svm_dr
+           Peer Cluster: dr-cluster
+           Peer State: peered
+           Peer Applications: snapmirror
+           State Description: -
+           First Seen: 2024-01-15 09:23:14 -05:00
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: Vserver peer relationship already exists.`** — Check existing peer relationships with `vserver peer show` and remove the old one using `vserver peer delete` if needed.
+    **`Error: command failed: Peer cluster dr-cluster is not reachable.`** — Verify cluster peering exists first with `cluster peer show` and ensure network connectivity between clusters on port 11104.
+    **`Error: command failed: Vserver svm_dr does not exist on peer cluster dr-cluster.`** — Confirm the SVM name and cluster name are correct, and create the SVM on the DR cluster if it doesn't exist.
 ### Reviewing and Rotating Peer Authentication
 
 Stale or unused cluster peer relationships should be reviewed annually and removed. Peer relationships persist indefinitely; removing an unused peer eliminates unnecessary trust scope.

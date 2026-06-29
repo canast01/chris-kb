@@ -192,6 +192,21 @@ snapshot show -vserver svm_sql01 -volume vol_sql01_data
 # A snapshot named with the SnapCenter job ID should appear
 ```
 
+
+```text title="Expected output"
+Vserver     Volume            Snapshot                                  Size  State
+----------- ----------------- ----------------------------------------- ------ --------
+svm_sql01   vol_sql01_data    hourly.2024-01-15_0800                   2.1GB valid
+svm_sql01   vol_sql01_data    daily.2024-01-14_2300                    4.3GB valid
+svm_sql01   vol_sql01_data    SnapCenter_sql01-backup_01_20240115_0815 856MB valid
+svm_sql01   vol_sql01_data    weekly.2024-01-08_1900                   7.2GB valid
+svm_sql01   vol_sql01_data    monthly.2023-12-31_0000                  12.5GB valid
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: snapshot`** — Ensure you are connected to the ONTAP cluster CLI (via SSH or console), not the SnapCenter host.
+    **`Vserver "svm_sql01" does not exist`** — Verify the SVM name matches your environment; use `vserver show` to list available SVMs.
+    **`Volume "vol_sql01_data" does not exist`** — Confirm the volume name is correct and exists on the specified SVM using `volume show -vserver svm_sql01`.
 3. Test a restore to confirm the backup is usable:
    - In SnapCenter, select the database, click **Restore**.
    - Choose the latest snapshot as the restore point.

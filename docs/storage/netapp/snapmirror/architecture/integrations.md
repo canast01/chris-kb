@@ -48,6 +48,76 @@ PATCH /api/snapmirror/relationships/{uuid}
 GET /api/snapmirror/relationships/{uuid}/transfers
 ```
 
+
+```text title="Expected output"
+GET /api/snapmirror/relationships
+{
+  "records": [
+    {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "source": {"path": "cluster1.example.com:/vol/source_vol"},
+      "destination": {"path": "cluster2.example.com:/vol/dest_vol"},
+      "state": "snapmirrored",
+      "policy": "MirrorAllSnapshots",
+      "lag_time": 3600
+    },
+    {
+      "uuid": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+      "source": {"path": "cluster1.example.com:/vol/data_prod"},
+      "destination": {"path": "cluster3.example.com:/vol/data_prod_dr"},
+      "state": "snapmirrored",
+      "policy": "DailyBackup",
+      "lag_time": 86400
+    }
+  ],
+  "num_records": 2
+}
+
+POST /api/snapmirror/relationships
+{
+  "job": {
+    "uuid": "7ce8b920-1f3a-11ec-81d3-0242ac130003",
+    "state": "running",
+    "message": "SnapMirror relationship creation in progress"
+  }
+}
+
+PATCH /api/snapmirror/relationships/550e8400-e29b-41d4-a716-446655440000
+{
+  "job": {
+    "uuid": "8df9c031-2g4b-12fd-92e4-1353bd141114",
+    "state": "success",
+    "message": "SnapMirror update completed successfully"
+  }
+}
+
+GET /api/snapmirror/relationships/550e8400-e29b-41d4-a716-446655440000/transfers
+{
+  "records": [
+    {
+      "uuid": "9ea0d142-3h5c-13ge-a3f5-2464ce252225",
+      "state": "success",
+      "bytes_transferred": 1099511627776,
+      "start_time": "2024-01-15T08:30:00Z",
+      "end_time": "2024-01-15T09:45:00Z",
+      "duration": 4500
+    },
+    {
+      "uuid": "aeb1e253-4i6d-14hf-b4g6-3575df363336",
+      "state": "success",
+      "bytes_transferred": 549755813888,
+      "start_time": "2024-01-16T08:30:00Z",
+      "end_time": "2024-01-16T09:15:00Z",
+      "duration": 2700
+    }
+  ],
+  "num_records": 2
+}
+```
+
+!!! warning "Common errors"
+    **`Error: 13001 - Relationship does not exist`** — Verify the UUID is correct by listing all relationships with `GET /api/snapmirror/relationships`.
+    **`Error: 14002 - Source volume is offline`** — Check source cluster health and ensure the source volume is online before creating or updating the relationship.
 Authenticate with HTTP Basic or cluster-scoped API tokens. Use the ONTAP REST API documentation at `https://<cluster-mgmt>/docs/api` for interactive exploration.
 
 ---

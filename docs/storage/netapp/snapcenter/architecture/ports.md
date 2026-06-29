@@ -75,6 +75,21 @@ nc -zv <snapcenter-server> 8145
 showmount -e <ontap-nfs-lif>
 ```
 
+
+```text title="Expected output"
+200
+200
+Connection to snapcenter-prod.corp.local 8145 port [tcp/*] succeeded!
+Export list for 192.168.42.50:
+/vol/backup_nfs           192.168.40.0/24
+/vol/snapcenter_logs      192.168.40.0/24
+/vol/plugin_staging       192.168.40.0/24
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed).
+    **`Connection refused`** — Verify SnapCenter Server is running with `systemctl status snapcenter` and firewall rules allow port 8145 from plugin host.
+    **`showmount: clnt_create: RPC: Program not registered`** — Confirm NFS service is enabled on ONTAP LIF and the LIF is reachable; check `network interface show -vserver <svm>` for correct NFS LIF IP.
 ## See also
 
 - [NetApp SnapCenter — Architecture](../how-it-works/)

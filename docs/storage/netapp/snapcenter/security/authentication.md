@@ -193,6 +193,18 @@ snapcenter ALL=(ALL) NOPASSWD: /bin/mount, /bin/umount, /sbin/multipath, \
 sudo -l -U snapcenter
 ```
 
+
+```text title="Expected output"
+Matching Entries for user snapcenter on this host:
+    RunAsUsers: ALL
+    Commands:
+	(ALL) NOPASSWD: /bin/mount, /bin/umount, /sbin/multipath, /sbin/fdisk, /usr/sbin/dmsetup, /opt/NetApp/snapcenter/spl/bin/*
+```
+
+!!! warning "Common errors"
+    **`sudo: user snapcenter does not exist in the passwd file`** — Create the snapcenter user first with `useradd -m -s /bin/bash snapcenter` before adding sudoers entries.
+    **`>>> /etc/sudoers: syntax error near line X`** — Use `visudo` instead of a text editor to validate syntax, or run `sudo visudo` to fix the malformed entry.
+    **`sudo: sorry, you must have a tty to run sudo`** — Add `Defaults:snapcenter !requiretty` to the sudoers file to allow non-interactive sudo execution by the SnapCenter plugin.
 ---
 
 ## Session and Token Management
@@ -224,6 +236,42 @@ curl -sk -X POST "https://snapcenter.example.com/api/4.9/auth/logout" \
     -H "token: $TOKEN"
 ```
 
+
+```text title="Expected output"
+{
+  "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTMxNDU2MiwiZXhwIjoxNzA5MzE4MTYyfQ.kR9mL2pQxZ8vN4jK6wL1sT5uY9aB3cD7eF8gH2iJ0kL",
+  "Expires": 3600
+}
+{
+  "ResourceGroups": [
+    {
+      "Id": "rg-001",
+      "Name": "Production-DB-Backup",
+      "Description": "Daily backups for production databases",
+      "CreatedTime": "2024-03-01T08:15:22Z"
+    },
+    {
+      "Id": "rg-002",
+      "Name": "VMware-VMs",
+      "Description": "Virtual machine snapshots",
+      "CreatedTime": "2024-02-28T14:30:45Z"
+    },
+    {
+      "Id": "rg-003",
+      "Name": "Exchange-Mailbox",
+      "Description": "Exchange database protection",
+      "CreatedTime": "2024-02-27T10:22:18Z"
+    }
+  ],
+  "Total": 3
+}
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the SnapCenter certificate into your system's trusted store.
+    **`{"Error":"Invalid credentials","ErrorCode":401}`** — Verify the username, password, and role name are correct in the UserOperationContext JSON payload.
+    **`curl: (7) Failed to connect to snapcenter.example.com port 443: Connection refused`** — Confirm the SnapCenter server hostname/IP and port are correct, and that the SnapCenter API service is running.
 For automation scripts, always log out at the end of the script to invalidate the token. Do not hardcode credentials in scripts — retrieve them from a secrets vault at runtime.
 ---
 

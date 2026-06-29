@@ -70,6 +70,28 @@ system node autosupport invoke -node * -type all -message "Opening case for <iss
 system node autosupport history show | head -20
 ```
 
+
+```text title="Expected output"
+node-01: Autosupport message posted successfully.
+node-02: Autosupport message posted successfully.
+
+Node     Seq Num   Date                     Subject
+-------- --------- ------------------------ -----------------------------------------------
+node-01  847       11/15/2024 14:32:15 UTC  AutoSupport INVOKE: Opening case for disk failure
+node-01  846       11/15/2024 13:18:42 UTC  WEEKLY AUTOSUPPORT
+node-01  845       11/14/2024 22:05:33 UTC  DAILY AUTOSUPPORT
+node-02  923       11/15/2024 14:32:18 UTC  AutoSupport INVOKE: Opening case for disk failure
+node-02  922       11/15/2024 13:19:01 UTC  WEEKLY AUTOSUPPORT
+node-02  921       11/14/2024 22:06:12 UTC  DAILY AUTOSUPPORT
+node-02  920       11/13/2024 10:44:27 UTC  DAILY AUTOSUPPORT
+node-01  844       11/13/2024 10:43:55 UTC  DAILY AUTOSUPPORT
+...
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: system`** — Ensure you are logged into the NetApp cluster management interface (SSH to the cluster IP), not a Linux host.
+    **`Error: AutoSupport is not enabled`** — Enable AutoSupport with `system node autosupport modify -node * -state enable` before invoking.
+    **`Error: Invalid node name "*"`** — Replace `*` with specific node names (e.g., `node-01 node-02`) if wildcard expansion fails in your shell context.
 ## Information to Include in a Case
 
 - Array serial number and system name

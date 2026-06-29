@@ -126,6 +126,25 @@ esac
 exit $worst
 ```
 
+
+```text title="Expected output"
+=== SnapMirror Lag Report: dst-cluster.example.com ===
+Thresholds — WARN: 30 min  |  CRIT: 60 min
+
+RELATIONSHIP                                            LAG (min)  HEALTHY  STATUS
+----------------------------------------------------------------------------------------------------
+src-cluster.example.com:/vol/data01 -> dst-cluster.example.com:/vol/data01_mirror          12  true     OK
+src-cluster.example.com:/vol/data02 -> dst-cluster.example.com:/vol/data02_mirror          45  true     WARNING  (lag=45m >= 30m)
+src-cluster.example.com:/vol/logs -> dst-cluster.example.com:/vol/logs_mirror              78  false    CRITICAL (unhealthy)
+src-cluster.example.com:/vol/archive -> dst-cluster.example.com:/vol/archive_mirror        8   true     OK
+
+CRITICAL: One or more relationships are unhealthy or exceed the critical lag threshold.
+```
+
+!!! warning "Common errors"
+    **`ERROR: sshpass is required (brew install hudochenkov/sshpass/sshpass)`** — Install sshpass via your package manager (apt-get install sshpass on Linux, or brew install hudochenkov/sshpass/sshpass on macOS).
+    **`Permission denied (publickey,password).`** — Verify ONTAP_USER and ONTAP_PASS are correct and the user has cluster admin or snapmirror admin privileges.
+    **`ssh: Could not resolve hostname dst-cluster.example.com: Name or service not known`** — Ensure ONTAP_HOST is set to a resolvable FQDN or IP address of the destination cluster management interface.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -166,6 +185,37 @@ cd /mnt/c/Users/YourName/Desktop
 bash sm_lag_monitor.sh
 ```
 
+
+```text title="Expected output"
+SnapMirror Lag Monitor v2.1
+Connected to ONTAP cluster: cluster1.example.com (192.168.1.100)
+Authenticated as: admin
+
+Relationship: vol_prod_01 → vol_prod_01_dr
+  Status: SnapMirrored
+  Last Transfer: 2024-01-15 14:32:18 UTC
+  Lag Time: 2 hours 14 minutes
+  Transfer Rate: 45.2 MB/s
+
+Relationship: vol_data_02 → vol_data_02_dr
+  Status: SnapMirrored
+  Last Transfer: 2024-01-15 14:28:05 UTC
+  Lag Time: 2 hours 18 minutes
+  Transfer Rate: 38.7 MB/s
+
+Relationship: vol_logs_03 → vol_logs_03_dr
+  Status: Transferring
+  Last Transfer: 2024-01-15 14:45:22 UTC
+  Lag Time: 18 minutes
+  Transfer Rate: 62.1 MB/s
+
+Monitor completed successfully. Next check in 300 seconds.
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Verify the ONTAP management IP is correct and the cluster API is accessible on port 443.
+    **`Error: Invalid credentials for user 'admin'`** — Confirm ONTAP_USER and ONTAP_PASS environment variables match the cluster admin account credentials.
+    **`bash: sm_lag_monitor.sh: No such file or directory`** — Ensure the script exists in the current directory (/mnt/c/Users/YourName/Desktop) or provide the full path to the script.
 **What you should see**
 
 A table listing every SnapMirror relationship with source path, destination path, lag in minutes, healthy flag, and a colour-coded status: green OK, yellow WARNING, red CRITICAL. A summary line at the bottom shows the overall worst state.
@@ -243,6 +293,34 @@ done
 log "Failover complete. Log saved to: $LOG_FILE"
 ```
 
+
+```text title="Expected output"
+[2024-01-15 14:32:18] === SnapMirror Planned DR Failover ===
+[2024-01-15 14:32:18] Destination cluster : dr-cluster
+[2024-01-15 14:32:18] Destination SVM     : svm_dr
+[2024-01-15 14:32:18] Volumes             : vol1 vol2 vol3
+[2024-01-15 14:32:18] Log file            : /var/log/dr_failover_20240115_143218.log
+Proceed with DR failover? This will make destination volumes read-write. [yes/NO]: yes
+[2024-01-15 14:32:20] Step 1: Quiescing SnapMirror relationships...
+[2024-01-15 14:32:20]   Quiescing svm_dr:vol1
+[2024-01-15 14:32:21]   Quiescing svm_dr:vol2
+[2024-01-15 14:32:22]   Quiescing svm_dr:vol3
+[2024-01-15 14:32:23] Step 2: Waiting 30s for in-flight transfers to complete...
+[2024-01-15 14:32:53] All transfers appear stopped. Proceed to break relationships? [yes/NO]: yes
+[2024-01-15 14:32:55] Step 3: Breaking SnapMirror relationships...
+[2024-01-15 14:32:55]   Breaking svm_dr:vol1
+[2024-01-15 14:32:56]   svm_dr:vol1 is now read-write
+[2024-01-15 14:32:57]   Breaking svm_dr:vol2
+[2024-01-15 14:32:58]   svm_dr:vol2 is now read-write
+[2024-01-15 14:32:59]   Breaking svm_dr:vol3
+[2024-01-15 14:33:00]   svm_dr:vol3 is now read-write
+[2024-01-15 14:33:01] Failover complete. Log saved to: /var/log/dr_failover_20240115_143218.log
+```
+
+!!! warning "Common errors"
+    **`ERROR: sshpass is required.`** — Install sshpass with `apt-get install sshpass` (Ubuntu/Debian) or `yum install sshpass` (RHEL/CentOS).
+    **`Permission denied (publickey,password).`** — Verify ONTAP_USER and ONTAP_PASS are correct and the user has SSH access to the destination cluster.
+    **`ERROR: Failed to break <destination-path> — manual intervention required`** — Check cluster connectivity and ensure the SnapMirror relationship exists; manually run `snapmirror break -destination-path <path> -force` on the destination cluster.
 ---
 
 ## Relationship Health Report (Perl)

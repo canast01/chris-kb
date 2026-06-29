@@ -78,6 +78,43 @@ snapmirror history show -fields source-path,destination-path,status,transfer-siz
 snapmirror show -type sync -fields lag-time,healthy,is-healthy
 ```
 
+
+```text title="Expected output"
+Source Path                 Destination Path            Lag Time State    Healthy Last Transfer End Timestamp
+-------------------------------- -------------------------------- -------- -------- ------- --------------------------------
+cluster1:vol_prod_01        cluster2:vol_prod_01_mirror  00:15:32 snapmirrored true    2024-01-15 14:32:18 -05:00
+cluster1:vol_data_02        cluster2:vol_data_02_mirror  00:08:45 snapmirrored true    2024-01-15 14:39:05 -05:00
+cluster1:vol_test_03        cluster2:vol_test_03_mirror  02:22:10 snapmirrored false   2024-01-15 12:25:33 -05:00
+cluster1:vol_archive_04     cluster2:vol_archive_04_mr   06:45:22 snapmirrored true    2024-01-15 08:02:11 -05:00
+
+Lag Time State    Healthy
+-------- -------- -------
+02:22:10 snapmirrored false
+
+Relationship Status
+-------------------
+broken-off
+
+Source Path         Destination Path        Lag Time State    Healthy
+------------------- ----------------------- -------- -------- -------
+cluster1:vol_vault  cluster2:vol_vault_xdp  00:03:18 snapmirrored true
+
+Source Path              Destination Path         Status    Transfer Size
+------------------------ ------------------------ ---------- ----------------
+cluster1:vol_prod_01     cluster2:vol_prod_01_m   Success   524.2MB
+cluster1:vol_data_02     cluster2:vol_data_02_m   Success   1.8GB
+cluster1:vol_test_03     cluster2:vol_test_03_m   Failed    0B
+cluster1:vol_archive_04  cluster2:vol_archive_04  Success   256.5MB
+
+Lag Time State    Healthy Is-Healthy
+-------- -------- ------- -----------
+00:02:15 in-sync  true    true
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: snapmirror`** — Ensure you are logged into the ONTAP cluster CLI (SSH to cluster management IP) and not a local shell.
+    **`Error: There are no entries matching your query`** — Verify the relationship exists with `snapmirror show` and confirm the filter criteria (e.g., `-health-status unhealthy`) matches actual relationships.
+    **`Error: Invalid field name "is-healthy"`** — Use `healthy` instead of `is-healthy` for SnapMirror Asynchronous relationships; `is-healthy` is only valid for Synchronous relationships.
 ## Relationship States
 
 ![Relationship States](../../../../assets/storage-netapp-snapmirror-hc-relationship-states.svg)
@@ -103,6 +140,20 @@ Lag time is the age of the last successful transfer. For async SnapMirror:
 snapmirror show -fields lag-time
 ```
 
+
+```text title="Expected output"
+Source Destination Lag Time
+vserver1:vol_data vserver2:vol_data_mirror 00:15:32
+vserver1:vol_logs vserver2:vol_logs_mirror 00:08:47
+vserver1:vol_archive vserver2:vol_archive_mirror 02:34:19
+vserver3:vol_prod vserver4:vol_prod_dr 00:22:11
+vserver3:vol_temp vserver4:vol_temp_mirror 01:45:56
+```
+
+!!! warning "Common errors"
+    **`Error: command not found`** — Ensure you are logged into the NetApp cluster CLI (ssh to cluster IP) rather than a Linux shell.
+    **`Error: Invalid field name "lag-time"`** — Use the correct field name `lag-time` or run `snapmirror show -fields ?` to list available fields for your ONTAP version.
+    **`No SnapMirror relationships found`** — Verify that SnapMirror relationships exist on this cluster by running `snapmirror list-destinations` first.
 ---
 
 ## Verify
