@@ -2871,6 +2871,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#linux-connectivity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux Connectivity Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#verify" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -8267,6 +8278,26 @@ Daily operations centre on replication health and authentication event monitorin
 <li>Confirm DC OS patch levels are current</li>
 </ul>
 <hr />
+<h2 id="linux-connectivity-check">Linux Connectivity Check<a class="headerlink" href="#linux-connectivity-check" title="Permanent link">&para;</a></h2>
+<p>Run from any Linux host joined to the domain or with network access to a DC:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify AD DNS SRV records resolve (replace example.com with your domain)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>nslookup<span class="w"> </span>-type<span class="o">=</span>SRV<span class="w"> </span>_ldap._tcp.example.com
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>nslookup<span class="w"> </span>-type<span class="o">=</span>SRV<span class="w"> </span>_kerberos._tcp.example.com
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Confirm LDAP port reachable on each DC</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">for</span><span class="w"> </span>DC<span class="w"> </span><span class="k">in</span><span class="w"> </span>dc01.example.com<span class="w"> </span>dc02.example.com<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>nc<span class="w"> </span>-zv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DC</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">389</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DC</span><span class="s2"> LDAP OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DC</span><span class="s2"> LDAP FAIL&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="k">done</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>_ldap._tcp.example.com  service = 0 100 389 dc01.example.com.
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>_ldap._tcp.example.com  service = 0 100 389 dc02.example.com.
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>_kerberos._tcp.example.com  service = 0 100 88 dc01.example.com.
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Connection to dc01.example.com 389 port [tcp/ldap] succeeded!
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>dc01.example.com LDAP OK
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Connection to dc02.example.com 389 port [tcp/ldap] succeeded!
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>dc02.example.com LDAP OK
+</code></pre></div>
+<hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Confirm the operation completed without errors in the log or management UI</li>
@@ -8302,7 +8333,7 @@ Daily operations centre on replication health and authentication event monitorin
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:38:21 UTC"><span class="timeago" datetime="2026-06-28T23:38:21+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:38:21 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
   </span>
 
     

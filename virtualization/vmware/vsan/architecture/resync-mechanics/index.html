@@ -2794,6 +2794,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#resync-and-the-stretched-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resync and the Stretched Cluster
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -9626,36 +9637,31 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Look for &quot;type&quot; field: DELTA vs FULL</span>
 </code></pre></div>
-<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Resync UUID                          Object UUID                      Type  Progress
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Resync UUID                          Object UUID                      Type  Progress
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>52a4c8f1-7e3a-4d2b-9f1c-3b8a2c5d9e1f 6f2d1a4c-8b3e-5f9c-2a7d-1e4b3c8f5a9d DELTA 45%
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>7c9e2f3a-1b5d-8a4c-6e2f-9d3a1c5b7e8f a1f4c7e2-3b9d-5a8c-1f6e-4d2a7c9b3e5f DELTA 78%
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>9f1c3e5a-2d7b-4a8f-6c1e-3b9d5f2a7c4e c5a2f8d1-7e3b-9c4a-2f6d-8a1e5b3c7f9d FULL 12%
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>3d6a1f8c-5e2b-9a4d-7c3f-1e8b2a5d9c6f 2e7a4f1c-9b3d-6a8e-5c2f-1d4a7b9e3c6f DELTA 92%
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>1a4c7e9f-3b2d-8f5a-6e1c-4d9b2f3a7c5e 8f2c5a9d-1e7b-4f3a-6c8d-2a9e1b5f3c7d DELTA 56%
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>!!! warning &quot;Common errors&quot;
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    **`error: Unknown command or namespace`** — Ensure you are running this command on an ESXi host with vSAN enabled; the vsan namespace may not be available on non-vSAN clusters.
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    **`error: Unable to connect to the local vSAN cluster`** — Verify the host is part of an active vSAN cluster and has network connectivity to other cluster members.
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Delta-sync is why a host that returns from a short reboot syncs in minutes, while a replacement disk might take hours — even if the object sizes are identical.
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>---
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>## Resync and the Stretched Cluster
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>In a stretched cluster, resync has an additional dimension: **site preference**. CLOM prefers to rebuild components within the preferred site first, then the secondary site.
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>During an inter-site network partition:
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>- The preferred site + witness have quorum → VMs continue
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>- Components on the isolated site become ABSENT
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>- After `clomRepairDelay`, CLOM rebuilds those components on the preferred site
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>- When the partition resolves, CLOM must re-synchronise the isolated site back
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>This can trigger large resync volumes after a site partition event. Monitor inter-site bandwidth carefully — the vSAN stretched cluster replication link carries both VM write traffic and resync traffic.
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>```bash
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a># Check inter-site resync specifically (stretched cluster)
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>esxcli vsan debug resync list | grep -i &quot;remote\|site&quot;
-</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>error: Unknown command or namespace</code></strong> — Ensure you are running this command on an ESXi host with vSAN enabled; the vsan namespace may not be available on non-vSAN clusters.
+<strong><code>error: Unable to connect to the local vSAN cluster</code></strong> — Verify the host is part of an active vSAN cluster and has network connectivity to other cluster members.</p>
+</div>
+<p>Delta-sync is why a host that returns from a short reboot syncs in minutes, while a replacement disk might take hours — even if the object sizes are identical.</p>
+<hr />
+<h2 id="resync-and-the-stretched-cluster">Resync and the Stretched Cluster<a class="headerlink" href="#resync-and-the-stretched-cluster" title="Permanent link">&para;</a></h2>
+<p>In a stretched cluster, resync has an additional dimension: <strong>site preference</strong>. CLOM prefers to rebuild components within the preferred site first, then the secondary site.</p>
+<p>During an inter-site network partition:
+- The preferred site + witness have quorum → VMs continue
+- Components on the isolated site become ABSENT
+- After <code>clomRepairDelay</code>, CLOM rebuilds those components on the preferred site
+- When the partition resolves, CLOM must re-synchronise the isolated site back</p>
+<p>This can trigger large resync volumes after a site partition event. Monitor inter-site bandwidth carefully — the vSAN stretched cluster replication link carries both VM write traffic and resync traffic.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check inter-site resync specifically (stretched cluster)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;remote\|site&quot;</span>
+</code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>RemoteSyncProgress: 98.5%
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>RemoteSiteLatency: 12.3ms
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>RemoteSyncObjects: 1247
@@ -9691,7 +9697,7 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:24:38 UTC"><span class="timeago" datetime="2026-06-29T03:24:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:24:38 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
   </span>
 
     

@@ -2658,6 +2658,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#dm-multipath-conflict-on-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DM-Multipath Conflict on Linux
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-issues-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -9318,7 +9329,7 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="c1"># Cisco MDS:</span>
 <a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4<span class="w">  </span><span class="c1"># look for link_failures, sync_loss</span>
 </code></pre></div>
-<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Jan 15 10:23:45 storage-01 kernel: emcp: (Class:01 Code:00.04.02) SCSI Path Event: Path Dead - dev=emcpowerb, port=0, target=500143800000001a
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Jan 15 10:23:45 storage-01 kernel: emcp: (Class:01 Code:00.04.02) SCSI Path Event: Path Dead - dev=emcpowerb, port=0, target=500143800000001a
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Jan 15 10:23:47 storage-01 kernel: emcp: (Class:01 Code:00.04.03) SCSI Path Event: Path Restored - dev=emcpowerb, port=0, target=500143800000001a
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Jan 15 10:24:12 storage-01 kernel: PowerPath: Logical device emcpowerb (EMC SYMMETRIX) path failover completed
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Jan 15 10:25:33 storage-01 kernel: emcp: Path Dead - dev=emcpowerc, port=1, target=500143800000001b
@@ -9344,53 +9355,49 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 <a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a>Portname: 0
 <a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>Port_ID: 050601
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>!!! warning &quot;Common errors&quot;
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    **`grep: /var/log/messages: No such file or directory`** — Check the correct syslog location with `ls /var/log/syslog* /var/log/messages*` as it varies by distribution.
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    **`cat: /sys/class/fc_host/host0/statistics/link_failure_count: No such file or directory`** — Verify the HBA is present with `ls /sys/class/fc_host/` and adjust the host number accordingly.
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    **`powermt: command not found`** — Install EMC PowerPath with `rpm -ivh PowerPath*.rpm` or verify the installation path with `which powermt`.
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>**Root cause and resolution:** Path flapping is a physical layer symptom. Common causes:
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>- Marginal SFP (transmit power below threshold intermittently)
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>- Damaged or contaminated FC cable or connector
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>- Oversubscribed switch port (BBCR/BBSCN issues)
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>- HBA SFP compatibility issue with the switch optic
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>Replace the suspect SFP or cable. After the physical fix, run `powermt restore` and monitor for 30–60 minutes.
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>---
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>
-<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>## DM-Multipath Conflict on Linux
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>
-<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>**Symptom:** Both `multipathd` and PowerPath are running on the same host. Duplicate devices appear (`/dev/emcpower*` and `/dev/mapper/*` for the same LUN). I/O errors or inconsistency may occur.
-<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>
-<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>```bash
-<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a># Confirm multipathd is running
-<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>systemctl status multipathd
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>grep: /var/log/messages: No such file or directory</code></strong> — Check the correct syslog location with <code>ls /var/log/syslog* /var/log/messages*</code> as it varies by distribution.
+<strong><code>cat: /sys/class/fc_host/host0/statistics/link_failure_count: No such file or directory</code></strong> — Verify the HBA is present with <code>ls /sys/class/fc_host/</code> and adjust the host number accordingly.
+<strong><code>powermt: command not found</code></strong> — Install EMC PowerPath with <code>rpm -ivh PowerPath*.rpm</code> or verify the installation path with <code>which powermt</code>.</p>
+</div>
+<p><strong>Root cause and resolution:</strong> Path flapping is a physical layer symptom. Common causes:
+- Marginal SFP (transmit power below threshold intermittently)
+- Damaged or contaminated FC cable or connector
+- Oversubscribed switch port (BBCR/BBSCN issues)
+- HBA SFP compatibility issue with the switch optic</p>
+<p>Replace the suspect SFP or cable. After the physical fix, run <code>powermt restore</code> and monitor for 30–60 minutes.</p>
+<hr />
+<h2 id="dm-multipath-conflict-on-linux">DM-Multipath Conflict on Linux<a class="headerlink" href="#dm-multipath-conflict-on-linux" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Both <code>multipathd</code> and PowerPath are running on the same host. Duplicate devices appear (<code>/dev/emcpower*</code> and <code>/dev/mapper/*</code> for the same LUN). I/O errors or inconsistency may occur.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Confirm multipathd is running</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>multipathd
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Check if Dell/EMC devices are claimed by DM-Multipath</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;DGC|EMC|SYMMETRIX&quot;</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Add blacklist entries to /etc/multipath.conf</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="c1"># (Edit the file and add the following inside the blacklist section)</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># blacklist {</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1">#     device {</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1">#         vendor &quot;DGC&quot;</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="c1">#         product &quot;.*&quot;</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1">#     }</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="c1">#     device {</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="c1">#         vendor &quot;EMC&quot;</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="c1">#         product &quot;SYMMETRIX&quot;</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="c1">#     }</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="c1"># }</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="c1"># Reload multipathd to apply blacklist</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>multipathd
 <a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>
-<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a># Check if Dell/EMC devices are claimed by DM-Multipath
-<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>multipath -ll | grep -iE &quot;DGC|EMC|SYMMETRIX&quot;
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="c1"># Confirm Dell/EMC devices are no longer in multipath -ll</span>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;DGC|EMC|SYMMETRIX&quot;</span>
 <a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>
-<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a># Add blacklist entries to /etc/multipath.conf
-<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a># (Edit the file and add the following inside the blacklist section)
-<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a># blacklist {
-<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a>#     device {
-<a id="__codelineno-20-30" name="__codelineno-20-30" href="#__codelineno-20-30"></a>#         vendor &quot;DGC&quot;
-<a id="__codelineno-20-31" name="__codelineno-20-31" href="#__codelineno-20-31"></a>#         product &quot;.*&quot;
-<a id="__codelineno-20-32" name="__codelineno-20-32" href="#__codelineno-20-32"></a>#     }
-<a id="__codelineno-20-33" name="__codelineno-20-33" href="#__codelineno-20-33"></a>#     device {
-<a id="__codelineno-20-34" name="__codelineno-20-34" href="#__codelineno-20-34"></a>#         vendor &quot;EMC&quot;
-<a id="__codelineno-20-35" name="__codelineno-20-35" href="#__codelineno-20-35"></a>#         product &quot;SYMMETRIX&quot;
-<a id="__codelineno-20-36" name="__codelineno-20-36" href="#__codelineno-20-36"></a>#     }
-<a id="__codelineno-20-37" name="__codelineno-20-37" href="#__codelineno-20-37"></a># }
-<a id="__codelineno-20-38" name="__codelineno-20-38" href="#__codelineno-20-38"></a>
-<a id="__codelineno-20-39" name="__codelineno-20-39" href="#__codelineno-20-39"></a># Reload multipathd to apply blacklist
-<a id="__codelineno-20-40" name="__codelineno-20-40" href="#__codelineno-20-40"></a>systemctl reload multipathd
-<a id="__codelineno-20-41" name="__codelineno-20-41" href="#__codelineno-20-41"></a>
-<a id="__codelineno-20-42" name="__codelineno-20-42" href="#__codelineno-20-42"></a># Confirm Dell/EMC devices are no longer in multipath -ll
-<a id="__codelineno-20-43" name="__codelineno-20-43" href="#__codelineno-20-43"></a>multipath -ll | grep -iE &quot;DGC|EMC|SYMMETRIX&quot;
-<a id="__codelineno-20-44" name="__codelineno-20-44" href="#__codelineno-20-44"></a>
-<a id="__codelineno-20-45" name="__codelineno-20-45" href="#__codelineno-20-45"></a># If multipathd is not needed on this host
-<a id="__codelineno-20-46" name="__codelineno-20-46" href="#__codelineno-20-46"></a>systemctl disable --now multipathd
-</code></pre></div></p>
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a><span class="c1"># If multipathd is not needed on this host</span>
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>multipathd
+</code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>● multipathd.service - Device-Mapper Multipath Daemon
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>     Loaded: loaded (/usr/lib/systemd/system/multipathd.service; enabled; vendor preset: enabled)
 <a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
@@ -9523,7 +9530,7 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 04:17:07 UTC"><span class="timeago" datetime="2026-06-29T04:17:07+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 04:17:07 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
   </span>
 
     

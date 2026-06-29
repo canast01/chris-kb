@@ -3716,6 +3716,34 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vxrail-manager-tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VxRail Manager TLS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VxRail Manager TLS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+        
           <li class="md-nav__item">
   <a href="#certificate-renewal" class="md-nav__link">
     <span class="md-ellipsis">
@@ -10445,35 +10473,29 @@ Encryption reference for VxRail in the VMware product context. Covers vSAN data-
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>racadm<span class="w"> </span>jobqueue<span class="w"> </span>create<span class="w"> </span>BIOS.Setup.1-1<span class="w"> </span>-r<span class="w"> </span>pwrcycle<span class="w"> </span>-s<span class="w"> </span>TIME_NOW
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Node will reboot and apply BIOS settings — allow 5 minutes</span>
 </code></pre></div>
-<p><div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>BIOS.SysProfileSettings.SecureBoot set to Enabled
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>BIOS.SysProfileSettings.SecureBoot set to Enabled
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Job queued with Job ID = JID_123456789012
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>!!! warning &quot;Common errors&quot;
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    **`RACADM.1.0.GEN1.CRAC382 : A user with sufficient privileges is required to execute this command`** — Ensure you are running racadm with root/administrator privileges or use `sudo racadm`.
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    **`RACADM.2.0.GEN9.CRAC440 : The target BIOS object property does not exist or is not supported on this system`** — Verify the iDRAC firmware version supports Secure Boot; check with `racadm get BIOS.SysProfileSettings` to confirm available settings.
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>**Note:** Enabling Secure Boot on a node with unsigned VIBs will prevent ESXi from booting. Confirm all installed VIBs are signed before enabling. VxRail-managed nodes with standard LCM builds will have signed VIBs. Custom VIBs from third-party vendors must be verified before enabling Secure Boot.
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>---
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>## VxRail Manager TLS
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>The VxRail Manager VM exposes its REST API and vCenter plugin endpoint over TLS (port 443). The certificate presented must be valid and trusted by all vCenter instances using the VxRail plugin.
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>### Certificate Management
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>VxRail Manager ships with a self-signed certificate. Replace with a CA-signed certificate for production use.
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>**Replace VxRail Manager TLS certificate:**
-<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
-<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>```bash
-<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a># Upload a CA-signed certificate and key to VxRail Manager
-<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>curl -sk \
-<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>  -X POST \
-<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>  -H &quot;Authorization: Basic $(echo -n &#39;mystic:password&#39; | base64)&quot; \
-<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>  -F &quot;certificate=@/tmp/vxrail-manager.crt&quot; \
-<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>  -F &quot;private_key=@/tmp/vxrail-manager.key&quot; \
-<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>  &quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/system/certificate&quot;
-</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Common errors</p>
+<p><strong><code>RACADM.1.0.GEN1.CRAC382 : A user with sufficient privileges is required to execute this command</code></strong> — Ensure you are running racadm with root/administrator privileges or use <code>sudo racadm</code>.
+<strong><code>RACADM.2.0.GEN9.CRAC440 : The target BIOS object property does not exist or is not supported on this system</code></strong> — Verify the iDRAC firmware version supports Secure Boot; check with <code>racadm get BIOS.SysProfileSettings</code> to confirm available settings.</p>
+</div>
+<p><strong>Note:</strong> Enabling Secure Boot on a node with unsigned VIBs will prevent ESXi from booting. Confirm all installed VIBs are signed before enabling. VxRail-managed nodes with standard LCM builds will have signed VIBs. Custom VIBs from third-party vendors must be verified before enabling Secure Boot.</p>
+<hr />
+<h2 id="vxrail-manager-tls">VxRail Manager TLS<a class="headerlink" href="#vxrail-manager-tls" title="Permanent link">&para;</a></h2>
+<p>The VxRail Manager VM exposes its REST API and vCenter plugin endpoint over TLS (port 443). The certificate presented must be valid and trusted by all vCenter instances using the VxRail plugin.</p>
+<h3 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h3>
+<p>VxRail Manager ships with a self-signed certificate. Replace with a CA-signed certificate for production use.</p>
+<p><strong>Replace VxRail Manager TLS certificate:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Upload a CA-signed certificate and key to VxRail Manager</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;certificate=@/tmp/vxrail-manager.crt&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;private_key=@/tmp/vxrail-manager.key&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/system/certificate&quot;</span>
+</code></pre></div>
 <div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>{
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  &quot;request_id&quot;: &quot;req-a7f3c2e9-4b21-11ed-9e2a&quot;,
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  &quot;status&quot;: &quot;success&quot;,
@@ -10595,7 +10617,7 @@ Encryption reference for VxRail in the VMware product context. Covers vSAN data-
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 03:24:38 UTC"><span class="timeago" datetime="2026-06-29T03:24:38+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 03:24:38 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
   </span>
 
     
