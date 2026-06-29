@@ -102,6 +102,43 @@ service-control --start --all
 service-control --status --all
 ```
 
+
+```text title="Expected output"
+Stopping all services...
+Stopped vpxd
+Stopped vmware-sts-idmd
+Stopped vmware-stsd
+Stopped vmware-vpostgres
+Stopped vmware-rhttpproxy
+Stopped vmware-vsan-health
+All services stopped successfully.
+
+Starting vmware-vpostgres...
+Service vmware-vpostgres started successfully
+Starting vmware-stsd...
+Service vmware-stsd started successfully
+Starting vmware-sts-idmd...
+Service vmware-sts-idmd started successfully
+Starting vpxd...
+Service vpxd started successfully
+Starting all remaining services...
+Service vmware-rhttpproxy started successfully
+Service vmware-vsan-health started successfully
+All services started successfully.
+
+Service                 Status
+vmware-vpostgres        RUNNING
+vmware-stsd             RUNNING
+vmware-sts-idmd         RUNNING
+vpxd                    RUNNING
+vmware-rhttpproxy       RUNNING
+vmware-vsan-health      RUNNING
+```
+
+!!! warning "Common errors"
+    **`Error: vpxd failed to start. Dependency vmware-stsd is not running.`** — Verify vmware-stsd started successfully with `service-control --status vmware-stsd` before starting vpxd.
+    **`Error: Cannot connect to service-control daemon. Is vmon running?`** — Restart the service control daemon with `systemctl restart vmon` or reboot the vCenter appliance.
+    **`Error: vmware-vpostgres failed to start: database directory not accessible`** — Check disk space and permissions on `/storage/db` with `df -h` and `ls -la /storage/db`.
 ---
 
 ## Sizing
@@ -237,6 +274,52 @@ ss -tlnp
 cat /etc/photon-release
 ```
 
+
+```text title="Expected output"
+SERVICE CONTROL STATUS:
+Service                                    Running  Startup
+applmgmt                                   true     Automatic
+certificatemanagement                      true     Automatic
+eam                                        true     Automatic
+envoy                                      true     Automatic
+imagebuilder                               true     Automatic
+...
+
+DISK USAGE:
+Filesystem                Size  Used Avail Use% Mounted on
+/dev/sda1                 100G   47G   53G  47% /
+/dev/sda2                  50G   12G   38G  24% /storage
+tmpfs                      32G  512M   32G   2% /dev/shm
+
+VECS CERTIFICATE STORE:
+Alias: __MACHINE_CERT
+Not After: 2026-03-15T18:42:33Z
+
+Alias: __MACHINE_CERT_CA
+Not After: 2033-03-15T18:42:33Z
+
+SSO DOMAIN INFO:
+vsphere.local
+
+SYSTEM RESOURCE USAGE:
+top - 14:32:18 up 127 days, 3:45, 1 user, load average: 2.14, 1.98, 1.87
+Tasks: 287 total, 2 running, 285 sleeping, 0 stopped, 0 zombie
+%Cpu(s): 18.2 us, 4.1 sy, 0.0 ni, 77.1 id, 0.6 wa, 0.0 hi, 0.0 si, 0.0 st
+
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 2  0      0 18432M 2048M 8192M    0    0    12    45  892 1247 18  4 77  1  0
+ 1  0      0 18401M 2048M 8195M    0    0     8    32  856 1198 16  3 80  1  0
+ 0  0      0 18375M 2048M 8198M    0    0     4    18  734 1056 14  2 83  1  0
+ 1  0      0 18350M 2048M 8201M    0    0     6    24  798 1134 17  3 79  1  0
+ 0  0      0 18328M 2048M 8204M    0    0     3    12  712  998 13  2 84  1  0
+
+NETWORK LISTENING PORTS:
+State  Recv-Q Send-Q Local Address:Port        Peer Address:Port Process
+LISTEN 0      128    0.0.0.0:22               0.0.0.0:*        users:(("sshd",pid=1247,fd=3))
+LISTEN 0      128    0.0.0.0:443              0.0.0.0:*        users:(("envoy",pid=8934,fd=21))
+LISTEN 0      128    0.0.0.0:80               0.0.0.0:*        users:(("envoy",pid=8934,fd=19))
+```
 ---
 
 ## Database Operations
@@ -252,6 +335,43 @@ SELECT COUNT(*) FROM vc_event;               # verify DB is intact
 \q
 ```
 
+
+```text title="Expected output"
+psql (12.7)
+Type "help" for help.
+
+VCDB=# \dt
+                           List of relations
+ Schema |                Name                 | Type  |  Owner   
+--------+-------------------------------------+-------+----------
+ public | vc_event                            | table | postgres
+ public | vc_task                             | table | postgres
+ public | vc_host                             | table | postgres
+ public | vc_vm                               | table | postgres
+ public | vc_cluster                          | table | postgres
+ public | vc_datastore                        | table | postgres
+ public | vc_network                          | table | postgres
+(7 rows)
+
+VCDB=# SELECT pg_size_pretty(pg_database_size('VCDB'));
+ pg_size_pretty 
+----------------
+ 8547 MB
+(1 row)
+
+VCDB=# SELECT COUNT(*) FROM vc_event;
+  count  
+---------
+ 2847561
+(1 row)
+
+VCDB=# \q
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not connect to server: No such file or directory`** — Ensure the vPostgres service is running with `systemctl status vpostgres` and verify `/opt/vmware/vpostgres/current/bin/psql` exists.
+    **`FATAL: role "postgres" does not exist`** — The embedded PostgreSQL instance may be corrupted; restart vCenter services with `service-control --stop --all` followed by `service-control --start --all`.
+    **`ERROR: relation "vc_event" does not exist`** — The VCDB schema is incomplete; restore from backup or reinitialize the vCenter database using the vCenter installer.
 Do not modify the vCenter database directly unless directed by VMware Support.
 
 ---
@@ -280,6 +400,57 @@ curl -sk -H "vmware-api-session-id: $TOKEN" \
     -X DELETE https://vcenter.example.local/api/session
 ```
 
+
+```text title="Expected output"
+[
+  {
+    "host": "host-123",
+    "name": "esx01.example.local",
+    "connection_state": "CONNECTED",
+    "power_state": "POWERED_ON"
+  },
+  {
+    "host": "host-124",
+    "name": "esx02.example.local",
+    "connection_state": "CONNECTED",
+    "power_state": "POWERED_ON"
+  }
+]
+[
+  {
+    "vm": "vm-456",
+    "name": "prod-web-01",
+    "power_state": "POWERED_ON",
+    "cpu_count": 4,
+    "memory_mb": 8192
+  },
+  {
+    "vm": "vm-457",
+    "name": "prod-db-01",
+    "power_state": "POWERED_ON",
+    "cpu_count": 8,
+    "memory_mb": 16384
+  },
+  {
+    "vm": "vm-458",
+    "name": "dev-test-01",
+    "power_state": "POWERED_OFF",
+    "cpu_count": 2,
+    "memory_mb": 4096
+  }
+]
+{
+  "status": "green",
+  "messages": [],
+  "last_check_time": "2024-01-15T14:32:18.456Z"
+}
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if error persists, verify vCenter hostname matches certificate CN).
+    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}`** — Verify credentials are correct and TOKEN variable is populated; re-run authentication command and check for shell quoting issues with special characters in password.
+    **`curl: (7) Failed to connect to vcenter.example.local port 443: Name or service not known`** — Confirm vCenter FQDN is resolvable and accessible from your network; check DNS or use IP address instead.
 Swagger UI: `https://<vcenter>/apiexplorer`
 
 ---

@@ -89,6 +89,35 @@ kubectl version --kubeconfig <management-cluster-kubeconfig>
 kubectl get ns -A 2>&1 | head -20
 ```
 
+
+```text title="Expected output"
+version: v0.28.1
+buildDate: 2024-01-15T09:42:31Z
+sha: a3f8c9e2b1d4e5f6g7h8i9j0k1l2m3n4
+
+NAME                    NAMESPACE                      STATUS   KUBERNETES VERSION
+mgmt-cluster-prod       tkg-system                     running  v1.27.8+vmware.2
+workload-us-west-2      tkg-system                     running  v1.26.5+vmware.1
+workload-us-east-1      tkg-system                     running  v1.27.8+vmware.2
+
+Client Version: v1.27.8+vmware.2
+Kube-apiserver Version: v1.27.8+vmware.2
+Kubelet Version: v1.27.8+vmware.2
+
+NAMESPACE                           STATUS   AGE
+vmware-system-csi                   Active   342d
+vmware-system-tkg                   Active   342d
+kube-system                         Active   342d
+kube-public                         Active   342d
+kube-node-lease                     Active   342d
+tanzu-system                        Active   340d
+...
+```
+
+!!! warning "Common errors"
+    **`error: unable to connect to the server: dial tcp: lookup mgmt-cluster on "10.0.0.1:53": no such host`** — Verify the kubeconfig path is correct and the management cluster hostname resolves in your DNS or /etc/hosts.
+    **`error: the server doesn't have a resource type "cluster"`** — Ensure you are logged into the correct Tanzu management cluster context with `tanzu context list` and `tanzu context use <context-name>`.
+    **`Unable to connect to the vSphere Supervisor: certificate verify failed`** — Update your kubeconfig with current credentials using `tanzu cluster kubeconfig get <cluster-name>` or refresh vSphere credentials in your Tanzu configuration.
 ### 2. Collect the Tanzu diagnostics bundle
 
 ```bash
@@ -107,6 +136,26 @@ ls -lh diagnostics-*.tar.gz
 TANZU_LOG_LEVEL=debug tanzu cluster get <cluster-name> 2>&1 | tee tanzu-verbose-$(date +%Y%m%d).log
 ```
 
+
+```text title="Expected output"
+Collecting diagnostics for management cluster 'prod-mgmt-01'...
+Gathering cluster information...
+Collecting logs from all nodes...
+Collecting API server logs...
+Collecting controller manager logs...
+Diagnostics collection completed successfully.
+Bundle saved to: diagnostics-prod-mgmt-01-20240115-143022.tar.gz
+
+-rw-r--r-- 1 admin admin 287M Jan 15 14:30 diagnostics-prod-mgmt-01-20240115-143022.tar.gz
+
+NAME           NAMESPACE   STATUS   READY   SEVERITY   MESSAGE
+prod-mgmt-01   tkg-system  running  True    -          Cluster is healthy
+```
+
+!!! warning "Common errors"
+    **`Error: management cluster '<mgmt-cluster-name>' not found in kubeconfig`** — Verify the cluster name matches your kubeconfig context and run `tanzu cluster list` to confirm available clusters.
+    **`Error: failed to collect logs: permission denied`** — Ensure your kubeconfig has sufficient RBAC permissions and run `kubectl auth can-i get pods --all-namespaces` to verify access.
+    **`Error: diagnostics bundle creation failed: disk space insufficient`** — Free up disk space in the current directory (bundles typically require 500MB–2GB) and retry the collection.
 ### 3. Collect the Kubernetes cluster dump
 
 ```bash
@@ -120,6 +169,27 @@ kubectl cluster-info dump \
 tar czf /tmp/cluster-dump-$(date +%Y%m%d).tar.gz /tmp/cluster-dump-$(date +%Y%m%d)/
 ```
 
+
+```text title="Expected output"
+Clustering info dumped to /tmp/cluster-dump-20240315
+Dumping namespaces...
+Dumping namespace: default
+Dumping namespace: kube-system
+Dumping namespace: kube-public
+Dumping namespace: kube-node-lease
+Dumping namespace: tanzu-system
+Dumping namespace: vmware-system-csi
+...
+Dumping cluster-scoped resources
+Dumping events from all namespaces
+
+tar: Removing leading `/' from member names
+```
+
+!!! warning "Common errors"
+    **`error: unable to connect to the server: dial tcp: lookup <cluster-kubeconfig>: no such host`** — Verify the kubeconfig file path is correct and the cluster endpoint is reachable with `kubectl cluster-info --kubeconfig <path>`.
+    **`mkdir: cannot create directory '/tmp/cluster-dump-20240315': Permission denied`** — Run the command with `sudo` or ensure `/tmp` is writable by your user with `ls -ld /tmp`.
+    **`tar: /tmp/cluster-dump-20240315/: Cannot stat: No such file or directory`** — Check that the first command completed successfully by verifying the dump directory exists with `ls -la /tmp/cluster-dump-*`.
 ### 4. Collect vCenter and NSX events for cluster VMs
 
 In vSphere Client: navigate to the **datacenter or cluster** hosting the Tanzu node VMs.
@@ -138,6 +208,38 @@ kubectl get pods -n kube-system --kubeconfig <cluster-kubeconfig>
 kubectl logs <failing-pod-name> -n kube-system --kubeconfig <cluster-kubeconfig> | tail -200
 ```
 
+
+```text title="Expected output"
+NAMESPACE     LAST SEEN   TYPE      REASON                OBJECT                                    MESSAGE
+kube-system   2m          Normal    Scheduled             pod/etcd-supervisor-1                     Successfully assigned to node-1
+kube-system   2m          Normal    Pulled                pod/etcd-supervisor-1                     Container image "registry.tanzu.vmware.com/tanzu_core/etcd:v3.5.6" already present on machine
+kube-system   2m          Normal    Created               pod/etcd-supervisor-1                     Created container etcd
+kube-system   2m          Normal    Started               pod/etcd-supervisor-1                     Started container etcd
+kube-system   1m          Warning   BackOff               pod/kube-apiserver-supervisor-1           Back-off restarting failed container
+kube-system   45s         Warning   FailedScheduling      pod/coredns-5d78c0869d-xyz9k              0/3 nodes available: 3 Insufficient memory
+kube-system   30s         Normal    NodeReady             node/supervisor-1                         Node supervisor-1 status is now: NodeReady
+kube-system   15s         Warning   FailedProbeWarning    pod/kube-controller-manager-supervisor-1  Readiness probe failed: HTTP probe failed with statuscode: 503
+
+NAME                                      READY   STATUS             RESTARTS   AGE
+coredns-5d78c0869d-xyz9k                  0/1     Pending            0          8m
+etcd-supervisor-1                         1/1     Running            0          10m
+kube-apiserver-supervisor-1               0/1     CrashLoopBackOff   5          8m
+kube-controller-manager-supervisor-1      1/1     Running            2          9m
+kube-scheduler-supervisor-1                1/1     Running            0          10m
+
+W0315 14:23:45.123456   12847 client.go:432] WARNING: the server chose to advertise the hostname instead of the IP address
+E0315 14:23:47.654321   12847 run.go:74] "Failed to start kube-apiserver" err="listen tcp 10.0.1.45:6443: bind: address already in use"
+panic: runtime error: invalid memory address or nil pointer dereference
+[signal SIGSEGV: segmentation fault]
+goroutine 42 [running]:
+main.(*Server).Run(0xc0004a2000, 0x0, 0x0)
+	/go/src/kubernetes/cmd/kube-apiserver/app/server.go:156 +0x2c8
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "events"`** — Ensure you have sufficient RBAC permissions and the kubeconfig points to a valid cluster endpoint.
+    **`Unable to connect to the server: dial tcp 10.0.1.45:6443: i/o timeout`** — Verify the cluster-kubeconfig path is correct and the Supervisor cluster API server is reachable from your management network.
+    **`pod "kube-apiserver-supervisor-1" not found`** — Confirm the pod name matches exactly (use `kubectl get pods -n kube-system` first) and you are querying
 ### 5. Write the timeline
 
 ```text
@@ -262,6 +364,48 @@ kubectl get events -A --sort-by='.lastTimestamp' --kubeconfig <mgmt-kubeconfig> 
 tanzu package installed list -A
 ```
 
+
+```text title="Expected output"
+version: v0.28.1
+
+NAME                      NAMESPACE     STATUS   CONTROLPLANE   WORKERS   KUBERNETES
+mgmt-cluster              tkg-system    running  1/1            3/3       v1.27.5
+prod-workload-01          default       running  3/3            5/5       v1.27.5
+staging-workload-02       default       running  1/1            2/2       v1.27.4
+
+NAME                                    STATUS   ROLES           AGE     VERSION
+mgmt-node-01                            Ready    control-plane   45d     v1.27.5
+mgmt-node-02                            Ready    worker          45d     v1.27.5
+mgmt-node-03                            Ready    worker          45d     v1.27.5
+prod-wld-cp-xvk9m                       Ready    control-plane   12d     v1.27.5
+prod-wld-worker-pool-a-abc123           Ready    worker          12d     v1.27.5
+
+NAMESPACE            NAME                                    READY   STATUS             RESTARTS   AGE
+kube-system          coredns-558bd4d5db-2k8pq               0/1     CrashLoopBackOff   7          3h
+kube-system          etcd-mgmt-node-01                      1/1     Running            0          45d
+tkg-system           tkr-controller-manager-5d7c8f9b2-lmq9  1/1     Running            0          45d
+tanzu-system-auth    dex-5f8b9c2d1-9qrs                     1/1     Running            0           8d
+
+NAME                                    STATUS   ROLES           AGE     VERSION
+prod-wld-cp-xvk9m                       Ready    control-plane   12d     v1.27.5
+prod-wld-worker-pool-a-abc123           Ready    worker          12d     v1.27.5
+prod-wld-worker-pool-a-def456           Ready    worker          12d     v1.27.5
+
+NAME                                    PHASE        AGE   VERSION
+mgmt-cluster-control-plane-abc12        Running      45d   v1.27.5
+prod-workload-01-control-plane-xyz78    Running      12d   v1.27.5
+prod-workload-01-md-0-worker-def45      Running      12d   v1.27.5
+
+NAME                                    REPLICAS   UPDATED   READY   AVAILABLE   AGE
+prod-workload-01-md-0                   5          5         4       4           12d
+prod-workload-01-md-1                   3          3         3       3           8d
+
+NAMESPACE            LAST SEEN   TYPE      REASON                  OBJECT
+kube-system          3m          Warning   BackOff                 pod/coredns-558bd4d5db-2k8pq
+kube-system          12m         Normal    NodeHasSufficientDisk   node/mgmt-node-02
+tkg-system           8m          Warning   FailedScheduling        pod/new-addon-installer-job-xyz
+default              15m         Normal    SuccessfulCreate        machinedeployment/prod-workload-01
+```
 ---
 
 ## Support SLA Reference

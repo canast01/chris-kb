@@ -75,6 +75,32 @@ vmkload_mod -l | grep hbr
 esxcli hbr replication getstate -i <vmid>
 ```
 
+
+```text title="Expected output"
+hbrsvc is running.
+VM-1234 (prod-web-01): Replication State: Active, RPO: 5 minutes, Last sync: 2024-01-15 14:32:18 UTC
+VM-5678 (prod-db-02): Replication State: Active, RPO: 15 minutes, Last sync: 2024-01-15 14:31:45 UTC
+VM-9012 (dev-app-03): Replication State: Paused, RPO: N/A, Last sync: 2024-01-15 13:22:10 UTC
+
+VM-1234 (prod-web-01):
+  State: Active
+  RPO: 5 minutes
+  Checkpoint: 2024-01-15 14:32:18.123456 UTC
+  Replicated Data: 45.2 GB
+  Network Throughput: 12.5 Mbps
+
+2024-01-15T14:35:22.456Z [hbrsvc] Replication checkpoint completed for VM-1234
+2024-01-15T14:35:45.789Z [hbrsvc] Syncing VM-5678 checkpoint data
+2024-01-15T14:36:01.234Z [hbrsvc] Network latency detected: 125ms to replication server
+2024-01-15T14:36:15.567Z [hbrsvc] Checkpoint VM-9012 paused by user request
+
+hbr 1.0.0 loaded
+```
+
+!!! warning "Common errors"
+    **`hbrsvc is stopped.`** — Run `service hbrsvc start` or `/etc/init.d/hbrsvc start` to restart the replication service.
+    **`Error: Unknown command or invalid option`** — Verify the ESXi version supports the `esxcli hbr` command (requires vSphere Replication 8.0+) and check command syntax against your version's documentation.
+    **`No replication tasks found`** — Confirm that replication is configured for VMs on this host by checking the vSphere Replication appliance management interface and verifying target site connectivity.
 ### Changed Block Tracking vs hbr Bitmap
 
 | Property | CBT (Backup) | hbr (VR) |
@@ -263,6 +289,46 @@ tail -f /var/log/vmware/vrms/vrms.log
 systemctl list-units | grep -E 'hms|vrms|lighttpd'
 ```
 
+
+```text title="Expected output"
+admin@vra-prod-01.corp.local's password: 
+● hms.service - VMware vSphere Replication HMS
+     Loaded: loaded (/etc/systemd/system/hms.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+   Main PID: 2847 (java)
+      Tasks: 47 (limit: 4915)
+     Memory: 512.3M
+        CPU: 2h 14m 32s
+● vrms.service - VMware vSphere Replication VRMS
+     Loaded: loaded (/etc/systemd/system/vrms.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:25 UTC; 2 days ago
+   Main PID: 3156 (java)
+      Tasks: 52 (limit: 4915)
+     Memory: 768.1M
+        CPU: 3h 8m 19s
+=== HMS restart ===
+2024-01-17T14:45:22.891Z INFO [HMS-Bootstrap] Initializing replication data receiver on port 44046
+2024-01-17T14:45:23.156Z INFO [HMS-Bootstrap] HMS service started successfully
+=== VRMS restart ===
+2024-01-17T14:45:31.402Z INFO [VRMS-UI] Management layer reloaded
+2024-01-17T14:45:31.598Z INFO [VRMS-UI] Web console available at https://vra-prod-01.corp.local:5480
+=== HMS log tail ===
+2024-01-17T14:45:22.891Z INFO Replication queue depth: 847 objects
+2024-01-17T14:45:23.156Z INFO Data transfer rate: 156.2 MB/s
+2024-01-17T14:45:24.203Z WARN Incoming replication from site-b delayed by 2.3s
+=== VRMS log tail ===
+2024-01-17T14:45:31.402Z INFO UI session established for user admin
+2024-01-17T14:45:31.598Z INFO vSphere Replication dashboard loaded
+=== Service list ===
+hms.service                                    loaded active running   VMware vSphere Replication HMS
+vrms.service                                   loaded active running   VMware vSphere Replication VRMS
+lighttpd.service                               loaded active running   Lightweight HTTP Server
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify the VRA appliance hostname/IP is correct and SSH port 22 is accessible from your management network.
+    **`Unit hms.service not found`** — Confirm you are connected to a valid VRA appliance; this service only exists on vSphere Replication Appliance instances.
+    **`Permission denied`** — Use `sudo systemctl restart hms` or ensure the admin account has passwordless sudo configured in `/etc/sudoers.d/`.
 ---
 
 ## VRS — vSphere Replication Server (Scale-Out)
@@ -308,6 +374,48 @@ systemctl status hms
 tail -f /var/log/vmware/hms/hms.log
 ```
 
+
+```text title="Expected output"
+[
+  {
+    "id": "vrs-prod-01",
+    "hostname": "vrs-prod-01.corp.local",
+    "ipAddress": "192.168.10.45",
+    "version": "8.7.0.1",
+    "status": "REGISTERED",
+    "lastHeartbeat": "2024-01-15T14:32:18Z"
+  },
+  {
+    "id": "vrs-prod-02",
+    "hostname": "vrs-prod-02.corp.local",
+    "ipAddress": "192.168.10.46",
+    "version": "8.7.0.1",
+    "status": "REGISTERED",
+    "lastHeartbeat": "2024-01-15T14:31:52Z"
+  }
+]
+
+● hms.service - VMware vSphere Replication HMS Service
+     Loaded: loaded (/etc/systemd/system/hms.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:28:33 UTC; 3h 47min ago
+       Docs: man:hms(8)
+   Main PID: 2847 (java)
+      Tasks: 42 (limit: 4915)
+     Memory: 487.3M
+        CPU: 2min 14.328s
+     CGroup: /system.slice/hms.service
+             └─2847 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xmx1024m...
+
+2024-01-15 14:32:41,203 [main] INFO  com.vmware.hms.replication - Replication task completed for VM: prod-web-01 (uuid: 50186e42-a1b2-4c3d-8e9f-2b7a4c8d9e1f)
+2024-01-15 14:32:38,891 [pool-12-thread-4] DEBUG com.vmware.hms.transport - Heartbeat received from VRA: vra-prod.corp.local
+2024-01-15 14:32:35,445 [pool-8-thread-2] INFO  com.vmware.hms.sync - Synchronizing 3 pending recovery points
+2024-01-15 14:32:22,156 [main] WARN  com.vmware.hms.network - Network latency detected: 145ms to source site
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the VRA's CA certificate into your system trust store.
+    **`ssh: connect to host <VRS-FQDN> port 22 refused`** — Verify the VRS appliance is powered on and SSH is enabled; check firewall rules between your admin host and the VRS management network.
+    **`tail: cannot open '/var/log/vmware/hms/hms.log' for reading: Permission denied`** — Run the tail command with `sudo` or ensure your user account has read permissions on the HMS log directory.
 ---
 
 ## Consistency Groups

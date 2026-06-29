@@ -81,6 +81,24 @@ esxcli vsan debug resync list   # should be empty before maintenance
 esxcli vsan debug object list | grep -v healthy   # should return nothing
 ```
 
+
+```text title="Expected output"
+Cluster Status: HEALTHY
+Cluster UUID: 52d4a8f1-2e3c-4d7a-9b1c-8f3a2e5d9c1b
+Cluster Dominance: SATISFIED
+Cluster Redundancy: SATISFIED
+Cluster Component Limit: OK
+Cluster Connectivity: OK
+
+Resync Operations: 0
+
+(no output — all objects healthy)
+```
+
+!!! warning "Common errors"
+    **`Cluster Status: DEGRADED`** — Check vSAN health details with `esxcli vsan health cluster get` and verify all hosts are online and network connectivity is stable.
+    **`Resync Operations: <number greater than 0>`** — Wait for ongoing resync operations to complete before entering maintenance mode, or check disk/network issues with `esxcli vsan cluster get`.
+    **`Error: Unknown command or namespace`** — Verify vSAN is licensed and enabled on the host with `esxcli vsan cluster get`, and ensure you are running the command on an ESXi host (not vCenter).
 ## 7. Storage Paths
 
 ```bash
@@ -91,6 +109,16 @@ esxcli storage core path list | grep "State: dead"
 esxcli storage core path list | grep -c "State: active"
 ```
 
+
+```text title="Expected output"
+State: dead
+State: dead
+6
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Run this command directly on an ESXi host via SSH or vSphere CLI, not from a remote management station.
+    **`Unknown command or namespace storage.core.path`** — Verify the ESXi host version supports this namespace; use `esxcli storage core path list --help` to confirm availability.
 ## 8. NTP and DNS
 
 ```bash
@@ -102,6 +130,28 @@ nslookup $(hostname)
 nslookup vcenter.example.local
 ```
 
+
+```text title="Expected output"
+NTP Enabled: true
+NTP Servers: 10.0.0.1, 10.0.0.2
+NTP Running: true
+
+Server:		10.0.53.53
+Address:	10.0.53.53#53
+
+Name:	esx-host-04.example.local
+Address: 192.168.1.145
+
+Server:		10.0.53.53
+Address:	10.0.53.53#53
+
+Name:	vcenter.example.local
+Address: 192.168.1.50
+```
+
+!!! warning "Common errors"
+    **`can't find $(hostname): Non-existent domain`** — Replace `$(hostname)` with the actual hostname or use backticks instead: `` nslookup `hostname` ``
+    **`connection timed out; no servers could be reached`** — Verify DNS server is reachable and configured in `/etc/resolv.conf`, or specify the DNS server explicitly: `nslookup vcenter.example.local 10.0.53.53`
 ## 9. Cluster HA and DRS
 
 ```powershell

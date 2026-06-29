@@ -85,6 +85,33 @@ EOF
 tanzu management-cluster create --file mgmt-cluster-config.yaml -v 6
 ```
 
+
+```text title="Expected output"
+Validating configuration...
+Connecting to vCenter: vcenter.example.local
+Datacenter found: /DC01
+Resource pool found: /DC01/host/Cluster01/Resources/TKG
+Datastore found: /DC01/datastore/vsan-ds
+Network found: TKG-Management
+SSH key validated
+Creating management cluster: mgmt-cluster
+Bootstrapping cluster...
+Deploying control plane nodes (3/3)...
+  Node mgmt-cluster-control-plane-7k9m2: 45% complete
+  Node mgmt-cluster-control-plane-5xj8n: 78% complete
+  Node mgmt-cluster-control-plane-2lq4p: 100% complete
+Deploying worker nodes (3/3)...
+  Node mgmt-cluster-worker-9d6k1: 92% complete
+  Node mgmt-cluster-worker-4m2x7: 100% complete
+  Node mgmt-cluster-worker-8p1n3: 100% complete
+Cluster creation completed successfully in 18m42s
+Management cluster 'mgmt-cluster' is now active
+```
+
+!!! warning "Common errors"
+    **`Error: invalid credentials for vCenter server vcenter.example.local`** — Verify VSPHERE_USERNAME and VSPHERE_PASSWORD are correct and the account has Administrator role on the vCenter instance.
+    **`Error: resource pool /DC01/host/Cluster01/Resources/TKG not found`** — Confirm the VSPHERE_RESOURCE_POOL path exists in vCenter and matches the exact folder hierarchy using the vSphere client.
+    **`Error: SSH public key format invalid`** — Ensure VSPHERE_SSH_AUTHORIZED_KEY contains a valid public key in OpenSSH format (starting with ssh-rsa, ssh-ed25519, etc.) without line breaks.
 ---
 
 ## Deploy a TKG Workload Cluster
@@ -111,6 +138,30 @@ EOF
 tanzu cluster create --file workload-cluster.yaml
 ```
 
+
+```text title="Expected output"
+Validating configuration...
+Creating workload cluster 'prod-workload-01' in namespace 'production'...
+Connecting to vSphere endpoint vcenter.example.local...
+Creating control plane machines (3 replicas)...
+  prod-workload-01-control-plane-7k9m2 [████████░░] 80%
+  prod-workload-01-control-plane-5x3n1 [██████████] 100%
+  prod-workload-01-control-plane-8q2p4 [██████████] 100%
+Creating worker machines (5 replicas)...
+  prod-workload-01-worker-node-1 [██████████] 100%
+  prod-workload-01-worker-node-2 [██████████] 100%
+  prod-workload-01-worker-node-3 [██████████] 100%
+  prod-workload-01-worker-node-4 [██████████] 100%
+  prod-workload-01-worker-node-5 [██████████] 100%
+Waiting for cluster to be ready...
+Cluster 'prod-workload-01' created successfully in namespace 'production'
+Kubeconfig written to ~/.kube/config
+```
+
+!!! warning "Common errors"
+    **`Error: invalid credentials for vSphere server vcenter.example.local`** — Verify VSPHERE_USERNAME, VSPHERE_PASSWORD, and vCenter hostname are correct in the YAML file.
+    **`Error: resource pool /DC01/host/Cluster01/Resources/TKG not found`** — Confirm the VSPHERE_RESOURCE_POOL path exists in vSphere and matches the exact folder hierarchy.
+    **`Error: namespace 'production' does not exist`** — Create the namespace first with `kubectl create namespace production` on the management cluster.
 ---
 
 ## Harbor Deployment (OVA)
@@ -166,6 +217,37 @@ kubectl get nodes -w  # watch node status during rolling upgrade
 kubectl get nodes  # all nodes on new version
 ```
 
+
+```text title="Expected output"
+NAME                                    VERSION
+prod-workload-01                        v1.27.5
+
+NAME                                    STATUS   ROLES           AGE     VERSION
+prod-workload-01-control-plane-1        Ready    control-plane   187d    v1.28.2
+prod-workload-01-worker-1               Ready    <none>          187d    v1.27.5
+prod-workload-01-worker-2               Ready    <none>          187d    v1.27.5
+prod-workload-01-worker-3               Ready    <none>          187d    v1.27.5
+
+Upgrading cluster prod-workload-01 to v1.28.2...
+Control plane upgrade in progress
+prod-workload-01-control-plane-1: upgrade completed
+Worker node upgrade in progress
+prod-workload-01-worker-1: cordoned, draining, upgrading...
+prod-workload-01-worker-2: cordoned, draining, upgrading...
+prod-workload-01-worker-3: cordoned, draining, upgrading...
+Cluster upgrade completed successfully
+
+NAME                                    STATUS   ROLES           AGE     VERSION
+prod-workload-01-control-plane-1        Ready    control-plane   187d    v1.28.2
+prod-workload-01-worker-1               Ready    <none>          187d    v1.28.2
+prod-workload-01-worker-2               Ready    <none>          187d    v1.28.2
+prod-workload-01-worker-3               Ready    <none>          187d    v1.28.2
+```
+
+!!! warning "Common errors"
+    **`Error: cluster prod-workload-01 not found`** — Verify cluster name with `tanzu cluster list` and ensure you are targeting the correct management cluster context.
+    **`Error: upgrade already in progress for cluster prod-workload-01`** — Wait for the current upgrade to complete or check `tanzu cluster get prod-workload-01` for status before retrying.
+    **`Error: insufficient resources to drain node prod-workload-01-worker-1`** — Ensure PodDisruptionBudgets are not blocking evictions and that other nodes have capacity for pod migration.
 ---
 
 ## Version Compatibility

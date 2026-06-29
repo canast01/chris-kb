@@ -114,6 +114,39 @@ esxcli storage core path list | grep -v Active   # check for dead paths
 esxcli network ip connection list | grep ESTABLISHED  # active connections
 ```
 
+
+```text title="Expected output"
+Uptime: 86400 seconds
+
+EventID | Timestamp           | Severity | Message
+--------|---------------------|----------|------------------------------------------
+1       | 2024-01-15 14:23:45 | Warning  | Temperature threshold exceeded
+2       | 2024-01-15 13:12:10 | Info     | Power supply redundancy lost
+3       | 2024-01-15 12:05:33 | Critical | Fan speed below threshold
+
+Vmid Name                                   File
+---- ---------------------------------------- -----
+1    prod-web-01                            [datastore1] prod-web-01/prod-web-01.vmx
+2    prod-db-02                             [datastore2] prod-db-02/prod-db-02.vmx
+3    dev-test-vm                            [datastore1] dev-test-vm/dev-test-vm.vmx
+
+Path: vmhba2:C0:T5:L0
+State: Dead
+Adapter: vmhba2
+Target: 5
+LUN: 0
+
+Proto Recv-Q Send-Q Local-Address           Foreign-Address         State
+----- ------ ------ ----------------------- ----------------------- -----------
+tcp   0      0      192.168.1.45:22         10.50.100.12:54321      ESTABLISHED
+tcp   0      0      192.168.1.45:443        10.50.100.15:49876      ESTABLISHED
+tcp   0      0      192.168.1.45:902        10.50.100.20:38765      ESTABLISHED
+```
+
+!!! warning "Common errors"
+    **`vim-cmd: command not found`** — Verify the ESXi host is in maintenance mode or use the vSphere Client API instead; vim-cmd requires the host's management services to be fully operational.
+    **`Permission denied`** — Run commands with root privileges or ensure your SSH user account has administrative rights on the ESXi host.
+    **`IPMI sel list: Unknown command`** — Confirm IPMI is enabled in the host's BIOS and the management controller is accessible via `esxcli hardware ipmi sel info` first.
 **Expected output:** `storage core path list | grep -v Active` returns no output (all paths active). `hardware ipmi sel list` returns no critical hardware events. IPMI critical events require hardware replacement ticket.
 
 ## vSAN Health Check
@@ -128,6 +161,32 @@ esxcli vsan cluster get    # cluster UUID and node count
 rvc user@vcenter -c "vsan.health.health_summary /<dc>/computers/<cluster>"
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 522e4dce-1234-5678-abcd-ef1234567890
+Cluster Health: Healthy
+Node Count: 4
+Disk Groups: 3
+
+Name                          Health Status
+----                          ------
+vsan-cluster-01               Healthy
+vsan-cluster-02               Healthy
+vsan-cluster-03               Healthy
+vsan-cluster-04               Healthy
+
+Disk Name       Capacity      Used          Health
+---------       --------      ----          ------
+naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m  1.6TB  892GB  Healthy
+naa.6001405a9z8y7x6w5v4u3t2s1r0q9p8o7  1.6TB  756GB  Healthy
+naa.6001405a1a2b3c4d5e6f7g8h9i0j1k2l3  1.6TB  1.2TB  Healthy
+...
+```
+
+!!! warning "Common errors"
+    **`vsan health cluster list: Unknown command or namespace`** — Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` first to confirm VSAN is initialized.
+    **`Error: Unable to connect to host <hostname>: Connection refused`** — Ensure SSH is enabled on the ESXi host and you have network connectivity; check firewall rules with `esxcli network firewall get`.
+    **`RVC Error: Connection refused or timeout connecting to vCenter`** — Verify vCenter hostname/IP is correct, credentials are valid, and vCenter service is running with `systemctl status vpxd` on the vCenter appliance.
 **Expected output:** `vsan health cluster list` shows all checks as `green`. `vsan cluster get` confirms node count matches expected cluster size. Any `yellow` or `red` check requires investigation before any scheduled maintenance.
 
 ## Horizon Connection Diagnosis
@@ -151,6 +210,40 @@ kubectl logs <pod> -n <ns> --previous             # previous container logs
 kubectl get events -n <ns> --sort-by=.lastTimestamp | tail -20
 ```
 
+
+```text title="Expected output"
+NAME                    STATUS   ROLES           AGE    VERSION            INTERNAL-IP      EXTERNAL-IP   OS-IMAGE
+esx-k8s-master-01       Ready    control-plane   45d    v1.28.2            10.42.10.15      <none>        VMware Photon OS/Linux
+esx-k8s-worker-01       Ready    worker          45d    v1.28.2            10.42.10.16      <none>        VMware Photon OS/Linux
+esx-k8s-worker-02       Ready    worker          44d    v1.28.2            10.42.10.17      <none>        VMware Photon OS/Linux
+esx-k8s-worker-03       NotReady worker          2d     v1.28.2            10.42.10.18      <none>        VMware Photon OS/Linux
+
+NAMESPACE     NAME                              READY   STATUS             RESTARTS   AGE
+kube-system   coredns-5d78c0854d-7x9kl          0/1     CrashLoopBackOff   12         3h22m
+monitoring    prometheus-operator-6f4d8c2b9     0/1     ImagePullBackOff   0          1h45m
+default       nginx-deployment-7d4f8b6c2-q2r8t  0/2     Pending            0          2h10m
+kube-system   etcd-backup-job-27481             0/1     Error              5          45m
+
+Name:         nginx-deployment-7d4f8b6c2-q2r8t
+Namespace:    default
+Events:
+  Type     Reason            Age   Message
+  ----     ------            ---   -------
+  Warning  FailedScheduling  2h    0/3 nodes available: 1 NotReady, 2 insufficient resources
+  Warning  FailedScheduling  1h    0/3 nodes available: 1 NotReady, 2 insufficient resources
+
+(no output — command completes silently)
+
+LAST SEEN              TYPE      REASON                    OBJECT                                MESSAGE
+2024-01-15T14:32:10Z   Warning   FailedScheduling         pod/nginx-deployment-7d4f8b6c2-q2r8t  0/3 nodes available
+2024-01-15T14:28:45Z   Warning   BackOff                  pod/coredns-5d78c0854d-7x9kl          Back-off restarting failed container
+2024-01-15T14:15:22Z   Warning   ImagePullBackOff         pod/prometheus-operator-6f4d8c2b9     Failed to pull image "prometheus:v2.41.0"
+2024-01-15T13:50:18Z   Normal    NodeNotReady             node/esx-k8s-worker-03                Node esx-k8s-worker-03 status is now: NotReady
+2024-01-15T13:48:02Z   Normal    NodeStatusUpdate         node/esx-k8s-worker-03                Kubelet stopped posting node status.
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "pods"`** — Verify the cluster context with
 ## VxRail Troubleshooting
 
 ```bash
@@ -163,3 +256,33 @@ systemctl status vmware-marvin
 # Check VxRail log
 tail -100 /var/log/vmware/vmware-vxrail-manager.log
 ```
+
+
+```text title="Expected output"
+Collecting support bundle...
+Support bundle collection started with ID: sb-20240115-a7f3k9m2
+Estimated time: 2-3 minutes
+Bundle will be saved to: /var/log/vmware/support-bundles/
+
+● vmware-marvin.service - VMware VxRail Manager
+     Loaded: loaded (/etc/systemd/system/vmware-marvin.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2 days ago
+   Main PID: 4521 (marvind.py)
+      Tasks: 12 (limit: 4915)
+     Memory: 487.3M
+     CGroup: /system.slice/vmware-marvin.service
+             └─4521 /usr/bin/python3 /usr/lib/vmware-marvin/marvind.py
+
+2024-01-15 14:45:22.891 [INFO] VxRail Manager initialized successfully
+2024-01-15 14:45:23.104 [INFO] Connected to vCenter: vc-prod-01.corp.local
+2024-01-15 14:45:24.567 [INFO] Cluster health check: HEALTHY
+2024-01-15 14:45:25.234 [INFO] Storage capacity: 89.2% utilized
+2024-01-15 14:45:26.891 [WARN] Node esx-node-04 CPU temp: 78°C (normal range)
+2024-01-15 14:45:27.445 [INFO] Replication lag: 0.3ms
+2024-01-15 14:45:28.112 [INFO] Last backup: 2024-01-15 02:15:00 UTC
+```
+
+!!! warning "Common errors"
+    **`ERROR: Permission denied: /usr/lib/vmware-marvin/marvind.py`** — Run the command with `sudo` or as root user.
+    **`ERROR: vmware-marvin.service not found`** — Verify VMware VxRail Manager is installed with `rpm -qa | grep vmware-marvin` and reinstall if missing.
+    **`tail: cannot open '/var/log/vmware/vmware-vxrail-manager.log' for reading: No such file or directory`** — Check the correct log path with `find /var/log -name '*vxrail*' -o -name '*marvin*'` and adjust the path accordingly.

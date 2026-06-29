@@ -127,6 +127,26 @@ curl -sk -o /dev/null -w "%{http_code}" https://tmc.cloud.vmware.com/
 tanzu cluster list
 ```
 
+
+```text title="Expected output"
+Kubernetes control plane is running at https://10.20.50.100:6443
+CoreDNS is running at https://10.20.50.100:6443/api/v1/namespaces/kube-system/services/coredns/proxy
+
+Command 'nc' for host 10.20.51.42 port 6081 [udp/*] succeeded!
+
+200
+
+200
+
+NAME                    NAMESPACE       STATUS   CONTROLPLANE   WORKERS   KUBERNETES        
+tkg-prod-cluster-01     default         running  3/3            5/5       v1.27.5+vmware.2
+tkg-dev-cluster-02      dev-ns          running  1/1            2/2       v1.27.5+vmware.2
+```
+
+!!! warning "Common errors"
+    **`Unable to connect to the server: dial tcp 10.20.50.100:6443: i/o timeout`** — Verify the Supervisor VIP is reachable and the API server is running with `kubectl get nodes -A` from the Supervisor cluster.
+    **`Connection refused`** — Confirm the overlay network is operational on the peer node by checking `ip link show` for the VXLAN interface and verifying vSphere Distributed Switch settings.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Harbor/TMC CA certificate into your system trust store.
 ---
 
 ## See also

@@ -45,6 +45,26 @@ vCenter enforces TLS 1.2 minimum by default (vSphere 7.0+). TLS 1.0 and 1.1 are 
 # Option 5: Replace machine SSL certificate
 ```
 
+
+```text title="Expected output"
+vCenter Certificate Manager
+
+1. Generate Certificate Signing Request (CSR)
+2. Create a Self-Signed Certificate
+3. Replace Machine SSL Certificate with VMCA-signed Certificate
+4. Replace Machine SSL Certificate with Custom Certificate
+5. Replace VMCA Root Certificate
+6. Regenerate VMCA Root Certificate
+7. Reset all Certificates to Default
+8. View Certificate Information
+
+Please select an option [1-8]:
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to VMware Certificate Authority. Please check VMCA service status.`** — Verify VMCA service is running with `systemctl status vmware-vmca` and restart if needed.
+    **`Error: Certificate file not found at /path/to/cert.pem`** — Ensure the certificate file path is correct and readable by the root user before proceeding.
+    **`Error: Private key does not match certificate. Certificate installation failed.`** — Verify the private key and certificate are from the same CSR and were not corrupted during transfer.
 Replacement requires vCenter services restart. Plan a maintenance window.
 
 ### Certificate Monitoring
@@ -67,6 +87,25 @@ echo | openssl s_client -connect <vcenter-fqdn>:443 -servername <vcenter-fqdn> 2
   | grep -E "Alias|Not After"
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 10:23:45 2023 GMT
+notAfter=Jan 15 10:23:45 2025 GMT
+
+Alias: __MACHINE_CERT
+Not After: 2025-01-15T10:23:45Z
+
+Alias: __MACHINE_CERT_ALT
+Not After: 2025-01-15T10:23:45Z
+
+Alias: BACKUP_MACHINE_CERT
+Not After: 2024-06-20T14:57:12Z
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify the vCenter FQDN is correct, the host is reachable on port 443, and vCenter services are running.
+    **`vecs-cli: command not found`** — Ensure you are connected via SSH to the VCSA appliance itself, not a remote system; the tool only runs on the vCenter Server Appliance.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — This is expected when checking self-signed certificates; the command still returns valid expiry dates despite the verification warning.
 ## Certificates to Track
 
 | Certificate | Location | Risk if Expired |
@@ -175,6 +214,15 @@ Disconnect-VIServer * -Confirm:$false
 # See VMware KB 2069041 for the reset procedure
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`dir-cli: error while loading shared libraries: libvmafd.so.0: cannot open shared object file`** — Ensure you are running the command from the VCSA appliance itself, not a remote system, as the vmafd libraries are only available locally.
+    **`Error: Authentication failed for user 'administrator@vsphere.local'`** — Verify the current password is correct and that the administrator account exists in the vsphere.local domain.
+    **`Error: Account 'administrator' is not locked`** — Confirm the account is actually locked before attempting to unlock it; use `dir-cli user list` to check account status first.
 ### Unlock an AD Account (from vCenter)
 
 AD account lockouts caused by vCenter (e.g. cached wrong password in identity source):

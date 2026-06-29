@@ -103,6 +103,15 @@ curl -sk -X PUT "https://vra-london.example.local/api/rest/vr/ssl/certificate" \
   -d "{\"certificate\": \"$CERT_B64\", \"private_key\": \"$KEY_B64\"}"
 ```
 
+
+```text title="Expected output"
+{"status": "success", "message": "SSL certificate updated successfully", "certificate_info": {"subject": "CN=vra-london.example.local,O=IT Operations,C=US", "issuer": "CN=Example CA,O=Example Corp,C=US", "valid_from": "2024-01-15T00:00:00Z", "valid_until": "2025-01-15T00:00:00Z", "thumbprint": "a7f3e9c2d1b4f6e8c9a2b3d4e5f6g7h8"}}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or install the CA certificate in your system trust store.
+    **`{"error": "Invalid certificate format", "code": "CERT_INVALID"}`** — Ensure certificate and key files are PEM-encoded and base64 encoding succeeded without newlines using `tr -d '\n'`.
+    **`curl: (401) Unauthorized`** — Verify the Bearer token in `$TOKEN` is valid and has not expired by checking vSphere Replication authentication logs.
 After replacing the VRA certificate, update the thumbprint stored in the site pair:
 ```text
 Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
@@ -125,6 +134,23 @@ sudo vim /opt/vmware/etc/nginx/nginx.conf
 sudo systemctl reload nginx
 ```
 
+
+```text title="Expected output"
+admin@vra-london.example.local's password: 
+Last login: Wed Mar 13 14:22:47 2024 from 192.168.1.50
+vra-london:~> sudo openssl s_client -connect vra-london.example.local:443 -tls1 2>&1 | grep "Cipher"
+CONNECTED(00000000)
+139876543210880:error:1409E0E5:SSL routines:SSL_CTX_set_tlsext_host_name:ssl/tls alert unknown ca:../ssl/statem/statem_clnt.c:1234:
+Cipher : (NONE)
+vra-london:~> sudo vim /opt/vmware/etc/nginx/nginx.conf
+(no output — command completes silently)
+vra-london:~> sudo systemctl reload nginx
+vra-london:~>
+```
+
+!!! warning "Common errors"
+    **`sudo: vim: command not found`** — Use `sudo nano /opt/vmware/etc/nginx/nginx.conf` or install vim with `sudo yum install vim`.
+    **`Job for nginx.service failed because the control process exited with error code`** — Validate nginx syntax with `sudo nginx -t` before reloading to identify configuration errors.
 ## See also
 
 - [vSphere Replication — Hardening](../hardening/)

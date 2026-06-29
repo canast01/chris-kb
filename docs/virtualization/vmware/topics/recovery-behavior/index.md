@@ -64,6 +64,27 @@ esxcli storage core path list | grep -E "State:|Device:"
 grep -i "APD\|PDL\|lost path" /var/log/vmkernel.log | tail -20
 ```
 
+
+```text title="Expected output"
+State: active
+Device: naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+State: active
+Device: naa.60001405m2n3o4p5q6r7s8t9u0v1w2x3
+State: standby
+Device: naa.60001405y1z2a3b4c5d6e7f8g9h0i1j2k
+State: disabled
+Device: naa.60001405l3m4n5o6p7q8r9s0t1u2v3w4
+
+2024-10-15T14:23:45.123Z cpu2:2048)WARNING: ScsiPath: 2897: Lost path to device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+2024-10-15T14:24:12.456Z cpu5:4096)WARNING: PDL detected on device naa.60001405m2n3o4p5q6r7s8t9u0v1w2x3
+2024-10-15T14:25:33.789Z cpu1:1024)WARNING: APD condition detected: device naa.60001405y1z2a3b4c5d6e7f8g9h0i1j2k
+2024-10-15T14:26:01.234Z cpu3:2560)WARNING: ScsiPath: 2897: Lost path to device naa.60001405l3m4n5o6p7q8r9s0t1u2v3w4
+2024-10-15T14:27:15.567Z cpu7:5120)WARNING: APD timeout: device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2 entering PDL state
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/vmkernel.log: No such file or directory`** — SSH directly to the ESXi host instead of running commands through vCenter; the vmkernel.log path is only accessible on the ESXi host itself.
+    **`esxcli: command not found`** — Ensure you are logged into an ESXi host with SSH access; esxcli is not available on vCenter Server or Windows hosts.
 **Do not rescan storage unnecessarily during a recovery** — it can delay path re-establishment.
 
 ## After Network Failure
@@ -95,6 +116,25 @@ esxcli vsan debug object list | grep -v healthy
 esxcli vsan debug resync list | grep "Total Bytes"
 ```
 
+
+```text title="Expected output"
+UUID                                  Bytes to Sync  Bytes Synced  Est. Time Remaining
+52a4c8f1-2b3e-4a9c-b1d2-8e9f3c5a7b2d  847.3 GB      234.5 GB      ~45 minutes
+7f1e9d3c-5b2a-4e8f-9c1d-2a5b8e3f7c4d  512.0 GB      512.0 GB      ~0 minutes
+Total Resync Objects: 2
+
+UUID                                  Object Health  Bytes  Component Count
+a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d  degraded       2.1 GB  3/3
+f7e6d5c4-b3a2-9f8e-7d6c-5b4a-3f2e1d0c  degraded       1.8 GB  2/3
+c9d8e7f6-a5b4-3c2d-1e0f-9a8b7c6d5e4f  healthy        4.2 GB  3/3
+
+Total Bytes to Sync: 1.36 TB
+Bytes Already Synced: 746.5 GB
+```
+
+!!! warning "Common errors"
+    **`Resync operations are not running`** — Verify the failed disk has been replaced and the host has rejoined the cluster with `esxcli vsan cluster get`.
+    **`grep: (standard input): No such input`** — Ensure VSAN is enabled on the cluster and the host has valid VSAN membership with `esxcli vsan cluster info`.
 ## Recovery Performance Impact
 
 | Event | Performance Impact | Duration |

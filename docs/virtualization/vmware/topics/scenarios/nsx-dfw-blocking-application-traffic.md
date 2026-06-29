@@ -121,6 +121,34 @@ curl -sk -u admin:<password> \
   | python3 -m json.tool | grep -A5 "tags"
 ```
 
+
+```text title="Expected output"
+{
+    "results": [
+        {
+            "external_id": "vm-42",
+            "display_name": "web-server-01",
+            "tags": [
+                {
+                    "scope": "environment",
+                    "tag": "production"
+                },
+                {
+                    "scope": "team",
+                    "tag": "platform-eng"
+                }
+            ],
+            "resource_type": "VirtualMachine"
+        }
+    ],
+    "result_count": 1
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if still failing, verify NSX Manager hostname matches certificate CN).
+    **`jq: command not found`** — Install `python3-json-tool` or use `python3 -m json.tool` instead (as shown in the example).
+    **`"results": []`** — Verify the VM display name matches exactly (case-sensitive) and the VM has been registered with NSX Manager.
 Look for: a recently changed IP address on the source or destination VM will invalidate an IP-set-based group membership. Dynamic tag criteria are the most fragile — confirm the tag is still present and spelled correctly.
 
 ---
@@ -157,6 +185,30 @@ curl -sk -X POST -u admin:<password> \
   "https://<nsx-manager>/api/v1/fabric/virtual-machines?action=update_tags"
 ```
 
+
+```text title="Expected output"
+{
+  "result_count": 1,
+  "results": [
+    {
+      "external_id": "vm-42",
+      "tags": [
+        {
+          "scope": "app",
+          "tag": "web-tier"
+        }
+      ],
+      "display_name": "web-server-01",
+      "resource_type": "VirtualMachine"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify NSX manager hostname matches certificate CN).
+    **`{"error_code":401,"error_message":"Unauthorized"}`** — Verify admin credentials are correct and URL-encoded (special characters like `@` or `#` in password must be percent-encoded).
+    **`{"error_code":404,"error_message":"Virtual machine not found"}`** — Confirm the `<vm-moid>` value is the correct vSphere managed object ID (obtain via vCenter inventory or `govc vm.info` command).
 After any rule or group change, re-run Traceflow to confirm the packet now shows **Delivered** at the destination.
 
 Look for: if Traceflow shows Delivered but the application still fails — the issue is now above Layer 4 (application layer, TLS, auth) rather than DFW.
@@ -180,6 +232,27 @@ pktcap-uw --switchport <SwitchPort> --proto 6 --dstport 5432 -c 200 -o /tmp/cap.
 # Filter in Wireshark: tcp.port==5432 and tcp.flags.reset==1
 ```
 
+
+```text title="Expected output"
+World ID    Name                                          Num Ports
+4           vm-123-web-server                            1
+7           vm-456-db-primary                            2
+12          vm-789-cache-node                            1
+
+Port ID  vNIC ID  Team Uplink  MAC Address        IP Address      Status
+16777220 4000     vmnic0       00:0c:29:a4:5e:2b  192.168.1.45    ok
+16777221 4001     vmnic1       00:0c:29:a4:5e:2c  192.168.1.46    ok
+
+Capturing on switchport 16777220, 200 packets, output to /tmp/cap.pcap
+^C
+Packets captured: 187
+Packets dropped: 0
+```
+
+!!! warning "Common errors"
+    **`World ID not found`** — Run `esxcli network vm list` first to identify the correct WorldID, then pass it with `-w <WorldID>` to the port list command.
+    **`pktcap-uw: command not found`** — Enable SSH on the ESXi host and ensure you are connected directly to the ESXi shell (not vCenter); pktcap-uw is only available on ESXi hosts.
+    **`Permission denied: /tmp/cap.pcap`** — Run the pktcap-uw command with root privileges or write to a world-writable directory like `/tmp` after verifying disk space with `df -h`.
 Look for: TCP RST packets in the capture confirm the DFW is sending a reset (REJECT rule). No response at all confirms a DROP rule. If neither appears and traffic is flowing out the vNIC, the issue is downstream.
 
 ---

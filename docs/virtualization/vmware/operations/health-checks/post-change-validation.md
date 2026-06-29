@@ -55,6 +55,29 @@ get service router
 get logical-routers
 ```
 
+
+```text title="Expected output"
+Cluster Status: STABLE
+  Node 1 (nsx-mgr-01.lab.local): STABLE - 192.168.1.10
+  Node 2 (nsx-mgr-02.lab.local): STABLE - 192.168.1.11
+  Node 3 (nsx-mgr-03.lab.local): STABLE - 192.168.1.12
+  Last Sync: 2024-01-15T14:32:18Z
+
+Service Router Status:
+  SR-01: UP (Active) - CPU: 45% | Memory: 62%
+  SR-02: UP (Standby) - CPU: 12% | Memory: 28%
+
+Logical Routers:
+  lr-prod-01: ACTIVE - 10.0.0.1/24
+  lr-prod-02: ACTIVE - 10.1.0.1/24
+  lr-dev-01: ACTIVE - 10.2.0.1/24
+  lr-test-01: ACTIVE - 10.3.0.1/24
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to cluster manager at 192.168.1.10:443`** — Verify NSX Manager VMs are powered on and network connectivity exists from your management host.
+    **`Cluster Status: DEGRADED - Node nsx-mgr-02 unreachable`** — SSH to the unreachable node and check network interfaces with `ip link show` and restart networking if needed.
+    **`Service Router SR-01: DOWN - Last heartbeat 5m ago`** — Reboot the edge VM or check its management network connectivity and NSX Controller registration status.
 ## Backup Validation
 
 ```powershell

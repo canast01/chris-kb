@@ -55,6 +55,49 @@ curl -sk -H "vmware-api-session-id: <token>" \
   https://<vcenter>/api/vcenter/vm
 ```
 
+
+```text title="Expected output"
+{
+  "value": "52b1042c-3ca3-4900-a236-2d2322e7eb41"
+}
+{
+  "value": [
+    {
+      "vm": "vm-42",
+      "name": "web-server-01",
+      "power_state": "POWERED_ON",
+      "cpu_count": 4,
+      "memory_MB": 8192
+    },
+    {
+      "vm": "vm-156",
+      "name": "db-primary-prod",
+      "power_state": "POWERED_ON",
+      "cpu_count": 8,
+      "memory_MB": 16384
+    },
+    {
+      "vm": "vm-203",
+      "name": "backup-vault-02",
+      "power_state": "POWERED_OFF",
+      "cpu_count": 2,
+      "memory_MB": 4096
+    },
+    {
+      "vm": "vm-891",
+      "name": "test-vm-staging",
+      "power_state": "POWERED_ON",
+      "cpu_count": 2,
+      "memory_MB": 2048
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the vCenter CA certificate into your system trust store.
+    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"Invalid session.","id":"Com.Vmware.Vapi.Std.Errors.Unauthenticated"}]}}`** — Ensure the session token from the first curl command is correctly passed in the `vmware-api-session-id` header and hasn't expired (tokens expire after 30 minutes of inactivity).
+    **`curl: (7) Failed to connect to <vcenter>: Name or service not known`** — Verify the vCenter hostname or IP address is correct and resolvable; check DNS or use the FQDN instead of a short hostname.
 ### Syslog / SIEM
 
 vCenter forwards events as syslog (RFC 5424). Configure in VAMI or via PowerCLI:

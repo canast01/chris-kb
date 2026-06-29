@@ -38,6 +38,32 @@ vCenter 7.0+ enforces TLS 1.2 minimum. Verify after upgrading from older vSphere
 /usr/lib/vmware-tls-reconfigurator/VcTlsReconfigurator/reconfigureVc update --tlsVersion TLSv1.2
 ```
 
+
+```text title="Expected output"
+Endpoint: localhost
+Protocol: TLSv1.2
+Cipher Suite: ECDHE-RSA-AES256-GCM-SHA384
+Certificate: CN=localhost,OU=VMware,O=VMware Inc.,C=US
+Issuer: CN=VMware Root CA,OU=VMware,O=VMware Inc.,C=US
+Valid From: 2023-11-15T08:22:14Z
+Valid Until: 2026-11-14T08:22:14Z
+
+Scanning TLS configuration on vCenter Server 7.0.3...
+Current TLS Version: TLSv1.0
+Deprecated Protocols Detected: SSLv3, TLSv1.0, TLSv1.1
+Recommendation: Update to TLSv1.2 or higher
+
+Updating TLS configuration to TLSv1.2...
+Stopping services...
+Reconfiguring endpoints...
+Starting services...
+TLS reconfiguration completed successfully.
+```
+
+!!! warning "Common errors"
+    **`vmafd-cli: command not found`** — Verify vmafd service is running with `systemctl status vmware-vmafd` and check the correct binary path.
+    **`ERROR: Failed to update TLS version: Service dependency error`** — Restart all vCenter services with `/etc/init.d/vmware-vpxd restart` before retrying the TLS update.
+    **`ERROR: Certificate validation failed during reconfiguration`** — Regenerate the vCenter certificate using the Certificate Manager tool before applying TLS changes.
 Test TLS from outside the appliance:
 ```bash
 # Verify only TLS 1.2+ is accepted
@@ -46,6 +72,40 @@ openssl s_client -connect vcenter.example.local:443 -tls1_1 # should fail
 openssl s_client -connect vcenter.example.local:443 -tls1_2 # should succeed
 ```
 
+
+```text title="Expected output"
+# First command (TLS 1.0) — should fail
+CONNECTED(00000003)
+139911234567890:error:1409442E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version:../ssl/record/rec_read_c.c:583:SSL alert number 70
+---
+
+# Second command (TLS 1.1) — should fail
+CONNECTED(00000003)
+139911234567890:error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure:../ssl/record/rec_read_c.c:583:SSL alert number 40
+---
+
+# Third command (TLS 1.2) — should succeed
+CONNECTED(00000003)
+depth=0 CN = vcenter.example.local, O = VMware, C = US
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 CN = vcenter.example.local, O = VMware, C = US
+verify return:1
+---
+Certificate chain
+ 0 s:CN = vcenter.example.local, O = VMware, C = US
+   i:CN = vcenter.example.local, O = VMware, C = US
+subject=CN = vcenter.example.local, O = VMware, C = US
+issuer=CN = vcenter.example.local, O = VMware, C = US
+---
+Cipher   : ECDHE-RSA-AES256-GCM-SHA384
+Protocol : TLSv1.2
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify vCenter is running and listening on port 443 with `netstat -tlnp | grep 443`.
+    **`error:1409442E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version`** — This is expected output indicating TLS 1.0 is correctly rejected; no action needed.
+    **`error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure`** — This is expected output indicating TLS 1.1 is correctly rejected; no action needed.
 ---
 
 ## SSO Password and Lockout Policy
@@ -139,6 +199,31 @@ esxcli network firewall ruleset set --ruleset-id sshClient --allowed-all false
 esxcli network firewall ruleset allowedip add --ruleset-id sshClient --ip-address 10.0.1.0/24
 ```
 
+
+```text title="Expected output"
+Enable                           Loaded
+------                           ------
+true                             true
+
+Name                             Enabled  Implicit
+----                             -------  --------
+sshServer                        true     false
+sshClient                        true     false
+nfsClient                        true     false
+nfsServer                        false    false
+dhcp                             true     false
+dns                              true     false
+snmp                             true     false
+syslog                           true     false
+...
+
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or malformed command line.`** — Verify the ruleset ID exists with `esxcli network firewall ruleset list` and check for typos in the ruleset name.
+    **`Error: The IP address format is invalid.`** — Use valid CIDR notation (e.g., `10.0.1.0/24`) or a single IP without a prefix (e.g., `10.0.1.50`).
 ---
 
 ## Audit Logging Configuration

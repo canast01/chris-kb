@@ -78,6 +78,22 @@ nslookup esxi-new-host.domain.local
 nslookup <esxi-management-ip>
 ```
 
+
+```text title="Expected output"
+Server:		10.0.1.53
+Address:	10.0.1.53#53
+
+Name:	esxi-new-host.domain.local
+Address: 192.168.100.45
+
+Server:		10.0.1.53
+Address:	10.0.1.53#53
+45.100.168.192.in-addr.arpa	name = esxi-new-host.domain.local.
+```
+
+!!! warning "Common errors"
+    **`** server can't find esxi-new-host.domain.local: NXDOMAIN`** — Verify the hostname is correctly registered in DNS and check that the jump host can reach the DNS server (ping 10.0.1.53).
+    **`** server can't find 45.100.168.192.in-addr.arpa: NXDOMAIN`** — Confirm the reverse DNS zone is configured on the DNS server and the PTR record exists for the ESXi management IP address.
 Expected: both lookups return the correct name/IP. Fix DNS if either fails — do not use `/etc/hosts` workarounds.
 
 ---
@@ -92,6 +108,21 @@ esxcli system ntp set --enabled true
 ntpq -p
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ ntp1.domain.lo  10.0.0.1         2 u   64  128  377   12.543    2.156   1.234
+ ntp2.domain.lo  10.0.0.2         2 u   32  128  377   14.821   -1.892   0.987
+ LOCAL(0)        .LOCL.          10 l  998 1024    1    0.000    0.000   0.001
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option --server`** — Use `esxcli system ntp set --servers=ntp1.domain.local,ntp2.domain.local` (comma-separated in a single argument) on some ESXi versions instead of repeated `--server` flags.
+    **`Error: Unable to resolve ntp1.domain.local`** — Verify DNS resolution is working on the ESXi host and the NTP server hostnames are resolvable via `nslookup ntp1.domain.local`.
+    **`reach   delay   offset  jitter` (no peer entries)** — Wait 2-3 minutes for NTP to synchronize and re-run `ntpq -p`, or check firewall rules allow UDP port 123 outbound to the NTP servers.
 Look for: `*` or `+` next to a server in the `ntpq -p` output, indicating an active sync source.
 
 ---
@@ -117,6 +148,27 @@ esxcli network ip interface tag add --interface-name vmk2 --tagname VSAN
 vmkping -I vmk2 -d -s 8972 <existing-host-vSAN-vmk-ip>
 ```
 
+
+```text title="Expected output"
+vmk1 successfully added.
+vmk1 successfully configured.
+vmk1 successfully tagged.
+vmk2 successfully added.
+vmk2 successfully configured.
+vmk2 successfully tagged.
+PING 10.20.1.42 (10.20.1.42): 8972 data bytes
+8980 bytes from 10.20.1.42: icmp_seq=0 time=1.245 ms
+8980 bytes from 10.20.1.42: icmp_seq=1 time=1.198 ms
+8980 bytes from 10.20.1.42: icmp_seq=2 time=1.267 ms
+8980 bytes from 10.20.1.42: icmp_seq=3 time=1.203 ms
+--- 10.20.1.42 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+```
+
+!!! warning "Common errors"
+    **`Error: The object already exists.`** — Verify the VMkernel interface does not already exist with `esxcli network ip interface list` before adding.
+    **`Error: The portgroup does not exist.`** — Ensure the port group "vMotion" or "vSAN" is created on the vSwitch before running the interface add command.
+    **`100% packet loss`** — Confirm the target vSAN host's vmk2 IP is reachable and that jumbo frames (MTU 9000) are enabled on both the physical switch and vSAN port group.
 Expected: vmkping returns 0% packet loss. If it fails, check MTU on the switch port and VDS portgroup — vSAN requires end-to-end MTU 9000.
 
 ---
@@ -144,6 +196,19 @@ If the cluster uses vSAN, claim disks via vCenter → **vSAN** → **Disk Manage
 esxcli vsan storage list
 ```
 
+
+```text title="Expected output"
+Name                                    VSANID                                Tier  Allocated  Capacity
+------------------------------------    ------------------------------------  ----  ---------  ----------
+vsanDatastore                           52d33c41-a8f2-4e12-b1c3-7f9e2a1d5c8b  All   2.3 TB     4.6 TB
+vsanDatastore-2                         61e44d52-b9f3-5f23-c2d4-8g0f3b2e6d9c  All   1.8 TB     3.2 TB
+vsanDatastore-backup                    7af55e63-ca04-6g34-d3e5-9h1g4c3f7e0d  All   892 GB     2.0 TB
+vsanDatastore-prod                      8bg66f74-db15-7h45-e4f6-0i2h5d4g8f1e  All   3.1 TB     5.5 TB
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Run this command directly on an ESXi host via SSH or vSphere CLI, not from a local workstation.
+    **`Error: Could not connect to the vSAN cluster`** — Verify the host is part of a vSAN cluster and vSAN is enabled on the cluster.
 Expected: all disks shown as claimed and healthy in the disk group. If EZ-Claim is not enabled, manually select disks, click **Claim Disks**, and assign cache and capacity roles.
 
 ---
@@ -180,6 +245,14 @@ Disable SSH once all configuration steps are complete.
 vim-cmd hostsvc/disable_ssh
 ```
 
+
+```text title="Expected output"
+SSH has been disabled.
+```
+
+!!! warning "Common errors"
+    **`Unknown command: disable_ssh`** — Verify the correct vSphere API command syntax; use `vim-cmd hostsvc/enable_ssh` or `vim-cmd hostsvc/query_config` to check SSH status instead.
+    **`vim-cmd: command not found`** — Ensure you are running this command directly on the ESXi host (not a vCenter server) where vim-cmd is available in the PATH.
 Expected: SSH service stops. Set startup policy to **Start and stop manually** (vCenter → Host → **Configure** → **Services** → **SSH**) to prevent it restarting on reboot.
 
 ---

@@ -100,6 +100,24 @@ ssh root@<vra-ip>
 ls -lh /tmp/vr-support*.zip
 ```
 
+
+```text title="Expected output"
+root@vra-prod-01:~# /etc/rc3.d/*vrms/scripts/vr-support.sh
+Generating VMware vSphere Replication support bundle...
+Collecting system logs...
+Collecting replication statistics...
+Collecting configuration data...
+Support bundle generation completed successfully.
+Bundle saved to: /tmp/vr-support-2024-01-15-143022.zip
+
+root@vra-prod-01:~# ls -lh /tmp/vr-support*.zip
+-rw-r--r-- 1 root root 287M Jan 15 14:30 /tmp/vr-support-2024-01-15-143022.zip
+```
+
+!!! warning "Common errors"
+    **`bash: /etc/rc3.d/*vrms/scripts/vr-support.sh: No such file or directory`** — Verify the correct VRA version path with `find /etc -name "vr-support.sh" 2>/dev/null` and adjust the script location accordingly.
+    **`Permission denied`** — Ensure you are logged in as root or have sudo privileges; if using a non-root account, prepend `sudo` to the command.
+    **`/tmp: No space left on device`** — Free up disk space on the VRA appliance with `rm -rf /tmp/vr-support*.zip` to remove old bundles, or increase the /tmp partition size.
 ### 3. Collect ESXi replication logs from the source host
 
 ```bash
@@ -116,6 +134,28 @@ tail -200 /var/log/hostd.log | grep -i "replication\|vr\|hbr"
 scp root@<source-esxi-ip>:/var/log/hbr.log /tmp/hbr-$(hostname).log
 ```
 
+
+```text title="Expected output"
+root@esxi-prod-01:~# tail -300 /var/log/hbr.log | grep -i "error\|fail\|exception\|warn"
+2024-01-15T09:47:23.456Z warn hbr[2048]: [vm-123] Replication lag detected: 2.5 GB pending
+2024-01-15T09:52:18.891Z error hbr[2048]: [vm-456] Failed to send checkpoint: Connection timeout to vSphere Replication Server
+2024-01-15T10:01:05.234Z warn hbr[2048]: [vm-789] Network bandwidth throttled to 50 Mbps
+2024-01-15T10:15:42.567Z error hbr[2048]: [vm-123] Exception during snapshot creation: Insufficient storage on replica datastore
+
+root@esxi-prod-01:~# tail -200 /var/log/hostd.log | grep -i "replication\|vr\|hbr"
+2024-01-15T09:45:12.123Z info hostd[1024]: HBR agent initialized successfully
+2024-01-15T09:46:33.456Z info hostd[1024]: Replication task started for vm-123 (UUID: 50123456-abcd-ef01-2345-6789abcdef01)
+2024-01-15T10:02:47.789Z warn hostd[1024]: vSphere Replication Server heartbeat delayed by 3.2 seconds
+2024-01-15T10:18:55.012Z info hostd[1024]: Replication checkpoint completed: 847 MB transferred
+
+root@esxi-prod-01:~# scp root@192.168.1.45:/var/log/hbr.log /tmp/hbr-esxi-prod-01.log
+hbr.log                                          100%  2847KB   4.2MB/s   00:00
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and that root login is enabled on the ESXi host via DCUI or vSphere Client.
+    **`No such file or directory`** — Confirm the ESXi host is running vSphere Replication Agent; if not installed, deploy it from the vSphere Replication appliance.
+    **`Connection refused`** — Ensure the source ESXi host is reachable on the network and SSH service is running (check firewall rules and host connectivity).
 ### 4. Export vCenter system logs
 
 In vSphere Client:
@@ -245,6 +285,21 @@ service vmware-h4 status
 tail -200 /var/log/vmware/hbrsrv/hbrsrv.log | grep -i "error\|fail\|exception"
 ```
 
+
+```text title="Expected output"
+vmware-vrms is running.
+vmware-h4 is running.
+2024-01-15 14:32:18.445 [pool-12-thread-4] ERROR com.vmware.hbr.server.replication.RpoTracker - RPO threshold exceeded for site-pair 'prod-to-dr': current RPO 3245s > configured 1800s
+2024-01-15 14:28:52.112 [pool-8-thread-2] WARN com.vmware.hbr.server.sync.SyncManager - Replication lag detected for VM 'web-prod-01': 2847 MB pending
+2024-01-15 14:15:33.667 [pool-5-thread-1] ERROR com.vmware.hbr.server.connection.SitePairManager - Failed to authenticate with remote VRA at 10.42.18.55: javax.net.ssl.SSLHandshakeException: PKIX path validation failed
+2024-01-15 14:02:19.334 [pool-3-thread-6] EXCEPTION com.vmware.hbr.server.storage.SnapshotManager - Unable to create snapshot on datastore 'ds-repl-01': No space left on device
+2024-01-15 13:58:44.221 [pool-11-thread-9] ERROR com.vmware.hbr.server.network.Heartbeat - Heartbeat timeout from peer VRA (site-pair UUID: a7f2c1d8-9e4b-42a1-8c3f-5b6d2e9a1f4c)
+```
+
+!!! warning "Common errors"
+    **`Failed to authenticate with remote VRA at <IP>: javax.net.ssl.SSLHandshakeException: PKIX path validation failed`** — Regenerate and re-exchange SSL certificates between VRA appliances using the vSphere Replication management interface or re-pair the sites.
+    **`Unable to create snapshot on datastore: No space left on device`** — Expand the replication datastore capacity or reduce the number of concurrent replications to free up storage space.
+    **`Heartbeat timeout from peer VRA`** — Verify network connectivity between VRA appliances on port 31031 and check firewall rules; restart vmware-h4 service if connectivity is confirmed.
 ```bash
 # SSH to the source ESXi host as root
 
@@ -255,6 +310,21 @@ tail -200 /var/log/hbr.log | grep -i "error\|fail"
 esxcli network ip interface list | grep -i "replication\|hbr"
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:47:23.456Z [ERROR] Replication of vm-prod-db-01 failed: Connection timeout to replica host 192.168.100.45
+2024-01-15T09:48:12.789Z [WARN] Checkpoint for vm-web-02 delayed by 2.5 minutes
+2024-01-15T09:49:01.234Z [ERROR] Failed to replicate snapshot: Insufficient space on replica datastore (2.1 GB required, 1.8 GB available)
+2024-01-15T09:50:44.567Z [ERROR] Authentication failed for replica host: Invalid credentials for user 'root@vsphere.local'
+
+Name    IPv4 Address      IPv6 Address  MAC Address        MTU  Enabled  Portset      VDS
+vmk1    192.168.100.10    ::1           00:50:56:c0:00:01  1500 true     vSphere Replication  vds-prod
+vmk2    192.168.101.15    fe80::1       00:50:56:c0:00:02  1500 true     Management   vds-mgmt
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/var/log/hbr.log' for reading: No such file or directory`** — Verify vSphere Replication is installed on the ESXi host by checking the VR extension in vCenter or reinstall the VR agent.
+    **`Name    IPv4 Address      IPv6 Address  MAC Address        MTU  Enabled  Portset`** — If no replication vmkernel is listed, create a dedicated vmk interface tagged for vSphere Replication traffic in vCenter's host networking configuration.
 ---
 
 ## Support SLA Reference

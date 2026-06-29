@@ -55,12 +55,41 @@ signoff_checklist: "Sign-off Checklist" {shape: rectangle}
 service-control --status --all | grep -v RUNNING   # anything not RUNNING?
 ```
 
+
+```text title="Expected output"
+vmware-vpostgres                                    STOPPED
+vmware-rhttpproxy                                   RUNNING
+vmware-sps                                          RUNNING
+vmware-vpxd                                         RUNNING
+vmware-vsan-health                                  RUNNING
+vmware-cm                                           STOPPED
+vmware-cis-license                                  RUNNING
+vmware-netdumper                                    STOPPED
+```
+
+!!! warning "Common errors"
+    **`service-control: command not found`** — Ensure you are logged into the VCSA appliance directly (SSH to the vCenter Server Appliance hostname/IP), not a Windows vCenter instance.
+    **`Permission denied`** — Run the command with `sudo` or log in as root user to the VCSA appliance.
 **Expected output:** No output (all services RUNNING). If any service appears, restart it:
 
 ```bash
 service-control --restart <service-name>
 ```
 
+
+```text title="Expected output"
+Stopping service <service-name>...
+Waiting for service <service-name> to stop...
+Service <service-name> stopped successfully.
+Starting service <service-name>...
+Waiting for service <service-name> to start...
+Service <service-name> started successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown service '<service-name>'`** — Replace `<service-name>` with a valid VMware service name like `vmware-vpxd`, `vmware-esx-hostd`, or `vpxa`.
+    **`Error: Permission denied`** — Run the command with root privileges using `sudo service-control --restart <service-name>` or as the root user.
+    **`Timeout waiting for service to start`** — Check service dependencies and logs with `service-control --status <service-name>` and review `/var/log/vmware/vpxd/vpxd.log` for startup errors.
 Check alarms in vSphere Client: **Home → Alarms → All Alarms** — filter to `Critical`. Any critical alarm here blocks the rest of the routine until acknowledged or resolved.
 
 Verify backup:
@@ -71,6 +100,14 @@ Verify backup:
 grep "Backup completed" /var/log/vmware/applmgmt/backup.log | tail -1
 ```
 
+
+```text title="Expected output"
+Backup completed successfully at 2024-01-15 03:45:22 UTC. Duration: 47 minutes. Size: 23.4 GB. Destination: /mnt/backup/vcenter-prod-01.bak.
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/vmware/applmgmt/backup.log: No such file or directory`** — Verify the vCenter appliance has backup logging enabled and check the correct log path with `find /var/log -name "*backup*"`.
+    **`(no output returned)`** — The backup log exists but contains no successful completions; check `/var/log/vmware/applmgmt/backup.log` directly or review VAMI for backup job status and errors.
 **Expected output:** Timestamp within last 24 hours.
 
 **Escalate if:** Any service not running after restart · Last backup > 24 h ago · Critical alarms present.
@@ -119,6 +156,18 @@ Get-VMHost | Get-View | Select Name, @{N='HWStatus';E={$_.OverallStatus}} |
 esxcli vsan health cluster get | grep -v "Green\|green" | grep -v "^$"
 ```
 
+
+```text title="Expected output"
+Cluster Status: yellow
+Memory Usage: yellow
+Network Latency: yellow
+Disk Capacity: yellow
+```
+
+!!! warning "Common errors"
+    **`Connect timed out`** — Verify the ESXi host is reachable and SSH is enabled via `esxcli system ssh set --enabled=true` on the target host.
+    **`Unknown command or namespace`** — Ensure you're connected to an ESXi host with vSAN enabled; run `esxcli vsan cluster list` first to confirm vSAN is active on the cluster.
+    **`Permission denied`** — Confirm your SSH user has root or equivalent privileges; use an account with administrative rights to the ESXi host.
 **Expected output:** No output (all checks green). Any non-green line needs investigation.
 
 Check object health:
@@ -127,6 +176,20 @@ Check object health:
 esxcli vsan debug object list | grep -v "state:healthy" | head -20
 ```
 
+
+```text title="Expected output"
+Object UUID                          State          Space Used
+52a4c8f1-2b3e-4a9c-8d1f-7e6c5b4a3d2c state:degraded 2.1 GB
+7f9e8d7c-6b5a-4938-2c1b-0a9f8e7d6c5b state:absent    0 B
+3c2b1a0f-9e8d-7c6b-5a4938-2c1b0a9f8e state:congested 5.8 GB
+9d8c7b6a-5f4e-3d2c-1b0a-9f8e7d6c5b4a state:degraded 1.2 GB
+1a0f9e8d-7c6b5a49-38-2c1b0a9f8e7d6c state:inaccessible 0 B
+6b5a4938-2c1b-0a9f-8e7d-6c5b4a3d2c1b state:degraded 3.4 GB
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Ensure you are running this command directly on an ESXi host (SSH session), not from vCenter; if on vCenter, use SSH to connect to the ESXi host first.
+    **`VSAN is not enabled on this cluster`** — Verify VSAN is licensed and enabled on the cluster by checking vSphere Client > Cluster > Configure > vSAN > General.
 **Expected output:** No output, or only objects in `state:resyncing` (acceptable if resync is making progress).
 
 Check capacity:
@@ -135,6 +198,19 @@ Check capacity:
 esxcli vsan storage list | grep -E "Used Capacity|Total Capacity"
 ```
 
+
+```text title="Expected output"
+Used Capacity: 2.34 TB
+Total Capacity: 5.12 TB
+Used Capacity: 1.87 TB
+Total Capacity: 5.12 TB
+Used Capacity: 3.21 TB
+Total Capacity: 5.12 TB
+```
+
+!!! warning "Common errors"
+    **`Connect to localhost failed. Error: Unable to connect to the vSAN Health Service`** — Ensure vSAN is enabled on the cluster and the vSAN Health Service is running; restart the service with `systemctl restart vsanvpd` if needed.
+    **`Unknown command or namespace vsan`** — Verify the ESXi host has vSAN licensed and enabled; check with `esxcli vsan cluster get` to confirm vSAN is active on the cluster.
 **Expected output:** Used capacity < 70% of total. At 70% set a ticket; at 80% escalate immediately.
 
 Check resync throughput (if objects are resyncing):
@@ -178,6 +254,15 @@ curl -sk -u admin:<password> https://<nsx-mgr>/api/v1/firewall/sections \
   | python3 -c "import sys,json; d=json.load(sys.stdin); print(f'DFW sections: {d[\"result_count\"]}')"
 ```
 
+
+```text title="Expected output"
+DFW sections: 47
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip SSL verification (already present in the example, so verify the flag wasn't removed).
+    **`curl: (7) Failed to connect to <nsx-mgr>: Name or service not known`** — Verify the NSX Manager hostname or IP address is correct and resolvable from your network.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Check that the NSX Manager API is responding and the credentials are valid; a 401/403 response will produce invalid JSON.
 **Expected output:** DFW section count matches previous day. An unexpected increase may indicate a runaway automation job.
 
 **Escalate if:** Any NSX Manager node not active · Any Edge node down · BGP session not Established · DFW count changed unexpectedly by > 5.

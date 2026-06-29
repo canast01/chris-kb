@@ -132,6 +132,43 @@ Watch disk latency during migration to detect storage pressure that affects othe
 esxtop
 ```
 
+
+```text title="Expected output"
+CPU  MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+PCPU MEMORY  DISK  NETWORK  POWER  HELP  QUIT
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or console, not from a vCenter Server or external system.
+    **`Error: Could not open display`** — Run esxtop in batch mode with `esxtop -b -n 1 -o csv > output.csv` if X11 forwarding is unavailable.
 Look for: DAVG stays below 30 ms. If DAVG exceeds 30 ms consistently: throttle concurrent workloads, reschedule to off-peak hours, or stagger multi-VM migrations to run sequentially. Monitor Aria Operations → **Workload** → **VMs** for disk latency alerts on neighbouring VMs.
 
 ---

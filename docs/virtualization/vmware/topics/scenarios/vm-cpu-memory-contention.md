@@ -155,6 +155,25 @@ Connect to the ESXi host via SSH and launch esxtop:
 esxtop
 ```
 
+
+```text title="Expected output"
+ESXTOP - VMware ESXi top utility (version 6.7.0 build-14320388)
+Press 'h' for help, 'q' to quit, 'e' to toggle VCPU stats
+────────────────────────────────────────────────────────────────────────────────
+GID  NAME                                   NWORLDID  %USED  %SYS  %WAIT  %RDY
+  1  vmx                                        2048  45.2   8.1   12.3   2.1
+  2  vmx                                        2049  38.7   6.9   18.5   1.8
+  3  vmx                                        2050  22.1   4.2    5.6   0.9
+  4  vmx                                        2051  15.3   3.1    2.1   0.4
+────────────────────────────────────────────────────────────────────────────────
+PCPU USED(%): 30.3  SYS(%): 5.6  WAIT(%): 9.6  IDLE(%): 54.5
+Memory: 262144 MB total, 187456 MB used, 74688 MB free
+────────────────────────────────────────────────────────────────────────────────
+```
+
+!!! warning "Common errors"
+    **`ESXTOP: Cannot open /proc/uptime: Permission denied`** — Run esxtop as root or with sudo.
+    **`ESXTOP: No such file or directory`** — Ensure you are running this command directly on an ESXi host, not a vCenter server or external system.
 Press `m` to switch to memory view. Key columns:
 
 | Column | Meaning | Threshold |

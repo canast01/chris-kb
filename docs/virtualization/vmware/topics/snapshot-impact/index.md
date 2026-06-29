@@ -160,6 +160,28 @@ esxtop
 # Compare VMs with/without snapshots for correlation
 ```
 
+
+```text title="Expected output"
+ESXTOP 7.0.3 -- 192.168.1.42 -- 09:34:22
+DISK ADAPTER STATISTICS
+Adapter    CMDS/s  READS/s  WRITES/s  MBPS    GAVG    DAVG    QAVG    %UTIL
+vmhba0     145.2   89.3     55.9      234.5   18.2    8.1     0.3     42%
+vmhba1     312.7   156.4    156.3     512.1   34.6    22.4    1.8     78%
+vmhba2     98.1    45.2     52.9      156.3   12.1    5.9     0.1     28%
+
+VIRTUAL MACHINE DISK STATISTICS
+VM Name              READS/s  WRITES/s  GAVG    DAVG    %RDY
+prod-db-01           234.5    89.3      42.1    18.7    8.2%
+prod-web-02          45.2     12.1      8.3     3.2     1.1%
+prod-db-01-snap      189.7    156.2     67.3    31.4    14.6%
+backup-vm-03         12.3     4.5       5.1     2.1     0.3%
+...
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Ensure you are connected to an ESXi host via SSH or use vSphere Client; esxtop only runs on ESXi hosts, not vCenter.
+    **`ESXTOP: Unable to open /proc/vmware/sched/pcpu/cpu0/stats`** — Verify the user account has root or equivalent ESXi administrative privileges; standard users cannot access performance metrics.
+    **`ESXTOP: No such file or directory`** — Confirm the ESXi host is fully booted and the hostd service is running with `systemctl status hostd`; esxtop requires the management daemon to be active.
 ## Backup-Induced Snapshots
 
 Backup tools (Veeam, NBU, Commvault) create and delete a snapshot per job run. If the delta disk grows large during backup and consolidation is slow:

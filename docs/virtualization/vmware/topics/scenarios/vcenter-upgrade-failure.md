@@ -138,12 +138,46 @@ vim-cmd vmsvc/snapshot.revert <vmid> <snapshot-id> 0
 vim-cmd vmsvc/power.on <vmid>
 ```
 
+
+```text title="Expected output"
+Vmid       Name                                Config File                          Guest OS       Version   Annotation
+4          vcsa-6.7-prod                       [datastore1] vcsa-6.7-prod/vcsa.vmx  vmkernel65     vmx-13    Production VCSA
+8          vcsa-6.7-stage                      [datastore1] vcsa-6.7-stage/vcsa.vmx  vmkernel65     vmx-13    Stage Environment
+12         vcenter-8.0-dr                      [datastore2] vcenter-8.0-dr/vcsa.vmx  vmkernel65     vmx-13    DR Replica
+
+Snapshot Tree:
+ Snapshot Name        Snapshot ID  Timestamp                 Quiesced
+ pre-Stage-2          0x1a2b3c4d   2024-01-15 14:32:18 UTC   true
+ post-Stage-1         0x5e6f7g8h   2024-01-15 10:15:42 UTC   true
+ initial-backup       0x9i0j1k2l   2024-01-14 08:00:00 UTC   false
+
+Reverting to snapshot 0x1a2b3c4d...
+Revert succeeded.
+
+Powering on VM 4...
+VM 4 is now running.
+```
+
+!!! warning "Common errors"
+    **`vim-cmd: command not found`** — SSH directly to the ESXi host (not vCenter) where the VCSA VM is running, as vim-cmd is only available on ESXi.
+    **`Error: The object has already been deleted or has not been completely created`** — Wait 30-60 seconds after reverting the snapshot before attempting to power on, as the VM state may not have fully synchronized.
+    **`Snapshot not found: <snapshot-id>`** — Verify the snapshot ID exists by running `vim-cmd vmsvc/snapshot.get <vmid>` and use the exact Snapshot ID from the output.
 After rollback, SSH to the source VCSA and confirm all services are running:
 
 ```bash
 service-control --status --all | grep -i stopped
 ```
 
+
+```text title="Expected output"
+vmware-vpxd                                    stopped
+vmware-vsan-health                             stopped
+vmware-eam                                     stopped
+```
+
+!!! warning "Common errors"
+    **`service-control: command not found`** — Ensure you are running this command on a vCenter Server or ESXi host where VMware service control tools are installed, or use the full path `/usr/lib/vmware-vise/bin/service-control`.
+    **`grep: (standard input) is empty`** — This occurs when all services are running; the grep filter returns no matches, which is normal and not an error condition.
 ---
 
 ## 5. Stage 2 Failure — Read the Upgrade Logs
@@ -165,6 +199,29 @@ tail -100 /var/log/vmware/upgrade/dbmigration.log
 tail -100 /var/log/vmware/upgrade/certmigration.log
 ```
 
+
+```text title="Expected output"
+appliance.log
+dbmigration.log
+firstboot.log
+upgrade.log
+vcsa-upgrade.log
+certmigration.log
+...
+2024-01-15T09:47:32.156Z | INFO  | Upgrade orchestration started for vCenter 7.0.3 → 8.0.1
+2024-01-15T09:52:18.423Z | ERROR | Stage 2 migration failed: insufficient disk space on /storage/db
+2024-01-15T09:52:19.001Z | INFO  | Rolling back database changes
+2024-01-15T09:52:45.678Z | ERROR | Rollback incomplete: 847 transactions pending
+2024-01-15T09:53:12.234Z | WARN  | Certificate migration skipped due to upstream failure
+2024-01-15T09:53:15.891Z | INFO  | Upgrade process halted at Stage 2
+2024-01-15T10:15:22.445Z | ERROR | Failed to migrate certificate: source cert not found in /etc/vmware-vpx/ssl/
+2024-01-15T10:15:23.112Z | WARN  | Fallback to self-signed certificate pending manual intervention
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/var/log/vmware/upgrade/vcsa-upgrade.log' for reading: No such file or directory`** — SSH to the VCSA management interface instead of the appliance shell, or verify the upgrade process actually started by checking `/var/log/firstboot/` for pre-upgrade logs.
+    **`Permission denied`** — Ensure you are logged in as root or a user with sudo privileges; use `sudo -i` to escalate if needed.
+    **`/var/log/vmware/upgrade/: No such file or directory`** — The upgrade may not have been initiated yet or the VCSA is still in pre-upgrade state; check `/var/log/firstboot/firstboot.log` to confirm upgrade stage.
 Common Stage 2 failure patterns:
 
 ```text
@@ -211,6 +268,40 @@ for svc in vpxd-extension machine vsphere-webclient; do
 done
 ```
 
+
+```text title="Expected output"
+Stopped services:
+  vsphere-ui
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda2       59G   28G   28G  49% /
+/dev/sda1      550M  187M  363M  35% /boot
+tmpfs          3.9G     0  3.9G   0% /dev/shm
+
+               Local time: Wed 2024-01-17 14:32:18 UTC
+               Universal time: Wed 2024-01-17 14:32:18 UTC
+               RTC time: Wed 2024-01-17 14:32:18 UTC
+               Time zone: UTC (UTC, +0000)
+               NTP service: active
+               RTC in local TZ: no
+               DST active: n/a
+
+Domain State: NORMAL
+
+Alias: vpxd-extension
+Not After: 2025-06-14T08:22:33Z
+
+Alias: machine
+Not After: 2025-06-14T08:22:33Z
+
+Alias: vsphere-webclient
+Not After: 2025-06-14T08:22:33Z
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to service-control`** — Ensure you are running this command as root or with sudo on the VCSA appliance.
+    **`command not found: /usr/lib/vmware-vmafd/bin/vmafd-cli`** — Verify the VCSA installation is complete and the vmafd service is running with `service-control --status --all | grep vmafd`.
+    **`Error: Connection refused`** — Wait 2–3 minutes after VCSA boot for all services to fully initialize, then retry the vmafd-cli commands.
 If the new VCSA boots but hosts are not reconnecting within 15 minutes:
 
 ```bash
@@ -219,6 +310,19 @@ Get-VMHost | Where-Object { $_.ConnectionState -eq "Disconnected" } `
   | ForEach-Object { $_ | Set-VMHost -State Connected }
 ```
 
+
+```text title="Expected output"
+Name                 ConnectionState       PowerState
+----                 ---------------       ----------
+esx-prod-01.lab.com  Connected             PoweredOn
+esx-prod-02.lab.com  Connected             PoweredOn
+esx-prod-03.lab.com  Connected             PoweredOn
+esx-dev-01.lab.com   Connected             PoweredOn
+```
+
+!!! warning "Common errors"
+    **`Connect-VIServer : The specified item could not be found on the server.`** — Ensure you are connected to the correct vCenter instance with `Connect-VIServer` before running the command.
+    **`Set-VMHost : The object 'VMHost' cannot be modified because it is being accessed by a different user or the connection to the server has been lost.`** — Verify network connectivity between vCenter and ESXi hosts, and check that no other administrators are performing concurrent operations on those hosts.
 ---
 
 ## 7. Aria SuiteLC Upgrade Path

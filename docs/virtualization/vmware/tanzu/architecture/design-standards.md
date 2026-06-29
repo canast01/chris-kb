@@ -141,6 +141,14 @@ SERVICE_CIDR: 100.64.0.0/13
 # Note: TKG defaults use 100.x ranges — change if they conflict with existing RFC1918
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`CLUSTER_CIDR: command not found`** — Remove the colon and use proper bash variable assignment syntax: `CLUSTER_CIDR=100.96.0.0/11` without spaces around the equals sign.
+    **`Error: CIDR block 100.96.0.0/11 overlaps with existing network`** — Verify your network topology and select non-overlapping CIDR ranges, or update existing infrastructure to use different subnets before deploying the TKG cluster.
 **Overlap check before deployment:**
 
 ```bash
@@ -149,6 +157,19 @@ ip route show
 # Or verify on NSX-T: check T0 BGP advertised routes and ensure pod/service CIDRs are not announced
 ```
 
+
+```text title="Expected output"
+default via 192.168.1.1 dev ens33 proto dhcp metric 100
+192.168.1.0/24 dev ens33 proto kernel scope link src 192.168.1.50 metric 100
+10.0.0.0/8 via 192.168.1.254 dev ens33 proto static metric 100
+172.16.0.0/12 via 192.168.1.254 dev ens33 proto static metric 100
+10.244.0.0/16 dev vxlan0 proto kernel scope link src 10.244.1.1 metric 0
+10.96.0.0/12 dev cni0 proto kernel scope link src 10.96.0.1 metric 0
+```
+
+!!! warning "Common errors"
+    **`RTNETLINK answers: Operation not permitted`** — Run the command with `sudo` or as root to view kernel routing table.
+    **`Device "vxlan0" does not exist.`** — Verify that the overlay network interface is properly initialized; check `ip link show` and confirm NSX-T or CNI plugin has created the virtual interface.
 ---
 
 ## Storage Policy Mapping
@@ -305,6 +326,14 @@ kubectl create secret generic harbor-ca-cert \
   -n vmware-system-tkg
 ```
 
+
+```text title="Expected output"
+secret/harbor-ca-cert created
+```
+
+!!! warning "Common errors"
+    **`error: open /path/to/harbor-ca.crt: no such file or directory`** — Replace `/path/to/harbor-ca.crt` with the actual absolute path to your Harbor CA certificate file.
+    **`error: namespaces "vmware-system-tkg" not found`** — Ensure the TKC cluster is fully provisioned and the vmware-system-tkg namespace exists by running `kubectl get ns vmware-system-tkg`.
 For containerd-based nodes, the CA must be placed at `/etc/containerd/certs.d/harbor.example.com/ca.crt` — use a DaemonSet or Bootstrap script to distribute.
 
 ---

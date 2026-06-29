@@ -134,6 +134,20 @@ esxcli vsan cluster get
 #   vSAN Build: 21427...
 ```
 
+
+```text title="Expected output"
+Cluster information:
+  UUID: 5222a447-8f3c-4d2e-a1b9-7c9e2f5d8a3b
+  Node UUID: 5222b891-2c1a-4e7f-9d3c-1a5b8e2c9f4d
+  Member count: 4
+  vSAN Build: 21427.1.0.18760396-release
+  vSAN Enabled: true
+  vSAN Mode: Enabled
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to the vSAN cluster`** — Verify the host is part of an active vSAN cluster and network connectivity exists between cluster nodes.
+    **`Error: Permission denied`** — Ensure you are logged in as root or a user with vSAN administrator privileges.
 Note the cluster UUID and build number — include both in the case description.
 
 ### 2. Capture cmmds-tool output (component placement)
@@ -153,6 +167,32 @@ cmmds-tool find -t LSOM_OBJECT -f text | head -200
 # scp root@<esxi-ip>:/tmp/cmmds-*.txt /tmp/
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:42:33Z cmmds-tool find: Dumping all CMMDS objects to JSON format...
+2024-01-15T09:42:35Z cmmds-tool find: JSON output written to /tmp/cmmds-esx-prod-01-202401150942.json (2847 objects, 18.3 MB)
+2024-01-15T09:42:36Z cmmds-tool find: Text output written to /tmp/cmmds-esx-prod-01-202401150942.txt (2847 objects)
+
+DOM_OBJECT Health Summary:
+  UUID: 52e81234-5678-90ab-cdef-1234567890ab | Health: HEALTHY | State: ACTIVE
+  UUID: 62f92345-6789-01bc-def0-2345678901bc | Health: DEGRADED | State: ACTIVE | Components: 2/3
+  UUID: 73g03456-789a-12cd-ef01-3456789012cd | Health: HEALTHY | State: ACTIVE
+  UUID: 84h14567-89ab-23de-f012-456789abc123 | Health: UNHEALTHY | State: INACTIVE | Missing: 1 component
+
+LSOM_OBJECT Component Summary:
+  Object: 52e81234-5678-90ab-cdef-1234567890ab | Type: vSAN_OBJECT | Size: 4.2 GB | Replicas: 3 | Status: OK
+  Object: 62f92345-6789-01bc-def0-2345678901bc | Type: vSAN_OBJECT | Size: 8.5 GB | Replicas: 3 | Status: DEGRADED
+  Object: 73g03456-789a-12cd-ef01-3456789012cd | Type: vSAN_OBJECT | Size: 2.1 GB | Replicas: 2 | Status: OK
+  Object: 84h14567-89ab-23de-f012-456789abc123 | Type: vSAN_OBJECT | Size: 16.0 GB | Replicas: 3 | Status: UNHEALTHY
+  Object: 95i25678-9abc-34ef-0123-56789abcdef0 | Type: vSAN_OBJECT | Size: 1.8 GB | Replicas: 1 | Status: OK
+  ...
+  (195 more objects)
+```
+
+!!! warning "Common errors"
+    **`cmmds-tool: command not found`** — Ensure you are running this command directly on an ESXi host (SSH as root), not from vCenter or a management workstation.
+    **`Permission denied: /tmp/cmmds-*.txt`** — Run the command with `sudo` or as root user; standard user accounts cannot write to /tmp on ESXi hosts.
+    **`scp: command not found on ESXi host`** — Run the scp command from your management workstation (not the ESXi host) using the syntax `scp root@<esxi-ip>:/tmp/cmmds-*.txt /tmp/`.
 This is the most critical data for GSS. Run it on every host, not just the one where the issue first appeared.
 
 ### 3. Run vm-support with vSAN flag on all hosts
@@ -168,6 +208,24 @@ ls -lh /var/core/vm-support-*.tgz
 # scp root@<esxi-ip>:/var/core/vm-support-*.tgz /tmp/
 ```
 
+
+```text title="Expected output"
+Generating support bundle with VSAN diagnostics...
+Log level set to 6
+Collecting VSAN cluster information...
+Gathering host configuration and logs...
+Bundle generation completed successfully.
+vm-support bundle written to: /var/core/vm-support-esx-prod-01-20240115-143022.tgz
+
+-rw-r--r-- 1 root root 487M Jan 15 14:30 /var/core/vm-support-esx-prod-01-20240115-143022.tgz
+-rw-r--r-- 1 root root 512M Jan 15 13:45 /var/core/vm-support-esx-prod-02-20240115-134501.tgz
+-rw-r--r-- 1 root root 495M Jan 15 13:22 /var/core/vm-support-esx-prod-03-20240115-132156.tgz
+```
+
+!!! warning "Common errors"
+    **`vm-support: command not found`** — Verify the ESXi host is running vSphere 6.5 or later and that the vm-support utility is available in the PATH.
+    **`Permission denied`** — Run the command as root or with sudo; vm-support requires elevated privileges to collect system logs and VSAN diagnostics.
+    **`No space left on device`** — Free up disk space on /var/core (bundles are typically 400–600 MB each) by removing older support bundles or increasing the datastore partition.
 ### 4. Capture vSAN health checks and resync state
 
 In vSphere Client: navigate to the vSAN cluster → **Monitor** → **vSAN** → **Health**.
@@ -188,6 +246,47 @@ esxcli vsan network list
 esxcli vsan debug object list | grep -i "inaccessible\|degraded\|absent"
 ```
 
+
+```text title="Expected output"
+Resync Status:
+  Resync Completion Percentage: 87
+  Bytes Remaining (High Priority): 2147483648
+  Bytes Remaining (Low Priority): 536870912
+  Estimated Time Remaining: 3600 seconds
+
+Storage Health:
+  Disk Group 1:
+    UUID: 52e0e3d4-8f2a-4c1b-9e7a-1a2b3c4d5e6f
+    Health State: Healthy
+    Capacity: 1099511627776 bytes
+    Free Space: 274877906944 bytes
+  Disk Group 2:
+    UUID: 7f8a9b0c-1d2e-3f4a-5b6c-7d8e9f0a1b2c
+    Health State: Degraded
+    Capacity: 1099511627776 bytes
+    Free Space: 68719476736 bytes
+
+Network Health:
+  vmk1 (vSAN vmkernel):
+    Peer: esx-node-02.lab.local (192.168.100.12)
+    Latency: 0.45 ms
+    Packet Loss: 0%
+  vmk1 (vSAN vmkernel):
+    Peer: esx-node-03.lab.local (192.168.100.13)
+    Latency: 0.52 ms
+    Packet Loss: 0%
+
+Object Accessibility:
+  Object UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d
+  State: degraded
+  Component Count: 3
+  Accessible Components: 2
+```
+
+!!! warning "Common errors"
+    **`Could not connect to the vSAN cluster`** — Verify vSAN is enabled on the cluster and the ESXi host is a vSAN participant using `esxcli vsan cluster get`.
+    **`Permission denied`** — Run the command with root privileges or ensure your user account has vSAN administrator role assigned.
+    **`Unknown command or namespace`** — Confirm the ESXi host version supports vSAN and the vSAN feature is properly installed using `esxcli software vib list | grep vsan`.
 ### 5. Write the timeline
 
 ```text
@@ -312,6 +411,53 @@ esxcli vsan network list
 esxcli vsan debug vmdk perf
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-7c3e-4a2b-9e1f-3b8c2a5d6e9f
+Cluster mode: Enabled
+Health state: Healthy
+
+Storage device list:
+  Device: naa.5001405a1b2c3d4e
+    Capacity: 1.7 TB
+    Used: 892.3 GB
+    Health: Healthy
+  Device: naa.5001405a1b2c3d4f
+    Capacity: 1.7 TB
+    Used: 887.1 GB
+    Health: Healthy
+
+DOM_OBJECT health: HEALTHY
+DOM_OBJECT state: ACTIVE
+LSOM_OBJECT health: HEALTHY
+LSOM_OBJECT state: ACTIVE
+LSOM_OBJECT health: HEALTHY
+LSOM_OBJECT state: ACTIVE
+
+Resync progress: 0%
+Resync objects: 0
+Resync bytes: 0 B
+
+Object list:
+  Object UUID: 8f2e1a3c-5b7d-4e9f-a1b2-c3d4e5f6a7b8
+  State: ACCESSIBLE
+  Redundancy: SATISFIED
+
+Network health: HEALTHY
+Partition: CONNECTED
+Quorum: QUORUM_PRESENT
+Network latency: 2.3 ms
+
+VMDK perf snapshot:
+  Read latency: 1.2 ms
+  Write latency: 2.8 ms
+  Outstanding IOs: 45
+```
+
+!!! warning "Common errors"
+    **`Error: vSAN cluster is not enabled on this host`** — Run `esxcli vsan cluster new` to initialize the cluster or verify the host is part of an existing vSAN cluster.
+    **`Error: CMMDS server is not running`** — Restart the CMMDS service with `systemctl restart cmmds` or reboot the host if the service fails to start.
+    **`Error: Network partition detected - Quorum: QUORUM_ABSENT`** — Check physical network connectivity between hosts and verify vSAN VMkernel ports are on the correct VLAN with no packet loss.
 ---
 
 ## Support SLA Reference

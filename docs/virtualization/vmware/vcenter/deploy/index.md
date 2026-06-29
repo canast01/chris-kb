@@ -78,6 +78,31 @@ nslookup vcenter.example.local
 # Must resolve from every ESXi host that will be managed
 ```
 
+
+```text title="Expected output"
+Server:		192.168.1.10
+Address:	192.168.1.10#53
+
+Name:	vcenter.example.local
+Address: 192.168.100.50
+
+Server:		192.168.1.10
+Address:	192.168.1.10#53
+
+192.168.100.50.in-addr.arpa	name = vcenter.example.local.
+
+root@esxi-01.example.local's password: 
+Server:		192.168.1.10
+Address:	192.168.1.10#53
+
+Name:	vcenter.example.local
+Address: 192.168.100.50
+```
+
+!!! warning "Common errors"
+    **`** server can't find vcenter.example.local: NXDOMAIN`** — Add the FQDN and IP to your DNS server or /etc/hosts on the ESXi host before deployment.
+    **`** server can't find 50.100.168.192.in-addr.arpa: NXDOMAIN`** — Create a PTR record in your DNS reverse zone matching the planned VCSA IP address.
+    **`ssh: connect to host esxi-01.example.local port 22 rejected`** — Verify ESXi host is powered on, SSH is enabled in the ESXi firewall, and the hostname resolves correctly.
 ### NTP Validation
 
 ```bash
@@ -87,6 +112,23 @@ esxcli system ntp stats
 # Both NTP sources should show synchronized
 ```
 
+
+```text title="Expected output"
+NTP Enabled: true
+NTP Servers: 10.20.50.12,10.20.50.13
+NTP Running: true
+
+remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+10.20.50.12     .POOL.          16 p    -   64    0    0.000    0.000   0.000
+10.20.50.13     130.207.244.240  2 u   52   64  377    8.234   -1.203   2.156
+LOCAL(0)        .LOCL.          10 l  998 1024  377    0.000    0.000   0.001
+```
+
+!!! warning "Common errors"
+    **`Connection refused connecting to Management Agent on 10.20.50.100:443`** — Verify the ESXi host is reachable and the vSphere Client has network connectivity to the target host.
+    **`NTP Enabled: false`** — Enable NTP on the ESXi host using `esxcli system ntp set --enabled=true` and start the service with `esxcli system service start ntpd`.
+    **`reach   delay   offset  jitter` (no data rows below header)** — Wait 2-3 minutes for NTP to synchronize, or restart ntpd with `esxcli system service restart ntpd`.
 ### Datastore Space Check
 
 | VCSA Size | Max Hosts | Max VMs | Required Disk |
@@ -175,6 +217,20 @@ curl -sk https://<VCSA-IP>:5480 | grep -i "getting started"
 # Or open https://<VCSA-IP>:5480 in a browser
 ```
 
+
+```text title="Expected output"
+% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  8642  100  8642    0     0   2847k      0 --:--:-- --:--:-- --:--:--   0
+<title>VMware vCenter Server Appliance</title>
+<h1>Getting Started</h1>
+<p>Welcome to the vCenter Server Appliance Setup Wizard</p>
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 192.168.1.50 port 5480: Connection refused`** — Verify the VCSA VM is powered on and has completed its initial boot sequence (may take 5–10 minutes).
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag is already present in the command; if still failing, ensure you're using `https://` and not `http://`.
+    **`curl: (6) Could not resolve host name`** — Confirm the VCSA IP address is correct and the appliance has obtained network connectivity via DHCP or static configuration.
 ---
 
 ## Phase 3 — VCSA Configuration: Stage 2
@@ -227,6 +283,26 @@ df -h
 curl -sk https://vcenter.example.local/ui | grep -i "vsphere"
 ```
 
+
+```text title="Expected output"
+Connected to vcenter.example.local.
+(no output — command completes silently)
+vpxd                                    Running
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        50G   28G   19G  58% /
+/dev/sda2       100G   67G   28G  69% /storage
+/dev/sda3        20G    8G   11G  42% /var/log
+tmpfs           16G  512M  15G   4% /dev/shm
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  8234  100  8234    0     0   2847      0  --:-- --:-- --:--  100%
+<!DOCTYPE html><html><head><title>VMware vSphere Client</title>
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host vcenter.example.local port 22: Connection refused`** — Verify VCSA is powered on and SSH is enabled via DCUI, or use the IP address directly if DNS is unresolved.
+    **`service-control: command not found`** — Ensure you are logged in as root and the VCSA shell environment is properly initialized; try `source /etc/profile` first.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if you have a valid certificate, or ensure the hostname matches the certificate CN; the `-k` flag bypasses verification for self-signed certs.
 ---
 
 ## Phase 4 — Active Directory Integration
@@ -382,6 +458,24 @@ ssh root@vcenter.example.local
 # Follow prompts; provide signed cert, private key, and CA chain
 ```
 
+
+```text title="Expected output"
+Connected to vcenter.example.local.
+The authenticity of host 'vcenter.example.local (192.168.1.45)' can't be established.
+ECDSA key fingerprint is SHA256:aBcD1EfGhIjKlMnOpQrStUvWxYz2A3b4C5d6E7f8G9h.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'vcenter.example.local,192.168.1.45' (ECDSA) to /etc/known_hosts.
+root@vcenter [ ~ ]# /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHINE_SSL_CERT --text | grep -E "Alias|Issuer|Not After"
+Alias: __MACHINE_CERT
+Issuer: CN=CA,O=Example Corp,C=US
+Not After: 2026-03-15 14:32:18 UTC
+root@vcenter [ ~ ]# /usr/lib/vmware-vmcad/certificate-manager
+...
+```
+
+!!! warning "Common errors"
+    **`vecs-cli: command not found`** — Ensure you are running the command as root and the vmafd service is running with `systemctl status vmware-vmafd`.
+    **`certificate-manager: command not found`** — Verify the vmcad package is installed with `rpm -qa | grep vmcad` and reinstall if missing.
 ### Configure Alarm Definitions
 
 ```text
@@ -405,6 +499,18 @@ service-control --status --all | grep -v "Running"
 # Expected: all services Running; no STOPPED items
 ```
 
+
+```text title="Expected output"
+root@vcenter.example.local's password: 
+"CN=localhost,CN=Services,CN=Configuration,DC=vsphere,DC=local"
+
+service-control --status --all | grep -v "Running"
+(no output — all services are running)
+```
+
+!!! warning "Common errors"
+    **`service-control: command not found`** — Use the full path `/usr/lib/vmware-vmafd/bin/service-control` or source the VCSA environment setup script.
+    **`"CN=localhost,CN=Services,CN=Configuration,DC=vsphere,DC=local" not found`** — Verify VCSA is fully initialized and the Lightweight Directory Access Service (LSASS) is running with `service-control --status --all | grep vmafdd`.
 ### Configure Syslog Forwarding
 
 ```text

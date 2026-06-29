@@ -110,6 +110,29 @@ ls -lh /tmp/srm-bundle-*.tgz
 scp root@<srm-appliance-ip>:/tmp/srm-bundle-*.tgz /tmp/
 ```
 
+
+```text title="Expected output"
+root@srm-appliance:~# /usr/lib/vmware-dr/bin/dr-backup.sh --export /tmp/srm-bundle-$(hostname)-$(date +%Y%m%d).tgz
+Exporting SRM configuration and logs...
+[====================================] 100%
+Export completed successfully.
+Bundle size: 487 MB
+Export location: /tmp/srm-bundle-srm-appliance-20240115.tgz
+
+root@srm-appliance:~# ls -lh /tmp/srm-bundle-*.tgz
+-rw-r--r-- 1 root root 487M Jan 15 10:42 /tmp/srm-bundle-srm-appliance-20240115.tgz
+
+root@srm-appliance:~# exit
+Connection to 192.168.1.45 closed.
+
+local:~$ scp root@192.168.1.45:/tmp/srm-bundle-*.tgz /tmp/
+srm-bundle-srm-appliance-20240115.tgz          100%  487MB   8.2MB/s   00:59
+```
+
+!!! warning "Common errors"
+    **`/usr/lib/vmware-dr/bin/dr-backup.sh: command not found`** — Verify the SRM version and confirm the correct path with `find / -name dr-backup.sh 2>/dev/null`.
+    **`Permission denied`** — Ensure you are logged in as root or have sudo privileges; use `sudo /usr/lib/vmware-dr/bin/dr-backup.sh` if needed.
+    **`scp: /tmp/srm-bundle-*.tgz: No such file or directory`** — Verify the bundle was created successfully by checking `/tmp/` directly on the SRM appliance before attempting to copy.
 ### 3. Generate the vSphere Replication (vSR) bundle (both sites)
 
 If vSphere Replication is used (rather than array-based replication):
@@ -257,6 +280,33 @@ ssh root@<vra-ip>
 tail -200 /var/log/vmware/hbrsrv/hbrsrv.log | grep -i "error\|fail"
 ```
 
+
+```text title="Expected output"
+● vmware-dr.service - VMware Site Recovery Manager
+     Loaded: loaded (/etc/systemd/system/vmware-dr.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+   Main PID: 4521 (java)
+      Tasks: 47 (limit: 4915)
+     Memory: 892.3M
+        CPU: 2h 14m 32s
+     CGroup: /system.slice/vmware-dr.service
+             └─4521 /usr/java/default/bin/java -Xmx2048m -Xms1024m...
+
+2024-01-17T14:45:22.891Z ERROR [SrmServer] Failed to connect to vCenter: Connection timeout after 30000ms
+2024-01-17T14:46:01.234Z EXCEPTION [ReplicationManager] Array replication paused: LUN 0x5a3f offline
+2024-01-17T14:52:15.567Z ERROR [InventorySync] Inventory sync failed for site-pair prod-dr-01: Permission denied
+2024-01-17T15:03:44.123Z FAIL [RecoveryPlan] Recovery plan 'Finance-Tier1' validation failed: Target resource pool unavailable
+
+root@vra-recovery-01:~# tail -200 /var/log/vmware/hbrsrv/hbrsrv.log | grep -i "error\|fail"
+2024-01-17 14:33:12 ERROR: Failed to establish replication channel to source site 192.168.1.45:31031
+2024-01-17 14:35:47 ERROR: Replication lag exceeded threshold (285 seconds > 60 second limit)
+2024-01-17 14:41:22 FAIL: Bitmap sync incomplete for VM prod-db-02 (87% complete)
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/var/log/vmware/dr/dr*.log' for reading: No such file or directory`** — Verify the SRM appliance is fully deployed and check the actual log path with `find /var/log/vmware -name "*.log" -type f`.
+    **`ssh: connect to host <vra-ip> port 22: Connection refused`** — Ensure the vSphere Replication appliance is powered on and SSH is enabled; verify the IP address is correct with `ping <vra-ip>`.
+    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or ensure your user account has read permissions on the log files with `sudo tail -200 /var/log/vmware/hbrsrv/hbrsrv.log`.
 ---
 
 ## Support SLA Reference

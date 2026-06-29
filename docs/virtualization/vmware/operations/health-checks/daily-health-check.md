@@ -73,6 +73,23 @@ esxcli vsan health cluster list | grep -v "Green\|healthy"
 esxcli vsan debug object list | grep -i "Resyncing\|Degraded\|Absent" | wc -l
 ```
 
+
+```text title="Expected output"
+Cluster Health Status:
+  Cluster: vsan-prod-01
+  Health: Yellow
+  Component: Network Connectivity
+  Status: Degraded
+  Affected Nodes: 3
+  Details: Unicast agent unreachable on host esx-04.lab.local
+
+Object Resync Status:
+42
+```
+
+!!! warning "Common errors"
+    **`esxcli: Unknown command or namespace vsan health cluster list`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN is active.
+    **`Unable to connect to the local host. Is the local host running?`** — Ensure you are running the command directly on an ESXi host with SSH enabled, not from a remote management station.
 ## 6. Critical VM Status
 
 ```powershell

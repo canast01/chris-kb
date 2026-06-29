@@ -123,6 +123,30 @@ curl -sk -o /dev/null -w "%{http_code}" https://depot.vmware.com/
 curl -sk -u admin:<pass> https://localhost/v1/bundles | python3 -m json.tool | grep -A2 '"status"'
 ```
 
+
+```text title="Expected output"
+200
+200
+200
+200
+{
+  "status": "AVAILABLE",
+  "downloadStatus": "COMPLETED"
+},
+{
+  "status": "AVAILABLE",
+  "downloadStatus": "COMPLETED"
+},
+{
+  "status": "STAGED",
+  "downloadStatus": "IN_PROGRESS"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the SDDC Manager CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to <sddc-manager-ip> port 443: Connection refused`** — Verify the SDDC Manager IP address is correct and that port 443 is open; check firewall rules and confirm SDDC Manager services are running with `systemctl status vcf-*.service`.
+    **`jq: command not found` or `python3: No module named json.tool`** — Install `jq` with `apt-get install jq` or use `python3 -m json.tool` if Python 3 is available on your SDDC Manager appliance.
 ---
 
 ## See also

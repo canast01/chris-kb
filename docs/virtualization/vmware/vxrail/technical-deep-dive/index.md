@@ -101,6 +101,34 @@ journalctl -xe
 curl -k https://localhost/rest/vxm/internal/system
 ```
 
+
+```text title="Expected output"
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       100G   45G   55G  45% /
+/dev/sda2       500G  320G  180G  64% /var
+/dev/sda3       200G   85G  115G  42% /opt
+tmpfs           32G  1.2G   31G   4% /dev/shm
+● vmware-marvin.service - VMware Marvin Service
+     Loaded: loaded (/etc/systemd/system/vmware-marvin.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+   Main PID: 8742 (marvin)
+      Tasks: 24 (limit: 4915)
+     Memory: 512.3M
+        CPU: 2h 14m 23s
+{
+  "id": "vxrail-cluster-prod-01",
+  "version": "8.0.210.45821",
+  "health_status": "Healthy",
+  "cluster_mode": "Stretched",
+  "nodes": 4,
+  "last_update": "2024-01-19T08:42:15Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or import the VxRail certificate into your system trust store.
+    **`Unit vmware-marvin.service not found.`** — Verify the VxRail management VM is running and the vmware-marvin service is installed with `systemctl list-units | grep marvin`.
+    **`Failed to get D-Bus connection: Operation not permitted`** — Run the command with `sudo` or as root, as systemctl requires elevated privileges to query service status.
 ## Common Failure Points
 
 - LCM pre-check failure

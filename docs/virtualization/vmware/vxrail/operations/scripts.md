@@ -410,6 +410,15 @@ crontab -e
 0 */4 * * * /usr/bin/pwsh /opt/scripts/vxrail/vsan-capacity-alert.ps1 >> /var/log/vxrail-capacity.log 2>&1
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`crontab: no crontab for root`** — Run `crontab -e` as the root user or the intended service account, or initialize with `crontab -i` first.
+    **`command not found: /usr/bin/pwsh`** — Install PowerShell Core with `apt-get install -y powershell` (Debian/Ubuntu) or `yum install -y powershell` (RHEL/CentOS).
+    **`/opt/scripts/vxrail/vsan-capacity-alert.ps1: No such file or directory`** — Verify the script path exists and is readable with `ls -la /opt/scripts/vxrail/vsan-capacity-alert.ps1`.
 ---
 
 ## See also

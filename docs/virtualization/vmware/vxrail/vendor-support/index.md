@@ -79,6 +79,20 @@ vm-support -w /tmp
 scp root@<esxi-ip>:/tmp/esx-<hostname>-*.tgz <destination>
 ```
 
+
+```text title="Expected output"
+Generating support bundle for host esx-vxrail-node01...
+Collecting system logs and diagnostics...
+Collecting storage information...
+Collecting network configuration...
+Collecting virtual machine data...
+Support bundle created: /tmp/esx-vxrail-node01-2024-01-15-14-32-45.tgz (2.3 GB)
+esx-vxrail-node01-2024-01-15-14-32-45.tgz          100%  2.3GB   45.2MB/s   00:51
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey).`** — Ensure SSH key is loaded in ssh-agent or use `-i` flag to specify the private key file.
+    **`No such file or directory`** — Wait for the vm-support command to complete fully before attempting SCP; check `/tmp` on the ESXi host to confirm the .tgz file exists.
 ---
 
 ## SRS / SupportAssist
@@ -146,3 +160,23 @@ vxrail-system-info --node-list
 # Check iDRAC for hardware events on a node
 racadm getsel   # System Event Log (hardware alerts)
 ```
+
+
+```text title="Expected output"
+VxRail Release 7.0.510-26.0.0-20231015
+VMware ESXi 7.0.3 build-19482537
+Node List:
+  Node 1: Service Tag ABCD123, IP 192.168.1.101
+  Node 2: Service Tag EFGH456, IP 192.168.1.102
+  Node 3: Service Tag IJKL789, IP 192.168.1.103
+  Node 4: Service Tag MNOP012, IP 192.168.1.104
+System Event Log (SEL) Records:
+  1 | 10/15/2023 | 14:32:15 | Temperature | Upper Critical | CPU1 Temp 89C
+  2 | 10/15/2023 | 14:28:42 | Voltage | Lower Warning | +12V Rail 11.8V
+  3 | 10/15/2023 | 13:15:09 | Fan | Lower Critical | Fan1_SYS 2100 RPM
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host <vxrail-manager-ip> port 22: Connection timed out`** — Verify the VxRail Manager IP address is correct and reachable on the network, and confirm SSH is enabled on the appliance.
+    **`racadm: command not found`** — Install or load the Dell iDRAC tools package (typically `yum install dell-idrac-tools` or access iDRAC via HTTPS web interface instead).
+    **`vxrail-system-info: command not found`** — Ensure you are running this command from the VxRail Manager appliance itself, not from a remote ESXi host.

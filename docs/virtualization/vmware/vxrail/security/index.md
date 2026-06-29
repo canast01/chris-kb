@@ -78,6 +78,26 @@ racadm set iDRAC.IPBlocking.RangeAddr <mgmt-subnet>
 racadm set iDRAC.IPBlocking.RangeMask <subnet-mask>
 ```
 
+
+```text title="Expected output"
+RACADM: Performing set on property iDRAC.Users.2.Password
+(no output — command completes silently)
+RACADM: Performing set on property iDRAC.LocalSecurity.LocalConfig
+(no output — command completes silently)
+RACADM: Performing set on property iDRAC.AuditLog.Enable
+(no output — command completes silently)
+RACADM: Performing set on property iDRAC.IPBlocking.BlockEnable
+(no output — command completes silently)
+RACADM: Performing set on property iDRAC.IPBlocking.RangeAddr
+(no output — command completes silently)
+RACADM: Performing set on property iDRAC.IPBlocking.RangeMask
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`RACADM: Error: DRAC_E_INVALID_PARAMETER (DRAC error 0x00000002)`** — Verify the password meets iDRAC complexity requirements (minimum 8 characters, uppercase, lowercase, number, special character) and that user ID 2 exists.
+    **`RACADM: Error: DRAC_E_UNSUPPORTED_OPERATION (DRAC error 0x00000005)`** — Ensure you are connected to the iDRAC via SSH or serial console with root/DRAC credentials, not a remote RACADM session.
+    **`RACADM: Error: DRAC_E_INVALID_IPADDRESS (DRAC error 0x00000009)`** — Verify the management subnet IP address and mask are in valid CIDR notation (e.g., 10.0.0.0 and 255.255.255.0).
 ---
 
 ## ESXi Lockdown Mode
@@ -129,6 +149,27 @@ esxcli vsan debug object list | grep -i "encrypt"
 Get-Cluster | Get-View | Select -ExpandProperty ConfigurationEx | Select -ExpandProperty VsanConfigInfo
 ```
 
+
+```text title="Expected output"
+# esxcli vsan debug object list | grep -i "encrypt"
+Object UUID: 52e4c8f1-a3b2-4d7e-9c1f-8e2b3a4c5d6e Flags: 0x0001 (encrypted) Policy: raid1 Size: 102400 MB
+Object UUID: 7f3a9b2c-1d4e-5a6f-8b9c-2e3f4a5b6c7d Flags: 0x0001 (encrypted) Policy: raid5 Size: 204800 MB
+Object UUID: 9c2d1e3f-4a5b-6c7d-8e9f-0a1b2c3d4e5f Flags: 0x0000 (unencrypted) Policy: raid1 Size: 51200 MB
+
+# Get-Cluster | Get-View | Select -ExpandProperty ConfigurationEx | Select -ExpandProperty VsanConfigInfo
+Enabled                    : True
+EncryptionEnabled          : True
+EncryptionKeyProvider      : kmip
+EncryptionKeyProviderId    : kmip-provider-01
+EncryptionKeyStatus        : connected
+EncryptionCipherAlgorithm  : AES-256
+EncryptionDeduplication    : True
+EncryptionCompressionLevel : 6
+```
+
+!!! warning "Common errors"
+    **`Connect-VIServer : The server certificate could not be validated`** — Add `-IgnoreCertificateErrors` to the PowerCLI command or configure trusted certificates on the vCenter server.
+    **`esxcli: Unknown command or namespace vsan debug object`** — Verify VSAN is licensed and enabled on the ESXi host by running `esxcli vsan cluster get`.
 ---
 
 ## Certificate Management

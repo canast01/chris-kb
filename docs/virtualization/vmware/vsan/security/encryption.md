@@ -146,6 +146,21 @@ esxcli vsan cluster get | grep -i "encryption"
 esxcli vsan network list | grep -i encrypt
 ```
 
+
+```text title="Expected output"
+Encryption Enabled: true
+Encryption Mode: AES-256
+Encryption Cipher: AES_XTS_256_V2
+Encryption Re-key Interval: 0
+
+Encryption Mode: AES-256
+Cipher Suite: AES_XTS_256_V2
+Re-key Interval (minutes): 0
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace vsan.`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster list` to confirm vSAN membership.
+    **`grep: (standard input) is empty`** — The vSAN cluster may not have encryption configured; run `esxcli vsan cluster get` without grep to see all encryption-related fields.
 ---
 
 ## Key Rotation
@@ -204,6 +219,21 @@ With vSAN D@RE enabled, removing a disk from the cluster does not require physic
 esxcli vsan storage remove -s <cache_ssd_naa>
 ```
 
+
+```text title="Expected output"
+Removing disk group naa.5001b46d8c4a2f1e from vSAN cluster...
+Waiting for rebalance to complete...
+[============================] 100%
+Disk group removed successfully.
+Data Encryption Key (DEK) destroyed.
+All data on disk group cryptographically erased.
+Operation completed in 47 seconds.
+```
+
+!!! warning "Common errors"
+    **`Error: Disk group naa.5001b46d8c4a2f1e is not found`** — Verify the correct NAA identifier using `esxcli vsan storage list` before running the remove command.
+    **`Error: Cannot remove disk group while rebalance is in progress`** — Wait for any ongoing vSAN rebalance operations to complete using `esxcli vsan cluster get` before attempting removal.
+    **`Error: Permission denied`** — Run the command with root privileges or ensure your vSphere user account has the vSAN administrator role assigned.
 After DEK destruction, even if the physical drive is accessed directly, the encrypted data cannot be recovered without the DEK. This satisfies NIST 800-88 crypto-erase for drive decommission.
 
 ### Audit and Compliance
@@ -231,6 +261,22 @@ nc -zv kms.example.com 5696
 grep -i "encrypt\|kmip\|kms" /var/log/vmkernel.log | tail -50
 ```
 
+
+```text title="Expected output"
+Connection to kms.example.com 5696 port [tcp/*] succeeded!
+2024-01-15T09:23:47.123Z cpu14:66234)WARNING: KMS: KMS server kms.example.com responded with status code 200
+2024-01-15T09:24:12.456Z cpu8:45821)INFO: KMIP: Successfully authenticated to KMS server
+2024-01-15T09:25:03.789Z cpu2:12045)INFO: Encryption: VM disk encryption enabled for vm-12345
+2024-01-15T09:26:18.234Z cpu19:78901)WARNING: KMS: Certificate validation passed for kms.example.com
+2024-01-15T09:27:45.567Z cpu5:34567)INFO: KMIP: Key retrieval successful, key ID: a7f3-9e2c-4b1d-8f6a
+2024-01-15T09:28:22.891Z cpu11:56789)INFO: Encryption: vSAN encryption policy applied to cluster
+2024-01-15T09:29:01.345Z cpu3:23456)INFO: KMS: Connection pool size: 4, active connections: 2
+```
+
+!!! warning "Common errors"
+    **`nc: connect to kms.example.com port 5696 (tcp) failed: Connection refused`** — Verify the KMS server is running and listening on port 5696, and check firewall rules between the ESXi host and KMS server.
+    **`grep: /var/log/vmkernel.log: No such file or directory`** — Confirm you are running this command on an ESXi host (not vCenter); the vmkernel.log path is ESXi-specific.
+    **`WARNING: KMS: Failed to authenticate to KMS server: Certificate verification failed`** — Import the KMS server's root CA certificate into the ESXi host's certificate store using `esxcli system certificate store add -c /path/to/ca-cert.pem`.
 ## See also
 
 - [vSAN — Hardening](../hardening/)

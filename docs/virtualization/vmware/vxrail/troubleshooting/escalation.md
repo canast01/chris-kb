@@ -89,6 +89,20 @@ In vCenter vSphere Client:
 esxcli system version get
 ```
 
+
+```text title="Expected output"
+Product: VMware ESXi
+   Version: 7.0.3
+   Build: 19482537
+   Update: 3
+   Patch: 0
+   Vendor: VMware
+   Release Date: 2023-09-14
+```
+
+!!! warning "Common errors"
+    **`Could not connect to the local host. Error: Unable to establish a connection to the host.`** — Ensure the ESXi host is powered on and accessible, or run the command directly from the ESXi console rather than remotely.
+    **`Unknown command or namespace esxcli system version get`** — Verify you are running this command on an ESXi host (not vCenter); older ESXi versions may require `vmware -v` instead.
 ### 2. Generate the VxRail support bundle
 
 ```text
@@ -118,6 +132,29 @@ ls -lh /var/core/
 scp root@<esxi-host>:/var/core/vm-support-*.tar.gz /tmp/
 ```
 
+
+```text title="Expected output"
+root@esxi-host01.lab.local [ ~ ]# vm-support
+Generating support bundle, please wait...
+Gathering system logs...
+Gathering configuration files...
+Gathering performance data...
+Support bundle completed successfully.
+Bundle location: /var/core/vm-support-esx-host01-2026-06-15--09.30.tar.gz
+
+root@esxi-host01.lab.local [ ~ ]# ls -lh /var/core/
+total 1.2G
+-rw-r--r-- 1 root root 487M Jun 15 09:30 vm-support-esx-host01-2026-06-15--09.30.tar.gz
+-rw-r--r-- 1 root root 312M Jun 14 14:22 vm-support-esx-host01-2026-06-14--14.22.tar.gz
+
+root@workstation# scp root@esxi-host01.lab.local:/var/core/vm-support-*.tar.gz /tmp/
+vm-support-esx-host01-2026-06-15--09.30.tar.gz     100%  487MB   8.2MB/s   00:59
+```
+
+!!! warning "Common errors"
+    **`No space left on device`** — Check available disk space with `df -h /var/core/` and delete older bundles or expand the partition if needed.
+    **`Permission denied (publickey,password)`** — Verify SSH connectivity and root credentials with `ssh -v root@<esxi-host-ip>` and ensure SSH is enabled on the ESXi host.
+    **`vm-support: command not found`** — Confirm you are logged in as root on an ESXi host (not vCenter); use `whoami` and `uname -a` to verify the correct system.
 ### 4. Export the iDRAC SEL (System Event Log)
 
 ```bash
@@ -127,6 +164,14 @@ racadm getsel > /tmp/idrac-sel-<service-tag>-$(date +%Y%m%d).txt
 # Alternative: iDRAC web UI → iDRAC Settings → Lifecycle Log → Export
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`bash: racadm: command not found`** — Ensure you are running this command directly on the iDRAC console or via SSH to the iDRAC IP address (not the ESXi host); if using a remote system, install Dell OMECLI or use iDRAC web UI export instead.
+    **`Permission denied`** — Verify your iDRAC user account has administrative privileges; log in with root or a user assigned the "Administrator" role in iDRAC settings.
 The SEL is the hardware event log — it shows disk faults, DIMM errors, PSU issues, and any hardware-triggered events that preceded the failure.
 
 ### 5. Capture vSAN health status
@@ -145,6 +190,35 @@ esxcli vsan health cluster view -t vsanobjectdatahealthsummary
 esxcli vsan health cluster view -t drivedatahealthsummary
 ```
 
+
+```text title="Expected output"
+The ESXi host you are trying to connect to has shut down, or the network connection is unreachable.
+root@esxi-node-01.lab.local ~]# esxcli vsan health cluster list
+Cluster Health State: Healthy
+Cluster Health Timestamp: 2024-01-15T09:42:33.847Z
+Cluster Health Generation: 1847
+
+root@esxi-node-01.lab.local ~]# esxcli vsan health cluster view -t vsanobjectdatahealthsummary
+Object Health Summary:
+  Healthy Objects: 1247
+  Unhealthy Objects: 0
+  Absent Objects: 0
+  Reduced Redundancy Objects: 0
+  Inaccessible Objects: 0
+
+root@esxi-node-01.lab.local ~]# esxcli vsan health cluster view -t drivedatahealthsummary
+Drive Health Summary:
+  Healthy Drives: 24
+  Unhealthy Drives: 0
+  Absent Drives: 0
+  Reduced Capacity Drives: 0
+  Congested Drives: 0
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname <esxi-host-ip>: Name or service not known`** — Replace `<esxi-host-ip>` with the actual ESXi node IP address (e.g., `192.168.1.50`).
+    **`Unknown command or namespace vsan health`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status.
+    **`Error: Unknown option or set of options: -t drivedatahealthsummary`** — Confirm ESXi version supports this health view option; use `esxcli vsan health cluster view --help` to list available view types.
 ### 6. Write the timeline
 
 ```text
@@ -269,6 +343,42 @@ esxcli network ip interface list | grep -E "vmk|Management"
 racadm getsel | tail -30
 ```
 
+
+```text title="Expected output"
+ESXi 7.0.3 build-19482429
+vSAN Cluster Health:
+  Cluster UUID: 52e8c4a1-7f3e-4a2c-9b1d-8e2f5c3a1b9d
+  Health State: yellow
+  Cluster Capacity: 4.2 TB
+  Free Space: 1.8 TB
+
+vSAN Object Health Summary:
+  Absent Objects: 3
+  Orphaned Objects: 0
+  Inaccessible Objects: 1
+  Unhealthy Objects: 2
+
+Drive Data Health Summary:
+  Healthy Drives: 24
+  Degraded Drives: 2
+  Failed Drives: 1
+  Congested Drives: 0
+
+Name       IPv4Address      IPv6Address  MTU  MAC Address        Enabled
+vmk0       10.45.120.42     ::1          1500 00:50:56:c0:00:01  true
+vmk1       10.46.0.18       ::1          1500 00:50:56:c0:00:02  true
+Management 10.45.120.42     ::1          1500 00:50:56:c0:00:01  true
+
+SEL Records (last 30):
+2024-01-15T14:32:18 | System Event | Power Supply 1 | Voltage out of range
+2024-01-15T14:28:05 | Storage | Disk 3 | Predictive Failure
+2024-01-15T14:15:22 | System Event | Fan Module 2 | Below lower threshold
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to localhost:443`** — Verify SSH connectivity to the ESXi host and ensure vSAN is fully initialized with `esxcli vsan cluster get`.
+    **`Error: vSAN health cluster list returned empty`** — Confirm the host is part of an active vSAN cluster by checking vCenter; a single-node cluster may not report health data.
+    **`racadm: command not found`** — Install iDRAC tools or use `ipmitool sel list` instead if iDRAC CLI is unavailable on the ESXi host.
 ---
 
 ## Support SLA Reference

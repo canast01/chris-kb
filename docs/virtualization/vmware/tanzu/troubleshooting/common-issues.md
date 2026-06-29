@@ -197,6 +197,32 @@ kubectl describe svc <service-name> -n <namespace>
 # NSX-T → Networking → Load Balancing → Virtual Servers → check IP usage
 # AVI: AVI Controller → Cloud → SE Group → check IP pool capacity
 ```
+
+```text title="Expected output"
+Name:                     my-app-service
+Namespace:                tanzu-system
+Labels:                   app=my-app
+Annotations:              <none>
+Selector:                 app=my-app
+Type:                     LoadBalancer
+IP:                       10.0.1.50
+LoadBalancer Ingress:     pending
+Port:                     http  80/TCP
+TargetPort:               8080/TCP
+NodePort:                 31245/TCP
+Endpoints:                10.20.1.10:8080,10.20.1.11:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:
+  Type     Reason                 Age    From                Message
+  ----     ------                 ----   ----                -------
+  Warning  SyncLoadBalancerFailed 2m15s  service-controller  Error syncing load balancer: failed to ensure load balancer: no IPs available in NSX IP pool 'TKG-LB-Pool'
+  Warning  UnAvailableLoadBalancer 1m30s service-controller  There are no available nodes for LoadBalancer
+```
+
+!!! warning "Common errors"
+    **`Error syncing load balancer: failed to ensure load balancer: no IPs available in NSX IP pool`** — Expand the NSX-T IP pool size or release unused LoadBalancer service IPs by deleting idle services.
+    **`There are no available nodes for LoadBalancer`** — Verify worker nodes are in Ready state with `kubectl get nodes` and check NSX segment connectivity to those nodes.
 ```bash
 # Check Contour pods are running:
 kubectl get pods -n projectcontour
@@ -214,6 +240,44 @@ kubectl get svc -n projectcontour
 curl -k https://<envoy-LB-IP>/ -H "Host: myapp.example.local"
 ```
 
+
+```text title="Expected output"
+NAME                      READY   STATUS    RESTARTS   AGE
+contour-5d8f4c9b7-2kx9m   1/1     Running   0          3d
+contour-5d8f4c9b7-7pqrs   1/1     Running   0          3d
+envoy-ds-9m4k2            1/1     Running   0          2d
+envoy-ds-b7x3n            1/1     Running   0          2d
+envoy-ds-c5k8p            1/1     Running   0          2d
+
+NAME                    FQDN                      TLS SECRET      STATUS     STATUS DESCRIPTION
+myapp                   myapp.example.local       myapp-tls       valid      
+another-app             api.example.local         api-tls         valid      
+
+Name:         myapp
+Namespace:    production
+Status:       valid
+Conditions:
+  Type    Status  Reason
+  ----    ------  ------
+  Valid   True    ValidHTTPProxyFound
+
+NAME                      READY   STATUS    RESTARTS   AGE
+envoy-ds-9m4k2            1/1     Running   0          2d
+envoy-ds-b7x3n            1/1     Running   0          2d
+envoy-ds-c5k8p            1/1     Running   0          2d
+
+NAME                TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)
+contour             ClusterIP      10.96.45.123    <none>          8001/TCP
+envoy               LoadBalancer   10.96.78.234    203.0.113.45    80:31234/TCP,443:31567/TCP
+
+curl: (60) SSL certificate problem: self signed certificate
+subject: CN=myapp.example.local
+issuer: CN=myapp.example.local
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "httpproxy"`** — Install Contour CRDs with `kubectl apply -f https://projectcontour.io/quickstart/contour.yaml` or verify the APIGroup is registered via `kubectl api-resources | grep httpproxy`.
+    **`curl: (7) Failed to connect to 203.0.113.45 port 443: Connection refused`** — Verify the Envoy LoadBalancer service has an EXTERNAL-IP assigned and is listening on port 443 with `kubectl get svc -n projectcontour envoy -o wide`.
 ---
 
 ## See also

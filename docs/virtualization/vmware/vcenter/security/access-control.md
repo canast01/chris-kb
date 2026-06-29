@@ -260,6 +260,16 @@ If `administrator@vsphere.local` is locked out:
     --password <vmdir-admin-password>
 ```
 
+
+```text title="Expected output"
+Unlocking user [administrator] in domain [vsphere.local]...
+User [administrator] unlocked successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Cannot connect to directory service on localhost:389`** — Ensure the vCenter Directory Service (vmdir) is running with `service vmdir status` and restart if needed.
+    **`Error: Authentication failed for user [administrator]`** — Verify the vmdir-admin-password is correct; if unknown, reset it using the VCSA management interface or recovery mode.
+    **`Error: User [administrator] not found in domain [vsphere.local]`** — Confirm the domain name matches your vCenter configuration (check `/etc/vmware-vpx/vcdb.properties` for the correct domain).
 If the root password is unknown, use the VCSA VM console (via ESXi DCUI) to boot into single-user mode and reset it — documented in VMware KB 2069041.
 
 Store the break-glass password for `administrator@vsphere.local` in an offline vault (e.g., printed and sealed, or HSM-backed secrets manager) separate from the primary password manager. The break-glass procedure must be documented and tested annually.

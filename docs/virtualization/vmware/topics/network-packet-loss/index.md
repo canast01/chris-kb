@@ -53,6 +53,42 @@ esxcli network nic stats get -n vmnic1
 esxcli network nic list
 ```
 
+
+```text title="Expected output"
+NIC Statistics for vmnic0
+   Packets received: 45782341
+   Packets sent: 38291847
+   Bytes received: 12847293847
+   Bytes sent: 9384729384
+   Receive errors: 0
+   Transmit errors: 0
+   Receive dropped: 127
+   Transmit dropped: 0
+   Receive CRC: 0
+   Collisions: 0
+
+NIC Statistics for vmnic1
+   Packets received: 44921847
+   Packets sent: 37849201
+   Bytes received: 12734928374
+   Bytes sent: 9271847293
+   Receive errors: 2
+   Transmit errors: 0
+   Receive dropped: 89
+   Transmit dropped: 0
+   Receive CRC: 3
+   Collisions: 0
+
+Name    PCI Driver   Link State   Speed   Duplex   MAC Address
+vmnic0  0000:02:00.0 bnx2x        Up      10000Mbps Full   00:0a:95:9d:68:f2
+vmnic1  0000:02:00.1 bnx2x        Up      10000Mbps Full   00:0a:95:9d:68:f3
+vmnic2  0000:04:00.0 ixgbe        Down    0Mbps    Half   00:0a:95:9d:68:f4
+vmnic3  0000:04:00.1 ixgbe        Up      10000Mbps Full   00:0a:95:9d:68:f5
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or set of options.`** — Verify the NIC name is correct (e.g., vmnic0, not vm-nic0) and that you have ESXi 5.0 or later.
+    **`Error: Could not connect to the host.`** — Ensure you are connected to the ESXi host via SSH or vSphere CLI with appropriate credentials.
 ## vmkping — Reachability and MTU Testing
 
 ```bash
@@ -69,6 +105,33 @@ vmkping -I vmk2 -d -s 8972 <peer_vsan_vmk_ip>
 vmkping -I vmk1 -c 100 <target_host_vmk1_ip>
 ```
 
+
+```text title="Expected output"
+PING 192.168.100.50 (192.168.100.50): 56 data bytes
+64 bytes from 192.168.100.50: icmp_seq=0 ttl=64 time=2.341 ms
+64 bytes from 192.168.100.50: icmp_seq=1 ttl=64 time=2.156 ms
+64 bytes from 192.168.100.50: icmp_seq=2 ttl=64 time=2.289 ms
+
+PING 192.168.100.50 (192.168.100.50): 8972 data bytes
+8972 bytes from 192.168.100.50: icmp_seq=0 ttl=64 time=5.412 ms
+8972 bytes from 192.168.100.50: icmp_seq=1 ttl=64 time=5.198 ms
+8972 bytes from 192.168.100.50: icmp_seq=2 ttl=64 time=5.667 ms
+
+PING 192.168.1.75 (192.168.1.75): 8972 data bytes
+8972 bytes from 192.168.1.75: icmp_seq=0 ttl=64 time=1.834 ms
+8972 bytes from 192.168.1.75: icmp_seq=1 ttl=64 time=1.921 ms
+8972 bytes from 192.168.1.75: icmp_seq=2 ttl=64 time=1.756 ms
+
+PING 192.168.50.22 (192.168.50.22): 56 data bytes
+--- 192.168.50.22 statistics ---
+100 packets transmitted, 100 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 0.891/1.247/3.156/0.412 ms
+```
+
+!!! warning "Common errors"
+    **`Unknown interface vmk0`** — Verify the VMkernel adapter name with `esxcli network ip interface list` and use the correct interface identifier.
+    **`Destination Host Unreachable`** — Confirm the destination IP is reachable and the vSAN/vMotion network routing is configured correctly on both ESXi hosts.
+    **`Message too long`** — Reduce the packet size below the MTU (e.g., `-s 8972` for 9000 MTU) or verify the physical switch and vNIC MTU settings match.
 Packet loss should always be **zero**. Any loss requires investigation before proceeding with maintenance.
 
 ## PowerCLI Network Checks
@@ -109,4 +172,9 @@ watch -n 2 "esxcli network nic stats get -n vmnic0 | grep -E 'Dropped|Error|CRC'
 
 # Or use esxtop for real-time network metrics
 esxtop   # press 'n' to switch to network view
+```
+
+
+```text title="Expected output"
+Every 2.0s: esxcli network nic stats get -n vmnic0 | grep -E 'Dropped|Error|CRC'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                esxcli network nic stats get -n vmnic0 | grep -E 'Dropped|Error|CRC'
 ```

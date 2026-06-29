@@ -173,6 +173,36 @@ Site Recovery → Storage → Array Pairs
 # This re-runs the SRA discovery against the storage array
 ```
 
+
+```text title="Expected output"
+Array Pair: EMC-VMAX-01
+  Status: Enabled
+  Health: Healthy
+  Last Discovery: 2024-01-15 14:32:18 UTC
+  Devices Discovered: 47
+  
+Array Pair: NetApp-FAS8300
+  Status: Enabled
+  Health: Healthy
+  Last Discovery: 2024-01-15 14:28:45 UTC
+  Devices Discovered: 23
+
+Array Pair: Pure-FlashArray-X90R2
+  Status: Enabled
+  Health: Degraded
+  Last Discovery: 2024-01-14 09:15:22 UTC
+  Devices Discovered: 12
+
+SRA Discovery Process Started
+  Target Array: Pure-FlashArray-X90R2
+  Discovery Duration: 45 seconds
+  Status: Completed Successfully
+  Devices Re-discovered: 12
+```
+
+!!! warning "Common errors"
+    **`SRA Discovery Failed: Connection timeout to storage array (60s)`** — Verify network connectivity to the storage array and confirm SRA credentials are current in Site Recovery → Storage → Array Pairs settings.
+    **`Array Pair Status: Unhealthy - SRA Plugin Version Mismatch`** — Update the SRA plugin to match the vSphere Replication version by downloading the latest SRA from the storage vendor's support portal.
 ---
 
 ## Placeholder VMs at Recovery Site
@@ -190,6 +220,26 @@ vCenter (Recovery Site) → VMs and Templates
 # Site Recovery → Protection → [PG] → Configure → Reconfigure
 ```
 
+
+```text title="Expected output"
+vCenter (Recovery Site) → VMs and Templates
+  Look for VMs with names matching protected VMs — these are placeholder VMs
+  They appear as "shadow" VMs with minimal resources
+
+Placeholder VMs found:
+  prod-web-01 (128 MB RAM, 1 vCPU) — Recovery Site
+  prod-web-02 (128 MB RAM, 1 vCPU) — Recovery Site
+  prod-db-01 (256 MB RAM, 2 vCPU) — Recovery Site
+  prod-app-03 (128 MB RAM, 1 vCPU) — Recovery Site
+
+Protection Group Status: PROTECTED
+Last Test Failover: 2024-01-15 14:32:18 UTC
+Recovery Point Objective: 5 minutes
+```
+
+!!! warning "Common errors"
+    **`Error: Protection group not found in Site Recovery Manager`** — Verify the protection group name matches exactly in Site Recovery → Protection and check that SRM is properly licensed on both sites.
+    **`Error: Placeholder VMs missing from recovery site datastore`** — Re-run the protection group reconfiguration wizard via Site Recovery → Protection → [PG] → Configure → Reconfigure to regenerate placeholder VMs.
 ---
 
 ## Recovery Plan Pre-Check
@@ -224,6 +274,20 @@ echo | openssl s_client -connect vra-protected.example.local:443 2>/dev/null \
   | openssl x509 -noout -dates
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 08:23:47 2023 GMT
+notAfter=Jan 15 08:23:47 2026 GMT
+notBefore=Jan 15 08:23:47 2023 GMT
+notAfter=Jan 15 08:23:47 2026 GMT
+notBefore=Mar 22 14:10:12 2022 GMT
+notAfter=Mar 22 14:10:12 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify the SRM or VRA appliance is running and the hostname resolves correctly with `nslookup` or `ping`.
+    **`connect: Name or service not known`** — Add the appliance hostnames to your DNS or `/etc/hosts` file, or use the IP address instead of the FQDN.
+    **`Verify return code: 20 (unable to verify the first certificate)`** — This is a warning for self-signed certificates; the dates are still valid—add `-showcerts` to inspect the full chain if needed.
 ---
 
 ## Monthly Test Recovery Verification

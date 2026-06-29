@@ -143,6 +143,18 @@ Update DNS only if VMs receive new IP addresses at the DR site (different subnet
 nslookup app.domain.local <DR-DNS-server-IP>
 ```
 
+
+```text title="Expected output"
+Server:  10.45.12.50
+Address:  10.45.12.50#53
+
+Name:    app.domain.local
+Address:  10.45.18.75
+```
+
+!!! warning "Common errors"
+    **`** server can't find app.domain.local: NXDOMAIN`** — Verify the DNS record was successfully added with `dnscmd /enumrecords <zone> <hostname>` and confirm the DR DNS server IP is correct.
+    **`** server can't find app.domain.local: SERVFAIL`** — Check that the DR DNS server is online and reachable; run `ping 10.45.12.50` from the client and verify zone replication has completed on the DC.
 Expected: `nslookup` returns the DR site IP for each application FQDN.
 
 ### 5. Post-Failover Validation

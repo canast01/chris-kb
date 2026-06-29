@@ -179,6 +179,32 @@ Prism Central → Activity → Audit Logs
 ncc --health_checks audit_log_check 2>/dev/null
 ```
 
+
+```text title="Expected output"
+Nutanix Cluster Check (NCC) v4.2.1
+===============================================
+
+Cluster: prod-cluster-01
+Timestamp: 2024-01-15 14:32:18 UTC
+
+Health Check: audit_log_check
+Status: PASSED
+Details:
+  - Audit logging enabled: YES
+  - Log retention (days): 90
+  - Total audit events: 14,287
+  - Last event timestamp: 2024-01-15 14:31:45 UTC
+  - Storage usage: 2.3 GB / 10 GB
+  - Remote syslog configured: YES (10.45.12.8:514)
+
+Summary: All audit log checks passed successfully.
+===============================================
+```
+
+!!! warning "Common errors"
+    **`Error: NCC not found in PATH`** — Install NCC on the Nutanix cluster or add its installation directory to your PATH environment variable.
+    **`Error: Connection refused to Prism (10.x.x.x:9440)`** — Verify cluster connectivity and that Prism Central/Element is running with `curl -k https://<prism-ip>:9440/api/nutanix/v3/clusters`.
+    **`Error: Insufficient permissions for audit_log_check`** — Run the command with cluster admin credentials or ensure your user has the "Audit" role assigned in Prism.
 ---
 
 ## Verify Access Controls

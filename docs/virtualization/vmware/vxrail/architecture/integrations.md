@@ -72,6 +72,19 @@ curl -k -H "X-AUTH-TOKEN: <token>" \
   https://vxrail-mgr.corp.example.com/rest/vxm/v1/hosts
 ```
 
+
+```text title="Expected output"
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTcwOTMxNjgwMH0.x7K9mN2pQrS4vWxYzAbCdEfGhIjKlMnOpQrStUvWxYz","token_type":"Bearer","expires_in":3600}
+
+{"cluster_id":"cluster-1","name":"VxRail-Cluster-01","version":"8.0.200.12345","health":"Healthy","node_count":4,"storage_capacity_gb":102400,"used_capacity_gb":51200}
+
+{"hosts":[{"host_id":"host-1","hostname":"vxrail-node-01.corp.example.com","ip_address":"192.168.1.101","health":"Healthy","cpu_cores":32,"memory_gb":512,"model":"VxRail G560F"},{"host_id":"host-2","hostname":"vxrail-node-02.corp.example.com","ip_address":"192.168.1.102","health":"Healthy","cpu_cores":32,"memory_gb":512,"model":"VxRail G560F"},{"host_id":"host-3","hostname":"vxrail-node-03.corp.example.com","ip_address":"192.168.1.103","health":"Healthy","cpu_cores":32,"memory_gb":512,"model":"VxRail G560F"},{"host_id":"host-4","hostname":"vxrail-node-04.corp.example.com","ip_address":"192.168.1.104","health":"Degraded","cpu_cores":32,"memory_gb":512,"model":"VxRail G560F"}]}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass SSL verification, or import the VxRail manager's certificate into your system's trusted store.
+    **`{"error":"Invalid credentials","error_code":401}`** — Verify the username and password are correct and the admin account is not locked; check VxRail manager logs for authentication failures.
+    **`{"error":"Token expired","error_code":401}`** — Re-authenticate to obtain a fresh token, as the previous token has exceeded its 3600-second expiration window.
 ## CMDB Integration
 
 VxRail nodes and the vSAN datastore should be registered in the CMDB:

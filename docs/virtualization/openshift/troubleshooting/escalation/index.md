@@ -112,6 +112,55 @@ oc adm must-gather --dest-dir=/tmp/must-gather
 tar czf must-gather-$(date +%F-%H%M).tar.gz /tmp/must-gather/
 ```
 
+
+```text title="Expected output"
+apiVersion: config.openshift.io/v4
+kind: ClusterVersion
+metadata:
+  name: version
+  namespace: openshift-cluster-version
+status:
+  desired:
+    image: quay.io/openshift-release-dev/ocp-release@sha256:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+    version: 4.14.8
+  history:
+  - completionTime: "2024-01-15T14:32:00Z"
+    image: quay.io/openshift-release-dev/ocp-release@sha256:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+    startedTime: "2024-01-15T13:45:00Z"
+    state: Completed
+    version: 4.14.8
+4.14.8
+4.14.7
+4.14.6
+4.14.5
+
+NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+authentication                             4.14.8    True        False         False      2d
+baremetal                                  4.14.8    True        False         False      2d
+cloud-credential                           4.14.8    True        False         False      2d
+cluster-autoscaler                         4.14.8    True        False         False      2d
+...
+
+NAME                STATUS   ROLES           AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE
+master-0            Ready    master,worker   45d   v1.27.8   10.0.1.10      203.0.113.45  Red Hat Enterprise Linux CoreOS 414.92.202401151234-0
+master-1            Ready    master,worker   45d   v1.27.8   10.0.1.11      203.0.113.46  Red Hat Enterprise Linux CoreOS 414.92.202401151234-0
+worker-0            Ready    worker          42d   v1.27.8   10.0.2.20      203.0.113.50  Red Hat Enterprise Linux CoreOS 414.92.202401151234-0
+worker-1            Ready    worker          42d   v1.27.8   10.0.2.21      203.0.113.51  Red Hat Enterprise Linux CoreOS 414.92.202401151234-0
+
+Client Version: 4.14.8
+Server Version: 4.14.8
+Kubernetes Version: v1.27.8+4fab27b
+AWS
+OpenShiftSDN
+
+Gathering data for cluster...
+Wrote must-gather to /tmp/must-gather
+must-gather-2024-01-16-1430.tar.gz
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "clusterversion"`** — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc cluster-info`.
+    **`error: Unable to connect to the server: dial tcp: lookup api.cluster.example.com on 8.8.8.8:53: no such host`** — Check your kubeconfig context with `oc config current
 Case description must include:
 1. **OpenShift version**: exact version from `oc get clusterversion`
 2. **Infrastructure**: IPI/UPI, cloud/bare-metal/vSphere, network plugin (OVN-K/SDN)
@@ -172,6 +221,33 @@ wait
 echo "All sos reports complete"
 ```
 
+
+```text title="Expected output"
+Starting debug container on node master-0...
+Spawning a debug container with image "quay.io/openshift-release-dev/ocp-v4.14.0-linux:latest".
+Root filesystem is mounted at /host.
+Removing debug pod "node-debug-7k9mz" ...
+Toolbox initialized. Type 'exit' to return to the host.
+Running 'sosreport' setup for openshift-node...
+Loaded plugins: crio, crio.logs, networking, kubernetes
+Collecting data and creating archive...
+sosreport (version 4.4.1)
+  Running plugins. Completing % |████████████████████████| Time: 0:02:15
+  Your sosreport has been packaged and saved in:
+    /var/tmp/sosreport-master-0-20240315-kxvj2.tar.xz
+  Size: 287M
+  MD5: 8f4e2c9d1a6b5e3f2c7d9a1b4e6f8c0d
+
+Starting sosreport on master-0
+Starting sosreport on master-1
+Starting sosreport on master-2
+All sos reports complete
+```
+
+!!! warning "Common errors"
+    **`error: unable to find a match for "node/<node-name>"`** — Replace `<node-name>` with an actual node name from `oc get nodes`.
+    **`tar: /host/var/tmp/sosreport*.tar.xz: No such file or directory`** — The sosreport may still be running; wait a few seconds and verify the file exists with `oc debug node/<node-name> -- ls -lh /host/var/tmp/sosreport*.tar.xz`.
+    **`command not found: toolbox`** — Install toolbox on the node with `oc debug node/<node-name> -- chroot /host dnf install -y toolbox` or use Method 2 if sos is already available.
 ## Escalation Path
 
 ```text
@@ -214,6 +290,22 @@ grep -r "password\|token\|key" /tmp/must-gather/must-gather.local.*/ | \
 oc adm inspect namespace/my-project --dest-dir=/tmp/inspect-ns
 ```
 
+
+```text title="Expected output"
+/tmp/must-gather/must-gather.local.5678/namespaces/openshift-monitoring/secrets.yaml:    - key: prometheus-k8s-tls-assets-ca-bundle
+/tmp/must-gather/must-gather.local.5678/namespaces/openshift-monitoring/secrets.yaml:    - key: alertmanager-main-tls-assets-ca-bundle
+/tmp/must-gather/must-gather.local.5678/namespaces/openshift-apiserver/configmaps.yaml:      password_database: "postgresql"
+/tmp/must-gather/must-gather.local.5678/namespaces/kube-system/configmaps.yaml:      token_endpoint: "https://oauth.example.com"
+/tmp/must-gather/must-gather.local.5678/cluster-scoped-resources/core/secrets.yaml:    - key: tls.key
+/tmp/must-gather/must-gather.local.5678/cluster-scoped-resources/core/secrets.yaml:    - key: tls.crt
+
+Inspecting namespace my-project...
+Wrote inspect data to /tmp/inspect-ns
+```
+
+!!! warning "Common errors"
+    **`grep: /tmp/must-gather/must-gather.local.*/: No such file or directory`** — Run `oc adm must-gather` first to generate the must-gather bundle in /tmp/must-gather/.
+    **`error: the server doesn't have a resource type "namespace"`** — Use `oc adm inspect namespace/my-project` (with lowercase "namespace") or specify the full resource path like `oc adm inspect ns/my-project`.
 ## Pre-Escalation Triage Checklist
 
 Run through this checklist before opening a case to rule out self-resolvable issues.
@@ -258,6 +350,63 @@ oc get machineconfigpool -o wide
 oc get machineconfig --sort-by=.metadata.creationTimestamp | tail -10
 ```
 
+
+```text title="Expected output"
+NAME                                                  READY   UP-TO-DATE   AVAILABLE   AGE
+clusteroperator/authentication                        True    False        False       45d
+clusteroperator/baremetal                             True    False        False       45d
+clusteroperator/cloud-credential                      True    False        False       45d
+clusteroperator/cluster-autoscaler                    True    False        False       45d
+clusteroperator/console                               True    False        False       45d
+NAME     STATUS   ROLES    AGE   VERSION
+node-0   Ready    master   45d   v1.27.6+f67aeb3
+node-1   Ready    master   45d   v1.27.6+f67aeb3
+node-2   Ready    worker   45d   v1.27.6+f67aeb3
+node-3   NotReady worker   45d   v1.27.6+f67aeb3
+...
+NAME                                    READY   STATUS    RESTARTS   AGE
+openshift-apiserver/apiserver-0         1/1     Running   0          2d
+openshift-etcd/etcd-node-0              1/1     Running   1          45d
+openshift-monitoring/prometheus-0       2/2     Running   0          3h
+...
+state-2024-01-15-1430.txt
+
+conditions:
+- lastTransitionTime: "2024-01-15T14:28:33Z"
+  message: "etcd cluster is healthy"
+  reason: EtcdClusterHealthy
+  status: "True"
+  type: Available
+- lastTransitionTime: "2024-01-15T14:28:33Z"
+  message: ""
+  reason: ""
+  status: "False"
+  type: Progressing
+
+NAME       CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
+node-0     2847m        71%    18432Mi         58%
+node-1     1923m        48%    12288Mi         39%
+node-2     892m         22%    8192Mi         26%
+node-3     3456m        86%    24576Mi        78%
+
+POD                                                    CPU(cores)   MEMORY(bytes)
+openshift-monitoring/prometheus-operator-6d8f5c4b9d   156m         512Mi
+openshift-etcd/etcd-node-0                            234m         1024Mi
+openshift-apiserver/apiserver-0                       189m         768Mi
+openshift-monitoring/alertmanager-main-0              98m          256Mi
+openshift-kube-scheduler/scheduler-node-0             67m          128Mi
+...
+
+Inspecting clusteroperator/kube-apiserver...
+Wrote results to /tmp/apiserver-inspect
+
+4.13.0-rc.1	2024-01-10T08:45:22Z
+4.12.15	2024-01-05T16:22:15Z
+4.12.14	2023-12-28T09:11:44Z
+
+NAME                    CONFIG                                        UPDATED   UPDATING   DEGRADED   MACHINECOUNT   READYMACHINECOUNT   UPDATEDMACHINECOUNT   DEGRADEDMACHINECOUNT   AGE
+master                  rendered-master-a1b2c3d4e
+```
 ---
 
 ## See also

@@ -53,6 +53,19 @@ esxcli vsan storage capacity get
 # Check "Used Capacity" — keep below 70% to allow object rebuild headroom
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-7c2e-41e2-9a3f-8b1d6e9c2f4a
+Physical capacity: 12.34 TB
+Capacity used: 8.12 TB (65.8%)
+Capacity free: 4.22 TB (34.2%)
+Slack space (reserved): 2.10 TB
+Dedup and compression savings: 1.87 TB
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to the vSAN cluster`** — Verify the ESXi host is part of an active vSAN cluster and network connectivity to cluster members is available.
+    **`Error: vSAN service is not running`** — Enable vSAN on the cluster or restart the vSAN service with `systemctl restart vsanvpd` on the affected host.
 vSAN capacity thresholds:
 - > 60% used: plan capacity expansion
 - > 70% used: critical — rebuild operations may fail if a disk fails

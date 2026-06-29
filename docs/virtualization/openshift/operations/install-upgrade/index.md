@@ -66,6 +66,22 @@ oc patch clusterversion version --type=json \
 oc adm upgrade
 ```
 
+
+```text title="Expected output"
+stable-4.13
+(no output — command completes silently)
+(no output — command completes silently)
+Cluster version is 4.13.12
+Updates available:
+  VERSION     IMAGE
+  4.13.13     quay.io/openshift-release-dev/ocp-release@sha256:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+  4.14.0      quay.io/openshift-release-dev/ocp-release@sha256:f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5
+  4.14.1      quay.io/openshift-release-dev/ocp-release@sha256:p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g3h4i5
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "clusterversion" in group "config.openshift.io" in the namespace "default"`** — Ensure you are connected to an OpenShift cluster with `oc login` and have cluster-admin permissions.
+    **`Error from server (Forbidden): clusterversions.config.openshift.io "version" is forbidden: User "system:serviceaccount:default:deployer" cannot patch resource "clusterversions" in API group "config.openshift.io" at the cluster scope`** — Run the command as a user with cluster-admin role using `oc adm policy add-cluster-role-to-user cluster-admin <username>`.
 **EUS channels** apply only to even-numbered minor versions (4.10, 4.12, 4.14, 4.16). Subscriptions to an EUS channel unlock the EUS-to-EUS upgrade path; odd-version intermediate releases are not available in EUS channels.
 
 ## Upgrade Prerequisites Checklist
@@ -90,6 +106,19 @@ oc get mcp | grep -v "^NAME" && \
 echo "Pre-checks PASSED"
 ```
 
+
+```text title="Expected output"
+NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+authentication                             4.12.15   True        False         False      2d
+baremetal                                  4.12.15   True        False         False      2d
+cloud-credential                           4.12.15   True        False         False      2d
+cluster-autoscaler                         4.12.15   True        False         False      2d
+Pre-checks PASSED
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "co"`** — Ensure you are connected to a valid OpenShift cluster with `oc login` and have sufficient permissions.
+    **`grep: (standard input) is empty`** — This occurs when all cluster operators are healthy; add `|| true` at the end of each grep chain to allow the script to continue on empty results.
 ## Standard Upgrade Procedure
 
 ```bash
@@ -119,6 +148,51 @@ oc get clusterversion
 # STATUS field: "Cluster version is 4.14.5"
 ```
 
+
+```text title="Expected output"
+# 1. Set channel
+(no output — command completes silently)
+
+# 2. Review available versions and recommended path
+Upstream is unset, so the cluster will use an appropriate default.
+Channel: stable-4.14
+Desired: 4.14.5
+Current: 4.14.3
+Updates available:
+  VERSION     IMAGE
+  4.14.4      quay.io/openshift-release-dev/ocp-release@sha256:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6
+  4.14.5      quay.io/openshift-release-dev/ocp-release@sha256:b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a
+  4.15.0      quay.io/openshift-release-dev/ocp-release@sha256:c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a1b
+
+# 3. Trigger upgrade to specific version
+Upgrade initiated to version 4.14.5
+
+# 4. Monitor ClusterVersion
+NAME             VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+version          4.14.3    True        True          2m      Working towards 4.14.5
+version          4.14.3    True        True          5m      Working towards 4.14.5
+version          4.14.4    True        True          12m     Working towards 4.14.5
+version          4.14.5    True        False         18m     Cluster version is 4.14.5
+
+# 5. Monitor cluster operators
+NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE
+authentication                             4.14.5    True        False         False      8m
+cloud-credential-operator                  4.14.5    True        False         False      7m
+cluster-autoscaler                         4.14.5    True        False         False      9m
+config-operator                            4.14.5    True        False         False      6m
+...
+
+# 6. Monitor node upgrades
+NAME                    STATUS   ROLES           AGE    VERSION
+worker-0.example.com    Ready    worker          45d    v1.27.6
+worker-1.example.com    Ready    worker          45d    v1.27.6
+master-0.example.com    Ready    control-plane   45d    v1.27.6
+master-1.example.com    Ready    control-plane   45d    v1.27.6
+master-2.example.com    Ready    control-plane   45d    v1.27.6
+
+NAME                                    CONFIG                                   UPDATED   UPDATING   DEGRADED   MACHINECOUNT   READYMACHINECOUNT   UNAVAILABLEMACHINECOUNT   AGE
+master                                  rendered-master-a1b2c3d4e5f6g7h8        True      False      False      3              3                   0
+```
 ## Upgrade Command Reference
 
 | Command | Description |
@@ -153,6 +227,28 @@ oc patch mcp worker --type merge -p '{"spec":{"paused":false}}'
 oc get mcp -w                         # Watch worker pool drain+reboot
 ```
 
+
+```text title="Expected output"
+machineconfigpool.machineconfigpools.openshift.io/worker patched
+true
+Updating to 4.14.5
+NAME                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE
+authentication             4.14.5    True        False         False      2m14s
+baremetal                  4.14.5    True        False         False      2m8s
+cloud-credential           4.14.5    True        False         False      2m22s
+cluster-autoscaler         4.14.5    True        False         False      2m19s
+cluster-version            4.14.5    False       True          False      3m1s
+console                    4.14.5    True        False         False      2m5s
+...
+machineconfigpool.machineconfigpools.openshift.io/worker patched
+NAME     CONFIG                                 UPDATED   UPDATING   DEGRADED   NODES   READY   UNAVAILABLE   AGE
+master   rendered-master-a1b2c3d4e5f6g7h8i     True      False      False      3       3       0             45d
+worker   rendered-worker-f8g7h6i5e4d3c2b1a     False     True       False      5       3       2             45d
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "mcp"`** — Use the full resource name `machineconfigpool` or ensure the OpenShift CLI is updated to version 4.10+.
+    **`Unable to connect to the server: dial tcp: lookup api.cluster.local on 127.0.0.1:53: no such host`** — Verify your kubeconfig is set correctly with `export KUBECONFIG=/path/to/kubeconfig` and the cluster API is reachable.
 > **Warning:** Do not leave worker MCP paused after upgrade completes. Nodes will be out of sync with the cluster config until resumed.
 
 ## EUS-to-EUS Upgrade (e.g. 4.12 → 4.14)
@@ -182,6 +278,36 @@ oc patch mcp worker --type=merge -p '{"spec":{"paused":false}}'
 oc get mcp -w
 ```
 
+
+```text title="Expected output"
+clusterversion.config.openshift.io/version patched
+machineconfigpool.machineconfiguration.openshift.io/worker patched
+Updating to version 4.13.27
+NAME                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+authentication             4.12.15   True        False         False      10m     
+cluster-autoscaler         4.12.15   True        False         False      10m     
+cluster-storage-operator   4.12.15   True        False         False      10m     
+console                    4.12.15   True        True          False      2m      Working towards 4.13.27
+dns                        4.12.15   True        False         False      10m     
+etcd                       4.12.15   True        False         False      10m     
+...
+clusterversion.config.openshift.io/version patched
+Updating to version 4.14.5
+NAME                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+authentication             4.13.27   True        True          False      1m      Working towards 4.14.5
+cluster-autoscaler         4.13.27   True        False         False      8m      
+console                    4.13.27   True        True          False      45s     Working towards 4.14.5
+...
+machineconfigpool.machineconfiguration.openshift.io/worker patched
+NAME     CONFIG                                   UPDATED   UPDATING   DEGRADED   UNAVAILABLE   AGE
+master   rendered-master-a1b2c3d4e5f6g7h8i9j0   True      False      False      0             45d
+worker   rendered-worker-x9y8z7w6v5u4t3s2r1q0   False     True       False      2             45d
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "clusterversion"`** — Ensure you are logged in with `oc login` to a valid OpenShift cluster and have cluster-admin permissions.
+    **`Unable to find version 4.13.27 in the available updates`** — Run `oc adm upgrade` without arguments to list available versions, then use a valid intermediate z-stream from the output.
+    **`machine-config-daemon on node worker-0 is degraded`** — Wait for the worker node to finish applying the paused MachineConfig before unpausing, or check `oc describe node worker-0` for blocking conditions.
 ## Multi-Hop Upgrade
 
 OCP upgrade graph enforces version adjacency. Some versions require traversing an intermediate release. The upgrade graph at `access.redhat.com/labs/ocpupgradegraph` shows valid paths.
@@ -201,6 +327,32 @@ oc adm upgrade --to-image=quay.local:8443/ocp4/openshift/release:4.14.5-x86_64 \
   --allow-explicit-upgrade
 ```
 
+
+```text title="Expected output"
+Desired version: 4.14.5
+Cluster version: 4.12.8
+
+Available updates:
+  VERSION     IMAGE
+  4.13.27     quay.io/openshift-release-dev/ocp-release:4.13.27-x86_64
+  4.13.28     quay.io/openshift-release-dev/ocp-release:4.13.28-x86_64
+
+Upgrade to intermediate first
+Updating to version 4.13.27
+Cluster Version Operator is unavailable
+Cluster is updating: 4.12.8 -> 4.13.27 (100 of 600 seconds)
+
+Updating to version 4.14.5
+Cluster is updating: 4.13.27 -> 4.14.5 (45 of 720 seconds)
+
+Updating to image quay.local:8443/ocp4/openshift/release:4.14.5-x86_64
+Cluster is updating: 4.14.5 -> 4.14.5 (disconnected, 12 of 180 seconds)
+```
+
+!!! warning "Common errors"
+    **`error: the server has asked for the client to provide credentials`** — Ensure your kubeconfig is valid and you are logged in with `oc login` to the cluster.
+    **`error: unable to find image "quay.local:8443/ocp4/openshift/release:4.14.5-x86_64" locally`** — Verify the image digest exists in your disconnected registry and the registry hostname/port are accessible from all nodes.
+    **`error: upgrade cannot proceed: DesiredReleaseInvalid`** — Confirm the target version exists in the update graph by running `oc adm upgrade` without arguments, or use an intermediate version if a direct path is unavailable.
 ## OCP Version Lifecycle
 
 | Version | Type | GA | Full support end | Maintenance end |
@@ -244,6 +396,46 @@ oc get pdb -A
 # etcdctl snapshot restore → re-bootstrap control plane
 ```
 
+
+```text title="Expected output"
+conditions:
+- lastTransitionTime: "2024-01-15T09:23:47Z"
+  message: "ClusterOperatorDegraded: operator/kube-apiserver is degraded"
+  reason: ClusterOperatorDegraded
+  status: "True"
+  type: Degraded
+- lastTransitionTime: "2024-01-15T09:15:12Z"
+  message: "MultipleErrors: etcd quorum lost, 1 of 3 members unavailable"
+  reason: MultipleErrors
+  status: "True"
+  type: Progressing
+
+Name:                  kube-apiserver
+Namespace:             openshift-kube-apiserver
+Labels:                <none>
+Status:                Degraded
+Conditions:
+  Type                 Status  LastTransitionTime      Reason
+  ----                 ------  ------------------      ------
+  Degraded             True    2024-01-15T09:23:47Z   NodeInstallerDegraded
+  Progressing          True    2024-01-15T09:15:12Z   NodeInstallerProgressing
+
+clusteroperator.config.openshift.io/kube-apiserver patched
+
+NAME                                    READY   STATUS    RESTARTS   AGE     NODE
+etcd-member-ip-10-0-1-45.ec2.internal  1/1     Running   0          2d14h   master-0
+coredns-7f4d8c9b5d-2k9wx               0/1     Evicted   0          4h12m   worker-1
+openshift-sdn-8xjkl                     1/1     Running   0          3d8h    worker-2
+
+NAME                                    MIN AVAILABLE   AGE
+poddisruptionbudget-etcd-backup         1               45d
+poddisruptionbudget-ingress-controller  2               60d
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "co"`** — Use the full resource name `clusteroperator` instead of the alias `co`, or verify the API group with `oc api-resources | grep operator`.
+    **`Error from server (NotFound): clusteroperators.config.openshift.io "<operator>" not found`** — Verify the operator name exists with `oc get clusteroperator` and check for typos in the degraded operator name.
+    **`error: unable to patch the resource with name "<operator>"`** — Ensure you have cluster-admin privileges with `oc auth can-i patch clusteroperators` and only apply patches on explicit Red Hat support guidance.
 ---
 
 ## See also

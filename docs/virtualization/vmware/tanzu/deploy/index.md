@@ -71,6 +71,24 @@ nslookup supervisor.example.local
 nslookup <supervisor-VIP>
 ```
 
+
+```text title="Expected output"
+Server:		10.0.1.53
+Address:	10.0.1.53#53
+
+Name:	supervisor.example.local
+Address: 10.20.30.40
+Address: 10.20.30.41
+
+Server:		10.0.1.53
+Address:	10.0.1.53#53
+40.30.20.10.in-addr.arpa	name = supervisor.example.local.
+41.30.20.10.in-addr.arpa	name = supervisor.example.local.
+```
+
+!!! warning "Common errors"
+    **`** server can't find supervisor.example.local: NXDOMAIN`** — Add the A-record for supervisor.example.local to your DNS server before enabling Workload Management.
+    **`** server can't find 40.30.20.10.in-addr.arpa: NXDOMAIN`** — Create a PTR record in your reverse DNS zone pointing the Supervisor VIP back to supervisor.example.local.
 ### NTP Verification
 
 ```bash
@@ -80,6 +98,19 @@ esxcli system ntp stats
 # Clock offset should be < 1 second
 ```
 
+
+```text title="Expected output"
+NTP Enabled: true
+NTP Servers: 10.20.30.40, 10.20.30.41
+NTP Running: true
+
+Remote Server: 10.20.30.40, Stratum: 2, ReferenceID: 192.168.1.1, Synchronized: true, Reachability: 377, Delay(ms): 12.543, Offset(ms): 0.234
+Remote Server: 10.20.30.41, Stratum: 2, ReferenceID: 192.168.1.2, Synchronized: true, Reachability: 377, Delay(ms): 14.821, Offset(ms): -0.156
+```
+
+!!! warning "Common errors"
+    **`Could not connect to the host. The host may not be running, or the login credentials may not be correct.`** — Verify SSH connectivity to the ESXi host and confirm credentials are correct.
+    **`NTP Enabled: false`** — Enable NTP with `esxcli system ntp set --enabled=true` and start the service with `esxcli system service start ntpd`.
 ---
 
 ## Phase 2 — Enable Workload Management (Supervisor)
@@ -123,6 +154,33 @@ curl -sk https://<supervisor-VIP>:443/api/ | head -5
 # Expected: API discovery response
 ```
 
+
+```text title="Expected output"
+{
+  "kind": "APIGroup",
+  "apiVersion": "v1",
+  "name": "api",
+  "versions": [
+    {
+      "groupVersion": "v1",
+      "version": "v1"
+    },
+    {
+      "groupVersion": "apps/v1",
+      "version": "v1"
+    }
+  ],
+  "preferredVersion": {
+    "groupVersion": "v1",
+    "version": "v1"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <supervisor-VIP> port 443: Connection refused`** — Verify the Supervisor VIP is correct and reachable from your workstation by pinging the IP first.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should bypass SSL verification; if still failing, ensure you're using lowercase `-sk` and not mixing with other curl options.
+    **`curl: (6) Could not resolve host`** — Confirm the `<supervisor-VIP>` placeholder was replaced with an actual IP address (e.g., `192.168.1.100`) and is resolvable from your network.
 ---
 
 ## Phase 3 — vSphere Namespace Configuration
@@ -174,6 +232,29 @@ kubectl config get-contexts
 kubectl get namespaces
 ```
 
+
+```text title="Expected output"
+Logged in successfully to 'https://10.42.100.15' as 'administrator@vsphere.local'
+The server has a self signed certificate. Proceeding anyway.
+
+CURRENT   NAME                          CLUSTER                       AUTHINFO                      NAMESPACE
+*         10.42.100.15                  10.42.100.15                  wcp:10.42.100.15:administrator@vsphere.local   
+          tanzu-cli-mc-stg              tanzu-cli-mc-stg              tanzu-cli-mc-stg-user         
+
+NAME              STATUS   AGE
+default           Active   45d
+kube-node-lease   Active   45d
+kube-public       Active   45d
+kube-system       Active   45d
+workload-prod     Active   38d
+workload-staging  Active   22d
+...
+```
+
+!!! warning "Common errors"
+    **`error: Unable to connect to the server: dial tcp: lookup <supervisor-VIP>: no such host`** — Replace `<supervisor-VIP>` with the actual Supervisor Cluster IP address (e.g., `10.42.100.15`).
+    **`error: invalid credentials provided`** — Verify the vSphere username and password are correct; use `--vsphere-username` with the full UPN format (e.g., `administrator@vsphere.local`).
+    **`error: x509: certificate signed by unknown authority`** — Remove the `--insecure-skip-tls-verify` flag once you have a valid certificate, or ensure your CA certificate is in the system trust store.
 ---
 
 ## Phase 4 — TKG Workload Cluster Provisioning
@@ -192,6 +273,16 @@ kubectl vsphere login \
 kubectl config use-context team-prod
 ```
 
+
+```text title="Expected output"
+Logged in successfully.
+
+The current context is now "team-prod".
+```
+
+!!! warning "Common errors"
+    **`error: You must be logged in to the server (Unauthorized)`** — Verify the supervisor VIP is correct and the vSphere credentials are valid; check that the user has permission to access the Supervisor Cluster.
+    **`error: context "team-prod" does not exist`** — List available contexts with `kubectl config get-contexts` and use the correct namespace name from the output.
 ### List Available TKG Releases
 
 ```bash
@@ -200,6 +291,19 @@ kubectl get tanzukubernetesrelease
 # Choose a TKR from this list for the cluster manifest below
 ```
 
+
+```text title="Expected output"
+NAME                                    VERSION        READY   REASON
+v1.24.9---vmware.1-tkg.1-tiny           1.24.9         True    
+v1.25.7---vmware.1-tkg.1-small          1.25.7         True    
+v1.26.5---vmware.1-tkg.1-medium         1.26.5         True    
+v1.27.2---vmware.1-tkg.1-large          1.27.2         True    
+v1.28.1---vmware.1-tkg.1-xlarge         1.28.1         False   ImageNotReady
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "tanzukubernetesrelease"`** — Ensure the Tanzu Kubernetes Grid management cluster is properly initialized with `tanzu management-cluster create` and the required CRDs are installed.
+    **`No resources found in default namespace.`** — Switch to the correct namespace where TanzuKubernetesRelease objects exist, typically `tkg-system`, using `kubectl config set-context --current --namespace=tkg-system`.
 ### Deploy TKG Workload Cluster
 
 ```bash
@@ -233,6 +337,41 @@ EOF
 kubectl apply -f prod-cluster.yaml
 ```
 
+
+```text title="Expected output"
+cat > prod-cluster.yaml <<'EOF'
+apiVersion: run.tanzu.vmware.com/v1alpha3
+kind: TanzuKubernetesCluster
+metadata:
+  name: prod-cluster
+  namespace: team-prod
+spec:
+  topology:
+    controlPlane:
+      replicas: 3
+      vmClass: best-effort-medium
+      storageClass: vsan-default
+      tkr:
+        reference:
+          name: v1.28.8---vmware.1-tkg.2
+    nodePools:
+    - name: worker-pool-1
+      replicas: 5
+      vmClass: best-effort-large
+      storageClass: vsan-default
+      volumes:
+      - name: containerd-storage
+        mountPath: /var/lib/containerd
+        capacity:
+          storage: 50Gi
+EOF
+tanzukubernetescluster.run.tanzu.vmware.com/prod-cluster created
+```
+
+!!! warning "Common errors"
+    **`error: unable to recognize "prod-cluster.yaml": no matches for kind "TanzuKubernetesCluster" in version "run.tanzu.vmware.com/v1alpha3"`** — Verify the Tanzu Kubernetes Grid management cluster is properly initialized and the TKG CRDs are installed with `kubectl get crds | grep tanzu`.
+    **`The namespace "team-prod" does not exist`** — Create the namespace first with `kubectl create namespace team-prod`.
+    **`vmClass "best-effort-medium" not found`** — Verify available VM classes in your Supervisor Cluster with `kubectl get vmclass` and use an existing class name.
 ### Monitor Cluster Provisioning
 
 ```bash
@@ -255,6 +394,30 @@ kubectl get nodes
 # Expected: all nodes in Ready state
 ```
 
+
+```text title="Expected output"
+NAME           PHASE         READY   TKR NAME                    AGE
+prod-cluster   Provisioning  False   v1.27.5---vmware.2-tkg.1    2m
+prod-cluster   Provisioning  False   v1.27.5---vmware.2-tkg.1    5m
+prod-cluster   Ready         True    v1.27.5---vmware.2-tkg.1    18m
+
+NAME                                    PHASE     VERSION
+prod-cluster-control-plane-2xk9f        Running   v1.27.5
+prod-cluster-md-0-5d8c4f7b9-lm2pq       Running   v1.27.5
+prod-cluster-md-0-5d8c4f7b9-n8qvx       Running   v1.27.5
+
+Logged in successfully to supervisor cluster 10.20.1.50 as administrator@vsphere.local
+Switched to context prod-cluster
+
+NAME                             STATUS   ROLES           AGE   VERSION
+prod-cluster-control-plane-2xk9f Ready    control-plane   16m   v1.27.5
+prod-cluster-md-0-5d8c4f7b9-lm2pq Ready    <none>          14m   v1.27.5
+prod-cluster-md-0-5d8c4f7b9-n8qvx Ready    <none>          14m   v1.27.5
+```
+
+!!! warning "Common errors"
+    **`error: unable to connect to the server: dial tcp 10.20.1.50:6443: i/o timeout`** — Verify the supervisor-VIP is reachable and the vSphere control plane is healthy; check network connectivity and firewall rules.
+    **`error: x509: certificate signed by unknown authority`** — Remove the `--insecure-skip-tls-verify` flag once a valid certificate is installed, or ensure your CA bundle is properly configured in kubeconfig.
 ---
 
 ## Phase 5 — Harbor Container Registry
@@ -315,6 +478,16 @@ curl -u admin:<password> -X POST \
 # Administration → Interrogation Services → Trivy → Edit → Enable
 ```
 
+
+```text title="Expected output"
+{"project_id":100,"project_name":"team-prod","public":false,"creation_time":"2024-01-15T09:42:33.521Z","update_time":"2024-01-15T09:42:33.521Z"}
+{"id":23,"name":"ci-pipeline","description":"CI push account","secret":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...","creation_time":"2024-01-15T09:43:12.847Z","expires_at":-1}
+```
+
+!!! warning "Common errors"
+    **`{"errors":[{"code":"CONFLICT","message":"Project name already exists"}]}`** — Check if the project exists with `curl -u admin:<password> https://harbor.example.local/api/v2.0/projects?name=team-prod` and use a different name or delete the existing project first.
+    **`{"errors":[{"code":"UNAUTHORIZED","message":"Unauthorized"}]}`** — Verify the admin password is correct and URL is accessible; test connectivity with `curl -k https://harbor.example.local/api/v2.0/health`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification for self-signed certs, or import the Harbor CA certificate into your system trust store.
 ---
 
 ## Phase 6 — End-to-End Validation
@@ -332,6 +505,23 @@ kubectl get pods -A | grep -v Running | grep -v Completed
 # No pods in CrashLoopBackOff or Pending state
 ```
 
+
+```text title="Expected output"
+Switched to context "prod-cluster".
+NAME                    STATUS   ROLES           AGE   VERSION        INTERNAL-IP      EXTERNAL-IP   OS-IMAGE
+prod-worker-01          Ready    worker          45d   v1.28.4         10.20.15.42      <none>        VMware Photon OS/Linux
+prod-worker-02          Ready    worker          45d   v1.28.4         10.20.15.43      <none>        VMware Photon OS/Linux
+prod-worker-03          Ready    worker          44d   v1.28.4         10.20.15.44      <none>        VMware Photon OS/Linux
+prod-control-plane-01   Ready    control-plane   45d   v1.28.4         10.20.15.40      <none>        VMware Photon OS/Linux
+prod-control-plane-02   Ready    control-plane   45d   v1.28.4         10.20.15.41      <none>        VMware Photon OS/Linux
+NAMESPACE     NAME                                    READY   STATUS      RESTARTS   AGE
+kube-system   coredns-5d78c0869f-2k8xm               1/1     Completed   0          45d
+kube-system   etcd-prod-control-plane-01             1/1     Running     2          45d
+```
+
+!!! warning "Common errors"
+    **`error: context "prod-cluster" does not exist`** — Run `kubectl config get-contexts` to list available contexts and use the correct name.
+    **`Unable to connect to the server: dial tcp 10.20.15.40:6443: connection refused`** — Verify the control plane nodes are running and network connectivity exists; check `kubectl cluster-info` for endpoint status.
 ### PVC Provisioning Test
 
 ```bash
@@ -356,6 +546,18 @@ kubectl get pvc pvc-test
 kubectl delete pvc pvc-test
 ```
 
+
+```text title="Expected output"
+persistentvolumeclaim/pvc-test created
+NAME       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+pvc-test   Bound    pvc-1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p   5Gi        RWO            vsan-default   2s
+persistentvolumeclaim "pvc-test" deleted
+```
+
+!!! warning "Common errors"
+    **`Error from server (NotFound): error when retrieving current configuration of the object before updating: persistentvolumeclaims "pvc-test" is not found`** — Ensure the namespace is correct and the PVC was successfully created before attempting to delete it.
+    **`storageclass.storage.k8s.io "vsan-default" not found`** — Verify the storage class exists in your cluster with `kubectl get storageclass` and update the `storageClassName` field accordingly.
+    **`PersistentVolumeClaim is in use by pod`** — Delete any pods using the PVC before attempting to delete the claim, or use `kubectl delete pvc pvc-test --grace-period=0 --force` if necessary.
 ### Harbor Push/Pull Test
 
 ```bash
@@ -371,6 +573,23 @@ docker push harbor.example.local/team-prod/alpine:test
 # Harbor → Projects → team-prod → Repositories → alpine → test
 ```
 
+
+```text title="Expected output"
+Login Succeeded
+latest: Pulling from library/alpine
+Digest: sha256:eece025e432126ce23f223450a0326fbebde39cba518d143f6b05a849d08ce1f
+Status: Downloaded newer image for alpine:latest
+(no output — command completes silently)
+(no output — command completes silently)
+The push refers to repository [harbor.example.local/team-prod/alpine]
+test: digest: sha256:9c6e40b8664f8e1f4b3d7a2c9e5f1d8a4b6c2e9f1a3d5b7c9e2f4a6b8d0e1f3 size: 528
+Digest: sha256:9c6e40b8664f8e1f4b3d7a2c9e5f1d8a4b6c2e9f1a3d5b7c9e2f4a6b8d0e1f3
+```
+
+!!! warning "Common errors"
+    **`Error response from daemon: Get "https://harbor.example.local/v2/": x509: certificate signed by unknown authority`** — Add Harbor's CA certificate to your Docker daemon trust store or use `--insecure-registry` if testing in non-production.
+    **`denied: requested access to the resource is denied`** — Verify the robot account token is correct and has push permissions on the `team-prod` project in Harbor.
+    **`Error response from daemon: Get "https://harbor.example.local/v2/team-prod/alpine/manifests/test": unauthorized: unauthorized to access repository`** — Confirm you are logged in with `docker login` and the robot account has the correct role (Developer or higher) assigned to the team-prod project.
 ### Network Policy Test
 
 ```bash
@@ -382,6 +601,27 @@ kubectl run nettest --image=alpine --restart=Never --rm -it -- \
   wget -qO- https://<supervisor-VIP>:443/api/
 ```
 
+
+```text title="Expected output"
+NAME                                    READY   STATUS    RESTARTS   AGE
+antrea-agent-2k8xj                      2/2     Running   0          14d
+antrea-agent-5lmqp                      2/2     Running   0          14d
+antrea-agent-9vwkl                      2/2     Running   0          14d
+antrea-controller-0                     1/1     Running   0          14d
+antrea-controller-1                     1/1     Running   0          14d
+antrea-controller-2                     1/1     Running   0          14d
+pod/nettest created
+{
+  "kind": "APIVersions",
+  "versions": ["v1"],
+  "serverAddressByClientCIDRs": [{"clientCIDR": "0.0.0.0/0", "serverAddress": "192.168.1.50:443"}]
+}
+pod "nettest" deleted
+```
+
+!!! warning "Common errors"
+    **`error: no matching resources found`** — Verify Antrea is installed on the cluster with `kubectl get ns kube-system` and check the CNI plugin deployment status.
+    **`Connection timed out`** — Confirm the Supervisor VIP is reachable from worker nodes by replacing `<supervisor-VIP>` with the actual IP and testing with `ping` from a node first.
 ### Post-Deployment Checklist
 
 | Item | Check |

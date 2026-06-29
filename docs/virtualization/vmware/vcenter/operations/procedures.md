@@ -72,6 +72,15 @@ esxcli system maintenanceMode set --enable true
 esxcli system maintenanceMode get
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+Enabled
+```
+
+!!! warning "Common errors"
+    **`Could not connect to the local host. Error: Connection refused`** — Ensure the ESXi host SSH service is running and you have network connectivity to the management interface.
+    **`Unknown command or namespace maintenanceMode`** — Verify you are running this command on ESXi 5.0 or later; older versions use different maintenance mode syntax.
 Exit maintenance mode:
 ```powershell
 Set-VMHost -VMHost (Get-VMHost "esxi-01.example.local") -State Connected
@@ -187,6 +196,25 @@ grep "<esxi-hostname>" /var/log/vmware/vpxd/vpxd.log | tail -50
 /etc/init.d/vpxa status
 ```
 
+
+```text title="Expected output"
+Stopping vpxa...
+Waiting for vpxa to stop...
+Starting vpxa...
+Waiting for vpxa to start...
+vpxa started successfully.
+Stopping hostd...
+Waiting for hostd to stop...
+Starting hostd...
+Waiting for hostd to start...
+hostd started successfully.
+Running /etc/init.d/vpxa status
+vpxa is running.
+```
+
+!!! warning "Common errors"
+    **`vpxa is not running.`** — Check `/var/log/vpxa.log` for startup errors and verify network connectivity to vCenter Server.
+    **`Unable to connect to the local hostd agent`** — Wait 30-60 seconds for hostd to fully initialize after restart before checking vpxa status.
 If the host certificate has drifted from vCenter's expected thumbprint, reconnect via UI and accept the new thumbprint, or re-add the host to vCenter after removing it.
 
 ---
@@ -292,6 +320,44 @@ python /usr/lib/vmware-vmafd/bin/lstool.py list --url http://localhost:7080/look
 # Use certificate-manager → Option 8: Reset all certificates
 ```
 
+
+```text title="Expected output"
+root@vcenter.example.com [ ~ ]# /usr/lib/vmware-vmca/bin/certificate-manager
+
+	 *** Welcome to Certificate Manager ***
+
+Please select an option [1-9]:
+1. Replace Machine SSL certificate with Custom Certificate
+2. Replace VMCA-signed Machine SSL certificate with VMCA signed certificate
+3. Regenerate a new VMCA Root Certificate
+4. Replace Solution User certificates with custom certificate
+5. Replace Solution User certificates with VMCA signed certificate
+6. Regenerate a new Solution User certificate
+7. Reset all Certificates
+8. Replace Machine SSL certificate with VMCA signed certificate
+9. Exit
+
+Option [1-9]: 1
+Please provide a Certificate file [.crt/.cer]: /root/machine-cert.crt
+Please provide a Private Key file [.key]: /root/machine-key.key
+Please provide a Root CA Certificate file [.crt/.cer]: /root/root-ca.crt
+Certificate replaced successfully. Please restart all services.
+
+root@vcenter.example.com [ ~ ]# python /usr/lib/vmware-vmafd/bin/lstool.py list --url http://localhost:7080/lookupservice/sdk 2>/dev/null | grep -i expire
+Expires: 2025-03-15T18:42:31.000Z
+Expires: 2025-03-15T18:42:31.000Z
+
+root@vcenter.example.com [ ~ ]# /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS
+Entry 0
+	Alias: __MACHINE_CERT
+	Type: X.509 Certificate
+	Expires: 2026-03-14 18:42:31 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: Certificate file not found or invalid format`** — Verify the certificate file path and ensure it is in PEM format (.crt or .cer).
+    **`Error: Private key does not match certificate`** — Regenerate the certificate signing request and ensure the private key corresponds to the signed certificate.
+    **`Error: Root CA certificate validation failed`** — Confirm the root CA certificate is valid and in the correct chain order for your custom CA.
 Post-replacement validation:
 
 ```bash
@@ -307,6 +373,25 @@ vmon-cli --status | grep -E "RUNNING|STOPPED"
 # Verify ESXi hosts still show Connected
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 10:23:45 2024 GMT
+notAfter=Jan 15 10:23:45 2025 GMT
+subject=C = US, ST = California, L = San Francisco, O = Acme Corp, CN = vcenter.acme.local
+vpxd                                    RUNNING
+vpxd:vpxd                               RUNNING
+vpxd:vpostgres                          RUNNING
+vsphere-ui                              RUNNING
+vsphere-ui:vsphere-ui                   RUNNING
+sps                                     RUNNING
+sps:sps                                 RUNNING
+netdump                                 RUNNING
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify vCenter is running and port 443 is accessible; check firewall rules and vmon-cli --status output.
+    **`STOPPED`** — Restart the stopped service using `vmon-cli --restart <service-name>` and wait 2–3 minutes for full initialization.
+    **`unable to load certificate`** — Confirm the certificate file path is correct and readable; verify the certificate was properly imported using `certificate-manager` utility.
 ## vCenter File-Based Backup
 
 vCenter supports scheduled file-based backups to NFS, SFTP, FTPS, HTTP, or HTTPS locations.
@@ -402,6 +487,36 @@ curl -sk -X GET "https://<vcenter-fqdn>/api/vcenter/identity/providers" \
   -H "vmware-api-session-id: <session-id>"
 ```
 
+
+```text title="Expected output"
+[
+  {
+    "name": "vsphere.local",
+    "type": "LOCAL_OS",
+    "friendly_name": "Local OS",
+    "domain_name": "vsphere.local"
+  },
+  {
+    "name": "corp.example.com",
+    "type": "LDAP",
+    "friendly_name": "Corporate Active Directory",
+    "domain_name": "corp.example.com",
+    "base_dn": "dc=corp,dc=example,dc=com"
+  },
+  {
+    "name": "lab.internal",
+    "type": "LDAP",
+    "friendly_name": "Lab Domain",
+    "domain_name": "lab.internal",
+    "base_dn": "dc=lab,dc=internal"
+  }
+]
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the vCenter CA certificate into your system trust store with `curl -cacert /path/to/ca.crt`.
+    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","messages":["Invalid session."]}`** — Obtain a valid session ID by running `curl -sk -X POST "https://<vcenter-fqdn>/api/session" -u "administrator@vsphere.local:password"` first.
+    **`curl: (7) Failed to connect to <vcenter-fqdn> port 443: Connection refused`** — Verify vCenter is running and accessible on the network; check firewall rules and confirm the FQDN resolves correctly with `nslookup <vcenter-fqdn>`.
 ---
 
 ## Configure a vSphere Alarm
@@ -504,6 +619,24 @@ vmon-cli --status | grep -v RUNNING
 # Verify ESXi hosts still show Connected in the new vCenter
 ```
 
+
+```text title="Expected output"
+{
+  "version": "7.0.3.00000",
+  "product": "VMware vCenter Server",
+  "build": "19480866",
+  "type": "vcsa"
+}
+STOPPED  vmware-vpxd-svcs
+STOPPED  vmware-mbcs
+root@vcenter.lab.local [ ~ ]# vmon-cli --status | grep -v RUNNING
+root@vcenter.lab.local [ ~ ]#
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the vCenter CA certificate into your trusted store.
+    **`ssh: Could not resolve hostname <new-vcenter-fqdn>: Name or service not known`** — Replace `<new-vcenter-fqdn>` with the actual FQDN or IP address of your vCenter appliance.
+    **`Authentication failed for user 'administrator@vsphere.local'`** — Verify the password is correct and the user account exists; check vCenter's authentication source if using external identity provider.
 ---
 
 ## Deploy a VM from OVA/OVF Template
@@ -521,6 +654,14 @@ shasum -a 256 vendor-appliance.ova
 # Compare output against the published checksum on the vendor download page
 ```
 
+
+```text title="Expected output"
+d4e8f3a9c2b1e7f6a5d9c3b8e1f4a7d2c9e5b8a1f3d6c9e2b5a8f1d4e7a0c3  vendor-appliance.ova
+```
+
+!!! warning "Common errors"
+    **`shasum: vendor-appliance.ova: No such file or directory`** — Verify the OVA file exists in the current directory with `ls -lh vendor-appliance.ova` and correct the filename or path.
+    **`shasum: command not found`** — Install the sha utilities package with `apt-get install coreutils` (Debian/Ubuntu) or `yum install coreutils` (RHEL/CentOS), or use `sha256sum` instead.
 ### Step 2 — Deploy via vCenter UI
 
 ![Step 2 — Deploy via vCenter UI](../../../../assets/vcenter-proc-step-2-deploy-via-vcenter-ui.svg)
@@ -638,6 +779,27 @@ Enhanced Linked Mode joins multiple vCenter instances into a federated Single Si
 # Output should list both vCenters as replication partners
 ```
 
+
+```text title="Expected output"
+Replication Partners:
+	CN=vcenter-01.corp.local,OU=Domain Controllers,DC=vsphere,DC=local
+	CN=vcenter-02.corp.local,OU=Domain Controllers,DC=vsphere,DC=local
+
+Partner: vcenter-01.corp.local
+	Status: Up
+	Last Heartbeat: 2024-01-15T14:32:18.456Z
+
+Partner: vcenter-02.corp.local
+	Status: Up
+	Last Heartbeat: 2024-01-15T14:32:15.123Z
+
+Replication Latency: 3ms
+```
+
+!!! warning "Common errors"
+    **`Error: Cannot connect to localhost:389 (Connection refused)`** — Verify the vCenter SSO service is running with `systemctl status vmware-vmafd` and restart if needed.
+    **`Error: Authentication failed for user 'administrator' (Invalid credentials)`** — Confirm the SSO administrator password is correct and hasn't expired by testing login in the vSphere Client.
+    **`Error: vdcrepadmin: command not found`** — Ensure you are running this command directly on a vCenter Server appliance (not a remote host) where the vmafd tools are installed.
 ### Step 3 — Configure Cross-vCenter Permissions (Optional)
 
 ![Step 3 — Configure Cross-vCenter Permissions (Optional)](../../../../assets/vcenter-proc-step-3-configure-cross-vcenter-permissions-optional.svg)

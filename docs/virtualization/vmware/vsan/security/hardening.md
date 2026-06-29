@@ -53,6 +53,18 @@ esxcli system settings advanced set -o /UserVars/ESXiShellTimeOut -i 300
 esxcli system settings advanced set -o /Config/Etc/motd -s "Authorized access only. Activity monitored."
 ```
 
+
+```text title="Expected output"
+Operation completed successfully.
+Operation completed successfully.
+Operation completed successfully.
+Operation completed successfully.
+Operation completed successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or setting '/UserVars/ESXiShellInteractiveTimeOut'`** — Verify the exact parameter name with `esxcli system settings advanced list | grep -i timeout` as the setting may differ by ESXi version.
+    **`Error: Ruleset 'sshServer' does not exist`** — Use `esxcli network firewall ruleset list` to confirm the correct ruleset name (typically `sshServer` on ESXi 6.5+, but may vary).
 ### ESXi Firewall
 
 ```bash
@@ -68,6 +80,33 @@ esxcli network firewall ruleset set --ruleset-id DHCPv6 --enabled false    # if 
 esxcli network firewall ruleset set --ruleset-id httpClient --enabled false  # if not using vSAN HCL check
 ```
 
+
+```text title="Expected output"
+Name                    Enabled
+------                  -------
+syslog                  true
+ntpClient               true
+CIMHttpsServer          true
+vpxHeartbeats           true
+vSAN                    true
+CMMDS                   true
+vSphere-Client          true
+...
+
+Name                    Enabled
+------                  -------
+vSAN                    true
+CMMDS                   true
+FaultTolerance          true
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or malformed command`** — Verify the ruleset-id exists by running `esxcli network firewall ruleset list` and use the exact name from the output.
+    **`Error: This operation requires elevated privileges`** — Run the commands as root or with appropriate ESXi administrative credentials.
 ### Account and Password Policies
 
 ```bash
@@ -84,6 +123,17 @@ esxcli system settings advanced set -o /Security/AccountUnlockTime -i 900
 esxcli system settings advanced set -o /Security/PasswordHistory -i 5
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option /Security/PasswordQualityControl`** — Verify the advanced setting name matches your ESXi version (some versions use `/Security/PasswordQuality` without `Control`); check `esxcli system settings advanced list | grep -i password` to confirm available options.
+    **`Error: Invalid value for option /Security/AccountLockFailures: value must be an integer`** — Remove the `-i` flag if the parameter expects a string, or ensure the value is a valid integer without quotes.
 **Via host profile (recommended for cluster-wide enforcement):**
 
 vSphere Client → Policies and Profiles → Host Profiles → Edit Profile → Security and Services → Security Settings → Password Policies
@@ -99,6 +149,14 @@ vSphere Client → Policies and Profiles → Host Profiles → Edit Profile → 
 grep PermitRootLogin /etc/ssh/sshd_config
 ```
 
+
+```text title="Expected output"
+PermitRootLogin no
+```
+
+!!! warning "Common errors"
+    **`grep: /etc/ssh/sshd_config: No such file or directory`** — This command runs on ESXi hosts where SSH config is located at `/etc/ssh/sshd_config`; verify SSH is enabled on the host and you are connected to the correct ESXi system.
+    **`Permission denied`** — Run the command as root or with `sudo` since `/etc/ssh/sshd_config` requires elevated privileges to read on some ESXi versions.
 From ESXi 8.0, the `PermitRootLogin` option can be set to `no` with named admin accounts defined. Document this change before applying — losing root SSH access to all hosts simultaneously is a recovery scenario.
 
 ### Audit Logging to Syslog
@@ -117,6 +175,21 @@ esxcli system syslog config get
 esxcli network firewall ruleset set --ruleset-id syslog --enabled true
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+Loghost: udp://siem.example.com:514
+Default Network Retry Timeout: 180
+Default Network Retry Attempts: 3
+Queue Drop Mark: 90
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option --loghost`** — Use `--loghost=` syntax without spaces (e.g., `--loghost=udp://siem.example.com:514`).
+    **`Error: Unable to resolve hostname siem.example.com`** — Verify DNS resolution on the ESXi host with `esxcli network ip dns server list` and ensure the SIEM server hostname is correct.
+    **`Error: Ruleset syslog not found`** — The ruleset name is `syslog` but may not exist on all ESXi versions; use `esxcli network firewall ruleset list` to confirm the exact ruleset name.
 **Key events to monitor in syslog:**
 
 - `SSH login`
@@ -143,6 +216,29 @@ esxcli system time get
 ntpq -p   # shows NTP peer status
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+Enabled: true
+ConfigFile: /etc/ntp.conf
+Servers: ntp1.example.com,ntp2.example.com
+
+Current Time: 2024-01-15T14:32:47Z
+Timezone: UTC
+NTP Synchronized: true
+
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*ntp1.example.co 10.0.0.1         2 u   64  128  377   12.456   -1.234   2.105
++ntp2.example.co 10.0.0.2         2 u   62  128  377   15.789    0.567   1.892
+-ntp.ubuntu.com  216.239.35.0     2 u  126  128  377   48.234   12.456   5.234
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify that NTP servers are reachable from the ESXi host and that firewall rules allow UDP port 123 outbound.
+    **`Error: Unable to set NTP servers`** — Ensure you have root/administrator privileges and that the ESXi host is not in lockdown mode.
+    **`ntpq: read: Connection refused`** — Confirm that the ntpd service is running with `systemctl status ntpd` or restart it with `systemctl restart ntpd`.
 **Via host profile:**
 Host Profiles → Security and Services → Time Configuration → NTP Configuration
 
@@ -176,6 +272,16 @@ EOF
 /etc/init.d/rsyslog restart
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+ * Stopping rsyslog                                             [ OK ]
+ * Starting rsyslog                                             [ OK ]
+```
+
+!!! warning "Common errors"
+    **`cat: /etc/vmware-syslog/syslog.conf: Permission denied`** — Run the commands with `sudo` or as root user.
+    **`Job for rsyslog.service failed because the control process exited with error code.`** — Verify the syslog.conf syntax is correct and the SIEM server address is reachable with `telnet siem.example.com 514`.
 ### TLS and Cipher Configuration
 
 vCenter uses TLS 1.2 minimum from vSphere 7.0. Verify:
@@ -185,6 +291,17 @@ vCenter uses TLS 1.2 minimum from vSphere 7.0. Verify:
 /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHINE_SSL_CERT | grep -i tls
 ```
 
+
+```text title="Expected output"
+TLSv1.2
+TLSv1.3
+Certificate CN=vcsa-01.corp.local, OU=VMware, O=VMware, C=US
+Issuer CN=VMware-Root-CA, OU=VMware, O=VMware, C=US
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to local certificate store`** — Ensure the vmafd service is running with `systemctl status vmafd` and restart if needed.
+    **`grep: (standard input): No such file or directory`** — Verify the MACHINE_SSL_CERT store exists by running `vecs-cli store list` first to confirm certificate stores are accessible.
 Disable weak ciphers via the vSphere Client:
 vCenter → Configure → Advanced Settings → search for `config.tls` and `config.ssl`
 

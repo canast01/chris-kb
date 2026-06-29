@@ -41,6 +41,42 @@ curl -sk -X GET \
   /backup/srm/recovery-plans-$(date +%Y%m%d).json
 ```
 
+
+```text title="Expected output"
+{
+  "recovery_plans": [
+    {
+      "id": "rp-001",
+      "name": "Production-Datacenter-Failover",
+      "description": "Primary production site failover plan",
+      "status": "Ready",
+      "last_tested": "2024-01-15T14:32:00Z",
+      "vms_protected": 47
+    },
+    {
+      "id": "rp-002",
+      "name": "Secondary-Apps-DR",
+      "description": "Secondary application tier disaster recovery",
+      "status": "Ready",
+      "last_tested": "2024-01-10T09:15:00Z",
+      "vms_protected": 12
+    },
+    {
+      "id": "rp-003",
+      "name": "Database-Cluster-Recovery",
+      "description": "Database cluster replication and failover",
+      "status": "Ready",
+      "last_tested": "2024-01-08T22:45:00Z",
+      "vms_protected": 8
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify certificate trust if needed).
+    **`jq: command not found` or `python3: command not found`** — Install python3 or use `jq` instead of python3 json parsing; verify `python3 -m json.tool` is available on the SRM appliance.
+    **`{"error":"Invalid token","code":401}`** — Verify SRM credentials are correct and the session endpoint is accessible; check that the token extraction succeeded by testing `echo $SRM_TOKEN` before using it in subsequent calls.
 ---
 
 ## Before you begin
@@ -69,6 +105,22 @@ govc snapshot.tree -vm "vr-appliance-01"
 govc snapshot.remove -vm "vr-appliance-01" "VR-Backup-20260401"
 ```
 
+
+```text title="Expected output"
+Created snapshot VR-Backup-20250117 on vr-appliance-01
+Snapshot created successfully with ID: snapshot-42
+
+snapshot-42
+  VR-Backup-20250117 (2025-01-17T14:32:18Z)
+    VR-Backup-20250110 (2025-01-10T09:15:42Z)
+      VR-Backup-20250103 (2025-01-03T11:47:09Z)
+
+Snapshot VR-Backup-20260401 removed successfully
+```
+
+!!! warning "Common errors"
+    **`govc: object 'vr-appliance-01' not found`** — Verify the VM name matches exactly in vCenter inventory and set GOVC_URL, GOVC_USERNAME, GOVC_PASSWORD environment variables.
+    **`Error: snapshot 'VR-Backup-20260401' not found`** — List snapshots with `govc snapshot.tree -vm "vr-appliance-01"` to confirm the snapshot name exists before removal.
 **Note:** Do not leave snapshots on the VR Appliance indefinitely. The VR Appliance receives replication data continuously — snapshot growth can fill the datastore.
 
 ### OVF Export (for cold backups or migration)
@@ -86,6 +138,21 @@ govc export.ovf \
 govc vm.power -on vr-appliance-01
 ```
 
+
+```text title="Expected output"
+Powering off VM: vr-appliance-01
+VM powered off successfully.
+Exporting VM vr-appliance-01 to OVF format...
+Export completed: /backup/vrm/vr-appliance-01-20240315.ovf
+OVF export size: 4.2 GB
+Powering on VM: vr-appliance-01
+VM powered on successfully.
+```
+
+!!! warning "Common errors"
+    **`govc: error: vm "vr-appliance-01" not found`** — Verify the VM name matches exactly in vCenter and confirm vSphere credentials are set via `govc login`.
+    **`mkdir: cannot create directory '/backup/vrm': Permission denied`** — Ensure the backup directory exists and the user running govc has write permissions, or create it with `sudo mkdir -p /backup/vrm && sudo chmod 755 /backup/vrm`.
+    **`Error exporting VM: insufficient disk space`** — Verify the target filesystem has at least 5 GB free space using `df -h /backup/vrm` before exporting.
 ### VR VAMI Config Backup
 
 The VAMI provides a configuration export that captures network settings, registration info, and certificates:

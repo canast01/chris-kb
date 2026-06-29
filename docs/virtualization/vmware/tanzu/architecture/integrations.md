@@ -121,6 +121,38 @@ kubectl logs -n kube-system nsx-ncp-<hash> --tail=100
 kubectl get configmap -n kube-system nsx-ncp-config -o yaml
 ```
 
+
+```text title="Expected output"
+nsx-ncp-7d4f2k9m                           1/1     Running   0          12d
+nsx-ncp-7d4f2k9m-metrics                   1/1     Running   0          12d
+
+2024-01-15T08:42:33.123Z [INFO] NCP initialized successfully
+2024-01-15T08:42:35.456Z [INFO] Connected to NSX Manager at 192.168.1.50:443
+2024-01-15T08:42:37.789Z [INFO] Cluster UUID: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+2024-01-15T08:42:40.012Z [INFO] Syncing logical switches for 3 namespaces
+2024-01-15T08:42:42.345Z [INFO] Container networking policy enforcement enabled
+2024-01-15T08:42:45.678Z [INFO] Health check passed: NSX connectivity OK
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nsx-ncp-config
+  namespace: kube-system
+data:
+  ncp.ini: |
+    [DEFAULT]
+    nsx_api_managers = 192.168.1.50
+    nsx_username = admin
+    cluster = supervisor-cluster-1
+    [coe]
+    cluster_name = supervisor-cluster-1
+    enable_snat = True
+    container_ip_block_id = 550e8400-e29b-41d4-a716-446655440000
+```
+
+!!! warning "Common errors"
+    **`error: pods "nsx-ncp-<hash>" not found`** — Replace `<hash>` with the actual pod hash from the first command output (e.g., `nsx-ncp-7d4f2k9m`).
+    **`Error from server (NotFound): configmaps "nsx-ncp-config" not found`** — Verify NCP is installed in the Supervisor cluster and check the correct namespace with `kubectl get configmap -A | grep ncp`.
 NCP translates:
 - `NetworkPolicy` → NSX Distributed Firewall rules
 - `Service type: LoadBalancer` → NSX Virtual Server + Pool
@@ -155,6 +187,42 @@ kubectl logs -n avi-system ako-0 --tail=100
 kubectl get configmap -n avi-system avi-k8s-config -o yaml
 ```
 
+
+```text title="Expected output"
+NAME                                READY   STATUS    RESTARTS   AGE
+ako-0                               1/1     Running   0          45d
+avi-controller-0                    1/1     Running   0          45d
+avi-controller-1                    1/1     Running   0          45d
+avi-controller-2                    1/1     Running   0          45d
+
+2024-01-15T14:32:18.456Z [INFO] AKO initialized successfully
+2024-01-15T14:32:19.123Z [INFO] Connected to Avi Controller at 10.50.100.50
+2024-01-15T14:32:20.789Z [INFO] Cluster name: tanzu-prod-01
+2024-01-15T14:32:21.234Z [INFO] Service Engine Group: Default-Group
+2024-01-15T14:32:22.567Z [INFO] Syncing ingress resources from cluster
+2024-01-15T14:32:23.891Z [INFO] Registered 3 LoadBalancer services
+2024-01-15T14:32:24.445Z [INFO] AKO controller loop running
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: avi-k8s-config
+  namespace: avi-system
+data:
+  avi_controller: "10.50.100.50"
+  avi_username: "admin"
+  avi_password: "***"
+  cluster_name: "tanzu-prod-01"
+  service_engine_group: "Default-Group"
+  network_name: "k8s-vip-network"
+  subnet_ip: "10.60.0.0"
+  subnet_prefix: "24"
+  log_level: "INFO"
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "configmap" in API group ""`** — Verify the namespace exists with `kubectl get ns avi-system` and ensure AKO is installed via Helm.
+    **`Error from server (NotFound): pods "ako-0" not found`** — Check that the AKO pod is running with `kubectl get pods -n avi-system` and verify the deployment completed successfully.
 Key AKO settings:
 
 ```yaml
@@ -235,6 +303,31 @@ kubectl logs -n vmware-system-csi vsphere-csi-controller-<hash> -c vsphere-csi-c
 kubectl get csidriver csi.vsphere.vmware.com -o jsonpath='{.metadata.annotations}'
 ```
 
+
+```text title="Expected output"
+NAME                                       READY   STATUS    RESTARTS   AGE
+vsphere-csi-controller-0                   6/6     Running   0          14d
+vsphere-csi-node-4k8xj                     3/3     Running   2          14d
+vsphere-csi-node-7m2pq                     3/3     Running   1          14d
+vsphere-csi-node-9n5kr                     3/3     Running   0          14d
+vsphere-csi-syncer-0                       1/1     Running   0          14d
+
+I1215 09:42:33.521847       1 utils.go:89] CSI node driver initialized
+I1215 09:42:35.234521       1 node.go:156] Node ID: vm-worker-02.corp.local
+I1215 09:42:40.891234       1 csi.go:412] Volume attach successful: pvc-a7f3e2c1-9b4d-4e8f-b2a1-5c8d9e3f2a1b
+I1215 09:43:12.456789       1 node.go:203] Mount operation completed for /var/lib/kubelet/plugins/csi.vsphere.vmware.com/pv/pvc-a7f3e2c1-9b4d-4e8f-b2a1-5c8d9e3f2a1b
+
+I1215 09:41:22.123456       1 controller.go:78] CSI controller driver initialized
+I1215 09:41:25.654321       1 manager.go:234] Syncing volume metadata with vSphere
+I1215 09:41:30.987654       1 provisioner.go:445] Volume provisioning request received: size=50Gi, storageClass=vsphere-sc-default
+I1215 09:41:35.345678       1 attacher.go:312] Attach operation queued for node: vm-worker-01.corp.local
+
+{"csi.vsphere.vmware.com/version":"v2.7.1","csi.vsphere.vmware.com/build":"20231201.001"}
+```
+
+!!! warning "Common errors"
+    **`Error from server (NotFound): pods "vsphere-csi-node-<hash>" not found`** — Replace `<hash>` with the actual pod hash from the first command output (e.g., `vsphere-csi-node-4k8xj`).
+    **`error: the server doesn't have a resource type "csidriver"`** — Verify the Kubernetes API server supports CSIDriver resources (requires Kubernetes 1.12+) and check RBAC permissions for the current user.
 ---
 
 ## Active Directory / LDAP Integration
@@ -313,6 +406,22 @@ kubectl vsphere login \
   --insecure-skip-tls-verify   # only if cert not trusted locally
 ```
 
+
+```text title="Expected output"
+Logged in successfully.
+
+Context "supervisor-vip.example.com" created.
+
+You have access to the following contexts:
+   supervisor-vip.example.com
+
+Current context is now "supervisor-vip.example.com".
+```
+
+!!! warning "Common errors"
+    **`error: error validating the path to a credential file`** — Ensure `kubectl vsphere` plugin is installed via `kubectl krew install vsphere` and your kubeconfig directory exists.
+    **`error: x509: certificate signed by unknown authority`** — Remove the `--insecure-skip-tls-verify` flag and install the vSphere supervisor cluster's CA certificate in your system trust store, or keep the flag only for non-production testing.
+    **`error: invalid credentials`** — Verify the vSphere username and password are correct; use `--password` flag or enter interactively when prompted, and confirm the account has Kubernetes cluster admin permissions.
 ---
 
 ## Harbor Registry Integration
@@ -353,6 +462,39 @@ curl -u admin:Harbor12345 \
   | jq '.["application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0"].vulnerabilities[] | select(.severity=="Critical")'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "sha256:abc123",
+  "scan_status": "Success",
+  "scan_status_code": 200,
+  "scan_status_description": "The artifact has been scanned",
+  "scan_status_revision": 1
+}
+{
+  "id": "CVE-2024-1234",
+  "package": "openssl",
+  "package_version": "1.1.1k-1",
+  "vulnerability_id": "CVE-2024-1234",
+  "severity": "Critical",
+  "fixed_version": "1.1.1m-1",
+  "description": "Buffer overflow in X.509 certificate parsing"
+}
+{
+  "id": "CVE-2024-5678",
+  "package": "glibc",
+  "package_version": "2.31-13",
+  "vulnerability_id": "CVE-2024-5678",
+  "severity": "Critical",
+  "fixed_version": "2.31-14",
+  "description": "Heap corruption in malloc implementation"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or import the Harbor CA certificate into your system trust store.
+    **`{"errors":[{"code":"UNAUTHORIZED","message":"Unauthorized"}]}`** — Verify Harbor admin credentials are correct and the user has project access; check if the password contains special characters requiring URL encoding.
+    **`jq: error (at <stdin>:1): Cannot index object with string "application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0"`** — Ensure the artifact scan has completed successfully by checking `scan_status` is "Success" before querying vulnerabilities.
 ### Block Images with Critical CVEs (Replication and Deploy Gate)
 
 ```text
@@ -386,6 +528,16 @@ kubectl create clusterrolebinding aria-ops-reader \
 kubectl create token aria-ops-reader -n kube-system --duration=87600h
 ```
 
+
+```text title="Expected output"
+serviceaccount/aria-ops-reader created
+clusterrolebinding.rbac.authorization.k8s.io/aria-ops-reader created
+eyJhbGciOiJIUzI1NiIsImtpZCI6IjEyMzQ1Njc4OTBhYmNkZWYifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZWFjY291bnQubmFtZSI6ImFyaWEtb3BzLXJlYWRlciIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZWFjY291bnQudWlkIjoiYTJmNDZkYzItNzc5Yi00YzQ1LWI4ZDItOGY5YzFhMmI0ZTU5In0.rZ9KqX_vL2mN8pQ3wT6xY_jK4sA9bC5dE7fG2hI0jL
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "token"`** — Upgrade to Kubernetes 1.24+ or use `kubectl get secret -n kube-system $(kubectl get secret -n kube-system | grep aria-ops-reader-token | awk '{print $1}') -o jsonpath='{.data.token}' | base64 -d` for older versions.
+    **`Error from server (AlreadyExists): serviceaccounts "aria-ops-reader" already exists`** — Delete the existing service account with `kubectl delete serviceaccount aria-ops-reader -n kube-system` before recreating it.
 Aria Operations collects: node CPU/memory/disk, pod status, PVC usage, K8s events, namespace resource consumption.
 
 ---

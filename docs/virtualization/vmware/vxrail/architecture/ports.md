@@ -116,6 +116,32 @@ curl -sk -o /dev/null -w "%{http_code}" https://<vcenter-ip>/rest/com/vmware/cis
 curl -sk -o /dev/null -w "%{http_code}" https://downloads.dell.com
 ```
 
+
+```text title="Expected output"
+200
+200
+System Information
+  System Model: VxRail E560
+  System Manufacturer: Dell Inc.
+  BIOS Version: 2.19.2
+  iDRAC Version: 5.10.20.00
+  System UUID: 550e8400-e29b-41d4-a716-446655440000
+  Lifecycle Controller Version: 3.85.85.85
+  Baseboard Management Controller Version: 1.65.10
+  System Power State: On
+  Last System Shutdown Time: 2024-01-15T08:32:14Z
+  Last System Boot Time: 2024-01-15T09:15:22Z
+  Number of CPUs: 2
+  Number of Cores: 28
+  Number of Threads: 56
+200
+200
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in examples, but ensure it's not removed in production variants).
+    **`curl: (7) Failed to connect to <vxrail-manager-ip> port 443: Connection refused`** — Verify VxRail Manager service is running with `systemctl status vxrail-manager` and confirm the IP/hostname is correct.
+    **`curl: (28) Operation timeout. The timeout was reached`** — Increase curl timeout with `--connect-timeout 10 --max-time 30` and verify network connectivity and firewall rules allow HTTPS traffic.
 ---
 
 ## See also

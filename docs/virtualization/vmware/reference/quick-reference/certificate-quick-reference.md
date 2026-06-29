@@ -55,6 +55,28 @@ In vCenter Appliance Management (VAMI) at `https://<vcenter>:5480`:
 /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS
 ```
 
+
+```text title="Expected output"
+Entry [0]
+	Alias: CA
+	Certificate DN: CN=CA,OU=VMware,O=VMware,C=US
+	Issuer DN: CN=CA,OU=VMware,O=VMware,C=US
+	NotBefore: Jan 1 00:00:00 2020 GMT
+	NotAfter: Jan 1 00:00:00 2030 GMT
+	Fingerprint: A1:B2:C3:D4:E5:F6:7A:8B:9C:0D:1E:2F:3A:4B:5C:6D
+
+Entry [1]
+	Alias: Root
+	Certificate DN: CN=Root,OU=VMware,O=VMware,C=US
+	Issuer DN: CN=Root,OU=VMware,O=VMware,C=US
+	NotBefore: Jan 1 00:00:00 2015 GMT
+	NotAfter: Jan 1 00:00:00 2035 GMT
+	Fingerprint: F1:E2:D3:C4:B5:A6:97:88:79:6A:5B:4C:3D:2E:1F:0A
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to VMware Certificate Store`** — Ensure the vmafd service is running with `systemctl status vmware-vmafd` and restart if needed.
+    **`Error: Permission denied`** — Run the command with root privileges using `sudo` or as the root user.
 ## Validate After Replacement
 
 - Browser access to vCenter — no certificate warning

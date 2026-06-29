@@ -37,6 +37,10 @@ SDDC --> ADM: Workload domain live
 @enduml
 ```
 
+
+```text title="Expected output"
+(no output — this is a PlantUML diagram definition block, not executable bash code)
+```
 ## API — rotate a single credential
 curl -sk -u 'admin@local:password' \
   -X POST \

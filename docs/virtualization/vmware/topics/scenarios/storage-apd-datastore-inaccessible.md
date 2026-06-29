@@ -112,6 +112,25 @@ grep -i "APD\|PDL\|Lost Path\|path state change\|scsi sense" /var/log/vmkernel.l
 grep -i "APD\|path.*dead" /var/log/vmkernel.log | head -20
 ```
 
+
+```text title="Expected output"
+2024-01-15T08:23:45.123Z cpu15:2048)ScsiPath: 4282: Path vmhba4:C0:T5:L0 to device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2 state change: On -> Dead
+2024-01-15T08:23:47.456Z cpu22:2105)ScsiPath: 4283: Marking path vmhba4:C0:T5:L0 as APD (All Paths Down)
+2024-01-15T08:24:12.789Z cpu18:2156)ScsiPath: 4284: SCSI sense data: Key=0x3 ASC=0x11 ASCQ=0x00 (Medium Error)
+2024-01-15T08:24:15.234Z cpu8:2201)ScsiPath: 4285: Path vmhba5:C0:T3:L2 Lost Path detected on device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+2024-01-15T08:24:45.567Z cpu12:2289)ScsiPath: 4286: PDL (Permanent Device Loss) condition detected
+2024-01-15T08:25:10.890Z cpu19:2334)ScsiPath: 4287: Path vmhba4:C0:T5:L0 state change: Dead -> On
+2024-01-15T08:26:33.123Z cpu5:2445)ScsiPath: 4288: SCSI sense Key=0x5 ASC=0x24 ASCQ=0x00 (Invalid Field)
+...
+2024-01-15T08:23:45.123Z cpu15:2048)ScsiPath: 4282: Path vmhba4:C0:T5:L0 to device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2 state change: On -> Dead
+2024-01-15T08:23:47.456Z cpu22:2105)ScsiPath: 4283: Marking path vmhba4:C0:T5:L0 as APD (All Paths Down)
+2024-01-15T08:24:12.789Z cpu18:2156)ScsiPath: 4284: SCSI sense data: Key=0x3 ASC=0x11 ASCQ=0x00 (Medium Error)
+2024-01-15T08:24:15.234Z cpu8:2201)ScsiPath: 4285: Path vmhba5:C0:T3:L2 Lost Path detected on device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2
+2024-01-15T08:24:45.567Z cpu12:2289)ScsiPath: 4286: PDL (Permanent Device Loss) condition detected
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/vmkernel.log: No such file or directory`** — Verify you are running the command directly on the ESXi host
 Common vmkernel.log entries:
 
 ```text
@@ -147,6 +166,32 @@ esxcli storage san fc events get
 grep -i "FC\|fibre\|hba" /var/log/vmkernel.log | tail -30
 ```
 
+
+```text title="Expected output"
+HBA: vmhba0
+LinkState: link up
+PortName: 50:00:14:40:5a:2b:c1:a0
+HBA: vmhba1
+LinkState: link up
+PortName: 50:00:14:40:5a:2b:c1:a1
+HBA: vmhba2
+LinkState: link down
+PortName: 50:00:14:40:5a:2b:c1:a2
+
+2024-01-15T08:23:47.123Z: FC link up on vmhba0, target 50:0a:0985:2c1a3b4d
+2024-01-15T08:15:22.456Z: FC link down on vmhba2, target 50:0a:0985:2c1a3b4e
+2024-01-15T07:42:11.789Z: FC target discovery completed, 12 LUNs found
+
+2024-01-15T08:23:47.123Z cpu0:2048)vmhba0: [HBA Link State Change] Link up on port 50:00:14:40:5a:2b:c1:a0
+2024-01-15T08:15:22.456Z cpu2:4096)vmhba2: [HBA Link State Change] Link down on port 50:00:14:40:5a:2b:c1:a2
+2024-01-15T07:42:11.789Z cpu1:3072)Fibre Channel: Target discovery initiated on vmhba0
+2024-01-15T07:41:55.234Z cpu3:5120)HBA vmhba1: RSCN received, rescanning targets
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Verify you are running this command on an ESXi host with direct SSH access, not a vCenter Server.
+    **`grep: /var/log/vmkernel.log: No such file or directory`** — Confirm the ESXi host is fully booted and the /var/log directory is mounted; try `ls -la /var/log/` to verify.
+    **`No such FC HBA found`** — Check that FC HBAs are installed and recognized by running `esxcli storage san fc list` without filters to see all available adapters.
 **iSCSI:**
 
 ```bash
@@ -161,6 +206,32 @@ esxcli iscsi adapter discovery sendtarget list -A vmhba64
 esxcli iscsi networkportal list
 ```
 
+
+```text title="Expected output"
+Name    Driver      State   iscsi.MaxIoSize
+------  ----------  ------  ---------------
+vmhba64 iscsi       online  65536
+vmhba65 iscsi       online  65536
+
+SessionName                              Portal          PortalGroup  State
+---------------------------------------  --------------  -----------  ------
+iqn.1991-05.com.example:storage.lun01    192.168.1.100   1            LOGGED_IN
+iqn.1991-05.com.example:storage.lun02    192.168.1.101   1            LOGGED_IN
+
+Discovery Address  Discovery Status
+------------------  ----------------
+192.168.1.50        STATIC
+
+Adapter  PortalGroup  Portal              State
+-------  -----------  ------------------  -------
+vmhba64  1            192.168.1.100:3260  ACTIVE
+vmhba64  1            192.168.1.101:3260  ACTIVE
+vmhba65  2            192.168.1.102:3260  ACTIVE
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace iscsi.adapter`** — Verify the iSCSI software adapter is installed and loaded with `esxcli iscsi adapter list`; if empty, enable it via vSphere Client or `esxcli iscsi adapter set --adapter=vmhba64 -e true`.
+    **`Error: Could not find adapter vmhba64`** — Confirm the adapter name is correct by running `esxcli iscsi adapter list` first, as adapter numbers vary by host configuration.
 **NFS:**
 
 ```bash
@@ -175,6 +246,29 @@ esxcli storage nfs add -H <nfs-server-ip> -s /path/to/export -v <volume-label>
 vmkping -I vmk1 <nfs-server-ip>
 ```
 
+
+```text title="Expected output"
+NFS Mount List:
+Volume Name                                    Host                Port   Type  Mounted  Read-Only
+nfs-datastore-prod                             192.168.10.45       2049   NFS   true     false
+nfs-datastore-backup                           192.168.10.46       2049   NFS   true     false
+
+NFS datastore nfs-datastore-prod removed successfully.
+NFS datastore nfs-datastore-prod added and mounted successfully.
+
+PING 192.168.10.45 (192.168.10.45): 56 data bytes
+64 bytes from 192.168.10.45: icmp_seq=0 time=2.341 ms
+64 bytes from 192.168.10.45: icmp_seq=1 time=2.156 ms
+64 bytes from 192.168.10.45: icmp_seq=2 time=2.287 ms
+--- 192.168.10.45 statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 2.156, 2.261, 2.341 ms
+```
+
+!!! warning "Common errors"
+    **`NFS mount failed: Permission denied`** — Verify NFS server export permissions include the ESXi host IP and that the export is readable/writable.
+    **`vmkping: Unknown host 192.168.10.45`** — Confirm the NFS server IP is correct and that the vmk1 interface has network connectivity and a valid route to the NFS server subnet.
+    **`NFS datastore nfs-datastore-prod is still mounted`** — Unmount the datastore from all VMs and remove any locks using `esxcli storage nfs list` before attempting removal.
 Look for: if FC HBA shows `LinkState = Link Down`, the issue is the physical link or SFP. If iSCSI sessions are absent, check network reachability from the VMkernel port. For NFS, a ping failure to the NFS server confirms a network or server outage.
 
 ---
@@ -199,6 +293,23 @@ $das = $cluster.ExtensionData.Configuration.DasConfig
 $das.DefaultVmSettings.VmComponentProtectionSettings
 ```
 
+
+```text title="Expected output"
+IsEnabled                    : True
+VmStorageProtectionForAPD    : clusterWide
+VmTerminateDelayForAPD       : 300
+VmReactionOnAPDCleared       : reset
+VmMoterationForAPDCleared    : disabled
+VmStorageProtectionForPDL    : clusterWide
+VmTerminateDelayForPDL       : 300
+VmReactionOnPDLCleared       : reset
+VmMoterationForPDLCleared    : disabled
+```
+
+!!! warning "Common errors"
+    **`Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Import the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the command.
+    **`Get-Cluster : Could not find cluster with name 'cluster-name'.`** — Replace `"cluster-name"` with the actual cluster name; verify it exists with `Get-Cluster | Select-Object Name`.
+    **`Access to the resource is forbidden.`** — Ensure your vCenter user account has at least read-only permissions on the cluster object.
 Look for: `vmReactionOnAPDCleared = reset` means vCenter automatically restores VMs when paths recover — monitor whether this triggers correctly after fabric is restored.
 
 ---
@@ -218,6 +329,24 @@ esxcli storage core adapter rescan -A vmhba0
 esxcli storage nfs list
 ```
 
+
+```text title="Expected output"
+HBA Rescan: Complete
+vmhba0 Rescan: Complete
+vmhba1 Rescan: Complete
+vmhba2 Rescan: Complete
+
+NFS Mount Information:
+Volume Name  Host          Accessible  Mounted  Read-Only
+nfs-datastore-01  192.168.1.50  true       true     false
+nfs-datastore-02  192.168.1.51  true       true     false
+nfs-backup-vol    192.168.1.52  false      false    false
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option --all`** — Use `-a` instead of `--all` for the rescan command.
+    **`Error: Could not find HBA adapter vmhba0`** — Verify the HBA name with `esxcli storage core adapter list` before rescanning.
+    **`NFS mount timeout or stale NFS handle detected`** — Remount the NFS datastore using `esxcli storage nfs remove -v <volume-name>` followed by `esxcli storage nfs add`.
 In vCenter: **Storage → Datastores → right-click affected datastore → Rescan Storage**.
 
 After paths recover, monitor vmkernel.log:
@@ -226,6 +355,21 @@ After paths recover, monitor vmkernel.log:
 grep -i "path.*active\|APD cleared\|PDL cleared" /var/log/vmkernel.log | tail -20
 ```
 
+
+```text title="Expected output"
+2024-01-15T08:23:45.123Z cpu2:2051)WARNING: NMP: nmp_PathStateChangeEvent:4782: Active path "vmhba2:C0:T1:L0" changed to "dead"
+2024-01-15T08:24:12.456Z cpu5:4103)WARNING: NMP: nmp_PathStateChangeEvent:4782: Active path "vmhba3:C0:T2:L0" changed to "dead"
+2024-01-15T08:25:33.789Z cpu1:1923)NMP: nmp_DeviceAttemptFailover:5421: Failing over device "naa.60060e8007a2e0000007a2e000010001" from path "vmhba2:C0:T1:L0"
+2024-01-15T08:26:01.234Z cpu7:3456)APD cleared: Device naa.60060e8007a2e0000007a2e000010001 recovered after 28 seconds
+2024-01-15T08:27:15.567Z cpu3:2789)PDL cleared: Device naa.60060e8007a2e0000007a2e000010002 path restored
+2024-01-15T08:28:44.891Z cpu6:5012)NMP: nmp_PathStateChangeEvent:4782: Active path "vmhba4:C0:T3:L0" changed to "active"
+2024-01-15T08:29:22.345Z cpu2:1834)WARNING: NMP: nmp_PathStateChangeEvent:4782: Active path "vmhba1:C0:T0:L0" changed to "dead"
+2024-01-15T08:30:55.678Z cpu4:3267)APD cleared: Device naa.60060e8007a2e0000007a2e000010003 recovered after 45 seconds
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/vmkernel.log: No such file or directory`** — Verify the ESXi host is accessible and the vmkernel.log path is correct; on some versions it may be in `/var/log/vmkernel` or rotated to dated files like `vmkernel.1.log`.
+    **`grep: (standard input): No such file or directory`** — Ensure you have read permissions on the vmkernel.log file; run the command with `sudo` or as root if access is denied.
 Look for: `APD cleared` entries confirm all paths are restored. VMs that were not powered off by VMCP will resume I/O automatically within seconds.
 
 ---

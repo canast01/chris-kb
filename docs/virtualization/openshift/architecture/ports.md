@@ -131,6 +131,28 @@ oc get nodes -o wide
 curl -sk -o /dev/null -w "%{http_code}" https://localhost:10250/healthz
 ```
 
+
+```text title="Expected output"
+200
+{"health":"true"}
+Connection to 10.0.2.45 6081 (udp) succeeded!
+Kubernetes control plane is running at https://api.ocp4.example.com:6443
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
+NAME                    STATUS   ROLES           AGE   VERSION        INTERNAL-IP    EXTERNAL-IP   OS-IMAGE
+worker-node-01.ocp4    Ready    worker          45d   v1.27.8+4fab27 10.0.2.10      <none>        Red Hat Enterprise Linux CoreOS 4.13.13
+worker-node-02.ocp4    Ready    worker          45d   v1.27.8+4fab27 10.0.2.11      <none>        Red Hat Enterprise Linux CoreOS 4.13.13
+master-node-01.ocp4    Ready    control-plane   45d   v1.27.8+4fab27 10.0.1.5       <none>        Red Hat Enterprise Linux CoreOS 4.13.13
+master-node-02.ocp4    Ready    control-plane   45d   v1.27.8+4fab27 10.0.1.6       <none>        Red Hat Enterprise Linux CoreOS 4.13.13
+master-node-03.ocp4    Ready    control-plane   45d   v1.27.8+4fab27 10.0.1.7       <none>        Red Hat Enterprise Linux CoreOS 4.13.13
+200
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <api-server-lb>:6443: Connection refused`** — Verify the API load balancer is running and the hostname/IP resolves correctly with `nslookup <api-server-lb>`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should suppress this; if it persists, ensure curl supports the `-k` option or use `--insecure` instead.
+    **`Connection refused`** (from nc command) — Confirm the peer node IP is correct and Geneve overlay networking is enabled by checking `oc get network cluster -o yaml | grep geneve`.
 ---
 
 ## See also

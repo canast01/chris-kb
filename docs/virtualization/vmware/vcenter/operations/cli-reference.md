@@ -210,6 +210,68 @@ tail -f /var/log/vmware/vmdird/vmdird-syslog.log
 /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHINE_SSL_CERT
 ```
 
+
+```text title="Expected output"
+SERVICE STATUS
+vpxd                                    running
+vmdird                                  running
+vmafdd                                  running
+vsan-health                             running
+vsphere-ui                              running
+pschealth                               running
+
+SERVICE START
+Starting vpxd...
+Starting vmdird...
+Starting vmafdd...
+Starting vsan-health...
+Starting vsphere-ui...
+All services started successfully.
+
+STOP vpxd
+Stopping vpxd...
+vpxd stopped successfully.
+
+DISK USAGE
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       500G  287G  213G  58% /
+/dev/sda2       100G   45G   55G  45% /storage
+tmpfs            32G     0   32G   0% /dev/shm
+
+LOG DIRECTORY
+vpxd.log  vpxd-ui.log  vpxd-profiler.log  vpxd-stats.log
+
+VPXD LOG (last 10 lines)
+2024-01-15T09:42:17.123Z [vpxd 7654] [Originator@6876 sub=Default opID=52e4c8f9] [INFO] vCenter Server initialization complete
+2024-01-15T09:42:18.456Z [vpxd 7654] [Originator@6876 sub=Hostd opID=52e4c8fa] [INFO] Connected to host esx-01.lab.local
+
+VMDIRD LOG (last 5 lines)
+2024-01-15T09:41:55.789Z [vmdird] [INFO] Directory server started on port 389
+2024-01-15T09:42:01.234Z [vmdird] [INFO] Replication cycle completed
+
+DOMAIN NAME
+vsphere.local
+
+LS LOCATION
+cn=default-first-site,cn=Sites,cn=Configuration,dc=vsphere,dc=local
+
+CERTIFICATE STORES
+MACHINE_SSL_CERT
+TRUSTED_ROOTS
+TRUSTED_ROOT_CRLS
+CRL
+TRUSTED_MGMT_CA
+
+MACHINE_SSL_CERT ENTRIES
+Alias                          NotBefore           NotAfter            Issuer
+machine-ssl                    Jan 10 2023         Jan 10 2026         CN=CA,DC=vsphere,DC=local
+machine-ssl-old                Jan 10 2022         Jan 10 2025         CN=CA,DC=vsphere,DC=local
+```
+
+!!! warning "Common errors"
+    **`service-control: command not found`** — Verify the vCenter Server is fully installed and /usr/lib/vmware-vmafd/bin is in PATH, or use full path `/usr/lib/vmware-vmafd/bin/service-control`.
+    **`tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory`** — Ensure vpxd service is running with `service-control --start vpxd` and the log directory exists.
+    **`Error: Cannot connect to server localhost`** — Verify vmdird and vmafdd services are running with `service-control --status` and check network connectivity to localhost.
 ---
 
 ## See also

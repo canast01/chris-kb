@@ -109,6 +109,26 @@ ssh root@<vcenter-ip>
 df -h
 ```
 
+
+```text title="Expected output"
+root@vcenter-01.corp.local's password: 
+Welcome to VCSA 7.0.3 Build 21958099
+Last login: Wed Jan 15 14:22:33 2025 from 192.168.1.50
+
+root@vcenter-01 [ ~ ]# df -h
+Filesystem                Size  Used Avail Use% Mounted on
+/dev/mapper/root_vg-root   50G   38G   9.2G  82% /
+/dev/mapper/root_vg-log    20G   12G   6.8G  62% /var/log
+/dev/mapper/root_vg-seat   10G  8.2G   1.4G  84% /storage/seat
+/dev/mapper/root_vg-core   30G   26G   2.8G  91% /storage/core
+/dev/sda1                 512M  312M  200M  61% /boot
+tmpfs                      32G     0   32G   0% /dev/shm
+root@vcenter-01 [ ~ ]#
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host <vcenter-ip> port 22 (Connection refused)`** — Verify SSH is enabled on VCSA (Administration > System Configuration > Services) and the IP address is correct.
+    **`Permission denied (publickey,password).`** — Confirm you are using the root account (not a domain user) and the VCSA root password is correct.
 Key partitions and alert thresholds:
 
 | Partition | Purpose | Alert Threshold |
@@ -137,6 +157,42 @@ find /var/log/vmware -name "*.gz" -mtime +30 -delete
 find /storage/log -name "*.gz" -mtime +30 -delete
 ```
 
+
+```text title="Expected output"
+Service                                    Running  Enabled
+applmgmt                                   true     true
+certificatemanagement                      true     true
+eam                                        true     true
+envoy                                      true     true
+imagebuilder                               true     true
+netdumper                                  true     true
+observability-client                       true     true
+perfcharts                                 true     true
+pschealth                                  true     true
+statsmonger                                true     true
+vapi-endpoint                              true     true
+vcenter-ui                                 true     true
+vmware-vpxd                                true     true
+vmware-stsd                                true     true
+vmonapi                                    true     true
+
+-- Logs begin at Wed 2024-01-10 14:22:31 UTC, end at Wed 2024-01-10 15:47:09 UTC --
+Jan 10 15:31:22 vcenter-01.corp.local vpxd[4521]: [error] Failed to connect to inventory service: timeout after 30s
+Jan 10 15:32:15 vcenter-01.corp.local vpxd[4521]: [warn] Retrying database connection pool initialization
+
+Jan 10 15:33:44 vcenter-01.corp.local stsd[5892]: [error] Token validation failed for user admin@vsphere.local
+
+Service                                    Status
+applmgmt                                   RUNNING
+eam                                        STOPPED
+netdumper                                  STOPPED
+---OUTPUT---
+```
+
+!!! warning "Common errors"
+    **`journalctl: command not found`** — Use `tail -f /var/log/vmware/vpxd/vpxd.log` instead on vCenter versions prior to 7.0.
+    **`find: '/storage/log': No such file or directory`** — Remove the `/storage/log` find command if vCenter uses only `/var/log/vmware` for log storage.
+    **`Permission denied`** — Run the entire troubleshooting script with `sudo` or as root user.
 ---
 
 ## Step 2 — Review key log files
@@ -161,6 +217,23 @@ tail -100 /var/log/vmware/vmcad/certificate-manager.log
 tail -100 /var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log | grep -i "error\|exception"
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:47:23.456Z [ERROR] vpxd[7F2A4C1E9B2D] Failed to connect to inventory service: Connection timeout after 30000ms
+2024-01-15T09:47:45.123Z [FATAL] vpxd[7F2A4C1E9B2D] Database connection pool exhausted, max connections: 100
+2024-01-15T09:48:12.789Z [ERROR] vpxd[7F2A4C1E9B2D] Task 'com.vmware.vc.vm.powerOn' failed: Host 'esx-prod-04.lab.local' is unreachable
+2024-01-15T10:02:33.456Z [ERROR] vmware-sts-idmd[5E8F2C9A1B4D] LDAP bind failed for user admin@vsphere.local: Invalid credentials
+2024-01-15T10:02:34.789Z [ERROR] ssoAdminServer[3C7E9F2A5B1D] Token issuance failed: Certificate validation error - cert expired on 2024-01-10
+2024-01-15T10:03:01.234Z [INFO] certificate-manager: Issuing certificate for CN=vcenter.lab.local, validity: 365 days
+2024-01-15T10:03:02.567Z [INFO] certificate-manager: Certificate installed successfully, thumbprint: A1:B2:C3:D4:E5:F6:7A:8B:9C:0D:1E:2F:3A:4B:5C:6D
+2024-01-15T10:15:44.890Z [ERROR] vsphere_client_virgo: Exception in com.vmware.vsphere.client.services.VmService: NullPointerException at line 342
+2024-01-15T10:15:45.123Z [ERROR] vsphere_client_virgo: Failed to retrieve datastore inventory: HTTP 503 Service Unavailable
+```
+
+!!! warning "Common errors"
+    **`[FATAL] vpxd Database connection pool exhausted, max connections: 100`** — Increase the database connection pool size in /etc/vmware-vpx/vpxd.cfg by setting `maxConnections` to a higher value (e.g., 150) and restart vpxd service.
+    **`LDAP bind failed for user admin@vsphere.local: Invalid credentials`** — Verify SSO admin credentials and LDAP connectivity; check that the identity source is properly configured in vCenter Administration > Single Sign-On > Configuration.
+    **`Certificate validation error - cert expired on 2024-01-10`** — Regenerate and install a new vCenter certificate using `/usr/lib/vmware-vpx/bin/certificate-manager` or request a new one from your CA and import it.
 All logs on the VCSA appliance:
 
 | Component | Primary Log Path |
@@ -202,6 +275,58 @@ chronyc tracking
 chronyc makestep
 ```
 
+
+```text title="Expected output"
+Server:		192.168.1.10
+Address:	192.168.1.10#53
+
+Name:	vcenter.example.local
+Address: 192.168.1.50
+
+Server:		192.168.1.10
+Address:	192.168.1.10#53
+50.1.168.192.in-addr.arpa	name = vcenter.example.local.
+
+Server:		192.168.1.10
+Address:	192.168.1.10#53
+
+Name:	esxi-01.example.local
+Address: 192.168.1.51
+
+               Local time: Wed 2024-01-17 14:32:18 UTC
+           Universal time: Wed 2024-01-17 14:32:18 UTC
+                 RTC time: Wed 2024-01-17 14:32:18
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+           RTC in local TZ: no
+
+MS Name/IP address         Stratum Poll Reach LastRx Last sample
+===============================================================
+^* ntp.ubuntu.com           2   10   377    42   -156us[ -198us] +/-   21ms
+^- time.google.com          1   10   377    38   +2.3ms[+2.3ms] +/-   35ms
+^+ ntp.apple.com            2   10   377    51   +892us[+892us] +/-   18ms
+
+Reference ID    : C0248C97 (ntp.ubuntu.com)
+Stratum         : 3
+Ref time (UTC)  : Wed Jan 17 14:32:10 2024
+System time     : 0.000234567 seconds slow of NTP time
+Frequency       : 12.345 ppm slow
+Residual freq   : -0.123 ppm
+Residual skew   : 0.456 ppm
+Root delay      : 0.031234 seconds
+Root dispersion : 0.012345 seconds
+Max error       : 0.015678 seconds
+Min error       : 0.000123 seconds
+Leap status     : Normal
+
+200 OK
+```
+
+!!! warning "Common errors"
+    **`nslookup: can't resolve 'vcenter.example.local': No address associated with hostname`** — Verify DNS server is reachable and vCenter's A record exists; check `/etc/resolv.conf` points to correct nameserver.
+    **`50.1.168.192.in-addr.arpa	name = esxi-01.example.local.`** — Reverse DNS PTR record mismatch indicates forward and reverse zones are inconsistent; update PTR record to match the forward FQDN exactly.
+    **`System clock synchronized: no`** — Restart chronyd service with `systemctl restart chronyd` and verify NTP pool servers are reachable on port 123.
 NTP drift over 5 minutes breaks Kerberos — SSO login failures for AD-backed accounts will occur. Fix NTP before investigating SSO.
 
 ---
@@ -235,6 +360,38 @@ echo | openssl s_client -connect vcenter.example.local:5480 2>/dev/null \
     | grep -E "Alias|Not After"
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 08:22:14 2023 GMT
+notAfter=Jan 15 08:22:14 2024 GMT
+notBefore=Jan 15 08:22:14 2023 GMT
+notAfter=Jan 15 08:22:14 2024 GMT
+MACHINE_SSL_CERT
+TRUSTED_ROOTS
+TRUSTED_ROOT_CHAIN
+vpxd-extension
+Alias: __MACHINE_CERT
+Subject: CN=vcenter.example.local,O=VMware,C=US
+Not After: 2024-01-15 08:22:14 UTC
+Alias: __MACHINE_CERT_ALT
+Subject: CN=*.example.local,O=VMware,C=US
+Not After: 2024-01-15 08:22:14 UTC
+Alias: __VMCA_ROOT
+Subject: CN=CA,O=VMware,C=US
+Not After: 2033-01-12 14:47:22 UTC
+Alias: __VMCA_INTERMEDIATE
+Subject: CN=Intermediate CA,O=VMware,C=US
+Not After: 2028-01-10 14:47:22 UTC
+Alias: vpxd-extension-cert
+Not After: 2024-06-20 12:15:33 UTC
+Alias: vpxd-extension-cert-backup
+Not After: 2023-12-25 09:44:18 UTC
+```
+
+!!! warning "Common errors"
+    **`error in x509 lookup v3 signature verification`** — Ensure the openssl command successfully connects by checking network connectivity to the vCenter port and that the certificate chain is complete.
+    **`vecs-cli: command not found`** — SSH directly into the VCSA appliance (not a Windows vCenter) as root or use the full path `/usr/lib/vmware-vmafd/bin/vecs-cli`.
+    **`VECS store 'vpxd-extension' does not exist`** — Verify the store name is correct for your vCenter version; use `vecs-cli store list` first to confirm available stores.
 Certificate renewals: **VAMI → `https://<vcenter>:5480` → Certificate Management** — shows all certs with expiry and a renewal button.
 
 ---
@@ -265,6 +422,42 @@ ldapsearch -x \
 /usr/lib/vmware-vmafd/bin/dir-cli ssogroup list --login administrator@vsphere.local
 ```
 
+
+```text title="Expected output"
+SERVICE vmware-stsd (pid 2847) is running.
+SERVICE vmware-sts-idmd (pid 2851) is running.
+vsphere.local
+ldaps://ls.vsphere.local:636/dc=vsphere,dc=local
+Enter LDAP Password: 
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=local> with scope subtree
+# filter: (objectClass=*)
+# requesting: dn
+#
+
+dn: DC=corp,DC=local
+dn: CN=Users,DC=corp,DC=local
+dn: CN=Computers,DC=corp,DC=local
+dn: CN=svc-vcenter-ldap,CN=Users,DC=corp,DC=local
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 5
+# numEntries: 4
+
+cn=Administrators,cn=Builtin,dc=vsphere,dc=local
+cn=SystemConfiguration,cn=Builtin,dc=vsphere,dc=local
+cn=DCAdmins,cn=Builtin,dc=vsphere,dc=local
+```
+
+!!! warning "Common errors"
+    **`ldapsearch: error code 81 (Server Down) - Errno 113 (No route to host)`** — Verify DC01 hostname resolves and is reachable via `ping dc01.example.local` and `telnet dc01.example.local 636` from the VCSA.
+    **`ldapsearch: error code 49 (Invalid Credentials) - Bind failed`** — Confirm the svc-vcenter-ldap account password is correct and the account is not locked in Active Directory.
+    **`SERVICE vmware-stsd (pid XXXX) is stopped.`** — Restart the SSO service with `service-control --start vmware-stsd` and wait 60 seconds for dependent services to initialize.
 ---
 
 ## Step 6 — Query vCenter REST API health
@@ -294,6 +487,21 @@ curl -sk -H "vmware-api-session-id: $TOKEN" \
     -X DELETE https://vcenter.example.local/api/session
 ```
 
+
+```text title="Expected output"
+{
+  "status": "GREEN",
+  "messages": []
+}
+PROBLEM: esx-prod-02.dc1.local state=DISCONNECTED
+PROBLEM: esx-backup-01.dc1.local state=NOT_RESPONDING
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip SSL verification, or import the vCenter CA certificate into your system trust store.
+    **`{"type.name":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}`** — Verify the vCenter password is correct and the user account is not locked; re-authenticate to obtain a fresh token.
+    **`jq: command not found`** — Install `jq` package (`apt-get install jq` on Debian/Ubuntu or `yum install jq` on RHEL) or use the Python JSON parser shown in the example instead.
 ---
 
 ## Step 7 — Run PowerCLI diagnostics
@@ -348,6 +556,22 @@ scp /var/core/esx-<timestamp>.tgz user@transfer-host:/path/
 # Administration → Deployment → System Configuration → Export System Logs
 ```
 
+
+```text title="Expected output"
+Generating support bundle for vcenter.example.local...
+Gathering system logs and diagnostics...
+Bundle generation completed successfully.
+Support bundle location: /var/core/esx-20240115-143022.tgz
+
+-rw-r--r-- 1 root root 847M Jan 15 14:30 /var/core/esx-20240115-143022.tgz
+
+esx-20240115-143022.tgz                    100%  847MB   12.3MB/s   01:09
+```
+
+!!! warning "Common errors"
+    **`/usr/bin/vm-support: command not found`** — Verify you are logged into the VCSA appliance directly (not an ESXi host) and check that vm-support is installed with `which vm-support`.
+    **`Permission denied`** — Run the command with `sudo` or ensure your user account has root privileges on the VCSA appliance.
+    **`No space left on device`** — Check available disk space with `df -h /var/core/` and delete older bundles or increase the partition size before retrying.
 Evidence to collect before escalation:
 
 | Evidence Item | How to Collect |

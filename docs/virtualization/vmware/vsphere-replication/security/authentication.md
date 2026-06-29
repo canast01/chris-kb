@@ -59,6 +59,14 @@ Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
 # OR: delete and re-create the site pair
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`SSL certificate verification failed: certificate has expired`** — Regenerate the SSL certificates on both vSphere Replication servers and re-pair the sites.
+    **`Thumbprint mismatch detected between sites`** — Verify network connectivity between replication servers and ensure both are running the same vSphere Replication version before refreshing thumbprints.
 ---
 
 ## VRA Admin Account
@@ -91,6 +99,37 @@ curl -sk -H "Authorization: Bearer <token>" \
   "https://vra-london.example.local/api/rest/vr/replications"
 ```
 
+
+```text title="Expected output"
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTMxNjgwMCwiZXhwIjoxNzA5MzIwNDAwfQ.kX9mPq2rL8vN5oW3jQ6sT1uY4zX7aB9cD2eF5gH8iJ0
+
+{
+  "replications": [
+    {
+      "id": "replication-001",
+      "sourceVm": "prod-db-01.example.local",
+      "targetSite": "london-dr",
+      "status": "ACTIVE",
+      "rpo": 300,
+      "lastSync": "2024-03-01T14:32:15Z"
+    },
+    {
+      "id": "replication-002",
+      "sourceVm": "prod-web-02.example.local",
+      "targetSite": "london-dr",
+      "status": "ACTIVE",
+      "rpo": 600,
+      "lastSync": "2024-03-01T14:28:42Z"
+    }
+  ],
+  "totalCount": 2
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but verify `-sk` flags are both included).
+    **`KeyError: 'token'`** — Verify the authentication credentials are correct and the VRA server is responding with a valid JSON token object; check server logs for authentication failures.
+    **`curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused`** — Confirm the VRA hostname is resolvable and the API service is running on the target host using `curl -v` for detailed connection diagnostics.
 Token TTL: default 300 seconds — request a new token for longer-running scripts.
 
 ---

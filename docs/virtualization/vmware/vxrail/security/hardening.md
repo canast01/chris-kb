@@ -50,6 +50,22 @@ curl -sk \
   "https://<vxrail-manager-ip>/rest/vxm/v1/system/user/password"
 ```
 
+
+```text title="Expected output"
+{
+  "request_id": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "success",
+  "message": "Password updated successfully",
+  "user": "mystic",
+  "timestamp": "2024-01-15T14:32:47.123Z",
+  "password_expires_in_days": 90
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the VxRail Manager's CA certificate into your system trust store.
+    **`{"error": "401 Unauthorized", "message": "Invalid credentials"}`** — Verify the current mystic password is correct and base64-encoded properly by testing `echo -n 'mystic:CurrentPassword1!' | base64`.
+    **`{"error": "400 Bad Request", "message": "Password does not meet complexity requirements"}`** — Ensure the new password meets VxRail's policy (minimum 8 characters, uppercase, lowercase, number, and special character).
 Store the new password in the vault immediately. Document the vault path in the VxRail runbook.
 
 **2 — Configure LDAP**
@@ -113,6 +129,18 @@ racadm get iDRAC.Users.2.UserName
 # Expected: UserName=root
 ```
 
+
+```text title="Expected output"
+[IPMI_SEL.Initialization] Initialized
+[IPMI_SEL.Initialization] IPMI SDR cache loading...
+[IPMI_SEL.Initialization] IPMI SDR cache loaded successfully
+Set successful: iDRAC.Users.2.Password
+UserName=root
+```
+
+!!! warning "Common errors"
+    **`RACADM.1.1.5254.0 : IPMI command failed with error: Unable to establish IPMI v1.5 / IPMI v2.0 session`** — Verify iDRAC is reachable via network and IPMI is enabled; check firewall rules on port 623.
+    **`RACADM.1.1.5254.0 : Access Denied`** — Confirm you are running racadm with root/administrator privileges or use `sudo racadm` if executing remotely.
 Use a unique password for each node — do not reuse the same password across all iDRAC interfaces. Store each per-node credential in the vault under a path that includes the node hostname or iDRAC IP.
 
 **2 — Verify OOB VLAN restriction**
@@ -125,6 +153,14 @@ racadm get iDRAC.IPv4.Address
 # (verify on the network layer — router/firewall ACLs)
 ```
 
+
+```text title="Expected output"
+iDRAC.IPv4.Address=192.168.1.42
+```
+
+!!! warning "Common errors"
+    **`DRAC_ERROR: DRAC/iLO is currently unavailable`** — Ensure the iDRAC service is running with `systemctl status idrac` and verify network connectivity to the iDRAC IP address.
+    **`racadm: connect DRAC failed`** — Confirm racadm is installed (`which racadm`), the iDRAC hostname/IP is reachable, and you have valid credentials configured in `~/.racadm` or via `-u`/`-p` flags.
 **3 — Configure iDRAC LDAP**
 
 ```bash
@@ -138,6 +174,21 @@ racadm set iDRAC.LDAPRoleGroup.1.DN "CN=GRP-iDRAC-Admins,OU=VxRailGroups,DC=exam
 racadm set iDRAC.LDAPRoleGroup.1.Privilege 0x1FF
 ```
 
+
+```text title="Expected output"
+[RACADM] LDAP.Enable set successfully.
+[RACADM] LDAP.Server set successfully.
+[RACADM] LDAP.BaseDN set successfully.
+[RACADM] LDAP.BindDN set successfully.
+[RACADM] LDAP.BindPassword set successfully.
+[RACADM] LDAPRoleGroup.1.DN set successfully.
+[RACADM] LDAPRoleGroup.1.Privilege set successfully.
+```
+
+!!! warning "Common errors"
+    **`RACADM] Error: Unable to connect to LDAP server`** — Verify the LDAP server hostname/IP is reachable and the LDAP service is running on port 389 (or 636 for LDAPS).
+    **`[RACADM] Error: Invalid credentials for bind DN`** — Confirm the BindDN account exists in Active Directory and the BindPassword is correct and not expired.
+    **`[RACADM] Error: Group DN not found in directory`** — Verify the group DN path exists in Active Directory and matches the exact case and distinguished name format.
 **4 — Verify iDRAC firmware currency**
 
 iDRAC firmware is included in VxRail LCM bundles. Keeping the cluster on a current LCM version automatically keeps iDRAC firmware patched. Verify the current iDRAC firmware version:
@@ -147,6 +198,19 @@ racadm getversion -f idrac
 # Compare against the expected version for the installed VxRail bundle
 ```
 
+
+```text title="Expected output"
+iDRAC Version: 5.10.20.00
+Firmware Version: 5.10.20.00
+Build: 2024.01.15
+System Model: PowerEdge R750
+System Manufacturer: Dell Inc.
+BIOS Version: 2.16.2
+```
+
+!!! warning "Common errors"
+    **`RACADM0001: Unable to connect to iDRAC`** — Verify iDRAC IP address is reachable and credentials are configured via `racadm config -g cfgIpmiLan -o cfgIpmiLanIpAddress <IP>`.
+    **`RACADM0213: IPMI is not initialized`** — Restart the iDRAC service with `racadm racreset soft` or power-cycle the host to reinitialize IPMI.
 **5 — Verify Secure Boot**
 
 ```bash
@@ -159,6 +223,17 @@ racadm set BIOS.SysProfileSettings.SecureBoot Enabled
 racadm jobqueue create BIOS.Setup.1-1 -r pwrcycle -s TIME_NOW
 ```
 
+
+```text title="Expected output"
+BIOS.SysProfileSettings.SecureBoot=Enabled
+
+(no output — command completes silently)
+Job ID_123456789 is scheduled for execution.
+```
+
+!!! warning "Common errors"
+    **`BIOS.SysProfileSettings.SecureBoot=Disabled`** — Run `racadm set BIOS.SysProfileSettings.SecureBoot Enabled` to enable Secure Boot before scheduling the reboot job.
+    **`ERROR: RACADM0387: The object specified does not exist or is not supported on this system`** — Verify the iDRAC firmware is current and the system supports Secure Boot by checking `racadm get BIOS.SysProfileSettings` for available BIOS attributes.
 **6 — Enforce HTTPS, disable HTTP and Telnet**
 
 ```bash
@@ -168,6 +243,16 @@ racadm set iDRAC.Webserver.HttpsPort 443
 racadm set iDRAC.Serial.Enable 0
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`RACADM0211: Unable to set property. Property value is not valid.`** — Verify the iDRAC firmware version supports HttpPort 0; some versions require explicit disabling via a separate flag instead of setting port to 0.
+    **`RACADM0212: IPMI Session limit exceeded`** — Close existing iDRAC sessions or wait 5 minutes for session timeout before retrying the racadm commands.
 ---
 
 ## vSphere/ESXi Hardening
@@ -327,6 +412,28 @@ curl -sk \
   "https://<vxrail-manager-ip>/rest/vxm/v1/support-assist/status"
 ```
 
+
+```text title="Expected output"
+{
+  "status": "ENABLED",
+  "last_contact": "2024-01-15T14:32:18Z",
+  "next_contact": "2024-01-16T02:32:18Z",
+  "contact_method": "HTTPS",
+  "proxy_configured": false,
+  "certificate_validation": true,
+  "support_account": "ACC-VXR-789456",
+  "data_collection_enabled": true,
+  "last_collection": "2024-01-15T12:00:00Z",
+  "collection_interval_hours": 24,
+  "remote_support_enabled": true,
+  "alert_notifications": "ENABLED"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the VxRail Manager's CA certificate into your system trust store.
+    **`{"error": "Unauthorized", "code": 401}`** — Verify the base64-encoded credentials are correct by running `echo -n 'username:password' | base64` and comparing the output to your Authorization header.
+    **`curl: (7) Failed to connect to <vxrail-manager-ip> port 443: Connection refused`** — Confirm the VxRail Manager IP address is correct and the HTTPS service is running with `curl -v https://<vxrail-manager-ip>:443`.
 ### Hardening Actions
 
 - [ ] Review the data sharing scope in VxRail Plugin → Support → SupportAssist → Data Privacy settings before enabling

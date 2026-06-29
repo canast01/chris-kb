@@ -108,6 +108,39 @@ ncli host list
 ncli disk list | grep -v NORMAL
 ```
 
+
+```text title="Expected output"
+nutanix@192.168.1.45's password: 
+Last login: Wed Jan 15 14:32:18 2025 from 10.0.0.88
+
+nutanix@cvm-45:~$ ncli cluster info
+Cluster Name                : prod-cluster-01
+Cluster UUID                : 00058e6e-8888-4d2f-a1b2-3c4d5e6f7g8h
+AOS Version                 : 6.5.2.1
+Replication Factor          : 3
+Redundancy Factor           : 2
+Encrypted                   : false
+Cluster Redundancy State    : REDUNDANT
+
+nutanix@cvm-45:~$ ncli host list
+  Host ID                           Serial Number      IP Address      Hypervisor
+  ========================================================================
+  00058e6e-1111-4d2f-a1b2-3c4d5e6f : NTNX-ABC123XYZ01 : 192.168.1.41  : AHV
+  00058e6e-2222-4d2f-a1b2-3c4d5e6f : NTNX-ABC123XYZ02 : 192.168.1.42  : AHV
+  00058e6e-3333-4d2f-a1b2-3c4d5e6f : NTNX-ABC123XYZ03 : 192.168.1.43  : AHV
+  00058e6e-4444-4d2f-a1b2-3c4d5e6f : NTNX-ABC123XYZ04 : 192.168.1.45  : AHV
+
+nutanix@cvm-45:~$ ncli disk list | grep -v NORMAL
+  Disk ID                           State       Host IP         Capacity
+  ========================================================================
+  00058e6e-disk-5555-4d2f-a1b2     : DEGRADED   : 192.168.1.42  : 1.6 TB
+  00058e6e-disk-6666-4d2f-a1b2     : DEGRADED   : 192.168.1.42  : 1.6 TB
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify the CVM IP is correct and SSH service is running; check firewall rules allow port 22 from your source IP.
+    **`ncli: command not found`** — Ensure you are logged in as the nutanix user and the PATH includes /usr/local/nutanix/bin; run `source /etc/profile` if needed.
+    **`Permission denied (publickey,password)`** — Confirm the nutanix user credentials are correct and the CVM's SSH key-based authentication is configured if required by your environment.
 ### 2. Run NCC health checks
 
 ```bash
@@ -118,6 +151,32 @@ ncc --health_checks run_all 2>&1 | tee /tmp/ncc-$(date +%Y%m%d%H%M).txt
 ncc --health_checks run_all --ncc_critical_only=true 2>&1 | tail -100
 ```
 
+
+```text title="Expected output"
+Running NCC health checks on cluster...
+[2024-01-15 14:32:18] Starting NCC v4.8.2 health check suite
+[2024-01-15 14:32:19] Cluster: prod-cluster-01 | Nodes: 4 | AOS: 6.5.2.1
+[2024-01-15 14:32:22] CHECK: DNS Resolution — PASS
+[2024-01-15 14:32:25] CHECK: NTP Synchronization — PASS
+[2024-01-15 14:32:31] CHECK: Disk Space — WARNING (node-3: 78% used)
+[2024-01-15 14:32:45] CHECK: Network Connectivity — PASS
+[2024-01-15 14:32:52] CHECK: Hypervisor Health — PASS
+[2024-01-15 14:33:18] CHECK: Storage Pool Status — PASS
+[2024-01-15 14:33:42] CHECK: Replication Factor — PASS
+[2024-01-15 14:34:05] Health check complete. Results saved to /tmp/ncc-202401151432.txt
+Summary: 7 PASS, 1 WARNING, 0 FAIL
+
+Running critical checks only...
+[2024-01-15 14:34:12] CHECK: Cluster Quorum — PASS
+[2024-01-15 14:34:18] CHECK: Storage Redundancy — PASS
+[2024-01-15 14:34:25] CHECK: Network Heartbeat — PASS
+[2024-01-15 14:34:31] Critical checks complete: 3 PASS, 0 FAIL
+```
+
+!!! warning "Common errors"
+    **`ncc: command not found`** — Ensure NCC is installed on the Prism Central or CVM by running `yum install ncc` or verify it is in your PATH.
+    **`ERROR: Unable to connect to cluster — Connection refused`** — Verify cluster connectivity and that you are running the command from a node with network access to the cluster management interface.
+    **`ERROR: Permission denied — ncc requires root or sudoer privileges`** — Run the command with `sudo` or ensure your user account has appropriate sudo permissions for NCC execution.
 GSS will ask for the full NCC output as the first diagnostic step. A fresh NCC run captures the current cluster health state.
 
 ### 3. Collect the support bundle
@@ -144,6 +203,27 @@ logbay collect --output_dir="/tmp/logbay-$(date +%Y%m%d)"
 ls -lh ~/support-bundle/
 ```
 
+
+```text title="Expected output"
+Collecting diagnostic data...
+Gathering cluster information...
+Collecting logs from all nodes...
+Processing support bundle...
+Support bundle generated successfully.
+Bundle location: /home/nutanix/support-bundle/logbay_bundle_20240115_143022.tar.gz
+Bundle size: 2.3G
+Compression completed in 47 seconds.
+
+total 9.2G
+-rw-r--r-- 1 nutanix nutanix 2.3G Jan 15 14:30 logbay_bundle_20240115_143022.tar.gz
+-rw-r--r-- 1 nutanix nutanix 1.8G Jan 14 09:15 logbay_bundle_20240114_091547.tar.gz
+-rw-r--r-- 1 nutanix nutanix 3.1G Jan 13 16:42 logbay_bundle_20240113_164201.tar.gz
+```
+
+!!! warning "Common errors"
+    **`logbay: command not found`** — Ensure you are SSH'd to a Nutanix CVM and have the correct PATH set, or source the Nutanix environment setup script.
+    **`Permission denied`** — Run the command as the nutanix user or with sudo; verify your user has write access to /home/nutanix/support-bundle/.
+    **`Disk space low: insufficient space for bundle`** — Free up disk space on the CVM or specify an alternate output directory with `--output_dir` pointing to a partition with adequate free space.
 ### 4. Collect targeted logs for specific issues
 
 | Issue Type | Additional Collection |
@@ -275,6 +355,60 @@ ncc --health_checks run_all --ncc_critical_only=true 2>&1 | tail -30
 ncli cluster info | grep -i "storage\|usage\|capacity"
 ```
 
+
+```text title="Expected output"
+nutanix@NTNX-CVM-001:~$ ncli cluster info
+  Cluster UUID                 : 0005b48f-1234-5678-abcd-ef0123456789
+  Cluster Name                 : prod-cluster-01
+  Redundancy Factor            : 2
+  Fingerprint                  : a1b2c3d4e5f6
+  External Subnet              : 10.20.0.0/24
+  Cluster Incarnation Number   : 1234567890
+
+nutanix@NTNX-CVM-001:~$ ncli host list
+  Host ID | Host Name        | Host Address | State  | Cluster
+  --------|------------------|--------------|--------|----------
+  1       | NTNX-PHY-001     | 10.20.1.10   | UP     | prod-cluster-01
+  2       | NTNX-PHY-002     | 10.20.1.11   | UP     | prod-cluster-01
+  3       | NTNX-PHY-003     | 10.20.1.12   | UP     | prod-cluster-01
+
+nutanix@NTNX-CVM-001:~$ ncli disk list | grep -v NORMAL
+  (no output — all disks are NORMAL)
+
+nutanix@NTNX-CVM-001:~$ genesis status
+  Nutanix Cluster Manager (NCM)          : UP
+  Cassandra                              : UP
+  Zookeeper                              : UP
+  Stargate                               : UP
+  Prism                                  : UP
+  Curator                                : UP
+
+nutanix@NTNX-CVM-001:~$ tail -100 /home/nutanix/data/logs/stargate.INFO | grep -i "error\|FATAL\|I/O"
+  (no output — no errors in last 100 lines)
+
+nutanix@NTNX-CVM-001:~$ ncc --health_checks run_all --ncc_critical_only=true 2>&1 | tail -30
+  ============= NCC Health Check Summary =============
+  Total Checks Run        : 47
+  Passed                  : 46
+  Failed                  : 0
+  Warnings                : 1
+  Skipped                 : 0
+  
+  WARNING: Cluster time drift detected on NTNX-PHY-002 (offset: 2.3s)
+  
+  Overall Status          : PASS
+
+nutanix@NTNX-CVM-001:~$ ncli cluster info | grep -i "storage\|usage\|capacity"
+  Usable Capacity          : 45.6 TB
+  Used Capacity            : 23.4 TB
+  Free Capacity            : 22.2 TB
+  Usage Percentage         : 51.3%
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify the CVM is running and SSH is enabled; check firewall rules allowing port 22 to the CVM IP.
+    **`ncli: command not found`** — Confirm you are logged in as the nutanix user and the PATH includes /home/nutanix/bin; source the environment if needed.
+    **`Permission denied`** — Ensure your SSH key is authorized in /home/nut
 ---
 
 ## Support SLA Reference

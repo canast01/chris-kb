@@ -109,6 +109,19 @@ esxcli vsan storage add -s <device-id> -d <cache-device-id>
 # or use vCenter: Cluster → Configure → vSAN → Disk Management → claim unclaimed disks
 ```
 
+
+```text title="Expected output"
+Adding device naa.5001405a1b2c3d4e to vSAN cluster...
+Device naa.5001405a1b2c3d4e successfully added as capacity tier
+Cache device naa.5001405a1b2c3d4f already claimed
+vSAN rebalancing initiated on host esx-prod-04.lab.local
+Rebalance task: 45% complete (ETA: 8 minutes)
+```
+
+!!! warning "Common errors"
+    **`Error: Device naa.5001405a1b2c3d4e is not eligible for vSAN`** — Verify the disk is not already partitioned or in use by running `esxcli storage core device list | grep <device-id>` and ensure it shows no partitions.
+    **`Error: Cache device naa.5001405a1b2c3d4f not found or not available`** — Confirm the cache device ID is correct and the device is visible to the host with `esxcli storage core device list`.
+    **`Error: vSAN cluster is not in a healthy state`** — Wait for any ongoing rebalance operations to complete and check cluster health in vCenter before attempting to add new devices.
 ### Option B — Add a new host to the cluster
 
 1. Follow the [ESXi Host Maintenance Mode Runbook](../esxi-host-maintenance/) for any pre-work on the new host.

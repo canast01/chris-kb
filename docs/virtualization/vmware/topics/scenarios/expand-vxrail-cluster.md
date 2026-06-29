@@ -55,6 +55,23 @@ Rack and cable the new node identically to existing nodes, then assign the iDRAC
 ping <new-node-idrac-ip>
 ```
 
+
+```text title="Expected output"
+PING 192.168.1.45 (192.168.1.45) 56(84) bytes of data.
+64 bytes from 192.168.1.45: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 192.168.1.45: icmp_seq=2 ttl=64 time=1.89 ms
+64 bytes from 192.168.1.45: icmp_seq=3 ttl=64 time=2.12 ms
+64 bytes from 192.168.1.45: icmp_seq=4 ttl=64 time=1.95 ms
+^C
+--- 192.168.1.45 statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/stddev = 1.89/2.07/2.34/0.18 ms
+```
+
+!!! warning "Common errors"
+    **`ping: unknown host <new-node-idrac-ip>`** — Replace the placeholder with the actual iDRAC IP address (e.g., `ping 192.168.1.45`).
+    **`From 10.0.0.1 icmp_seq=1 Destination Host Unreachable`** — Verify the iDRAC IP is correct, the management network cable is connected, and the iDRAC has completed POST and is powered on.
+    **`ping: sendto: Operation not permitted`** — Check that the management network interface is up with `ip link show` and that firewall rules allow ICMP traffic.
 Expected: iDRAC web UI accessible at `https://<idrac-ip>` with all PSUs present, no drive faults, and BIOS POST completed. Do not proceed if iDRAC shows hardware faults. Default credentials: root / Calvin — change immediately after expansion.
 
 ---
@@ -75,6 +92,24 @@ nslookup new-node-hostname.domain.local
 nslookup <new-node-management-ip>
 ```
 
+
+```text title="Expected output"
+Server:		10.20.30.40
+Address:	10.20.30.40#53
+
+Name:	new-node-hostname.domain.local
+Address: 192.168.1.150
+
+Server:		10.20.30.40
+Address:	10.20.30.40#53
+192.168.1.150	name = new-node-hostname.domain.local.
+Verify the IP address matches your expected management network assignment.
+```
+
+!!! warning "Common errors"
+    **`** server can't find new-node-hostname.domain.local: NXDOMAIN`** — Verify the hostname is registered in DNS and matches the FQDN exactly, including the domain suffix.
+    **`** server can't find 192.168.1.150: NXDOMAIN`** — Confirm the reverse DNS zone is configured on your DNS server and the PTR record exists for the management IP.
+    **`nslookup: command not found`** — Install bind-utils (RHEL/CentOS) or dnsutils (Debian/Ubuntu) on the jump host or VxRail Manager VM.
 Expected: both directions resolve correctly. VxRail Manager validates the FQDN during the wizard and will fail if either record is missing.
 
 ---

@@ -109,10 +109,44 @@ After the host reboots and SSH is accessible, collect the key log files.
 cat /var/log/vmkernel.log | grep -iE "PSOD|panic|backtrace|oops" | tail -50
 ```
 
+
+```text title="Expected output"
+2024-01-15T14:32:18.123Z cpu2:65432)PANIC: Exception 14 in world 12345 ip=0x418f2a3c addr=0x7f8c9000
+2024-01-15T14:32:18.456Z cpu5:87654)Backtrace for world 12345:
+2024-01-15T14:32:18.789Z cpu5:87654) 0x418f2a3c 0x418f1b2c 0x418f0e4a 0x41234567
+2024-01-15T14:32:19.012Z cpu2:65432)PSOD: Unrecoverable error in module 'vmkernel' at 0x418f2a3c
+2024-01-15T14:32:19.234Z cpu3:45678)Oops: Page fault at 0x7f8c9000, code=0x00000002
+2024-01-15T14:32:19.567Z cpu1:23456)Backtrace for world 87654:
+2024-01-15T14:32:19.890Z cpu1:23456) 0x41234567 0x41234abc 0x41234def 0x41234999
+2024-01-15T14:32:20.123Z cpu4:99999)PANIC: NMI watchdog timeout on CPU 4
+2024-01-15T14:32:20.456Z cpu6:11111)Oops: NULL pointer dereference in vmk_HeapFree
+2024-01-15T14:32:20.789Z cpu2:65432)PSOD: Dumping core to /vmfs/volumes/datastore1/vmkernel-dump-2024-01-15
+```
+
+!!! warning "Common errors"
+    **`grep: (standard input): No such file or directory`** — Ensure vmkernel.log exists at /var/log/vmkernel.log; check file permissions with `ls -la /var/log/vmkernel.log`.
+    **`tail: cannot open '50' for reading: No such file or directory`** — Remove the pipe and use `tail -50 /var/log/vmkernel.log | grep -iE "PSOD|panic|backtrace|oops"` instead (correct command order).
 ```bash
 cat /var/log/vmksummary.log | tail -20
 ```
 
+
+```text title="Expected output"
+2024-01-15T08:23:14.567Z: [vmkernel] 2621506 cpu0:65536)ALERT: NFS mount /vmfs/volumes/nfs-datastore-01 is degraded
+2024-01-15T08:24:02.891Z: [vmkernel] 2621507 cpu2:65537)WARNING: Memory pressure at 87% on NUMA node 1
+2024-01-15T08:25:45.123Z: [vmkernel] 2621508 cpu1:65538)INFO: vMotion migration completed for VM-prod-web-03 (duration: 45s)
+2024-01-15T08:26:18.456Z: [vmkernel] 2621509 cpu3:65539)ERROR: iSCSI target 192.168.100.45:3260 unreachable
+2024-01-15T08:27:33.789Z: [vmkernel] 2621510 cpu0:65540)WARNING: CPU ready time exceeded threshold on host esx-prod-04.lab.local
+2024-01-15T08:28:01.234Z: [vmkernel] 2621511 cpu2:65541)INFO: HA agent heartbeat received from esx-prod-05.lab.local
+2024-01-15T08:29:15.567Z: [vmkernel] 2621512 cpu1:65542)ALERT: Datastore /vmfs/volumes/local-ssd-01 free space below 5%
+2024-01-15T08:30:44.890Z: [vmkernel] 2621513 cpu3:65543)WARNING: Network latency detected on vSwitch0 (avg 12ms)
+2024-01-15T08:31:22.145Z: [vmkernel] 2621514 cpu0:65544)INFO: VM snapshot consolidation started for VM-backup-db-01
+2024-01-15T08:32:55.678Z: [vmkernel] 2621515 cpu2:65545)ERROR: PSOD detected - initiating core dump to /vmfs/volumes/coredump
+```
+
+!!! warning "Common errors"
+    **`cat: /var/log/vmksummary.log: No such file or directory`** — Verify the ESXi host is running and the log file path is correct; on some ESXi versions the file may be `/var/log/vmkernel.log` instead.
+    **`tail: cannot open '/var/log/vmksummary.log' for reading: Permission denied`** — Run the command with root privileges using `sudo` or SSH directly as root to the ESXi host.
 Look for: the vmksummary.log gives a concise summary of the crash (timestamp, panic type, initiating world). The vmkernel.log contains the full backtrace.
 
 Check hostd for precursor events in the seconds before the crash:
@@ -121,6 +155,23 @@ Check hostd for precursor events in the seconds before the crash:
 cat /var/log/hostd.log | grep -E "ERROR|WARNING" | tail -50
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:23:47.123Z [INFO] hostd[94521] [Originator@6876 sub=Hostd] Hostd started
+2024-01-15T09:24:12.456Z [WARNING] hostd[94521] [Originator@6876 sub=Libs] Failed to load module libvmkctl.so: symbol not found
+2024-01-15T09:25:03.789Z [ERROR] hostd[94521] [Originator@6876 sub=Config] Unable to read /etc/vmware/config: Permission denied
+2024-01-15T09:26:45.234Z [WARNING] hostd[94521] [Originator@6876 sub=Hostd] NTP sync failed, clock skew detected: 2.3 seconds
+2024-01-15T09:27:18.567Z [ERROR] hostd[94521] [Originator@6876 sub=Vpx] Connection to vCenter lost: timeout after 30s
+2024-01-15T09:28:22.891Z [WARNING] hostd[94521] [Originator@6876 sub=Hostd] Memory pressure: 87% utilization
+2024-01-15T09:29:01.345Z [ERROR] hostd[94521] [Originator@6876 sub=Net] vSwitch0 link down on vmnic2
+2024-01-15T09:30:15.678Z [WARNING] hostd[94521] [Originator@6876 sub=Storage] Datastore ds-nfs-01 latency high: 145ms
+2024-01-15T09:31:42.912Z [ERROR] hostd[94521] [Originator@6876 sub=Hostd] Failed to allocate memory for VM vm-prod-web-03
+2024-01-15T09:32:08.234Z [WARNING] hostd[94521] [Originator@6876 sub=Hostd] Swap usage increased to 12%
+```
+
+!!! warning "Common errors"
+    **`cat: /var/log/hostd.log: No such file or directory`** — Verify the ESXi host is running and the hostd service is active with `systemctl status hostd` or check the correct log path for your vSphere version.
+    **`grep: (standard input): Permission denied`** — Run the command with elevated privileges using `sudo` or as root, since hostd logs typically require root access.
 ---
 
 ## 5. Generate a vm-support Bundle
@@ -131,6 +182,23 @@ Generate a support bundle after the host reboots — transfer it off the host be
 vm-support -w /tmp/
 ```
 
+
+```text title="Expected output"
+Collecting support information for VM host-esx-prod-01.dc1.internal...
+Gathering system logs... [████████████████████] 100%
+Collecting diagnostic data... [████████████████████] 100%
+Collecting performance metrics... [████████████████████] 100%
+Creating support bundle...
+Support bundle created: /tmp/esx-support-2024-01-15-14-32-45.tar.gz
+Bundle size: 487 MB
+Checksum (SHA256): a7f3e2c9d1b4e8f6a2c5d9e1f3a7b4c6d8e0f1a3b5c7d9e1f3a5b7c9d1e3f5
+Support information collection completed successfully.
+```
+
+!!! warning "Common errors"
+    **`vm-support: command not found`** — Ensure you are running this command on an ESXi host with VMware Tools installed, or load the appropriate VMware module.
+    **`Permission denied: /tmp/`** — Run the command with appropriate privileges (sudo or as root) or specify a writable directory where your user has write permissions.
+    **`No space left on device`** — Free up disk space on the target filesystem or specify an alternate output directory with sufficient capacity (typically 500 MB+ required).
 This creates a compressed archive in `/tmp/` containing all logs, configuration, and system state. Transfer with SCP.
 
 Alternatively, generate from vCenter: right-click the host → **Export System Logs** — equivalent but saves directly to your local machine.
@@ -192,6 +260,16 @@ esxcli software vib list | grep <module>
 esxcli software vib remove --vibname <vib-name>
 ```
 
+
+```text title="Expected output"
+Name                           Version                        Vendor  Acceptance Level  Install Date
+net-driver-bnx2x               20.2.209.0-1OEM.700.1.0.15160482  Broadcom  PartnerSupported  2024-01-15
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`VIB net-driver-bnx2x not found.`** — Verify the exact VIB name with `esxcli software vib list | grep -i <partial-name>` and use the correct name from the output.
+    **`Cannot remove VIB: VIB is part of an Image Profile and cannot be removed independently.`** — Use LCM (Lifecycle Manager) or boot into maintenance mode and remove via `esxcli software vib remove --vibname <vib-name> --force` if safe to do so.
 Then use VxRail Manager → LCM to apply the correct validated driver as part of a bundle upgrade. For the full VxRail LCM upgrade procedure, see the
 [VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure/index.md) scenario.
 

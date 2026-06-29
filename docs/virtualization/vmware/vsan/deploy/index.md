@@ -158,6 +158,36 @@ esxcli system ntp stats
 esxcli system hostname get
 ```
 
+
+```text title="Expected output"
+The authenticity of host 'esxi-01.example.com (192.168.1.45)' can't be established.
+ECDSA key fingerprint is SHA256:aBcD1234eFgH5678iJkL9012mNoPqRsT3456uVwXyZ.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'esxi-01.example.com,192.168.1.45' (ECDSA) to /etc/ssh/known_hosts.
+root@esxi-01.example.com's password:
+root@esxi-01:~]
+
+NTP Configured for:
+   Server: ntp1.example.com
+   Server: ntp2.example.com
+NTP Enabled: true
+
+NTP Sync State: synchronized
+Remote Clock Stratum: 2
+Reference Clock ID: 0x9f6e0a0a
+Synchronized: true
+Offset: -0.002 ms
+Frequency: 0.000 ppm
+Jitter: 0.156 ms
+
+Hostname: esxi-01.example.com
+Domain Name: example.com
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname esxi-01.example.com: Name or service not known`** — Verify the hostname is resolvable by checking DNS or using the IP address directly (ssh root@192.168.1.45).
+    **`Error: NTP set failed: Unable to set NTP servers`** — Confirm the NTP server hostnames are reachable and that firewall rules allow UDP port 123 outbound from the ESXi host.
+    **`Error: NTP stats not available`** — Wait 30-60 seconds after enabling NTP for the host to synchronize with the configured servers, then retry the stats command.
 ### Verify Connectivity
 
 From a management workstation:
@@ -168,6 +198,38 @@ nslookup <esxi-management-ip>   # Reverse DNS
 ssh root@esxi-01.example.com
 ```
 
+
+```text title="Expected output"
+PING esxi-01.example.com (192.168.1.45) 56(84) bytes of data.
+64 bytes from esxi-01.example.com (192.168.1.45): icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from esxi-01.example.com (192.168.1.45): icmp_seq=2 ttl=64 time=1.98 ms
+64 bytes from esxi-01.example.com (192.168.1.45): icmp_seq=3 ttl=64 time=2.11 ms
+^C
+--- esxi-01.example.com statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/stddev = 1.98/2.14/2.34/0.15 ms
+
+Server:		192.168.1.10
+Address:	192.168.1.10#53
+
+Name:	esxi-01.example.com
+Address: 192.168.1.45
+
+Server:		192.168.1.10
+Address:	192.168.1.10#53
+45.1.168.192.in-addr.arpa	name = esxi-01.example.com.
+
+The authenticity of host 'esxi-01.example.com (192.168.1.45)' can't be established.
+ECDSA key fingerprint is SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCdE.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'esxi-01.example.com,192.168.1.45' (ECDSA) to /root/.ssh/known_hosts.
+root@esxi-01.example.com's password:
+```
+
+!!! warning "Common errors"
+    **`ping: esxi-01.example.com: Name or service not known`** — Verify DNS resolution by checking /etc/resolv.conf and ensure the ESXi hostname is registered in DNS or add it to /etc/hosts.
+    **`nslookup: can't resolve 'esxi-01.example.com': No address associated with hostname`** — Confirm the ESXi host's management IP is correctly registered in DNS or use the IP address directly instead of the hostname.
+    **`ssh: connect to host esxi-01.example.com port 22: Connection refused`** — Verify SSH is enabled on the ESXi host via the vSphere Client and check that the management network is reachable.
 Repeat for every host. All must have working forward and reverse DNS before vCenter deployment.
 
 ---
@@ -210,6 +272,26 @@ chronyc tracking
 # Reference time must match ESXi hosts
 ```
 
+
+```text title="Expected output"
+Reference ID    : 91.189.89.198 (ntp.ubuntu.com)
+Stratum         : 2
+Ref time (UTC)  : Wed Nov 15 14:32:18 2023
+System time     : 0.000000123 seconds fast of NTP time
+Latest offset   : +0.000156 sec
+RMS offset      : 0.000089 sec
+Frequency       : -12.456 ppm slow
+Residual freq   : +0.002 ppm
+Skew            : 0.087 ppm
+Root delay      : 0.031456 sec
+Root dispersion : 0.015234 sec
+Update interval : 64.2 sec
+Leap status     : Normal
+```
+
+!!! warning "Common errors"
+    **`506 Cannot talk to daemon`** — Ensure the chronyd service is running with `systemctl start chronyd` on the VCSA.
+    **`Stratum         : 16`** — The NTP server is unreachable or misconfigured; verify network connectivity and NTP server address in `/etc/chrony.conf`.
 ---
 
 ## Phase 4 — dvSwitch and vSAN Network Setup
@@ -281,6 +363,40 @@ vmkping -I vmk2 -d -s 8972 192.168.100.14
 # 0% packet loss on all tests = MTU correct end-to-end
 ```
 
+
+```text title="Expected output"
+PING 192.168.100.12 (192.168.100.12): 56 data bytes
+64 bytes from 192.168.100.12: icmp_seq=0 ttl=64 time=0.542 ms
+64 bytes from 192.168.100.12: icmp_seq=1 ttl=64 time=0.518 ms
+64 bytes from 192.168.100.12: icmp_seq=2 ttl=64 time=0.531 ms
+64 bytes from 192.168.100.12: icmp_seq=3 ttl=64 time=0.525 ms
+--- 192.168.100.12 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 0.518/0.529/0.542 ms
+
+PING 192.168.100.13 (192.168.100.13): 56 data bytes
+64 bytes from 192.168.100.13: icmp_seq=0 ttl=64 time=1.247 ms
+64 bytes from 192.168.100.13: icmp_seq=1 ttl=64 time=1.263 ms
+64 bytes from 192.168.100.13: icmp_seq=2 ttl=64 time=1.251 ms
+64 bytes from 192.168.100.13: icmp_seq=3 ttl=64 time=1.255 ms
+--- 192.168.100.13 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 1.247/1.254/1.263 ms
+
+PING 192.168.100.14 (192.168.100.14): 56 data bytes
+64 bytes from 192.168.100.14: icmp_seq=0 ttl=64 time=0.789 ms
+64 bytes from 192.168.100.14: icmp_seq=1 ttl=64 time=0.801 ms
+64 bytes from 192.168.100.14: icmp_seq=2 ttl=64 time=0.795 ms
+64 bytes from 192.168.100.14: icmp_seq=3 ttl=64 time=0.798 ms
+--- 192.168.100.14 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 0.789/0.796/0.801 ms
+```
+
+!!! warning "Common errors"
+    **`PING 192.168.100.12 (192.168.100.12): 56 data bytes — No response from host`** — Verify the vSAN VMkernel IP is correct and the network path between hosts is unblocked.
+    **`Unknown interface vmk2`** — Confirm vmk2 exists on this host with `esxcli network ip interface list` and use the correct VMkernel interface name.
+    **`4 packets transmitted, 0 packets received, 100% packet loss`** — Check that the vSAN network MTU is set to 9000 on all physical switches and VMkernel interfaces with `esxcli network ip
 Any packet loss means MTU 9000 is not configured somewhere in the path (switch port, trunk, uplink). Fix before enabling vSAN.
 
 ### Configure NIOC (If Sharing NICs)
@@ -326,6 +442,22 @@ Best practice: one disk group per host with all eligible disks. Multiple disk gr
 esxcli vsan storage list | grep -E "Disk Group UUID|Is SSD|Health"
 ```
 
+
+```text title="Expected output"
+Disk Group UUID: 52e4a1c3-8f2b-4a9e-b1d2-7c9e3f5a2b1d
+Is SSD: true
+Health: Healthy
+Disk Group UUID: 52e4a1c3-8f2b-4a9e-b1d2-7c9e3f5a2b1e
+Is SSD: true
+Health: Healthy
+Disk Group UUID: 52e4a1c3-8f2b-4a9e-b1d2-7c9e3f5a2b1f
+Is SSD: true
+Health: Healthy
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace vsan storage list`** — Verify vSAN is licensed and enabled on the cluster, then reconnect the ESXi host to vCenter.
+    **`(empty output)`** — Run the command on each ESXi host individually using SSH; the command does not aggregate across hosts from a single execution point.
 ### Verify vSAN Cluster Formation
 
 ```bash
@@ -338,6 +470,27 @@ esxcli vsan health cluster get
 # All tests should PASS
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-7c2e-4f3a-9b1a-8e3d2c1f5a9b
+Cluster Master: esx-prod-01.lab.local
+Member UUIDs:
+  52d4a8f1-7c2e-4f3a-9b1a-8e3d2c1f5a9b (esx-prod-01.lab.local)
+  63e5b9g2-8d3f-5g4b-0c2b-9f4e3d2g6b0c (esx-prod-02.lab.local)
+  74f6c0h3-9e4g-6h5c-1d3c-0g5f4e3h7c1d (esx-prod-03.lab.local)
+
+Cluster Health Status: HEALTHY
+Test Results:
+  Cluster: PASS
+  Physical disk: PASS
+  Memory: PASS
+  Network: PASS
+  Connectivity: PASS
+```
+
+!!! warning "Common errors"
+    **`Cluster UUID: <unknown>`** — Ensure all hosts are licensed for vSAN and the cluster has been properly initialized with `esxcli vsan cluster new`.
+    **`Cluster Health Status: DEGRADED`** — Check individual host health with `esxcli vsan health host get` and verify network connectivity between cluster members.
 **From vSphere Client:**
 Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before proceeding.
 
@@ -443,6 +596,14 @@ esxcli vsan health cluster get | grep -v PASS
 # Expected: no output (all tests pass)
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to the specified host. The session is not authenticated.`** — Authenticate to the ESXi host or vCenter using `esxcli -s <host> -u <user> -p <password>` before running vsan commands.
+    **`Error: Unknown command or namespace 'vsan'.`** — Verify vSAN is licensed and enabled on the cluster; if not installed, the vsan namespace will not be available in esxcli.
 ### Storage Policy Compliance
 
 ```powershell
@@ -459,6 +620,28 @@ esxcli vsan cluster get
 esxcli vsan storage list | grep -E "Disk Group|Health|State"
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f0-1a2c-4d8e-9b3f-7e2c1a5d9f4b
+Cluster Health: Healthy
+Cluster Status: Running
+Member Count: 4
+Disk Format Version: 13
+
+Disk Group: Group 1 (52d4a8f0-1a2c-4d8e-9b3f-7e2c1a5d9f4c)
+Health: Healthy
+State: Enabled
+Disk Group: Group 2 (52d4a8f0-1a2c-4d8e-9b3f-7e2c1a5d9f4d)
+Health: Healthy
+State: Enabled
+Disk Group: Group 3 (52d4a8f0-1a2c-4d8e-9b3f-7e2c1a5d9f4e)
+Health: Healthy
+State: Enabled
+```
+
+!!! warning "Common errors"
+    **`VSAN Cluster is not enabled on this host`** — Enable vSAN on the host through vCenter or run `esxcli vsan cluster new` to initialize the cluster.
+    **`Unknown command or namespace vsan`** — Install or enable the vSAN license and ensure the vSAN VIB is installed with `esxcli software vib list | grep vsan`.
 ### MTU Verification (Final Check)
 
 ```bash
@@ -467,6 +650,31 @@ vmkping -I vmk2 -d -s 8972 <all-other-vsan-vmk-ips>
 # 0% loss on all tests
 ```
 
+
+```text title="Expected output"
+PING 192.168.100.11 (192.168.100.11): 56 data bytes
+64 bytes from 192.168.100.11: icmp_seq=0 ttl=64 time=1.234 ms
+64 bytes from 192.168.100.11: icmp_seq=1 ttl=64 time=1.156 ms
+64 bytes from 192.168.100.11: icmp_seq=2 ttl=64 time=1.289 ms
+64 bytes from 192.168.100.11: icmp_seq=3 ttl=64 time=1.198 ms
+--- 192.168.100.11 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 1.156/1.219/1.289 ms
+
+PING 192.168.100.12 (192.168.100.12): 56 data bytes
+64 bytes from 192.168.100.12: icmp_seq=0 ttl=64 time=2.045 ms
+64 bytes from 192.168.100.12: icmp_seq=1 ttl=64 time=1.987 ms
+64 bytes from 192.168.100.12: icmp_seq=2 ttl=64 time=2.134 ms
+64 bytes from 192.168.100.12: icmp_seq=3 ttl=64 time=2.056 ms
+--- 192.168.100.12 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 1.987/2.055/2.134 ms
+```
+
+!!! warning "Common errors"
+    **`PING 192.168.100.11 (192.168.100.11): 56 data bytes — 100% packet loss`** — Verify vmk2 is bound to the correct vSAN network and check physical switch connectivity between hosts.
+    **`Unknown host 192.168.100.11`** — Confirm the vSAN vmk IP addresses are correct and reachable from the current host's management network.
+    **`Cannot find device vmk2`** — Ensure vmk2 exists on this host by running `esxcli network ip interface list` and create it if missing.
 ### Deploy a Test VM
 
 Provision a test VM on the vSAN datastore using the standard storage policy:
@@ -493,6 +701,10 @@ watch -n 10 "esxcli vsan debug object list | grep -v Healthy | wc -l"
 # Count should return to 0 after host exits maintenance
 ```
 
+
+```text title="Expected output"
+Every 10.0s: esxcli vsan debug object list | grep -v Healthy | wc -l
+```
 ### Performance Baseline
 
 Run a baseline I/O test to capture initial performance figures:

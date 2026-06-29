@@ -132,6 +132,23 @@ Apply the following configuration baseline to every vSAN cluster before placing 
 vmkping -I vmk2 -d -s 8972 <remote-vsan-vmk-ip>
 ```
 
+
+```text title="Expected output"
+PING 192.168.100.45 (192.168.100.45): 8972 data bytes
+8980 bytes from 192.168.100.45: icmp_seq=0 ttl=64 time=1.234 ms
+8980 bytes from 192.168.100.45: icmp_seq=1 ttl=64 time=1.156 ms
+8980 bytes from 192.168.100.45: icmp_seq=2 ttl=64 time=1.289 ms
+8980 bytes from 192.168.100.45: icmp_seq=3 ttl=64 time=1.198 ms
+8980 bytes from 192.168.100.45: icmp_seq=4 ttl=64 time=1.267 ms
+--- 192.168.100.45 statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max = 1.156/1.229/1.289 ms
+```
+
+!!! warning "Common errors"
+    **`Fragmentation needed and DF set`** — Lower the packet size (try `-s 8972` instead of larger values) or verify MTU 9000 is configured on both the physical NIC and vSAN VMkernel port.
+    **`No route to host`** — Verify the vSAN VMkernel interface (vmk2) is on the correct VLAN and has network connectivity to the remote vSAN cluster node.
+    **`vmkping: Unknown host <remote-vsan-vmk-ip>`** — Replace `<remote-vsan-vmk-ip>` with an actual IP address (e.g., 192.168.100.45) or verify DNS resolution is working.
 ### Stretched Cluster Requirements
 
 | Item | Requirement |
@@ -231,6 +248,26 @@ esxcli vsan cluster get
 Get-VsanSpaceUsage -Cluster <clustername>
 ```
 
+
+```text title="Expected output"
+Name                           Capacity          Used              Available        
+vsan-disk-group-001            10.95 TB           3.24 TB            7.71 TB          
+vsan-disk-group-002            10.95 TB           2.89 TB            8.06 TB          
+vsan-disk-group-003            10.95 TB           4.12 TB            6.83 TB          
+
+Cluster UUID: 52d4a8f1-7c3e-4d2a-b1e9-8f6c2a9d3e1b
+Cluster Name: prod-vsan-cluster-01
+Node Count: 4
+Health Status: Healthy
+Stretched Cluster: false
+
+Cluster                Space Usage (GB)    Provisioned (GB)    Used (GB)    Available (GB)
+prod-vsan-cluster-01   18240               24576               10250        13990
+```
+
+!!! warning "Common errors"
+    **`Could not connect to the vSAN cluster`** — Verify the ESXi host is part of a vSAN cluster and network connectivity exists to cluster members.
+    **`Get-VsanSpaceUsage : The term 'Get-VsanSpaceUsage' is not recognized`** — Import the VMware.VimAutomation.Vsan module using `Import-Module VMware.VimAutomation.Vsan` before running PowerCLI commands.
 Capacity monitoring should also be configured in Aria Operations with an alert policy targeting the 70% threshold.
 
 ---

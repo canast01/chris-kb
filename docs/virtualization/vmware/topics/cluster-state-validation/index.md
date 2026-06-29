@@ -78,6 +78,34 @@ esxcli vsan health cluster list
 esxcli vsan debug object list | grep -i "Degraded\|Absent"
 ```
 
+
+```text title="Expected output"
+Cluster ID: 4a3f8c2e-9b1d-47e2-a5c1-2f7d9e4b6c1a
+Cluster Health: Healthy
+Node UUID: 5e2c9f1a-3d4b-8e7f-6a2c-1b9d4f8e3a5c
+Enabled: true
+Current Health: Healthy
+Build: 21813879
+Cluster Capacity: 2.7 TB
+Cluster Free Space: 1.2 TB
+
+Health Check Results:
+Component: vSAN Cluster Health
+Status: Healthy
+Timestamp: 2024-01-15T14:32:18Z
+
+Component: Network Connectivity
+Status: Healthy
+Timestamp: 2024-01-15T14:32:19Z
+
+Component: Memory
+Status: Healthy
+Timestamp: 2024-01-15T14:32:20Z
+```
+
+!!! warning "Common errors"
+    **`vsan cluster get: Unknown command or namespace`** — Ensure vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster info` if the command is unavailable.
+    **`Health check failed: Unable to contact cluster members`** — Verify network connectivity between ESXi hosts and check that all hosts in the cluster are in a healthy state with `esxcli network ip interface list`.
 ## Resource Utilisation
 
 ```powershell

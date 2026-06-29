@@ -62,6 +62,59 @@ tail -100 /var/log/vmware/vpxd/vpxd.log | grep -i error
 crontab -l 2>/dev/null | grep -i backup
 ```
 
+
+```text title="Expected output"
+SERVICE vmware-vpxd RUNNING
+SERVICE vmware-vsan-health RUNNING
+SERVICE vmware-eam RUNNING
+SERVICE vmware-mbcs RUNNING
+SERVICE vmware-sts RUNNING
+SERVICE vmware-lookupsvc RUNNING
+SERVICE vmware-rhttpproxy RUNNING
+SERVICE vmware-netdumper RUNNING
+SERVICE vmware-content-library RUNNING
+...
+
+VMware vCenter Server 8.0.1 build-21495797
+
+SERVICE vmware-sts RUNNING
+SERVICE vmware-lookupsvc RUNNING
+
+VECS store list:
+	APPLIANCE_SSL_CERT
+	MACHINE_SSL_CERT
+	TRUSTED_ROOTS
+	TRUSTED_ROOT_CRLS
+
+Filesystem     Size  Used Avail Use% Mounted on
+/storage/db    500G  387G  113G  78% /storage/db
+/storage/log   100G   34G   66G  34% /storage/log
+/storage/seat   50G   12G   38G  24% /storage/seat
+
+HA Enabled: true
+HA State: HEALTHY
+Node Role: ACTIVE
+Cluster Mode: ENABLED
+
+               Local time: Wed 2024-01-17 14:32:18 UTC
+           Universal time: Wed 2024-01-17 14:32:18 UTC
+                 RTC time: Wed 2024-01-17 14:32:18 UTC
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+
+5
+
+2024-01-17T14:28:43.421Z [vpxd 7654] [Originator@6876 sub=Default] [error] Connection timeout to host 192.168.1.45
+2024-01-17T14:15:12.089Z [vpxd 7654] [Originator@6876 sub=Default] [error] Failed to retrieve datastore inventory
+
+0 2 * * * /usr/lib/vmware-vami/scripts/backup.sh >> /var/log/vmware-vami/backup.log 2>&1
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if still failing, verify curl is installed with `which curl`).
+    **`python3: command not found`** — Install Python 3 with `apt-get install python3` on Debian-based VCSA or use the full path `/usr/bin/python3`.
+    **`/var/log/vmware/vpxd/vpxd.log: No such file or directory`** — Verify vpxd service is running with `service-control --status vmware-vpxd` and check log location with `find /var/log -name vpxd.log`.
 Key partitions to monitor:
 - `/storage/log` — fills quickly during issues
 - `/storage/db` — vCenter database
@@ -77,6 +130,16 @@ service-control --status vmware-lookupsvc
 service-control --status vmware-eam
 ```
 
+
+```text title="Expected output"
+vmware-sts is running
+vmware-lookupsvc is running
+vmware-eam is running
+```
+
+!!! warning "Common errors"
+    **`service-control: command not found`** — Ensure you are running this command on the vCenter Server appliance (VCSA) with root privileges, as `service-control` is only available in the vCenter environment.
+    **`vmware-sts is stopped`** — Restart the STS service with `service-control --start vmware-sts` and wait 30-60 seconds for dependent services to recover.
 ## DNS and NTP Validation
 
 ![DNS and NTP Validation](../../../../assets/virtualization-vmware-vcenter-hc-dns-and-ntp-validation.svg)
@@ -90,6 +153,40 @@ dig <vcenter-fqdn>
 timedatectl
 ```
 
+
+```text title="Expected output"
+Server:		10.0.0.1
+Address:	10.0.0.1#53
+
+Name:	vcenter.example.com
+Address: 192.168.1.50
+
+; <<>> DiG 9.11.4-P8-RedHat-9.11.4-26.P2-el7 <<>> vcenter.example.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 54321
+;; QUESTION SECTION:
+;vcenter.example.com.		IN	A
+
+;; ANSWER SECTION:
+vcenter.example.com.	300	IN	A	192.168.1.50
+
+;; Query time: 2 msec
+;; SERVER: 10.0.0.1#53(10.0.0.1)
+
+               Local time: Wed 2024-01-10 14:32:45 UTC
+           Universal time: Wed 2024-01-10 14:32:45 UTC
+                 RTC time: Wed 2024-01-10 14:32:44
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+       RTC in local TZ: no
+```
+
+!!! warning "Common errors"
+    **`nslookup: command not found`** — Install bind-utils package with `yum install bind-utils` or use `dig` instead.
+    **`connection timed out; no servers could be reached`** — Verify DNS server IP is correct in `/etc/resolv.conf` and network connectivity to the DNS server exists.
+    **`System clock synchronized: no`** — Restart the NTP service with `systemctl restart ntp` or `systemctl restart chrony` depending on your time daemon.
 ## PowerCLI Health Checks
 
 ![PowerCLI Health Checks](../../../../assets/virtualization-vmware-vcenter-hc-powercli-health-checks.svg)

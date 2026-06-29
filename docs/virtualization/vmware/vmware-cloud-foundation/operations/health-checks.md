@@ -89,6 +89,52 @@ sudo systemctl restart vcf-operationsmanager   # example
 journalctl -u vcf-operationsmanager --since "30 minutes ago" | tail -50
 ```
 
+
+```text title="Expected output"
+vcf@sddc-manager:~$ systemctl status vcf-operationsmanager
+● vcf-operationsmanager.service - VCF Operations Manager
+     Loaded: loaded (/etc/systemd/system/vcf-operationsmanager.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+   Main PID: 4521 (java)
+      Tasks: 47 (limit: 4915)
+     Memory: 1.2G
+     CGroup: /system.slice/vcf-operationsmanager.service
+             └─4521 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xmx2g...
+
+vcf@sddc-manager:~$ systemctl status vcf-commonsvcs
+● vcf-commonsvcs.service - VCF Common Services
+     Loaded: loaded (/etc/systemd/system/vcf-commonsvcs.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:22 UTC; 2 days ago
+   Main PID: 4687 (java)
+      Tasks: 52 (limit: 4915)
+     Memory: 1.8G
+
+vcf@sddc-manager:~$ systemctl status vcf-domainmanager
+● vcf-domainmanager.service - VCF Domain Manager
+     Loaded: loaded (/etc/systemd/system/vcf-domainmanager.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:25 UTC; 2 days ago
+   Main PID: 4823 (java)
+      Tasks: 38 (limit: 4915)
+     Memory: 956M
+
+vcf@sddc-manager:~$ systemctl status nginx
+● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:10 UTC; 2 days ago
+   Main PID: 3891 (nginx)
+      Tasks: 8 (limit: 4915)
+     Memory: 24.3M
+
+vcf@sddc-manager:~$ systemctl list-units 'vcf-*' --state=failed
+     UNIT LOAD ACTIVE SUB
+0 loaded units listed. Pass --all to see loaded but inactive units.
+
+vcf@sddc-manager:~$ sudo systemctl restart vcf-operationsmanager
+vcf@sddc-manager:~$ journalctl -u vcf-operationsmanager --since "30 minutes ago" | tail -50
+Jan 17 15:02:14 sddc-manager systemd[1]: Stopping VCF Operations Manager...
+Jan 17 15:02:15 sddc-manager systemd[1]: vcf-operationsmanager.service: Main process exited, code=exited, status=0/SUCCESS
+Jan 17 15:02:15 sddc-manager systemd[1]: Stopped VCF Operations
+```
 ---
 
 ## Workload Domain Health
@@ -127,6 +173,28 @@ curl -sk -u admin:<password> \
 #   "FAILED"     — host has a problem; investigate before attempting assignment
 ```
 
+
+```text title="Expected output"
+"fqdn": "esx-wld1-01.corp.local",
+"status": "ASSIGNED",
+"fqdn": "esx-wld1-02.corp.local",
+"status": "ASSIGNED",
+"fqdn": "esx-wld2-01.corp.local",
+"status": "ASSIGNED",
+"fqdn": "esx-mgmt-01.corp.local",
+"status": "ASSIGNED",
+"fqdn": "esx-pool-01.corp.local",
+"status": "UNASSIGNED",
+"fqdn": "esx-pool-02.corp.local",
+"status": "UNASSIGNED",
+"fqdn": "esx-failed-01.corp.local",
+"status": "FAILED",
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the SDDC Manager's CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to sddc-manager.example.com port 443: Connection refused`** — Verify the SDDC Manager hostname/IP is correct and the appliance is running; check network connectivity with `ping` or `nc -zv`.
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure the API endpoint is correct and the SDDC Manager is responding; test with `curl -sk -u admin:<password> https://sddc-manager.example.com/v1/hosts` without piping to confirm valid JSON output.
 UI check: SDDC Manager → **Inventory** → **Hosts** → filter by **Status: FAILED** — any results require immediate attention.
 
 For hosts in FAILED state: check ESXi connectivity (ping FQDN), verify management vmkernel adapter is up, and review SDDC Manager task logs under **Administration → Tasks**.
@@ -199,6 +267,25 @@ curl -sk -u admin:<password> \
 # All nodes must show: "connectivity_status": "CONNECTED"
 ```
 
+
+```text title="Expected output"
+"overall_status": "STABLE",
+  "mgmt_cluster_status": "STABLE"
+  "display_name": "nsx-manager-1.example.com",
+  "manager_role": "ACTIVE",
+  "connectivity_status": "CONNECTED"
+  "display_name": "nsx-manager-2.example.com",
+  "manager_role": "STANDBY",
+  "connectivity_status": "CONNECTED"
+  "display_name": "nsx-manager-3.example.com",
+  "manager_role": "STANDBY",
+  "connectivity_status": "CONNECTED"
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the NSX manager's CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to nsx-manager.example.com port 443: Connection refused`** — Verify the NSX manager hostname/IP is correct, the management network is reachable, and the NSX manager API service is running (check `systemctl status nsxd` on the manager node).
+    **`"connectivity_status": "DISCONNECTED"`** — Restart the affected NSX manager node or check network connectivity between cluster members; if persistent, reinitialize the node from the NSX manager UI.
 UI check: NSX Manager → **System** → **Overview** — the cluster health indicator must show green for all three manager nodes and the controller cluster.
 
 ---
@@ -222,6 +309,34 @@ curl -sk -k -u administrator@vsphere.local:<password> \
   python3 -m json.tool | grep -E '"name"|"health"'
 ```
 
+
+```text title="Expected output"
+{"value":"green"}
+    "name": "applmgmt",
+    "health": "green"
+    "name": "certificatemanagement",
+    "health": "green"
+    "name": "eam",
+    "health": "green"
+    "name": "envoy",
+    "health": "green"
+    "name": "imagebuilder",
+    "health": "green"
+    "name": "netdump",
+    "health": "green"
+    "name": "sts",
+    "health": "green"
+    "name": "vapi",
+    "health": "green"
+    "name": "vmon",
+    "health": "green"
+...
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (note: the command already includes `-sk -k`, so remove one `-k` or verify the certificate chain is trusted).
+    **`curl: (7) Failed to connect to vcenter.example.com port 443: Connection refused`** — Verify vCenter hostname/IP is correct and the appliance management API is accessible on port 443 using `curl -sk https://vcenter.example.com/rest/appliance/health/overall`.
+    **`jq: command not found` or `json.tool: No module named json.tool`** — Install python3-json or use `jq` instead: `curl -sk -u administrator@vsphere.local:<password> https://vcenter.example.com/rest/appliance/health/services | jq '.value[] | {name, health}'`.
 UI check: vCenter → **Administration** → **Appliance** → **Health** — all service health indicators must be green.
 
 If vCenter shows red: SSH to the vCenter appliance → `service-control --status --all` → restart the failing service → re-check health endpoint.

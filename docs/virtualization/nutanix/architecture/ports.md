@@ -164,6 +164,29 @@ sudo ntpq -p
 nc -zv <peer-ahv-ip> 16514
 ```
 
+
+```text title="Expected output"
+200
+Welcome to Nutanix CVM
+nutanix@NTNX-1234567890AB:~$
+Connection to 10.20.30.45 port 2009 [tcp/*] succeeded!
+  Cluster UUID: 00051234-1234-1234-1234-123456789abc
+  Cluster Name: prod-cluster-01
+  Cluster State: GOOD
+     remote-cvm-01: GOOD
+     remote-cvm-02: GOOD
+     remote-cvm-03: GOOD
+     remote-cvm-04: GOOD
+  NTP Synchronized: True
+     remote.ntp.pool (10.10.1.5)
+     ntp.ubuntu.com (91.189.89.198)
+Connection to 10.20.40.12 port 16514 [tcp/*] succeeded!
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <prism-element-vip> port 9440: Connection refused`** — Verify the Prism Element VIP is reachable and port 9440 is open on the network firewall.
+    **`ssh: connect to host <cvm-ip> port 22: Connection timed out`** — Confirm the CVM IP is correct, the CVM is powered on, and SSH port 22 is not blocked by network ACLs or host firewall.
+    **`nc: getaddrinfo: Name or service not known`** — Ensure the remote CVM IP address is valid and resolvable; check DNS or use the full IP instead of a hostname.
 ---
 
 ## See also

@@ -98,6 +98,29 @@ curl -sk -X POST \
   }' | jq .
 ```
 
+
+```text title="Expected output"
+{
+  "value": "backup-job-20250214-084532"
+}
+{
+  "value": {
+    "id": "backup-job-20250214-084532",
+    "state": "RUNNING",
+    "progress": 0,
+    "detail": null,
+    "start_time": "2025-02-14T08:45:32.123Z",
+    "end_time": null,
+    "messages": [],
+    "description": "vCenter Server backup job"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present; if error persists, verify certificate chain on vCenter).
+    **`jq: parse error: Invalid JSON text at line 1`** — Ensure jq is installed (`yum install jq`) and that the API response is valid JSON by testing the curl command without piping to jq first.
+    **`{"value":{"messages":[{"default_message":"Authentication failed"}]}}`** — Verify the vCenter administrator password is correct and the user account is not locked; reset credentials in vCenter if needed.
 ### Scheduled backup via VAMI
 
 1. VAMI → Backup → **Schedule**.
@@ -120,6 +143,33 @@ ls -lh /backups/vcenter/sn-*/
 cat /backups/vcenter/sn-<timestamp>/manifest.json
 ```
 
+
+```text title="Expected output"
+total 2.3G
+drwxr-xr-x 4 backup backup 4.0K 2024-01-15 14:32 /backups/vcenter/sn-20240115-143200/
+drwxr-xr-x 4 backup backup 4.0K 2024-01-14 09:18 /backups/vcenter/sn-20240114-091800/
+drwxr-xr-x 4 backup backup 4.0K 2024-01-13 22:45 /backups/vcenter/sn-20240113-224500/
+-rw-r--r-- 1 backup backup 1.2G 2024-01-15 14:35 sn-20240115-143200.tar.gz
+-rw-r--r-- 1 backup backup 1.1G 2024-01-14 09:20 sn-20240114-091800.tar.gz
+
+{
+  "backup_id": "sn-20240115-143200",
+  "timestamp": "2024-01-15T14:32:00Z",
+  "vcenter_version": "7.0.3",
+  "components": [
+    {"name": "database", "size_bytes": 856932864, "status": "completed"},
+    {"name": "config", "size_bytes": 45678912, "status": "completed"},
+    {"name": "ssl_certs", "size_bytes": 2097152, "status": "completed"},
+    {"name": "logs", "size_bytes": 312458240, "status": "completed"}
+  ],
+  "total_size_bytes": 1217167168,
+  "checksum": "sha256:a7f3e9c2b1d4f8e6a9c3b2e1f4d7a9c2"
+}
+```
+
+!!! warning "Common errors"
+    **`ls: cannot access '/backups/vcenter/sn-*/': No such file or directory`** — Verify the backup mount point is mounted with `mount | grep backups` and check the SFTP target path is correct.
+    **`cat: /backups/vcenter/sn-<timestamp>/manifest.json: No such file or directory`** — Replace `<timestamp>` with an actual backup directory name from the `ls` output (e.g., `sn-20240115-143200`).
 A valid backup contains:
 - `manifest.json` — metadata and component list
 - `*.bak` — encrypted backup data files

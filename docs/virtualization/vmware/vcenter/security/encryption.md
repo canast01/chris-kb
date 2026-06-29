@@ -96,6 +96,50 @@ The simplest replacement — use when VMCA is the CA and no custom CA is require
 # The tool will replace the cert and restart required services
 ```
 
+
+```text title="Expected output"
+VMware Certificate Manager
+Version 7.0.3 Build 21958341
+
+1. Generate Certificate Signing Request (CSR)
+2. Create a Self-Signed Certificate
+3. Replace Machine SSL Certificate
+4. Replace VMCA Root Certificate
+5. Replace Solution User Certificates
+6. Replace Machine SSL certificate with VMCA Certificate
+7. Regenerate VMCA Root Certificate
+8. Reset all Certificates
+9. Exit
+
+Select an option [1-9]: 6
+
+Retrieving VMCA Certificate...
+Enter username [Administrator@vsphere.local]: administrator@vsphere.local
+Enter password: 
+
+Certificate Details:
+  Subject: CN=vcsa-01.corp.local,O=VMware,C=US
+  Issuer: CN=VMCA,O=VMware,C=US
+  Valid From: 2024-01-15 10:30:00 UTC
+  Valid Until: 2026-01-15 10:30:00 UTC
+
+Do you want to replace the Machine SSL Certificate? (Y/N): Y
+
+Replacing Machine SSL Certificate...
+Certificate replaced successfully.
+
+Restarting services:
+  - vmware-vpxd
+  - vmware-vsan-health
+  - vmware-rhttpproxy
+
+All services restarted successfully.
+```
+
+!!! warning "Common errors"
+    **`Authentication failed for user administrator@vsphere.local`** — Verify the password is correct and the user account is not locked; reset credentials via DCUI if needed.
+    **`Certificate replacement failed: Certificate chain validation error`** — Ensure VMCA root certificate is valid and not expired by checking `/etc/vmware-vpx/ssl/vmca_issued_certs.pem`.
+    **`Service restart timeout: vmware-vpxd did not respond within 120 seconds`** — Wait 2-3 minutes for services to stabilize, then manually restart with `service-control --restart --all` if the issue persists.
 After renewal:
 ```bash
 # Verify new certificate dates
@@ -106,6 +150,23 @@ echo | openssl s_client -connect vcenter.example.local:443 2>/dev/null \
 service-control --status --all
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 10:23:45 2024 GMT
+notAfter=Jan 15 10:23:45 2025 GMT
+Service vpxd is running
+Service vsan-health is running
+Service wcp is running
+Service vsphere-ui is running
+Service rhttpproxy is running
+Service vmonapi is running
+Service sps is running
+Service pschealth is running
+```
+
+!!! warning "Common errors"
+    **`error in x509 lookup v3 extensions`** — Ensure the certificate chain is complete; use `openssl s_client -connect vcenter.example.local:443 -showcerts` to verify all intermediate certificates are present.
+    **`Service vpxd is stopped`** — Restart the vCenter service with `service-control --start --all` and wait 2–3 minutes for dependent services to initialize.
 ### Machine SSL Certificate (Custom CA)
 
 When your organisation uses an enterprise CA (Microsoft CA, DigiCert, etc.):
@@ -127,6 +188,65 @@ When your organisation uses an enterprise CA (Microsoft CA, DigiCert, etc.):
 # Provide path to: certificate file, key file, and root CA chain
 ```
 
+
+```text title="Expected output"
+vCenter Certificate Manager
+
+Please select an option:
+
+1. Generate Certificate Signing Request(s) and Key(s) for Machine SSL certificate
+2. Generate Certificate Signing Request(s) and Key(s) for all certificates
+3. Regenerate a new Machine SSL certificate
+4. Replace Machine SSL certificate with Custom Certificate
+5. Replace all Certificates with Custom Certificates
+6. Regenerate all certificates
+7. Reset all Certificates to default
+8. List all certificates
+
+Option [1]: 1
+
+Generating Certificate Signing Request for Machine SSL certificate...
+CSR generated successfully at: /tmp/vmca_issued_csr.csr
+Key generated at: /tmp/vmca_issued_key.key
+
+Please submit the CSR to your enterprise CA and return with the signed certificate.
+
+---
+
+vCenter Certificate Manager
+
+Please select an option:
+
+1. Generate Certificate Signing Request(s) and Key(s) for Machine SSL certificate
+2. Generate Certificate Signing Request(s) and Key(s) for all certificates
+3. Regenerate a new Machine SSL certificate
+4. Replace Machine SSL certificate with Custom Certificate
+5. Replace all Certificates with Custom Certificates
+6. Regenerate all certificates
+7. Reset all Certificates to default
+8. List all certificates
+
+Option [1]: 5
+
+Provide the following paths:
+Certificate file path: /tmp/vcenter.crt
+Key file path: /tmp/vmca_issued_key.key
+Root CA chain file path: /tmp/ca-chain.crt
+
+Validating certificate and key...
+Certificate validation: PASSED
+Key validation: PASSED
+Chain validation: PASSED
+
+Replacing Machine SSL certificate...
+Certificate replacement completed successfully.
+Services will restart automatically. Please wait...
+```
+
+!!! warning "Common errors"
+    **`Error: Certificate file not found at /tmp/vcenter.crt`** — Verify the signed certificate file path is correct and readable by the root user.
+    **`Error: Private key does not match certificate`** — Ensure the key file corresponds to the CSR that was signed by your CA.
+    **`Error: Certificate chain validation failed: untrusted root`** — Include the complete CA chain from intermediate to root CA in the chain file, in order from leaf to root.
 ### STS Signing Certificate
 
 The STS (Security Token Service) signing certificate is the most impactful — its expiry causes complete login failure for all vSphere accounts. It has a 10-year validity by default but may have been set shorter on older installations.
@@ -149,6 +269,48 @@ service-control --stop --all
 service-control --start --all
 ```
 
+
+```text title="Expected output"
+Alias                                    : STS_INTERNAL_SSL_CERT
+Not After                                : Dec 18 14:32:15 2025 GMT
+(no output — command completes silently)
+Stopping all services...
+Service vmon stopped
+Service vmafdd stopped
+Service vmdird stopped
+Service vmcad stopped
+Service vpostgres stopped
+All services stopped successfully.
+
+2019-01-01T08:45:23.456Z - certificate-manager
+======================================
+VMware Certificate Manager
+======================================
+1. Replace Machine SSL certificate
+2. Replace VMCA Root certificate
+3. Replace PSC SSL certificate
+4. Replace Solution User certificates
+5. Regenerate a new VMCA Root certificate and all certificates
+6. Replace Smart Card certificate
+7. Replace Authentication Proxy Server certificate
+8. Reset all certificates
+9. Exit
+Select an option [1-9]: 8
+Resetting all certificates...
+All certificates reset successfully.
+Starting all services...
+Service vmon started
+Service vmafdd started
+Service vmdird started
+Service vmcad started
+Service vpostgres started
+All services started successfully.
+```
+
+!!! warning "Common errors"
+    **`vecs-cli: command not found`** — Verify you are running this command on the vCenter Server appliance (not a remote host) and that VMware vSphere Authentication Daemon is installed.
+    **`Error: Failed to stop service — timeout waiting for service to stop`** — Increase the timeout or manually kill lingering processes with `pkill -9 vmware` before retrying service-control.
+    **`certificate-manager: Permission denied`** — Run the command with `sudo` or as root user, as certificate operations require elevated privileges.
 **Warning**: If the STS certificate is already expired, the `certificate-manager` may not be able to authenticate. In this case, use the `fix_sts_cert.py` script from VMware KB 79248 or engage VMware Support directly.
 
 ---

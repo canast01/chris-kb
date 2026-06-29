@@ -153,6 +153,21 @@ Review the DFW packet log on each host to find traffic that the default Drop rul
 cat /var/log/dfwpktlogs.log | grep "MONITOR DROP" | head -50
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:23:47.123Z [MONITOR DROP] src=192.168.1.45 dst=10.0.0.8 proto=tcp port=443 reason=policy_deny
+2024-01-15T09:24:12.456Z [MONITOR DROP] src=172.16.5.22 dst=10.0.0.9 proto=udp port=53 reason=rate_limit
+2024-01-15T09:25:03.789Z [MONITOR DROP] src=192.168.2.100 dst=10.0.0.10 proto=tcp port=22 reason=blacklist
+2024-01-15T09:26:15.234Z [MONITOR DROP] src=10.1.1.5 dst=10.0.0.11 proto=icmp reason=protocol_blocked
+2024-01-15T09:27:44.567Z [MONITOR DROP] src=203.0.113.77 dst=10.0.0.12 proto=tcp port=3306 reason=policy_deny
+2024-01-15T09:28:22.891Z [MONITOR DROP] src=192.168.3.15 dst=10.0.0.13 proto=tcp port=8080 reason=anomaly_detected
+2024-01-15T09:29:01.345Z [MONITOR DROP] src=172.31.45.88 dst=10.0.0.14 proto=udp port=5353 reason=rate_limit
+2024-01-15T09:30:18.678Z [MONITOR DROP] src=198.51.100.42 dst=10.0.0.15 proto=tcp port=445 reason=malware_signature
+```
+
+!!! warning "Common errors"
+    **`cat: /var/log/dfwpktlogs.log: No such file or directory`** — Verify the DFW (Distributed Firewall) logging is enabled in vSphere and check the correct log path for your ESXi version.
+    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or as root to access protected log files on the ESXi host.
 Look for: MONITOR DROP entries with legitimate source/destination pairs. For each entry, either add an allow rule or confirm it is traffic that should be blocked. Common legitimate flows frequently missed:
 
 - Windows activation (TCP 1688)
@@ -186,6 +201,21 @@ NSX → **Security** → **Distributed Firewall** → select the policy → **Ed
 cat /var/log/dfwpktlogs.log | grep "DROP" | grep -v "MONITOR" | head -50
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:42:31.245Z [DROP] SRC=192.168.1.105 DST=10.0.0.50 PROTO=TCP DPORT=443 RULE=default-deny-egress
+2024-01-15T09:42:35.612Z [DROP] SRC=172.16.5.20 DST=8.8.8.8 PROTO=UDP DPORT=53 RULE=default-deny-dns
+2024-01-15T09:42:41.089Z [DROP] SRC=192.168.1.110 DST=10.20.0.1 PROTO=TCP DPORT=3306 RULE=db-access-restricted
+2024-01-15T09:42:48.334Z [DROP] SRC=10.0.0.75 DST=203.0.113.45 PROTO=TCP DPORT=22 RULE=ssh-outbound-blocked
+2024-01-15T09:42:52.901Z [DROP] SRC=172.16.8.88 DST=192.0.2.100 PROTO=ICMP RULE=ping-blocked-prod
+2024-01-15T09:43:01.567Z [DROP] SRC=192.168.1.200 DST=10.50.0.10 PROTO=TCP DPORT=5432 RULE=postgres-restricted
+2024-01-15T09:43:15.223Z [DROP] SRC=10.0.0.99 DST=198.51.100.5 PROTO=TCP DPORT=8080 RULE=app-port-blocked
+...
+```
+
+!!! warning "Common errors"
+    **`cat: /var/log/dfwpktlogs.log: No such file or directory`** — Verify the DFW logging path is correct for your vSphere version (check `/etc/vmware/vdfw/` for active config) or enable packet logging in the Distributed Firewall settings.
+    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or as root to access the DFW packet log file.
 Expected: no application-breaking DROP entries. Have an application owner verify functionality within 15 minutes. If an unexpected break occurs, revert to monitor mode immediately — this restores full connectivity in under 30 seconds.
 
 ---

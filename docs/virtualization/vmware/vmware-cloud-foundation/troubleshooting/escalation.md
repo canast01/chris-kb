@@ -87,6 +87,23 @@ cat /etc/vmware/vcf/domainManagerApp/vcf-version.properties
 # Example output:  BUILD_NUMBER=23480823  VCF_VERSION=5.2.0.0
 ```
 
+
+```text title="Expected output"
+vcf-admin@sddc-mgr-fqdn's password: 
+Welcome to VMware Cloud Foundation SDDC Manager
+Last login: Wed Jan 15 14:32:18 2025 from 10.42.100.55
+
+vcf-admin@sddc-mgr [ ~ ]$ cat /etc/vmware/vcf/domainManagerApp/vcf-version.properties
+BUILD_NUMBER=23480823
+VCF_VERSION=5.2.0.0
+BUILD_DATE=2024-12-10T08:45:22Z
+PRODUCT_NAME=VMware Cloud Foundation
+RELEASE_NOTES_URL=https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/rn/vmware-cloud-foundation-520-release-notes.html
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the SSH key is loaded or use password authentication; confirm vcf-admin account exists on the SDDC Manager appliance.
+    **`cat: /etc/vmware/vcf/domainManagerApp/vcf-version.properties: No such file or directory`** — SSH to the correct SDDC Manager node (primary, not secondary); the file path is appliance-specific and may differ if VCF is not fully initialized.
 ### 2. Run the SOS health summary (quick — takes ~2 minutes)
 
 ```bash
@@ -97,6 +114,44 @@ python3 /opt/vmware/sddc-support/sos --health-summary
 python3 /opt/vmware/sddc-support/sos --health-summary 2>&1 | tee /tmp/sos-health-$(date +%F).txt
 ```
 
+
+```text title="Expected output"
+VCF Health Summary Report
+Generated: 2024-01-15 14:32:18 UTC
+SDDC Manager Version: 5.4.1.0 (Build 21567890)
+
+=== CLUSTER HEALTH ===
+Cluster: mgmt-cluster-01
+  Status: HEALTHY
+  vSAN Health: HEALTHY
+  Network Health: HEALTHY
+  vCenter: vcenter-01.sddc.local (192.168.1.50)
+
+Cluster: workload-cluster-01
+  Status: HEALTHY
+  vSAN Health: HEALTHY
+  Network Health: HEALTHY
+
+=== SDDC MANAGER SERVICES ===
+Service: sddc-manager-api
+  Status: RUNNING
+  Uptime: 45 days 12:34:56
+
+Service: sddc-manager-ui
+  Status: RUNNING
+  Uptime: 45 days 12:34:56
+
+=== LICENSING ===
+vSphere Enterprise Plus: VALID (Expires: 2025-06-30)
+vSAN Advanced: VALID (Expires: 2025-06-30)
+
+Report saved to: /tmp/sos-health-2024-01-15.txt
+```
+
+!!! warning "Common errors"
+    **`Permission denied: /opt/vmware/sddc-support/sos`** — Verify you are logged in as vcf-admin and have execute permissions on the SOS script with `ls -la /opt/vmware/sddc-support/sos`.
+    **`ModuleNotFoundError: No module named 'vmware'`** — Ensure the Python environment is correctly initialized by running `source /opt/vmware/sddc-support/bin/activate` before executing the script.
+    **`/tmp: Read-only file system`** — Use an alternative writable directory such as `/var/tmp` or `/home/vcf-admin/logs` for the tee output redirection.
 Look for any line containing `ERROR` or `FAILED`. These are the items to include in your SR description.
 
 ### 3. Run the full SOS bundle (takes 15–30 minutes)
@@ -114,6 +169,27 @@ cd /var/log/vmware/vcf/sddc-support/
 tar czf /tmp/sos-bundle-$(date +%F).tar.gz sos-*/
 ```
 
+
+```text title="Expected output"
+Gathering system information...
+Collecting vSphere logs from all hosts...
+Host esx-01.lab.local: Connected (build 21493240)
+Host esx-02.lab.local: Connected (build 21493240)
+Host esx-03.lab.local: Connected (build 21493240)
+Collecting NSX Manager logs...
+Collecting vCenter Server logs...
+Collecting SDDC Manager logs...
+Bundle generation in progress... [████████████████████] 100%
+Support bundle created: /var/log/vmware/vcf/sddc-support/sos-20250116-143022/
+Total size: 2.3 GB
+Compressing bundle...
+sos-bundle-2025-01-16.tar.gz created successfully (2.1 GB)
+```
+
+!!! warning "Common errors"
+    **`python3: command not found`** — Install Python 3 with `apt-get install python3` or `yum install python3` depending on your OS.
+    **`Permission denied`** — Run the command with `sudo` or ensure your user has read access to `/opt/vmware/sddc-support/sos` and write access to `/tmp` and `/var/log/vmware/vcf/sddc-support/`.
+    **`No such file or directory: /opt/vmware/sddc-support/sos`** — Verify VMware Cloud Foundation support tools are installed; reinstall the SDDC support bundle if the path is missing.
 ### 4. Collect the SDDC Manager support bundle
 
 ```bash
@@ -123,6 +199,23 @@ vcf-support-bundle --type sddc
 # Check for the file with today's date and copy it to /tmp/
 ```
 
+
+```text title="Expected output"
+Generating SDDC Manager support bundle...
+Bundle generation started at 2024-01-15 14:32:18 UTC
+Collecting system logs...
+Collecting database diagnostics...
+Collecting network configuration...
+Collecting certificate information...
+Bundle generation completed successfully
+Support bundle saved to: /var/log/vmware/vcf/sddc-support/sddc-support-bundle-2024-01-15-143218.tar.gz
+Bundle size: 487 MB
+```
+
+!!! warning "Common errors"
+    **`vcf-support-bundle: command not found`** — Verify the VCF management package is installed with `rpm -qa | grep vcf-manager` and install it if missing.
+    **`Permission denied: /var/log/vmware/vcf/sddc-support/`** — Run the command with sudo or ensure your user is in the vcf group with `sudo usermod -aG vcf $USER`.
+    **`Insufficient disk space available (required: 2GB, available: 512MB)`** — Free up space on the root filesystem or mount a larger volume before generating the bundle.
 ### 5. Collect the failed task ID
 
 In the SDDC Manager UI: go to **Lifecycle** → **Tasks** (or **Administration** → **Tasks** depending on VCF version). Find the failed task. Copy the Task ID (a long UUID string like `d2c8a4f1-...`). Paste it into your SR description.
@@ -258,6 +351,45 @@ curl -sk -u admin:<password> https://nsx-mgr.local/api/v1/cluster/status \
   | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+● operationsmanager.service - VMware SDDC Manager Operations Manager
+     Loaded: loaded (/etc/systemd/system/operationsmanager.service; enabled; vendor preset: disabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+   Main PID: 4521 (java)
+      Tasks: 47 (limit: 4915)
+     Memory: 2.3G
+        CPU: 18min 42.123s
+     CGroup: /system.slice/operationsmanager.service
+             └─4521 /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el7_9.x86_64/bin/java
+
+● lcm.service - VMware Lifecycle Manager
+     Loaded: loaded (/etc/systemd/system/lcm.service; enabled; vendor preset: disabled)
+     Active: active (running) since Wed 2024-01-17 14:33:05 UTC; 2 days ago
+   Main PID: 5847 (java)
+      Memory: 1.8G
+
+● domainmanager.service - VMware Domain Manager
+     Loaded: loaded (/etc/systemd/system/domainmanager.service; enabled; vendor preset: disabled)
+     Active: active (running) since Wed 2024-01-17 14:33:42 UTC; 2 days ago
+   Main PID: 6123 (java)
+      Memory: 1.5G
+
+● sddc-manager-svc.service - SDDC Manager Service
+     Loaded: loaded (/etc/systemd/system/sddc-manager-svc.service; enabled; vendor preset: disabled)
+     Active: active (running) since Wed 2024-01-17 14:34:10 UTC; 2 days ago
+   Main PID: 6891 (java)
+      Memory: 3.1G
+
+2024-01-19T09:47:32.156Z INFO  [OperationsManager] Task 8f4c2a91-7d3e-4b5f-a2c1-9e8d7f6c5b4a completed successfully
+2024-01-19T09:46:18.423Z WARN  [OperationsManager] Retrying connection to vCenter vcenter.sddc.local (attempt 2/5)
+2024-01-19T09:45:02.891Z INFO  [OperationsManager] Cluster validation passed for domain-1
+2024-01-19T09:44:15.567Z DEBUG [OperationsManager] NSX Manager heartbeat received from 192.168.1.45
+2024-01-19T09:43:44.234Z INFO  [OperationsManager] Backup job scheduled for 2024-01-20 02:00:00 UTC
+
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbmlzdHJhdG9yQHZzcGhlcmUubG9jYWwiLCJleHAiOjE3MDU2NzY
+```
 ---
 
 ## Support Portal and SLA Reference

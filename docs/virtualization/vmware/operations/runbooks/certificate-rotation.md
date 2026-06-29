@@ -82,6 +82,29 @@ Used when: Machine SSL cert is expiring; VMCA root is still valid.
 /usr/lib/vmware-vmca/bin/certificate-manager
 ```
 
+
+```text title="Expected output"
+============================================================
+         VMware Certificate Manager
+============================================================
+
+1. Replace Machine SSL Certificate
+2. Replace VMCA Root Certificate
+3. Replace Solution User Certificates
+4. Replace Machine SSL Certificate with Custom Certificate
+5. Regenerate a new VMCA Root Certificate and all Certificates
+6. Reset all Certificates to default
+7. View Certificate Details
+8. Fix vCenter Certificate and VMCA Mismatches
+9. Quit
+
+Please enter an option [1 to 9]:
+```
+
+!!! warning "Common errors"
+    **`bash: /usr/lib/vmware-vmca/bin/certificate-manager: Permission denied`** — Run the command with `sudo` or ensure your user is in the root or wheel group.
+    **`bash: /usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory`** — Verify the VCSA version supports this tool path; on some versions it may be located at `/usr/lib/vmware-vmafd/bin/certificate-manager` instead.
+    **`Error: Unable to connect to VMware Certificate Authority`** — Ensure the VMware Certificate Authority service is running with `systemctl status vmware-vmafd` and restart it if needed.
 Choose option **3** (Replace Machine SSL certificate with VMCA Certificate):
 - Confirm environment details when prompted
 - The tool replaces the Machine SSL cert, restarts `nginx` and `vsphere-client`
@@ -92,6 +115,15 @@ Verify:
 echo | openssl s_client -connect vcenter.example.local:443 2>/dev/null | openssl x509 -noout -dates
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 10:23:45 2023 GMT
+notAfter=Jan 15 10:23:45 2024 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Ensure the vCenter hostname resolves correctly and the server is reachable on port 443; verify DNS or add an entry to `/etc/hosts`.
+    **`Verify return code: 20 (unable to verify the first certificate)`** — This is a warning about self-signed certificates and does not prevent the dates from displaying; the output above the error message contains the valid certificate dates.
 ---
 
 ### Option B — Renew VMCA root and all dependent certificates
@@ -102,6 +134,28 @@ Used when: VMCA root itself is expiring or needs to be replaced.
 /usr/lib/vmware-vmca/bin/certificate-manager
 ```
 
+
+```text title="Expected output"
+VMware Certificate Manager
+
+1. Generate Certificate Signing Request (CSR)
+2. Generate Self-Signed Certificate
+3. Replace Machine SSL Certificate
+4. Replace VMCA Root Certificate
+5. Replace Solution User Certificates
+6. Regenerate VMCA Root Certificate
+7. Reset all Certificates
+8. List Certificates
+9. View Certificate Details
+10. Quit
+
+Please select an option [1 to 10]:
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to the local certificate store`** — Ensure the VMware Certificate Authority service is running with `systemctl status vmca` and restart if needed.
+    **`Error: Permission denied`** — Run the command with sudo or as root: `sudo /usr/lib/vmware-vmca/bin/certificate-manager`.
+    **`Error: Certificate operation failed: Invalid certificate chain`** — Verify the certificate file is valid and in the correct format (PEM or DER) before attempting replacement.
 Choose option **8** (Reset all certificates) — this:
 1. Generates a new VMCA root
 2. Re-issues all Machine SSL and Solution User certs
@@ -151,6 +205,26 @@ service-control --status --all | grep -v running
 esxcli system certificate list  # run on each host
 ```
 
+
+```text title="Expected output"
+subject=CN = vcenter.example.local, O = example, C = US
+notBefore=Jan 15 10:23:45 2024 GMT
+notAfter=Jan 15 10:23:45 2025 GMT
+
+(no output — all services running)
+
+Certificate:
+   ID: 1
+   Issuer: CN=VMCA,O=example,C=US
+   Issued: 2024-01-15
+   Expires: 2025-01-15
+   Status: Valid
+```
+
+!!! warning "Common errors"
+    **`error:0907D06C:PEM routines:PEM_read_bio:no start line`** — Verify vCenter hostname resolves and port 443 is accessible; check firewall rules and vCenter service status.
+    **`service-control: command not found`** — Run this command directly on the vCenter appliance via SSH or vSphere Client console, not from a remote machine.
+    **`Certificate verification failed: self signed certificate`** — Import the new VMCA root certificate into your OS/browser trust store or temporarily disable certificate validation warnings in your browser settings.
 ---
 
 ## Troubleshooting

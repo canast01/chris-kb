@@ -64,6 +64,34 @@ timedatectl status
 chronyc tracking
 ```
 
+
+```text title="Expected output"
+Local time: Wed 2024-01-17 14:32:45 UTC
+           Universal time: Wed 2024-01-17 14:32:45 UTC
+                 RTC time: Wed 2024-01-17 14:32:45
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+           RTC in local TZ: no
+
+Reference ID    : 91F20D03 (ntp.ubuntu.com)
+Stratum         : 2
+Ref time (UTC)  : Wed Jan 17 14:32:40 2024
+System time offset : 0.000234567 seconds
+Last update     : 12 seconds ago
+RMS offset      : 0.001234 seconds
+Frequency       : -2.456 ppm
+Residual freq   : +0.002 ppm
+Skew            : 0.156 ppm
+Root delay      : 0.045678 seconds
+Root dispersion : 0.012345 seconds
+Update interval : 1024.0 seconds
+Leap status     : Normal
+```
+
+!!! warning "Common errors"
+    **`command not found: timedatectl`** — Install systemd-container or ensure systemd is available on the system.
+    **`command not found: chronyc`** — Install chrony package using `apt-get install chrony` or `yum install chrony`.
 Expected output:
 
 ```text
@@ -93,6 +121,25 @@ ntpq -p
 date
 ```
 
+
+```text title="Expected output"
+NTP Enabled: true
+NTP Servers: 10.20.30.40, 10.20.30.41
+NTP Service Running: true
+
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ 10.20.30.40     129.6.15.28      2 u   64  128  377   12.543    2.341   1.234
+ 10.20.30.41     129.6.15.29      2 u   32  128  377   11.892   -1.876   0.987
+ LOCAL(0)        .LOCL.          10 l  987 1024    1    0.000    0.000   0.001
+
+Thu Oct 12 14:23:47 UTC 2024
+```
+
+!!! warning "Common errors"
+    **`NTP Enabled: false`** — Enable NTP with `esxcli system ntp set --enabled=true` and start the service with `service ntpd start`.
+    **`ntpq: read: Connection refused`** — Start the NTP daemon with `service ntpd start` and verify it is listening on port 123.
+    **`Error: Unable to connect to Management Agent`** — Ensure the ESXi host management network is configured and the management vmkernel interface is active with `esxcli network ip interface list`.
 Expected `ntpq -p` output:
 
 ```text
@@ -115,6 +162,26 @@ get system clock
 get ntp-server
 ```
 
+
+```text title="Expected output"
+System Clock:
+  Current Time: 2024-01-15 14:32:47 UTC
+  Timezone: UTC
+  NTP Synchronized: yes
+  Last Sync: 2024-01-15 14:32:15 UTC
+
+NTP Server:
+  Primary: ntp.vmware.com (216.239.35.0)
+  Secondary: time.google.com (216.239.35.4)
+  Tertiary: pool.ntp.org (203.0.113.42)
+  Status: synchronized
+  Stratum: 2
+  Offset: +0.002ms
+```
+
+!!! warning "Common errors"
+    **`command not found: get`** — Use the correct CLI tool (e.g., `timedatectl` on Linux or `ntpq -p` for NTP queries) or access the management interface with proper credentials.
+    **`Permission denied`** — Run the command with appropriate privileges using `sudo` or log in as a user with administrative access to the system.
 Look for: system clock time matching vCenter within 60 seconds, and NTP servers matching the environment's authoritative sources.
 
 ---
@@ -130,6 +197,17 @@ esxcli system ntp set --enabled true
 ntpdate -u ntp1.domain.local
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+21 Nov 12:34:56 ntpdate[2048]: adjust time server 10.42.8.15 offset 0.002341 sec
+```
+
+!!! warning "Common errors"
+    **`ntpdate: no servers can be used, exiting`** — Verify NTP server hostnames resolve correctly with `nslookup ntp1.domain.local` and confirm network connectivity to the NTP servers.
+    **`Error: Unknown option or flag '--server'`** — Use `esxcli system ntp set --servers=ntp1.domain.local --servers=ntp2.domain.local` (with `=` syntax) on ESXi 6.5+, or check your ESXi version with `vmware -v`.
 Confirm the fix:
 
 ```bash
@@ -137,6 +215,20 @@ ntpq -p
 date
 ```
 
+
+```text title="Expected output"
+remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*ntp.ubuntu.com  17.253.34.125    2 u   64  128  377   45.234   -2.341   1.203
++time.google.com 216.239.35.12    2 u   32  128  377   38.921    1.456   0.892
+-ntp.nist.gov    132.163.96.1     2 u  102  128  377   52.103   -5.234   2.145
++pool.ntp.org    203.0.113.45      3 u   48  128  377   61.234    0.789   1.567
+Thu Mar 14 09:47:23 UTC 2024
+```
+
+!!! warning "Common errors"
+    **`ntpq: read: Connection refused`** — Ensure ntpd or systemd-timesyncd is running with `systemctl start ntp` or `systemctl start systemd-timesyncd`.
+    **`command not found: ntpq`** — Install ntp utilities with `apt-get install ntp` or `yum install ntp`.
 Repeat for every ESXi host in the cluster — NTP must be applied per host unless a Host Profile enforces it cluster-wide.
 
 ---
@@ -152,6 +244,16 @@ timedatectl set-ntp true
 chronyc makestep
 ```
 
+
+```text title="Expected output"
+System clock synchronized.
+200 sources online.
+Leap status: normal.
+```
+
+!!! warning "Common errors"
+    **`Failed to set ntp: Permission denied`** — Run the commands with `sudo` or as root user.
+    **`chronyd is not running`** — Start the chrony service with `sudo systemctl start chronyd` before running `chronyc makestep`.
 `chronyc makestep` forces an immediate step adjustment rather than the gradual slew — without this, SSL failures continue for minutes or hours while drift corrects naturally.
 
 Confirm:
@@ -161,6 +263,34 @@ chronyc tracking
 timedatectl status
 ```
 
+
+```text title="Expected output"
+reference id    : 91.189.89.198 (ntp.ubuntu.com)
+stratum         : 2
+ref time (UTC)  : Fri Dec 15 14:32:18 2023
+system time     : 0.000234567 seconds fast of NTP time
+last update     : 42 seconds ago
+RMS offset      : 0.001234 seconds
+frequency       : -12.345 ppm
+residual freq   : +0.123 ppm
+skew            : 0.456 ppm
+root delay      : 0.045678 seconds
+root dispersion : 0.123456 seconds
+update interval : 64.0 seconds
+leap status     : Normal
+
+               Local time: Fri 2023-12-15 14:32:18 UTC
+           Universal time: Fri 2023-12-15 14:32:18 UTC
+                 RTC time: Fri 2023-12-15 14:32:18
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+           RTC in local TZ: no
+```
+
+!!! warning "Common errors"
+    **`chronyc: command not found`** — Install chrony with `apt-get install chrony` or `yum install chrony` depending on your distribution.
+    **`System clock synchronized: no`** — Wait for NTP synchronization to complete (typically 1-5 minutes) or check that your NTP server is reachable with `chronyc sources`.
 ---
 
 ## 7. Fix NTP on NSX Manager
@@ -173,12 +303,35 @@ set ntp-server ntp2.domain.local
 restart service ntpd
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Unknown command: set`** — Use the correct CLI context (e.g., `configure` mode in vSphere or ESXi) before issuing `set` commands.
+    **`Unknown command: restart`** — Use the correct restart syntax for your platform, such as `service ntpd restart` on ESXi or `/etc/init.d/ntpd restart` on Linux.
 Verify:
 
 ```bash
 get system clock
 ```
 
+
+```text title="Expected output"
+System clock information:
+Current time: 2024-01-15 14:32:47 UTC
+Hardware clock: 2024-01-15 14:32:45 UTC
+Time zone: UTC
+NTP status: synchronized
+Last NTP sync: 2024-01-15 14:32:10 UTC
+Clock source: kvm-clock
+Frequency adjustment: +0.000 ppm
+```
+
+!!! warning "Common errors"
+    **`command not found: get`** — Use the correct system command such as `timedatectl`, `date`, or `hwclock` depending on your OS and what clock information you need.
+    **`timedatectl: command not found`** — Install the systemd package or use alternative commands like `date` for software clock or `hwclock` for hardware clock on systems without timedatectl.
 Look for: clock time within 60 seconds of vCenter after `ntpd` restarts.
 
 ---
@@ -191,6 +344,17 @@ If SSO token errors persist after NTP is corrected, stale tokens remain invalid 
 service-control --restart vmware-stsd
 ```
 
+
+```text title="Expected output"
+Stopping VMware Security Token Service...
+Waiting for services to stop...
+Starting VMware Security Token Service...
+VMware Security Token Service started successfully.
+```
+
+!!! warning "Common errors"
+    **`service-control: command not found`** — Ensure you are running this command on a vCenter Server or ESXi host where VMware tools are installed, or use the full path `/usr/lib/vmware-vmafd/bin/service-control`.
+    **`Error: Failed to stop service vmware-stsd`** — Check that the service exists and is running with `service-control --status vmware-stsd`, and verify you have root or sudo privileges.
 Wait 60–90 seconds after restart before attempting login — STS generates new signing keys on startup, which invalidates all cached tokens; this is expected behaviour.
 
 ---
@@ -208,6 +372,14 @@ If a host still fails after NTP is configured, force a sync:
 ntpdate -u ntp1.domain.local
 ```
 
+
+```text title="Expected output"
+4 Dec 12:34:56 ntpdate[2847]: adjust time server 192.168.1.50 offset 0.045821 sec
+```
+
+!!! warning "Common errors"
+    **`ntpdate[2847]: no server suitable for synchronization found`** — Verify the NTP server hostname resolves and is reachable with `ping ntp1.domain.local` and `nc -zv ntp1.domain.local 123`.
+    **`ntpdate: command not found`** — Install NTP utilities with `apt-get install ntp` (Debian/Ubuntu) or `yum install ntp` (RHEL/CentOS), or use `chronyc makestep` on systems with chrony instead.
 Then re-run the health check from vCenter.
 
 ---

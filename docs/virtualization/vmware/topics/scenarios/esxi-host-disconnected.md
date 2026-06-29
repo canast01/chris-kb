@@ -73,6 +73,23 @@ Ping the host's vmk0 IP from a jump host on the management VLAN to determine whe
 ping <esxi-mgmt-ip>
 ```
 
+
+```text title="Expected output"
+PING 192.168.1.42 (192.168.1.42) 56(84) bytes of data.
+64 bytes from 192.168.1.42: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 192.168.1.42: icmp_seq=2 ttl=64 time=1.89 ms
+64 bytes from 192.168.1.42: icmp_seq=3 ttl=64 time=2.12 ms
+64 bytes from 192.168.1.42: icmp_seq=4 ttl=64 time=1.95 ms
+^C
+--- 192.168.1.42 statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/stddev = 1.89/2.07/2.34/0.18 ms
+```
+
+!!! warning "Common errors"
+    **`ping: unknown host <esxi-mgmt-ip>`** — Replace `<esxi-mgmt-ip>` with the actual ESXi management IP address (e.g., `192.168.1.42`).
+    **`From 192.168.1.1 icmp_seq=1 Destination Host Unreachable`** — Verify the ESXi host is powered on, the management network is connected, and firewall rules allow ICMP traffic.
+    **`ping: sendto: No route to host`** — Confirm the ESXi management IP is on the same subnet or that routing is properly configured between your admin workstation and the ESXi management network.
 - **Reachable** → host is up; issue is vpxa/hostd or SSL.
 - **Unreachable** → network is down or host crashed; use iDRAC/iLO console.
 
@@ -89,6 +106,27 @@ tail -50 /var/log/vpxa.log
 tail -50 /var/log/hostd.log
 ```
 
+
+```text title="Expected output"
+vpxa (pid 2847) is running...
+hostd (pid 3124) is running...
+2024-01-15 14:32:18.547 [7F2A4C1B9700 info 'Libs' opID=52d41e22] VpxaHalVmomi_GetConfig: Entering
+2024-01-15 14:32:19.123 [7F2A4C1B9700 info 'Hostd' opID=52d41e22] Config update: vMotion enabled
+2024-01-15 14:32:20.445 [7F2A4C1B9700 warn 'Libs' opID=52d41e22] Certificate expiry in 45 days
+2024-01-15 14:32:21.678 [7F2A4C1B9700 info 'Libs' opID=52d41e22] Connection to vCenter established
+2024-01-15 14:32:22.891 [7F2A4C1B9700 info 'Hostd' opID=52d41e22] Inventory sync completed
+...
+2024-01-15 14:33:45.234 [7F2A4C1B9700 info 'Libs' opID=52d41e22] Heartbeat received from vCenter
+2024-01-15 14:33:46.567 [7F2A4C1B9700 info 'Hostd' opID=52d41e22] VM snapshot operation completed
+2024-01-15 14:33:47.890 [7F2A4C1B9700 info 'Libs' opID=52d41e22] Storage device scan completed
+2024-01-15 14:33:48.123 [7F2A4C1B9700 info 'Hostd' opID=52d41e22] NTP synchronization successful
+2024-01-15 14:33:49.456 [7F2A4C1B9700 info 'Libs' opID=52d41e22] All services operational
+```
+
+!!! warning "Common errors"
+    **`vpxa (pid XXXX) is running... hostd (pid XXXX) is running...`** — Both services are healthy; if either shows "is stopped," restart with `/etc/init.d/vpxa start` and `/etc/init.d/hostd start`.
+    **`tail: cannot open '/var/log/vpxa.log' for reading: Permission denied`** — Run the command with `sudo` or as root to access ESXi host logs.
+    **`[7F2A4C1B9700 error 'Hostd'] Connection to vCenter failed: timeout`** — Verify network connectivity to vCenter and check firewall rules on port 443.
 If an agent is stopped or crashed, restart it:
 
 ```bash
@@ -96,6 +134,17 @@ If an agent is stopped or crashed, restart it:
 /etc/init.d/hostd restart
 ```
 
+
+```text title="Expected output"
+Stopping vpxa:                                             [  OK  ]
+Starting vpxa:                                             [  OK  ]
+Stopping hostd:                                            [  OK  ]
+Starting hostd:                                            [  OK  ]
+```
+
+!!! warning "Common errors"
+    **`vpxa: unrecognized service`** — Verify the ESXi host is running and the vpxa service exists by checking `/etc/init.d/vpxa` file permissions and presence.
+    **`hostd: command not found`** — Ensure you are running these commands directly on the ESXi host (not a remote system) with root privileges.
 Wait 60–90 seconds, then attempt the vCenter Reconnect action again.
 
 ---
@@ -110,6 +159,26 @@ esxcli network ip route ipv4 list
 esxcli system hostname get
 ```
 
+
+```text title="Expected output"
+Name  IPv4 Address      IPv4 Netmask      IPv4 Broadcast    Address Type  DHCP DNS
+----  ---------------   ----------------  ----------------  -----------   ---------
+vmk0  192.168.1.105     255.255.255.0     192.168.1.255     STATIC        false
+vmk1  10.20.30.50       255.255.255.0     10.20.30.255      STATIC        false
+vmk2  172.16.0.100      255.255.255.0     172.16.0.255      DHCP          true
+
+Destination     Netmask         Gateway         Interface
+-----------     -------         -------         ---------
+0.0.0.0         0.0.0.0         192.168.1.1     vmk0
+192.168.1.0     255.255.255.0   0.0.0.0         vmk0
+10.20.30.0      255.255.255.0   0.0.0.0         vmk1
+
+Current Hostname: esx-prod-01.lab.local
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace network ip interface ipv4 get`** — Verify esxcli is available and you are running ESXi 5.0 or later; older versions use different command syntax.
+    **`Error: Unable to connect to the host`** — Ensure SSH is enabled on the ESXi host and your user account has sufficient privileges (typically root or a user in the administrators group).
 Look for: vmk0 shows the correct static IP, default gateway is present, FQDN matches what vCenter has registered. Any mismatch prevents reconnection even after agent restarts.
 
 ---
@@ -124,12 +193,42 @@ cat /etc/resolv.conf
 esxcli network ip dns server list
 ```
 
+
+```text title="Expected output"
+Server:		10.0.0.1
+Address:	10.0.0.1#53
+
+Name:	vcenter.domain.local
+Address: 192.168.1.50
+
+# Generated by NetworkManager
+nameserver 10.0.0.1
+nameserver 10.0.0.2
+search domain.local
+
+IPv4 DNS Servers
+   10.0.0.1
+   10.0.0.2
+```
+
+!!! warning "Common errors"
+    **`nslookup: can't resolve 'vcenter.domain.local': No address associated with hostname`** — Verify the DNS server is reachable and the hostname exists in DNS; check `/etc/resolv.conf` has correct nameserver entries.
+    **`cat: /etc/resolv.conf: No such file or directory`** — This file may not exist on some ESXi hosts; use `esxcli network ip dns server list` instead to verify DNS configuration.
+    **`Could not connect to Management Agent on localhost`** — Run the commands directly on the ESXi host via SSH or vSphere Client console, not from a remote system without proper credentials.
 Correct a missing DNS server:
 
 ```bash
 esxcli network ip dns server add --server <dns-ip>
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or parameter: --server`** — Use the correct syntax `esxcli network ip dns server add -a <dns-ip>` (the flag is `-a`, not `--server`).
+    **`Error: Connect to localhost failed. Connection refused`** — Ensure you are running this command directly on an ESXi host with SSH enabled, not from a remote vSphere client; alternatively, use `esxcli -s <host-ip> -u root -p <password>` to target the host remotely.
 Look for: `nslookup` returns the correct vCenter IP; no "NXDOMAIN" or timeout errors.
 
 ---
@@ -144,6 +243,25 @@ ntpq -p
 date
 ```
 
+
+```text title="Expected output"
+NTP Enabled: true
+NTP Servers: 10.20.30.40, 10.20.30.41
+NTP Service Running: true
+
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ 10.20.30.40     .LOCL.          1 u   64   64  377    2.341   -0.523   1.204
+ 10.20.30.41     .LOCL.          1 u   62   64  377    2.156    0.412   0.987
+ ntp.ubuntu.com  193.67.79.202   2 u   58   64  377   18.523    1.234   2.156
+
+Thu Mar 14 09:47:23 UTC 2024
+```
+
+!!! warning "Common errors"
+    **`NTP Enabled: false`** — Enable NTP with `esxcli system ntp set --enabled=true` and start the service with `systemctl start ntpd`.
+    **`reach   0`** — Verify network connectivity to NTP servers and check firewall rules allowing UDP port 123 outbound from the ESXi host.
+    **`command not found: ntpq`** — Install the ntp client package or use `esxcli system ntp get` alone if ntpq is unavailable on your ESXi version.
 Look for: offset column in `ntpq -p` output beyond ±60,000 ms (60 seconds) from the reference server. Compare `date` output on the host with vCenter system time to confirm drift.
 
 Fix NTP if drifted — see the
@@ -160,6 +278,20 @@ tail -100 /var/log/hostd.log | grep -iE "error|ssl|certificate|timeout|refused"
 tail -100 /var/log/vpxa.log  | grep -iE "error|ssl|certificate|timeout|refused"
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:42:33.847Z [7F2A1B4C] [ssl] Certificate validation failed for peer 192.168.1.50
+2024-01-15T09:43:01.221Z [7F2A1B4D] [error] Connection timeout to vCenter server vc.internal.local:443
+2024-01-15T09:44:15.556Z [7F2A1B4E] [ssl] Unable to load certificate chain from /etc/vmware/ssl/rui.crt
+2024-01-15T09:45:22.889Z [7F2A1B4F] [error] SSL_ERROR_HANDSHAKE_FAILURE_ALERT: peer refused connection
+2024-01-15T09:46:08.112Z [7F2A1B50] [certificate] Certificate expires in 45 days
+2024-01-15T09:47:33.445Z [7F2A1B51] [error] Timeout waiting for hostd response after 30 seconds
+2024-01-15T09:48:19.778Z [7F2A1B52] [ssl] TLS version mismatch: client requested TLSv1.0, server requires TLSv1.2
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/var/log/hostd.log' for reading: No such file or directory`** — Verify the ESXi host is running and the log file path is correct; check if you're on the correct host or if logs have been rotated.
+    **`grep: (standard input) is empty`** — This occurs when the log file exists but has no matching entries; it's not an error condition, just no matching lines found.
 Common patterns:
 
 ```text
@@ -181,6 +313,17 @@ Check NSX Manager → **Fabric → Transport Nodes → select host**. If state r
 /etc/init.d/nsx-mpa restart
 ```
 
+
+```text title="Expected output"
+Stopping NSX Operations Agent...                                    [  OK  ]
+Starting NSX Operations Agent...                                    [  OK  ]
+Stopping NSX Message Processing Agent...                           [  OK  ]
+Starting NSX Message Processing Agent...                           [  OK  ]
+```
+
+!!! warning "Common errors"
+    **`/etc/init.d/nsx-opsagent: No such file or directory`** — Verify NSX is installed on this host and the service paths are correct with `ls -la /etc/init.d/ | grep nsx`.
+    **`Job for nsx-opsagent.service failed because the control process exited with error code.`** — Check service logs with `journalctl -u nsx-opsagent -n 50` to identify the underlying startup failure.
 Look for: transport node state transitions to "Up" in NSX Manager within 60–90 seconds.
 
 ---

@@ -87,6 +87,21 @@ esxcli software vib list | grep -iE "esx-vsip|esx-vxlan|vmware-nsx"
 esxcli software vib list | grep -i nsx
 ```
 
+
+```text title="Expected output"
+Name                                 Version                Install Date
+esx-vsip                             6.7.0-20191015        2024-01-15
+esx-vxlan                            6.7.0-20191015        2024-01-15
+vmware-nsx-esx                       6.8.1-15842123        2024-03-22
+vmware-nsx-esx-vib                   6.8.1-15842123        2024-03-22
+vmware-nsx-manager-proxy             6.8.1-15842123        2024-03-22
+esx-vxlan-mc                         6.7.0-20191015        2024-01-15
+```
+
+!!! warning "Common errors"
+    **`grep: (standard input): No such file or directory`** — Verify esxcli is installed and the host has network connectivity to the vCenter server.
+    **`Error: Unknown command or namespace`** — Ensure you are running this command directly on an ESXi host with root privileges, not from a remote vCenter client.
+    **`VIB esx-vsip is present but vmware-nsx-esx is missing`** — Uninstall all NSX-V VIBs completely before attempting NSX-T installation using `esxcli software vib remove -n esx-vsip esx-vxlan`.
 NSX-V VIBs (`esx-vsip`, `esx-vxlan`) are incompatible with NSX-T and must be removed before retrying.
 
 ---
@@ -97,6 +112,14 @@ NSX-V VIBs (`esx-vsip`, `esx-vxlan`) are incompatible with NSX-T and must be rem
 esxcli software acceptance get
 ```
 
+
+```text title="Expected output"
+Current Acceptance Level: CommunitySupported
+```
+
+!!! warning "Common errors"
+    **`Could not connect to the host. Verify the host name, port, and credentials.`** — Ensure you are connected to the ESXi host via `esxcli` or vSphere CLI, or use the `-s <hostname>` flag with valid credentials.
+    **`Unknown command or namespace software acceptance get.`** — Verify you are running this command on ESXi 5.0 or later; older versions do not support the acceptance level feature.
 NSX-T VIBs are `PartnerSupported` — the host acceptance level must be `PartnerSupported` or lower
 (i.e., `CommunitySupported`). If the host is set to `VMwareCertified` or `VMwareAccepted`, NSX VIBs
 will be rejected:
@@ -105,6 +128,14 @@ will be rejected:
 esxcli software acceptance set --level PartnerSupported
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or parameter: --level`** — Verify the ESXi version supports this parameter; older versions use `--set-level` instead.
+    **`Error: Permission denied`** — Run the command as root or with appropriate vSphere privileges; use `sudo` or execute from an account with Administrator role.
 ---
 
 ## 4. Verify Port Reachability
@@ -120,6 +151,19 @@ esxcli network diag ping -H <nsx-manager-vip> -I vmk0 -c 4
 nc -z <nsx-manager-vip> 1235
 ```
 
+
+```text title="Expected output"
+Connection to 192.168.1.50 443 port [tcp/https] succeeded!
+PING 192.168.1.50 from 192.168.1.100 via vmk0
+Sent: 4 Received: 4 Lost: 0%
+round-trip min/avg/max/stddev = 2.145/2.341/2.687/0.201 ms
+Connection to 192.168.1.50 1235 port [tcp/*] succeeded!
+```
+
+!!! warning "Common errors"
+    **`Connection to 192.168.1.50 443 port [tcp/https] failed: Connection refused`** — Verify NSX Manager is running and listening on port 443, or check firewall rules between the ESXi host and NSX Manager VIP.
+    **`PING 192.168.1.50 from 192.168.1.100 via vmk0 ... Sent: 4 Received: 0 Lost: 100%`** — Confirm vmk0 management network connectivity and that the NSX Manager VIP is reachable from the ESXi host's management network.
+    **`Connection to 192.168.1.50 1235 port [tcp/*] failed: Connection refused`** — Ensure NSX Manager messaging service is active and the host has not been disconnected from the NSX cluster; check NSX Manager logs for service errors.
 If `nc` is unavailable on the ESXi host, check from a jump host on the same management network. Any
 failure here points to a firewall or routing issue rather than a VIB conflict.
 
@@ -131,6 +175,23 @@ failure here points to a firewall or routing issue rather than a VIB conflict.
 grep -iE "error|fail|conflict|reject" /var/log/esxupdate.log | tail -40
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:23:45.123Z [ERROR] VIB installation failed for esx-base: Dependency conflict detected
+2024-01-15T09:24:12.456Z [WARN] Staging area validation: 2 packages marked for removal
+2024-01-15T09:25:03.789Z [ERROR] Rollback initiated: Previous state restore in progress
+2024-01-15T09:25:45.012Z [INFO] Conflict resolution: esx-ui version mismatch (7.0.1 vs 7.0.2)
+2024-01-15T09:26:22.345Z [ERROR] VIB signature validation failed for net-driver-bnx2: Certificate expired
+2024-01-15T09:27:01.678Z [WARN] Installation rejected: Insufficient disk space in /boot (412MB required, 389MB available)
+2024-01-15T09:27:58.901Z [ERROR] Metadata conflict: Duplicate VIB entries detected in staging
+2024-01-15T09:28:34.234Z [INFO] Retry attempt 1 of 3: Redownloading failed component
+2024-01-15T09:29:15.567Z [ERROR] Installation failed: Incompatible hardware detected (CPU microcode update required)
+2024-01-15T09:30:02.890Z [WARN] Rejection reason: Maintenance mode not enabled before update
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/esxupdate.log: No such file or directory`** — Run this command on an ESXi host directly (via SSH or DCUI console), not from vCenter; the log only exists on ESXi systems.
+    **`Permission denied`** — Execute the command as root or with sudo; standard users cannot read ESXi system logs.
 Representative failure entries:
 
 ```text
@@ -155,12 +216,32 @@ Set-VMHost -VMHost <host-fqdn> -State Maintenance
 esxcli system maintenanceMode set --enable true
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Connect-VIServer : Cannot find a valid certificate.`** — Ensure vCenter SSL certificate is valid or use `-SkipCertificateCheck` parameter in PowerCLI connection.
+    **`Error: Unable to parse arguments from inputs: Unknown option --enable`** — Verify ESXi version supports the flag syntax; some older versions use `esxcli system maintenanceMode set -e true` instead.
 Remove NSX-V VIBs:
 
 ```bash
 esxcli software vib remove -n esx-vsip -n esx-vxlan --maintenance-mode
 ```
 
+
+```text title="Expected output"
+Removal Result
+   Message: The following VIBs were successfully removed:
+   esx-vsip-7.0.3-20.16.15939701
+   esx-vxlan-7.0.3-20.16.15939701
+   Reboot Required: true
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option: --maintenance-mode`** — Use `--force` instead, or ensure the host is already in maintenance mode before running the command.
+    **`Error: VIB esx-vsip not found`** — Verify the exact VIB name with `esxcli software vib list` and use the correct identifier.
 ### Remove Stale NSX-T VIBs (Partial Install)
 
 If a previous preparation attempt left partial NSX-T VIBs:
@@ -174,6 +255,24 @@ esxcli software vib remove \
   --maintenance-mode
 ```
 
+
+```text title="Expected output"
+Removal Result
+   Message: The following VIBs were successfully removed:
+   nsx-aggservice 6.4.10.1-28045389
+   nsx-context-mux 6.4.10.1-28045389
+   nsx-exporter 6.4.10.1-28045389
+   nsx-sfhc 6.4.10.1-28045389
+
+   Reboot Required: true
+```
+
+!!! warning "Common errors"
+    **`Error: The host is not in maintenance mode. Please enter maintenance mode before removing VIBs.`** — Run `esxcli system maintenanceMode set --enable true` before executing the removal command.
+    
+    **`Error: VIB nsx-aggservice could not be removed. VIB is in use by running processes.`** — Stop all NSX services with `systemctl stop nsxd` and ensure no VMs are actively using NSX networking before retrying.
+    
+    **`Error: Insufficient space in /scratch partition. Required: 512MB, Available: 128MB.`** — Free up space on the ESXi host's /scratch partition or use `esxcli software vib remove --dry-run` to verify requirements before removal.
 After removal, reboot the host to clear any loaded kernel modules:
 
 ```bash
@@ -186,6 +285,14 @@ reboot
 esxcli system maintenanceMode set --enable false
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or parameter: --enable`** — Use `--enable=false` (with equals sign) instead of `--enable false` (with space).
+    **`Error: The object or item could not be found on the specified datastore.`** — Ensure the ESXi host is not in a critical state; try reconnecting the host in vCenter before disabling maintenance mode.
 In NSX Manager: **System → Fabric → Hosts → `<host>` → Actions → Force Sync**
 
 Monitor the preparation task in NSX Manager — it typically completes within 5–10 minutes.
@@ -220,6 +327,18 @@ Direction: Outbound from hosts
 esxcli software vib list | grep -i nsx
 ```
 
+
+```text title="Expected output"
+nsx-common                                1.0.0-20.5.1.1                    VMware    VisorModuleForCertification
+nsx-esg                                   1.0.0-20.5.1.1                    VMware    VisorModuleForCertification
+nsx-vxlan                                 1.0.0-20.5.1.1                    VMware    VisorModuleForCertification
+nsx-vsip                                  1.0.0-20.5.1.1                    VMware    VisorModuleForCertification
+nsx-netcpa                                1.0.0-20.5.1.1                    VMware    VisorModuleForCertification
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Run the command directly on an ESXi host via SSH or vSphere Client console, not from a remote management station.
+    **`(empty output / no NSX VIBs listed)`** — NSX VIBs are not installed on this host; use `esxcli software vib install` with the NSX bundle to install them.
 Expected VIBs (version strings vary by NSX release):
 
 ```text
@@ -241,6 +360,22 @@ esxcli network ip interface list | grep -i tep
 vmkping -I <tep-vmkernel> <peer-tep-ip> -c 4
 ```
 
+
+```text title="Expected output"
+Name                           PortBinding            DhcpEnabled   IPv4Address      IPv6Address
+vmk10                          vxlan                  false         172.16.50.11     ::1
+Reply from 172.16.50.12: bytes=60 time=2.45ms TTL=64
+Reply from 172.16.50.12: bytes=60 time=2.31ms TTL=64
+Reply from 172.16.50.12: bytes=60 time=2.48ms TTL=64
+Reply from 172.16.50.12: bytes=60 time=2.39ms TTL=64
+
+--- PING Statistics ---
+Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+```
+
+!!! warning "Common errors"
+    **`vmkping: Unknown host <peer-tep-ip>`** — Replace `<peer-tep-ip>` with the actual IP address of the peer TEP VMkernel adapter (e.g., 172.16.50.12).
+    **`Name                           PortBinding            DhcpEnabled   IPv4Address      IPv6Address` (no TEP adapter listed)** — Create the TEP VMkernel adapter on the vxlan port binding using `esxcli network ip interface add -i vmk10 -p vxlan -I 172.16.50.11 -N 255.255.255.0`.
 ---
 
 ## 8. Prevention

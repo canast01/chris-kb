@@ -72,6 +72,22 @@ curl -sk -u admin:<password> \
   | python3 -m json.tool | grep -E '"display_name"|"status"'
 ```
 
+
+```text title="Expected output"
+"display_name": "edge-node-01.domain.local",
+"status": "UP",
+"display_name": "edge-node-02.domain.local",
+"status": "UP",
+"display_name": "edge-node-03.domain.local",
+"status": "DOWN",
+"display_name": "edge-node-04.domain.local",
+"status": "UP",
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if error persists, verify NSX Manager hostname matches certificate CN).
+    **`jq: command not found`** — Install `python3-json-tool` or use `python3 -m json.tool` instead of piping to `jq`.
+    **`401 Unauthorized`** — Verify NSX Manager admin credentials and ensure the user has API access permissions in NSX Manager role-based access control.
 ---
 
 ## 3. Check BGP Neighbor State on the T0 Gateway
@@ -107,6 +123,38 @@ get bgp neighbor summary
 get route
 ```
 
+
+```text title="Expected output"
+Logical Router UUID                          Name                    Status
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx         uplink-vrf             up
+yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy         tenant-vrf-prod        up
+zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz         tenant-vrf-dev         down
+
+Switched to VRF: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+BGP neighbor 10.0.0.1
+  Remote AS: 65001
+  State: Established
+  Uptime: 2d 14h 22m
+  Messages: RX 4521 TX 4518
+
+BGP neighbor 10.0.0.2
+  Remote AS: 65001
+  State: Established
+  Uptime: 1d 8h 15m
+  Messages: RX 3847 TX 3849
+
+Codes: C - connected, S - static, B - BGP, O - OSPF
+Destination          Gateway            Metric Type
+0.0.0.0/0            10.0.0.1           0      B
+10.0.0.0/24          10.0.0.254         0      C
+192.168.1.0/24       10.0.0.1           100    B
+172.16.0.0/16        10.0.0.2           200    B
+```
+
+!!! warning "Common errors"
+    **`invalid vrf uuid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`** — Verify the UUID is copied exactly from the logical-routers output and matches an active VRF.
+    **`bgp: neighbor not configured`** — Ensure BGP is enabled on the uplink VRF and neighbors are defined in the NSX Manager configuration.
 Look for: **Established** state and a non-zero **PfxRcd** (prefixes received from upstream router).
 
 ```bash
@@ -117,6 +165,31 @@ ping <upstream-router-ip> interface <uplink-interface-name>
 get interfaces
 ```
 
+
+```text title="Expected output"
+PING <upstream-router-ip> from <uplink-interface-name>: 56 data bytes
+64 bytes from 192.168.1.1: icmp_seq=0 ttl=64 time=2.341 ms
+64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=2.156 ms
+64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=2.289 ms
+64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=2.412 ms
+----192.168.1.1 STATISTICS----
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 2.156/2.300/2.412/0.099 ms
+
+Interface: eth0 (uplink-interface-name)
+  Status: up
+  Speed: 10000 Mbps
+  MTU: 1500
+  MAC: 00:50:56:a1:2e:f4
+  IP: 10.20.30.45/24
+  RX packets: 1245678 RX bytes: 987654321
+  TX packets: 987654 TX bytes: 654321098
+```
+
+!!! warning "Common errors"
+    **`ping: unknown host <upstream-router-ip>`** — Replace `<upstream-router-ip>` with the actual IP address of your upstream router (e.g., `ping 192.168.1.1 interface eth0`).
+    **`Interface <uplink-interface-name> not found`** — Verify the uplink interface name exists by running `get interfaces` first and use the correct interface identifier.
+    **`Command not found: get interfaces`** — Use the correct CLI syntax for your hypervisor platform (e.g., `ip link show` for Linux or `show interfaces` for NSX edge nodes).
 ---
 
 ## 5. Check TEP Connectivity — Edge to ESXi Host Tunnels
@@ -132,12 +205,50 @@ get tunnel-ports
 get logical-switch port <port-id>
 ```
 
+
+```text title="Expected output"
+Port                          State    Encapsulation
+nsx-tunnel-1                  UP       GENEVE
+nsx-tunnel-2                  UP       GENEVE
+nsx-tunnel-3                  DOWN     GENEVE
+nsx-tunnel-4                  UP       GENEVE
+nsx-tunnel-5                  UP       GENEVE
+
+Logical Switch Port Details:
+Port ID: nsx-tunnel-1
+State: UP
+Encapsulation: GENEVE
+Remote TEP: 192.168.100.45
+Local TEP: 192.168.100.12
+MTU: 1600
+```
+
+!!! warning "Common errors"
+    **`Port <port-id> not found`** — Verify the port ID exists by running `get tunnel-ports` first and use the exact port name from the output.
+    **`Command not found: get`** — Ensure you are connected to the NSX Manager or edge node CLI; reconnect with `ssh admin@<nsx-manager-ip>` and authenticate.
 ```bash
 # From an ESXi host — verify TEP reachability to the edge node TEP IP
 vmkping -I vmk10 <edge-tep-ip> -d -s 8972
 # vmk10 = TEP VMkernel interface (check your environment for the correct vmk)
 ```
 
+
+```text title="Expected output"
+PING 192.168.100.45 (192.168.100.45): 8972 data bytes
+8980 bytes from 192.168.100.45: icmp_seq=0 ttl=64 time=2.341 ms
+8980 bytes from 192.168.100.45: icmp_seq=1 ttl=64 time=2.156 ms
+8980 bytes from 192.168.100.45: icmp_seq=2 ttl=64 time=2.298 ms
+8980 bytes from 192.168.100.45: icmp_seq=3 ttl=64 time=2.412 ms
+8980 bytes from 192.168.100.45: icmp_seq=4 ttl=64 time=2.187 ms
+--- 192.168.100.45 statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max = 2.156/2.278/2.412 ms
+```
+
+!!! warning "Common errors"
+    **`Unable to route to 192.168.100.45`** — Verify the edge TEP IP is correct and the ESXi host has network connectivity to the TEP subnet; check routing tables with `esxcli network ip route ipv4 list`.
+    **`Cannot find vmk10 interface`** — Confirm the correct TEP VMkernel interface name on your ESXi host by running `esxcli network ip interface list` and adjust the `-I` parameter accordingly.
+    **`100% packet loss`** — Check that the edge node TEP interface is up and reachable; verify firewall rules and VLAN configuration allow traffic between the ESXi host and edge TEP.
 Look for: failed large-packet pings between ESXi hosts and the edge node TEP IPs — this points to the underlay VLAN carrying TEP traffic; check the physical switch port.
 
 ---
@@ -181,6 +292,23 @@ show bgp ipv4 unicast summary | grep <edge-uplink-ip>
 show interface eth1/10 status
 ```
 
+
+```text title="Expected output"
+BGP router identifier 10.20.1.1, local AS number 65001
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.50.2.5       4 65002   45821   45819   128456    0    0 5w2d        156
+10.50.2.6       4 65002   45820   45818   128456    0    0 5w2d        152
+
+Eth1/10 is up
+admin@nexus-01# show interface eth1/10 status
+
+Port          Name               Status    Vlan  Duplex Speed Type
+Eth1/10       NSX-Edge-Uplink    connected  trunk   full  10G Ethernet
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the exact interface name with `show interface brief` and use the correct format (e.g., `Ethernet1/10` instead of `eth1/10`).
+    **`BGP neighbor not found in output`** — Confirm the edge uplink IP is correct and that BGP peering is established with `show bgp ipv4 unicast neighbors`.
 ---
 
 ## Common Mistakes

@@ -163,6 +163,34 @@ curl -sk -X GET \
   | jq '.alerts | sort_by(.startTimeEpoch) | .[] | {name: .name, object: .resourceId, time: .startTimeEpoch}'
 ```
 
+
+```text title="Expected output"
+{
+  "name": "vSAN Disk Group Health Degraded",
+  "object": "urn:vmomi:InventoryItem:domain-c23:DOMAIN\\ClusterA",
+  "time": 1699564800
+}
+{
+  "name": "ESXi Host Memory Pressure Critical",
+  "object": "urn:vmomi:InventoryItem:host-45:DOMAIN\\esx-prod-02.domain.local",
+  "time": 1699568400
+}
+{
+  "name": "VM CPU Ready Time Exceeds Threshold",
+  "object": "urn:vmomi:InventoryItem:vm-156:DOMAIN\\prod-db-vm-01",
+  "time": 1699572000
+}
+{
+  "name": "Datastore Latency High",
+  "object": "urn:vmomi:InventoryItem:datastore-89:DOMAIN\\ds-tier1-ssd",
+  "time": 1699575600
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify `ariaops.domain.local` hostname resolves correctly).
+    **`jq: parse error: Cannot index string with string "alerts"`** — Verify the API response is valid JSON and the bearer token is not expired; test with `curl -sk ... | jq '.'` to inspect raw response.
+    **`curl: (401) Unauthorized`** — Regenerate the bearer token in Aria Ops UI (Administration > API Tokens) and ensure it has alert read permissions.
 ```bash
 # Get alerts for a specific resource (cluster or host)
 curl -sk -X GET \
@@ -171,6 +199,34 @@ curl -sk -X GET \
   | jq '.alerts[] | {name: .name, criticality: .alertLevel, time: .startTimeEpoch}'
 ```
 
+
+```text title="Expected output"
+{
+  "name": "CPU Usage High",
+  "criticality": "CRITICAL",
+  "time": 1699564800000
+}
+{
+  "name": "Memory Pressure",
+  "criticality": "WARNING",
+  "time": 1699548400000
+}
+{
+  "name": "Disk I/O Latency",
+  "criticality": "CRITICAL",
+  "time": 1699532000000
+}
+{
+  "name": "vSAN Disk Group Degraded",
+  "criticality": "IMMEDIATE",
+  "time": 1699515600000
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present; if still failing, verify the hostname matches the certificate CN).
+    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Ensure the API response is valid JSON by checking the token is not expired and the resourceId UUID format is correct.
+    **`curl: (401) Unauthorized`** — Verify the Bearer token is valid and not expired by requesting a fresh token from the authentication endpoint.
 ---
 
 ## 4. Identify Common Root Causes
@@ -220,6 +276,34 @@ curl -sk -X POST \
   }' | jq '.events[] | {timestamp: .timestamp, text: .text}'
 ```
 
+
+```text title="Expected output"
+{
+  "timestamp": 1700000045123,
+  "text": "ERROR: Unable to allocate memory for VM esxi-host-01.domain.local"
+}
+{
+  "timestamp": 1700000087456,
+  "text": "ERROR: vSAN disk group degraded on esxi-host-01"
+}
+{
+  "timestamp": 1700000156789,
+  "text": "ERROR: Network connectivity lost to esxi-host-01 management interface"
+}
+{
+  "timestamp": 1700000234012,
+  "text": "ERROR: Storage I/O latency threshold exceeded on esxi-host-01"
+}
+{
+  "timestamp": 1700000298345,
+  "text": "ERROR: Host esxi-host-01 entered maintenance mode unexpectedly"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example; if still failing, verify the Aria Logs server certificate is trusted or use `--cacert` with the proper CA bundle).
+    **`jq: parse error: Cannot index string with string "timestamp"`** — Ensure the API response contains a valid `.events` array; check the token is valid and the query constraints match the Aria Logs schema by testing with `| jq '.'` first.
+    **`curl: (401) Unauthorized`** — Verify the Bearer token is current and has permissions to query the Aria Logs API; regenerate the token in the Aria Logs UI if expired.
 ---
 
 ## 7. Tune Noisy Alert Definitions After the Storm

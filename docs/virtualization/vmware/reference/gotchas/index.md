@@ -43,6 +43,14 @@ nsx_transport_node_reboot_required_a -> nsx_edge_vm_cpu_must_be_pinned_to_a_: us
 esxcli vsan cluster set --clom-repair-delay-minutes 0
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or parameter: clom-repair-delay-minutes`** — Verify the correct parameter name is `clom-repair-delay-minutes` and check your ESXi/vSAN version supports this option (available in vSAN 6.6+).
+    **`Error: The VSAN cluster is not enabled on this host`** — Ensure vSAN is initialized and the cluster is properly configured before attempting to modify cluster settings.
 Reset to the original value (60) after the resync completes.
 
 ---
@@ -109,6 +117,18 @@ Reset to the original value (60) after the resync completes.
 /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHINE_SSL_CERT | grep -i valid
 ```
 
+
+```text title="Expected output"
+Entry has CN=vcsa-01.lab.local, OU=VMware, O=VMware, C=US
+Issuer CN=VMware-Root, OU=VMware, O=VMware, C=US
+NotBefore: Jan 15 00:00:00 2023 GMT
+NotAfter: Jan 15 00:00:00 2025 GMT
+Valid from Jan 15 00:00:00 2023 GMT to Jan 15 00:00:00 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`vecs-cli: command not found`** — Ensure the vSphere Certificate Manager service is running with `systemctl status vmware-vmafd` and verify the path is correct for your vCenter version.
+    **`Error: Failed to connect to Certificate Store`** — Run the command with elevated privileges using `sudo` or as root, as VECS requires administrative access.
 Set a 60-day alert. Renew certificates proactively using `certificate-manager` before expiry. Do not wait for services to fail.
 
 ---
@@ -151,6 +171,14 @@ Re-enable after troubleshooting is complete. vCenter will automatically recreate
 vim-cmd hostsvc/quickboot/enabled
 ```
 
+
+```text title="Expected output"
+1
+```
+
+!!! warning "Common errors"
+    **`Unknown command vim-cmd`** — Ensure you are running this command on an ESXi host with SSH enabled, not on a vCenter server or external machine.
+    **`Error: Permission denied`** — Run the command as root or with appropriate sudo privileges on the ESXi host.
 Remove PCI passthrough device assignments from all VMs on the host before enabling Quick Boot. Verify against the HCL if the host is borderline-compatible.
 
 ---
@@ -253,6 +281,19 @@ Never upgrade any component outside of SDDC Manager orchestration. If a componen
 kubectl get virtualmachinesetresourcepolicies -A
 ```
 
+
+```text title="Expected output"
+NAMESPACE            NAME                                    AGE
+vmware-system-capi   default-resource-policy                 45d
+vmware-system-capi   compute-optimized-policy                32d
+vmware-system-capi   memory-optimized-policy                 28d
+kube-system          gpu-workload-policy                     15d
+default              custom-vm-policy                        8d
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "virtualmachinesetresourcepolicies"`** — Ensure the VMware Tanzu Kubernetes Grid extension is installed and the CRD is registered with `kubectl get crd | grep virtualmachine`.
+    **`No resources found in any namespace.`** — Create at least one VirtualMachineSetResourcePolicy resource using `kubectl apply -f policy.yaml` or verify the correct namespace with `kubectl get ns`.
 If the range is exhausted, the only remediation is to remove unused TKCs to free IPs, or to re-enable Workload Management with a larger range — which requires destroying all existing TKCs. Plan the range generously at initial deployment.
 
 ---
@@ -269,6 +310,19 @@ If the range is exhausted, the only remediation is to remove unused TKCs to free
 kubectl get tkc -A
 ```
 
+
+```text title="Expected output"
+NAMESPACE                NAME                    CONTROL PLANE   WORKER   KUBECONFIG AGE
+tkg-system              tkg-mgmt-cluster        3/3             6/6      True       45d
+workload-ns-prod        wl-cluster-east         3/3             4/4      True       12d
+workload-ns-staging     wl-cluster-west         2/3             3/4      False      8d
+workload-ns-dev         dev-ephemeral           1/3             2/4      False      2d
+vmware-system-tkg       tkg-shared-services     3/3             5/5      True       60d
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "tkc"`** — Ensure the Tanzu Kubernetes Cluster CRD is installed by verifying the management cluster has the TKG extension enabled.
+    **`Unable to connect to the server: dial tcp: lookup api.tkg-mgmt on 10.0.0.1:53: no such host`** — Verify your kubeconfig is pointing to the correct management cluster and that DNS resolution is working for the management cluster endpoint.
 For clusters that have fallen behind, plan sequential upgrade windows rather than attempting a single jump. Each minor version upgrade should be validated (workloads running, kube-system pods healthy) before proceeding to the next step.
 
 ---

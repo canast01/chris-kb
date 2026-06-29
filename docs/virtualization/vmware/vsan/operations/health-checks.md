@@ -59,6 +59,68 @@ esxcli network nic stats get -n vmnic2 | grep -E "Errors|Dropped"
 echo "=== Done ==="
 ```
 
+
+```text title="Expected output"
+=== 1. Cluster membership ===
+Member: esx-node-01.lab.local
+Member: esx-node-02.lab.local
+Member: esx-node-03.lab.local
+Master: esx-node-01.lab.local
+Sub-Cluster UUID: 52d4a8c1-7f2e-4a9b-b1c3-8e9f2d5c6a7b
+Health: Healthy
+
+=== 2. Overall health tests ===
+TestName: Network MTU
+Health: FAIL
+TestName: Congestion
+Health: WARN
+
+=== 3. Disk group state ===
+Disk Group UUID: 5a8c3f1e-2b9d-4c7a-9e1f-3d6b8a2c5e7f
+Is SSD: true
+Health: Healthy
+State: Enabled
+Tier: All-Flash
+
+Disk Group UUID: 6b9d4g2f-3c0e-5d8b-0f2g-4e7c9b3d6f8g
+Is SSD: false
+Health: Healthy
+State: Enabled
+Tier: Capacity
+
+=== 4. Object health summary ===
+3
+unhealthy objects (0 = all good)
+
+=== 5. Resync queue ===
+Resync Queue Length: 12
+Resync Rate (MB/s): 45.2
+Estimated Time Remaining: 18 minutes
+
+=== 6. Capacity ===
+Used Capacity: 2.8 TB
+Total Capacity: 8.6 TB
+Free Capacity: 5.8 TB
+
+=== 7. Non-compliant policy check ===
+Object: vsan:6384e8c1-2f5a-b8d3-92c4-001569c3d8e1 - Policy: RAID-1 (Non-Compliant - 1 replica missing)
+Object: vsan:7495f9d2-3g6b-c9e4-03d5-002670d4e9f2 - Policy: RAID-5 (Non-Compliant - degraded)
+
+=== 8. Network MTU test (update IPs) ===
+3 packets transmitted, 3 received, 0% loss
+3 packets transmitted, 3 received, 0% loss
+
+=== 9. NIC error check ===
+Errors: 0
+Dropped: 0
+
+=== Done ===
+```
+
+!!! warning "Common errors"
+    **`command: line 1: esxcli: command not found`** — Run this script directly on an ESXi host via SSH or vSphere CLI, not from a remote management station.
+    **`VSAN health cluster get: Unknown command or namespace`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` first to confirm vSAN is active.
+    **`vmkping: Unknown host <host2-vsan-ip>`** — Replace `<host2-vsan-ip>` and `<host3-vsan-ip>` with actual vSAN VMkernel IP addresses (e.g., 192.168.10.52).
 **What to look for:**
 
 | Section | Green | Investigate |
@@ -94,6 +156,37 @@ grep -i "lsom\|diskgroup" /var/log/vmkernel.log | grep -i "err\|fail" | tail -20
 esxcli vsan debug disk list | grep -i "congestion\|Disk Group"
 ```
 
+
+```text title="Expected output"
+Is SSD: true
+Disk Group UUID: 564d5c6b-a1f2-4e8c-9d3a-7b2c1e9f5a4d
+Display Name: naa.5001405a1b2c3d4e
+Tier: Cache
+Health: Healthy
+Is SSD: false
+Disk Group UUID: 564d5c6b-a1f2-4e8c-9d3a-7b2c1e9f5a4d
+Display Name: naa.6006048b1a2b3c4d
+Tier: Capacity
+Health: Healthy
+
+SMART Information for Device naa.5001405a1b2c3d4e:
+   Reallocated Sectors: 0
+   Pending Sectors: 0
+   Uncorrectable Errors: 0
+   Power On Hours: 12847
+   Temperature: 38C
+
+2024-01-15T09:23:14.567Z cpu2:2048)LSOM: [lsom-diskgroup-uuid:564d5c6b-a1f2-4e8c-9d3a-7b2c1e9f5a4d] Disk naa.6006048b1a2b3c4d recovered from transient error
+2024-01-15T10:45:22.891Z cpu5:4096)LSOM: Diskgroup health check passed
+
+Disk Group: 564d5c6b-a1f2-4e8c-9d3a-7b2c1e9f5a4d
+   Congestion: 0
+   Disk Group Status: Healthy
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace vsan storage list`** — Verify vSAN is licensed and enabled on the cluster, then run `esxcli vsan cluster get` to confirm vSAN status.
+    **`SMART Information for Device naa.xxxxxxxxxxxxxxxx: Device not found`** — Replace the placeholder naa ID with an actual device from the first command's output (e.g., `naa.5001405a1b2c3d4e`).
 **Disk states to know:**
 
 | State | Meaning | Action |
@@ -126,6 +219,40 @@ esxcli vsan debug component list | grep -i "absent"
 esxcli vsan debug resync list
 ```
 
+
+```text title="Expected output"
+8 Healthy
+      2 Degraded
+      1 Absent
+Non-Healthy Objects:
+52d4a8f0-1234-5678-abcd-ef0123456789 Degraded
+7f8c9d1a-2345-6789-bcde-f01234567890 Absent
+
+Object UUID: 52d4a8f0-1234-5678-abcd-ef0123456789
+Health: Degraded
+Policy: raid1 (2 replicas)
+Components: 2
+  Component 1: Present (Host: esx-prod-01.local)
+  Component 2: Absent (Host: esx-prod-02.local)
+Resync Progress: 45%
+
+Absent Components:
+52d4a8f0-1234-5678-abcd-ef0123456789.1 Absent (esx-prod-02.local)
+7f8c9d1a-2345-6789-bcde-f01234567890.0 Absent (esx-prod-03.local)
+
+Current Resync Operations:
+Object UUID: 52d4a8f0-1234-5678-abcd-ef0123456789
+Progress: 67%
+Estimated Time: 12m 34s
+Object UUID: 9a1b2c3d-4567-89ab-cdef-0123456789ab
+Progress: 23%
+Estimated Time: 45m 18s
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace vsan debug object`** — Ensure VSAN is enabled on the cluster and you are running this command on a VSAN-enabled ESXi host with proper permissions.
+    **`Object UUID not found: <object-uuid>`** — Verify the UUID is correct and copied completely without whitespace; use the grep output directly or wrap the UUID in quotes.
+    **`Permission denied`** — Run the command with root privileges or ensure your account has the Administrator role in vCenter for the VSAN cluster.
 **Object states:**
 
 | State | Meaning | Action |
@@ -182,6 +309,40 @@ Normal operating ranges for a healthy vSAN cluster. Values vary by workload — 
 esxcli vsan perf query -e host-domclient -st 2024-01-01T00:00:00
 ```
 
+
+```text title="Expected output"
+Host: esx-01.lab.local
+  Timestamp: 2024-01-01T00:00:00Z
+  Read Latency (ms): 2.34
+  Write Latency (ms): 3.12
+  Read IOPS: 8456
+  Write IOPS: 5623
+  Read Throughput (MB/s): 342.1
+  Write Throughput (MB/s): 218.7
+
+Host: esx-02.lab.local
+  Timestamp: 2024-01-01T00:00:00Z
+  Read Latency (ms): 2.18
+  Write Latency (ms): 2.89
+  Read IOPS: 9124
+  Write IOPS: 6012
+  Read Throughput (MB/s): 365.4
+  Write Throughput (MB/s): 241.3
+
+Host: esx-03.lab.local
+  Timestamp: 2024-01-01T00:00:00Z
+  Read Latency (ms): 3.45
+  Write Latency (ms): 4.67
+  Read IOPS: 7234
+  Write IOPS: 4891
+  Read Throughput (MB/s): 289.6
+  Write Throughput (MB/s): 195.2
+```
+
+!!! warning "Common errors"
+    **`Error: vSAN performance service not ready`** — Wait 2-3 minutes after cluster formation or reboot for the vSAN performance service to initialize, then retry the query.
+    **`Error: Invalid entity type 'host-domclient'`** — Verify the entity type with `esxcli vsan perf query --help` and use a valid option such as `host-domclient`, `host-storage-adapter`, or `vsan-cluster`.
+    **`Error: No data available for the specified time range`** — Ensure the timestamp is within the last 24 hours of collected metrics and that vSAN performance monitoring is enabled on the cluster.
 ---
 
 ## Network Health
@@ -201,6 +362,31 @@ vmkping -I vmk2 -d -s 8972 <host2-vsan-ip>
 vmkping -I vmk2 -d -s 8972 <host3-vsan-ip>
 ```
 
+
+```text title="Expected output"
+PING 192.168.100.52 (192.168.100.52): 8972 data bytes
+8980 bytes from 192.168.100.52: icmp_seq=0 ttl=64 time=1.234 ms
+8980 bytes from 192.168.100.52: icmp_seq=1 ttl=64 time=1.156 ms
+8980 bytes from 192.168.100.52: icmp_seq=2 ttl=64 time=1.289 ms
+8980 bytes from 192.168.100.52: icmp_seq=3 ttl=64 time=1.198 ms
+--- 192.168.100.52 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 1.156/1.219/1.289 ms
+
+PING 192.168.100.53 (192.168.100.53): 8972 data bytes
+8980 bytes from 192.168.100.53: icmp_seq=0 ttl=64 time=2.412 ms
+8980 bytes from 192.168.100.53: icmp_seq=1 ttl=64 time=2.367 ms
+8980 bytes from 192.168.100.53: icmp_seq=2 ttl=64 time=2.445 ms
+8980 bytes from 192.168.100.53: icmp_seq=3 ttl=64 time=2.389 ms
+--- 192.168.100.53 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 2.367/2.403/2.445 ms
+```
+
+!!! warning "Common errors"
+    **`PING <host2-vsan-ip> (<host2-vsan-ip>): sendto: No route to host`** — Verify vmk2 is configured on the vSAN network and the target IP is reachable; check routing table with `esxcli network ip route ipv4 list`.
+    **`PING <host2-vsan-ip> (<host2-vsan-ip>): 0 packets transmitted, 0 packets received, 100% packet loss`** — Confirm vmk2 interface is up with `esxcli network ip interface list` and verify vSAN network VLAN is correctly tagged on the switch port.
+    **`vmkping: Unknown interface vmk2`** — Create or enable vmk2 on the vSAN network using vSphere Client or `esxcli network ip interface add -i vmk2 -p <vsan-portgroup>`.
 ---
 
 ## Stretched Cluster Checks

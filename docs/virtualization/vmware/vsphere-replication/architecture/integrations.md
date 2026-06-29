@@ -53,6 +53,46 @@ curl -k -u admin:<pass> \
   | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <QueryServiceContentResponse xmlns="urn:vim25">
+      <returnval>
+        <extension>
+          <key>com.vmware.vcDr</key>
+          <description>vSphere Replication</description>
+          <version>8.7.0.1234</version>
+          <lastHeartbeatTime>2024-01-15T14:32:18.456Z</lastHeartbeatTime>
+        </extension>
+        <extension>
+          <key>com.vmware.HmsMain</key>
+          <description>Health Management System</description>
+          <version>8.7.0.1234</version>
+        </extension>
+      </returnval>
+    </QueryServiceContentResponse>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+{
+  "site": {
+    "id": "site-1",
+    "name": "Production-Site-A",
+    "ipAddress": "192.168.1.45",
+    "version": "8.7.0.1234",
+    "status": "CONNECTED",
+    "lastHeartbeat": "2024-01-15T14:35:22Z",
+    "pairingStatus": "PAIRED"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vCenter/VRA SSL certificate into your system trust store.
+    **`HTTP/1.1 401 Unauthorized`** — Verify the username and password are correct; use `echo -n "password" | base64` to check for special character encoding issues in credentials.
+    **`jq: parse error: Invalid JSON`** — Ensure the VRA API endpoint is responding with valid JSON; check that the VRA service is running with `systemctl status vmware-vra` on the VRA appliance.
 ---
 
 ## SRM Integration

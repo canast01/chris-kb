@@ -80,6 +80,33 @@ nextbootdir=/altbootbank
 # Or via Host Client: Manage → System → Boot Options → select previous
 ```
 
+
+```text title="Expected output"
+Product: VMware ESXi
+Version: 7.0.3
+Build: 19482537
+Update: 3
+Patch: ESXi700-202301001
+
+/bootbank:
+total 2847356
+-rw-r--r--  1 root root 1073741824 Jan 15 10:23 esx-base.z
+-rw-r--r--  1 root root  536870912 Jan 15 10:24 esx-update.z
+-rw-r--r--  1 root root    4194304 Jan 15 10:25 boot.cfg
+drwxr-xr-x  3 root root       4096 Jan 15 10:20 .
+
+/altbootbank:
+total 2847356
+-rw-r--r--  1 root root 1073741824 Dec 20 14:12 esx-base.z
+-rw-r--r--  1 root root  536870912 Dec 20 14:13 esx-update.z
+-rw-r--r--  1 root root    4194304 Dec 20 14:14 boot.cfg
+drwxr-xr-x  3 root root       4096 Dec 20 14:10 .
+```
+
+!!! warning "Common errors"
+    **`bash: nextbootdir=/altbootbank: command not found`** — Remove the leading `#` comment character; this is a shell variable assignment, not a comment.
+    **`Permission denied`** — Ensure you are logged in as root or have root privileges via sudo; bootbank modifications require elevated access.
+    **`/altbootbank: No such file or directory`** — Verify the ESXi host supports dual bootbanks (ESXi 6.5+); older versions may only have /bootbank.
 This works immediately post-upgrade before any configuration changes are made. After hosts are rejoined to vCenter and NSX re-prepared, bootbank rollback becomes impractical.
 
 ## NSX Backup Before Upgrade
@@ -94,6 +121,40 @@ GET https://nsxmanager/api/v1/cluster/backups/history
 # Backup stored to external SFTP target (configured in NSX → Backup & Restore)
 ```
 
+
+```text title="Expected output"
+{
+  "backup_id": "backup-20240115-143022",
+  "status": "COMPLETED",
+  "start_time": "2024-01-15T14:30:22.451Z",
+  "end_time": "2024-01-15T14:35:18.923Z",
+  "size_bytes": 2147483648,
+  "node_id": "node-1"
+}
+
+{
+  "backups": [
+    {
+      "backup_id": "backup-20240115-143022",
+      "status": "COMPLETED",
+      "timestamp": "2024-01-15T14:35:18.923Z",
+      "size_bytes": 2147483648
+    },
+    {
+      "backup_id": "backup-20240115-120015",
+      "status": "COMPLETED",
+      "timestamp": "2024-01-15T12:00:15.441Z",
+      "size_bytes": 2147483648
+    }
+  ]
+}
+
+Backup successfully transferred to sftp://backup.corp.local/nsx-backups/backup-20240115-143022.tar.gz
+```
+
+!!! warning "Common errors"
+    **`{"error_code": 6001, "error_message": "NSX Manager cluster is not stable"}`** — Wait for cluster health to reach 100% via `GET /api/v1/cluster/status` before triggering backup.
+    **`{"error_code": 5003, "error_message": "External backup target unreachable"}`** — Verify SFTP credentials and network connectivity to the backup server in NSX Manager UI under Backup & Restore settings.
 ## Aria Product Rollback (Snapshots)
 
 Snapshot all Aria appliances before upgrade via LCM or directly:

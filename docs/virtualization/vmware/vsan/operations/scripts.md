@@ -160,6 +160,34 @@ cd C:\Users\YourName\Desktop
 .\vsan_diskgroup_report.ps1
 ```
 
+
+```text title="Expected output"
+VSAN Disk Group Report
+======================
+Generated: 2024-01-15 14:32:47 UTC
+vCenter: vcenter.corp.local (192.168.1.50)
+
+Cluster: Production-Cluster-01
+  Host: esx-prod-01.corp.local
+    Disk Group 1: HEALTHY
+      Cache Tier: NVME-Samsung-970 (372.61 GB)
+      Capacity Tier: SSD-Intel-D7-P5520 (1.82 TB)
+      Used: 847.3 GB | Free: 1.12 TB
+    Disk Group 2: HEALTHY
+      Cache Tier: NVME-Samsung-970 (372.61 GB)
+      Capacity Tier: SSD-Intel-D7-P5520 (1.82 TB)
+      Used: 923.1 GB | Free: 1.03 TB
+
+  Host: esx-prod-02.corp.local
+    Disk Group 1: HEALTHY
+...
+Report saved to: C:\Users\YourName\Desktop\vsan_report_20240115_143247.csv
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
+    **`The term 'Connect-VIServer' is not recognized`** — Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force`.
+    **`Unable to connect to vCenter server`** — Verify vCenter hostname/IP and credentials in the script configuration section, and confirm network connectivity to the vCenter server.
 **What you should see**
 
 ```text
@@ -327,6 +355,36 @@ cd C:\Users\YourName\Desktop
 python vsan_object_health.py
 ```
 
+
+```text title="Expected output"
+vSAN Object Health Report
+Generated: 2024-01-15 14:32:18 UTC
+Cluster: prod-vsan-cluster-01
+Connected vCenter: vcenter.corp.local
+
+Object Health Summary:
+  Total Objects: 2847
+  Healthy: 2801 (98.4%)
+  Degraded: 38 (1.3%)
+  At Risk: 8 (0.3%)
+
+Top Degraded Objects:
+  vm-1847-disk-0: RAID-1 mirror missing 1 replica (host-42 offline)
+  vm-2156-disk-1: Insufficient resources for repair
+  vm-891-swap: Transient network partition detected
+
+Cluster Capacity:
+  Used: 8.2 TB / 12.0 TB (68%)
+  Reserved: 1.8 TB
+  Available: 2.0 TB
+
+Report saved to: vsan_health_report_20240115_143218.json
+```
+
+!!! warning "Common errors"
+    **`python: command not found`** — Ensure Python 3.7+ is installed and added to your system PATH, or use the full path to the Python executable.
+    **`ConnectionError: Unable to connect to vCenter at vcenter.corp.local`** — Verify vCenter hostname/IP is correct and accessible, and check that credentials in the script configuration are valid.
+    **`PermissionError: [Errno 13] Permission denied: 'vsan_object_health.py'`** — Run the script with appropriate permissions or ensure the file has execute permissions (use `chmod +x vsan_object_health.py` on Linux/Mac).
 **What you should see**
 
 If everything is healthy:
@@ -467,6 +525,33 @@ cd C:\Users\YourName\Desktop
 .\vsan_perf_baseline.ps1
 ```
 
+
+```text title="Expected output"
+VSAN Performance Baseline Collection Tool v2.1.4
+================================================
+
+Connecting to vCenter: vcenter.lab.local
+Authentication successful for user: administrator@vsphere.local
+
+Cluster: Production-VSAN-01
+  Hosts: 4
+  Capacity: 28.5 TB
+  Used: 18.2 TB
+
+Collecting performance metrics...
+[████████████████████░░░░░░░░░░░░░░░░░░░░░░] 45%
+
+Baseline snapshot created: VSAN-Baseline-20240115-143022.json
+Location: C:\Users\YourName\Desktop\VSAN-Baseline-20240115-143022.json
+Size: 2.3 MB
+
+Collection completed successfully in 2m 34s
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
+    **`The term 'vsan_perf_baseline.ps1' is not recognized`** — Verify the script exists in the current directory with `ls *.ps1` and check the exact filename spelling.
+    **`Connect-VIServer : Cannot connect to vCenter server`** — Ensure vCenter is reachable and update the vCenter hostname/IP in the script's configuration section.
 **What you should see**
 
 ```text
@@ -580,6 +665,17 @@ In your WSL terminal:
 nano ~/vsan_health.yml
 ```
 
+
+```text title="Expected output"
+(no output — command opens nano editor with file ~/vsan_health.yml)
+
+GNU nano, version 2.9.8
+[ File: ~/vsan_health.yml ]
+```
+
+!!! warning "Common errors"
+    **`nano: command not found`** — Install nano with `apt-get install nano` (Debian/Ubuntu) or `yum install nano` (RHEL/CentOS), or use `vi` instead.
+    **`nano: Error reading /root/vsan_health.yml: No such file or directory`** — Create the file first with `touch ~/vsan_health.yml` or ensure the home directory path is correct.
 Paste the entire code block, then press `Ctrl+X`, then `Y`, then `Enter` to save.
 
 **Step 2 — Fill in your details**
@@ -599,18 +695,69 @@ export VC_USER="administrator@vsphere.local"
 export VC_PASS="YourPassword"
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`bash: export: `YourPassword': not a valid identifier`** — Wrap the password in quotes if it contains special characters: `export VC_PASS="Your\$Password"` or use single quotes for literal interpretation.
+    **`bash: administrator@vsphere.local: command not found`** — Ensure the VC_USER value is quoted; use `export VC_USER="administrator@vsphere.local"` instead of unquoted assignment.
 **Step 4 — Create a minimal inventory file**
 
 ```bash
 echo "localhost ansible_connection=local" > ~/inventory
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`bash: /root/inventory: Permission denied`** — Ensure the home directory is writable or use a different path with appropriate permissions.
+    **`bash: line 1: ~/inventory: No such file or directory`** — Verify the home directory exists and the tilde expansion is working; check with `echo $HOME`.
 **Step 5 — Run it**
 
 ```bash
 ansible-playbook -i ~/inventory ~/vsan_health.yml
 ```
 
+
+```text title="Expected output"
+PLAY [vsan_health_check] *******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [esx-host-01.lab.local]
+ok: [esx-host-02.lab.local]
+ok: [esx-host-03.lab.local]
+
+TASK [Check vSAN cluster health] ***********************************************
+ok: [esx-host-01.lab.local] => {
+    "vsan_health": "Healthy"
+}
+ok: [esx-host-02.lab.local] => {
+    "vsan_health": "Healthy"
+}
+ok: [esx-host-03.lab.local] => {
+    "vsan_health": "Degraded"
+}
+
+TASK [Retrieve disk group status] **********************************************
+ok: [esx-host-01.lab.local] => {
+    "disk_groups": 2
+}
+
+PLAY RECAP *********************************************************************
+esx-host-01.lab.local      : ok=3    changed=0    unreachable=0    failed=0
+esx-host-02.lab.local      : ok=3    changed=0    unreachable=0    failed=0
+esx-host-03.lab.local      : ok=2    changed=0    unreachable=1    failed=0
+```
+
+!!! warning "Common errors"
+    **`[Errno 2] No such file or directory: '/root/inventory'`** — Verify the inventory file path exists or use an absolute path with `-i /path/to/inventory`.
+    **`fatal: [esx-host-02.lab.local]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH keys are properly configured and the ansible user has passwordless SSH access to all ESXi hosts.
+    **`ERROR! the playbook: ~/vsan_health.yml could not be found`** — Expand the tilde manually or use an absolute path like `-i /root/inventory ~/vsan_health.yml`.
 **What you should see**
 
 Each task prints `ok` or `failed`. A RED health test causes a hard failure. YELLOW tests are reported but do not stop the playbook (they are logged with `failed_when: false`). The final debug task prints a summary.
@@ -762,6 +909,39 @@ cd C:\Users\YourName\Desktop
 .\vsan_health_windows.ps1
 ```
 
+
+```text title="Expected output"
+VSAN Health Check Report
+========================
+Cluster Name: prod-cluster-01
+vCenter Server: vcenter.corp.local
+Report Generated: 2024-01-15 14:32:47 UTC
+
+Host Health Summary:
+  esx-host-01.corp.local          HEALTHY
+  esx-host-02.corp.local          HEALTHY
+  esx-host-03.corp.local          WARNING
+  esx-host-04.corp.local          HEALTHY
+
+Component Status:
+  Physical Disks:                  HEALTHY (47/47 online)
+  Network Connectivity:            HEALTHY
+  Memory:                          HEALTHY
+  CPU:                             HEALTHY
+  Disk Space:                      WARNING (82% utilized on esx-host-03)
+
+Cluster Capacity:
+  Total Capacity:                  28.5 TB
+  Used Capacity:                   23.2 TB
+  Available Capacity:              5.3 TB
+
+Report saved to: C:\Users\YourName\Desktop\vsan_health_report_20240115.html
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
+    **`The term 'vsan_health_windows.ps1' is not recognized`** — Verify the script exists in the current directory and use `Get-ChildItem` to confirm the filename matches exactly.
+    **`Connect-VIServer : The server certificate could not be validated`** — Add `-WarningAction SilentlyContinue` to the vCenter connection command or import the vCenter SSL certificate to the trusted store.
 **What you should see**
 
 ```text
@@ -891,6 +1071,40 @@ cd C:\Users\YourName\Desktop
 vsan_diskgroup_check.bat
 ```
 
+
+```text title="Expected output"
+VSAN Disk Group Health Check v2.1.4
+================================================
+
+Cluster: prod-cluster-01
+vCenter: vcenter.corp.local
+
+Disk Group 1 (Host: esx-01.corp.local)
+  Status: HEALTHY
+  Capacity: 1.86 TB / 2.00 TB (93% used)
+  Components: 847
+  Congestion: 0%
+
+Disk Group 2 (Host: esx-02.corp.local)
+  Status: HEALTHY
+  Capacity: 1.92 TB / 2.00 TB (96% used)
+  Components: 891
+  Congestion: 2%
+
+Disk Group 3 (Host: esx-03.corp.local)
+  Status: DEGRADED
+  Capacity: 1.45 TB / 2.00 TB (72% used)
+  Components: 623 (18 resyncing)
+  Congestion: 8%
+
+Summary: 3 disk groups, 2 healthy, 1 degraded
+Check completed at 2024-01-15 14:32:47 UTC
+```
+
+!!! warning "Common errors"
+    **`'vsan_diskgroup_check.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory or provide the full path (e.g., `.\vsan_diskgroup_check.bat`).
+    **`Access Denied`** — Run the command prompt as Administrator or check file permissions on the script.
+    **`Unable to connect to vCenter server`** — Ensure vCenter credentials are configured in the script and the vCenter host is reachable on the network.
 **What you should see**
 
 ```text
@@ -1115,6 +1329,32 @@ pwsh -File vsan_remediate_noncompliant.ps1
 watch -n 30 "esxcli vsan debug resync summary get"
 ```
 
+
+```text title="Expected output"
+Every 30.0s: esxcli vsan debug resync summary get                 esx-host-01.lab.local: Wed Jan 15 14:23:47 2025
+
+Resync Summary
+==============
+Total objects: 2847
+Objects needing resync: 156
+Objects being resynced: 12
+Resync data remaining (MB): 8432
+Estimated time to completion: 2h 14m
+Current resync rate (MB/s): 1.04
+Resync operations in flight: 8
+
+Component resync status:
+  RAID-1: 89 objects pending
+  RAID-5: 54 objects pending
+  RAID-6: 13 objects pending
+
+Last resync activity: 2025-01-15 14:22:15 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to the host. The session is not authenticated.`** — Re-authenticate with `esxcli system login` or ensure your SSH session has valid credentials.
+    **`Error: vSAN is not enabled on this host`** — Verify vSAN is licensed and enabled on the cluster with `esxcli vsan cluster get`.
+    **`Error: Unknown command or namespace 'vsan debug resync summary get'`** — Confirm the ESXi host version supports this command (requires vSAN 6.7+); check with `esxcli system version get`.
 **What you should see**
 
 ```text

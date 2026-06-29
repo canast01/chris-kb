@@ -113,6 +113,18 @@ curl -k -X GET https://<srm_fqdn>/api/plans   -H "Authorization: <token>"
 curl -k -X POST "https://<srm_fqdn>/api/plans/<plan_id>/actions/test"   -H "Authorization: <token>"
 ```
 
+
+```text title="Expected output"
+{"sessionId":"52a8f3c1-7e9a-4b2d-9c1f-8e6d5a4b3c2d","user":"administrator@vsphere.local"}
+[{"id":"pg-001","name":"Production-VMs","protectionStatus":"Protected","lastSyncTime":"2024-01-15T14:32:18Z"},{"id":"pg-002","name":"Database-Tier","protectionStatus":"Protected","lastSyncTime":"2024-01-15T14:28:45Z"},{"id":"pg-003","name":"Web-Tier","protectionStatus":"ProtectionError","lastSyncTime":"2024-01-15T13:55:22Z"}]
+[{"id":"plan-42","name":"DR-Failover-Primary","protectionGroups":["pg-001","pg-002"],"status":"Ready"},{"id":"plan-43","name":"DR-Failover-Secondary","protectionGroups":["pg-003"],"status":"Ready"},{"id":"plan-44","name":"Maintenance-Window","protectionGroups":["pg-001"],"status":"Suspended"}]
+{"taskId":"task-8847","status":"InProgress","action":"TestFailover","planId":"plan-42","startTime":"2024-01-15T15:47:22Z","estimatedTimeRemaining":180}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the SRM server's CA certificate into your system trust store.
+    **`{"error":"Invalid token","code":401}`** — Re-authenticate with the POST /api/sessions endpoint and use the returned sessionId in the Authorization header as `Authorization: <sessionId>`.
+    **`{"error":"Plan not found","code":404}`** — Verify the plan_id exists by listing all plans with GET /api/plans and confirm the ID matches exactly.
 ---
 
 ## See also

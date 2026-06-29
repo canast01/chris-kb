@@ -114,6 +114,26 @@ Each VxRail node contributes one or more vSAN disk groups — a cache disk plus 
 esxcli vsan storage list | grep -E "Disk Group|Is SSD|Device:"
 ```
 
+
+```text title="Expected output"
+Disk Group: 1
+Device: naa.5001405a1b2c3d4e
+Is SSD: true
+Device: naa.5001405a1b2c3d4f
+Is SSD: false
+Device: naa.5001405a1b2c3d50
+Is SSD: false
+Disk Group: 2
+Device: naa.5001405a1b2c3d51
+Is SSD: true
+Device: naa.5001405a1b2c3d52
+Is SSD: false
+...
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace vsan storage list.`** — Verify VSAN is licensed and enabled on the cluster, then SSH directly to an ESXi host that is part of the VSAN cluster.
+    **`Connection refused`** — Ensure SSH is enabled on the ESXi host (Configuration > Security Profile > Services > SSH) and you are using the correct hostname/IP and credentials.
 ### vSAN Policies and FTT
 
 | Policy | FTT | Minimum Nodes | Data Copies |
@@ -186,6 +206,36 @@ curl -sk -u 'admin:password' \
   "https://<vxrail-manager-ip>/rest/vxm/v1/lcm/upgrade" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "cluster-001",
+  "name": "vxrail-prod-cluster",
+  "version": "7.0.540",
+  "health": "Healthy",
+  "nodes": 4,
+  "storage_capacity_gb": 102400,
+  "used_capacity_gb": 67584,
+  "vsan_enabled": true,
+  "stretched_cluster": false,
+  "last_health_check": "2024-01-15T14:32:18Z"
+}
+{
+  "upgrade_status": "Completed",
+  "current_version": "7.0.540",
+  "target_version": "7.0.540",
+  "progress_percentage": 100,
+  "last_upgrade_time": "2024-01-10T08:45:22Z",
+  "nodes_upgraded": 4,
+  "nodes_total": 4,
+  "estimated_time_remaining": 0
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the VxRail Manager's CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to <vxrail-manager-ip> port 443: Connection refused`** — Verify the VxRail Manager IP address is correct and the REST API service is running with `systemctl status vxrail-rest-api`.
+    **`jq: parse error: Invalid JSON text at line 1`** — Ensure python3 is installed and the API response is valid JSON; test with `curl -sk -u 'admin:password' "https://<vxrail-manager-ip>/rest/vxm/v1/cluster"` without piping to check raw output.
 | Account | Default Username | Notes |
 |---|---|---|
 | VxRail Manager local admin | `mystic` | Change on first login |

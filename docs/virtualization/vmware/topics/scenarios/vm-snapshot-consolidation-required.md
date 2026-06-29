@@ -83,6 +83,21 @@ ls -lh /vmfs/volumes/<datastore-uuid>/<vm-folder>/*-delta.vmdk
 df -h /vmfs/volumes/<datastore-uuid>
 ```
 
+
+```text title="Expected output"
+/vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e/vm-prod-web-01/-000001-delta.vmdk
+/vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e/vm-prod-web-01/-000002-delta.vmdk
+/vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e/vm-prod-web-01/vm-prod-web-01.vmsd
+-rw-------  1 root root 12.4G Nov 15 14:32 /vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e/vm-prod-web-01/-000001-delta.vmdk
+-rw-------  1 root root 8.7G Nov 15 14:28 /vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e/vm-prod-web-01/-000002-delta.vmdk
+Filesystem                                      Size  Used Avail Use% Mounted on
+/vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e 2.0T 1.8T 187G  91% /vmfs/volumes/5a3c8f2e-1b4a-4c9d-8e2f-7d9c1a5b3f4e
+```
+
+!!! warning "Common errors"
+    **`find: No such file or directory`** — Verify the datastore UUID and VM folder name are correct by running `ls /vmfs/volumes/` to list available datastores.
+    **`Permission denied`** — Run the commands as root or via an SSH session with elevated privileges on the ESXi host.
+    **`Filesystem /vmfs/volumes/<datastore-uuid> not found`** — Confirm the datastore is mounted and accessible by checking `esxcli storage filesystem list`.
 Look for: delta files larger than the base VMDK indicate the snapshot has been accumulating changes for a long time — consolidation I/O will be heavy and may take hours. Ensure at least 20% free space on the datastore before starting.
 
 ---
@@ -127,6 +142,23 @@ vmkfstools -D /vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm-flat.vmdk>
 # Cross-reference MAC to identify which host to check
 ```
 
+
+```text title="Expected output"
+Lock [type 10001c1 offset 4294967295 v 34 gen 14 mode 1 owner 00051a6b-d8f7e2c4-3f9a-001a6b8d flags 0x0 epoch 0]
+RO Owner[0] HB offset 4294967295
+RW Owner[0] HB offset 4294967295
+Addr<4, 0, 32>
+Gen 14 Len 0 Owners []
+Lock [type 10001c1 offset 4294967295 v 34 gen 14 mode 1 owner 00051a6b-d8f7e2c4-3f9a-001a6b8d flags 0x0 epoch 0]
+RO Owner[0] HB offset 4294967295
+RW Owner[0] HB offset 4294967295
+Addr<4, 0, 32>
+Gen 14 Len 0 Owners []
+```
+
+!!! warning "Common errors"
+    **`Failed to open the disk '/vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm-flat.vmdk>': No such file or directory`** — Verify the datastore UUID and VM folder path are correct using `ls -la /vmfs/volumes/` and `find /vmfs/volumes -name "*.vmdk"`.
+    **`Failed to open the disk '/vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm-flat.vmdk>': Permission denied`** — Ensure you are running the command as root or with sufficient privileges on the ESXi host.
 A backup agent (VADP proxy) or a stale ESXi process may hold the lock. Check active backup jobs in your backup console and terminate any that are stuck on this VM.
 
 **Cause 2: Insufficient disk space**
@@ -159,6 +191,28 @@ cat /vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm>.vmsd
 # If delta files exist but .vmsd shows no snapshots, this is the orphan condition
 ```
 
+
+```text title="Expected output"
+.encoding = "UTF-8"
+snapshot.lastUID = "3"
+snapshot.current = "2"
+snapshot.0.uid = "1"
+snapshot.0.filename = "vm-000001.vmdk"
+snapshot.0.displayName = "Before patch Tuesday"
+snapshot.0.createTime = "2024-01-16T14:32:45.123456Z"
+snapshot.1.uid = "2"
+snapshot.1.filename = "vm-000002.vmdk"
+snapshot.1.displayName = "Post-migration backup"
+snapshot.1.createTime = "2024-01-18T09:15:22.654321Z"
+snapshot.2.uid = "3"
+snapshot.2.filename = "vm-000003.vmdk"
+snapshot.2.displayName = "Current working state"
+snapshot.2.createTime = "2024-01-20T11:47:08.987654Z"
+```
+
+!!! warning "Common errors"
+    **`cat: /vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm>.vmsd: No such file or directory`** — Verify the datastore UUID and VM folder path are correct by running `ls -la /vmfs/volumes/` and navigating to the correct VM directory.
+    **`Permission denied`** — Run the command as root or with appropriate ESXi host privileges; standard user accounts cannot read VMFS metadata files.
 **Cause 4: VM has active write I/O that cannot be quiesced**
 
 Temporarily stun (quiesce) the VM by migrating it off the host with vMotion or briefly suspending it during off-hours before consolidating — this is a last resort and should be planned as a maintenance window.
@@ -191,6 +245,26 @@ mv /vmfs/volumes/<ds>/<vm>/<vm>-flat-merged.vmdk /vmfs/volumes/<ds>/<vm>/<vm>-fl
 # 7. Power on VM and verify — do NOT remove originals until validation passes
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:47:32Z: Inflating snapshot chain for vm-prod-db01
+Source: /vmfs/volumes/datastore1/vm-prod-db01/vm-prod-db01-000001.vmdk
+Destination: /vmfs/volumes/datastore1/vm-prod-db01/vm-prod-db01-flat-merged.vmdk
+Cloning virtual disk '/vmfs/volumes/datastore1/vm-prod-db01/vm-prod-db01-000001.vmdk'...
+Clone: 100% done.
+Virtual disk cloned successfully. Size: 524288 MB (512 GB allocated, 287 GB used)
+Merging delta layers into flat disk...
+Merge completed in 847 seconds.
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`vmkfstools: Invalid virtual disk specification`** — Verify the snapshot delta number (-000001, -000002, etc.) matches the actual file in the directory by running `ls -la /vmfs/volumes/<ds>/<vm>/` first.
+    **`No such file or directory`** — Ensure you are SSH'd directly to the ESXi host (not vCenter) and the datastore path is mounted; check with `ls /vmfs/volumes/<ds>/` to confirm access.
+    **`Device or resource busy`** — Power off the VM completely and confirm no snapshots are actively consolidating; check with `vim-cmd vmsvc/snapshot.get <vmid>` before proceeding.
 Look for: this procedure should only be used when vCenter consolidation is unavailable and the VM cannot be restored from backup. Always retain original files until the VM is confirmed healthy.
 
 ---

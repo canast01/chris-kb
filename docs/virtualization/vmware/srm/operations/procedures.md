@@ -126,6 +126,28 @@ symrdf -sid <SYMID> -rdfg <RDFG> query
 boxmgmt cg check_all
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789
+RDF Group: 001
+Local Device: 0001
+Remote Device: 0001
+RDF Mode: Synchronous
+Link State: Ready
+Mirror State: Synchronized
+Last Update: 2024-01-15 14:32:18
+
+RecoverPoint Journal Status:
+Consistency Group: prod-db-01
+Latest Recovery Point: 2024-01-15 14:32:05 UTC
+Journal Usage: 78%
+Replication Lag: 2.3 seconds
+Status: HEALTHY
+```
+
+!!! warning "Common errors"
+    **`symrdf: Command not found`** — Install EMC Solutions Enabler package or add the SymCLI bin directory to your PATH.
+    **`boxmgmt: Unable to connect to RecoverPoint appliance at <IP>`** — Verify network connectivity to the RecoverPoint management IP and confirm credentials are set in the environment or config file.
 ---
 
 ## Reprotect
@@ -349,6 +371,33 @@ boxmgmt cg check_all
 symrdf -sid <SYMID> -rdfg <RDFG> query
 ```
 
+
+```text title="Expected output"
+RecoverPoint Consistency Group Status:
+CG Name: Production_DB_01
+State: ACTIVE
+Last Journal Timestamp: 2024-01-15 14:32:47 UTC
+RTO: 0 seconds
+RPO: 45 seconds
+
+CG Name: Production_APP_02
+State: ACTIVE
+Last Journal Timestamp: 2024-01-15 14:33:12 UTC
+RTO: 0 seconds
+RPO: 120 seconds
+
+PowerMax SRDF Replication State:
+Symmetrix ID: 000123456789
+RDF Group: 001
+State: Synchronized
+Last Sync Time: 2024-01-15 14:33:05
+Pair State: Synchronized
+Link State: OK
+```
+
+!!! warning "Common errors"
+    **`boxmgmt: command not found`** — Ensure you are running this command directly on the RecoverPoint appliance via SSH, not on a remote management host.
+    **`symrdf: Invalid SYMID or RDFG specified`** — Verify the SYMID and RDFG values match your environment by running `symcfg list -v` and `symrdf -sid <SYMID> list` to confirm valid identifiers.
 ---
 
 ## Add a VM to an Existing Protection Group

@@ -80,6 +80,40 @@ ping -c 3 <node2-idrac-ip>
 ping -c 3 <node3-idrac-ip>
 ```
 
+
+```text title="Expected output"
+PING 192.168.1.101 (192.168.1.101) 56(84) bytes of data.
+64 bytes from 192.168.1.101: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 192.168.1.101: icmp_seq=2 ttl=64 time=2.18 ms
+64 bytes from 192.168.1.101: icmp_seq=3 ttl=64 time=2.41 ms
+
+--- 192.168.1.101 statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/stddev = 2.18/2.31/2.41/0.10 ms
+
+PING 192.168.1.102 (192.168.1.102) 56(84) bytes of data.
+64 bytes from 192.168.1.102: icmp_seq=1 ttl=64 time=1.89 ms
+64 bytes from 192.168.1.102: icmp_seq=2 ttl=64 time=2.05 ms
+64 bytes from 192.168.1.102: icmp_seq=3 ttl=64 time=1.97 ms
+
+--- 192.168.1.102 statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/stddev = 1.89/1.97/2.05/0.07 ms
+
+PING 192.168.1.103 (192.168.1.103) 56(84) bytes of data.
+64 bytes from 192.168.1.103: icmp_seq=1 ttl=64 time=3.12 ms
+64 bytes from 192.168.1.103: icmp_seq=2 ttl=64 time=3.28 ms
+64 bytes from 192.168.1.103: icmp_seq=3 ttl=64 time=3.05 ms
+
+--- 192.168.1.103 statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2005ms
+rtt min/avg/max/stddev = 3.05/3.15/3.28/0.11 ms
+```
+
+!!! warning "Common errors"
+    **`ping: sendto: No route to host`** — Verify the jump host is on the OOB management VLAN and routing to the iDRAC subnet is configured.
+    **`ping: unknown host <node1-idrac-ip>`** — Confirm the iDRAC IP addresses are correct and resolvable, or use explicit IP addresses instead of hostnames.
+    **`100% packet loss`** — Check that iDRAC interfaces are powered on, network cables are connected, and firewall rules allow ICMP on the OOB management network.
 **DNS pre-creation**
 
 Create A and PTR records for ALL of the following FQDNs before starting the wizard. Missing DNS records cause wizard failure or post-deploy vCenter join errors.
@@ -101,6 +135,29 @@ nslookup node-01.example.local
 nslookup 10.0.1.20
 ```
 
+
+```text title="Expected output"
+Server:		10.0.1.10
+Address:	10.0.1.10#53
+
+Name:	vxrail-manager.example.local
+Address: 10.0.1.50
+
+Server:		10.0.1.10
+Address:	10.0.1.10#53
+
+Name:	node-01.example.local
+Address: 10.0.1.51
+
+Server:		10.0.1.10
+Address:	10.0.1.10#53
+
+10.0.1.20.in-addr.arpa	name = vcenter.example.local.
+```
+
+!!! warning "Common errors"
+    **`** server can't find vxrail-manager.example.local: NXDOMAIN`** — Verify the hostname exists in DNS and check the domain suffix matches your environment (use `nslookup vxrail-manager.example.local <dns-server-ip>` to test against the correct nameserver).
+    **`** server can't find 10.0.1.20.in-addr.arpa: NXDOMAIN`** — Confirm reverse DNS zones are configured on your DNS server and the PTR record exists for the vCenter IP address.
 **NTP reachability**
 
 ```bash
@@ -109,6 +166,15 @@ ntpdate -q ntp1.example.local
 ntpdate -q ntp2.example.local
 ```
 
+
+```text title="Expected output"
+server 10.20.50.12, stratum 3, offset 0.002341, delay 0.045123
+server 10.20.50.13, stratum 3, offset -0.001876, delay 0.041567
+```
+
+!!! warning "Common errors"
+    **`no server suitable for synchronization found`** — Verify NTP servers are reachable from the management VLAN by running `ping ntp1.example.local` and check firewall rules allow UDP port 123.
+    **`getaddrinfo: Name or service not known`** — Confirm DNS resolution works on the jump host with `nslookup ntp1.example.local` and verify the NTP server hostnames are correct in your environment.
 **Switch VLAN and MTU configuration**
 
 | Network | VLAN ID | MTU | Notes |
@@ -136,6 +202,22 @@ The First Run Wizard is a browser-based workflow that runs before vCenter exists
 https://<node1-management-ip>/
 ```
 
+
+```text title="Expected output"
+(no output — this is a browser navigation URL, not a bash command)
+
+The VxRail bootstrap wizard loads in your browser at:
+- URL: https://192.168.1.100/
+- Page title: "VxRail Deployment Wizard"
+- Status: Bootstrap agent listening on port 443
+- Node 1 management IP: 192.168.1.100
+- Session established with TLS 1.2
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Verify node 1 is powered on, bootstrap agent is running, and the management VLAN network is correctly configured on your client.
+    **`SSL_ERROR_BAD_CERT_DOMAIN`** — The certificate is self-signed during bootstrap; add a security exception in your browser or use `curl -k` if testing via CLI.
+    **`ERR_NAME_NOT_RESOLVED` or `nodename nor servname provided`** — Ensure the node1 management IP is reachable from your client and DNS/hosts file is configured if using a hostname instead of an IP address.
 Accept the self-signed certificate warning. Default credentials at first access: no login required — the wizard prompts for all passwords as part of setup.
 
 **Wizard input sequence**
@@ -193,6 +275,33 @@ esxcli vsan health cluster get
 esxcli vsan health summary get
 ```
 
+
+```text title="Expected output"
+Cluster Health Status:
+  Cluster Status: healthy
+  Hosts Participating: 4
+  Hosts Healthy: 4
+  Hosts Unhealthy: 0
+  Hosts Disconnected: 0
+  Data Health: Healthy
+  Memory Health: Healthy
+  Network Health: Healthy
+  Physical Disk Health: Healthy
+  Capacity Health: Healthy
+
+Summary Health Status:
+  Overall Cluster Status: green
+  Cluster Capacity: 87% used
+  Rebalance Progress: 100%
+  Resync Activity: None
+  Component Limit Status: green
+  Network Connectivity: green
+  Host Health: green
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to VSAN cluster`** — Ensure VSAN is enabled on the cluster and the host is part of a valid VSAN cluster; run `esxcli vsan cluster get` to verify cluster membership.
+    **`Error: Permission denied`** — Log in with root credentials or an account with VSAN administration privileges; use `esxcli system permission list` to verify your role.
 **Create production SPBM policy**
 
 The default vSAN storage policy (FTT=0) provides no redundancy. Always create and apply a production policy before placing any workload VMs.
@@ -218,6 +327,32 @@ Expected output: `green`
 curl -sk -u 'mystic:password' https://<vxm-ip>/rest/vxm/v1/system | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "vxm-01.lab.local",
+  "version": "7.0.410-28915276",
+  "build": "28915276",
+  "productName": "VxRail Manager",
+  "serialNumber": "VXM123456789ABC",
+  "systemStatus": "Healthy",
+  "clusterStatus": "Online",
+  "nodeCount": 4,
+  "totalCapacity": {
+    "cpu": 384,
+    "memory": 3072,
+    "storage": 614400
+  },
+  "lastUpdated": "2024-01-15T14:32:18Z",
+  "licenseStatus": "Valid",
+  "supportStatus": "Active"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, so ensure it's not being removed).
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VxRail Manager IP address is correct and the management interface is reachable with `ping <vxm-ip>`.
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure `python3 -m json.tool` is installed; if unavailable, use `jq` instead or remove the formatter to see the raw response.
 **Exit criterion:** vSAN health all green. VxRail Manager reports cluster healthy. Production SPBM policy created and applied to VxRail Manager and vCenter VMs.
 
 ---
@@ -251,6 +386,26 @@ esxcli network ip interface list
 esxcli network ip interface ipv4 get
 ```
 
+
+```text title="Expected output"
+Name  Enabled  Connected  MTU  MAC Address        IPV4 Address      Netmask         Broadcast
+----  -------  ---------  ---  -----------------  ----------------  --------------  ----------------
+vmk0  true     true       1500  00:50:56:c0:00:01  192.168.1.45      255.255.255.0   192.168.1.255
+vmk1  true     true       1500  00:50:56:c0:00:02  192.168.100.45    255.255.255.0   192.168.100.255
+vmk2  false    false      1500  00:50:56:c0:00:03  0.0.0.0           0.0.0.0         0.0.0.0
+vmk3  true     true       9000  00:50:56:c0:00:04  10.20.30.45       255.255.255.0   10.20.30.255
+
+Name  IPV4 Address      Netmask         Broadcast           DHCP   DefaultGateway
+----  ----------------  --------------  ------------------  -----  ----------------
+vmk0  192.168.1.45      255.255.255.0   192.168.1.255       false  192.168.1.1
+vmk1  192.168.100.45    255.255.255.0   192.168.100.255     false  192.168.100.1
+vmk2  0.0.0.0           0.0.0.0         0.0.0.0             false  0.0.0.0
+vmk3  10.20.30.45       255.255.255.0   10.20.30.255        false  10.20.30.1
+```
+
+!!! warning "Common errors"
+    **`Could not connect to the host. The host may not be running, or a network error may have occurred.`** — Verify SSH connectivity to the VxRail node and confirm the ESXi host is powered on and responsive.
+    **`Unknown command or namespace.`** — Ensure you are connected to an ESXi host with esxcli enabled; this command does not work on vCenter or management appliances.
 **MTU test on vSAN network**
 
 Run from each node to each peer node vSAN VMkernel IP. All tests must succeed (0% packet loss) before the cluster is considered production-ready.
@@ -264,6 +419,30 @@ vmkping -I vmk2 -d -s 8972 <node2-vsan-vmk-ip>
 vmkping -I vmk2 -d -s 8972 <node3-vsan-vmk-ip>
 ```
 
+
+```text title="Expected output"
+PING 192.168.100.12 (192.168.100.12): 8972 data bytes
+8980 bytes from 192.168.100.12: icmp_seq=0 ttl=64 time=0.456 ms
+8980 bytes from 192.168.100.12: icmp_seq=1 ttl=64 time=0.423 ms
+8980 bytes from 192.168.100.12: icmp_seq=2 ttl=64 time=0.441 ms
+8980 bytes from 192.168.100.12: icmp_seq=3 ttl=64 time=0.438 ms
+--- 192.168.100.12 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 0.423/0.439/0.456 ms
+
+PING 192.168.100.13 (192.168.100.13): 8972 data bytes
+8980 bytes from 192.168.100.13: icmp_seq=0 ttl=64 time=0.512 ms
+8980 bytes from 192.168.100.13: icmp_seq=1 ttl=64 time=0.498 ms
+8980 bytes from 192.168.100.13: icmp_seq=2 ttl=64 time=0.505 ms
+8980 bytes from 192.168.100.13: icmp_seq=3 ttl=64 time=0.489 ms
+--- 192.168.100.13 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+```
+
+!!! warning "Common errors"
+    **`PING 192.168.100.12 (192.168.100.12): 8972 data bytes (100% packet loss)`** — Verify vSAN VMkernel interface MTU is set to 9000 on both nodes using `esxcli network ip interface list`.
+    **`sendto() failed (Message too long)`** — Reduce packet size or confirm physical switch and vSAN portgroup MTU settings match 9000 bytes across all uplinks.
+    **`Unable to route to host`** — Verify vSAN VMkernel IP is correct and the vSAN network is properly isolated and routable between nodes.
 **Verify OMIVV plugin in vCenter**
 
 After wizard: vCenter → Menu → OpenManage Integration for VMware vCenter should appear. If the plugin is not present, see Phase 5 for manual installation.
@@ -302,6 +481,32 @@ curl -sk https://esrs.emc.com
 curl -sk https://supportassist.emc.com
 ```
 
+
+```text title="Expected output"
+<!DOCTYPE html>
+<html>
+<head>
+<title>EMC ESRS Portal</title>
+</head>
+<body>
+<h1>Welcome to ESRS</h1>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dell EMC SupportAssist</title>
+</head>
+<body>
+<h1>SupportAssist Online</h1>
+</body>
+</html>
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to esrs.emc.com port 443: Connection timed out`** — Verify network connectivity from VxRail Manager VM, check firewall rules allow outbound HTTPS to EMC domains, and confirm DNS resolution with `nslookup esrs.emc.com`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if you need strict certificate validation, or ensure the VxRail Manager VM has current CA certificates installed via `update-ca-certificates` or equivalent.
+    **`curl: (6) Could not resolve host: esrs.emc.com`** — Verify DNS servers are configured correctly on the VxRail Manager VM with `cat /etc/resolv.conf` and test with `nslookup 8.8.8.8`.
 If a proxy is required, configure it in VxRail Manager: Settings → Network → Proxy.
 
 **Verify hardware monitoring**
@@ -329,6 +534,15 @@ curl -sk -X PUT -u 'mystic:currentpassword' \
   https://<vxm-ip>/rest/vxm/v1/system/credentials/mystic
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, so ensure you're using the exact command provided).
+    **`curl: (401) Unauthorized`** — Verify the current password is correct and the mystic user exists; check VxRail Manager credentials in your environment.
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm the VxRail Manager IP address is correct and reachable, and that the REST API service is running on the target node.
 **Change iDRAC default passwords on all nodes**
 
 Default iDRAC credentials (root / Calvin) must be changed on every node. Do this via RACADM from each node's ESXi SSH session or from a jump host with RACADM installed.
@@ -341,6 +555,18 @@ racadm set idrac.users.2.password <NewPassword>
 racadm get idrac.users.2.username
 ```
 
+
+```text title="Expected output"
+RACADM.2.1 -- Dell EMC RACADM CLI Tool, Version 2.1.1.0
+Copyright (C) 2009-2023 Dell Inc. All rights reserved.
+
+Object value modified successfully.
+root
+```
+
+!!! warning "Common errors"
+    **`RACADM.1.1 -- Unexpected EOF while processing command`** — Ensure the iDRAC IP is reachable and RACADM is authenticated; add `-r <iDRAC_IP> -u root -p <current_password>` flags if running remotely.
+    **`Error: IPMI command failed: Insufficient privilege`** — Verify you are running RACADM as root or with sudo, or that the current iDRAC user has administrator privileges.
 Alternatively use the iDRAC web UI: iDRAC Settings → User Authentication → Local Users → root → Change Password.
 
 **Enable lockdown mode on all hosts**
@@ -390,6 +616,15 @@ vim-cmd hostsvc/disable_ssh
 vim-cmd hostsvc/disable_esx_shell
 ```
 
+
+```text title="Expected output"
+SSH has been disabled.
+ESX Shell has been disabled.
+```
+
+!!! warning "Common errors"
+    **`vim-cmd: command not found`** — Ensure you are logged into an ESXi host directly via SSH, not a vCenter or management appliance where vim-cmd is not available.
+    **`Error: Permission denied`** — Verify you are logged in as root or a user with administrative privileges on the ESXi host.
 Or via PowerCLI:
 
 ```powershell

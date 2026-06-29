@@ -77,6 +77,37 @@ esxcli vsan storage list
 esxcli vsan storage list | grep -E "DiskGroupUUID|SSD|Capacity|State"
 ```
 
+
+```text title="Expected output"
+UUID: 52e3f4a1-8c2d-4f9e-b1a2-7d6c9e3f2a1b
+Health: Healthy
+Host: esx-prod-01.lab.local
+Disk: naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2a
+
+UUID: 62f4g5b2-9d3e-5g0f-c2b3-8e7d0f4g3b2c
+Health: Degraded
+Host: esx-prod-01.lab.local
+Disk: naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2b
+
+UUID: 73g5h6c3-0e4f-6h1g-d3c4-9f8e1g5h4c3d
+Health: Healthy
+Host: esx-prod-01.lab.local
+Disk: naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2c
+
+DiskGroupUUID: 84h6i7d4-1f5g-7i2h-e4d5-0g9f2h6i5d4e
+SSD: naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2d
+Capacity: 1.7 TB
+State: Healthy
+
+DiskGroupUUID: 95i7j8e5-2g6h-8j3i-f5e6-1h0g3i7j6e5f
+SSD: naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2e
+Capacity: 1.7 TB
+State: Degraded
+```
+
+!!! warning "Common errors"
+    **`esxcli: Unknown command or namespace vsan`** — Verify vSAN is licensed and enabled on the host by running `esxcli vsan cluster get`.
+    **`grep: (standard input) is empty`** — Confirm the host is part of a vSAN cluster and has vSAN enabled with `esxcli vsan cluster get`.
 Look for: note which host the absent component lives on, which disk group it belongs to, and whether the state is `Absent` (disk gone) or `Degraded` (disk present but component needs rebuild).
 
 ---
@@ -119,6 +150,45 @@ esxcli storage core device smart get -d naa.<device-id>
 # Drive Temperature > 55°C        — thermal issue
 ```
 
+
+```text title="Expected output"
+Display Name: Local ATA Disk mpx.vmhba0:C0:T0:L0
+State: Online
+Device: naa.5001b1a9b3c4d5e6
+
+Display Name: SAS Disk mpx.vmhba1:C0:T1:L0
+State: Online
+Device: naa.6002ac0000a1b2c3d4e5f6g7
+
+Display Name: NVMe Device mpx.vmhba2:C0:T2:L0
+State: Online
+Device: naa.55cd2e404bd2e11e
+
+SMART Health Data for Device naa.5001b1a9b3c4d5e6:
+Parameter: Reallocated Sector Count
+Value: 8
+Threshold: 36
+Status: OK
+
+Parameter: Uncorrectable Sector Count
+Value: 0
+Threshold: 0
+Status: OK
+
+Parameter: SSD Wear Indicator
+Value: 78
+Threshold: 10
+Status: OK
+
+Parameter: Drive Temperature
+Value: 42
+Threshold: 60
+Status: OK
+```
+
+!!! warning "Common errors"
+    **`Error: Could not retrieve SMART data for device naa.<device-id>`** — Verify the NAA identifier is correct by copying it directly from the device list output and ensure the device supports SMART queries.
+    **`Error: Unknown option or syntax error in esxcli command`** — Check your ESXi version supports the `esxcli storage core device smart` command (requires ESXi 6.5+); use `esxcli storage core device list` alone if unavailable.
 For VxRail deployments, check iDRAC before acting — OMIVV surfaces hardware events as vCenter alarms:
 
 ```bash
@@ -126,6 +196,19 @@ For VxRail deployments, check iDRAC before acting — OMIVV surfaces hardware ev
 racadm getsel | grep -i "storage\|disk\|drive"
 ```
 
+
+```text title="Expected output"
+SEL Records:
+   1 | 01/15/2024 | 14:32:45 | Storage | Physical Disk 0 in Slot 1 | Predictive Failure
+   2 | 01/15/2024 | 14:35:12 | Storage | RAID Controller 0 | Battery Learn Cycle Started
+   3 | 01/16/2024 | 09:18:33 | Disk | Physical Disk 2 in Slot 3 | Drive Online
+   4 | 01/16/2024 | 11:45:22 | Storage | Virtual Disk 1 | Rebuild in Progress
+   5 | 01/17/2024 | 16:22:10 | Drive | Hot Spare Activated | Slot 4
+```
+
+!!! warning "Common errors"
+    **`racadm: command not found`** — Install Dell OMECLI tools or use the iDRAC web UI at https://<idrac-ip> instead.
+    **`DRAC001: Authentication failed`** — Verify iDRAC credentials and ensure your user account has sufficient permissions to query system event logs.
 Look for: cross-reference **vCenter → Alarms → Triggered Alarms** for any Dell OMIVV alarm correlated with the vSAN alert to confirm the physical disk identity.
 
 ---
@@ -145,6 +228,22 @@ esxcli vsan debug resync summary get
 #   ActiveResyncETA   — estimated completion time
 ```
 
+
+```text title="Expected output"
+BytesToResync: 2147483648
+ResyncType: REPAIR
+ObjectsToResync: 42
+ActiveResyncETA: 2h 15m
+ResyncStartTime: 2024-01-15T09:32:14Z
+ResyncEndTime: 2024-01-15T11:47:14Z
+CurrentResyncRate: 16.8 MB/s
+PendingResyncObjects: 12
+CompletedResyncObjects: 30
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace path vsan/debug/resync/summary.`** — Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm VSAN status first.
+    **`Error: Permission denied.`** — Ensure you are logged in with root or an account with VSAN administration privileges; use `esxcli system permission list` to verify your role.
 Look for: `ResyncType = REPAIR` with decreasing `BytesToResync` confirms rebuild is in progress. For VxRail, use **VxRail Manager → Maintenance → Disk Replacement** wizard — it verifies cluster capacity before removal and monitors rebuild post-replacement.
 
 ---

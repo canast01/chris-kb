@@ -124,6 +124,28 @@ scp core@<master-ip>:/home/core/assets/backup/static_kuberesources_*.tar.gz /bac
 oc rsync <master-pod>:/home/core/assets/backup/ ./etcd-backup-$(date +%F)/
 ```
 
+
+```text title="Expected output"
+core@master-0.example.com:~$ sudo -i
+root@master-0.example.com:~# /usr/local/bin/cluster-backup.sh /home/core/assets/backup
+Backing up etcd data...
+Backup complete. Files written to /home/core/assets/backup
+root@master-0.example.com:~# ls -lh /home/core/assets/backup/
+total 892M
+-rw-r--r-- 1 core core 847M Nov 14 10:23 snapshot_2024-11-14_102345.db
+-rw-r--r-- 1 core core  12M Nov 14 10:23 static_kuberesources_2024-11-14_102345.tar.gz
+root@master-0.example.com:~# exit
+logout
+$ scp core@192.168.1.45:/home/core/assets/backup/snapshot_*.db /backup/etcd/
+snapshot_2024-11-14_102345.db                    100%  847MB   18.2MB/s   00:47
+$ scp core@192.168.1.45:/home/core/assets/backup/static_kuberesources_*.tar.gz /backup/etcd/
+static_kuberesources_2024-11-14_102345.tar.gz    100%   12MB    8.4MB/s   00:01
+```
+
+!!! warning "Common errors"
+    **`/usr/local/bin/cluster-backup.sh: No such file or directory`** — Verify the OCP version includes the backup script; on older versions use `oc debug node/<master-node>` to access the script or manually back up etcd using `etcdctl`.
+    **`scp: /backup/etcd/: No such file or directory`** — Create the destination directory on your workstation with `mkdir -p /backup/etcd/` before running the scp command.
+    **`Permission denied (publickey,gssapi-keyexchange)`** — Ensure your SSH key is added to the ssh-agent (`ssh-add ~/.ssh/id_rsa`) and the core user's authorized_keys includes your public key.
 ## Automate etcd Backup with CronJob
 
 ```yaml
@@ -199,6 +221,46 @@ oc get nodes
 oc get co
 ```
 
+
+```text title="Expected output"
+core@master-0:~$ sudo mv /etc/kubernetes/manifests/kube-apiserver.yaml /tmp/
+core@master-0:~$ sudo mv /etc/kubernetes/manifests/kube-controller-manager.yaml /tmp/
+core@master-0:~$ sudo mv /etc/kubernetes/manifests/kube-scheduler.yaml /tmp/
+core@master-0:~$ sudo mkdir -p /home/core/assets/backup
+core@master-0:~$ sudo cp /backup/etcd/snapshot_*.db /home/core/assets/backup/
+core@master-0:~$ sudo cp /backup/etcd/static_kuberesources_*.tar.gz /home/core/assets/backup/
+core@master-0:~$ sudo /usr/local/bin/cluster-restore.sh /home/core/assets/backup
+Restoring etcd snapshot from /home/core/assets/backup/snapshot_20240115-143022.db
+Restoring static resources from /home/core/assets/backup/static_kuberesources_20240115-143022.tar.gz
+Restore completed successfully
+core@master-0:~$ sudo mv /tmp/kube-apiserver.yaml /etc/kubernetes/manifests/
+core@master-0:~$ sudo mv /tmp/kube-controller-manager.yaml /etc/kubernetes/manifests/
+core@master-0:~$ sudo mv /tmp/kube-scheduler.yaml /etc/kubernetes/manifests/
+core@master-0:~$ until oc get nodes; do sleep 10; done
+NAME       STATUS   ROLES    AGE    VERSION
+master-0   Ready    master   45d    v1.27.8
+master-1   Ready    master   45d    v1.27.8
+master-2   Ready    master   45d    v1.27.8
+worker-0   Ready    worker   42d    v1.27.8
+worker-1   Ready    worker   42d    v1.27.8
+core@master-0:~$ oc delete pod -n openshift-etcd --selector=app=etcd
+pod "etcd-master-0" deleted
+pod "etcd-master-1" deleted
+pod "etcd-master-2" deleted
+core@master-0:~$ oc get csr | grep Pending
+node-bootstrapper-csr-abc123def456   47m   kubernetes.io/kubelet-serving   system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
+core@master-0:~$ oc get csr -o name | xargs oc adm certificate approve
+certificatesigningrequest.certificates.k8s.io/node-bootstrapper-csr-abc123def456 approved
+core@master-0:~$ oc get nodes
+NAME       STATUS   ROLES    AGE    VERSION
+master-0   Ready    master   45d    v1.27.8
+master-1   Ready    master   45d    v1.27.8
+master-2   Ready    master   45d    v1.27.8
+worker-0   Ready    worker   42d    v1.27.8
+worker-1   Ready    worker   42d    v1.27.8
+core@master-0:~$ oc get co
+NAME                                       READY
+```
 ## Replace Single etcd Member
 
 ```bash
@@ -223,6 +285,29 @@ oc adm certificate approve <csr>
 oc rsh -n openshift-etcd etcd-<master> etcdctl member list
 ```
 
+
+```text title="Expected output"
+member 2891874932c66141: name=etcd-master-0 peerURLs=http://10.0.1.45:2380 clientURLs=http://10.0.1.45:2379
+member 6a4c8b1f9e2d5c73: name=etcd-master-1 peerURLs=http://10.0.1.46:2380 clientURLs=http://10.0.1.46:2379
+member 8f3d2e9c1a7b4f56: name=etcd-master-2 peerURLs=http://10.0.1.47:2380 clientURLs=http://10.0.1.47:2379
+Member 8f3d2e9c1a7b4f56 removed
+NAME                                    STATE     TYPE    REPLICAS   UPDATED   READY   AVAILABLE   AGE
+master-us-east-1a                       Running   Master  3          3         2       2           45d
+master-us-east-1b                       Running   Master  3          3         3       3           45d
+master-us-east-1c                       Unhealthy Master  3          3         2       2           12m
+machine-master-us-east-1c-xyz9q deleted
+NAME                                      PENDING   CERTIFICATE REQUEST AGE
+system:serviceaccount:openshift-machine-config-operator:default  5s
+csr-8x9kl approved
+member 2891874932c66141: name=etcd-master-0 peerURLs=http://10.0.1.45:2380 clientURLs=http://10.0.1.45:2379
+member 6a4c8b1f9e2d5c73: name=etcd-master-1 peerURLs=http://10.0.1.46:2380 clientURLs=http://10.0.1.46:2379
+member 9c2f5e8a3d1b7g64: name=etcd-master-2 peerURLs=http://10.0.1.48:2380 clientURLs=http://10.0.1.48:2379
+```
+
+!!! warning "Common errors"
+    **`error: unable to connect to etcd: context deadline exceeded`** — Verify the healthy master pod is running with `oc get pod -n openshift-etcd` and use the correct pod name in the rsh command.
+    **`Error from server (NotFound): machines.machine.openshift.io "<machine-name>" not found`** — Confirm the exact machine name with `oc get machine -n openshift-machine-api -o wide` before deletion.
+    **`error: certificate request csr-xxxx is not pending`** — Wait for the CSR to appear in Pending state (may take 1-2 minutes after machine creation) before attempting approval.
 ## OADP Application Backup
 
 ```bash
@@ -296,6 +381,28 @@ oc get restore -n openshift-adp
 velero backup logs my-app-backup -n openshift-adp
 ```
 
+
+```text title="Expected output"
+backupstoragelocation.velero.io/s3-backup created
+backup.velero.io/my-app-backup created
+schedule.velero.io/daily-backup created
+restore.velero.io/my-app-restore created
+NAME              STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
+my-app-backup     Completed   0        2          2024-01-15T14:32:18Z            29d       s3-backup          <none>
+daily-backup-20240115-020001  Completed   0        0          2024-01-15T02:00:15Z            29d       s3-backup          <none>
+
+NAME               STATUS      ERRORS   WARNINGS   CREATED                         SELECTOR
+my-app-restore     Completed   0        1          2024-01-15T14:35:42Z            <none>
+
+time="2024-01-15T14:32:18Z" level=info msg="Starting backup" backup=openshift-adp/my-app-backup
+time="2024-01-15T14:32:22Z" level=info msg="Backing up resource" logSource="pkg/backup/backup.go:431" resource=deployments.apps
+time="2024-01-15T14:32:25Z" level=info msg="Backup completed successfully" backup=openshift-adp/my-app-backup duration=7.234s
+```
+
+!!! warning "Common errors"
+    **`error: unable to recognize "STDIN": no matches for kind "BackupStorageLocation" in version "velero.io/v1"`** — Verify the OADP operator is fully installed and the velero.io API is registered with `oc api-resources | grep velero`.
+    **`error validating data: data[spec.credential.name]: Invalid value: "cloud-credentials": secret not found`** — Create the AWS credentials secret in the openshift-adp namespace using `oc create secret generic cloud-credentials --from-file=cloud=<path-to-aws-creds> -n openshift-adp`.
+    **`backup.velero.io "my-app-backup" is invalid: spec.storageLocation: Invalid value: "s3-backup": BackupStorageLocation not found`** — Ensure the BackupStorageLocation resource is created and in Completed phase before creating backups with `oc get bsl -n openshift-adp`.
 ## PV Snapshot Backup (CSI)
 
 CSI-based snapshots are independent of OADP and operate at the storage driver level. Use alongside OADP for complete application protection.
@@ -348,6 +455,19 @@ spec:
 EOF
 ```
 
+
+```text title="Expected output"
+volumesnapshotclass.snapshot.storage.k8s.io/csi-snapclass created
+volumesnapshot.snapshot.storage.k8s.io/myapp-data-snap-2024-01-15 created
+NAME                          READYTOUSE   SOURCEPVC      SOURCESNAPSHOTCONTENT   RESTORESIZE   SNAPSHOTCLASS   SNAPSHOTCONTENT                              CREATIONTIME   AGE
+myapp-data-snap-2024-01-15    true         myapp-data     <unset>                 50Gi          csi-snapclass   snapshotcontent-a7f2c9e1-4b8d-11ee-9c2a   2024-01-15T14:32:18Z   45s
+persistentvolumeclaim/myapp-data-restored created
+```
+
+!!! warning "Common errors"
+    **`error: resource mapping not found for "snapshot.storage.k8s.io/v1/VolumeSnapshot"`** — Install the snapshot controller with `oc apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml`.
+    **`VolumeSnapshot "myapp-data-snap-2024-01-15" is not ready for use`** — Wait for the snapshot to reach `READYTOUSE: true` status before attempting restore, or check CSI driver logs with `oc logs -n openshift-cluster-csi-drivers -l app=ebs-csi-controller`.
+    **`error: PersistentVolumeClaim in version "v1" cannot be handled as a PersistentVolumeClaim: no kind "PersistentVolumeClaim" is registered for version "snapshot.storage.k8s.io/v1"`** — Replace `<date>` placeholder with actual snapshot name (e.g., `myapp-data-snap-2024-01-15`) in the restore PVC manifest.
 ---
 
 ## See also

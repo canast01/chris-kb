@@ -70,6 +70,22 @@ ssh mystic@<vxm-ip>
 tail -100 /var/log/mystic/lcm.log | grep -iE "pre-check|precheck|ERROR|FAIL"
 ```
 
+
+```text title="Expected output"
+Last login: Wed Mar 15 14:22:18 2024 from 10.45.32.18
+[mystic@vxm-prod-01 ~]$ tail -100 /var/log/mystic/lcm.log | grep -iE "pre-check|precheck|ERROR|FAIL"
+2024-03-15 14:18:32.445 [INFO] Starting pre-check validation for cluster upgrade
+2024-03-15 14:18:45.221 [INFO] Pre-check: Validating vSAN health status
+2024-03-15 14:18:47.892 [INFO] Pre-check: Checking ESXi host connectivity (8/8 hosts online)
+2024-03-15 14:18:52.334 [INFO] Pre-check: Verifying storage capacity (1.2TB available, 340GB required)
+2024-03-15 14:19:01.556 [INFO] Pre-check: Validating network configuration
+2024-03-15 14:19:15.778 [INFO] Pre-check validation completed successfully
+2024-03-15 14:19:22.445 [INFO] Beginning LCM upgrade sequence for vSAN 7.0.3 → 8.0.1
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,gssapi-keyexchange)`** — Verify SSH key is loaded with `ssh-add` or use password authentication with `ssh -o PubkeyAuthentication=no mystic@<vxm-ip>`.
+    **`tail: cannot open '/var/log/mystic/lcm.log' for reading: No such file or directory`** — Confirm the VXM appliance is fully initialized and check the correct log path with `find /var/log -name "*lcm*" -type f`.
 Look for: the specific pre-check name that failed. Common failures and fixes:
 
 **vSAN health not green:** Navigate to **Cluster → Monitor → vSAN → Skyline Health** and resolve all
@@ -83,6 +99,17 @@ red or yellow items. LCM will not proceed with any vSAN health warning outstandi
 esxcli software vib list | grep -v "VMware\|Dell\|Broadcom\|QLogic"
 ```
 
+
+```text title="Expected output"
+esx-ui                                    1.45.0-20567896                VMware    CommunitySupported
+lsi-mr3                                   7.714.06.00-1OEM.700.1.0.15160174  VMware    CommunitySupported
+net-bnx2                                  2.2.5k-1OEM.700.1.0.15160174       VMware    CommunitySupported
+scsi-megaraid-sas                         7.714.06.00-1OEM.700.1.0.15160174  VMware    CommunitySupported
+```
+
+!!! warning "Common errors"
+    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or as root: `sudo esxcli software vib list | grep -v "VMware\|Dell\|Broadcom\|QLogic"`
+    **`esxcli: command not found`** — Ensure you are running this command on an ESXi host directly (SSH session) or via vSphere CLI; this command does not work on vCenter Server.
 Remove any VIBs not in the VxRail approved list before retrying.
 
 **NTP skew:** Check and fix NTP on all nodes — see the
@@ -117,6 +144,25 @@ Check ESXi installation logs on the affected host if accessible:
 cat /var/log/esxi_install.log | tail -50
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:42:33Z [INFO] ESXi 8.0.1 installation started on host esx-prod-04.datacenter.local
+2024-01-15T09:42:45Z [INFO] Detected hardware: Dell PowerEdge R750, 2x Intel Xeon Platinum 8380
+2024-01-15T09:43:12Z [INFO] Network configuration: VLAN 100, IP 192.168.1.45/24, Gateway 192.168.1.1
+2024-01-15T09:44:28Z [INFO] Storage detected: 4x 1.2TB SAS drives, 2x 960GB NVMe
+2024-01-15T09:45:01Z [INFO] Partitioning disk /dev/sda with GPT layout
+2024-01-15T09:46:15Z [INFO] Installing ESXi boot loader to /dev/sda1
+2024-01-15T09:52:33Z [INFO] Copying system files to /dev/sda2 (progress: 87%)
+2024-01-15T10:01:44Z [INFO] Configuring management network on vmnic0
+2024-01-15T10:02:19Z [INFO] Setting hostname to esx-prod-04.datacenter.local
+2024-01-15T10:03:05Z [INFO] Installation completed successfully
+2024-01-15T10:03:22Z [INFO] System will reboot in 30 seconds
+2024-01-15T10:03:52Z [INFO] Reboot initiated
+```
+
+!!! warning "Common errors"
+    **`cat: /var/log/esxi_install.log: No such file or directory`** — The log file only exists during active installation; check `/var/log/vmkernel.log` or `/var/log/hostd.log` on a running ESXi host instead.
+    **`tail: cannot open '/var/log/esxi_install.log' for reading: Permission denied`** — Run the command with `ssh root@<esxi-host>` or execute it directly on the ESXi console with appropriate root privileges.
 Look for:
 
 ```text
@@ -136,12 +182,59 @@ curl -k -u mystic:<password> \
   https://<vxm-ip>/rest/vxm/v1/lcm/upgrade/bundle/status
 ```
 
+
+```text title="Expected output"
+{
+  "id": "upgrade-bundle-20240115",
+  "status": "READY",
+  "version": "8.0.1",
+  "buildNumber": "21493496",
+  "releaseDate": "2024-01-15T00:00:00Z",
+  "bundleSize": "2847563648",
+  "checksum": "a7f3e9c2d1b4f8e6a9c3d5e7f1b3a5c7",
+  "components": [
+    {
+      "name": "vxrail-manager",
+      "version": "8.0.1",
+      "status": "READY"
+    },
+    {
+      "name": "vcenter-server",
+      "version": "8.0.1",
+      "status": "READY"
+    }
+  ],
+  "lastChecked": "2024-01-16T14:32:18Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the VXM's certificate into your system's CA bundle.
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VXM IP address is correct and the management interface is reachable on port 443 using `ping` or `nc -zv`.
+    **`{"error":"Unauthorized","code":401}`** — Confirm the username and password are correct; use `curl -k -u mystic:$PASSWORD` with proper credential escaping if special characters are present.
 ```bash
 curl -k -u mystic:<password> \
   -X POST \
   https://<vxm-ip>/rest/vxm/v1/system/support-bundle
 ```
 
+
+```text title="Expected output"
+{
+  "request_id": "req-8f4c2b91-7d3e-4a9e-b2f1-c5e8d9a1f6b3",
+  "status": "INITIATED",
+  "bundle_name": "vxm-support-bundle-20240115-143022.tar.gz",
+  "estimated_size_mb": 2847,
+  "location": "/var/log/vmware/vxm/bundles/vxm-support-bundle-20240115-143022.tar.gz",
+  "created_at": "2024-01-15T14:30:22Z",
+  "message": "Support bundle generation started. Check status with request_id."
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the VXM's CA certificate into your system trust store.
+    **`curl: (401) Unauthorized`** — Verify the username and password are correct; use `curl -u mystic:password` with the actual password or store credentials in `~/.netrc`.
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm the VXM IP address is correct and the management interface is running; check network connectivity with `ping <vxm-ip>`.
 Check current cluster and node versions:
 
 ```bash
@@ -149,6 +242,46 @@ curl -k -u mystic:<password> \
   https://<vxm-ip>/rest/vxm/v1/hosts | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "hosts": [
+    {
+      "id": "host-42",
+      "name": "esx-prod-01.datacenter.local",
+      "ipAddress": "192.168.1.105",
+      "version": "7.0.3",
+      "status": "ONLINE",
+      "cpuCount": 24,
+      "memoryGB": 512
+    },
+    {
+      "id": "host-43",
+      "name": "esx-prod-02.datacenter.local",
+      "ipAddress": "192.168.1.106",
+      "version": "7.0.3",
+      "status": "ONLINE",
+      "cpuCount": 24,
+      "memoryGB": 512
+    },
+    {
+      "id": "host-44",
+      "name": "esx-prod-03.datacenter.local",
+      "ipAddress": "192.168.1.107",
+      "version": "7.0.2",
+      "status": "MAINTENANCE",
+      "cpuCount": 16,
+      "memoryGB": 256
+    }
+  ],
+  "totalCount": 3
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VXM appliance is running and the IP address is correct with `ping <vxm-ip>`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should bypass this; if persisting, ensure you're using HTTPS and not HTTP.
+    **`jq: parse error: Invalid JSON at line 1`** — Verify the API endpoint is correct and the VXM service is responding; check VXM logs with `ssh <vxm-ip> tail -f /var/log/vmware/vxm/vxm.log`.
 Look for: bundle status showing `FAILED` with a phase name; support bundle creation returning a bundle ID that you can download and attach to a Dell support case.
 
 ---

@@ -36,6 +36,10 @@ collecting_an_esxi_support_bundle -> using_aria_operations_for_logs: uses
 /var/log/auth.log        # Authentication events
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
 ## vCenter Appliance Log Locations
 
 ```bash
@@ -45,6 +49,10 @@ collecting_an_esxi_support_bundle -> using_aria_operations_for_logs: uses
 /var/log/vmware/applmgmt/      # Appliance management logs
 ```
 
+
+```text title="Expected output"
+(no output — these are directory path references only)
+```
 ## Collecting a vCenter Support Bundle
 
 In vSphere Client: **Menu** → **Administration** → **Support** → **Export Support Bundle**
@@ -60,6 +68,22 @@ Or via SSH:
 vm-support -n <bundle-name>
 ```
 
+
+```text title="Expected output"
+Generating support bundle: vm-support-2024-01-15-14-32-45.tar.gz
+Collecting system logs...
+Collecting configuration files...
+Collecting performance data...
+Collecting network diagnostics...
+Bundle generation complete.
+Bundle location: /var/log/vm-support-2024-01-15-14-32-45.tar.gz
+Bundle size: 487.3 MB
+```
+
+!!! warning "Common errors"
+    **`vm-support: command not found`** — Ensure you are running this command on an ESXi host or vCenter Server where vm-support is installed, or use the full path `/usr/lib/vmware/bin/vm-support`.
+    **`Permission denied`** — Run the command with root privileges using `sudo vm-support -n <bundle-name>` or log in as root.
+    **`Error: Bundle name contains invalid characters`** — Use only alphanumeric characters, hyphens, and underscores in the bundle name; avoid spaces and special characters.
 ## Using Aria Operations for Logs
 
 - Search by hostname, IP, or keyword

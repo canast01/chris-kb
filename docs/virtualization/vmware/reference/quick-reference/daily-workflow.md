@@ -79,6 +79,22 @@ esxcli vsan health cluster list | grep -v "Green"   # Should return nothing
 esxcli vsan debug resync summary                     # Confirm no unexpected resync in progress
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+
+Cluster Resync Summary
+======================
+Cluster UUID: 52d4a8f1-7c2e-4d9a-b1e3-9f8c2a5d6e7f
+Resync Operations: 0
+Resync Bytes: 0 B
+Estimated Time Remaining: 0 seconds
+Last Updated: 2024-01-15 14:32:18 UTC
+```
+
+!!! warning "Common errors"
+    **`vsan health cluster list: Unknown command or namespace`** — Ensure you are running the command on an ESXi host with vSAN enabled; if vSAN is not licensed, install the vSAN license first.
+    **`Error: Unable to connect to the vSAN cluster`** — Verify the host is part of an active vSAN cluster by checking vCenter under Cluster → Configure → vSAN → General.
 ## Step 6 — Review Failed Tasks (2 min)
 
 vCenter UI → Recent Tasks → filter by Status: Error → review last 24 hours.

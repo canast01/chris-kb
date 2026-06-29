@@ -141,6 +141,47 @@ SSH to the ESXi host and run esxtop to get real-time ground-truth metrics before
 esxtop -b -n 3 | head -50
 ```
 
+
+```text title="Expected output"
+ESXTOP(1)                                                           ESXTOP(1)
+
+   LEGEND
+   %USED    -- CPU used by the hypervisor and VMs
+   %RUN     -- CPU ready time
+   %WAIT    -- CPU wait time
+   %CSTP    -- CPU co-stop time
+   MEMSZ    -- Memory size in MB
+   GRANT    -- Memory granted to VM
+   ACTIVE   -- Active memory
+   SHARED   -- Shared memory
+   SWAPPED  -- Swapped memory
+
+   GROUP CPU MEMORY DISK NETWORK
+   1    12.5 45.2   8.3  2.1
+   2    18.7 62.1   15.4 5.8
+   3    5.2  28.9   3.1  0.9
+
+   PCPU USED  RUN  WAIT CSTP
+   0    14.2  2.1  1.8  0.0
+   1    16.8  3.5  2.2  0.1
+   2    11.5  1.9  1.5  0.0
+   3    13.2  2.8  2.1  0.0
+
+   VMID NAME                 %CPU  %MEM  %DISK %NET
+   1    web-prod-01          22.5  48.2  12.1  3.2
+   2    db-backup-02         8.3   71.5  28.4  1.1
+   3    app-cache-03         15.7  35.9  5.2   8.7
+   4    monitoring-04        5.1   22.3  2.1   0.4
+
+   Batch sample 1 of 3 complete
+   Batch sample 2 of 3 complete
+   Batch sample 3 of 3 complete
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or local console, not from a vCenter server or external machine.
+    **`Error: Unable to open /proc/uptime: Permission denied`** — Run esxtop with elevated privileges using `sudo esxtop -b -n 3` or log in as root.
+    **`Batch mode failed: Invalid sample count`** — Verify the `-n` parameter is a positive integer (e.g., `-n 3` not `-n 0` or `-n abc`).
 Key esxtop views and what to look for:
 
 ```text
@@ -159,6 +200,30 @@ esxtop -b -n 1 | grep -A2 "vmx-vcpu"
 esxcli vm process list
 ```
 
+
+```text title="Expected output"
+PCPU  %USED  %RDY  %SYS  %WAIT %IDLE
+  0   45.2  12.5   2.1  15.3  24.9
+  1   38.7   8.9   1.8  18.2  32.4
+  2   52.1  15.3   2.5  12.1  18.0
+  3   41.5  10.2   2.0  16.8  29.5
+
+World ID  Name                           CPU Affinity  %USED  %RDY
+ 4567     vmx-vcpu:vm-prod-web-01:0      0            45.2   12.5
+ 4568     vmx-vcpu:vm-prod-web-01:1      1            38.7    8.9
+
+Getting all VMs
+UUID                 Display Name              File                                    Memory    CPU  State
+564d1234-5678-90ab   vm-prod-db-01            [datastore1] vm-prod-db-01/vm-prod-db-01.vmx  16384   4    running
+564d5678-90ab-cdef   vm-prod-web-01           [datastore1] vm-prod-web-01/vm-prod-web-01.vmx  8192    2    running
+564d90ab-cdef-1234   vm-dev-test-02           [datastore1] vm-dev-test-02/vm-dev-test-02.vmx  4096    1    running
+564dab12-3456-7890   vm-prod-app-03           [datastore1] vm-prod-app-03/vm-prod-app-03.vmx  12288   4    running
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Verify you are running this command directly on an ESXi host (not a vCenter server) with SSH access enabled.
+    **`grep: (standard input) is empty`** — Run `esxtop -b -n 1` without piping to check if esxtop is producing output; if blank, the host may be under extreme load or esxtop may need a moment to initialize.
+    **`Error: The object has already been deleted or has not been completely created.`** — Wait a few seconds before running `esxcli vm process list` as the VM list may be refreshing; retry the command.
 Look for: `%RDY` high across many VMs = host overcommitted; `%RDY` high on one VM only = check resource pool limits.
 
 ---
@@ -178,6 +243,30 @@ esxcli vsan storage list
 esxcli vsan debug vmdk list
 ```
 
+
+```text title="Expected output"
+Object UUID                          Health  Owner  Congestion  IsSsd  Capacity
+52a1f4c8-7d2e-4a9f-b1c2-9e3d5f6a7b8c  Healthy  host-42  0%  false  102400MB
+7f9e8d7c-6b5a-4938-2d1c-0a9b8c7d6e5f  Healthy  host-42  2%  false  51200MB
+1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d  Degraded  host-42  15%  true  204800MB
+9z8y7x6w-5v4u-3t2s-1r0q-9p8o7n6m5l4k  Healthy  host-43  0%  false  76800MB
+...
+
+Storage Device                    Disk Group UUID                       Status
+mpx.vmhba0:C0:T0:L0              4c5d6e7f-8a9b-0c1d-2e3f-4a5b6c7d8e9f  Healthy
+mpx.vmhba1:C0:T1:L0              4c5d6e7f-8a9b-0c1d-2e3f-4a5b6c7d8e9f  Healthy
+mpx.vmhba2:C0:T2:L0              5d6e7f8a-9b0c-1d2e-3f4a-5b6c7d8e9f0a  Healthy
+...
+
+VMDK UUID                            VM Name          Read(IOPS)  Write(IOPS)  Latency(ms)
+52a1f4c8-7d2e-4a9f-b1c2-9e3d5f6a7b8c  prod-web-01      1245        342         2.3
+7f9e8d7c-6b5a-4938-2d1c-0a9b8c7d6e5f  prod-db-02       892         1156        4.7
+1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d  dev-app-03       45          23          1.1
+```
+
+!!! warning "Common errors"
+    **`Unknown command at token esxcli`** — Verify you are running the command on an ESXi host with vSAN enabled, not a vCenter server.
+    **`vSAN performance service is not enabled`** — Enable the vSAN performance service in vSAN cluster settings or use `esxcli vsan cluster get` to verify vSAN is operational.
 Look for:
 
 ```text
@@ -203,6 +292,33 @@ curl -sk -u admin:<password> \
   | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "rule_id": "1001",
+  "rule_name": "Allow-Web-Traffic",
+  "hit_count": 15847,
+  "byte_count": 2847362,
+  "packet_count": 12456,
+  "last_hit_timestamp": 1699564823000,
+  "enabled": true,
+  "direction": "IN_OUT",
+  "source": "10.0.0.0/8",
+  "destination": "192.168.1.0/24",
+  "service": "HTTP,HTTPS",
+  "action": "ALLOW",
+  "statistics": {
+    "total_sessions": 8923,
+    "active_sessions": 127,
+    "dropped_packets": 0
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed).
+    **`curl: (7) Failed to connect to <nsx-manager>: Name or service not known`** — Verify the NSX Manager hostname or IP address is correct and reachable from your network.
+    **`jq: parse error: Invalid JSON at line 1`** — Confirm the API endpoint and rule ID are valid; an invalid rule ID may return HTML error pages instead of JSON.
 Look for: high hit-count rules on east-west flows. Reduce overhead by consolidating rules with the same action and groups, adding a service exception for high-throughput backup VMs, or disabling packet logging on stateful rules.
 
 ---

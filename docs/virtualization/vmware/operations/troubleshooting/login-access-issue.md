@@ -69,6 +69,40 @@ service-control --restart vmware-sso
 service-control --restart vmware-sts-idmd
 ```
 
+
+```text title="Expected output"
+vmware-analytics-engine                                 STOPPED
+vmware-cis-license                                      RUNNING
+vmware-cm                                               STOPPED
+vmware-eam                                              RUNNING
+vmware-envoy                                            RUNNING
+vmware-imagebuilder                                     STOPPED
+vmware-mbcs                                             RUNNING
+vmware-netdump                                          STOPPED
+vmware-perfcharts                                       RUNNING
+vmware-postgres                                         RUNNING
+vmware-rhttpproxy                                       RUNNING
+vmware-sso                                              RUNNING
+vmware-sts-idmd                                         RUNNING
+vmware-vapi-endpoint                                    RUNNING
+vmware-vpxd                                             RUNNING
+vmware-vpxd-svcs                                        RUNNING
+vmware-vsan-health                                      STOPPED
+...
+Service vmware-sts-idmd is running.
+Service vmware-sso is running.
+Restarting vmware-sso...
+Service vmware-sso stopped successfully.
+Service vmware-sso started successfully.
+Restarting vmware-sts-idmd...
+Service vmware-sts-idmd stopped successfully.
+Service vmware-sts-idmd started successfully.
+```
+
+!!! warning "Common errors"
+    **`Service vmware-sso is stopped.`** — Run `service-control --start vmware-sso` to bring the service online before attempting restart.
+    **`Error: Unable to restart vmware-sts-idmd: Service dependency vmware-sso is not running.`** — Ensure vmware-sso is started first, as vmware-sts-idmd depends on it.
+    **`grep: (standard input) is empty`** — The grep filter is too restrictive; remove the filter or use `service-control --status --all` without piping to see all services.
 **Step 3 — Check for a locked account:**
 
 ```bash
@@ -76,6 +110,23 @@ service-control --restart vmware-sts-idmd
 /usr/lib/vmware-vmafd/bin/dir-cli account find-by-name --account administrator --login administrator@vsphere.local
 ```
 
+
+```text title="Expected output"
+dn: cn=administrator,cn=users,dc=vsphere,dc=local
+objectClass: user
+userAccountControl: 512
+cn: administrator
+sAMAccountName: administrator
+userPrincipalName: administrator@vsphere.local
+pwdLastSet: 133298765432100000
+accountExpires: 9223372036854775807
+lockoutTime: 0
+badPwdCount: 0
+```
+
+!!! warning "Common errors"
+    **`Error: Cannot connect to directory service on localhost:389`** — Verify the vCenter SSO service is running with `systemctl status vmware-vmafd` and check network connectivity to the SSO endpoint.
+    **`Error: [LDAP_INVALID_CREDENTIALS] Failed to authenticate as administrator@vsphere.local`** — Ensure you are running the command as root or with appropriate permissions, and verify the SSO service credentials are correct.
 In vCenter UI (if another admin can log in): Administration → Single Sign-On → Users and Groups → check account status.
 
 ---
@@ -96,6 +147,33 @@ ldapsearch -H ldap://<dc-ip>:389 -x -b "dc=domain,dc=com" "(objectClass=*)" dn 2
 nslookup <ad-domain-fqdn>
 ```
 
+
+```text title="Expected output"
+# LDAP Search Results
+dn: dc=domain,dc=com
+dn: cn=Users,dc=domain,dc=com
+dn: cn=Computers,dc=domain,dc=com
+dn: cn=Domain Controllers,dc=domain,dc=com
+dn: cn=builtin,dc=domain,dc=com
+dn: cn=Managed Service Accounts,dc=domain,dc=com
+dn: cn=Program Files,dc=domain,dc=com
+dn: cn=System,dc=domain,dc=com
+dn: cn=Lost and Found,dc=domain,dc=com
+...
+
+# DNS Resolution Results
+Server:		192.168.1.10
+Address:	192.168.1.10#53
+
+Name:	corp.example.com
+Address: 192.168.1.50
+Address: 192.168.1.51
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Can't contact LDAP server (-1)`** — Verify the DC IP address is correct and port 389 is open in firewall rules between VCSA and domain controller.
+    **`ldapsearch: No such file or directory`** — Install the ldap-utils package on VCSA using `yum install openldap-clients`.
+    **`Server can't find <ad-domain-fqdn>: NXDOMAIN`** — Confirm the VCSA has the correct DNS server configured in `/etc/resolv.conf` pointing to a working AD-integrated DNS server.
 **Step 2 — Check for AD password expiry on the service account** used by vCenter for LDAP binding. vCenter uses a bind account to query AD — if its password expires, all AD authentication fails.
 
 **Step 3 — Verify time sync** — Kerberos authentication fails if the vCenter appliance is more than 5 minutes out of sync with the domain controllers:
@@ -105,6 +183,28 @@ timedatectl status
 ntpq -p
 ```
 
+
+```text title="Expected output"
+Local time: Thu 2024-01-18 14:32:47 UTC
+           Universal time: Thu 2024-01-18 14:32:47 UTC
+                 RTC time: Thu 2024-01-18 14:32:47
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+           RTC in local TZ: no
+
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ ntp.ubuntu.com  .POOL.          16 p    -   64    0    0.000    0.000   0.000
+*time.google.com 216.239.35.0     2 u   52   64  377   18.432   -2.104   3.217
++ntp.nist.gov    132.163.96.1     1 u   58   64  377   42.108    1.847   2.891
+-tick.ucla.edu   128.97.55.79     2 u   61   64  377   89.234    8.932   4.156
+```
+
+!!! warning "Common errors"
+    **`System clock synchronized: no`** — Run `timedatectl set-ntp true` to enable NTP synchronization.
+    **`ntpq: read: Connection refused`** — Ensure ntpd or systemd-timesyncd is running with `systemctl start ntp` or `systemctl start systemd-timesyncd`.
+    **`No association ID's returned`** — Wait 30-60 seconds for NTP to establish peer connections, then rerun `ntpq -p`.
 **Step 4 — Check AD group membership** for the user — vCenter grants access by group, not just individual accounts. Confirm the user is still in the correct AD group.
 
 ---
@@ -166,6 +266,34 @@ timedatectl status
 chronyc tracking
 ```
 
+
+```text title="Expected output"
+Local time: Wed 2024-01-17 14:32:45 UTC
+           Universal time: Wed 2024-01-17 14:32:45 UTC
+                 RTC time: Wed 2024-01-17 14:32:45
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+           RTC in local TZ: no
+
+Reference ID    : 91.189.89.198 (ntp.ubuntu.com)
+Stratum         : 2
+Ref time (UTC)  : Wed Jan 17 14:32:40 2024
+System time offset : 0.000234567 seconds
+Last update     : 8.2 seconds ago
+RMS offset      : 0.001234 seconds
+Frequency       : -12.456 ppm
+Residual freq   : +0.012 ppm
+Skew            : 0.089 ppm
+Root delay      : 0.045678 seconds
+Root dispersion : 0.062345 seconds
+Update interval : 1024.0 seconds
+Leap status     : Normal
+```
+
+!!! warning "Common errors"
+    **`chronyc: Could not get tracking data`** — Verify chrony service is running with `systemctl status chrony` and check network connectivity to NTP servers.
+    **`System clock synchronized: no`** — Wait 2–3 minutes for NTP synchronization to complete, or manually sync with `ntpdate <ntp-server>` if available.
 ---
 
 ## Verify

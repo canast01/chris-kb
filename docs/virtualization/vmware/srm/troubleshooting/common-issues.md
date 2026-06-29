@@ -225,6 +225,32 @@ netMap -> netCheck
 stuck -> script
 ```
 
+
+```text title="Expected output"
+Verifying vCenter at protected site is operational...
+  vCenter: vcenter-protected.corp.local (192.168.10.50)
+  Status: RUNNING
+  Build: 7.0.3.00100
+  SSL Certificate: Valid (expires 2025-11-14)
+
+Verifying SRM service running at protected site...
+  SRM Service: RUNNING
+  Process ID: 4521
+  Memory Usage: 1.2 GB / 4.0 GB
+  Last Health Check: 2024-01-15 14:32:18 UTC
+
+Verifying site pairing is Connected...
+  Protected Site: site-a.srm.local
+  Recovery Site: site-b.srm.local
+  Pairing Status: CONNECTED
+  Last Sync: 2024-01-15 14:35:42 UTC
+  Replication Health: 98.5%
+```
+
+!!! warning "Common errors"
+    **`vCenter service unavailable: connection refused on port 443`** — Verify vCenter is running with `systemctl status vmware-vpxd` and check firewall rules allow port 443 between SRM and vCenter.
+    **`SRM service not running: failed to connect to localhost:13116`** — Restart the SRM service with `systemctl restart vmware-srm` and check `/var/log/vmware/srm/srm.log` for startup errors.
+    **`Site pairing status: DISCONNECTED - certificate validation failed`** — Regenerate and re-import the SSL certificates on both sites, then re-pair the sites through the SRM UI.
 1. SRM → Configure → Array Managers → check status
 2. Verify SRA service is running:
    ```powershell

@@ -91,6 +91,14 @@ vCenter → select the cluster → **Configure** → **Key Providers** → **Add
 nc -zv <kms-server-ip> 5696
 ```
 
+
+```text title="Expected output"
+Connection to 192.168.1.50 5696 port [tcp/*] succeeded!
+```
+
+!!! warning "Common errors"
+    **`nc: connect to 192.168.1.50 port 5696 (tcp) failed: Connection refused`** — Verify the KMS service is running on the target server with `systemctl status kmsd` or equivalent, and confirm the firewall allows inbound traffic on port 5696.
+    **`nc: getaddrinfo failed for <kms-server-ip>: Name or service not known`** — Replace `<kms-server-ip>` with a valid IP address or resolvable hostname; verify DNS resolution with `nslookup <kms-server-ip>` from the vCenter appliance.
 Expected: connection succeeds on TCP 5696 (KMIP standard port). Import the KMS TLS certificate into vCenter to establish trust. If the KMS is clustered, add both nodes — vCenter uses the first available.
 
 ---
@@ -113,6 +121,18 @@ Get-Datastore "vsanDatastore" | Select Name, FreeSpaceGB, CapacityGB
 esxcli vsan debug resync summary get
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-7c3e-4f2a-9b1e-6a2c8d9e0f1b
+Resync queue length: 0
+Resync operations in progress: 0
+Estimated time to completion: 0 seconds
+Last resync activity: 2024-01-15 14:32:18 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace path: vsan debug resync`** — Verify VSAN is installed and enabled on the ESXi host with `esxcli vsan cluster get`.
+    **`Error: Permission denied`** — Run the command with root privileges or ensure your user account has VSAN administrator permissions.
 | Check | Requirement |
 |---|---|
 | vSAN Skyline Health | All tests green — no warnings or errors |
@@ -141,6 +161,23 @@ Monitor the resyncing objects queue until it reaches 0 — do not perform any st
 esxcli vsan debug resync summary get
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-7c2e-4f9a-b1d2-8e3c9a4b5c6d
+Resync Objects: 1247
+Resync Bytes: 847.3 GB
+Resync Rate (MB/s): 125.4
+Estimated Time Remaining: 1h 52m
+Objects Synced: 1089
+Bytes Synced: 742.1 GB
+Resync Percentage: 87.4%
+Last Updated: 2024-01-15 14:32:18 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to the host. Error message: Connection refused`** — Ensure the ESXi host is reachable and SSH/VSAN service is running; verify network connectivity and firewall rules.
+    **`Error: VSAN is not enabled on this host`** — Enable VSAN on the cluster through vCenter or use `esxcli vsan cluster get` to verify VSAN is active.
+    **`Error: Permission denied`** — Run the command with appropriate privileges or ensure your user account has VSAN administrator permissions on the host.
 Also monitor: vCenter → **vSAN** → **Monitor** → **Resyncing Objects** (updates every few minutes).
 
 Reference rebuild times:

@@ -67,6 +67,20 @@ sha256sum VxRail-7.0.401-bundle.bin
 Get-FileHash -Algorithm SHA256 VxRail-7.0.401-bundle.bin
 ```
 
+
+```text title="Expected output"
+VxRail-7.0.401-bundle.bin: OK
+a3f7e2c9d1b4f8e6a2c5d9e1f3b7a4c6d8e0f1a2b3c4d5e6f7a8b9c0d1e2f3
+
+(PowerShell output on Windows)
+Algorithm       : SHA256
+Hash            : A3F7E2C9D1B4F8E6A2C5D9E1F3B7A4C6D8E0F1A2B3C4D5E6F7A8B9C0D1E2F3
+Path            : C:\Downloads\VxRail-7.0.401-bundle.bin
+```
+
+!!! warning "Common errors"
+    **`sha256sum: VxRail-7.0.401-bundle.bin: No such file or directory`** — Verify the bundle file exists in the current directory using `ls -la` and navigate to the correct path.
+    **`Get-FileHash : Cannot find path 'C:\Downloads\VxRail-7.0.401-bundle.bin' because it does not exist.`** — Check the file path and ensure the bundle has been downloaded completely to the specified directory.
 Compare the hash against the value shown on the Dell support page.
 
 ---
@@ -89,6 +103,19 @@ curl -sk \
   "https://<vxm-ip>/rest/vxm/v1/lcm/bundle"
 ```
 
+
+```text title="Expected output"
+% Total    % Received % Xferd  Average Speed   Time    Current
+                                 Dload  Upload   Total   Spent    Left Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--:--
+100  2847M  100  2847M    0     0  18.5M      0 --:--:-- 153s --:--:-- --:--:--
+{"bundle_id":"b7f2c9e1-4a3d-11ed-9e2a-0050569b8d4e","status":"UPLOADING","progress":100,"message":"Bundle uploaded successfully"}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example; if error persists, verify the VxM hostname matches the certificate CN).
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm the VxM IP address is correct and the VxRail Manager REST API service is running with `systemctl status vxrail-rest-api`.
+    **`{"error":"Invalid credentials","code":401}`** — Verify the base64-encoded credentials are correct by decoding with `echo 'bXlzdGljOnBhc3N3b3Jk' | base64 -d` and confirm the VxM admin username and password.
 **Verify the bundle is listed after upload:**
 
 ```bash
@@ -97,6 +124,43 @@ curl -sk \
   "https://<vxm-ip>/rest/vxm/v1/lcm/upgrade" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "state": "READY",
+  "currentVersion": "7.0.510",
+  "targetVersion": "7.0.520",
+  "estimatedDuration": 3600,
+  "components": [
+    {
+      "name": "vxrail-manager",
+      "currentVersion": "7.0.510",
+      "targetVersion": "7.0.520",
+      "status": "PENDING"
+    },
+    {
+      "name": "vcenter",
+      "currentVersion": "7.0.200",
+      "targetVersion": "7.0.210",
+      "status": "PENDING"
+    },
+    {
+      "name": "esxi",
+      "currentVersion": "7.0.1",
+      "targetVersion": "7.0.2",
+      "status": "PENDING"
+    }
+  ],
+  "lastUpgradeTime": "2024-01-15T08:30:00Z",
+  "nextScheduledUpgrade": null
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
+    **`Authorization header missing or invalid`** — Verify the base64-encoded credentials are correct by testing `echo -n 'mystic:password' | base64` separately and confirm the VXM API user has proper permissions.
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm the VXM IP address is correct, reachable from your network, and the VXM appliance is running and has completed initialization.
 ---
 
 ## Step 3 — Run Pre-Upgrade Checks
@@ -119,6 +183,55 @@ curl -sk \
   "https://<vxm-ip>/rest/vxm/v1/lcm/precheck/status" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "precheck-2024-01-15-08:32:14",
+  "status": "COMPLETED",
+  "startTime": "2024-01-15T08:32:14.000Z",
+  "endTime": "2024-01-15T08:45:22.000Z",
+  "overallStatus": "PASSED",
+  "checkResults": [
+    {
+      "checkName": "Disk Space Validation",
+      "status": "PASSED",
+      "message": "All nodes have sufficient disk space"
+    },
+    {
+      "checkName": "Network Connectivity",
+      "status": "PASSED",
+      "message": "All cluster nodes are reachable"
+    },
+    {
+      "checkName": "vSAN Health",
+      "status": "PASSED",
+      "message": "vSAN cluster is healthy"
+    },
+    {
+      "checkName": "License Compliance",
+      "status": "WARNING",
+      "message": "License expiration in 45 days"
+    }
+  ],
+  "nodeDetails": [
+    {
+      "nodeId": "node-1",
+      "hostname": "esx-vxrail-01.lab.local",
+      "status": "READY"
+    },
+    {
+      "nodeId": "node-2",
+      "hostname": "esx-vxrail-02.lab.local",
+      "status": "READY"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's included if removed).
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VXM IP address is correct and the VXM appliance is running and accessible on the network.
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure the API endpoint is correct and the VXM service is responding; check VXM logs if the endpoint returns HTML error pages instead of JSON.
 **Do not proceed if any pre-check item shows FAILED.** Resolve the listed issue and re-run the pre-check.
 
 ---
@@ -156,6 +269,41 @@ curl -sk \
   "https://<vxm-ip>/rest/vxm/v1/lcm/upgrade" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "upgrade-job-12847",
+  "status": "IN_PROGRESS",
+  "progress": 65,
+  "currentStep": "Upgrading vSAN cluster",
+  "startTime": "2024-01-15T08:32:14Z",
+  "estimatedTimeRemaining": 1847,
+  "nodes": [
+    {
+      "hostname": "vxrail-node-01.lab.local",
+      "status": "COMPLETED",
+      "version": "8.0.210"
+    },
+    {
+      "hostname": "vxrail-node-02.lab.local",
+      "status": "IN_PROGRESS",
+      "version": "8.0.210"
+    },
+    {
+      "hostname": "vxrail-node-03.lab.local",
+      "status": "PENDING",
+      "version": "7.0.510"
+    }
+  ],
+  "warnings": [],
+  "errors": []
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VXM IP address is correct and the VXM management interface is reachable on port 443.
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure the VXM API is responding with valid JSON; check authentication credentials and that the endpoint is accessible.
 Key fields in the API response:
 
 | Field | Meaning |
@@ -210,6 +358,19 @@ racadm getversion -f idrac
 racadm getversion -f bios
 ```
 
+
+```text title="Expected output"
+VxRail Version: 7.0.510
+Build Number:   7.0.510-26.0.11248.1
+
+iDRAC Version: 6.10.40.00
+BIOS Version: 2.14.3 (Release Date: 04/15/2024)
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the VxRail Manager's certificate into your system's trusted store.
+    **`bash: racadm: command not found`** — Install Dell OMECLI tools or run this command directly on the iDRAC host; `racadm` is not available on VxRail Manager nodes.
+    **`Authorization header invalid or credentials incorrect`** — Verify the base64-encoded credentials are correct by testing `echo -n 'mystic:password' | base64` and confirm the VxRail Manager user has API access permissions.
 Post-upgrade checklist:
 
 - [ ] All nodes Online in VxRail Plugin

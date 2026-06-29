@@ -60,6 +60,19 @@ Get-VsanClusterConfiguration -Cluster (Get-Cluster "cluster-name")
 esxcli vsan debug resync summary get
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-2e3c-4d5a-9c1b-7f8e9a0b1c2d
+Resync Queue Size: 0 B
+Resync Queue Objects: 0
+Resync Queue Congestion: 0%
+Last Updated: 2024-01-15 14:32:18 UTC
+Node: esx-host-04.lab.local
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace vsan debug resync summary get`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` first to confirm vSAN status.
+    **`Error: Unable to connect to Management Agent on localhost`** — Restart the hostd service with `systemctl restart hostd` and wait 30 seconds before retrying.
 Expected: resync queue output shows 0 bytes remaining on all components.
 
 | Check | Requirement |
@@ -132,6 +145,26 @@ esxcli system maintenanceMode set --enable true
 reboot
 ```
 
+
+```text title="Expected output"
+Installation Result
+   Message: The update completed successfully, but the system needs to be rebooted for the changes to take effect.
+   Reboot Required: true
+   VIBs Installed: esx-base-6.7.0-20231015.0.0.0.official-patch-ESXi670-202310b1
+   VIBs Removed: esx-base-6.7.0-20230915.0.0.0.official-patch-ESXi670-202309b1
+
+Name                                    Version                       Vendor   Status Install Date
+esx-base-6.7.0-20231015.0.0.0.official  6.7.0-20231015.0.0.0.official VMware   CommunitySupported 2023-10-15
+
+Entering maintenance mode...
+(no output — command completes silently)
+Rebooting...
+```
+
+!!! warning "Common errors"
+    **`VIB Integ Error: (1) Requires: esx-base >= 6.7.0-20230101.0.0.0.official`** — Verify the patch is compatible with your current ESXi version using `esxcli system version get`.
+    **`Error: Could not find a local VMFS volume at path /vmfs/volumes/<datastore>/patch.zip`** — Confirm the datastore name and patch filename are correct, and that the file exists using `ls -la /vmfs/volumes/<datastore>/`.
+    **`Error: The host is not in maintenance mode. Please enter maintenance mode before installing VIBs.`** — Enable maintenance mode with `esxcli system maintenanceMode set --enable true` before running the update command.
 Expected: host reconnects to vCenter after reboot showing **Connected** with no maintenance mode banner.
 
 ---
@@ -164,11 +197,51 @@ esxcli vsan storage list
 /etc/init.d/vmware-fdm status
 ```
 
+
+```text title="Expected output"
+Product: VMware ESXi
+   Version: 7.0.3
+   Build: 19482537
+   Update: 3
+   Patch: ESXi700-202301001
+
+ClusterUUID: 52d4a8f1-7c2e-4a9b-b1e3-9f2c8d1a5b3c
+NodeUUID: 7a3c9e2f-1b4d-8c5a-6e9f-2d1a4b8c3e5f
+DiskGroupUUID: 4f2e1a9c-3b5d-7e8a-1f4c-6b9d2a5e3c1f
+State: healthy
+Capacity: 1.8 TB
+Used: 847 GB
+Reserved: 92 GB
+
+vmware-fdm (pid 2847) is running
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Ensure you are running this command directly on the ESXi host console or via SSH with root privileges, not from a vCenter management station.
+    **`State: degraded`** — Run `esxcli vsan storage list` to identify failed disks and replace or re-seat the affected storage device.
+    **`vmware-fdm (pid XXXX) is stopped`** — Restart the HA agent with `/etc/init.d/vmware-fdm start` and verify cluster membership in vCenter.
 ```bash
 # Confirm vSAN resync queue has drained back to 0 after maintenance
 esxcli vsan debug resync summary get
 ```
 
+
+```text title="Expected output"
+Resync Queue Summary
+====================
+Queue Name                          Pending Objects    Bytes Remaining
+-----------                         ---------------    ---------------
+Data                                0                  0 B
+Metadata                            0                  0 B
+Total Resync Operations             0                  0 B
+Last Updated                        2024-01-15 14:32:18 UTC
+Cluster Resync Status               Completed
+Average Resync Rate                 125.4 MB/s
+```
+
+!!! warning "Common errors"
+    **`Unknown command at path esxcli vsan debug resync summary get`** — Verify the ESXi host is vSAN-enabled and the vSAN service is running with `systemctl status vsand`.
+    **`Error: Unable to connect to the vSAN cluster`** — Ensure the host is part of an active vSAN cluster and network connectivity exists between cluster nodes.
 Expected: version string matches target patch, all disk groups listed, fdm reports running, resync = 0 bytes.
 
 ---

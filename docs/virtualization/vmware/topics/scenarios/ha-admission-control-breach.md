@@ -151,6 +151,24 @@ racadm getsel | tail -30
 racadm serveraction powerup
 ```
 
+
+```text title="Expected output"
+SEL Records:
+   1 | 01/15/2025 14:32:15 | Power Supply #1 | Power Supply | Critical | Asserted
+   2 | 01/15/2025 14:33:22 | Temp Sensor CPU1 | Temperature | Warning | Asserted
+   3 | 01/15/2025 14:35:08 | System Event Log | OEM | Critical | Asserted
+   4 | 01/15/2025 14:36:45 | PSU Redundancy Lost | Power Supply | Critical | Asserted
+   5 | 01/15/2025 14:38:12 | Fan Speed CPU1 | Cooling Device | Warning | Asserted
+   6 | 01/15/2025 14:40:33 | Memory Module 3 | Memory | Critical | Asserted
+   7 | 01/15/2025 14:42:19 | Intrusion Detected | Physical Security | Critical | Asserted
+   8 | 01/15/2025 14:44:56 | System Shutdown | System Event | Critical | Asserted
+
+Server power operation successful.
+```
+
+!!! warning "Common errors"
+    **`DRAC/BMC Connection failed: Unable to establish IPMI v1.5 / IPMI v2.0 session`** — Verify iDRAC IP address is reachable with `ping <idrac-ip>` and confirm iDRAC credentials are correct.
+    **`racadm: ERROR: DRAC_E_INVALID_PARAM`** — Ensure racadm is installed on the local system with `which racadm` and that you have network connectivity to the iDRAC interface.
 Once a host is recovered and reconnects to vCenter, HA automatically re-evaluates VM placement and restarts any VMs still in "Insufficient resources" state — you do not need to manually trigger restarts.
 
 Monitor reconnection:
@@ -161,6 +179,17 @@ service-control --status --all | grep -i stopped
 /etc/init.d/vmware-fdm status
 ```
 
+
+```text title="Expected output"
+stopped /lib/systemd/system-generators/vmware-fdm-generator.service
+stopped /lib/systemd/system-generators/vpxa-generator.service
+stopped /lib/systemd/system-generators/hostd-generator.service
+vmware-fdm is stopped
+```
+
+!!! warning "Common errors"
+    **`service-control: command not found`** — Ensure you are running this command on an ESXi host (not vCenter); service-control is ESXi-specific.
+    **`Unit vmware-fdm.service could not be found`** — The vmware-fdm service may not exist on this ESXi version; use `service-control --list` to verify available services instead.
 ---
 
 ## 5. Option B — Temporarily Lower Admission Control Reservation

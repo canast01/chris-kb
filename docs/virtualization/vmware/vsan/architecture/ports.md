@@ -88,6 +88,33 @@ The iSCSI target service listens on the vSAN VMkernel adapter, not the managemen
 esxcli vsan iscsi target list
 ```
 
+
+```text title="Expected output"
+vSAN iSCSI Target: vsan-iscsi-target-1
+  Alias: prod-storage-01
+  IQN: iqn.2016-06.com.vmware:vsan-iscsi-target-1
+  Port: 3260
+  Authentication: CHAP
+  Status: Online
+
+vSAN iSCSI Target: vsan-iscsi-target-2
+  Alias: prod-storage-02
+  IQN: iqn.2016-06.com.vmware:vsan-iscsi-target-2
+  Port: 3260
+  Authentication: None
+  Status: Online
+
+vSAN iSCSI Target: vsan-iscsi-target-3
+  Alias: backup-storage
+  IQN: iqn.2016-06.com.vmware:vsan-iscsi-target-3
+  Port: 3260
+  Authentication: CHAP
+  Status: Offline
+```
+
+!!! warning "Common errors"
+    **`Error: vSAN is not enabled on this host`** — Enable vSAN on the ESXi host using the vSAN management interface or `esxcli vsan cluster new`.
+    **`Error: Unknown command or namespace`** — Verify the ESXi version supports iSCSI targets (vSAN 6.2+) and that the vSAN iSCSI service is installed.
 ---
 
 ## HCI Mesh — Cross-Cluster Storage (vSAN 7.0+)
@@ -150,6 +177,47 @@ Get-VsanView -Id "VsanVcNetworkConfigSystem-vsan-vc-network-config-system" |
   Invoke-Method -Name "VsanQueryVcNetworkConfig"
 ```
 
+
+```text title="Expected output"
+Name    Enabled  Preferred  Agent Type  Traffic Type
+vmk2    true     true       unicast     vSAN
+vmk3    false    false      unicast     vSAN
+
+PING 192.168.50.42 (192.168.50.42): 56 data bytes
+64 bytes from 192.168.50.42: icmp_seq=0 time=1.234 ms
+64 bytes from 192.168.50.42: icmp_seq=1 time=1.156 ms
+64 bytes from 192.168.50.42: icmp_seq=2 time=1.289 ms
+--- 192.168.50.42 statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+
+PING 192.168.50.100 (192.168.50.100): 56 data bytes
+64 bytes from 192.168.50.100: icmp_seq=0 time=2.567 ms
+64 bytes from 192.168.50.100: icmp_seq=1 time=2.445 ms
+64 bytes from 192.168.50.100: icmp_seq=2 time=2.612 ms
+--- 192.168.50.100 statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+
+Cluster Health Status: HEALTHY
+Components: 6/6 healthy
+Disk Groups: 3/3 healthy
+Network Connectivity: HEALTHY
+
+CMMDS Status: RUNNING
+Nodes: 3 online
+Last Update: 2024-01-15T14:32:18Z
+
+VsanVcNetworkConfigSystem-vsan-vc-network-config-system
+  NetworkInfo: {
+    Ipv4Config: 192.168.50.0/24
+    TrafficType: vSAN
+    Enabled: true
+  }
+```
+
+!!! warning "Common errors"
+    **`vmkping: Unknown network device vmk2`** — Verify the VMkernel adapter name with `esxcli vsan network list` and use the correct interface name.
+    **`Error: The object 'VsanVcNetworkConfigSystem-vsan-vc-network-config-system' could not be found`** — Ensure vSAN is licensed and enabled on the cluster, and run the command from a vCenter PowerCLI session connected to the vCenter Server managing the cluster.
+    **`PING 192.168.50.42 (192.168.50.42): 56 data bytes — No response from host`** — Check network connectivity, firewall rules, and vSAN VMkernel adapter configuration on both the source and peer hosts.
 ---
 
 ## See also

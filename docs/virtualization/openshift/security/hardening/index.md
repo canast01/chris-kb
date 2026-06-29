@@ -140,6 +140,40 @@ oc get mcp worker -w
 oc get nodes -w
 ```
 
+
+```text title="Expected output"
+Starting debug pod on node worker-1.example.com ...
+Pod IP: 10.128.45.23
+If you don't see a command prompt, try pressing enter.
+sh-4.4# 
+sh-4.4# exit
+exit
+
+SELinux status:
+   SELinux status:                 enabled
+   Current mode:                   enforcing
+   Mode from config file:          enforcing
+   Policy version:                 33
+   Policy MLS status:              enabled
+
+rendered-worker-99a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p
+
+machineconfig.machineconfiguration.openshift.io/99-worker-sysctl created
+
+NAME     CONFIG                                           UPDATED   UPDATING   DEGRADED   MACHINECOUNT   READYMACHINECOUNT   UPDATEDMACHINECOUNT   DEGRADEDMACHINECOUNT   AGE
+worker   rendered-worker-99a1b2c3d4e5f6g7h8i9j0k1l2m3   False     True       False      3               1                   1                     0                      45d
+
+NAME                STATUS   ROLES    AGE   VERSION
+master-0            Ready    master   45d   v1.27.8+4fab27b
+worker-0            Ready    worker   45d   v1.27.8+4fab27b
+worker-1            NotReady worker   45d   v1.27.8+4fab27b
+worker-2            Ready    worker   45d   v1.27.8+4fab27b
+```
+
+!!! warning "Common errors"
+    **`error: unable to connect to the server: dial tcp: lookup api.example.com on 8.8.8.8:53: no such host`** — Verify your KUBECONFIG is set correctly and the cluster API endpoint is reachable.
+    **`Error from server (BadRequest): error when creating "STDIN": MachineConfig.machineconfiguration.openshift.io "99-worker-sysctl" is invalid: spec.config.storage.files[0].contents.source: Invalid value: "data:,net.ipv4.ip_forward%3D1...": must be a valid data URL`** — Ensure the data URL is properly percent-encoded and the ignition version matches your OpenShift release.
+    **`error: nodes "worker-1" not found`** — Verify the node name with `oc get nodes` and use the exact name from the output.
 ## Compliance Operator
 
 The Compliance Operator runs OpenSCAP-based scans against CIS, PCI-DSS, FedRAMP, and STIG profiles.
@@ -189,6 +223,43 @@ oc get complianceremediations -n openshift-compliance -o name | \
   --type=merge -p '{"spec":{"apply":true}}'
 ```
 
+
+```text title="Expected output"
+scansettingbinding.compliance.openshift.io/cis-compliance created
+NAME                                    PHASE       RESULT
+cis-compliance                          RUNNING     NOT-AVAILABLE
+cis-compliance                          RUNNING     NOT-AVAILABLE
+cis-compliance                          DONE        NON-COMPLIANT
+
+NAME                          PHASE       RESULT
+ocp4-cis                       DONE        NON-COMPLIANT
+ocp4-cis-node                  DONE        NON-COMPLIANT
+
+NAME                                                          STATUS
+ocp4-cis-accounts-restrict-service-account-tokens           FAIL
+ocp4-cis-api-server-audit-log-maxage                        FAIL
+ocp4-cis-api-server-encryption-provider-cipher              FAIL
+ocp4-cis-node-kubelet-anonymous-auth-disabled               FAIL
+ocp4-cis-node-kubelet-streaming-connection-idle-timeout     FAIL
+...
+
+NAME                                                          CURRENT STATE
+ocp4-cis-accounts-restrict-service-account-tokens           available
+ocp4-cis-api-server-audit-log-maxage                        available
+ocp4-cis-api-server-encryption-provider-cipher              available
+ocp4-cis-node-kubelet-anonymous-auth-disabled               available
+...
+
+complianceremediation.compliance.openshift.io/ocp4-cis-api-server-audit-log-maxage patched
+complianceremediation.compliance.openshift.io/ocp4-cis-api-server-encryption-provider-cipher patched
+complianceremediation.compliance.openshift.io/ocp4-cis-node-kubelet-anonymous-auth-disabled patched
+complianceremediation.compliance.openshift.io/ocp4-cis-node-kubelet-streaming-connection-idle-timeout patched
+```
+
+!!! warning "Common errors"
+    **`error: resource mapping not found for name: "cis-compliance" namespace: "openshift-compliance" from "": no matches for kind "ScanSettingBinding" in version "compliance.openshift.io/v1alpha1"`** — Verify the Compliance Operator is installed in openshift-compliance namespace with `oc get deployment -n openshift-compliance`.
+    **`Error from server (NotFound): complianceremediations.compliance.openshift.io "<name>" not found`** — Confirm the remediation name matches output from `oc get complianceremediations -n openshift-compliance` and wait for scans to complete.
+    **`error: no matches for kind "ScanSetting" in version "compliance.openshift.io/v1alpha1"`** — Create the default ScanSetting resource first with `oc apply -f - <<EOF` using the ScanSetting template from the Compliance Operator documentation.
 ## Pod Security Admission Labels
 
 ```bash
@@ -216,6 +287,25 @@ oc label namespace my-project \
 oc get events -n my-project | grep PodSecurity
 ```
 
+
+```text title="Expected output"
+namespace/my-project labeled
+namespace/legacy-app labeled
+pod-security.kubernetes.io/enforce: restricted
+pod-security.kubernetes.io/enforce-version: latest
+pod-security.kubernetes.io/warn: restricted
+pod-security.kubernetes.io/warn-version: latest
+namespace/my-project labeled
+LAST SEEN   TYPE     REASON           OBJECT                    MESSAGE
+2m45s       Warning  PodSecurityViolation  pod/nginx-deployment-5d4b8c9f7  violates "restricted": allowPrivilegeEscalation != false
+89s         Warning  PodSecurityViolation  pod/app-worker-2k8vx      violates "restricted": runAsNonRoot != true
+45s         Warning  PodSecurityViolation  pod/legacy-svc-7j9m2      violates "restricted": capabilities.drop missing ["ALL"]
+```
+
+!!! warning "Common errors"
+    **`Error from server (NotFound): namespaces "my-project" not found`** — Verify the namespace exists with `oc get namespaces` and use the correct name.
+    **`error: unable to recognize "": no matches for kind "PodSecurityPolicy" in version "policy/v1beta1"`** — Pod Security Policies are deprecated; use Pod Security Admission (PSA) labels on namespaces instead.
+    **`Warning: pod-security.kubernetes.io/enforce: restricted is not a valid label value`** — Ensure the label value is exactly `restricted`, `baseline`, or `privileged` with no typos or extra whitespace.
 ## NetworkPolicy Defaults
 
 ```yaml
@@ -282,6 +372,17 @@ oc get networkpolicy -n my-project
 oc label namespace openshift-ingress network.openshift.io/policy-group=ingress
 ```
 
+
+```text title="Expected output"
+networkpolicy.networking.k8s.io/deny-all-ingress-egress created
+NAME                        POD-SELECTOR   AGE
+deny-all-ingress-egress     <none>         0s
+namespace/openshift-ingress labeled
+```
+
+!!! warning "Common errors"
+    **`Error from server (NotFound): namespaces "my-project" not found`** — Verify the project exists with `oc get projects` and create it if needed using `oc new-project my-project`.
+    **`Error from server (AlreadyExists): networkpolicies.networking.k8s.io "deny-all-ingress-egress" already exists`** — Delete the existing policy first with `oc delete networkpolicy deny-all-ingress-egress -n my-project` or use `oc apply --force-conflicts=true`.
 ## Image Security
 
 ```bash
@@ -315,6 +416,29 @@ oc get imagestream -A | grep -v "<none>"
 oc adm top images
 ```
 
+
+```text title="Expected output"
+Importing image 'myapp:latest' from 'quay.io/myorg/myapp:latest'
+Scheduled import added to ImageStream 'myapp'
+imagestreamimport.image.openshift.io/myapp imported
+
+imagepruner.imageregistry.operator.openshift.io/cluster created
+
+NAMESPACE     NAME                IMAGE REPOSITORY                           TAGS      UPDATED
+my-project    myapp               quay.io/myorg/myapp                         latest    2 minutes ago
+kube-system   coredns             registry.k8s.io/coredns                     v1.9.3    5 days ago
+openshift     oauth-proxy         registry.redhat.com/openshift4/ose-oauth   v4.12.15  3 weeks ago
+...
+
+Images by size:
+NAME                                                    SIZE
+quay.io/myorg/myapp@sha256:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6   487.3 MiB
+registry.redhat.com/openshift4/ose-oauth@sha256:9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g   156.8 MiB
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "imagepruner"`** — Ensure the image-registry operator is installed and running with `oc get operator image-registry -o wide`.
+    **`error: unable to connect to quay.io/myorg/myapp:latest: unauthorized`** — Verify the image pull secret exists in the namespace with `oc get secrets -n my-project | grep pull-secret` and that credentials have pull access to the registry.
 ## Audit Logging
 
 ```bash
@@ -334,6 +458,29 @@ journalctl -u kube-apiserver | grep audit
 # Or: /var/log/kube-apiserver/audit.log
 ```
 
+
+```text title="Expected output"
+apiserver.config.openshift.io/cluster patched
+audit:
+  profile: WriteRequestBodies
+spec:
+  servingCerts: {}
+  unsupportedConfigOverrides: null
+
+Jumping into namespace "openshift-kube-apiserver"
+Starting pod/ip-10-0-45-12-debug ...
+To use host binaries, run `chroot /host`
+
+Nov 15 14:32:18 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=create user="system:admin" namespace=default resource=pods
+Nov 15 14:32:19 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=patch user="system:serviceaccount:openshift-kube-apiserver:sa-token" namespace=openshift-kube-apiserver resource=configmaps
+Nov 15 14:32:21 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=get user="system:kube-controller-manager" namespace="" resource=clusterrolebindings
+Nov 15 14:32:22 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse verb=watch user="system:node:ip-10-0-45-12" namespace=default resource=pods
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "apiserver"`** — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc api-resources | grep apiserver`.
+    **`journalctl: command not found`** — Run `chroot /host` first before executing journalctl to access the host filesystem.
+    **`No such file or directory: /var/log/kube-apiserver/audit.log`** — Check the actual audit log path with `find /var/log -name "*audit*"` or verify the audit profile has been applied with `oc get apiserver cluster -o yaml`.
 ## CIS OCP 4 Benchmark — Key Controls
 
 | Category | Control | Command / Action |

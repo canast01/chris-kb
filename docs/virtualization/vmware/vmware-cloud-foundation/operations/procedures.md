@@ -417,6 +417,23 @@ grep -i "LOGIN\|LOGOUT\|AUTH" /var/log/vmware/vcf/commonsvcs/audit.log | tail -5
 grep -i "ROTATE\|COMMISSION\|CREATE_DOMAIN" /var/log/vmware/vcf/commonsvcs/audit.log
 ```
 
+
+```text title="Expected output"
+2024-01-15T14:32:18.456Z [INFO] AUDIT: User admin@vcf.local performed action LOGIN from 192.168.1.105
+2024-01-15T14:32:45.123Z [INFO] AUDIT: User svc-automation@vcf.local performed action CREATE_DOMAIN for domain prod-cluster-01
+2024-01-15T14:33:12.789Z [INFO] AUDIT: User admin@vcf.local performed action ROTATE password for service account vcf-backup
+2024-01-15T14:33:58.234Z [INFO] AUDIT: User netadmin@vcf.local performed action COMMISSION host esx-prod-04.vcf.local
+2024-01-15T14:34:22.567Z [INFO] AUDIT: User admin@vcf.local performed action LOGOUT from 192.168.1.105
+2024-01-15T14:35:01.890Z [INFO] AUDIT: User svc-automation@vcf.local performed action AUTH_SUCCESS for API token refresh
+2024-01-15T14:35:44.321Z [INFO] AUDIT: User admin@vcf.local performed action LOGIN from 192.168.1.110
+2024-01-15T14:36:15.654Z [INFO] AUDIT: User helpdesk@vcf.local performed action LOGOUT from 192.168.1.115
+2024-01-15T14:37:02.987Z [INFO] AUDIT: User svc-automation@vcf.local performed action CREATE_DOMAIN for domain dev-cluster-02
+2024-01-15T14:37:33.445Z [INFO] AUDIT: User admin@vcf.local performed action ROTATE password for service account vcf-monitoring
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/var/log/vmware/vcf/commonsvcs/audit.log' for reading: No such file or directory`** — Verify the VCF service is running with `systemctl status vmware-vcf` and check the correct log path with `find /var/log -name "audit.log" -type f`.
+    **`grep: (standard input): Permission denied`** — Run the commands with `sudo` or ensure your user is in the appropriate group (typically `root` or `vcf-admin`).
 **Via SDDC Manager UI:**
 
 1. Navigate to **SDDC Manager → Administration → Audit Logs**.
@@ -437,6 +454,23 @@ curl -sk -u admin@local -X POST \
   -d '{"host": "syslog.domain.local", "port": 514, "protocol": "UDP"}'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "6f8c4a2e-91d3-4b7a-8f2c-5e1a9d3b7c2f",
+  "host": "syslog.domain.local",
+  "port": 514,
+  "protocol": "UDP",
+  "status": "PENDING",
+  "createdAt": "2024-01-15T14:32:18.456Z",
+  "updatedAt": "2024-01-15T14:32:18.456Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify SDDC Manager hostname matches certificate CN).
+    **`{"error":"Unauthorized","status":401}`** — Ensure credentials are correct and the admin@local user has API permissions; use `-u admin@local:password` with explicit password if needed.
+    **`{"error":"Invalid request","status":400,"message":"port must be between 514 and 65535"}`** — Change the port value to a valid syslog port (514 is standard for UDP syslog; use 601 or higher for TCP).
 **Key audit log fields:**
 
 | Field | Description |
@@ -474,6 +508,27 @@ curl -sk -u 'admin@local:<password>' -X POST \
   -d '{"elements": [{"resourceType": "SDDC_MANAGER"}]}'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "backup-20240315-143022",
+  "creationTimestamp": "2024-03-15T14:30:22.451Z",
+  "elements": [
+    {
+      "resourceType": "SDDC_MANAGER",
+      "status": "IN_PROGRESS"
+    }
+  ],
+  "backupSize": 0,
+  "status": "IN_PROGRESS",
+  "duration": "PT0S"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the SDDC Manager's CA certificate into your system trust store.
+    **`{"error":"Unauthorized","message":"Invalid credentials"}`** — Verify the admin password is correct and URL-encoded if it contains special characters; use `curl -u 'admin@local:password'` with proper escaping.
+    **`curl: (7) Failed to connect to sddc-manager.example.local port 443: Name or service not known`** — Ensure the SDDC Manager hostname resolves correctly by testing with `nslookup sddc-manager.example.local` or update your `/etc/hosts` file.
 ---
 
 ## Add an ESXi Host to the Free Pool
@@ -496,6 +551,26 @@ curl -sk -u 'admin@local:<password>' \
   | jq '.elements[] | {fqdn: .fqdn, status: .status}'
 ```
 
+
+```text title="Expected output"
+{
+  "fqdn": "esx-01.example.local",
+  "status": "UNASSIGNED_USEABLE"
+}
+{
+  "fqdn": "esx-02.example.local",
+  "status": "UNASSIGNED_USEABLE"
+}
+{
+  "fqdn": "esx-03.example.local",
+  "status": "UNASSIGNED_USEABLE"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed).
+    **`jq: parse error: Cannot index number with string "fqdn"`** — Verify the API response structure matches your VCF version; use `jq '.'` alone first to inspect the raw JSON response.
+    **`401 Unauthorized`** — Confirm the admin@local password is correct and the account has API permissions in SDDC Manager.
 ---
 
 ## Configure External Certificates for VCF Components
@@ -519,6 +594,34 @@ curl -sk -u 'admin@local:<password>' \
   | jq '.elements[] | {resourceFqdn: .resourceFqdn, notAfter: .certificate.notAfter}'
 ```
 
+
+```text title="Expected output"
+{
+  "resourceFqdn": "vcenter.sddc.local",
+  "notAfter": "2025-08-14T23:59:59Z"
+}
+{
+  "resourceFqdn": "sddc-manager.example.local",
+  "notAfter": "2025-09-22T23:59:59Z"
+}
+{
+  "resourceFqdn": "nsx-manager-01.sddc.local",
+  "notAfter": "2025-07-30T23:59:59Z"
+}
+{
+  "resourceFqdn": "esxi-01.sddc.local",
+  "notAfter": "2025-10-11T23:59:59Z"
+}
+{
+  "resourceFqdn": "esxi-02.sddc.local",
+  "notAfter": "2025-10-11T23:59:59Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the SDDC Manager's CA certificate into your system trust store.
+    **`jq: parse error: Cannot index string with string "resourceFqdn"`** — Verify the API response is valid JSON by running the curl command without the jq filter first; the API endpoint or credentials may be incorrect.
+    **`curl: (401) Unauthorized`** — Confirm the password is correct and the `admin@local` user has API access permissions in VCF.
 ---
 
 ## Review SDDC Manager Health Dashboard
@@ -538,6 +641,30 @@ sudo /opt/vmware/sddc-support/sos --health-check --domain-name sfo-m01
 # Output saved to /var/log/vmware/vcf/sddc-support/sos-<timestamp>/
 ```
 
+
+```text title="Expected output"
+vcf@sddc-manager.example.local's password: 
+Welcome to SDDC Manager v2.5.1 (Build 21567890)
+Last login: Wed Mar 13 14:22:18 2024 from 192.168.1.45
+
+vcf@sddc-manager:~$ sudo /opt/vmware/sddc-support/sos --health-check --domain-name sfo-m01
+[sudo] password for vcf: 
+Starting SOS health check for domain: sfo-m01
+Timestamp: 2024-03-13T14:23:45Z
+Checking vCenter Server connectivity... OK
+Checking ESXi hosts (4 total)... OK
+Checking vSAN cluster health... OK
+Checking NSX Manager connectivity... OK
+Checking SDDC Manager database... OK
+Health check completed successfully.
+Output saved to /var/log/vmware/vcf/sddc-support/sos-20240313-142345/
+vcf@sddc-manager:~$
+```
+
+!!! warning "Common errors"
+    **`sudo: /opt/vmware/sddc-support/sos: command not found`** — Verify the SOS tool is installed by running `ls -la /opt/vmware/sddc-support/` and confirm the SDDC Manager version supports this command.
+    **`ERROR: Domain 'sfo-m01' not found in SDDC Manager inventory`** — Check the correct domain name using `curl -s http://localhost:8080/v1/domains | grep -i name` and use the exact domain identifier.
+    **`Permission denied: /var/log/vmware/vcf/sddc-support/`** — Ensure the vcf user has write permissions to the log directory by running `sudo chown -R vcf:vcf /var/log/vmware/vcf/sddc-support/`.
 ---
 
 ## Recover SDDC Manager from Backup
@@ -574,6 +701,32 @@ curl -sk -u 'admin:VMware1!' \
   "https://<sddc-manager-ip>/v1/restores/tasks"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "backup-20240115-143022",
+  "createdAt": "2024-01-15T14:30:22.000Z"
+}
+{
+  "id": "backup-20240114-091545",
+  "createdAt": "2024-01-14T09:15:45.000Z"
+}
+{
+  "id": "backup-20240113-180633",
+  "createdAt": "2024-01-13T18:06:33.000Z"
+}
+{
+  "taskId": "restore-task-8f4a2c91-b7e3-4d9f-a1c2-5e8b3f6d9a2c",
+  "status": "RUNNING",
+  "startTime": "2024-01-15T15:42:18.000Z",
+  "description": "Restore operation initiated for backup backup-20240115-143022"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the SDDC Manager's certificate into your system's trusted store.
+    **`{"error": "Invalid credentials", "status": 401}`** — Verify the admin password is correct and URL-encoded if it contains special characters; use `-u 'admin:VMware1!'` with proper escaping.
+    **`{"error": "Backup file not found", "status": 404}`** — Ensure the backup file path in the `backupFile` parameter is absolute and accessible from the SDDC Manager appliance, and verify the file exists with `ls -la <path-to-backup-file>`.
 The restore process may take 20–60 minutes. SDDC Manager restarts multiple times.
 
 ### Step 3 — Validate Post-Restore State
@@ -586,6 +739,38 @@ curl -sk -u 'admin:VMware1!' \
   "https://<sddc-manager-ip>/v1/system/health-summary" | jq '.elements[] | {service: .type, status: .status}'
 ```
 
+
+```text title="Expected output"
+{
+  "service": "SDDC_MANAGER",
+  "status": "HEALTHY"
+}
+{
+  "service": "VCENTER",
+  "status": "HEALTHY"
+}
+{
+  "service": "NSX_MANAGER",
+  "status": "HEALTHY"
+}
+{
+  "service": "VSAN",
+  "status": "HEALTHY"
+}
+{
+  "service": "ESXI_HOST_1",
+  "status": "HEALTHY"
+}
+{
+  "service": "ESXI_HOST_2",
+  "status": "HEALTHY"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <sddc-manager-ip> port 443: Connection refused`** — Verify SDDC Manager service is running with `systemctl status sddc-manager` and check network connectivity to the appliance IP.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag is already present; if still failing, ensure you're using the correct SDDC Manager IP and that the appliance has completed post-restore initialization.
+    **`jq: parse error: Invalid JSON text at line 1`** — Confirm the API endpoint is accessible and returning valid JSON by testing without jq first: `curl -sk -u 'admin:VMware1!' "https://<sddc-manager-ip>/v1/system/health-summary"`.
 In the SDDC Manager UI:
 - **Workload Domains** → all domains should be visible and show their current state
 - **Inventory → Hosts** → all commissioned hosts should be listed
@@ -628,6 +813,24 @@ curl -sk -u 'admin:VMware1!' \
   "https://<sddc-manager>/v1/tasks/<task-id>" | jq '{status: .status, subTasks: .subTasks[].status}'
 ```
 
+
+```text title="Expected output"
+{
+  "status": "COMPLETED",
+  "subTasks": [
+    "COMPLETED",
+    "COMPLETED",
+    "COMPLETED",
+    "COMPLETED",
+    "COMPLETED"
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed).
+    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint and task ID are correct; the response may be an error message instead of JSON.
+    **`curl: (401) Unauthorized`** — Confirm the SDDC Manager credentials are correct and the user account has API access permissions.
 ### Step 3 — Decommission from VCF (Remove from Free Pool)
 
 ![Step 3 — Decommission from VCF (Remove from Free Pool)](../../../../assets/vmware-cloud-foundation-proc-step-3-decommission-from-vcf-remove-from-free-p.svg)
@@ -687,6 +890,22 @@ esxcli vsan cluster get | grep -E "Sub-Cluster Type|Witness|Preferred"
 esxcli vsan health cluster get | grep -E "Stretched|Fault Domain|Witness"
 ```
 
+
+```text title="Expected output"
+Sub-Cluster Type: Stretched
+Witness Host: esx-witness-01.site-b.local (192.168.50.45)
+Preferred Fault Domain: Site-A
+Stretched Cluster Status: Connected
+Fault Domain: Site-A (3 hosts)
+Fault Domain: Site-B (3 hosts)
+Witness Fault Domain: Site-B
+Witness Host Status: Alive
+```
+
+!!! warning "Common errors"
+    **`Could not connect to the local vSAN cluster`** — Ensure vSAN is enabled on the cluster and the host has network connectivity to other cluster members.
+    **`grep: (standard input) is empty`** — Run the command from an ESXi host that is part of the vSAN cluster; standalone hosts or non-vSAN clusters will return no output.
+    **`Witness Host: None`** — Configure a witness host for the stretched cluster using the vSAN UI or API; a stretched cluster without a witness cannot maintain quorum during site failures.
 In SDDC Manager: **Inventory → Workload Domains → cluster** — stretched cluster topology should show two fault domains and the witness.
 
 ---

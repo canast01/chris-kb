@@ -96,6 +96,18 @@ for fqdn in sddc-manager.example.local vcenter-mgmt.example.local nsx-mgr-01.exa
 done
 ```
 
+
+```text title="Expected output"
+sddc-manager.example.local: Address: 192.168.1.10
+vcenter-mgmt.example.local: Address: 192.168.1.20
+nsx-mgr-01.example.local: Address: 192.168.1.30
+esxi-mgmt-01.example.local: Address: 192.168.1.40
+```
+
+!!! warning "Common errors"
+    **`** server can't find sddc-manager.example.local: NXDOMAIN`** — Verify the DNS server is reachable and the FQDN exists in your DNS zone; check `/etc/resolv.conf` points to the correct nameserver.
+    **`nslookup: command not found`** — Install `bind-utils` (RHEL/CentOS) or `dnsutils` (Debian/Ubuntu) package on the management host.
+    **`** server can't find nsx-mgr-01.example.local: SERVFAIL`** — Confirm the DNS server is responding and the management network has connectivity to the DNS resolver on port 53.
 ### VLAN Configuration on ToR Switches
 
 | VLAN | Purpose | MTU |
@@ -119,6 +131,26 @@ ssh root@esxi-mgmt-04.example.local "esxcli system hostname get"
 # All must return correct FQDNs
 ```
 
+
+```text title="Expected output"
+Domain Name: example.local
+   Host Name: esxi-mgmt-01
+   FQDN: esxi-mgmt-01.example.local
+   Domain Name: example.local
+   Host Name: esxi-mgmt-02
+   FQDN: esxi-mgmt-02.example.local
+   Domain Name: example.local
+   Host Name: esxi-mgmt-03
+   FQDN: esxi-mgmt-03.example.local
+   Domain Name: example.local
+   Host Name: esxi-mgmt-04
+   FQDN: esxi-mgmt-04.example.local
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname esxi-mgmt-01.example.local: Name or service not known`** — Verify DNS is configured on the deployment host and resolves ESXi hostnames, or use IP addresses directly instead of FQDNs.
+    **`Permission denied (publickey,password).`** — Ensure SSH is enabled on ESXi hosts and root credentials are correct; verify the SSH key is in place or use password authentication with `-o PubkeyAuthentication=no`.
+    **`Connection refused`** — Confirm ESXi hosts are fully booted and SSH service is running; check firewall rules allow port 22 from the deployment host.
 ---
 
 ## Phase 2 — Cloud Builder Deployment
@@ -240,6 +272,25 @@ ssh admin@cloud-builder.example.local
 tail -f /var/log/vcf/bringup/vcf-bringup.log
 ```
 
+
+```text title="Expected output"
+The authenticity of host 'cloud-builder.example.local (192.168.1.45)' can't be established.
+ECDSA key fingerprint is SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCd.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'cloud-builder.example.local,192.168.1.45' (ECDSA) to the list of known_hosts.
+admin@cloud-builder.example.local's password:
+Last login: Wed Mar 13 14:22:18 2024 from 192.168.1.10
+2024-03-13T14:35:42.123Z [INFO] VCF Bringup: Starting deployment phase 2 of 5
+2024-03-13T14:35:58.456Z [INFO] Configuring management domain networking
+2024-03-13T14:36:15.789Z [INFO] Deploying vCenter Server appliance
+2024-03-13T14:36:42.012Z [DEBUG] vCenter OVA deployment progress: 45%
+2024-03-13T14:37:08.345Z [INFO] Configuring vSAN cluster
+2024-03-13T14:37:35.678Z [INFO] Applying security hardening policies
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname cloud-builder.example.local: Name or service not known`** — Verify DNS resolution or update /etc/hosts with the Cloud Builder IP address.
+    **`Permission denied (publickey,password).`** — Confirm the admin account credentials and that SSH key-based authentication is configured if required by your environment.
 ### Verify Bringup Complete
 
 ```bash
@@ -254,6 +305,26 @@ curl -sk -u 'admin@local:<password>' \
 # Expected: "MANAGEMENT" domain status "ACTIVE"
 ```
 
+
+```text title="Expected output"
+{
+  "name": "MANAGEMENT",
+  "status": "ACTIVE"
+}
+{
+  "name": "WORKLOAD-01",
+  "status": "ACTIVE"
+}
+{
+  "name": "WORKLOAD-02",
+  "status": "ACTIVE"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip SSL verification (already present in the example, so verify the flag is not accidentally removed).
+    **`curl: (7) Failed to connect to sddc-manager.example.local port 443: Name or service not known`** — Replace `sddc-manager.example.local` with the actual FQDN or IP address of your SDDC Manager instance and ensure network connectivity.
+    **`jq: parse error: Invalid JSON text at line 1`** — Verify the credentials are correct and the SDDC Manager API is responding; check that the response is valid JSON by running the curl command without the pipe to `python3 -m json.tool`.
 ---
 
 ## Phase 4 — SDDC Manager Initial Configuration
@@ -278,6 +349,31 @@ curl -sk -u 'admin@local:<password>' \
   | python3 -m json.tool | grep -E '"type"|"status"' | head -20
 ```
 
+
+```text title="Expected output"
+{
+  "id": "task-a7f2c9e1-4b6d-11ed-9c3a-005056a1b3f4",
+  "type": "CREDENTIAL_ROTATION",
+  "status": "RUNNING",
+  "creationTimestamp": "2024-01-15T09:42:33.521Z",
+  "updateTimestamp": "2024-01-15T09:43:12.891Z"
+}
+"type": "CREDENTIAL_ROTATION"
+"status": "RUNNING"
+"type": "CREDENTIAL_ROTATION"
+"status": "COMPLETED"
+"type": "BACKUP_TASK"
+"status": "COMPLETED"
+"type": "REMEDIATION"
+"status": "RUNNING"
+"type": "REMEDIATION"
+"status": "COMPLETED"
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the SDDC Manager CA certificate into your system trust store.
+    **`{"error":"Invalid credentials","status":401}`** — Verify the SDDC Manager admin password is correct and the account is not locked; check `/var/log/vmware/vcf/sddc-manager/sddc-manager.log` for authentication failures.
+    **`jq: command not found`** — Install `jq` package (`apt-get install jq` or `yum install jq`) or use `python3 -m json.tool` as shown in the example.
 ### Enter Licences
 
 ```text
@@ -316,6 +412,34 @@ curl -sk -u 'admin@local:<password>' \
 # → Generate CSR per component → sign with enterprise CA → import signed cert
 ```
 
+
+```text title="Expected output"
+{
+    "expirationDate": "2025-03-15T14:32:00.000Z",
+    "resourceFqdn": "sddc-manager.example.local"
+},
+{
+    "expirationDate": "2025-04-22T09:18:00.000Z",
+    "resourceFqdn": "vcenter.example.local"
+},
+{
+    "expirationDate": "2025-02-28T16:45:00.000Z",
+    "resourceFqdn": "nsx-manager.example.local"
+},
+{
+    "expirationDate": "2025-05-10T11:22:00.000Z",
+    "resourceFqdn": "esxi-01.example.local"
+},
+{
+    "expirationDate": "2025-01-20T08:00:00.000Z",
+    "resourceFqdn": "wsa.example.local"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the SDDC Manager's CA certificate into your system trust store.
+    **`jq: command not found`** — Install `python3-json-tool` or use `python3 -m json.tool` instead of piping to `jq`.
+    **`401 Unauthorized`** — Verify the admin@local password is correct and the account has not been locked after failed login attempts.
 ---
 
 ## Phase 5 — Workload Domain Creation
@@ -370,6 +494,19 @@ curl -sk -u 'admin@local:<password>' \
   | python3 -m json.tool | grep -E '"name"|"status"'
 ```
 
+
+```text title="Expected output"
+"name": "management",
+"status": "RUNNING"
+"name": "workload-domain-01",
+"status": "CREATING"
+"name": "workload-domain-02",
+"status": "RUNNING"
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the SDDC Manager certificate into your system's CA bundle.
+    **`curl: (7) Failed to connect to sddc-manager.example.local port 443: Name or service not known`** — Verify the SDDC Manager hostname is correct and resolvable from your network (use `nslookup sddc-manager.example.local` to test).
 ---
 
 ## Phase 6 — End-to-End Validation
@@ -388,6 +525,33 @@ sudo /opt/vmware/sddc-support/sos --health-check
 # WARN items: document and create follow-up tickets
 ```
 
+
+```text title="Expected output"
+vcf@sddc-manager.example.local's password: 
+Welcome to SDDC Manager v5.4.1 (Build 21567890)
+Last login: Wed Jan 15 14:32:18 2025 from 192.168.1.45
+
+vcf@sddc-manager:~$ sudo /opt/vmware/sddc-support/sos --health-check
+[sudo] password for vcf: 
+Starting comprehensive health check on SDDC Manager...
+Timestamp: 2025-01-15T14:33:22Z
+
+✓ PASS: vCenter connectivity (vc.example.local)
+✓ PASS: NSX Manager cluster (3/3 nodes healthy)
+✓ PASS: ESXi host connectivity (24/24 reachable)
+⚠ WARN: Certificate expiration in 45 days (vc.example.local)
+✓ PASS: Datastore accessibility (8/8 datastores online)
+✓ PASS: Network configuration (all VLANs routable)
+✓ PASS: Storage replication lag (< 100ms)
+
+Health check completed: 7 PASS, 1 WARN, 0 FAIL
+Execution time: 2m 34s
+```
+
+!!! warning "Common errors"
+    **`sudo: /opt/vmware/sddc-support/sos: command not found`** — Verify the SDDC Manager version and confirm the support tools package is installed with `rpm -qa | grep sddc-support`.
+    **`Permission denied (publickey,password)`** — Ensure the vcf user account exists and SSH key-based or password authentication is enabled in `/etc/ssh/sshd_config`.
+    **`FAIL: vCenter connectivity`** — Check network connectivity to vCenter and verify DNS resolution with `nslookup vc.example.local` from the SDDC Manager appliance.
 ### Verify Management Domain Components
 
 ```bash
@@ -403,6 +567,30 @@ curl -sk -u 'admin@local:<password>' \
   | python3 -m json.tool | grep -E '"status"|"version"'
 ```
 
+
+```text title="Expected output"
+"componentType": "SDDC_MANAGER",
+"status": "ACTIVE",
+"componentType": "VCENTER",
+"status": "ACTIVE",
+"componentType": "NSX_MANAGER",
+"status": "ACTIVE",
+"componentType": "ESXI_MGMT",
+"status": "ACTIVE",
+"componentType": "VSAN",
+"status": "ACTIVE",
+"status": "HEALTHY",
+"version": "3.2.1.1",
+"status": "HEALTHY",
+"version": "3.2.1.1",
+"status": "HEALTHY",
+"version": "3.2.1.1",
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; verify the hostname matches the certificate CN).
+    **`jq: command not found`** — Install `python3-json-tool` or use `python3 -m json.tool` instead (the example already uses the latter).
+    **`401 Unauthorized`** — Verify the admin password is correct and the account has not been locked after failed login attempts.
 ### Verify LCM Bundle Access
 
 ```bash
@@ -414,6 +602,15 @@ curl -sk -o /dev/null -w "%{http_code}" https://depot.vmware.com
 # SDDC Manager → Lifecycle Management → Bundle Management → Check Bundles
 ```
 
+
+```text title="Expected output"
+200
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to depot.vmware.com port 443: Connection timed out`** — Verify network connectivity and firewall rules allow outbound HTTPS to depot.vmware.com from the SDDC Manager appliance.
+    **`curl: (60) SSL certificate problem: self signed certificate in certificate chain`** — Add the `-k` flag to skip certificate verification, or import the corporate proxy/firewall certificate into the SDDC Manager trust store.
+    **`000`** — Check that SDDC Manager has internet access and DNS can resolve depot.vmware.com; if behind a proxy, configure proxy settings in SDDC Manager networking configuration.
 ### Post-Deployment Checklist
 
 | Item | Check |

@@ -89,6 +89,10 @@ Disk 2: Data      varies  thick eager zeroed
 Disk 3: Swap/page 8 GB    thick eager zeroed (Windows only)
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
 Do not store data on the OS VMDK. Separate OS and data disks from day one.
 
 ## Snapshot Policy

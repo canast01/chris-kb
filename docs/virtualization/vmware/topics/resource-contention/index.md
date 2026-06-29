@@ -152,6 +152,23 @@ Get-VMHost | Select-Object Name,
 esxtop   # press 'c', then look at %RDY per world
 ```
 
+
+```text title="Expected output"
+ESXTOP - VMware ESXi top utility
+GID  NAME                                   NWLD   %USED   %SYS   %RDY   %WAIT  %IDLE
+  1  vmx:VM-WebServer-01                      4   45.23   8.12  12.47  18.93  15.25
+  2  vmx:VM-Database-02                       8   72.15   6.89   3.21  14.32   3.43
+  3  vmx:VM-AppServer-03                      2   28.45   5.67  18.92  22.11  24.85
+  4  vmx:helper-world                         1    2.34   1.23   0.12   0.89  95.42
+  5  vmx:VM-Backup-04                         6   61.78   7.45   8.34  16.23   6.20
+  6  vmx:VM-Analytics-05                      3   55.89   9.12  14.56  12.34   8.09
+
+Press 'q' to quit, 'c' for CPU, 'm' for memory, 'd' for disk, 'n' for network
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Ensure you are logged into an ESXi host directly via SSH (not vCenter); esxtop is only available on ESXi.
+    **`Error: Unable to initialize display`** — Run esxtop with a terminal that supports interactive mode (avoid non-interactive SSH sessions); use `ssh -t` to force pseudo-terminal allocation.
 ## Memory Contention
 
 | Indicator | Threshold | Meaning |
@@ -174,6 +191,24 @@ Get-VMHost | Select-Object Name,
 esxtop   # press 'm'
 ```
 
+
+```text title="Expected output"
+│ ESXTOP │ Press 'h' for help
+│ World │ GID │ NWLD │ VMID │ NAME │ MCTLSZ │ SWPRD/s │ SWPWT/s │ %SWPFD │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 2048 │ 2048 │ 1 │ 4 │ vm-prod-web-01 │ 512 MB │ 0 │ 2.4 │ 8.2% │
+│ 2049 │ 2049 │ 1 │ 5 │ vm-prod-db-02 │ 1.2 GB │ 12.8 │ 45.6 │ 34.7% │
+│ 2050 │ 2050 │ 1 │ 6 │ vm-dev-test-03 │ 256 MB │ 0 │ 0 │ 0.0% │
+│ 2051 │ 2051 │ 1 │ 7 │ vm-prod-app-04 │ 768 MB │ 3.2 │ 18.9 │ 12.1% │
+│ 2052 │ 2052 │ 1 │ 8 │ vm-prod-cache-05 │ 2.1 GB │ 28.4 │ 156.2 │ 67.3% │
+│ 2053 │ 2053 │ 1 │ 9 │ vm-backup-srv-06 │ 0 MB │ 0 │ 0 │ 0.0% │
+...
+(Press 'q' to quit, 'h' for help)
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host (not a vCenter server) with SSH access enabled.
+    **`Cannot open /proc/vmware/sched: Permission denied`** — Run esxtop with root privileges or as a user in the root group.
 ## Storage Latency
 
 | Latency | State |
@@ -205,6 +240,24 @@ esxcli network nic stats get -n vmnic0 | grep -E "Bytes|Dropped"
 esxtop   # press 'n'
 ```
 
+
+```text title="Expected output"
+Bytes Received: 4,294,967,296
+Bytes Transmitted: 2,147,483,648
+Dropped Rx Packets: 0
+Dropped Tx Packets: 0
+
+esxtop 5.5.0   Build 1746018   (c) 1998-2013 VMware, Inc. All rights reserved.
+PORT-ID UPLINK PKTRX/s PKTTX/s MbRX/s MbTX/s DRPRX DRPTX
+vmnic0  yes    12450   8932    847.3  621.5  0     0
+vmnic1  yes    11203   9104    798.2  634.1  2     0
+vmnic2  no     0       0       0.0    0.0    0     0
+vmnic3  no     0       0       0.0    0.0    0     0
+```
+
+!!! warning "Common errors"
+    **`Could not get network stats for vmnic0: Unknown option`** — Verify the NIC name with `esxcli network nic list` and ensure you're using the correct vmnic identifier.
+    **`esxtop: command not found`** — Install or enable esxtop; if using ESXi 7.0+, use `esxcli stats` or vSphere Client instead as esxtop may be deprecated.
 ## Contention Response Actions
 
 | Resource | Contention | Response |

@@ -87,6 +87,23 @@ esxtop
 # Press 'c' for CPU view — look at %RDY column per VM/vCPU
 ```
 
+
+```text title="Expected output"
+CPU STATS - esxtop interactive mode
+GID  NAME                                   PCPU  %USED  %RDY  %SYS  %WAIT
+  1  vcpu-0:web-prod-01                      0    45.2   8.3   2.1  44.4
+  2  vcpu-1:web-prod-01                      1    52.1  12.7   1.8  33.4
+  3  vcpu-0:db-cluster-02                    2    78.9   3.2   1.5  16.4
+  4  vcpu-1:db-cluster-02                    3    81.4   2.1   1.2  15.3
+  5  vcpu-0:app-cache-03                     4    38.5  18.9   2.3  40.3
+  6  vcpu-1:app-cache-03                     5    41.2  22.1   2.1  34.6
+  7  vcpu-0:monitoring-04                    6    15.3   1.2   0.8  82.7
+  8  vcpu-1:monitoring-04                    7    16.8   0.9   0.9  81.4
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter Server.
+    **`Unable to open /proc/vmware/sched/cpu: Permission denied`** — Run esxtop with root privileges or as a user with administrative permissions on the ESXi host.
 **Resolutions:**
 
 - Reduce vCPU count on oversized VMs (a 16-vCPU VM may schedule worse than an 8-vCPU VM on a 20-core host)
@@ -103,6 +120,27 @@ esxtop
 # Press 'm' for memory — look at MCTLSZ (balloon), SWCUR (swap current), LLSWR (swap read rate)
 ```
 
+
+```text title="Expected output"
+ESXTOP - VMware ESXi performance monitoring tool
+Press 'h' for help, 'q' to quit
+────────────────────────────────────────────────────────────────────────────────
+Memory Stats (m pressed):
+PMEM:16384MB  FREE:2847MB  PMEM%:17.4  VMKMEM:2156MB  VMKSWAP:512MB
+MCTLSZ:4521MB  SWCUR:1247MB  LLSWR:12.3MB/s  LLSWW:8.7MB/s  MEMCTL:3891MB
+────────────────────────────────────────────────────────────────────────────────
+WORLD    NAME                    PMEM    VMEM    MCTLSZ   SWCUR   LLSWR
+2048     vm-prod-web-01          4096    6144    892      156     2.1
+2156     vm-prod-db-02           8192    10240   2156     487     5.8
+2287     vm-dev-test-03          2048    3072    412      89      1.2
+2401     vm-backup-04            1024    2048    61       0       0.0
+────────────────────────────────────────────────────────────────────────────────
+Press 'q' to exit esxtop
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Ensure you are logged into an ESXi host directly via SSH (not vCenter); esxtop is a local ESXi utility.
+    **`Cannot open /proc/vmware/sched/cpu: Permission denied`** — Run esxtop with root privileges or as a user with administrative ESXi permissions.
 Key indicators:
 
 | Metric | Meaning |
@@ -128,6 +166,23 @@ esxtop
 # KAVG (kernel queue latency) + DAVG (device latency) = GAVG
 ```
 
+
+```text title="Expected output"
+CPU  MEMORY NETWORK DISK SWAP MODULES                                    12:34:56
+0    0      0      0    0    0
+ADAPTER  NPATHS  QFULL  WORLD  GAVG  KAVG  DAVG  LOAD  %BUSY
+vmhba0   4       0      128    2.45  0.32  2.13  45%   67%
+vmhba1   2       0      64     1.89  0.28  1.61  32%   54%
+vmhba2   8       0      256    5.67  1.23  4.44  78%   89%
+vmhba3   4       0      128    3.12  0.45  2.67  52%   71%
+
+(Press 'q' to exit esxtop)
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host (SSH session), not from vCenter; esxtop is ESXi-only.
+    **`Error: Cannot open /proc/vmware/sched/pcpu`** — Verify the ESXi host is fully booted and the hostd service is running with `systemctl status hostd`.
+    **`Permission denied`** — Run esxtop as root or a user with administrative privileges; use `su -` or ensure your SSH user has root access.
 - Under 10ms GAVG — normal for most workloads
 - 10–20ms — acceptable for non-latency-sensitive workloads
 - Over 20ms — investigate array-side performance
@@ -168,6 +223,30 @@ Get-VM "VMName" | Get-NetworkAdapter | Select Name, NetworkName, ConnectionState
 esxcli network vswitch dvs vmware portgroup list | grep -A5 "PortgroupName"
 ```
 
+
+```text title="Expected output"
+PortgroupName: VM Network
+   VLAN ID: 0
+   Uplink Portgroup: false
+   Portgroup Type: earlyBinding
+   Bound VMs: 12
+
+PortgroupName: vMotion
+   VLAN ID: 100
+   Uplink Portgroup: false
+   Portgroup Type: earlyBinding
+   Bound VMs: 0
+
+PortgroupName: Management Network
+   VLAN ID: 1
+   Uplink Portgroup: false
+   Portgroup Type: earlyBinding
+   Bound VMs: 3
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace network.vswitch.dvs.vmware.portgroup.list`** — Verify the ESXi version supports DVS commands; use `esxcli network vswitch standard portgroup list` for standard vSwitches instead.
+    **`Error: Unable to connect to management daemon`** — Restart the hostd service with `services.sh restart` or reboot the ESXi host.
 **Step 4 — Check for MAC address conflict** — duplicate MAC addresses on the same VLAN will cause flapping.
 
 ---
@@ -193,6 +272,38 @@ du -sh /* 2>/dev/null | sort -rh | head -20
 du -sh /var/log/* | sort -rh | head -10
 ```
 
+
+```text title="Expected output"
+16G	/var
+12G	/usr
+8.5G	/home
+4.2G	/opt
+3.1G	/boot
+2.8G	/tmp
+1.9G	/srv
+1.2G	/lib
+892M	/etc
+512M	/root
+256M	/dev
+128M	/sys
+64M	/proc
+32M	/run
+16M	/mnt
+8M	/media
+
+2.3G	/var/log/vmware
+1.8G	/var/log/audit
+956M	/var/log/messages
+512M	/var/log/syslog
+384M	/var/log/kern.log
+256M	/var/log/auth.log
+128M	/var/log/httpd
+64M	/var/log/mysql
+```
+
+!!! warning "Common errors"
+    **`du: cannot read directory '/proc/kcore': Permission denied`** — Run the command with `sudo` or redirect stderr to /dev/null (already done in the first command).
+    **`du: cannot access '/var/log/vmware': Permission denied`** — Execute with `sudo du -sh /var/log/*` to access restricted log directories.
 **Extending the VMDK (hot-extend):**
 
 ```powershell

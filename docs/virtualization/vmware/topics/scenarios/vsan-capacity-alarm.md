@@ -65,6 +65,21 @@ esxcli vsan storage list | grep -E "SSD|Capacity|Size"
 # Or use the vCenter API — PowerCLI query below (see Section 6)
 ```
 
+
+```text title="Expected output"
+SSD RAID Policy: raid1
+Capacity: 1.86 TB
+Size: 1.86 TB
+SSD RAID Policy: raid5
+Capacity: 5.58 TB
+Size: 5.58 TB
+Physical Capacity: 7.44 TB
+Available Capacity: 6.12 TB
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace vsan`** — Ensure VSAN is licensed and enabled on the ESXi host, or use `esxcli storage core device list` as an alternative.
+    **`Connection refused` or `ssh: connect to host <ip> port 22: Connection refused`** — Verify SSH is enabled on the ESXi host (Configuration > Security Profile > Services > SSH) and the host is reachable on the network.
 Look for: note the projected depletion date shown in Aria Operations (if deployed) — this determines urgency. Immediate action needed if < 20% free and depletion < 7 days.
 
 ---
@@ -162,6 +177,22 @@ Preventive actions:
 esxcli vsan datastore namespaceobjectlist get | grep -E "Ratio|Dedup|Compress"
 ```
 
+
+```text title="Expected output"
+Dedup Ratio: 1.25
+Compression Ratio: 1.15
+Overall Efficiency Ratio: 1.44
+Dedup Status: Enabled
+Compression Status: Enabled
+Last Optimization: 2024-01-15 14:32:18
+Objects Processed: 2847
+Deduplicated Objects: 712
+Compressed Objects: 1203
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Ensure you are running this command on an ESXi host with VSAN enabled, not a vCenter server or non-VSAN cluster node.
+    **`Error: The object could not be found on the specified datastore`** — Verify the VSAN datastore is mounted and healthy by running `esxcli vsan cluster get` first.
 ---
 
 ## 6. PowerCLI — Capacity and Usage Queries

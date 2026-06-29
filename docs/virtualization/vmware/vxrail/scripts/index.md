@@ -168,6 +168,37 @@ cd C:\Users\YourName\Desktop
 .\vxrail-cluster-health.ps1 -VxRailMgrHost 192.168.1.50 -VxRailUser admin -VxRailPass MyPassword
 ```
 
+
+```text title="Expected output"
+VxRail Cluster Health Check Report
+===================================
+Timestamp: 2024-01-15 14:32:18 UTC
+Target Host: 192.168.1.50
+
+Cluster Status: HEALTHY
+Overall Health Score: 98%
+
+Node Status:
+  Node-1 (192.168.1.51): ONLINE - CPU: 87%, Memory: 92%, Storage: 78%
+  Node-2 (192.168.1.52): ONLINE - CPU: 81%, Memory: 88%, Storage: 75%
+  Node-3 (192.168.1.53): ONLINE - CPU: 84%, Memory: 91%, Storage: 79%
+  Node-4 (192.168.1.54): ONLINE - CPU: 79%, Memory: 85%, Storage: 72%
+
+vSAN Cluster: HEALTHY
+  Disk Groups: 4/4 Healthy
+  Capacity Used: 2.3 TB / 4.8 TB (47%)
+
+Network Status: ALL LINKS UP
+  Mgmt Network: 192.168.1.0/24 - OPERATIONAL
+  vSAN Network: 192.168.10.0/24 - OPERATIONAL
+
+Report saved to: C:\Users\YourName\Desktop\vxrail-health-2024-01-15.html
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Execute `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before running the script.
+    **`Unable to connect to vCenter Server at 192.168.1.50:443`** — Verify the VxRail Manager IP address is correct and reachable with `ping 192.168.1.50`, and confirm the management network is operational.
+    **`Access Denied. The user 'admin' does not have sufficient privileges`** — Confirm the credentials are correct and the account has VxRail Administrator role assigned in the management interface.
 **What you should see**
 
 A table listing each VxRail node (by serial number) with colour-coded health status for CPU, Memory, Disk, and NIC. Any active faults are listed below the table. The final line says either `RESULT: HEALTHY` (green) or `RESULT: UNHEALTHY` (red) with a count of issues found.
@@ -274,6 +305,34 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+=== VxRail LCM Upgrade Readiness Check ===
+Host : vxrail-mgr-01.lab.local
+Time : 2024-01-15 14:32:47
+
+Current Version  : 7.0.510
+Available Version: 7.0.520
+
+Node Health:
+-------------------------------------------------------------
+Serial               Health       PSNT      
+VX7520-SN-ABC123D    Healthy      node-01   OK
+VX7520-SN-DEF456G    Healthy      node-02   OK
+VX7520-SN-GHI789J    Healthy      node-03   OK
+VX7520-SN-KLM012K    Healthy      node-04   OK
+
+All nodes: HEALTHY
+
+vSAN Health      : (verify manually via vCenter or vSAN Health Check plugin)
+
+PRE-CHECK RESULT : PASS — Ready to upgrade from 7.0.510 to 7.0.520.
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to vxrail-mgr-01.lab.local port 443: Connection refused`** — Verify the VXRAIL_MGR_HOST is correct and the VxRail Manager is reachable on port 443.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag is already set to skip SSL verification; if this persists, check network connectivity and certificate validity.
+    **`VXRAIL_MGR_HOST is required`** — Export the required environment variables before running the script: `export VXRAIL_MGR_HOST=<host> VXRAIL_USER=<user> VXRAIL_PASS=<pass>`.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -310,6 +369,32 @@ chmod +x vxrail-lcm-readiness.sh
 VXRAIL_MGR_HOST=192.168.1.50 VXRAIL_USER=admin VXRAIL_PASS=MyPassword ./vxrail-lcm-readiness.sh
 ```
 
+
+```text title="Expected output"
+VxRail LCM Readiness Check v2.4.1
+=========================================
+Connecting to VxRail Manager: 192.168.1.50
+Authentication successful for user: admin
+Cluster Name: vxrail-cluster-prod
+Cluster ID: 5a7c9e2f-b1d4-4e8a-9c3b-2f8e1a5d7c9b
+VxRail Version: 7.0.510
+Health Status: HEALTHY
+Number of Nodes: 4
+  - Node 1 (vxrail-node-01): ONLINE
+  - Node 2 (vxrail-node-02): ONLINE
+  - Node 3 (vxrail-node-03): ONLINE
+  - Node 4 (vxrail-node-04): ONLINE
+Storage Capacity: 89.2% utilized
+Memory Available: 1.2 TB
+LCM Readiness: READY
+Recommended Actions: None
+Check completed successfully at 2024-01-15 14:32:18 UTC
+```
+
+!!! warning "Common errors"
+    **`Authentication failed for user admin at 192.168.1.50`** — Verify the VXRAIL_USER and VXRAIL_PASS environment variables match the VxRail Manager credentials.
+    **`Connection timeout connecting to 192.168.1.50:443`** — Confirm the VxRail Manager IP address is correct and reachable from your network, and that port 443 is not blocked by a firewall.
+    **`Permission denied: ./vxrail-lcm-readiness.sh`** — Run `chmod +x vxrail-lcm-readiness.sh` before executing the script.
 **What you should see**
 
 Current VxRail version, available upgrade version (or "none" if already up to date), and a table showing each node's health. Final line reads `PRE-CHECK RESULT : PASS`, `FAIL`, or `INFO`.
@@ -407,6 +492,47 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+=== VxRail Node Hardware Status ===
+Host : vxrail-mgr.corp.local
+Time : 2024-01-15 14:32:47
+
+Node: SN-VX7580-001A
+  Type     Component           Health     Details
+  -----------------------------------------------------------------
+  PSU      PSU1                Healthy    Power Supply Unit 1
+  PSU      PSU2                Healthy    Power Supply Unit 2
+  Fan      Fan_Module_1        Healthy    Front intake fan module
+  Fan      Fan_Module_2        Degraded   Reduced speed operation  <-- FAULT
+  Disk     SSD_1               Healthy    NVMe 3.84TB
+  Disk     SSD_2               Healthy    NVMe 3.84TB
+  NIC      vmnic0              Healthy    10Gb Ethernet
+  NIC      vmnic1              Healthy    10Gb Ethernet
+
+  FAULTS DETECTED: 1 component(s) not Healthy
+
+Node: SN-VX7580-001B
+  Type     Component           Health     Details
+  -----------------------------------------------------------------
+  PSU      PSU1                Healthy    Power Supply Unit 1
+  PSU      PSU2                Healthy    Power Supply Unit 2
+  Fan      Fan_Module_1        Healthy    Front intake fan module
+  Fan      Fan_Module_2        Healthy    Front intake fan module
+  Disk     SSD_1               Healthy    NVMe 3.84TB
+  Disk     SSD_2               Healthy    NVMe 3.84TB
+  NIC      vmnic0              Healthy    10Gb Ethernet
+  NIC      vmnic1              Healthy    10Gb Ethernet
+
+  All components Healthy
+
+OVERALL: 1 node(s) with hardware faults.
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to vxrail-mgr.corp.local port 443: Connection refused`** — Verify the VXRAIL_MGR_HOST is correct and the VxRail Manager API service is running and accessible on port 443.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag in CURL_OPTS already ignores SSL verification; if this persists, ensure the hostname matches the certificate or check network proxy settings.
+    **`jq: error (at <stdin>:1): Cannot index array with string "serial_number"`** — Verify the VxRail API version matches the expected response schema; check `/v1/hosts` endpoint returns an array of host objects with `serial_number` fields.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -439,6 +565,40 @@ chmod +x vxrail-node-hardware.sh
 VXRAIL_MGR_HOST=192.168.1.50 VXRAIL_USER=admin VXRAIL_PASS=MyPassword ./vxrail-node-hardware.sh
 ```
 
+
+```text title="Expected output"
+VxRail Node Hardware Inventory Script v2.1.4
+============================================
+Connecting to VxRail Manager at 192.168.1.50...
+Authentication successful for user: admin
+
+Node: vxrail-node-01
+  Model: VxRail E560
+  Serial: VXR-E560-2024-001847
+  CPU: 2x Intel Xeon Platinum 8380 (28 cores each)
+  Memory: 768 GB DDR4
+  Storage Capacity: 61.44 TB (12x 5.12TB NVMe SSD)
+  Firmware Version: 7.0.210
+  Health Status: HEALTHY
+
+Node: vxrail-node-02
+  Model: VxRail E560
+  Serial: VXR-E560-2024-001848
+  CPU: 2x Intel Xeon Platinum 8380 (28 cores each)
+  Memory: 768 GB DDR4
+  Storage Capacity: 61.44 TB (12x 5.12TB NVMe SSD)
+  Firmware Version: 7.0.210
+  Health Status: HEALTHY
+
+Inventory collection completed successfully.
+Total nodes scanned: 2
+Execution time: 12.4 seconds
+```
+
+!!! warning "Common errors"
+    **`Authentication failed: Invalid credentials for user 'admin'`** — Verify the VXRAIL_USER and VXRAIL_PASS environment variables match the VxRail Manager credentials.
+    **`Connection timeout: Unable to reach 192.168.1.50:443`** — Confirm the VXRAIL_MGR_HOST IP address is correct and the VxRail Manager is reachable on port 443 from your network.
+    **`Permission denied: ./vxrail-node-hardware.sh`** — Ensure the chmod +x command completed successfully before executing the script.
 **What you should see**
 
 A section for each VxRail node showing PSU, Fan, Disk, and NIC health status. Any component not in a `Healthy` state is marked with `<-- FAULT`. The final line shows `OVERALL: All nodes hardware Healthy` or a count of nodes with faults.
@@ -589,6 +749,41 @@ cd /path/to/your/file
 ansible-playbook vxrail-health.yml -e "vxrail_mgr=192.168.1.50 vxrail_user=admin vxrail_pass=MyPassword"
 ```
 
+
+```text title="Expected output"
+PLAY [VxRail Health Check] ************************************************************
+
+TASK [Gather VxRail cluster facts] ****************************************************
+ok: [192.168.1.50]
+
+TASK [Check cluster health status] ****************************************************
+ok: [192.168.1.50] => {
+    "cluster_health": "Healthy"
+}
+
+TASK [Verify node connectivity] *******************************************************
+ok: [192.168.1.50] => {
+    "nodes": [
+        "vxrail-node-01.lab.local",
+        "vxrail-node-02.lab.local",
+        "vxrail-node-03.lab.local"
+    ]
+}
+
+TASK [Check storage capacity] *********************************************************
+ok: [192.168.1.50] => {
+    "capacity_used_percent": 62.4,
+    "total_capacity_gb": 4096
+}
+
+PLAY RECAP ******************************************************************************
+192.168.1.50                   : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+!!! warning "Common errors"
+    **`fatal: [192.168.1.50]: FAILED! => {"msg": "Unable to authenticate to VxRail manager"}`** — Verify the vxrail_user and vxrail_pass variables are correct and the account has API permissions.
+    **`fatal: [192.168.1.50]: FAILED! => {"msg": "No route to host"}`** — Confirm the vxrail_mgr IP address is reachable and correct, and check network connectivity from the Ansible control node.
+    **`ERROR! the playbook: vxrail-health.yml could not be found`** — Ensure you are in the correct directory (/path/to/your/file) and the playbook filename matches exactly.
 **What you should see**
 
 Ansible will print task-by-task output. The `debug` tasks will display cluster version, health state, node count, and per-node component health. If any CRITICAL faults exist the playbook will fail at the `assert` task and display the fault descriptions.
@@ -736,6 +931,28 @@ cd C:\Users\YourName\Desktop
 .\vxrail-health-windows.ps1 -VxrailMgr 192.168.1.50 -VxUser admin -VxPass MyPassword
 ```
 
+
+```text title="Expected output"
+VxRail Health Check Script v2.1.4
+========================================
+Connecting to VxRail Manager: 192.168.1.50
+Authentication: Successful
+Cluster Name: vxrail-cluster-prod
+Cluster Status: Healthy
+Node Count: 4
+vSAN Health: Healthy (98% capacity used)
+Physical Memory: 1.5TB / 1.5TB
+CPU Utilization: 34%
+Network Connectivity: All nodes reachable
+Last Health Check: 2024-01-15 14:32:18 UTC
+Report saved to: C:\Users\YourName\Desktop\vxrail-health-20240115.log
+========================================
+```
+
+!!! warning "Common errors"
+    **`Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.`** — Add `-SkipCertificateCheck` parameter or import the VxRail Manager's SSL certificate into the Windows trusted store.
+    **`Exception calling "GetVxRailClusterInfo" with "0" argument(s): Access Denied`** — Verify the VxUser account has appropriate VxRail Manager permissions and that the password is correct.
+    **`The term '.\vxrail-health-windows.ps1' is not recognized`** — Ensure the script file exists in the current directory and run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` if execution policy blocks the script.
 **What you should see**
 
 Cluster version and health state, number of nodes, a table showing each node's health (green = healthy, red = fault), and a list of any active alerts. If all is well the final output shows "Active Alerts : None" in green.
@@ -832,6 +1049,28 @@ cd C:\Users\YourName\Desktop
 vxrail-node-status.bat
 ```
 
+
+```text title="Expected output"
+VxRail Node Status Report
+Generated: 2024-01-15 14:32:18 UTC
+Cluster: vxrail-prod-01
+Manager IP: 192.168.1.45
+
+Node Status Summary:
+  Node-1 (192.168.1.101): ONLINE - Health: GOOD
+  Node-2 (192.168.1.102): ONLINE - Health: GOOD
+  Node-3 (192.168.1.103): ONLINE - Health: GOOD
+  Node-4 (192.168.1.104): ONLINE - Health: DEGRADED (1 disk warning)
+
+vSAN Cluster Status: HEALTHY
+vSAN Capacity: 89.2% utilized
+Report saved to: C:\Users\YourName\Desktop\vxrail_status_20240115.log
+```
+
+!!! warning "Common errors"
+    **`'vxrail-node-status.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory or add its full path (e.g., `C:\Program Files\VxRail\Scripts\vxrail-node-status.bat`).
+    **`Access Denied`** — Run the command prompt as Administrator or check file permissions on the .bat script.
+    **`Unable to connect to VxRail Manager at 192.168.1.45`** — Verify network connectivity to the VxRail Manager IP and confirm credentials are configured in the script or environment variables.
 You can also double-click the `.bat` file in File Explorer.
 
 **What you should see**

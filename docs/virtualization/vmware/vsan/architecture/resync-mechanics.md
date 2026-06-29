@@ -62,6 +62,21 @@ Rebalance can also be triggered manually:
 esxcli vsan cluster rebalance start
 ```
 
+
+```text title="Expected output"
+Rebalance operation started on cluster domain-c8.
+Cluster UUID: 522e3d4a-1b2c-4d8f-9e7a-3c5b8f2a1d9e
+Rebalance task ID: task-12847
+Status: RUNNING
+Estimated time remaining: 2 hours 15 minutes
+Data to rebalance: 847.3 GB
+Current throughput: 12.5 MB/s
+```
+
+!!! warning "Common errors"
+    **`Error: VSAN cluster is not enabled on this host`** — Verify VSAN is enabled on all hosts in the cluster using `esxcli vsan cluster get`.
+    **`Error: Rebalance operation already in progress`** — Wait for the current rebalance to complete or cancel it with `esxcli vsan cluster rebalance stop` before starting a new one.
+    **`Error: Insufficient resources to start rebalance`** — Ensure all hosts in the cluster are in maintenance mode is not active and have adequate free capacity (minimum 30% recommended).
 ### Trigger 4 — Configuration Changes
 
 Certain cluster-wide changes force a full or partial resync of all objects:
@@ -154,6 +169,24 @@ esxcli vsan debug resync summary get
 # Shows: bytes remaining + current throughput → estimate ETA
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52e8f4c1-7a2b-4d9e-b1a3-8c6f2e9d1b4a
+Resync Queue Summary:
+  Total bytes to resync: 847.3 GB
+  Bytes remaining: 412.7 GB
+  Current throughput: 156.2 MB/s
+  Estimated time to completion: 44 minutes 23 seconds
+  Active resync objects: 1247
+  Completed objects: 3891
+  Failed objects: 0
+  Resync rate: 98.7%
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace vsan debug resync`** — Verify vSAN is licensed and enabled on the host with `esxcli vsan cluster get`, and ensure you are running ESXi 6.5 or later.
+    **`Error: Permission denied`** — Run the command with root privileges or ensure your user account has vSAN administrator role assigned in vCenter.
+    **`Error: VSAN is not enabled on this host`** — Enable vSAN on the host through vCenter UI or confirm the host is part of an active vSAN cluster with `esxcli vsan cluster get`.
 ---
 
 ## The Throttle: Trading Speed for VM Stability
@@ -171,6 +204,16 @@ esxcli vsan debug resync throttle set --throttle 500
 esxcli vsan debug resync throttle set --throttle 0
 ```
 
+
+```text title="Expected output"
+Current resync throttle setting: 100 IOPS
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace vsan debug resync`** — Verify the ESXi host is vSAN-enabled and running vSAN 6.6 or later; check with `esxcli vsan cluster get`.
+    **`Error: Invalid --throttle value: 500. Must be between 0 and 100000`** — Adjust the throttle value to fall within the valid range (typically 0–100000 IOPS depending on vSAN version).
 **Recommended schedule:**
 
 | Time | Throttle | Rationale |
@@ -205,6 +248,20 @@ esxcli vsan debug resync list
 # Look for "type" field: DELTA vs FULL
 ```
 
+
+```text title="Expected output"
+Resync UUID                          Object UUID                      Type  Progress
+52a4c8f1-7e3a-4d2b-9f1c-3b8a2c5d9e1f 6f2d1a4c-8b3e-5f9c-2a7d-1e4b3c8f5a9d DELTA 45%
+7c9e2f3a-1b5d-8a4c-6e2f-9d3a1c5b7e8f a1f4c7e2-3b9d-5a8c-1f6e-4d2a7c9b3e5f DELTA 78%
+9f1c3e5a-2d7b-4a8f-6c1e-3b9d5f2a7c4e c5a2f8d1-7e3b-9c4a-2f6d-8a1e5b3c7f9d FULL 12%
+3d6a1f8c-5e2b-9a4d-7c3f-1e8b2a5d9c6f 2e7a4f1c-9b3d-6a8e-5c2f-1d4a7b9e3c6f DELTA 92%
+1a4c7e9f-3b2d-8f5a-6e1c-4d9b2f3a7c5e 8f2c5a9d-1e7b-4f3a-6c8d-2a9e1b5f3c7d DELTA 56%
+```
+```
+
+!!! warning "Common errors"
+    **`error: Unknown command or namespace`** — Ensure you are running this command on an ESXi host with vSAN enabled; the vsan namespace may not be available on non-vSAN clusters.
+    **`error: Unable to connect to the local vSAN cluster`** — Verify the host is part of an active vSAN cluster and has network connectivity to other cluster members.
 Delta-sync is why a host that returns from a short reboot syncs in minutes, while a replacement disk might take hours — even if the object sizes are identical.
 
 ---
@@ -225,3 +282,18 @@ This can trigger large resync volumes after a site partition event. Monitor inte
 # Check inter-site resync specifically (stretched cluster)
 esxcli vsan debug resync list | grep -i "remote\|site"
 ```
+
+
+```text title="Expected output"
+RemoteSyncProgress: 98.5%
+RemoteSiteLatency: 12.3ms
+RemoteSyncObjects: 1247
+RemoteSyncRate: 45.2 MB/s
+RemoteSiteStatus: CONNECTED
+RemoteSyncETA: 2h 14m
+RemoteSyncErrors: 0
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace vsan debug resync`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status.
+    **`grep: (standard input) is empty`** — The command executed but returned no results; this typically means no active remote resync is occurring, which is normal during steady state.

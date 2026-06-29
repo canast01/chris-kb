@@ -58,6 +58,29 @@ AllowUsers admin
 sudo systemctl restart sshd
 ```
 
+
+```text title="Expected output"
+admin@vra-london.example.local's password: 
+Welcome to vSphere Replication Appliance (VRA) v8.7.2.1
+Last login: Wed Jan 15 14:32:18 2025 from 10.45.120.88
+vra-london:~$ sudo vim /etc/ssh/sshd_config
+[vim editor opens — no terminal output during editing]
+vra-london:~$ sudo systemctl restart sshd
+vra-london:~$ sudo systemctl status sshd
+● sshd.service - OpenSSH server daemon
+   Loaded: loaded (/lib/systemd/system/sshd.service; enabled; vendor preset: enabled)
+   Active: active (running) since Wed Jan 15 14:33:42 2025; 2s ago
+   Process: 8421 ExecStart=/usr/sbin/sshd -D $OPTIONS (code=exited, status=0/SUCCESS)
+  Main PID: 8422 (sshd)
+     Tasks: 1 (limit: 2048)
+    Memory: 3.2M
+vra-london:~$
+```
+
+!!! warning "Common errors"
+    **`sshd: no hostkeys available -- exiting.`** — Restore SSH host keys from backup or regenerate them with `sudo ssh-keygen -A` before restarting sshd.
+    **`Permission denied (publickey).`** — Ensure your public key is added to `~/.ssh/authorized_keys` on the VRA before disabling password authentication.
+    **`sudo: vim: command not found`** — Use `sudo nano /etc/ssh/sshd_config` or install vim with `sudo apt-get install vim` if nano is unavailable.
 Firewall rule: allow SSH (TCP 22) to VRA only from jump host IPs.
 
 ---
@@ -73,6 +96,19 @@ sudo iptables -A INPUT -p tcp --dport 443 -j DROP
 sudo iptables-save > /etc/iptables/rules.v4
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`iptables: No chain/target/match by that name`** — Ensure iptables is installed and the kernel module is loaded with `sudo modprobe iptable_filter`.
+    **`cannot open /etc/iptables/rules.v4: No such file or directory`** — Create the directory first with `sudo mkdir -p /etc/iptables` before running iptables-save.
+    **`Operation not permitted`** — Run all iptables commands with sudo or as root; standard user accounts cannot modify firewall rules.
 Port 31031 (replication data receiver) should only accept connections from source site ESXi management IPs:
 ```bash
 # Allow replication traffic from source ESXi subnet only:
@@ -80,6 +116,15 @@ sudo iptables -A INPUT -p tcp --dport 31031 -s 10.10.10.0/24 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 31031 -j DROP
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`iptables: No chain/target/match by that name`** — Ensure iptables is installed and the kernel module is loaded with `sudo modprobe iptables_filter`.
+    **`iptables: Permission denied (you must be root)`** — Run the commands with `sudo` or switch to root user with `su -`.
 ---
 
 ## Least-Privilege VR Service Account
@@ -141,6 +186,14 @@ echo | openssl s_client -connect vra-london.example.local:443 2>/dev/null \
 # VRA VAMI → SSL → Upload Certificate
 ```
 
+
+```text title="Expected output"
+notAfter=Dec 15 09:23:47 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Ensure the VRA hostname resolves correctly and port 443 is accessible; verify DNS or add an entry to `/etc/hosts` if needed.
+    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — This is expected for self-signed certs; the command still extracts the expiry date successfully, so verify the `notAfter` field in the output.
 After rotating VRA certificate at either site:
 ```text
 Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints

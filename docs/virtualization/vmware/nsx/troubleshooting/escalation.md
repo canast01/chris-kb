@@ -91,6 +91,32 @@ curl -sk -u admin:<password> https://<nsx-manager>/api/v1/node/version
 # Note: include build number in the SR, not just the release version
 ```
 
+
+```text title="Expected output"
+admin@nsx-manager-01.lab.local's password: 
+NSX Manager> get version
+Product: NSX
+Version: 3.2.1.0
+Build: 21150547
+Release Date: 2024-01-15
+
+NSX Manager> exit
+Connection to nsx-manager-01.lab.local closed.
+
+$ curl -sk -u admin:MyP@ssw0rd https://nsx-manager-01.lab.local/api/v1/node/version
+{
+  "product_name": "NSX",
+  "product_version": "3.2.1.0",
+  "build_number": "21150547",
+  "release_date": "2024-01-15T00:00:00Z",
+  "node_id": "a7f2c9e1-4b6d-11ee-b56e-005056a1e2c4"
+}
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH is enabled on the NSX Manager node.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if using a trusted certificate, or ensure the NSX Manager hostname matches the certificate CN.
+    **`NSX Manager> get version: command not found`** — Exit the NSX CLI shell first with `exit`, then use the API call instead, or verify you are connected to an NSX Manager node (not a controller).
 ### 2. Capture the Manager cluster status
 
 ```bash
@@ -107,6 +133,76 @@ curl -sk -u admin:<password> "https://<nsx-manager>/api/v1/transport-nodes/statu
 curl -sk -u admin:<password> "https://<nsx-manager>/api/v1/alarms?status=OPEN&severity=CRITICAL" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "cluster_status": "STABLE",
+  "cluster_id": "550e8400-e29b-41d4-a716-446655440000",
+  "node_count": 3,
+  "control_cluster_status": "STABLE",
+  "mgmt_cluster_status": "STABLE",
+  "last_updated": "2024-01-15T14:32:18.445Z"
+}
+{
+  "result_count": 3,
+  "results": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "fqdn": "nsx-mgr-01.lab.local",
+      "ip_address": "192.168.1.10",
+      "status": "UP",
+      "role": "MANAGER",
+      "version": "3.2.1.0.0.20456789"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "fqdn": "nsx-mgr-02.lab.local",
+      "ip_address": "192.168.1.11",
+      "status": "UP",
+      "role": "CONTROL_MANAGER",
+      "version": "3.2.1.0.0.20456789"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440003",
+      "fqdn": "nsx-mgr-03.lab.local",
+      "ip_address": "192.168.1.12",
+      "status": "UP",
+      "role": "CONTROL_MANAGER",
+      "version": "3.2.1.0.0.20456789"
+    }
+  ]
+}
+{
+  "result_count": 2,
+  "results": [
+    {
+      "transport_node_id": "tn-edge-01",
+      "display_name": "edge-01.lab.local",
+      "status": "DOWN",
+      "status_detail": "Connection lost",
+      "last_heartbeat": "2024-01-15T13:45:22.000Z"
+    },
+    {
+      "transport_node_id": "tn-host-07",
+      "display_name": "esx-host-07.lab.local",
+      "status": "DOWN",
+      "status_detail": "Agent timeout",
+      "last_heartbeat": "2024-01-15T12:18:55.000Z"
+    }
+  ]
+}
+{
+  "result_count": 1,
+  "results": [
+    {
+      "id": "alarm-550e8400-e29b-41d4-a716-446655440099",
+      "title": "Control Cluster Node Disconnected",
+      "severity": "CRITICAL",
+      "status": "OPEN",
+      "entity_id": "550e8400-e29b-41d4-a716-446655440002",
+      "created_time": "2024-01-15T14:15:33.000Z",
+      "description": "Control cluster node nsx-mgr-02 is
+```
 ### 3. Generate the NSX support bundle (takes 10–30 minutes)
 
 ```bash
@@ -127,6 +223,40 @@ curl -sk -u admin:<password> \
   -O "https://<nsx-manager>/api/v1/node/support-bundles/download/<bundle-id>"
 ```
 
+
+```text title="Expected output"
+{
+  "bundle_id": "support-bundle-20240115-143052-a7f2c9e1",
+  "status": "IN_PROGRESS",
+  "progress": 0,
+  "timestamp": "2024-01-15T14:30:52.000Z"
+}
+
+{
+  "bundle_id": "support-bundle-20240115-143052-a7f2c9e1",
+  "status": "IN_PROGRESS",
+  "progress": 45,
+  "timestamp": "2024-01-15T14:30:52.000Z"
+}
+
+{
+  "bundle_id": "support-bundle-20240115-143052-a7f2c9e1",
+  "status": "SUCCESS",
+  "progress": 100,
+  "file_size": 524288000,
+  "download_url": "/api/v1/node/support-bundles/download/support-bundle-20240115-143052-a7f2c9e1",
+  "timestamp": "2024-01-15T14:35:18.000Z"
+}
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  500M  100  500M    0     0  45.2M      0  0:00:11  0:00:11 --:--:-- support-bundle-20240115-143052-a7f2c9e1.tar.gz
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already included in the example, but ensure it's present if you remove it).
+    **`{"error":"Invalid credentials","status":401}`** — Verify the NSX Manager admin password is correct and URL is reachable with `ping <nsx-manager>`.
+    **`{"error":"Bundle generation failed","status":"FAILED","reason":"Insufficient disk space"}`** — Free up disk space on the NSX Manager node or reduce log_age parameter to collect fewer days of logs.
 ### 4. Run Traceflow (for traffic drop or DFW issues)
 
 In NSX Manager UI:
@@ -274,6 +404,102 @@ curl -sk -u admin:<pw> "https://<mgr>/api/v1/alarms?status=OPEN" | python3 -m js
 curl -sk -u admin:<pw> "https://<mgr>/api/v1/logical-routers" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+nsx-manager-01> nsxcli
+nsx-manager-01# get cluster status
+Cluster Status: STABLE
+Node ID: 42a7c8d1-9f2e-4b6c-a1e3-7d5f9c2b8e4a
+Node IP: 192.168.1.10
+Node Status: UP
+Cluster Node Count: 3
+
+nsx-manager-01# get managers
+Manager Nodes:
+  192.168.1.10  nsx-manager-01  UP
+  192.168.1.11  nsx-manager-02  UP
+  192.168.1.12  nsx-manager-03  UP
+
+nsx-manager-01# get services
+Service Name              Status    PID
+nsx-manager              UP        4521
+policy-service           UP        5847
+cluster-service          UP        3294
+corfu-service            UP        2156
+messaging-service        UP        6123
+
+nsx-manager-01# get corfu-cluster status
+Corfu Cluster Status: READY
+Cluster Size: 3
+Layout Epoch: 127
+
+nsx-manager-01# get transport-node-status
+Transport Node Status Summary:
+  UP: 24
+  DOWN: 1
+  DEGRADED: 0
+
+nsx-manager-01# get tunnel status
+Tunnel Status Summary:
+  UP: 156
+  DOWN: 3
+  UNKNOWN: 0
+
+edge-01> get version
+NSX Edge Version: 3.2.1.0
+Build: 18414822
+Release Date: 2023-11-15
+
+edge-01> get services
+Service Name              Status    PID
+nsx-edge                 UP        7234
+datapath                 UP        8156
+bgp-service              UP        5421
+
+edge-01> get bgp neighbor summary
+Neighbor Address    AS      State       Uptime
+10.0.0.1           65001   Established 14d 5h 23m
+10.0.0.2           65001   Established 8d 12h 44m
+10.0.0.3           65002   Connect     0h 2m 15s
+
+edge-01> get edge-cluster status
+Edge Cluster: edge-cluster-01
+Status: ACTIVE
+Member Count: 2
+Active Members: 2
+
+edge-01> get interfaces
+Interface Name    IP Address        Status    MTU
+eth0              10.20.30.41/24    UP        1500
+eth1              10.20.30.42/24    UP        1500
+eth2              10.20.30.43/24    UP        1500
+
+{
+  "cluster_status": "STABLE",
+  "node_count": 3,
+  "online_nodes": 3,
+  "offline_nodes": 0,
+  "degraded_nodes": 0
+}
+
+{
+  "results": [
+    {
+      "transport_node_id": "tn-456",
+      "display_name": "esx-host-07",
+      "status": "DOWN",
+      "last_heartbeat_timestamp": 1699564821000
+    }
+  ],
+  "result_count": 1
+}
+
+{
+  "results": [
+    {
+      "id": "alarm-789",
+      "title": "Transport Node Connectivity Lost",
+```
 ---
 
 ## Support Portal and SLA Reference

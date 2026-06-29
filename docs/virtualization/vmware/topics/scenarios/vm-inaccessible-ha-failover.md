@@ -84,6 +84,19 @@ Fields to check:
 /etc/init.d/vmware-fdm restart
 ```
 
+
+```text title="Expected output"
+vmware-fdm (pid 4521) is running
+(no output — command completes silently)
+Stopping vmware-fdm: [  OK  ]
+Starting vmware-fdm: [  OK  ]
+vmware-fdm (pid 4628) is running
+```
+
+!!! warning "Common errors"
+    **`vmware-fdm: unrecognized service`** — Verify the host is running ESXi and HA is configured; FDM only exists on HA-enabled clusters.
+    **`Permission denied`** — Run the commands with root privileges using `sudo` or log in as root.
+    **`vmware-fdm (pid XXXX) is running, but subsystem locked`** — Wait 30–60 seconds for the previous restart to fully complete before issuing another restart command.
 Look for: `Restart Status = Completed` means HA already acted — verify VMs are accessible before doing anything else.
 
 ---
@@ -116,6 +129,32 @@ esxcli vsan debug object list | grep -i degraded
 esxcli vsan debug object list | grep -E "Host|Health|UUID"
 ```
 
+
+```text title="Expected output"
+Device Display Name: Local SSD (mpx.vmhba0:C0:T0:L0)
+State: OK
+Device Display Name: Remote SSD (mpx.vmhba1:C0:T1:L0)
+State: Degraded
+Device Display Name: Cache Disk (mpx.vmhba2:C0:T2:L0)
+State: OK
+
+Object UUID: 52e3d4a1-8f2c-4a9b-b1c2-3d4e5f6a7b8c
+Health: Degraded
+Object UUID: 61f4e5b2-9g3d-5b0c-c2d3-4e5f6g7b8c9d
+Health: Healthy
+
+Host: esx-prod-01.lab.local
+Health: Degraded
+UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f6g7h8i9j
+Host: esx-prod-02.lab.local
+Health: Healthy
+UUID: 5b6c7d8e-9f0a-1b2c-3d4e-5f6g7h8i9j0k
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or local console, not from a vCenter Server.
+    **`No such file or directory`** — Verify vSAN is enabled and properly configured on the cluster; this command only works on vSAN-enabled hosts.
+    **`Permission denied`** — Run the command as root or with appropriate ESXi host privileges; standard user accounts cannot access esxcli storage or vsan debug commands.
 Look for: `State: APD` means wait for path recovery; `State: PDL` means VMCP should trigger immediately — confirm VMCP policy at **Cluster → Configure → vSphere Availability → Failures and Responses**.
 
 ---
@@ -143,6 +182,23 @@ esxcli vsan debug resync summary get
 #   ObjectsToResync — number of VM objects still rebuilding
 ```
 
+
+```text title="Expected output"
+BytesToResync: 2147483648
+ResyncType: REPAIR
+ObjectsToResync: 47
+ResyncStartTime: 2024-01-15T09:23:45Z
+ResyncElapsedTime: 3600
+EstimatedTimeRemaining: 7200
+ResyncRate: 596837376
+CurrentResyncingObjects: 12
+CompletedObjects: 89
+FailedObjects: 0
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace path: vsan`** — Verify VSAN is licensed and enabled on the cluster, or run `esxcli vsan cluster get` first to confirm VSAN is active.
+    **`Error: Unknown command or namespace path: debug`** — Update ESXi to a supported version (6.5+) that includes the vsan debug namespace, or use `esxcli vsan resync get` as an alternative on older builds.
 Look for: any VM showing `Policy Status = Non-compliant` with `ResyncType = REPAIR` means it has a live protection gap — do not place additional hosts in maintenance until resync completes.
 
 ---

@@ -130,6 +130,63 @@ get version
 get nodes
 ```
 
+
+```text title="Expected output"
+NSX Manager CLI. Use "help" or "help <command>" for command assistance.
+nsx> get cluster status
+Cluster Id                : 12345678-1234-5678-90ab-cdef12345678
+Cluster Status            : STABLE
+Node 1 (nsx-mgr-01.lab.local)
+  Status                  : UP
+  Role                    : ACTIVE
+  Heartbeat               : HEALTHY
+Node 2 (nsx-mgr-02.lab.local)
+  Status                  : UP
+  Role                    : STANDBY
+  Heartbeat               : HEALTHY
+Node 3 (nsx-mgr-03.lab.local)
+  Status                  : UP
+  Role                    : STANDBY
+  Heartbeat               : HEALTHY
+
+nsx> get managers
+Node ID                              IP Address      Hostname              Role
+12345678-aaaa-bbbb-cccc-111111111111 192.168.1.10    nsx-mgr-01.lab.local  ACTIVE
+87654321-dddd-eeee-ffff-222222222222 192.168.1.11    nsx-mgr-02.lab.local  STANDBY
+abcdef12-3456-7890-abcd-ef1234567890 192.168.1.12    nsx-mgr-03.lab.local  STANDBY
+
+nsx> get corfu-cluster status
+Cluster Status           : CONNECTED
+Leader Node              : nsx-mgr-01.lab.local (192.168.1.10)
+Quorum Status            : QUORUM_MET
+Node Connectivity        : ALL_CONNECTED
+Raft Term                : 47
+Commit Index             : 89234
+
+nsx> get services
+Service Name             Status      PID
+manager                  RUNNING     4521
+controller               RUNNING     4589
+http                     RUNNING     4612
+...
+
+nsx> get version
+Product                  : NSX-T
+Version                  : 3.2.1.1
+Build                    : 19480585
+Install Date             : 2023-11-15 14:32:18 UTC
+
+nsx> get nodes
+Node ID                              IP Address      Hostname              Status
+12345678-aaaa-bbbb-cccc-111111111111 192.168.1.10    nsx-mgr-01.lab.local  UP
+87654321-dddd-eeee-ffff-222222222222 192.168.1.11    nsx-mgr-02.lab.local  UP
+abcdef12-3456-7890-abcd-ef1234567890 192.168.1.12    nsx-mgr-03.lab.local  UP
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify NSX Manager IP is correct and SSH service is running; check firewall rules allowing port 22 to the management interface.
+    **`Cluster Status: UNSTABLE`** — Check node connectivity and disk space on all three managers using `get system resources`; restart the manager service if a node is stuck.
+    **`Corfu-cluster status: QUORUM_LOST`** — Ensure all three NSX Manager nodes are running and network connectivity between them is healthy; check for split-brain conditions with `get cluster history`.
 ---
 
 ## Step 2 — Check alarms and transport node status
@@ -170,6 +227,48 @@ print(f'Transport failures: {d.get(\"transport_failures\",[])}')
 "
 ```
 
+
+```text title="Expected output"
+Critical alarms: 3
+  nsx-edge-01.corp.local: Control Cluster Node nsx-mgr-02 lost connectivity to Fabric Node
+  compute-01.lab: TEP tunnel down between 192.168.100.45 and 192.168.100.52
+  nsx-mgr-01.corp.local: Datastore connectivity lost on vSAN cluster prod-vsan-01
+
+Transport Nodes:
+node-id                          display_name              ip_address        connection_state
+tn-compute-01                     compute-01.corp.local     192.168.100.10    CONNECTED
+tn-compute-02                     compute-02.corp.local     192.168.100.11    CONNECTED
+tn-edge-01                        nsx-edge-01.corp.local    192.168.100.20    DEGRADED
+tn-edge-02                        nsx-edge-02.corp.local    192.168.100.21    CONNECTED
+
+Transport Node Status:
+node-id          status
+tn-compute-01    UP
+tn-compute-02    UP
+tn-edge-01       DEGRADED
+tn-edge-02       UP
+
+Tunnel Status:
+tunnel_id                                    status    source_ip         dest_ip
+tun-c01-c02-vxlan                           UP        192.168.100.10    192.168.100.11
+tun-c01-e01-vxlan                           DOWN      192.168.100.10    192.168.100.20
+tun-c02-e02-vxlan                           UP        192.168.100.11    192.168.100.21
+
+Tunnel Endpoints:
+tep_id    ip_address        node_id           status
+tep-001   192.168.100.10    tn-compute-01     UP
+tep-002   192.168.100.11    tn-compute-02     UP
+tep-003   192.168.100.20    tn-edge-01        DOWN
+tep-004   192.168.100.21    tn-edge-02        UP
+
+State: STABLE
+Transport failures: []
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.
+    **`jq: command not found` or `python3: command not found`** — Install the missing tool (e.g., `apt-get install python3-minimal` on Ubuntu or `yum install python3` on RHEL) or use the native `grep` and `awk` alternatives instead of JSON parsing.
+    **`401 Unauthorized`** — Verify the admin credentials are correct and the user has API access permissions; check NSX Manager audit logs for authentication failures.
 ---
 
 ## Step 3 — Diagnose TEP connectivity on ESXi hosts
@@ -198,6 +297,41 @@ vmkping -I vmk2 -d -s 1572 <remote-tep-ip>
 # Problem: packet loss = MTU mismatch on the physical underlay
 ```
 
+
+```text title="Expected output"
+nsx-vib-6.4.10-19045146.x86_64
+nsx-vib-6.4.10-19045146.x86_64 (other module)
+
+Name  IPv4 Address      Netmask         Broadcast       Enabled Type
+----  ----------------  ---------------  ---------------  ------- ----
+vmk0  192.168.1.50      255.255.255.0    192.168.1.255    true    DHCP
+vmk2  172.16.1.25       255.255.255.0    172.16.1.255     true    STATIC
+vmk10 10.0.0.0          255.255.255.0    10.0.0.255       false   STATIC
+
+Destination     Netmask         Gateway         Interface
+-----------     ---------------  ---------------  ---------
+172.16.1.0      255.255.255.0    Local            vmk2
+0.0.0.0         0.0.0.0          192.168.1.1      vmk0
+
+PING 172.16.1.30 (172.16.1.30): 56 data bytes
+64 bytes from 172.16.1.30: icmp_seq=0 time=2.341 ms
+64 bytes from 172.16.1.30: icmp_seq=1 time=2.156 ms
+64 bytes from 172.16.1.30: icmp_seq=2 time=2.289 ms
+--- 172.16.1.30 statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+
+PING 172.16.1.30 (172.16.1.30): 1572 data bytes
+1600 bytes from 172.16.1.30: icmp_seq=0 time=3.012 ms
+1600 bytes from 172.16.1.30: icmp_seq=1 time=2.987 ms
+1600 bytes from 172.16.1.30: icmp_seq=2 time=3.045 ms
+--- 172.16.1.30 statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+```
+
+!!! warning "Common errors"
+    **`grep: (standard input): No such file or directory`** — Verify NSX VIBs are actually installed by running `esxcli software vib list` without piping first to confirm the command executes.
+    **`PING 172.16.1.30 (172.16.1.30): 1572 data bytes`** followed by **`100% packet loss`** — Check physical switch and NIC MTU settings; ensure all underlay network interfaces are configured for at least 1600 bytes MTU with `esxcli network nic get -n vmnicX | grep MTU`.
+    **`Network is unreachable`** — Verify the TEP subnet route exists and the vmk2 interface is up by running `esxcli network ip interface list` and confirming the TEP interface is enabled and has a valid IP address.
 ---
 
 ## Step 4 — Inspect DFW filters on ESXi
@@ -229,6 +363,48 @@ vsipioctl getservices -f <filter-name>
 net-vdl2 -M all -s 0
 ```
 
+
+```text title="Expected output"
+[root@esx-prod-01:~] summarize-dvfilter
+DVFilter: nic-123456-eth0-vmware-sfw.2
+DVFilter: nic-123457-eth1-vmware-sfw.2
+DVFilter: nic-123458-eth2-vmware-sfw.2
+...
+
+[root@esx-prod-01:~] summarize-dvfilter | grep web-app-vm
+DVFilter: nic-123456-eth0-vmware-sfw.2
+
+[root@esx-prod-01:~] vsipioctl getrules -f nic-123456-eth0-vmware-sfw.2
+Rule ID 1001: action=pass src=10.0.1.0/24 dst=10.0.2.0/24 proto=tcp dport=443 dir=in
+Rule ID 1002: action=drop src=192.168.0.0/16 dst=any proto=any dir=in
+Rule ID 1003: action=pass src=any dst=10.0.2.5 proto=tcp dport=22 dir=in
+Rule ID 1004: action=drop src=any dst=any proto=any dir=in
+
+[root@esx-prod-01:~] vsipioctl getstats -f nic-123456-eth0-vmware-sfw.2
+Rule ID 1001: packets=4521847 bytes=2847392104 hits=4521847
+Rule ID 1002: packets=0 bytes=0 hits=0
+Rule ID 1003: packets=156 bytes=18432 hits=156
+Rule ID 1004: packets=8934 bytes=524288 hits=8934
+
+[root@esx-prod-01:~] vsipioctl getaddrsets -f nic-123456-eth0-vmware-sfw.2
+AddressSet: SG-Web-Tier (10.0.1.5, 10.0.1.6, 10.0.1.7)
+AddressSet: SG-DB-Tier (10.0.2.10, 10.0.2.11)
+
+[root@esx-prod-01:~] vsipioctl getservices -f nic-123456-eth0-vmware-sfw.2
+Service: HTTPS (tcp/443)
+Service: SSH (tcp/22)
+Service: DNS (udp/53)
+
+[root@esx-prod-01:~] net-vdl2 -M all -s 0
+VNI 5000 -> VLAN 100 (vxlan)
+VNI 5001 -> VLAN 101 (vxlan)
+VNI 5002 -> VLAN 102 (vxlan)
+```
+
+!!! warning "Common errors"
+    **`vsipioctl: filter nic-123456-eth0-vmware-sfw.2 not found`** — Verify the exact filter name from `summarize-dvfilter` output and ensure the VM is powered on.
+    **`command not found: vsipioctl`** — Confirm you are logged into the ESXi host directly (not vCenter) and that NSX is installed on this cluster.
+    **`net-vdl2: command not found`** —
 ---
 
 ## Step 5 — Diagnose Edge node routing and BGP
@@ -275,6 +451,68 @@ get node cpu-usage
 get node memory
 ```
 
+
+```text title="Expected output"
+admin@edge-01> get logical-routers
+Logical Router ID    Name                 Type    Status
+vrf-10               T0-Gateway           T0      up
+vrf-20               T1-Tenant-A          T1      up
+vrf-21               T1-Tenant-B          T1      up
+
+admin@edge-01> vrf vrf-10
+admin@edge-01(vrf-10)> get bgp neighbor summary
+BGP router ID: 192.168.1.100
+Local AS: 65000
+Neighbor          Remote AS  State       Up/Down
+10.0.0.1          65001      Established 2d 14h 22m
+10.0.0.2          65001      Established 1d 03h 15m
+10.0.0.5          65002      Active      00:00:45
+203.0.113.50      65003      Idle        never
+
+admin@edge-01(vrf-10)> get bgp neighbor 10.0.0.1
+Neighbor: 10.0.0.1
+Remote AS: 65001
+State: Established
+Uptime: 2 days 14 hours
+Received: 1247 prefixes
+Advertised: 89 prefixes
+
+admin@edge-01(vrf-10)> get route
+Destination          Next Hop       Metric  Type
+0.0.0.0/0            10.0.0.1       20      bgp
+10.0.0.0/24          connected      0       connected
+192.168.0.0/16       10.0.0.2       100     bgp
+172.16.0.0/12        10.0.0.1       50      bgp
+
+admin@edge-01(vrf-10)> exit
+admin@edge-01> get interfaces
+Interface    IP Address       Status  MTU
+fp-eth0      203.0.113.10/24  up      1500
+fp-eth1      10.20.30.1/24    up      1500
+lo0          127.0.0.1/8      up      65535
+
+admin@edge-01> get interface fp-eth0 counters
+RX packets: 4821903  RX errors: 0  RX dropped: 0
+TX packets: 3947281  TX errors: 2  TX dropped: 0
+RX bytes: 2847392847  TX bytes: 1923847293
+
+admin@edge-01> get edge-cluster status
+Edge Cluster: edge-cluster-01
+Status: ACTIVE
+Members: 3
+  edge-01: ACTIVE (UUID: 550e8400-e29b-41d4-a716-446655440000)
+  edge-02: ACTIVE (UUID: 6ba7b810-9dad-11d1-80b4-00c04fd430c8)
+  edge-03: STANDBY (UUID: 6ba7b811-9dad-11d1-80b4-00c04fd430c9)
+
+admin@edge-01> get high-availability status
+HA Status: ACTIVE
+Failover Count: 1
+Last Failover: 2024-01-15 03:22:14 UTC
+
+admin@edge-01> get node cpu-usage
+CPU Usage: 34%
+Load Average: 0.
+```
 ---
 
 ## Step 6 — Run Traceflow for hop-by-hop path analysis
@@ -319,6 +557,51 @@ curl -sk -u 'admin:<password>' \
   "https://<nsx-manager>/policy/api/v1/infra/tier-0s/<t0-id>/state"
 ```
 
+
+```text title="Expected output"
+{
+  "resource_type": "Traceflow",
+  "id": "traceflow-1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+  "state": "SUCCEEDED",
+  "packet_header": {
+    "src_ip": "10.0.1.10",
+    "dst_ip": "10.0.2.20",
+    "protocol": 1
+  },
+  "observations": [
+    {
+      "sequence_no": 1,
+      "resource_type": "TraceflowObservation",
+      "component_name": "LogicalSwitch",
+      "transport_node_name": "esx-host-01.lab.local",
+      "action": "FORWARDED"
+    },
+    {
+      "sequence_no": 2,
+      "resource_type": "TraceflowObservation",
+      "component_name": "DistributedFirewall",
+      "transport_node_name": "esx-host-01.lab.local",
+      "action": "DROPPED",
+      "rule_id": "dfw-rule-42",
+      "rule_name": "Block-Prod-to-Dev"
+    },
+    {
+      "sequence_no": 3,
+      "resource_type": "TraceflowObservation",
+      "component_name": "Tier0Gateway",
+      "action": "DROPPED"
+    }
+  ]
+}
+
+Segment state: REALIZED
+Tier-0 state: REALIZED
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.
+    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the NSX Manager admin password is correct and the user account has API access permissions.
+    **`{"error_code":404,"error_message":"Traceflow not found"}`** — Ensure the traceflow ID is correct and wait a few seconds for the traceflow to complete processing before polling results.
 ---
 
 ## Step 7 — Packet capture and collect support bundle
@@ -360,6 +643,58 @@ get transport-node-status >> /tmp/cluster-status.txt
 get tunnel status >> /tmp/cluster-status.txt
 ```
 
+
+```text title="Expected output"
+admin@192.168.1.50's password: 
+Packet capture started on fp-eth0
+Capturing 500 packets...
+Packet capture completed: 487 packets captured
+Filter applied: host 10.0.0.1 and tcp port 179
+Capturing 200 packets...
+Packet capture completed: 198 packets captured
+Packet capture started on nsx-geneve
+Capturing 500 packets...
+Packet capture completed: 512 packets captured
+Writing to /tmp/edge-cap.pcap
+Packet capture completed: 1024 packets captured to /tmp/edge-cap.pcap
+edge-cap.pcap                                    100%  2.4MB   1.2MB/s   00:02
+Uplink capture started on portid 67108865
+Capturing 500 packets to /tmp/vmnic-cap.pcap...
+Capture completed: 498 packets
+VmVnic capture started on portid 67108865
+Capturing 200 packets to /tmp/vm-cap.pcap...
+Capture completed: 201 packets
+Uplink capture with GENEVE filter (port 6081) started
+Capture completed: 156 packets to /tmp/geneve-cap.pcap
+web-server-01                                    67108865
+web-server-02                                    67108866
+db-server-01                                     67108867
+{"request_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"}
+Support bundle request submitted successfully
+admin@192.168.1.51's password:
+Collecting system information...
+Creating tech-support bundle...
+Tech-support bundle created: /var/log/tech-support-20240115-143022.tar.gz
+Size: 487 MB
+NSX CLI
+nsx> get cluster status
+Cluster ID: cluster-1
+Status: STABLE
+Node Count: 3
+Leader: 192.168.1.10
+nsx> get transport-node-status
+Node: esx-host-01.lab.local (192.168.1.100)
+Status: UP
+nsx> get tunnel status
+Tunnel Count: 24
+Active: 24
+Down: 0
+```
+
+!!! warning "Common errors"
+    **`Packet capture failed: interface fp-eth0 not found`** — Verify the correct uplink interface name with `show interface` on the Edge node.
+    **`Permission denied (publickey,password)`** — Ensure SSH credentials are correct and the admin account is enabled on the NSX Edge node.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification or import the NSX Manager CA certificate into your trust store.
 ---
 
 ## Log locations

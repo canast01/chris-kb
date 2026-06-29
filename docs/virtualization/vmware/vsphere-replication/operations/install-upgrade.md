@@ -144,6 +144,26 @@ ssh admin@vra-london.example.local
 systemctl status hms
 ```
 
+
+```text title="Expected output"
+admin@vra-london.example.local's password: 
+● hms.service - VMware vSphere Replication Management Service
+     Loaded: loaded (/etc/systemd/system/hms.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2min 45s ago
+       Docs: man:hms(8)
+    Process: 4521 ExecStart=/opt/vmware/hms/bin/hms.sh start (code=exited, status=0/SUCCESS)
+   Main PID: 4538 (java)
+      Tasks: 28 (limit: 4915)
+     Memory: 512.3M
+        CPU: 8s
+     CGroup: /system.slice/hms.service
+             └─4538 /usr/lib/jvm/java-11-openjdk-11.0.18.10-1.el7_9.x86_64/bin/java -Xmx1024m...
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname vra-london.example.local: Name or service not known`** — Verify the hostname is correct and resolvable in DNS, or use the IP address directly instead.
+    **`Unit hms.service could not be found.`** — Confirm the vSphere Replication appliance was fully deployed and the hms service package is installed; check `/opt/vmware/hms/` directory exists.
+    **`Active: inactive (dead) since Mon 2024-01-15 14:25:03 UTC`** — Check service logs with `journalctl -u hms -n 50` to identify startup failures, typically due to port conflicts or insufficient memory.
 Check Site Recovery → Sites → both sites still Connected after upgrade.
 
 ---
@@ -170,6 +190,31 @@ curl -sk https://vra-london.example.local/api/rest/vr/health
 #   Wait for initial sync to complete (status: OK)
 ```
 
+
+```text title="Expected output"
+{
+  "status": "Healthy",
+  "version": "8.7.0.1",
+  "build": "21624480",
+  "uptime_seconds": 2419200,
+  "replication_pairs": 847,
+  "active_syncs": 12,
+  "failed_syncs": 0,
+  "last_heartbeat": "2024-01-15T14:32:18Z",
+  "storage_usage_percent": 67.3,
+  "network_latency_ms": 28.5,
+  "components": {
+    "database": "Healthy",
+    "storage": "Healthy",
+    "network": "Healthy"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the VRA's CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused`** — Verify the VRA appliance is powered on and the hostname resolves correctly with `nslookup vra-london.example.local`.
+    **`Initial sync stuck at "Syncing" status after 24+ hours`** — Check network connectivity and bandwidth between sites using `ping` and `iperf`, and verify the target datastore has sufficient free space.
 ---
 
 ## See also

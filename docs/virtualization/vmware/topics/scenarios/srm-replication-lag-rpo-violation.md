@@ -75,6 +75,30 @@ systemctl status vmware-hbr-cloudagent
 tail -100 /var/log/vmware/hbr/hbrServer.log | grep -i error
 ```
 
+
+```text title="Expected output"
+● vmware-hbrsrv.service - VMware vSphere Replication Server
+     Loaded: loaded (/usr/lib/systemd/system/vmware-hbrsrv.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+   Main PID: 4521 (java)
+     CGroup: /system.slice/vmware-hbrsrv.service
+             └─4521 /usr/java/default/bin/java -Xmx2048m -Xms512m...
+
+● vmware-hbr-cloudagent.service - VMware HBR Cloud Agent
+     Loaded: loaded (/usr/lib/systemd/system/vmware-hbr-cloudagent.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:33:05 UTC; 2 days ago
+   Main PID: 5847 (python)
+     CGroup: /system.slice/vmware-hbr-cloudagent.service
+             └─5847 /usr/bin/python3 /opt/vmware/hbr/cloudagent/agent.py
+
+2024-01-17T14:45:22.341Z ERROR [hbrServer] Replication task failed for VM vm-1847: Connection timeout after 30s
+2024-01-17T14:52:18.903Z ERROR [hbrServer] Failed to authenticate with vCenter 192.168.1.50: Invalid credentials
+2024-01-17T15:01:44.556Z ERROR [hbrServer] Insufficient disk space on /storage/replication: 2.1GB required, 1.8GB available
+```
+
+!!! warning "Common errors"
+    **`Unit vmware-hbrsrv.service could not be found.`** — Verify the vSphere Replication Server is installed with `rpm -qa | grep vmware-hbr` and reinstall if missing.
+    **`tail: cannot open '/var/log/vmware/hbr/hbrServer.log' for reading: No such file or directory`** — Check that the replication server has started at least once and verify the log directory exists with `ls -la /var/log/vmware/hbr/`.
 Look for: certificate mismatch errors after a vCenter SSL renewal — fix by re-registering: vCenter → Site Recovery → Configure → vSphere Replication Servers → select appliance → **Reconnect**.
 
 ---
@@ -91,6 +115,28 @@ esxcli network ip interface list | grep -A5 "vSphereReplication"
 esxcli network nic stats get -n <vmnic-name>
 ```
 
+
+```text title="Expected output"
+Name                          Enabled Connected MTU     IPv4 Address         IPv4 Netmask         IPv6 Address
+vmk0                          true    true      1500    192.168.1.45         255.255.255.0        fe80::250:56ff:fe9a:b1c2
+vmk1                          true    true      1500    192.168.2.50         255.255.255.0        fe80::250:56ff:fe9a:b1c3
+vmk2                          true    true      1500    192.168.3.100        255.255.255.0        fe80::250:56ff:fe9a:b1c4
+vSphereReplication            true    true      1500    192.168.4.75         255.255.255.0        fe80::250:56ff:fe9a:b1c5
+
+NIC name: vmnic2
+Packets received: 1847293
+Packets sent: 2156847
+Bytes received: 3847293847
+Bytes sent: 4156847293
+Broadcast packets received: 12
+Multicast packets received: 847
+Dropped packets received: 0
+Dropped packets sent: 0
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or malformed command at position 6`** — Verify the exact vmnic name (e.g., vmnic0, vmnic1) and use the correct syntax: `esxcli network nic stats get -n vmnic2`.
+    **`Could not find a matching VMkernel adapter`** — Ensure vSphere Replication is configured and the VMkernel interface exists; check with `esxcli network ip interface list` first.
 Look for: replication NIC at or near 100% utilisation = link saturated; options: enable network compression (20–40% reduction), throttle low-priority VMs, or request a bandwidth increase.
 
 ---
@@ -111,6 +157,34 @@ curl -sk -u admin:<password> \
   | python3 -m json.tool | grep -A10 "vm-name"
 ```
 
+
+```text title="Expected output"
+{
+    "instances": [
+        {
+            "vm-name": "prod-db-01",
+            "replication_rate_mbps": 245.3,
+            "lag_seconds": 12,
+            "status": "in_sync",
+            "last_sync": "2024-01-15T14:32:18Z",
+            "target_site": "dr-datacenter-02",
+            "rpo_minutes": 5
+        },
+        {
+            "vm-name": "prod-web-03",
+            "replication_rate_mbps": 89.7,
+            "lag_seconds": 3,
+            "status": "in_sync",
+            "last_sync": "2024-01-15T14:33:45Z"
+        }
+    ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify vSR appliance hostname matches certificate CN).
+    **`curl: (7) Failed to connect to vsr-appliance.domain.local port 443: Connection refused`** — Verify the vSR appliance is running and accessible on the network; check firewall rules and confirm the hostname/IP in the URL.
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure the vSR API is responding with valid JSON; check authentication credentials and confirm the API endpoint is correct for your vSR version.
 ---
 
 ## 5. Enable Compression or Adjust Throttle Settings
@@ -134,6 +208,34 @@ curl -sk -u admin:<password> \
   | python3 -m json.tool | grep -E '"vmName"|"rpoStatus"|"rpoViolation"'
 ```
 
+
+```text title="Expected output"
+{
+  "vmName": "prod-db-01",
+  "rpoStatus": "COMPLIANT",
+  "rpoViolation": false
+}
+{
+  "vmName": "prod-web-02",
+  "rpoStatus": "COMPLIANT",
+  "rpoViolation": false
+}
+{
+  "vmName": "prod-app-03",
+  "rpoStatus": "WARNING",
+  "rpoViolation": true
+}
+{
+  "vmName": "dr-cache-01",
+  "rpoStatus": "COMPLIANT",
+  "rpoViolation": false
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vSR appliance certificate into your system CA bundle.
+    **`curl: (7) Failed to connect to vsr-appliance.domain.local port 443: Connection refused`** — Verify the vSR appliance hostname/IP is correct and the REST API service is running with `systemctl status vmware-vsr-api` on the appliance.
+    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API response is valid JSON by testing the curl command without piping to `python3 -m json.tool` first to see the raw response.
 ---
 
 ## 7. Verify NSX Inter-Site Management Connectivity

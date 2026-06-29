@@ -115,6 +115,24 @@ nc -zv esxi01.corp.local 902
 ntpq -p
 ```
 
+
+```text title="Expected output"
+{"value":"52b2d8f6-e8e5-4a5c-9f2a-1c7d3e9a2b4f"}
+Connection to dc.corp.local 389 port 389 [tcp/ldap] succeeded!
+Connection to dc.corp.local 636 port 636 [tcp/ldaps] succeeded!
+Connection to esxi01.corp.local 902 port 902 [tcp/opsec-3] succeeded!
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*ntp.ubuntu.com     17.253.34.125  2 u   52   64  377   28.441   -1.234   2.156
++time.google.com    216.239.35.0   2 u   48   64  377   31.892    0.876   1.543
++ntp.apple.com      17.253.34.123  2 u   51   64  377   29.334    1.102   2.891
+-time.cloudflare.co 162.125.18.133  3 u   50   64  377   45.221   -2.445   3.012
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self-signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's included if removed).
+    **`nc: getaddrinfo for name/port failed: Name or service not known`** — Verify the FQDN is resolvable by running `nslookup dc.corp.local` and confirm DNS is configured on the VCSA.
+    **`Connection refused`** — Confirm the ESXi host is powered on and the vCenter management network can reach the ESXi management interface on port 902.
 ---
 
 ## See also

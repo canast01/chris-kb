@@ -52,6 +52,42 @@ oc logs -n openshift-kube-apiserver -l app=kube-apiserver --tail=100
 oc logs -n openshift-etcd -l app=etcd --tail=100
 ```
 
+
+```text title="Expected output"
+NAME                              READY   STATUS    RESTARTS   AGE
+kube-apiserver-master-0           1/1     Running   2          45d
+kube-apiserver-master-1           1/1     Running   1          45d
+kube-apiserver-master-2           1/1     Running   3          45d
+
+NAME                              READY   STATUS    RESTARTS   AGE
+etcd-master-0                     1/1     Running   0          45d
+etcd-master-1                     1/1     Running   1          45d
+etcd-master-2                     1/1     Running   2          45d
+
+NAME                              READY   STATUS    RESTARTS   AGE
+openshift-kube-scheduler-master-0 1/1     Running   4          45d
+openshift-kube-scheduler-master-1 1/1     Running   2          45d
+openshift-kube-scheduler-master-2 1/1     Running   3          45d
+
+NAME                                    READY   STATUS    RESTARTS   AGE
+kube-controller-manager-master-0        1/1     Running   1          45d
+kube-controller-manager-master-1        1/1     Running   2          45d
+kube-controller-manager-master-2        1/1     Running   0          45d
+
+I1215 14:32:18.456789 1 server.go:412] "starting kube-apiserver" version="v1.27.3"
+I1215 14:32:19.123456 1 apiserver.go:89] "APIServer listening" address="0.0.0.0" port=6443
+I1215 14:32:21.789012 1 storage.go:234] "etcd connection established" endpoint="https://10.0.0.11:2379"
+I1215 14:32:45.234567 1 server.go:567] "ready to handle requests"
+
+I1215 14:33:02.567890 1 etcd.go:156] "etcd server started" version="v3.5.9"
+I1215 14:33:03.234567 1 embed.go:445] "listening for client requests" address="127.0.0.1:2379"
+I1215 14:33:04.901234 1 raft.go:789] "raft election won" term=42 leader="10.0.0.10"
+I1215 14:33:05.456789 1 backend.go:123] "committed index" index=8945672
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "pods" in group ""`** — Verify you are connected to the correct cluster with `oc cluster-info` and have valid credentials via `oc login`.
+    **`error: pods "kube-apiserver-master-0" not found`** — The pod may have crashed; check pod status with `oc get pods -n openshift-kube-apiserver -o wide` and describe it with `oc describe pod <pod-name> -n openshift-kube-apiserver`.
 ## etcd Quorum Rules
 
 etcd uses the Raft consensus algorithm. A cluster requires a strict majority (quorum) of members to be alive before it accepts writes. In OpenShift, master nodes are the etcd members.
@@ -101,6 +137,30 @@ etcdctl snapshot save /var/home/core/etcd-backup-$(date +%F).db
 etcdctl snapshot status /var/home/core/etcd-backup-$(date +%F).db
 ```
 
+
+```text title="Expected output"
+3a57c9f2d8b1e4c6, started, https://10.0.1.45:2380
+5b82d1f9c4a7e2b3, started, https://10.0.1.46:2380
+7c93e2a5d6f1b8c4, started, https://10.0.1.47:2380
+
+Finished defragmenting etcd member https://10.0.1.45:2379
+
++------------------------+------------------+---------+---------+-----------+
+|       ENDPOINT         |        ID        | VERSION | DB SIZE | IN USE  |
++------------------------+------------------+---------+---------+-----------+
+| https://127.0.0.1:2379 | 3a57c9f2d8b1e4c6 |   3.5.9 | 2.1 GB  | 1.3 GB  |
++------------------------+------------------+---------+---------+-----------+
+
+compacted revision 4521847
+
+Snapshot saved at /var/home/core/etcd-backup-2024-01-15.db
+{"hash":2847361529,"revision":4521847,"totalKey":287456,"totalSize":2147483648}
+```
+
+!!! warning "Common errors"
+    **`Error: context deadline exceeded`** — Increase the command timeout with `--command-timeout=30s` or verify etcd member connectivity with `etcdctl endpoint health`.
+    **`Error: permission denied`** — Ensure certificate paths are correct and the user running etcdctl has read permissions on `/etc/kubernetes/static-pod-resources/etcd-certs/` with `ls -la /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/`.
+    **`Error: failed to dial default client URL`** — Verify the etcd endpoint is listening on port 2379 with `netstat -tlnp | grep 2379` and check firewall rules.
 **Compaction defaults (OCP 4.x):**
 
 | Parameter | Default | Notes |
@@ -153,6 +213,38 @@ oc get pods -n openshift-ingress-operator
 oc logs -n openshift-<name> deployment/<operator-deployment> --tail=200 -f
 ```
 
+
+```text title="Expected output"
+NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED
+authentication                             4.14.5    True        False         False
+baremetal                                  4.14.5    True        False         False
+cloud-credential                           4.14.5    True        False         False
+cluster-autoscaler                         4.14.5    True        False         False
+etcd                                       4.14.5    True        False         False
+kube-apiserver                             4.14.5    True        False         False
+kube-controller-manager                    4.14.5    True        False         False
+...
+
+NAME                                READY   STATUS    RESTARTS   AGE
+authentication-operator-5d8f9c2k4   1/1     Running   0          12d
+authentication-operator-5d8f9c2k5   1/1     Running   0          8d
+
+NAME                                READY   STATUS    RESTARTS   AGE
+dns-default-8xk7m                   2/2     Running   1          15d
+dns-default-p4j2n                   2/2     Running   0          15d
+
+NAME                                READY   STATUS    RESTARTS   AGE
+ingress-operator-7c4b5f9d8          1/1     Running   2          20d
+
+2024-01-15T09:47:32.123456Z INFO  Operator reconciliation completed successfully
+2024-01-15T09:47:28.987654Z DEBUG Syncing cluster configuration from configmap
+2024-01-15T09:47:25.654321Z INFO  All replicas are ready and healthy
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "co"`** — Use the full resource name `oc get clusteroperators` or ensure you're connected to an OpenShift cluster (not vanilla Kubernetes).
+    **`Error from server (NotFound): namespaces "openshift-<name>" not found`** — Replace `<name>` with the actual operator name in lowercase (e.g., `openshift-authentication`), and verify the namespace exists with `oc get ns | grep openshift`.
+    **`error: you must specify the type of resource to get the log from`** — Specify the exact deployment name with `oc logs -n openshift-<name> deployment/<exact-deployment-name>` after confirming it with `oc get deployment -n openshift-<name>`.
 ## MachineConfig and MCO
 
 The Machine Config Operator (MCO) manages OS-level configuration on RHCOS nodes. Configuration is expressed as `MachineConfig` objects that render into Ignition configs.
@@ -181,6 +273,40 @@ oc adm drain <node> --ignore-daemonsets --delete-emptydir-data
 # MCO applies config then cordons/uncordons automatically during rolling update
 ```
 
+
+```text title="Expected output"
+NAME     CONFIG                    UPDATED   UPDATING   DEGRADED
+master   rendered-master-abc123    True      False      False
+worker   rendered-worker-def456    True      False      False
+
+NAME                          GENERATEDBYCONTROLLER
+00-master                     rendered-master-abc123
+00-worker                     rendered-worker-def456
+01-master-kubelet             rendered-master-abc123
+99-custom-chrony              rendered-master-abc123
+rendered-master-abc123        <none>
+rendered-worker-def456        <none>
+
+machineConfigSelector:
+  matchLabels:
+    machineconfiguration.openshift.io/role: worker
+
+2024-01-15T14:32:18.456Z INFO  Machine config daemon starting, version 4.13.2
+2024-01-15T14:32:45.123Z INFO  Node worker-node-02 successfully applied config rendered-worker-def456
+2024-01-15T14:33:12.789Z WARN  Waiting for node master-node-01 to finish update (5 minutes elapsed)
+2024-01-15T14:33:45.234Z INFO  Config update completed on 3 nodes
+
+node/worker-node-02 cordoned
+evicting pod openshift-monitoring/prometheus-k8s-0
+evicting pod openshift-dns/dns-default-abc123
+pod/dns-default-abc123 evicted
+node/worker-node-02 drained
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "mcp"`** — Ensure you are connected to an OpenShift cluster with `oc login` and the machine-config-operator is installed.
+    **`Error from server (NotFound): nodes "<node>" not found`** — Verify the node name with `oc get nodes` before attempting to drain it.
+    **`error: unable to drain node, there are pending pods that don't tolerate disruption`** — Add `--force` flag or manually delete non-evictable pods before draining.
 **MachineConfig spec fields:**
 
 | Field | Purpose | Example |
@@ -228,6 +354,43 @@ oc get network.operator cluster -o yaml | grep -E "type:|clusterNetwork|serviceN
 oc get network.config cluster -o yaml
 ```
 
+
+```text title="Expected output"
+NAME                                      READY   STATUS    RESTARTS   AGE
+ovnkube-master-7k9mq                      3/3     Running   0          14d
+ovnkube-master-b2x4l                      3/3     Running   0          14d
+ovnkube-master-c8r5p                      3/3     Running   1          14d
+ovnkube-node-4jh2k                        2/2     Running   0          14d
+ovnkube-node-6m8np                        2/2     Running   0          14d
+ovnkube-node-9x7ql                        2/2     Running   2          13d
+...
+
+switch 8a3c2f1e-9b4d-4a2e-b1c3-7d5e9f2a6b4c (br-int)
+    port br-int
+        type: internal
+    port patch-br-ex_ovnkube-master-7k9mq-to-br-int
+        type: patch
+        options: {peer=patch-br-int-to-br-ex_ovnkube-master-7k9mq}
+    port ovnkube-node-4jh2k
+        type: system
+
+ cookie=0x0, duration=3600.234s, table=0, n_packets=1247563, n_bytes=892341256, priority=100,ip,nw_dst=10.128.0.0/14 actions=output:LOCAL
+ cookie=0x0, duration=3600.198s, table=0, n_packets=89234, n_bytes=45672891, priority=100,ip,nw_dst=172.30.0.0/16 actions=output:LOCAL
+ cookie=0x0, duration=3599.876s, table=20, n_packets=0, n_bytes=0, priority=0 actions=drop
+...
+
+type: OVNKubernetes
+clusterNetwork:
+- cidr: 10.128.0.0/14
+  hostPrefix: 23
+serviceNetwork:
+- 172.30.0.0/16
+```
+
+!!! warning "Common errors"
+    **`error: pod ovnkube-node-<id> not found`** — Replace `<id>` with an actual node pod name from the first command's output (e.g., `ovnkube-node-4jh2k`).
+    **`error: unable to connect to ovn-nbctl: No such file or directory`** — Ensure you're running the command inside the ovnkube-master pod via `oc rsh`; the OVN tools are only available within the pod container.
+    **`Error from server (NotFound): networks.operator.openshift.io "cluster" not found`** — Verify the cluster has OVN-Kubernetes installed; if using a different CNI, this resource may not exist.
 ## Node Types
 
 | Type | Role | Typical labels | Schedulable |
@@ -250,6 +413,35 @@ oc label node <infra-node> node-role.kubernetes.io/infra=""
 oc adm taint node <infra-node> node-role.kubernetes.io/infra=reserved:NoSchedule
 ```
 
+
+```text title="Expected output"
+NAME                    STATUS   ROLES           AGE    VERSION            INTERNAL-IP      EXTERNAL-IP   OS-IMAGE
+master-01.ocp.local    Ready    control-plane   45d    v1.27.8+4fab27b    192.168.1.10     <none>        Red Hat Enterprise Linux CoreOS 4.13.12
+master-02.ocp.local    Ready    control-plane   45d    v1.27.8+4fab27b    192.168.1.11     <none>        Red Hat Enterprise Linux CoreOS 4.13.12
+master-03.ocp.local    Ready    control-plane   45d    v1.27.8+4fab27b    192.168.1.12     <none>        Red Hat Enterprise Linux CoreOS 4.13.12
+worker-01.ocp.local    Ready    worker          42d    v1.27.8+4fab27b    192.168.1.20     <none>        Red Hat Enterprise Linux CoreOS 4.13.12
+worker-02.ocp.local    Ready    worker          42d    v1.27.8+4fab27b    192.168.1.21     <none>        Red Hat Enterprise Linux CoreOS 4.13.12
+infra-01.ocp.local     Ready    worker          38d    v1.27.8+4fab27b    192.168.1.30     <none>        Red Hat Enterprise Linux CoreOS 4.13.12
+
+node-role.kubernetes.io/control-plane=
+node-role.kubernetes.io/worker=
+node-role.kubernetes.io/infra=
+
+Conditions:
+  Type                 Status  LastHeartbeatTime         LastTransitionTime        Reason                       Message
+  ----                 ------  -----------------         ------------------        ------                       -------
+  Ready                True    Wed, 20 Dec 2023 14:32:15 +0000   Wed, 20 Dec 2023 09:12:00 +0000   KubeletReady            kubelet is posting ready status
+  MemoryPressure       False   Wed, 20 Dec 2023 14:32:15 +0000   Wed, 20 Dec 2023 09:12:00 +0000   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure         False   Wed, 20 Dec 2023 14:32:15 +0000   Wed, 20 Dec 2023 09:12:00 +0000   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure          False   Wed, 20 Dec 2023 14:32:15 +0000   Wed, 20 Dec 2023 09:12:00 +0000   KubeletHasSufficientPID      kubelet has sufficient PID available
+
+node/infra-01.ocp.local labeled
+node/infra-01.ocp.local tainted
+```
+
+!!! warning "Common errors"
+    **`error: node(s) "worker-99" not found`** — Verify the node name with `oc get nodes` and use the exact name from the NAME column.
+    **`Error from server (Forbidden): nodes is forbidden: User "system:serviceaccount:default
 ## See also
 
 - [OpenShift — Design Standards](../design-standards/)

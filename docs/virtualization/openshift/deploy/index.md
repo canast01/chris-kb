@@ -77,6 +77,49 @@ timedatectl status
 # 80/443 → ingress router (infra or worker nodes)
 ```
 
+
+```text title="Expected output"
+Server:		10.0.0.53
+Address:	10.0.0.53#53
+
+Name:	api.ocp.example.com
+Address: 192.168.1.10
+
+Server:		10.0.0.53
+Address:	10.0.0.53#53
+
+Name:	test.apps.ocp.example.com
+Address: 192.168.1.11
+
+0 10 etcd-server-ssl 5 100 2380 etcd-0.ocp.example.com.
+0 10 etcd-server-ssl 5 100 2380 etcd-1.ocp.example.com.
+0 10 etcd-server-ssl 5 100 2380 etcd-2.ocp.example.com.
+
+Reference time server: 192.168.1.1
+Stratum           : 2
+Ref time (UTC)    : Fri Jan 10 14:32:18 2025
+System time       : 0.000234567 seconds slow of NTP time
+Frequency offset  : -2.341 ppm
+Residual freq dev : 0.042 ppm
+Skew               : 0.089 ppm
+Root delay        : 0.021345 seconds
+Root dispersion   : 0.045678 seconds
+Max error         : 0.089234 seconds
+Leap status       : Normal
+
+               Local time: Fri 2025-01-10 14:32:18 UTC
+           Universal time: Fri 2025-01-10 14:32:18 UTC
+                 RTC time: Fri 2025-01-10 14:32:18
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no
+```
+
+!!! warning "Common errors"
+    **`nslookup: can't resolve 'api.ocp.example.com': No address associated with hostname`** — Verify DNS A record exists for api.ocp.example.com and resolves to the load balancer VIP.
+    **`dig: couldn't get address for '_etcd-server-ssl._tcp.ocp.example.com': not known`** — Create SRV records for etcd cluster members or ensure DNS is configured with proper etcd service discovery entries.
+    **`System clock unsynchronized: no`** — Start and enable chrony/ntpd service with `systemctl start chronyd && systemctl enable chronyd`, then wait 1–2 minutes for clock synchronization.
 ## install-config.yaml (vSphere IPI — Full Example)
 
 ```yaml
@@ -172,6 +215,48 @@ cat ocp-install/auth/kubeadmin-password  # Rotate or remove post-install
 tail -f ocp-install/.openshift_install.log
 ```
 
+
+```text title="Expected output"
+--2024-01-15 14:32:18--  https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.14.5/openshift-install-linux.tar.gz
+Resolving mirror.openshift.com (mirror.openshift.com)... 104.18.42.156
+Connecting to mirror.openshift.com (mirror.openshift.com)|104.18.42.156|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 487234567 (465M) [application/gzip]
+Saving to: 'openshift-install-linux.tar.gz'
+openshift-install-linux.tar.gz   100%[=====================================>] 465.00M  8.45MB/s    in 55s
+2024-01-15 14:33:13 (8.45 MB/s) - 'openshift-install-linux.tar.gz' saved [487234567/465M]
+
+INFO Waiting up to 20m0s for the Kubernetes API at https://api.ocp.example.com:6443...
+INFO API v1.27.8+4fab27b is up
+INFO Waiting up to 30m0s for bootstrapping to complete...
+INFO It is now safe to remove the bootstrap resources
+INFO Waiting up to 30m0s for the cluster to initialize...
+INFO Waiting for CVO to report available status...
+INFO Cluster initialization complete
+INFO Install complete!
+INFO To access the cluster as the system:admin user when using 'oc', run 'export KUBECONFIG=/root/ocp-install/auth/kubeconfig'
+INFO Access the OpenShift web-console here: https://console-openshift-console.apps.ocp.example.com
+INFO Login to the console with user "kubeadmin", and password "aBcD3-EfGhI-JkLmN-OpQrS"
+
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJRQ0NRRDZwVjBWVjBWVDAzREpCRkJnTlZIUk1CQWY4RkFEQXhNQjRHQTFVZEVRUVgKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    server: https://api.ocp.example.com:6443
+  name: ocp-install
+contexts:
+- context:
+    cluster: ocp-install
+    user: system:admin
+  name: admin
+current-context: admin
+kind: Config
+preferences: {}
+users:
+- name: system:admin
+  user:
+    client-certificate-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJRQ0NRRDZwVjBWVjBWVDAzREpCRkJnTlZIUk1CQWY4Rk
+```
 ## UPI Bare-Metal Procedure
 
 Ordered steps — do not skip or reorder.
@@ -216,6 +301,35 @@ oc get csr -o name | xargs oc adm certificate approve
 ./openshift-install wait-for install-complete --dir ocp-install
 ```
 
+
+```text title="Expected output"
+INFO Consuming Openshift Manifests from target directory
+INFO Manifests created in: ocp-install/manifests and ocp-install/openshift
+INFO Consuming Master Machines from target directory
+INFO Consuming Worker Machines from target directory
+INFO Consuming Common Manifests from target directory
+INFO Ignition-configs created in: ocp-install and ocp-install/auth
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
+INFO Waiting up to 20m0s (until 14:32:18 UTC) for the Kubernetes API at https://api.ocp.example.com:6443...
+INFO API v1.27.3+6d4b3f7 up
+INFO Waiting up to 10m0s (until 14:38:22 UTC) for bootstrapping to complete...
+INFO It is now safe to remove the bootstrap resources
+NAME                                       AGE     SIGNERNAME                                    REQUESTOR                   CONDITION
+csr-8k4mj                                  2m13s   kubernetes.io/kube-apiserver-client-kubelet   system:serviceaccount:openshift-machine-config-operator:default   Pending
+csr-9p2lx                                  2m10s   kubernetes.io/kubelet-serving                  system:node:worker-0.ocp.example.com   Pending
+certificaterequest.certificates.k8s.io/csr-8k4mj approved
+certificaterequest.certificates.k8s.io/csr-9p2lx approved
+INFO Waiting up to 30m0s (until 15:02:18 UTC) for the cluster to initialize...
+INFO Waiting for cluster operators to finish updating...
+INFO All cluster operators available. Cluster initialization complete.
+INFO Install complete!
+INFO To access the cluster as the system:admin user when using 'oc', run 'export KUBECONFIG=ocp-install/auth/kubeconfig'
+```
+
+!!! warning "Common errors"
+    **`error: open ocp-install/manifests/cluster-scheduler-02-config.yml: no such file or directory`** — Run `./openshift-install create manifests --dir ocp-install` first to generate the manifests directory.
+    **`error: Unable to connect to the server: dial tcp: lookup api.ocp.example.com: no such host`** — Ensure DNS is resolving your API endpoint and the cluster network is reachable before running wait-for commands.
+    **`error: http.server: Address already in use`** — Kill the existing process on port 8080 with `lsof -ti:8080 | xargs kill -9` or use a different port with `python3 -m http.server 8081`.
 ## Agent-Based Install
 
 Agent-based install (`openshift-install agent create image`) generates a bootable ISO that combines ignition, networking config, and the install agent. Use when: bare-metal without PXE infrastructure, disconnected/air-gap environments, single-node OCP (SNO).
@@ -276,6 +390,28 @@ hosts:
 ./openshift-install agent wait-for install-complete --dir ocp-install
 ```
 
+
+```text title="Expected output"
+INFO Extracting base image from release payload
+INFO Extracting agent ISO from release payload
+INFO Agent ISO created successfully
+INFO ISO available at: ocp-install/agent.x86_64.iso
+INFO Waiting for bootstrap to complete...
+INFO Discovered agent: host-1.example.com (192.168.1.101)
+INFO Discovered agent: host-2.example.com (192.168.1.102)
+INFO Discovered agent: host-3.example.com (192.168.1.103)
+INFO Bootstrap complete
+INFO Waiting for cluster operators to stabilize...
+INFO Cluster version: 4.14.5
+INFO Install complete!
+INFO Cluster is available at: https://api.ocp-cluster.example.com:6443
+INFO kubeconfig written to: ocp-install/auth/kubeconfig
+```
+
+!!! warning "Common errors"
+    **`Error: install-config.yaml not found in ocp-install directory`** — Ensure install-config.yaml and agent-config.yaml are present in the ocp-install directory before running the create image command.
+    **`Error: failed to discover agents: no agents joined the cluster within timeout`** — Verify all nodes have booted from the ISO, network connectivity is functional, and firewall rules allow agent communication on port 8090.
+    **`Error: bootstrap did not complete: pending csr approvals`** — Manually approve pending certificate signing requests using `oc adm certificate approve <csr-name>` or ensure automatic CSR approval is configured.
 ## Air-Gap Mirror Setup
 
 ```yaml
@@ -318,6 +454,33 @@ oc get mcp                         # Nodes will reboot to apply ICSP
 oc debug node/<node> -- chroot /host crictl pull quay.local:8443/ocp4/openshift/release:4.14.5-x86_64
 ```
 
+
+```text title="Expected output"
+Mirroring image set from imageset-config.yaml to docker://quay.local:8443/ocp4
+Wrote ICSP manifests to oc-mirror-workspace/results-1704067234/
+Wrote CatalogSource manifests to oc-mirror-workspace/results-1704067234/
+Processing complete. 847 images mirrored in 12m34s
+
+imageContentSourcePolicy.yaml  catalogSource.yaml  updateService.yaml
+
+imagecontentsourcepolicy.yaml created
+catalogsource.yaml created
+
+NAME                                    AGE
+release-0                               2s
+
+NAME                                    CONFIG                      UPDATED   UPDATING   DEGRADED   MACHINECOUNT   READYMACHINECOUNT   UPDATEDMACHINECOUNT   DEGRADEDMACHINECOUNT   AGE
+master                                  rendered-master-a1b2c3d4    True      False      False      3               3                   3                     0                      45d
+worker                                  rendered-worker-e5f6g7h8    True      True       False      2               1                   1                     0                      45d
+
+Image pull from quay.local:8443/ocp4/openshift/release:4.14.5-x86_64 succeeded
+sha256:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2
+```
+
+!!! warning "Common errors"
+    **`error: unable to connect to quay.local:8443: x509: certificate signed by unknown authority`** — Add `--dest-skip-tls` flag to the mirror command or import the registry's CA certificate into the cluster's trusted store.
+    **`Error from server (NotFound): imagecontentsourcepolicies.config.openshift.io "release-0" not found`** — Verify the ICSP YAML file path is correct and the `oc apply` command targeted the correct results directory with wildcard expansion.
+    **`error: unable to pull image: rpc error: code = Unknown desc = failed to pull and unpack image: failed to resolve reference: name not found`** — Ensure the image was successfully mirrored by checking `oc-mirror-workspace/results-*/mapping.txt` and verify the mirror registry hostname is resolvable from the node.
 ## Post-Install Validation Checklist
 
 | Check | Command | Expected Result |
@@ -346,6 +509,29 @@ oc get pods -A | grep -vE "Running|Completed|Succeeded" | grep -v "^NAMESPACE"
 oc delete secret kubeadmin -n kube-system
 ```
 
+
+```text title="Expected output"
+NAME                                       VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+cluster-version                            4.14.12   True        False         2h      Cluster version is 4.14.12
+authentication                             4.14.12   True        False         2h15m   
+baremetal                                  4.14.12   True        False         2h14m   
+cloud-credential                           4.14.12   True        False         2h16m   
+...
+NAME                 STATUS   ROLES           AGE   VERSION
+master-0.ocp.local   Ready    control-plane   2h    v1.27.8+4fab27b
+master-1.ocp.local   Ready    control-plane   2h    v1.27.8+4fab27b
+master-2.ocp.local   Ready    control-plane   2h    v1.27.8+4fab27b
+worker-0.ocp.local   Ready    worker          95m   v1.27.8+4fab27b
+worker-1.ocp.local   Ready    worker          94m   v1.27.8+4fab27b
+openshift-etcd       etcd-quorum-guard-0                    0/1     CrashLoopBackOff   3          45m
+openshift-monitoring prometheus-operator-5d8c7f4b9-xyz12   0/2     Pending            0          12m
+secret "kubeadmin" deleted
+```
+
+!!! warning "Common errors"
+    **`error: unable to read the kubeconfig file "ocp-install/auth/kubeconfig": open ocp-install/auth/kubeconfig: no such file or directory`** — Verify the installation directory path is correct and run the command from the parent directory where `ocp-install/` exists.
+    **`error: the server has asked for the client to provide credentials`** — Ensure the kubeconfig file has valid credentials and the API server is accessible; regenerate kubeconfig if corrupted.
+    **`error: secrets "kubeadmin" not found`** — The kubeadmin secret may have already been deleted or the cluster uses a different identity provider; verify the secret exists before deletion with `oc get secret kubeadmin -n kube-system`.
 ---
 
 ## See also

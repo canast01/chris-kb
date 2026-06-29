@@ -44,6 +44,22 @@ curl -sk \
   "https://<vxrail-manager-ip>/rest/vxm/v1/system/user/password"
 ```
 
+
+```text title="Expected output"
+{
+  "request_id": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "success",
+  "message": "Password updated successfully",
+  "user": "mystic",
+  "timestamp": "2024-01-15T14:32:18.456Z",
+  "effective_immediately": true
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed in production use with proper CA certificates).
+    **`{"error": "401 Unauthorized", "message": "Invalid credentials"}`** — Verify the base64-encoded credentials are correct by decoding them with `echo 'OldPassword1!' | base64` and confirm the old password matches the current mystic account password.
+    **`{"error": "400 Bad Request", "message": "Password does not meet complexity requirements"}`** — Ensure the new password meets VxRail's policy (minimum 8 characters, uppercase, lowercase, number, and special character).
 The `mystic` account has full administrative access including LCM trigger, cluster configuration changes, and support uploads. Treat it as a privileged account with corresponding vault and audit controls.
 
 ---
@@ -92,6 +108,16 @@ racadm set iDRAC.Users.2.Password "NewStrongPassword1!"
 racadm get iDRAC.Users.2.UserName
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+root
+```
+
+!!! warning "Common errors"
+    **`RACADM.1.1.5461 - IPMI command failed`** — Ensure the iDRAC service is running with `systemctl status idrac` and that you have local root or iDRAC administrative privileges.
+    **`ERROR: Unable to parse the object value`** — Use a properly quoted password string without unescaped special characters, or wrap the password in single quotes if it contains shell metacharacters.
+    **`Access Denied`** — Verify you are running racadm as root or with sudo, as password changes require administrative credentials on the iDRAC.
 **Change via iDRAC web UI:** iDRAC UI → iDRAC Settings → Users → root → Edit
 
 ### iDRAC LDAP for Centralised Authentication
@@ -114,6 +140,22 @@ racadm set iDRAC.LDAPRoleGroup.1.DN "CN=GRP-iDRAC-Admins,OU=VxRailGroups,DC=exam
 racadm set iDRAC.LDAPRoleGroup.1.Privilege 0x1FF
 ```
 
+
+```text title="Expected output"
+RACADM: LDAP.Enable set to 1
+RACADM: LDAP.Server set to ldap://dc01.example.local
+RACADM: LDAP.BaseDN set to DC=example,DC=local
+RACADM: LDAP.BindDN set to CN=svc-idrac,OU=ServiceAccounts,DC=example,DC=local
+RACADM: LDAP.BindPassword set successfully
+RACADM: LDAP.GroupAttributeIsDN set to 1
+RACADM: LDAPRoleGroup.1.DN set to CN=GRP-iDRAC-Admins,OU=VxRailGroups,DC=example,DC=local
+RACADM: LDAPRoleGroup.1.Privilege set to 0x1FF
+```
+
+!!! warning "Common errors"
+    **`RACADM: Error: LDAP Server is not reachable`** — Verify network connectivity to the LDAP server and confirm the hostname/IP resolves correctly from the iDRAC management network.
+    **`RACADM: Error: Invalid BindDN or BindPassword`** — Test the service account credentials directly against the LDAP server using ldapsearch or an LDAP client to confirm they are correct.
+    **`RACADM: Error: LDAPRoleGroup.1.DN does not exist in LDAP directory`** — Verify the AD group DN exists and is accessible by the bind account using an LDAP query tool.
 **iDRAC privilege values:**
 
 | Privilege | Hex value | Role |

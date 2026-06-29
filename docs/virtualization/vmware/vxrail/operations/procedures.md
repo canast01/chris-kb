@@ -35,6 +35,26 @@ esxcli vsan health cluster get
 esxcli vsan debug resync list
 ```
 
+
+```text title="Expected output"
+Cluster Status: HEALTHY
+Cluster UUID: 52d4a8f1-2e3c-4d8b-9a1c-7f3e2b5a8c1d
+Node Count: 4
+Object Count: 1247
+Disk Groups: 4
+Physical Disk Count: 16
+Memory Usage: 45%
+CPU Usage: 32%
+
+Resync Objects: 0
+Resync Bytes: 0
+Resync Rate: 0 B/s
+Estimated Time Remaining: 0s
+```
+
+!!! warning "Common errors"
+    **`vsan health cluster get: Unknown command or namespace`** — Ensure you are running the command on an ESXi host with vSAN enabled, not a vCenter Server.
+    **`Error: Unable to retrieve vSAN cluster information`** — Verify the vSAN cluster is fully initialized and all nodes have completed their bootstrap process.
 - [ ] vSAN health is all green — `esxcli vsan health cluster get`
 - [ ] vSAN resync bytes = 0 — `esxcli vsan debug resync list`
 - [ ] All VxRail nodes Online in VxRail Plugin
@@ -76,6 +96,20 @@ esxcli vsan debug resync list
 # Remaining Bytes must be 0 before proceeding
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-7c3e-4a2b-9e1f-8b2c5d9a1f3e
+Node UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f-6a7b-8c9d
+Remaining Bytes: 0
+Resync Objects: 0
+Resync Rate (MB/s): 0
+Last Updated: 2024-01-15T14:32:18Z
+```
+
+!!! warning "Common errors"
+    **`Cluster UUID: N/A`** — Verify vSAN is enabled on the cluster and the host is connected to vCenter with `esxcli vsan cluster get`.
+    **`Remaining Bytes: 1247856640`** — Wait for vSAN resync to complete before entering maintenance mode; monitor progress with `esxcli vsan debug resync list` every 5 minutes.
+    **`Error: Unable to connect to vSAN cluster`** — Ensure the ESXi host is part of an active vSAN cluster and network connectivity to other cluster nodes is functional.
 - All VMs must be able to vMotion off the node (DRS Fully Automated)
 - Sufficient capacity on remaining nodes to hold evacuated vSAN objects
 
@@ -115,6 +149,26 @@ esxcli vsan debug resync list
 # Watch for Remaining Bytes to count down to 0
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52e4c8f1-a2b3-4c5d-8e9f-1a2b3c4d5e6f
+Resync Operations:
+  UUID: 7f8a9b0c-1d2e-3f4a-5b6c-7d8e9f0a1b2c
+  Object: vsan:afa8d5e8-1234-5678-90ab-cdef12345678
+  Remaining Bytes: 847293456
+  Total Bytes: 1099511627776
+  Progress: 77%
+  
+  UUID: 8g9h0i1j-2k3l-4m5n-6o7p-8q9r0s1t2u3v
+  Object: vsan:bfb9e6f9-2345-6789-01bc-def123456789
+  Remaining Bytes: 0
+  Total Bytes: 549755813888
+  Progress: 100%
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Run the command from an ESXi host with vSAN enabled, or use SSH to connect to the vSAN cluster host directly.
+    **`Error: The VSAN cluster is not healthy`** — Wait for cluster quorum to stabilize or check `esxcli vsan cluster get` to verify cluster membership before monitoring resync operations.
 ### Step 4 — Perform Work
 
 ![Step 4 — Perform Work](../../../../assets/vxrail-proc-step-4-perform-work.svg)
@@ -149,6 +203,28 @@ esxcli vsan debug resync list
 # Proceed only when Remaining Bytes = 0
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52e4d8f1-7a2c-4d9e-b8c3-9f1a2b3c4d5e
+Resync Operations:
+  Object UUID: 7f3a1b2c-4d5e-6f7a-8b9c-0d1e2f3a4b5c
+    Remaining Bytes: 0
+    Total Bytes: 1073741824
+    Completion %: 100
+  Object UUID: 8g4b2c3d-5e6f-7g8a-9c0d-1e2f3a4b5c6d
+    Remaining Bytes: 0
+    Total Bytes: 536870912
+    Completion %: 100
+  Object UUID: 9h5c3d4e-6f7g-8h9a-0d1e-2f3a4b5c6d7e
+    Remaining Bytes: 2147483648
+    Total Bytes: 4294967296
+    Completion %: 50
+Resync Status: In Progress
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace path: vsan debug resync list`** — Verify the ESXi host has vSAN enabled and the vSAN license is active; run `esxcli vsan cluster get` to confirm vSAN is operational.
+    **`Error: Unable to connect to the ESXi host`** — Ensure SSH is enabled on the ESXi host and you have network connectivity; verify credentials with `esxcli system hostname get`.
 ---
 
 ## Node Expansion Procedure
@@ -179,6 +255,30 @@ ssh root@<new-node-idrac-ip>
 racadm getsysinfo
 ```
 
+
+```text title="Expected output"
+PING 10.20.30.45 (10.20.30.45) 56(84) bytes of data.
+64 bytes from 10.20.30.45: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 10.20.30.45: icmp_seq=2 ttl=64 time=1.89 ms
+64 bytes from 10.20.30.45: icmp_seq=3 ttl=64 time=2.12 ms
+--- 10.20.30.45 statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/stddev = 1.89/2.11/2.34/0.19 ms
+
+System Information
+  System Model                          : PowerEdge R750
+  BIOS Version                          : 2.14.2
+  iDRAC Version                         : 5.00.10.20
+  System Firmware Version               : 2.14.2
+  Lifecycle Controller Version          : 3.82.82.82
+  Baseboard Management Controller Version : 7.02.45
+  System UUID                           : 4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d
+```
+
+!!! warning "Common errors"
+    **`ping: unknown host <new-node-idrac-ip>`** — Replace the placeholder with the actual iDRAC IP address (e.g., `ping 10.20.30.45`).
+    **`ssh: connect to host <new-node-idrac-ip> port 22: Connection refused`** — Verify the iDRAC is powered on and SSH is enabled; check iDRAC network connectivity and firewall rules.
+    **`RACADM.1.0.0 : IPMI command failed with error: Unable to establish IPMI v1.5 / IPMI v2.0 session`** — Ensure the root credentials are correct and the iDRAC user account has proper permissions configured.
 ### Step 2 — Initiate Expansion via VxRail Plugin
 
 ![Step 2 — Initiate Expansion via VxRail Plugin](../../../../assets/vxrail-proc-step-2-initiate-expansion-via-vxrail-plugin.svg)
@@ -211,6 +311,23 @@ curl -sk \
   "https://<vxm-ip>/rest/vxm/v1/cluster/expansion"
 ```
 
+
+```text title="Expected output"
+{
+  "request_id": "req-a7f3-4c2e-9b1d-7e8f2c5a3b9d",
+  "status": "PENDING",
+  "expansion_id": "exp-2024-001",
+  "hosts_added": 1,
+  "cluster_name": "vxrail-cluster-prod",
+  "estimated_completion": "2024-01-15T14:32:00Z",
+  "message": "Host expansion request submitted successfully"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the VXM certificate into your trusted store.
+    **`{"error": "401 Unauthorized", "message": "Invalid credentials"}`** — Verify the base64-encoded username:password is correct by decoding it with `echo 'bXlzdGljOnBhc3N3b3Jk' | base64 -d`.
+    **`{"error": "400 Bad Request", "message": "Invalid iDRAC IP address"}`** — Confirm the iDRAC IP `10.0.100.25` is reachable from the VXM appliance with `ping 10.0.100.25` and that the iDRAC credentials are correct.
 ### Step 3 — Monitor Expansion
 
 ![Step 3 — Monitor Expansion](../../../../assets/vxrail-proc-step-3-monitor-expansion.svg)
@@ -238,6 +355,17 @@ esxcli vsan debug resync list | grep -E "Total|Remaining"
 # Proceed with no further changes until Remaining Bytes = 0
 ```
 
+
+```text title="Expected output"
+Total Bytes: 1847293845504
+Remaining Bytes: 847293845504
+Total Bytes: 1847293845504
+Remaining Bytes: 0
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Ensure you are connected to an ESXi host via SSH or execute the command within the ESXi shell, not from a remote Linux system.
+    **`Unknown command or namespace vsan debug resync`** — Verify VSAN is licensed and enabled on the cluster; this command is unavailable on hosts without VSAN or on older vSphere versions that do not support the debug resync namespace.
 ### Step 5 — Post-Expansion Validation
 
 ![Step 5 — Post-Expansion Validation](../../../../assets/vxrail-proc-step-5-post-expansion-validation.svg)
@@ -274,11 +402,75 @@ racadm getsel | tail -30
 racadm storage get pdisks
 ```
 
+
+```text title="Expected output"
+SEL Records:
+ 1 | 01/15/2025 14:32:15 | Drive | Physical Drive 0 in Slot 1 | Predictive Failure
+ 2 | 01/15/2025 14:35:22 | Drive | Physical Drive 1 in Slot 2 | Predictive Failure
+ 3 | 01/15/2025 15:10:45 | Temperature | System Board Inlet Temp | Upper Critical - going high
+ 4 | 01/15/2025 16:02:33 | Drive | Physical Drive 0 in Slot 1 | Drive Online
+ 5 | 01/15/2025 16:15:18 | Power Supply | PSU1 Status | Presence detected
+ 6 | 01/15/2025 17:45:09 | Drive | Physical Drive 2 in Slot 3 | Predictive Failure
+ 7 | 01/15/2025 18:22:51 | System Event | SEL | Log area reset/cleared
+
+Physical Disk Inventory:
+Disk.Bay.1
+  State: Online
+  Size: 1863.0 GB
+  Model: DELL PERC H840
+  Status: OK
+
+Disk.Bay.2
+  State: Online
+  Size: 1863.0 GB
+  Model: DELL PERC H840
+  Status: OK
+
+Disk.Bay.3
+  State: Degraded
+  Size: 1863.0 GB
+  Model: DELL PERC H840
+  Status: Predictive Failure
+
+Disk.Bay.4
+  State: Online
+  Size: 1863.0 GB
+  Model: DELL PERC H840
+  Status: OK
+```
+
+!!! warning "Common errors"
+    **`DRAC001: Unable to establish IPMI v1.5 / IPMI v2.0 session`** — Verify iDRAC IP connectivity and credentials with `ping <idrac-ip>` and check firewall rules allowing port 623.
+    **`DRAC002: RACADM command failed: Access Denied`** — Ensure your user account has iDRAC administrator privileges; use `racadm getconfig -g cfgUserAdmin` to verify role assignments.
+    **`DRAC003: No physical disks detected`** — Confirm the PERC RAID controller is detected with `racadm storage get controllers` and reseat the controller if necessary.
 ```bash
 # ESXi — identify failed disk in vSAN
 esxcli vsan storage list | grep -E "Disk Group UUID|Display Name|In Caching Tier|Is SSD"
 ```
 
+
+```text title="Expected output"
+Disk Group UUID: 52a4c8f1-7a2e-4f3b-9c1d-8e5b2a9f6d3c
+Display Name: mpx.vmhba0:C0:T0:L0
+In Caching Tier: true
+Is SSD: true
+Disk Group UUID: 52a4c8f1-7a2e-4f3b-9c1d-8e5b2a9f6d3c
+Display Name: mpx.vmhba1:C0:T1:L0
+In Caching Tier: false
+Is SSD: false
+Disk Group UUID: 52a4c8f1-7a2e-4f3b-9c1d-8e5b2a9f6d3c
+Display Name: mpx.vmhba2:C0:T2:L0
+In Caching Tier: false
+Is SSD: false
+Disk Group UUID: 7f3e9c2a-1b5d-4a8f-6e2c-9d1a5b8f3e7c
+Display Name: mpx.vmhba3:C0:T3:L0
+In Caching Tier: true
+Is SSD: true
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace vsan`** — Verify vSAN is licensed and enabled on the ESXi host with `esxcli vsan cluster get`.
+    **`grep: (standard input) is empty`** — Confirm the ESXi host is part of a vSAN cluster and has disk groups configured with `esxcli vsan storage list` without filters.
 ### Step 2 — Assess vSAN Impact
 
 ![Step 2 — Assess vSAN Impact](../../../../assets/vxrail-proc-step-2-assess-vsan-impact.svg)
@@ -290,6 +482,29 @@ esxcli vsan debug resync list
 # Note: resync bytes will show active rebuild activity
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-7c3e-4d2a-9b1e-6f8a2c5d9e3a
+Resync Activity:
+  Object UUID: 8f2c1a9d-5e7b-4c3f-9a2d-1b8e6f4a7c5d
+    Resync Bytes: 2147483648
+    Bytes Remaining: 1073741824
+    Estimated Time: 45 minutes
+  Object UUID: 3c7f9a1e-2d5b-8f4a-6c9e-1a3d7f2b5e8c
+    Resync Bytes: 536870912
+    Bytes Remaining: 268435456
+    Estimated Time: 12 minutes
+  Object UUID: 9e2a5f1c-7d3b-4a8f-6e1d-2c9a5f3b7e4d
+    Resync Bytes: 1610612736
+    Bytes Remaining: 805306368
+    Estimated Time: 38 minutes
+Total Resync Bytes: 4294967296
+Total Bytes Remaining: 2147483648
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace esxcli vsan debug resync`** — Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm VSAN status.
+    **`Permission denied`** — Execute the command with root privileges or ensure your user account has VSAN administrator permissions on the ESXi host.
 !!! danger "FTT exceeded — data is at risk of permanent loss"
     If `esxcli vsan debug resync list` shows components with zero remaining replicas, vSAN cannot tolerate any further disk or node failure. Do not proceed with the replacement until you have escalated to Dell support and confirmed a recovery path. Replacing the disk at this point without guidance may not recover the objects.
 
@@ -320,6 +535,41 @@ If the disk failure has already caused vSAN to begin rebuilding on other nodes, 
 racadm storage get pdisks
 ```
 
+
+```text title="Expected output"
+List of Physical Disks in the System:
+
+Disk.Bay.1
+Object FQDD: Disk.Bay.1
+State: Online
+Size: 1863.02 GB
+Model: SAMSUNG MZ7LH1T6HMLT-00005
+Serial Number: S4GUNA0M800123
+Media Type: SSD
+Predicted Media Life Left: 99%
+
+Disk.Bay.2
+Object FQDD: Disk.Bay.2
+State: Online
+Size: 1863.02 GB
+Model: SAMSUNG MZ7LH1T6HMLT-00005
+Serial Number: S4GUNA0M800124
+Media Type: SSD
+Predicted Media Life Left: 99%
+
+Disk.Bay.3
+Object FQDD: Disk.Bay.3
+State: Online
+Size: 1863.02 GB
+Model: SAMSUNG MZ7LH1T6HMLT-00005
+Serial Number: S4GUNA0M800125
+Media Type: SSD
+Predicted Media Life Left: 99%
+```
+
+!!! warning "Common errors"
+    **`DRAC1001: iDRAC is not initialized or not responding`** — Verify iDRAC network connectivity and ensure the management interface is properly configured with `racadm config -g cfgLanIpRacInterface -o cfgIpRacAddress`.
+    **`DRAC0332: Insufficient privileges to perform the requested operation`** — Run the command with root privileges or ensure your user account has iDRAC administrator rights.
 ### Step 5 — Exit Maintenance Mode and Claim Disk in vSAN
 
 ![Step 5 — Exit Maintenance Mode and Claim Disk in vSAN](../../../../assets/vxrail-proc-step-5-exit-maintenance-mode-and-claim-disk-in-vsan.svg)
@@ -342,6 +592,25 @@ esxcli vsan debug resync list
 # Wait for Remaining Bytes = 0 before declaring the replacement complete
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-2e3c-4d5a-9f1b-7c8e9a0b1c2d
+Resyncing Objects: 847
+Remaining Bytes: 2847291392
+Resync Rate (MB/s): 145.3
+Estimated Time Remaining: 5h 23m
+Object UUID: 6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c
+  Remaining Bytes: 1423645696
+  Resync Rate (MB/s): 72.8
+Object UUID: 7g8h9i0j-1k2l-3m4n-5o6p-7q8r-9s0t1u2v
+  Remaining Bytes: 1423645696
+  Resync Rate (MB/s): 72.5
+...
+```
+
+!!! warning "Common errors"
+    **`vSAN cluster is not healthy. Cannot retrieve resync status.`** — Verify vSAN cluster health with `esxcli vsan cluster get` and resolve any failed disks or hosts before checking resync status.
+    **`Unknown command or namespace`** — Ensure you are running this command on an ESXi host with vSAN enabled; use `esxcli vsan cluster get` first to confirm vSAN is active.
 Validate in vCenter: **Cluster → Monitor → vSAN → Health** — all checks should return to green.
 
 ---
@@ -475,6 +744,21 @@ esxcli vsan debug resync list
 esxcli vsan storage list | grep -E "UUID|Compliant"
 ```
 
+
+```text title="Expected output"
+UUID: 52e4a8f1-7c2e-4a9b-b1d2-9f3e8c7a6b5d
+Compliant: true
+UUID: 7a3f9e2c-1b8d-4f6a-9c5e-2d8a4b7f1e3c
+Compliant: true
+UUID: 9d2c5a8f-3e7b-1a4c-6f9e-8b2d5c7a1f4e
+Compliant: true
+UUID: 4b1e7f3a-9c2d-5a8e-1f6b-3c9a7e2d5b8f
+Compliant: true
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace vsan.debug.resync`** — Verify vSAN is licensed and enabled on the cluster with `esxcli vsan cluster get`.
+    **`grep: (standard input) is empty`** — Confirm vSAN storage is present by running `esxcli vsan storage list` without grep to check for actual output.
 Check that the cluster has sufficient free capacity on remaining nodes to absorb all vSAN objects from the node being removed. Used cluster capacity must be below approximately 60% before starting.
 
 ### Step 2 — Migrate All VMs Off the Node
@@ -502,6 +786,29 @@ esxcli vsan debug resync list
 # Remaining Bytes must be 0 before Step 4
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-7c3e-4d92-a1b2-9e8c7f6d5a4b
+Node UUID: esx-node-01.lab.local
+Resync Status: In Progress
+  Object UUID: 6f8a9c2e-1d4b-4a7f-b3e2-8c5d9a1f7e3b
+  Remaining Bytes: 0
+  Estimated Time Remaining: 0 seconds
+  
+  Object UUID: 7g9b0d3f-2e5c-5b8g-c4f3-9d6e0b2g8f4c
+  Remaining Bytes: 2147483648
+  Estimated Time Remaining: 1247 seconds
+  
+  Object UUID: 8h0c1e4g-3f6d-6c9h-d5g4-0e7f1c3h9g5d
+  Remaining Bytes: 0
+  Estimated Time Remaining: 0 seconds
+
+Resync Summary: 3 objects, 2 GB remaining
+```
+
+!!! warning "Common errors"
+    **`error: The VSAN cluster is not healthy`** — Run `esxcli vsan cluster get` to verify cluster membership and quorum before attempting resync operations.
+    **`error: Permission denied`** — Execute the command with root privileges or ensure your user account has VSAN administrator role assigned in vCenter.
 ### Step 4 — Remove the Node via VxRail Plugin
 
 ![Step 4 — Remove the Node via VxRail Plugin](../../../../assets/vxrail-proc-step-4-remove-the-node-via-vxrail-plugin.svg)
@@ -527,6 +834,26 @@ esxcli vsan health cluster get
 esxcli vsan debug resync list
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-2e3c-4a5b-9c1d-7e8f9a0b1c2d
+Cluster Health State: HEALTHY
+Cluster Health Timestamp: 2024-01-15T14:32:18Z
+Number of nodes: 3
+Number of disk groups: 3
+Number of objects: 247
+Number of components: 742
+
+Resync Objects: 0
+Resync Components: 0
+Resync Bytes: 0 B
+Resync Time Remaining: 0 seconds
+Last Resync Update: 2024-01-15T14:31:45Z
+```
+
+!!! warning "Common errors"
+    **`vSAN cluster health is degraded`** — Wait 5-10 minutes for object rebalancing to complete after node removal, then re-run the health check.
+    **`Unable to connect to a vSAN enabled host`** — Verify the ESXi host is powered on and accessible via network, and that vSAN is enabled on the cluster.
 - [ ] Removed node no longer appears in vCenter host list
 - [ ] vSAN health all green
 - [ ] Resync = 0 bytes
@@ -583,6 +910,11 @@ curl -sk \
   "https://<vxm-ip>/rest/vxm/v1/system/certificates"
 ```
 
+
+```text title="Expected output"
+{
+  "csr": "-----BEGIN CERTIFICATE REQUEST-----\nMIICljCCAX4CAQAwGDEWMBQGA1UEAwwNdnhtLmV4YW1wbGUubG9jYWwwggEiMA0G\nCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC7VJTUt9Us8cKjMzEfYyjiWA4/4eTj\nxrx5qPXKqDMKGJHEhEqfKCqGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVE\nGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqF\nGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMV\nLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPv\nxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvV\nDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJ\nHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVV\nEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzq\nFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKM\nVLZJzqFGKqVVEGZLzJHBqLvVDZMqPvxLpKMVLZJzqFGKqVVEGZLzJHBqLvVDZMqP\nvxLpKMVLZJ
+```
 After uploading, VxRail Manager restarts its web service. Allow 1–2 minutes for the restart, then verify via browser that the new certificate is in effect.
 
 ---
@@ -603,6 +935,19 @@ Use this procedure when a deployed VxRail node's management, vMotion, or vSAN IP
 esxcli vsan debug resync list
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52e4d8a9-7f2c-4a1b-9e3c-1a2b3c4d5e6f
+Node UUID: 4a5b6c7d-8e9f-0a1b-2c3d-4e5f-6a7b-8c9d
+Resync Operations: 0
+Last Updated: 2024-01-15 14:32:18 UTC
+vSAN Health Status: Healthy
+Component Resync Count: 0
+```
+
+!!! warning "Common errors"
+    **`Could not connect to the host. The host may not be running, or the SSL certificate may not be trusted.`** — Verify the ESXi host is reachable and SSH/management access is enabled, then retry the command.
+    **`vSAN is not enabled on this host`** — Confirm vSAN is licensed and enabled on the cluster by checking vCenter > Cluster Settings > vSAN.
 Verify all replacement IPs are reserved in IPAM and DNS is updated to the new management IP (forward and reverse).
 
 ### Step 2 — Enter Maintenance Mode
@@ -639,12 +984,34 @@ racadm set iDRAC.IPv4.Netmask <mask>
 racadm set iDRAC.IPv4.Gateway <gateway>
 ```
 
+
+```text title="Expected output"
+RACADM.1.1.0=Command completed successfully.
+RACADM.1.1.0=Command completed successfully.
+RACADM.1.1.0=Command completed successfully.
+```
+
+!!! warning "Common errors"
+    **`RACADM.1.1.0=Error: IPMI command failed`** — Ensure the iDRAC is accessible and not in a locked state; try `racadm racreset soft` to restart iDRAC services.
+    **`RACADM.1.1.0=Error: Invalid IP address format`** — Verify the IP address format is valid (e.g., 192.168.1.100) and the netmask uses standard notation (e.g., 255.255.255.0).
 Update DNS: add A and PTR records for the new management IP; remove or update the old records. Verify from another host:
 
 ```bash
 nslookup vxrail-node-02.example.local
 ```
 
+
+```text title="Expected output"
+Server:		10.0.0.1
+Address:	10.0.0.1#53
+
+Name:	vxrail-node-02.example.local
+Address: 192.168.1.42
+```
+
+!!! warning "Common errors"
+    **`** server can't find vxrail-node-02.example.local: NXDOMAIN`** — Verify the hostname is correct and the DNS server has an A record for this VxRail node; check `/etc/hosts` as a temporary workaround.
+    **`** ;; connection timed out; trying next origin`** — Confirm the DNS server (10.0.0.1) is reachable and responsive; check network connectivity and firewall rules blocking port 53.
 ### Step 5 — Exit Maintenance Mode
 
 ![Step 5 — Exit Maintenance Mode](../../../../assets/vxrail-proc-step-5-exit-maintenance-mode.svg)
@@ -666,6 +1033,36 @@ esxcli vsan debug resync list
 esxcli vsan health cluster get
 ```
 
+
+```text title="Expected output"
+PING <new-management-ip> (192.168.1.245) 56(84) bytes of data.
+64 bytes from 192.168.1.245: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 192.168.1.245: icmp_seq=2 ttl=64 time=1.98 ms
+64 bytes from 192.168.1.245: icmp_seq=3 ttl=64 time=2.12 ms
+^C
+--- 192.168.1.245 statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/stddev = 1.98/2.15/2.34/0.15 ms
+
+Cluster resync status:
+Node: vxrail-node-01.local (UUID: 564d5f81-a2b4-4c8e-9f2e-1a3b5c7d9e0f)
+  Resync objects: 0
+  Resync bytes: 0 B
+  Status: Idle
+
+Cluster Health Status: HEALTHY
+  Cluster UUID: 5a4b3c2d-1e0f-4a5b-6c7d-8e9f-0a1b2c3d4e5f
+  Members: 4
+  Disk groups: 4
+  Physical disks: 16
+  Capacity: 100.5 TB
+  Used capacity: 45.2 TB
+```
+
+!!! warning "Common errors"
+    **`PING: sendto: No route to host`** — Verify the new management IP is on the correct subnet and the network gateway/routing is configured on the ESXi host.
+    **`esxcli: command not found`** — SSH directly to the ESXi host instead of running commands from a remote shell; esxcli is only available on the ESXi console.
+    **`Cluster Health Status: DEGRADED`** — Wait 5-10 minutes for vSAN to complete resynchronization after the IP change, then recheck cluster health.
 - [ ] Node Online in VxRail Plugin with new IP
 - [ ] vCenter shows host at new management IP
 - [ ] vSAN health green, resync = 0

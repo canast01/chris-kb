@@ -70,6 +70,18 @@ for h in hosts:
 "
 ```
 
+
+```text title="Expected output"
+vxrail-esx-01.lab.local - green
+vxrail-esx-02.lab.local - green
+vxrail-esx-03.lab.local - green
+vxrail-esx-04.lab.local - green
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if still failing, verify VXM IP is correct and reachable on port 443).
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm VXM appliance is running and the IP address is correct; check network connectivity with `ping <vxm-ip>`.
+    **`error: 401 Unauthorized`** — Verify the VXM credentials (username:password) are correct and base64-encoded properly by testing `echo -n 'mystic:password' | base64` independently.
 ### 2. vSAN Health
 
 ![2. vSAN Health](../../../../assets/virtualization-vmware-vxrail-hc-2-vsan-health.svg)
@@ -90,6 +102,46 @@ esxcli vsan debug resync list
 esxcli vsan debug network test
 ```
 
+
+```text title="Expected output"
+Cluster Health Status: HEALTHY
+Number of Hosts: 4
+Number of Disk Groups: 4
+Skyline Health: ENABLED
+
+Health Check Summary
+=====================
+Component                          Status
+---------------------------------  --------
+vSAN Cluster                       HEALTHY
+vSAN Object Repair Timer           HEALTHY
+vSAN Disk Balance                  HEALTHY
+vSAN Memory Pool                   HEALTHY
+vSAN Network                       HEALTHY
+vSAN Physical Disk                 HEALTHY
+
+Resync Objects
+==============
+Object UUID                          Remaining Bytes    Status
+------------------------------------  -----------------  ----------
+52e3a1c4-1a2f-4c8a-9e7b-3f5d8b2a1c9  0                  Complete
+7f2b9d1e-5c3a-4b8f-2e1d-6a4c8f3b2e5  0                  Complete
+3c1f7a9e-2b5d-4a8c-1f3e-5b2a7d4c6e8  0                  Complete
+
+Network Connectivity Test Results
+===================================
+Source Host              Target Host              Status    Latency (ms)
+------------------------  ----------------------  --------  -----------
+esx-vxrail-01.lab.local  esx-vxrail-02.lab.local  PASS      0.847
+esx-vxrail-01.lab.local  esx-vxrail-03.lab.local  PASS      0.923
+esx-vxrail-02.lab.local  esx-vxrail-04.lab.local  PASS      1.102
+esx-vxrail-03.lab.local  esx-vxrail-04.lab.local  PASS      0.756
+```
+
+!!! warning "Common errors"
+    **`vSAN Cluster: UNHEALTHY — Check vSAN Object Repair Timer and Physical Disk status using esxcli vsan health cluster get, then resolve failed components before proceeding.`** — Investigate component-specific failures and remediate disk/network issues.
+    **`Network test FAILED: Host esx-vxrail-02 cannot reach esx-vxrail-04 — Verify vSAN VMkernel port connectivity, check firewall rules for UDP 12345, and confirm all hosts have matching vSAN network configuration.`** — Verify vSAN VMkernel adapters are on the same subnet and multicast is enabled.
+    **`Resync Objects: 2.5 TB Remaining Bytes — vSAN is actively resyncing data after a host failure or disk replacement.`** — Wait for resync to complete (monitor with watch 'esxcli vsan debug resync list') or check host/disk status if resync stalls.
 In PowerCLI:
 
 ```powershell
@@ -112,6 +164,34 @@ racadm getsysinfo
 racadm getsel | tail -20
 ```
 
+
+```text title="Expected output"
+System Information
+==================
+System Model: VxRail E560
+System BIOS Version: 2.14.3
+iDRAC Version: 5.10.20.00
+Firmware Version: 4.2.1
+System Status: OK
+Power Status: On
+Thermal Status: OK
+Memory Status: OK
+Storage Status: Warning
+Network Status: OK
+
+System Event Log (Last 20 entries):
+2024-01-15 14:32:18 | SEL ID: 0x00F4 | Physical Drive 1.2.3 | Predictive Failure
+2024-01-15 13:45:02 | SEL ID: 0x00F3 | Temperature Sensor CPU1 | Normal
+2024-01-15 12:18:55 | SEL ID: 0x00F2 | Power Supply 1 | Normal
+2024-01-15 11:05:33 | SEL ID: 0x00F1 | RAID Controller | Rebuild in Progress
+2024-01-15 09:22:14 | SEL ID: 0x00F0 | System Boot | Completed Successfully
+2024-01-15 08:10:47 | SEL ID: 0x00EF | Memory Module 3 | Correctable ECC Error
+```
+
+!!! warning "Common errors"
+    **`RACADM: ERROR: iDRAC IP <IP> is not responding`** — Verify iDRAC network connectivity and ensure the management interface is configured with `racadm config -g cfgLanSecurity -o cfgIpStaticIpAddr <IP>`.
+    **`RACADM: ERROR: Access Denied. Insufficient privileges`** — Confirm you are running the command as root or with sudo, or authenticate with `-u <username> -p <password>` flags.
+    **`RACADM: ERROR: Unable to parse response from iDRAC`** — Restart the iDRAC service with `racadm racreset` and wait 2 minutes for it to fully initialize before retrying.
 In OMIVV (vCenter plugin): **Menu → OpenManage Integration → Hardware → Alarms** — verify no red or orange alerts.
 
 ### 4. vSAN Capacity
@@ -143,6 +223,46 @@ curl -sk \
   "https://<vxm-ip>/rest/vxm/v1/lcm/upgrade" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "upgrade-bundle-20240115",
+  "version": "7.0.500",
+  "releaseDate": "2024-01-15T00:00:00Z",
+  "bundleSize": 8589934592,
+  "bundleSizeGB": 8.0,
+  "status": "available",
+  "releaseNotes": "https://docs.vmware.com/vxrail/7.0.500/release-notes",
+  "components": [
+    {
+      "name": "ESXi",
+      "currentVersion": "7.0.480",
+      "targetVersion": "7.0.500"
+    },
+    {
+      "name": "vCenter",
+      "currentVersion": "7.0.480",
+      "targetVersion": "7.0.500"
+    },
+    {
+      "name": "vSAN",
+      "currentVersion": "7.0.480",
+      "targetVersion": "7.0.500"
+    }
+  ],
+  "prerequisites": [
+    "Minimum 50GB free space on VXM",
+    "All hosts in healthy state",
+    "No active LCM operations"
+  ],
+  "estimatedDowntimeMinutes": 45
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the VXM certificate into your system's CA bundle; if still failing, verify the VXM hostname matches the certificate CN.
+    **`jq: parse error: Invalid JSON`** — Ensure python3 is installed and the API response is valid JSON; check that the VXM service is running with `curl -sk https://<vxm-ip>/rest/vxm/v1/system/status`.
+    **`curl: (401) Unauthorized`** — Verify the VXM credentials are correct and base64-encoded properly with `echo -n 'mystic:password' | base64`, then confirm the user has LCM API permissions in VXM.
 If a bundle is available, record it and plan an upgrade in the next maintenance window.
 
 ---
@@ -193,6 +313,19 @@ esxcli hardware sensor list --type Temperature | grep -i critical
 esxcli hardware sensor list --type Fan | grep -i critical
 ```
 
+
+```text title="Expected output"
+BIOS Version=2.14.2
+iDRAC Version=6.10.40.00
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`racadm: command not found`** — Install Dell iDRAC tools or run this command directly on the iDRAC IP via SSH instead of the ESXi host.
+    **`Unable to parse objname _NIC.Embedded.1-1-1`** — Restart the iDRAC service with `racadm racreset soft` and retry after 2 minutes.
 ---
 
 ## Run This Routine
@@ -314,6 +447,33 @@ echo "=== Hardware Sensors (Critical only) ==="
 esxcli hardware sensor list 2>&1 | grep -i "critical" || echo "No critical sensors"
 ```
 
+
+```text title="Expected output"
+=== vSAN Health ===
+Health Status: Healthy
+Cluster Status: Healthy
+Error Count: 0
+
+=== vSAN Resync ===
+Total Objects: 1247
+Remaining Objects: 0
+Resync Status: Complete
+
+=== vSAN Network Test ===
+vmnic0: PASS (latency: 0.42ms)
+vmnic1: PASS (latency: 0.38ms)
+vmnic2: PASS (latency: 0.41ms)
+vmnic3: PASS (latency: 0.39ms)
+Network Status: All links operational
+
+=== Hardware Sensors (Critical only) ===
+No critical sensors
+```
+
+!!! warning "Common errors"
+    **`vsan health cluster get: Unknown command or namespace`** — Verify the ESXi host is vSAN-enabled by running `esxcli vsan cluster get` instead (older ESXi versions use different command syntax).
+    **`Permission denied`** — Ensure you are connected via SSH as root or a user with vSAN admin privileges; use `sudo` or authenticate with elevated credentials.
+    **`Network test: No such file or directory`** — The vSAN debug network test command may not exist on this ESXi version; use `esxcli vsan debug network list` to verify network participation instead.
 ---
 
 ## See also

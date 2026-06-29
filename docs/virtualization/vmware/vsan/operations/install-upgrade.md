@@ -61,6 +61,28 @@ esxcli vsan health cluster list
 esxcli vsan debug object list | grep -i noncompliant
 ```
 
+
+```text title="Expected output"
+Product: VMware ESXi
+Version: 7.0.3
+Build: 19193900
+Update: 3
+Patch: ESXi700-202301001
+
+Cluster Health Status: Healthy
+Overall Health: green
+Data Health: green
+Memory Health: green
+Network Health: green
+Physical Disk Health: green
+Disk Format Version: 13
+
+(no output — all objects compliant)
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace vsan health cluster`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` instead if using older ESXi versions.
+    **`Error: Unknown command or namespace vsan debug object`** — Enable vSAN debug mode with `esxcli vsan debug object list` requires elevated privileges; run the command on the vSAN cluster coordinator host.
 ## ESA Migration
 
 The Express Storage Architecture (ESA) introduced in vSAN 8.0 is not an in-place upgrade from OSA. Migration requires a new cluster build.
@@ -89,6 +111,33 @@ esxcli software vib list | grep -i <controller-name>
 esxcli storage core device list
 ```
 
+
+```text title="Expected output"
+Name                           Version                Install Date
+lsi-mr3                        7.715.06.00-1OEM.700.1.0.15160138  2024-01-15
+bnx2x                          20.2.592.0v-1OEM.700.1.0.15160138   2024-01-15
+
+t10.ATA_____SAMSUNG_SSD_870_QVO_1TB__________________S5YTNF0N123456AB
+   Display Name: Samsung SSD 870 QVO 1TB
+   Has Settable Display Name: true
+   Size: 1099511627776
+   Device Type: Direct-Access
+   Multipath Plugin: NMP
+   Devfs Path: /vmfs/devices/disks/t10.ATA_____SAMSUNG_SSD_870_QVO_1TB__________________S5YTNF0N123456AB
+   Vendor: ATA
+   Model: SAMSUNG SSD 870
+   Revision: EMT04B6Q
+   SCSI Level: 5
+   Is SSD: true
+   Is Local: true
+   Is Removable: false
+   Is RDM Capable: false
+   Firmware Version: EMT04B6Q
+```
+
+!!! warning "Common errors"
+    **`grep: (standard input): No such file or directory`** — Verify the ESXi host is accessible and esxcli is properly configured by running `esxcli system version get` first.
+    **`Error: Unknown option or esxcli not found`** — Ensure you are running this command directly on an ESXi host or via SSH with proper vSphere CLI tools installed on a remote system.
 **vLCM with hardware support manager:** If the server vendor (Dell, HPE, Lenovo) provides a vSphere Lifecycle Manager Hardware Support Manager plugin, use it to manage firmware and driver updates alongside ESXi updates in a single vLCM image. This ensures certified driver/firmware combinations are applied together.
 
 **Key rule:** Never apply an ESXi patch without also verifying that the disk controller driver version in the vLCM image is HCL-certified for vSAN. Mismatched drivers are a leading cause of disk group failures post-upgrade.

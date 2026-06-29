@@ -40,6 +40,15 @@ kubectl label namespace logging \
   pod-security.kubernetes.io/enforce=baseline
 ```
 
+
+```text title="Expected output"
+namespace/production labeled
+namespace/logging labeled
+```
+
+!!! warning "Common errors"
+    **`error: namespaces "production" not found`** — Verify the namespace exists with `kubectl get namespaces` before applying labels.
+    **`error: label keys and values must be alphanumeric or -._`** — Ensure label keys use only alphanumeric characters, hyphens, dots, and underscores; the pod-security.kubernetes.io/ prefix is valid but custom labels cannot contain forward slashes outside the domain prefix.
 ---
 
 ## Default Deny Network Policy
@@ -231,6 +240,17 @@ kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="ExternalIP
 kubectl debug node/<node-name> -it --image=busybox
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+
+Entering debugger. Type 'help' for commands.
+/ #
+```
+
+!!! warning "Common errors"
+    **`error: unable to find node "<node-name>"`** — Verify the exact node name with `kubectl get nodes` and ensure you're querying the correct cluster context.
+    **`error: image "busybox" not found`** — Specify a valid debug image available in your registry, such as `--image=gcr.io/gke-release/gke-metrics-agent:latest` or check your cluster's image pull policy.
 ---
 
 ## Rotate kubeconfig Credentials
@@ -244,6 +264,25 @@ tanzu cluster kubeconfig get my-cluster --admin
 kubectl vsphere login --server https://supervisor.example.local --username user@corp.local
 ```
 
+
+```text title="Expected output"
+Fetching kubeconfig for admin of cluster 'my-cluster'...
+Kubeconfig written to /home/admin/.kube/config
+Context "my-cluster-admin" added to kubeconfig.
+Cluster "my-cluster" set.
+User "my-cluster-admin" set.
+Current context is now "my-cluster-admin".
+
+Logging in to vSphere with Kubernetes...
+Waiting for the vSphere login extension to be ready...
+Logged in successfully.
+Current context: supervisor.example.local
+```
+
+!!! warning "Common errors"
+    **`Error: cluster 'my-cluster' not found`** — Verify the cluster name matches output from `tanzu cluster list` and you are in the correct management cluster context.
+    **`Error: unable to connect to supervisor.example.local: no such host`** — Ensure the supervisor hostname is resolvable and correct; check DNS or use the IP address instead.
+    **`Error: invalid credentials for user@corp.local`** — Confirm the username and domain are correct and the OIDC provider is reachable from the cluster network.
 ## See also
 
 - [Tanzu — Access Control](../access-control/)

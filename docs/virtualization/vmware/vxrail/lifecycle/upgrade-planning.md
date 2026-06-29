@@ -27,6 +27,10 @@ phase_2_preupgrade_health_checks -> phase_3_preupgrade_support_bundle
 phase_3_preupgrade_support_bundle -> validate
 ```
 
+
+```text title="Expected output"
+(no output — this is a D2 diagram definition block, not executable bash code)
+```
 ## Phase 1: Planning
 
 ### Capture Current State

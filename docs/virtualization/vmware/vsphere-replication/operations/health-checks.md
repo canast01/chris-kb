@@ -63,6 +63,29 @@ curl -sk https://vra-london.example.local/api/rest/vr/health | python3 -m json.t
 # Status should be "OK"
 ```
 
+
+```text title="Expected output"
+{
+  "status": "OK",
+  "version": "8.7.0.21456",
+  "buildNumber": "21456",
+  "timestamp": "2024-01-15T14:32:18.742Z",
+  "components": {
+    "database": "OK",
+    "replication_engine": "OK",
+    "network": "OK",
+    "storage": "OK"
+  },
+  "uptime_seconds": 864000,
+  "active_replications": 42,
+  "pending_syncs": 3
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the VRA's certificate into your system trust store.
+    **`curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused`** — Verify the VRA appliance is running and the hostname/IP is correct; check firewall rules allowing HTTPS access to port 443.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm the VRA API service is fully started (may take 2-3 minutes after appliance boot) and the endpoint URL is correct.
 ---
 
 ## Check All Replications for RPO Violations
@@ -99,6 +122,17 @@ for r in reps.get('list', []):
 "
 ```
 
+
+```text title="Expected output"
+[LAGGING] prod-db-vm-01
+[LAGGING] web-cluster-02
+[SYNCING] app-tier-backup
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the vRA certificate into your system CA bundle.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the vRA API endpoint is reachable and responding; check credentials and ensure the authentication token endpoint is correct.
+    **`curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused`** — Confirm the vRA appliance hostname/IP is correct and the API service is running (`systemctl status vmware-vra` on the appliance).
 ---
 
 ## See also
@@ -118,12 +152,51 @@ df -h
 # VRA appliance disk: should have >20% free
 ```
 
+
+```text title="Expected output"
+admin@vra-london.example.local's password: 
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       100G   72G   23G  75% /
+/dev/sda2       200G  156G   38G  79% /opt
+/dev/sda3       150G  118G   28G  80% /var
+/dev/sda4        50G   8G   39G  17% /tmp
+tmpfs           16G      0   16G   0% /dev/shm
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname vra-london.example.local: Name or service not known`** — Verify the hostname is correct and resolvable in DNS, or use the IP address directly instead.
+    **`Permission denied (publickey,password).`** — Confirm the admin account credentials are correct and the SSH key or password is valid for this VRA appliance.
+    **`Warning: Permanently added 'vra-london.example.local' (ECDSA) to the list of known hosts.`** — This is informational; press Enter to continue, or add the host key to ~/.ssh/known_hosts beforehand with `ssh-keyscan`.
 Target-site datastore containing replica VMDKs:
 ```bash
 vCenter (Target Site) → Datastore → check % used
 # Keep below 80% — VRA stops writing when datastore fills up
 ```
 
+
+```text title="Expected output"
+Datastore: ds-replication-01
+  Capacity: 2.0 TB
+  Used: 1.52 TB (76%)
+  Free: 480 GB
+  Status: Normal
+
+Datastore: ds-replication-02
+  Capacity: 1.5 TB
+  Used: 1.35 TB (90%)
+  Free: 150 GB
+  Status: Warning — approaching capacity limit
+
+Datastore: ds-replication-03
+  Capacity: 3.0 TB
+  Used: 1.8 TB (60%)
+  Free: 1.2 TB
+  Status: Normal
+```
+
+!!! warning "Common errors"
+    **`Datastore capacity at 95% — replication writes suspended`** — Immediately migrate or delete non-critical VMs, or add storage capacity to the datastore.
+    **`Permission denied: cannot access datastore inventory`** — Verify your vCenter user account has Datastore.Browse and Datastore.FileManagement privileges on the target site.
 ---
 
 ## VRS Health (if deployed)
@@ -141,6 +214,25 @@ ssh admin@vrs-london-01.example.local
 systemctl status hms
 ```
 
+
+```text title="Expected output"
+admin@vrs-london-01.example.local's password: 
+● hms.service - VMware vSphere Replication Management Service
+     Loaded: loaded (/etc/systemd/system/hms.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:42:17 UTC; 3 days ago
+       Docs: man:hms(8)
+   Main PID: 2847 (java)
+      Tasks: 24 (limit: 4915)
+     Memory: 487.3M
+        CPU: 2h 14m 32s
+     CGroup: /system.slice/hms.service
+             └─2847 /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el7_9.x86_64/bin/java -Xmx1024m -Xms512m -Dcom.vmware.hms.home=/opt/vmware/hms
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname vrs-london-01.example.local: Name or service not known`** — Verify the hostname is correct and DNS resolution is working with `nslookup vrs-london-01.example.local` or update your `/etc/hosts` file.
+    **`Unit hms.service could not be found.`** — Confirm vSphere Replication is installed on this host; if recently installed, reload systemd with `systemctl daemon-reload`.
+    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH key-based authentication is configured, or use `ssh -v` to debug the connection.
 ---
 
 ## Verify Replication Files on Target Datastore
@@ -159,6 +251,21 @@ ls /vmfs/volumes/<target-datastore>/<VM-folder>/
 # No .vrepl files = replication not established or recovery was completed
 ```
 
+
+```text title="Expected output"
+drwxr-xr-x    1 root     root          4096 Nov 15 10:42 .
+drwxr-xr-x    1 root     root          4096 Nov 14 09:18 ..
+-rw-------    1 root     root    107374182400 Nov 15 10:45 web-app-prod-000001.vmdk
+-rw-------    1 root     root       2097152 Nov 15 10:42 web-app-prod.vmdk
+-rw-------    1 root     root        8192 Nov 15 10:45 web-app-prod.vmx
+-rw-------    1 root     root      16777216 Nov 15 10:44 web-app-prod.vrepl
+-rw-------    1 root     root        4096 Nov 15 10:42 web-app-prod.hbr
+-rw-------    1 root     root        1024 Nov 15 10:42 web-app-prod.nvram
+```
+
+!!! warning "Common errors"
+    **`ls: /vmfs/volumes/<target-datastore>/<VM-folder>/: No such file or directory`** — Verify the datastore name and VM folder path are correct, and that the target ESXi host has the datastore mounted.
+    **`Permission denied`** — Ensure you are connected via SSH as root or a user with sufficient privileges to access /vmfs/volumes.
 ---
 
 ## Certificate Expiry
@@ -175,6 +282,18 @@ echo | openssl s_client -connect vra-amsterdam.example.local:44046 2>/dev/null \
   | openssl x509 -noout -dates
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 10:23:45 2023 GMT
+notAfter=Jan 15 10:23:45 2026 GMT
+notBefore=Feb 3 14:57:12 2024 GMT
+notAfter=Feb 3 14:57:12 2027 GMT
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify the VRA service is running with `systemctl status vmware-vra` and check firewall rules allow inbound on port 443 or 44046.
+    **`depth=0 self signed certificate`** — This is expected for self-signed VRA certificates; add `-showcerts` to the command if you need to inspect the full chain.
+    **`unable to load certificate`** — Ensure OpenSSL can reach the host; test basic connectivity first with `ping vra-london.example.local` and verify DNS resolution.
 ---
 
 ## Monthly DR Test Trigger

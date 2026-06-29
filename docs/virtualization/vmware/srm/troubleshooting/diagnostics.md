@@ -158,6 +158,37 @@ systemctl status vmware-hbrsrv
 cat /var/log/vmware/hbrsrv.log | grep "ReplicationConfig\|vmId\|rpoSla" | tail -50
 ```
 
+
+```text title="Expected output"
+admin@vr-appliance-01:~$ tail -200 /var/log/vmware/hbrsrv.log | grep -i "error\|fail\|warn"
+2024-01-15T09:42:33.847Z warn [hbrsrv] Replication state: running for vm-245 (RPO: 300s)
+2024-01-15T09:43:12.521Z warn [hbrsrv] Network latency detected: 45ms to recovery site
+2024-01-15T09:44:01.634Z info [hbrsrv] Replication state: running for vm-512 (RPO: 600s)
+
+admin@vr-appliance-01:~$ tail -200 /var/log/vmware/hbrfilter.log | grep -i "error\|fail"
+(no output — command completes silently)
+
+admin@vr-appliance-01:~$ systemctl status vmware-hbrsrv
+● vmware-hbrsrv.service - VMware vSphere Replication Server
+   Loaded: loaded (/etc/systemd/system/vmware-hbrsrv.service; enabled; vendor preset: enabled)
+   Active: active (running) since Mon 2024-01-15 09:30:22 UTC; 14min ago
+   Process: 2847 ExecStart=/usr/lib/vmware-hbrsrv/bin/hbrsrv (code=exited, status=0/SUCCESS)
+   Main PID: 2851 (hbrsrv)
+   Tasks: 12 (limit: 4096)
+   Memory: 487.3M
+   CGroup: /systemd/system.slice/vmware-hbrsrv.service
+
+admin@vr-appliance-01:~$ cat /var/log/vmware/hbrsrv.log | grep "ReplicationConfig\|vmId\|rpoSla" | tail -50
+2024-01-15T09:15:44.221Z info ReplicationConfig loaded: vmId=vm-245, rpoSla=300, target=10.50.12.88
+2024-01-15T09:16:22.445Z info ReplicationConfig loaded: vmId=vm-512, rpoSla=600, target=10.50.12.88
+2024-01-15T09:17:05.889Z info ReplicationConfig loaded: vmId=vm-789, rpoSla=1800, target=10.50.12.89
+2024-01-15T09:18:33.112Z info ReplicationConfig synced: 3 active replications, 0 paused
+2024-01-15T09:42:15.667Z info vmId=vm-245 checkpoint created, bytes transferred: 2.4GB
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password)`** — Verify SSH credentials and that the admin user exists on the VR appliance; check `/etc/ssh/sshd_config` allows password authentication.
+    **`No such file or directory: /var/log/vmware/hbrsrv.log`** — Confirm the vSphere Replication server is installed and has started at least once; check `/var/log/vmware/`
 **If hbrsrv.log shows replication is behind:**
 1. Check network bandwidth between production and recovery site (VR uses HTTPS/TCP 443 and TCP 31031)
 2. Check ESXi host disk I/O on the production side — heavy I/O increases data to replicate
@@ -184,6 +215,20 @@ Select-String -Path $sraLog -Pattern "error|fail" | Select-Object -Last 50
 # Look for: discoverArrays, discoverDevices, testFailoverStart errors
 ```
 
+
+```text title="Expected output"
+C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-2024-01-15.log:142:2024-01-15T08:23:45.123Z ERROR [SRA-Worker-12] Failed to query array symmetrix ID SYM-123456789
+C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-2024-01-15.log:187:2024-01-15T08:24:12.456Z WARN [SRA-Worker-12] RDF link latency exceeded threshold: 245ms
+C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-2024-01-15.log:203:2024-01-15T08:25:03.789Z ERROR [SRA-Worker-15] discoverArrays command timeout after 30s
+C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-2024-01-15.log:251:2024-01-15T08:26:44.012Z ERROR [SRA-Worker-15] Connection refused to array management port 4443
+C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\netapp-2024-01-15.log:89:2024-01-15T08:27:15.334Z ERROR [SRA-Worker-8] testFailoverStart failed: SnapMirror relationship not initialized
+C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\netapp-2024-01-15.log:156:2024-01-15T08:28:22.567Z WARN [SRA-Worker-8] discoverDevices returned 0 LUNs from vserver prod-svm-01
+```
+
+!!! warning "Common errors"
+    **`Select-String : Cannot find path 'C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-*.log' because it does not exist.`** — Verify SRM is installed on this Windows Server and check the actual log directory path with `dir "C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\"`.
+    **`ERROR [SRA-Worker] Connection refused to array management port`** — Confirm the SRA array management IP/hostname is reachable and the SRA credentials configured in SRM are correct by testing connectivity from the SRM server.
+    **`ERROR [SRA-Worker] discoverArrays command timeout after 30s`** — Increase SRA command timeout in the SRM configuration or check array responsiveness; if the array is slow, restart the SRA service on the array management appliance.
 **SRA error patterns:**
 - `"discoverArrays failed"` → SRA cannot authenticate to the array; verify SRA credentials in SRM UI
 - `"testFailoverStart timeout"` → array is not responding to the SRA failover command; check array replication state

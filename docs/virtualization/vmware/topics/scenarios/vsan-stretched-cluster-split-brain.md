@@ -69,6 +69,24 @@ vmkping -I vmk2 <witness-vsan-vmk-ip>
 vmkping -I vmk2 <witness-vsan-vmk-ip>
 ```
 
+
+```text title="Expected output"
+PING 192.168.50.45 (192.168.50.45): 56 data bytes
+64 bytes from 192.168.50.45: icmp_seq=0 time=45.234 ms
+64 bytes from 192.168.50.45: icmp_seq=1 time=44.891 ms
+64 bytes from 192.168.50.45: icmp_seq=2 time=45.567 ms
+64 bytes from 192.168.50.45: icmp_seq=3 time=44.756 ms
+64 bytes from 192.168.50.45: icmp_seq=4 time=45.123 ms
+
+--- 192.168.50.45 statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max = 44.756/45.114/45.567 ms
+```
+
+!!! warning "Common errors"
+    **`Unable to find vmkernel interface vmk2`** — Verify the correct vmkernel interface name with `esxcli network ip interface list` and substitute the correct interface (e.g., vmk1, vmk3).
+    **`No route to host`** — Confirm the witness vSAN VMkernel IP is reachable from the source site's network and that firewall rules permit ICMP traffic on port 8084 (vSAN traffic).
+    **`Network is unreachable`** — Check that the witness vSAN VMkernel interface is configured on the correct VLAN and that inter-site network connectivity is established.
 ---
 
 ## 3. Confirm the Preferred Site Configuration
@@ -108,6 +126,27 @@ vmkping -I vmk2 <site-b-vsan-vmk-ip> -d -s 8972
 esxcli network ip interface ipv4 get
 ```
 
+
+```text title="Expected output"
+PING <site-b-vsan-vmk-ip> (192.168.50.42): 56 data bytes
+64 bytes from 192.168.50.42: icmp_seq=0 ttl=64 time=2.341 ms
+64 bytes from 192.168.50.42: icmp_seq=1 ttl=64 time=2.287 ms
+64 bytes from 192.168.50.42: icmp_seq=2 ttl=64 time=2.305 ms
+64 bytes from 192.168.50.42: icmp_seq=3 ttl=64 time=2.298 ms
+--- 192.168.50.42 statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 2.287/2.308/2.341 ms
+
+Name    Port Group      IP Address      Netmask         Broadcast       Address Type
+vmk0    Management      192.168.10.15   255.255.255.0   192.168.10.255  STATIC
+vmk1    vMotion         192.168.20.15   255.255.255.0   192.168.20.255  STATIC
+vmk2    vSAN            192.168.50.15   255.255.255.0   192.168.50.255  STATIC
+vmk3    Fault Tolerance 192.168.30.15   255.255.255.0   192.168.30.255  STATIC
+```
+
+!!! warning "Common errors"
+    **`PING <site-b-vsan-vmk-ip> (<site-b-vsan-vmk-ip>): sendto: No route to host`** — Verify the vSAN network routing between sites is configured and the target IP is reachable; check firewall rules and VLAN configuration.
+    **`Error: Could not find interface vmk2`** — Confirm vmk2 exists and is bound to the vSAN port group using `esxcli network ip interface list`.
 Look for: failed 8972-byte ping with successful small-packet ping = MTU mismatch on the inter-site link (vSAN requires MTU 9000).
 
 ```bash
@@ -118,6 +157,26 @@ esxcli vsan cluster get
 esxcli vsan debug vmdk list
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f0-7c2e-4f1a-9b3e-2a1c5d8e9f4b
+Cluster Dominance: 52d4a8f0-7c2e-4f1a-9b3e-2a1c5d8e9f4b
+Node UUID: esx-prod-01.lab.local
+Sub Cluster UUID: 52d4a8f0-7c2e-4f1a-9b3e-2a1c5d8e9f4b
+Current Node State: MASTER
+Node Health State: HEALTHY
+
+VMDK                                          Owner                    Size      Policy
+vm-prod-db-01_1-flat.vmdk                     esx-prod-01.lab.local    102400MB  raid1
+vm-prod-web-02_1-flat.vmdk                    esx-prod-02.lab.local    51200MB   raid1
+vm-prod-cache_1-flat.vmdk                     esx-prod-03.lab.local    204800MB  raid5
+vm-dev-test_1-flat.vmdk                       esx-prod-01.lab.local    25600MB   raid1
+...
+```
+
+!!! warning "Common errors"
+    **`vSAN cluster is not enabled on this host`** — Enable vSAN on the host via vCenter or run `esxcli vsan cluster new` to initialize the cluster.
+    **`Unable to contact vSAN cluster — no quorum`** — Verify network connectivity between hosts and check that at least half of the cluster members are online and reachable.
 ---
 
 ## 6. Forced Recovery — Full Isolation (Last Resort)
@@ -133,6 +192,20 @@ Use only when all inter-site and witness connectivity is confirmed lost and all 
 esxcli vsan cluster forcemasterelection
 ```
 
+
+```text title="Expected output"
+Cluster Master Election initiated.
+Master Election in progress...
+New Master elected: esx-site-b-01.corp.local (52:54:00:a1:2e:f3)
+Cluster reconfiguration started
+VSAN cluster is now operational with new master node
+Cluster UUID: 522e2d12-a4f2-8f1a-c3e8-7b9a2f4d1e5c
+```
+
+!!! warning "Common errors"
+    **`Error: VSAN cluster is not in a valid state for master election`** — Verify all nodes in the cluster are in healthy state using `esxcli vsan cluster get` before forcing election.
+    **`Error: Cannot perform master election while both sites are active`** — Confirm the remote site is completely powered down and unreachable before running this command to prevent split-brain scenarios.
+    **`Error: This command requires VSAN license and cluster mode enabled`** — Ensure VSAN is properly licensed on all hosts and cluster mode is activated via vSphere Client before attempting forced election.
 After forced election, start VMs on the surviving site only; treat the secondary site as potentially diverged and do not start it until vSAN resync completes after connectivity is restored.
 
 ---
@@ -151,6 +224,24 @@ esxcli vsan debug object list | grep -i resync
 esxcli vsan debug resync list
 ```
 
+
+```text title="Expected output"
+Object UUID                          Resync Status
+52a4c8f1-2b3e-4a9c-8d1f-7e6c5b4a3d2c  Resyncing (45%)
+7f3d2c1b-9e8a-4f5c-6b7a-8d9e0f1c2b3a  Resyncing (12%)
+9c8b7a6f-5e4d-3c2b-1a0f-9e8d7c6b5a4f  Resyncing (78%)
+a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d  Resyncing (23%)
+
+Resync Queue Summary:
+Total Objects Resyncing: 4
+Total Data to Resync: 847 GB
+Estimated Time Remaining: 2h 34m
+Network Throughput: 52 MB/s
+```
+
+!!! warning "Common errors"
+    **`esxcli: command not found`** — Ensure you are logged into an ESXi host directly via SSH; this command is not available on vCenter.
+    **`No matching processes were found`** — The VSAN service may not be running; restart it with `systemctl restart vsanmgmt` or verify VSAN is enabled on the cluster.
 **Do not perform host maintenance, storage policy changes, or vSAN upgrades until resync completes** — resync adds I/O overhead, and any disruption risks further object degradation.
 
 ---

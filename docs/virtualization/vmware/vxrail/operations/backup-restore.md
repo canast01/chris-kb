@@ -138,6 +138,22 @@ ls -lth /vcenter-backups/ | head -20
 # Example: 2026-06-01_02-00-00
 ```
 
+
+```text title="Expected output"
+total 2847
+drwxr-xr-x 4 root root 4096 Jun  1 02:00 2026-06-01_02-00-00
+drwxr-xr-x 4 root root 4096 May 31 02:00 2026-05-31_02-00-00
+drwxr-xr-x 4 root root 4096 May 30 02:00 2026-05-30_02-00-00
+drwxr-xr-x 4 root root 4096 May 29 02:00 2026-05-29_02-00-00
+drwxr-xr-x 4 root root 4096 May 28 02:00 2026-05-28_02-00-00
+drwxr-xr-x 4 root root 4096 May 27 02:00 2026-05-27_02-00-00
+drwxr-xr-x 4 root root 4096 May 26 02:00 2026-05-26_02-00-00
+drwxr-xr-x 4 root root 4096 May 25 02:00 2026-05-25_02-00-00
+```
+
+!!! warning "Common errors"
+    **`ls: cannot access '/vcenter-backups/': No such file or directory`** — Verify the SFTP target mount point exists and is mounted with `mount | grep vcenter-backups`.
+    **`ls: cannot open directory '/vcenter-backups/': Permission denied`** — Check directory permissions with `stat /vcenter-backups/` and ensure your user has read access.
 ---
 
 ## Restore Considerations
@@ -156,6 +172,30 @@ curl -sk \
   "https://<vxm-ip>/rest/vxm/v1/cluster" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "cluster-1",
+  "name": "VxRail-Cluster-01",
+  "version": "7.0.510-26041961",
+  "health": "Healthy",
+  "state": "Connected",
+  "nodes": 4,
+  "capacity_gb": 12288,
+  "used_gb": 8456,
+  "last_refresh": "2024-01-15T14:32:18Z",
+  "manager_ip": "192.168.1.100",
+  "manager_status": "Online",
+  "interconnect_status": "Connected",
+  "vsan_health": "Healthy",
+  "replication_factor": 3
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify VxRail Manager is fully booted and accessible; check network connectivity with `ping <vxm-ip>` and confirm HTTPS service is running.
+    **`{"error": "Invalid credentials", "code": 401}`** — Verify the base64-encoded username and password are correct by decoding with `echo 'bXlzdGljOnBhc3N3b3Jk' | base64 -d` and confirm the account has API access permissions.
+    **`command not found: python3`** — Install Python 3 with your package manager (`apt install python3` on Debian/Ubuntu or `yum install python3` on RHEL) or pipe to `jq` instead if available.
 ### If vCenter is Lost
 
 1. **VMs continue to run** on ESXi hosts — vSphere HA and DRS stop functioning but workloads are unaffected

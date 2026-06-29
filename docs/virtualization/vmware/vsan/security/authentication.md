@@ -140,6 +140,39 @@ curl -s -H "vmware-api-session-id: $TOKEN" \
     -X DELETE "https://vcenter/api/session" -k
 ```
 
+
+```text title="Expected output"
+{
+  "value": [
+    {
+      "cluster": "domain-c8",
+      "name": "Production-Cluster-01",
+      "drs_enabled": true,
+      "ha_enabled": true,
+      "vsan_enabled": true
+    },
+    {
+      "cluster": "domain-c12",
+      "name": "DR-Cluster-02",
+      "drs_enabled": true,
+      "ha_enabled": true,
+      "vsan_enabled": false
+    },
+    {
+      "cluster": "domain-c15",
+      "name": "Test-Cluster-03",
+      "drs_enabled": false,
+      "ha_enabled": false,
+      "vsan_enabled": true
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip certificate verification (already present in example, but ensure it's not removed).
+    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"args":[],"default_message":"Invalid session."}]}}`** — Verify the TOKEN variable is populated correctly by checking `echo $TOKEN` before the second curl call; re-authenticate if empty.
+    **`curl: (7) Failed to connect to vcenter port 443: Connection refused`** — Confirm vCenter hostname/IP is correct and accessible on port 443 with `ping vcenter` or `nc -zv vcenter 443`.
 ---
 
 ## ESXi Host Authentication
@@ -159,6 +192,18 @@ vim-cmd hostsvc/stop_ssh
 vim-cmd hostsvc/disable_ssh
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`vim-cmd: Unknown command 'hostsvc/enable_ssh'`** — Use the correct vim-cmd syntax: `vim-cmd hostsvc/enable_ssh` requires the ESXi host to be accessible via vSphere API; run these commands directly in the ESXi local console or SSH session, not remotely.
+    **`Error: The object or item could not be found on the server`** — Ensure you are running vim-cmd on the ESXi host itself (via SSH or local console), not from a vCenter Server or remote management station.
 **Or from vCenter UI:**
 Host → Configure → Services → SSH → Start / Stop
 
@@ -183,6 +228,14 @@ esxcli system settings advanced set \
 # vSphere Client → Host → Configure → System → Authentication Services → Join Domain
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or flag '-o'`** — Use the correct esxcli syntax: `esxcli system settings advanced set --option=/Config/HostAgent/plugins/hostsvc/esxAdminsGroup --string-value="vSphere Admins"`.
+    **`Error: Permission denied`** — Ensure you are logged into the ESXi shell with root or equivalent administrative credentials, not a standard user account.
 When joined to AD, members of the `ESX Admins` group (or the configured group) receive Administrator access to the ESXi host.
 
 **Post-join verification:**
@@ -192,6 +245,33 @@ When joined to AD, members of the `ESX Admins` group (or the configured group) r
 # lsass service should be running
 ```
 
+
+```text title="Expected output"
+Service 'lsass' (Local Security Authority)
+	Status: running
+	PID: 2847
+
+Service 'netlogond' (Net Logon)
+	Status: running
+	PID: 2891
+
+Service 'dcerpc' (DCE/RPC)
+	Status: running
+	PID: 2834
+
+Service 'eventlog' (Event Log)
+	Status: running
+	PID: 2856
+
+Service 'srvsvc' (Server Service)
+	Status: running
+	PID: 2903
+```
+
+!!! warning "Common errors"
+    **`Service 'lsass' (Local Security Authority) Status: stopped`** — Restart the lsass service with `/opt/likewise/bin/lwsm start lsass` and verify domain connectivity.
+    **`bash: /opt/likewise/bin/lwsm: No such file or directory`** — Verify Likewise Open is installed with `rpm -qa | grep likewise` and reinstall if missing.
+    **`Error: Failed to query service status`** — Check that the Likewise daemon is running with `/opt/likewise/bin/lwsm list` and restart the service with `/opt/likewise/bin/lwsm restart`.
 **Add AD groups to vCenter permissions after joining:**
 
 vSphere Client → vCenter → Permissions → Add → select identity source → search AD group → assign role
@@ -214,6 +294,29 @@ esxcli system certificate info list
 /usr/lib/vmware/vmca/bin/certool --status
 ```
 
+
+```text title="Expected output"
+Certificate Information
+   Certificate Path: /etc/vmware/ssl/rui.crt
+   Certificate Issuer: CN=esx-host-01.lab.local,O=VMware,C=US
+   Certificate Expiration Date: 2025-12-15
+   Certificate Thumbprint: A1:B2:C3:D4:E5:F6:G7:H8:I9:J0:K1:L2:M3:N4:O5:P6
+   Certificate Status: Valid
+
+VMCA Certificate Chain Status
+   VMCA Root Certificate Status: Valid
+   Root Certificate Expiration: 2030-06-20
+   Intermediate Certificate Status: Valid
+   Intermediate Expiration: 2027-03-10
+   Host Certificate Status: Valid
+   Host Certificate Expiration: 2025-12-15
+   Chain Validation: PASSED
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to localhost:443`** — Verify the ESXi host management network is reachable and the certificate service is running with `systemctl status vmware-vpxd`.
+    **`Certificate has expired`** — Regenerate the host certificate using `esxcli system certificate install` or request a new signed certificate from your VMCA.
+    **`VMCA service is not running`** — Start the VMCA service with `/etc/init.d/vmware-vpxd restart` or check logs in `/var/log/vmware/vpxd/vpxd.log`.
 **Custom CA certificates:** Replace VMCA-issued certificates with certificates from an enterprise CA (Microsoft CA, HashiCorp Vault PKI) if your security policy requires it. vSAN continues to function after certificate replacement — vCenter orchestrates the replacement rolling.
 
 vSphere Client → vCenter → Administration → Certificate Management → Replace VMCA Root Certificate
@@ -229,6 +332,23 @@ Verify TLS settings on VCSA:
 /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHINE_SSL_CERT
 ```
 
+
+```text title="Expected output"
+Entry [1]:
+	Alias: __MACHINE_CERT
+	Entry type: Certificate
+	Metadata: CN=vcsa-01.lab.local,O=VMware,C=US
+	Alias: __MACHINE_CERT_CHAIN
+	Entry type: Certificate chain
+	Metadata: CN=vcsa-01.lab.local,O=VMware,C=US; CN=VMware-Root,O=VMware,C=US
+	Alias: __MACHINE_PRIVATE_KEY
+	Entry type: Private key
+	Metadata: RSA 2048-bit
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to certificate store`** — Ensure the vmafd service is running with `systemctl status vmafd` and restart if needed.
+    **`Error: Access denied`** — Run the command with elevated privileges using `sudo` or directly as root user.
 Configure minimum TLS version in vCenter:
 vSphere Client → vCenter → Configure → Advanced Settings → `config.tls.minVersion` = `TLSv1.2`
 ---

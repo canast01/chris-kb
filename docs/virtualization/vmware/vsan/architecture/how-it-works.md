@@ -181,6 +181,28 @@ Get-SpbmStoragePolicy | Get-SpbmRule | Where-Object { $_.Capability -like "*IOPS
 esxcli vsan debug object list | grep -E "Object|IOPS"
 ```
 
+
+```text title="Expected output"
+Name                           Value
+----                           -----
+IOPS Limit                     5000
+IOPS Reservation               1000
+IOPS Shares                    Normal
+
+Object UUID: 52590e42-a1b2-4c3d-8e9f-1a2b3c4d5e6f
+  IOPS Current: 2847
+  IOPS Peak: 4156
+Object UUID: 62690e52-b2c2-5d3e-9f0g-2b3c4d5e6f7g
+  IOPS Current: 1923
+  IOPS Peak: 3421
+Object UUID: 72790e62-c3d3-6e4f-0g1h-3c4d5e6f7g8h
+  IOPS Current: 892
+  IOPS Peak: 2105
+```
+
+!!! warning "Common errors"
+    **`Get-SpbmStoragePolicy : The term 'Get-SpbmStoragePolicy' is not recognized`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running SPBM cmdlets.
+    **`esxcli: command not found`** — Run this command directly on an ESXi host via SSH or use `esxcli -s <host> -u <user> -p <pass>` from vCenter.
 **When to set limits:** Noisy-neighbour workloads (backups, bulk transfers) degrading production VMs. Set a low IOPS limit on backup VMs; leave production VMs unlimited or set a floor via shares.
 
 ---

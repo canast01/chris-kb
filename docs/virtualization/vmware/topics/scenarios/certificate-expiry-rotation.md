@@ -69,6 +69,24 @@ echo | openssl s_client -connect arialogs.domain.local:443 2>/dev/null \
   | openssl x509 -noout -dates
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 08:32:14 2023 GMT
+notAfter=Jan 15 08:32:14 2024 GMT
+notBefore=Feb 20 14:47:22 2023 GMT
+notAfter=Feb 20 14:47:22 2025 GMT
+notBefore=Mar 10 10:15:33 2023 GMT
+notAfter=Mar 10 10:15:33 2026 GMT
+notBefore=Apr 5 16:28:45 2023 GMT
+notAfter=Apr 5 16:28:45 2024 GMT
+notBefore=May 12 09:51:07 2023 GMT
+notAfter=May 12 09:51:07 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to connect to vcenter.domain.local:443`** — Verify the hostname is correct and the vCenter server is reachable with `ping vcenter.domain.local` or `nc -zv vcenter.domain.local 443`.
+    **`routines:tls_process_server_certificate:certificate verify failed`** — Add `-showcerts` flag or use `openssl s_client -connect <host>:443 -servername <host>` to properly retrieve the certificate chain.
+    **`error in x509_print_fp:num=20:unable to get local issuer certificate`** — This is a warning about certificate chain validation; the dates will still display—ignore it if you only need expiry information.
 ```bash
 # Batch audit across all known VMware hosts — outputs hostname and notAfter date
 for host in vcenter.domain.local nsxmanager.domain.local ariaops.domain.local arialogs.domain.local; do
@@ -78,6 +96,18 @@ for host in vcenter.domain.local nsxmanager.domain.local ariaops.domain.local ar
 done
 ```
 
+
+```text title="Expected output"
+vcenter.domain.local:                    notAfter=Dec 15 23:59:59 2025 GMT
+nsxmanager.domain.local:                 notAfter=Mar 22 23:59:59 2026 GMT
+ariaops.domain.local:                    notAfter=Jan 8 23:59:59 2024 GMT
+arialogs.domain.local:                   notAfter=Feb 14 23:59:59 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the host is reachable on port 443 and the certificate chain is complete; try `openssl s_client -connect $host:443 -showcerts` to diagnose.
+    **`grep: (standard input) is empty`** — The host may not be presenting a valid SSL certificate or the connection timed out; add a timeout flag with `timeout 5 echo | openssl s_client -connect $host:443`.
+    **`Name or service not known`** — Ensure all hostnames resolve correctly by running `nslookup $host` or update the host list to use IP addresses instead.
 Expected: each line prints the hostname and a `notAfter` date; any date within 60 days requires rotation.
 
 ---
@@ -93,6 +123,25 @@ Option A (CA-signed) is recommended for all production environments; Option B (s
 /usr/lib/vmware-vmca/bin/certificate-manager
 ```
 
+
+```text title="Expected output"
+vCenter Certificate Manager
+
+1. Replace Machine SSL Certificate
+2. Replace VMCA Root Certificate
+3. Replace Solution User Certificates
+4. Replace Machine SSL Certificate with Custom Certificate
+5. Regenerate a New VMCA Root Certificate and all Certificates
+6. Reset all Certificates to Default
+7. Quit
+
+Please select an option [1 to 7]:
+```
+
+!!! warning "Common errors"
+    **`certificate-manager: command not found`** — Verify you are logged into the VCSA appliance via SSH and not a Windows vCenter instance; the tool only exists on Linux-based VCSA deployments.
+    **`Permission denied`** — Run the command with `sudo` or as root: `sudo /usr/lib/vmware-vmca/bin/certificate-manager`.
+    **`/usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory`** — Confirm the vCenter version is 6.0 or later and the vmware-vmca package is installed by running `rpm -qa | grep vmware-vmca`.
 In the certificate manager menu:
 
 1. Select **Option 1**: Replace Machine SSL Certificate with Custom Certificate
@@ -108,6 +157,39 @@ In the certificate manager menu:
 # Select Option 8: Regenerate all certificates
 ```
 
+
+```text title="Expected output"
+VMware Certificate Manager
+
+1. Generate a Self-Signed Root CA Certificate
+2. Generate a Self-Signed SSL Certificate
+3. Generate a Certificate Signing Request (CSR)
+4. Install SSL Certificate
+5. Install Root CA Certificate
+6. Get SSL Certificate and Key in PEM Format
+7. Regenerate a Self-Signed Root CA Certificate
+8. Regenerate all certificates
+9. Reset all Certificates to default
+10. Exit
+
+Please select an option [1-10]: 8
+
+Regenerating all certificates...
+Backup of certificates created at: /etc/vmware-vpx/ssl/backup-20240115-143022
+Generating new Root CA certificate...
+Root CA certificate generated successfully
+Generating new Machine SSL certificate...
+Machine SSL certificate generated successfully
+Generating new Solution User certificates...
+Solution User certificates generated successfully
+All certificates regenerated successfully
+vCenter services will be restarted to apply changes...
+```
+
+!!! warning "Common errors"
+    **`Error: Certificate generation failed - insufficient disk space`** — Ensure at least 2GB free space in /etc/vmware-vpx/ssl and run the command again.
+    **`Error: Failed to restart vCenter services - timeout waiting for service startup`** — Wait 5-10 minutes for services to fully initialize, then verify with `service-control --status --all`.
+    **`Error: Permission denied - cannot write to /etc/vmware-vpx/ssl`** — Run the certificate-manager command with root privileges using `sudo` or as the root user.
 Expected: VCSA services restart; `openssl s_client` against vCenter returns a `notAfter` date beyond 1 year from today.
 
 ---
@@ -197,6 +279,18 @@ for host in vcenter.domain.local nsxmanager.domain.local ariaops.domain.local ar
 done
 ```
 
+
+```text title="Expected output"
+vcenter.domain.local:                   notAfter=Dec 15 23:59:59 2025 GMT
+nsxmanager.domain.local:                notAfter=Dec 15 23:59:59 2025 GMT
+ariaops.domain.local:                   notAfter=Dec 15 23:59:59 2025 GMT
+arialogs.domain.local:                  notAfter=Dec 15 23:59:59 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to connect to host:443`** — Verify the hostname resolves and the management interface is reachable on port 443 with `ping` and `nc -zv`.
+    **`depth=0 self signed certificate`** — This is a warning, not an error; the script will still extract the expiry date, but if you need to verify the certificate chain, use `openssl s_client -connect $host:443 -showcerts`.
+    **`grep: (standard input) is empty`** — The certificate was not returned; check that the host is running and SSL/TLS is enabled, or add `-servername $host` to the openssl command for SNI support.
 | Check | Location | Expected Result |
 |---|---|---|
 | vCenter cert expiry | `openssl s_client` against vCenter | notAfter > 1 year from today |

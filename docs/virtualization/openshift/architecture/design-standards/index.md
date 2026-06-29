@@ -144,6 +144,18 @@ data:
 EOF
 ```
 
+
+```text title="Expected output"
+node/worker-infra-01 labeled
+node/worker-infra-01 tainted with node-role.kubernetes.io/infra=reserved:NoSchedule
+ingresscontroller.operator.openshift.io/default patched
+configmap/cluster-monitoring-config created
+```
+
+!!! warning "Common errors"
+    **`error: node "<node>" not found`** — Replace `<node>` with the actual node hostname (e.g., `worker-infra-01`).
+    **`Error from server (NotFound): ingresscontrollers.operator.openshift.io "default" not found`** — Verify the ingress operator is installed with `oc get ingresscontroller -n openshift-ingress-operator`.
+    **`error: error validating "STDIN": error validating data: ValidationError(ConfigMap.data.config.yaml): invalid type for io.openshift.config.v1.ClusterMonitoringConfig: got "string", expected "object"`** — Remove the `config.yaml:` key and pipe the YAML object directly as the ConfigMap data value.
 ## etcd Disk Sizing and Validation
 
 etcd is the most I/O-sensitive component. Slow disk causes fsync latency, leader elections, and cluster instability.
@@ -173,6 +185,30 @@ fio \
 # If p99 > 10ms — do not use that disk for etcd
 ```
 
+
+```text title="Expected output"
+etcd-fio: (g=0): rw=write, bs=(R) 2300B-2300B, (W) 2300B-2300B, ioengine=sync, iodepth=1
+fio-3.28
+Starting 1 process
+etcd-fio: Laying out IO file (1 file / 22MiB)
+etcd-fio: Opened 1 file, 22MiB
+etcd-fio: IO Error: ENOSPC (No space left on device)
+
+Run status group 0 (all jobs):
+  WRITE: bw=8,456KiB/s (8,659kB/s), 8,456KiB/s-8,456KiB/s (8,659kB/s-8,659kB/s), io=18.2MiB (19.1MB), run=2203-2203msec
+
+Disk stats (read/write):
+  sda3: ios=0/9847, merge=0/0, ticks=0/18234, in_queue=18234, util=98.45%
+
+fsync/fdatasync/sync_file_range:
+  sync (usec): min=412, max=8923, avg=2156.34, stdev=1847.23, samples=7924
+  percentiles (usec): 1.00=521, 5.00=612, 10.00=701, 20.00=892, 50.00=1834, 90.00=4521, 95.00=6234, 99.00=8156, 99.9=8891, 99.99=8923
+```
+
+!!! warning "Common errors"
+    **`etcd-fio: IO Error: ENOSPC (No space left on device)`** — Ensure /var/lib/etcd has at least 50GB free space before running the test.
+    **`fio: command not found`** — Install fio with `yum install fio` (RHEL/CentOS) or `apt-get install fio` (Ubuntu).
+    **`Permission denied`** — Run the fio command with `sudo` or as root user since /var/lib/etcd requires elevated privileges.
 ## Network CIDR Planning
 
 Set at install time — cannot change after cluster creation without reinstalling.
@@ -214,6 +250,21 @@ oc get network.operator cluster -o jsonpath='{.spec.defaultNetwork.ovnKubernetes
 oc debug node/<node> -- ip link show eth0
 ```
 
+
+```text title="Expected output"
+1500
+
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500
+    link/ether 52:54:00:a1:2f:8c brd ff:ff:ff:ff:ff:ff
+3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500
+    link/ether 52:54:00:b3:4d:9e brd ff:ff:ff:ff:ff:ff
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "network.operator"`** — Verify the cluster-network-operator is installed with `oc get clusteroperator cluster-network-operator`.
+    **`Error from server (NotFound): nodes "<node>" not found`** — Replace `<node>` with an actual node name from `oc get nodes`.
 **VLAN segmentation recommendation:**
 
 Separate VLANs for: (1) machine/node network, (2) storage network (iSCSI/NFS/ODF replication), (3) cluster API/management. Avoids broadcast domain pollution and simplifies firewall rules.
@@ -269,6 +320,24 @@ EOF
 oc get pvc test-pvc
 ```
 
+
+```text title="Expected output"
+NAME             PROVISIONER                    RECLAIMPOLICY   VOLUMEBINDINGMODE
+thin-csi (default) csi.vsphere.volume.vmware.com Delete         WaitForFirstConsumer
+fast-ssd         csi.vsphere.volume.vmware.com Delete         Immediate
+
+NAME                    STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+pending-app-pvc         Pending                                      thin-csi        45m
+test-pvc                Pending                                      thin-csi        2m
+
+persistentvolumeclaim/test-pvc created
+NAME       STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+test-pvc   Pending                                      thin-csi        3s
+```
+
+!!! warning "Common errors"
+    **`error: unable to recognize "STDIN": no kind "PersistentVolumeClaim" in version "v1"`** — Verify the API group is correct and the cluster supports the v1 API version for PVCs.
+    **`Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "persistentvolumeclaims"`** — Grant the service account or user the `create` verb on `persistentvolumeclaims` via a ClusterRole or Role binding.
 ## MachineSet Design
 
 ```yaml
@@ -306,6 +375,30 @@ oc apply -f clusterautoscaler.yaml        # Global autoscaler config
 oc apply -f machineautoscaler.yaml        # References MachineSet + min/max replicas
 ```
 
+
+```text title="Expected output"
+machineset.machine.openshift.io/cluster-worker-0 scaled
+NAME                    DESIRED   CURRENT   READY   UPDATED   AVAILABLE   AGE
+cluster-worker-0        5         5         3       5         3           42d
+cluster-worker-1        3         3         3       3         3           42d
+cluster-worker-2        3         3         3       3         3           42d
+
+NAME                                    PHASE         TYPE   REGION      IMAGE                                    CREATED AT
+cluster-abc123-worker-0-abc12           Provisioning  m5.xl  us-east-1a  ami-0c55b159cbfafe1f0  2024-01-15T09:22:15Z
+cluster-abc123-worker-0-def45           Running       m5.xl  us-east-1a  ami-0c55b159cbfafe1f0  2024-01-15T09:18:42Z
+cluster-abc123-worker-0-ghi78           Running       m5.xl  us-east-1a  ami-0c55b159cbfafe1f0  2024-01-15T09:15:08Z
+cluster-abc123-worker-1-jkl90           Running       m5.xl  us-east-1b  ami-0c55b159cbfafe1f0  2024-01-14T14:33:21Z
+cluster-abc123-worker-1-mno12           Running       m5.xl  us-east-1b  ami-0c55b159cbfafe1f0  2024-01-14T14:30:55Z
+...
+
+clusterautoscaler.autoscaling.openshift.io/default created
+machineautoscaler.autoscaling.openshift.io/worker-autoscaler created
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "machineset"`** — Verify the machine-api-operator is running with `oc get pods -n openshift-machine-api` and check your cluster version supports MachineSets.
+    **`Error from server (NotFound): machinesets.machine.openshift.io "cluster-worker-0" not found`** — Confirm the exact MachineSet name with `oc get machineset -n openshift-machine-api` and use the correct namespace.
+    **`error: error validating "machineautoscaler.yaml": error validating data: ValidationError(MachineAutoscaler): unknown field "replicaCount"`** — Use correct field names `minReplicas` and `maxReplicas` in the MachineAutoscaler spec, not `replicaCount`.
 ## See also
 
 - [OpenShift — How It Works](../how-it-works/)

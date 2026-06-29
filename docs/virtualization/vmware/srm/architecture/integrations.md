@@ -35,6 +35,15 @@ purecli user create srmuser --role array_admin
 purecli user setpassword srmuser
 ```
 
+
+```text title="Expected output"
+User srmuser created successfully
+Password updated for user srmuser
+```
+
+!!! warning "Common errors"
+    **`Error: User srmuser already exists`** — Delete the existing user with `purecli user delete srmuser` before recreating it.
+    **`Error: Password does not meet complexity requirements`** — Ensure the password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters.
 ### SRA for Dell PowerStore / EMC
 
 Dell provides SRAs for multiple product lines.
@@ -50,6 +59,26 @@ tar xzf Dell_SRA_for_PowerStore_<version>.tar.gz
 systemctl restart vmware-dr
 ```
 
+
+```text title="Expected output"
+Dell_SRA_for_PowerStore_<version>.tar.gz                                100%  245MB   12.3MB/s   00:20
+root@srm-appliance's password: 
+root@srm-appliance:~# cd /tmp
+root@srm-appliance:/tmp# tar xzf Dell_SRA_for_PowerStore_<version>.tar.gz
+root@srm-appliance:/tmp# ./install.sh
+Dell SRA for PowerStore Installation Script v2.1.4
+Extracting SRA components...
+Installing SRA adapter files to /opt/vmware/srm/lib/adapters/
+Registering SRA with Site Recovery Manager...
+Installation completed successfully. SRA version 2.1.4 installed.
+root@srm-appliance:/tmp# systemctl restart vmware-dr
+root@srm-appliance:/tmp#
+```
+
+!!! warning "Common errors"
+    **`tar: Dell_SRA_for_PowerStore_<version>.tar.gz: No such file or directory`** — Verify the exact filename with `ls -la /tmp/` and replace `<version>` with the actual version number in the filename.
+    **`./install.sh: Permission denied`** — Run `chmod +x install.sh` before executing the script.
+    **`Failed to restart unit vmware-dr.service: Unit vmware-dr.service not found.`** — Confirm the SRM service name with `systemctl list-units --type=service | grep vmware` and use the correct service name.
 **PowerStore SRA credentials:**
 
 | Field | Value |
@@ -83,6 +112,22 @@ govc import.ova \
   vSphere_Replication_OVF10.ova
 ```
 
+
+```text title="Expected output"
+Uploading vSphere_Replication_OVF10.ova... 100%
+Importing OVA file...
+Creating virtual machine vr-appliance-01...
+Configuring network interface to Management...
+Registering VM on vsanDatastore...
+vr-appliance-01 successfully imported
+VM UUID: 502e4d63-8c2a-4e1f-9b8a-7d2c1a9f3e5b
+Power state: poweredOff
+```
+
+!!! warning "Common errors"
+    **`Error: datastore 'vsanDatastore' not found`** — Verify the datastore name with `govc datastore.ls` and ensure it is accessible from the current vCenter connection.
+    **`Error: network 'Management' not found`** — Confirm the port group name exists with `govc network.ls` and use the full network path if it's in a folder.
+    **`Error: failed to parse OVA: invalid manifest`** — Verify the OVA file is not corrupted by checking its integrity with `tar -tzf vSphere_Replication_OVF10.ova` and re-download if necessary.
 After deployment:
 - Access VR Appliance VAMI at `https://<vr-ip>:5480`
 - Configure: network, NTP, password
@@ -133,6 +178,52 @@ ls -lh /var/log/vmware/
 # vmware-vcd-watchdog.log — VR daemon log
 ```
 
+
+```text title="Expected output"
+admin@vr-appliance.example.com's password: 
+● vmware-vcd-watchdog.service - VMware VCD Watchdog
+     Loaded: loaded (/usr/lib/systemd/system/vmware-vcd-watchdog.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2 days ago
+   Main PID: 2847 (vmware-vcd-watc)
+      Tasks: 4 (limit: 4915)
+     Memory: 45.2M
+        CPU: 2h 14m 32s
+     CGroup: /system.slice/vmware-vcd-watchdog.service
+             └─2847 /usr/lib/vmware-vcd/bin/vmware-vcd-watchdog
+
+● vmware-hbrsrv.service - VMware Host-Based Replication Server
+     Loaded: loaded (/usr/lib/systemd/system/vmware-hbrsrv.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:32:22 UTC; 2 days ago
+   Main PID: 2891 (hbrsrv)
+      Tasks: 18 (limit: 4915)
+     Memory: 128.7M
+        CPU: 5h 47m 19s
+
+Session ID: 550e8400-e29b-41d4-a716-446655440000
+  Source VM: prod-db-01.example.com
+  Target VM: prod-db-01-replica.example.com
+  Status: Synced
+  RPO: 0 seconds
+  Throughput: 2.4 MB/s
+
+Session ID: 6ba7b810-9ebd-41d4-85d9-e6b321b4d113
+  Source VM: web-app-02.example.com
+  Target VM: web-app-02-replica.example.com
+  Status: Syncing
+  RPO: 45 seconds
+  Throughput: 1.8 MB/s
+
+total 2.1M
+-rw-r--r-- 1 root root 512K Jan 15 14:28 hbrsrv.log
+-rw-r--r-- 1 root root 256K Jan 15 14:30 vmware-vcd-watchdog.log
+-rw-r--r-- 1 root root 128K Jan 15 14:25 vmware-hostd.log
+-rw-r--r-- 1 root root  64K Jan 15 14:22 vpxd.log
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname vr-appliance.example.com: Name or service not known`** — Verify the VR appliance hostname/IP is correct and resolvable in your DNS or /etc/hosts file.
+    **`Unit vmware-hbrsrv.service could not be found.`** — Confirm the SRM VR appliance is properly deployed and the hbrsrv service package is installed.
+    **`hbr-configure: command not found`** — Ensure you are logged in as root or with sudo privileges, as hbr-configure
 ---
 
 ## NSX-T Integration for Network Mapping
