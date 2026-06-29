@@ -57,6 +57,14 @@ export PSTORE_BASE="https://${PSTORE_HOST}/api/rest"
 echo "Authenticated to ${PSTORE_HOST} as ${PSTORE_USER}"
 ```
 
+
+```text title="Expected output"
+Authenticated to 192.168.10.50 as admin
+```
+
+!!! warning "Common errors"
+    **`ERROR: PSTORE_PASS must be set`** — Set the PSTORE_PASS environment variable before sourcing the script: `export PSTORE_PASS="your_password"`.
+    **`ERROR: Authentication failed — check PSTORE_HOST, PSTORE_USER, PSTORE_PASS`** — Verify credentials are correct and the PowerStore array is reachable at the PSTORE_HOST IP address with `ping` or `curl -k https://${PSTORE_HOST}`.
 ---
 
 ## Daily Health Check Script
@@ -160,6 +168,32 @@ echo "  OVERALL: ${LABELS[$STATE]}"
 exit "$STATE"
 ```
 
+
+```text title="Expected output"
+====================================================
+  PowerStore Health Check: 192.168.1.42
+  2024-01-15 09:47:23
+====================================================
+  [INFO] Active alerts — CRITICAL:0  WARNING:2
+  [OK]   No CRITICAL alerts
+  [WARN] 2 WARNING alert(s)
+  [INFO] Drives with non-OK state: 0
+  [OK]   All drives healthy
+  [INFO] Nodes with non-OK state: 0
+  [OK]   All nodes healthy
+  [INFO] Replication sessions — FAILED:0  PAUSED:1
+  [OK]   No failed replication sessions
+  [WARN] 1 replication session(s) PAUSED
+  [INFO] Pool pool_01: 67.3% used
+  [INFO] Pool pool_02: 45.8% used
+====================================================
+  OVERALL: WARNING
+```
+
+!!! warning "Common errors"
+    **`CRIT: Authentication failed`** — Verify PSTORE_HOST is reachable, PSTORE_USER exists, and PSTORE_PASS is correct.
+    **`jq: parse error: Invalid numeric literal at line 1 column 5`** — Ensure the PowerStore API is responding with valid JSON; check network connectivity and API endpoint availability.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands (already present) or import the PowerStore's CA certificate into your system trust store.
 ---
 
 ## Volume Inventory Report
@@ -218,6 +252,27 @@ echo "----"
 echo "Total volumes: ${TOTAL}"
 ```
 
+
+```text title="Expected output"
+====================================================
+  PowerStore Volume Report: 192.168.1.42
+  2024-01-15 14:32:18
+====================================================
+NAME                                      SIZE (GiB)     STATE      DRR  DESCRIPTION
+----------------------------------------  ----------  ----------  ------  -----------
+prod-db-vol-01                                 500.0     Healthy    2.15  Production PostgreSQL
+prod-db-vol-02                                 750.0     Healthy    1.89  Production PostgreSQL replica
+backup-archive-vol                            2000.0     Healthy    3.42  Nightly backup target
+dev-test-volume                                100.0     Healthy    1.05  Development environment
+vmware-datastore-01                           1500.0     Healthy    2.67  vSphere cluster storage
+----
+Total volumes: 5
+```
+
+!!! warning "Common errors"
+    **`ERROR: Auth failed`** — Verify PSTORE_PASS is correct and the user account is not locked; check that the PowerStore API is responding with `curl -ks https://<ip>/api/rest/login_session`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands (already present) or import the PowerStore certificate into your system CA bundle with `update-ca-certificates`.
+    **`jq: parse error: Invalid numeric literal at line 1 column 5`** — Ensure the API response is valid JSON by testing the token endpoint directly; the PowerStore API may be unreachable or returning an error page instead of JSON.
 ---
 
 ## Replication Status Reporter
@@ -373,6 +428,23 @@ echo "---"
 echo "Dry run: ${DRY_RUN} | Deleted: ${DELETED}"
 ```
 
+
+```text title="Expected output"
+Scanning snapshots older than 7 days with prefix 'snap-manual'
+Dry run: true
+---
+  DEL: snap-manual-vol-prod-20250110 (created: 2025-01-10T14:32:18Z)
+  DEL: snap-manual-vol-prod-20250108 (created: 2025-01-08T09:15:47Z)
+  DEL: snap-manual-vol-test-20250105 (created: 2025-01-05T22:41:03Z)
+  DEL: snap-manual-vol-archive-20250103 (created: 2025-01-03T16:28:55Z)
+---
+Dry run: true | Deleted: 0
+```
+
+!!! warning "Common errors"
+    **`ERROR: Auth failed`** — Verify PSTORE_HOST is reachable and PSTORE_PASS credentials are correct.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands or import the PowerStore certificate into your system trust store.
+    **`jq: parse error: Invalid numeric literal at line 1 column 5`** — Ensure the PowerStore API is responding with valid JSON; check that PSTORE_HOST points to the management IP and the API endpoint is accessible.
 ---
 
 ## Capacity Forecast Report
@@ -508,6 +580,24 @@ echo "  PRE-CHECK PASSED — Safe to proceed."
 exit 0
 ```
 
+
+```text title="Expected output"
+============================================
+  PowerStore Pre-Change Check: 192.168.1.42
+  2024-01-15 14:32:18
+============================================
+  PASS  No CRITICAL alerts
+  PASS  All drives healthy
+  PASS  No failed replication sessions
+  PASS  Pool utilisation below 80%
+============================================
+  PRE-CHECK PASSED — Safe to proceed.
+```
+
+!!! warning "Common errors"
+    **`FAIL: Authentication failed`** — Verify PSTORE_HOST is reachable and PSTORE_PASS credentials are correct; check network connectivity with `ping ${PSTORE_HOST}`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the PowerStore CA certificate into your system trust store.
+    **`jq: parse error: Invalid numeric literal at line 1 column 5`** — Ensure the PowerStore API is responding with valid JSON; verify the API endpoint version matches your PowerStore firmware with `curl -ks https://${PSTORE_HOST}/api/rest/system`.
 ---
 
 ## Verify

@@ -130,6 +130,43 @@ curl -sk -b /tmp/ps-cookie.txt \
   python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+Login complete
+{
+  "name": "ps-cluster-prod",
+  "state": "Configured",
+  "management_address": "192.168.1.50",
+  "master_appliance_id": "A1-node-001"
+}
+{
+  "appliance": [
+    {
+      "name": "Appliance-1",
+      "model": "PowerStore 7000T",
+      "service_tag": "CN7K8N2",
+      "drive_failure_tolerance_level": 2,
+      "health": "OK"
+    },
+    {
+      "name": "Appliance-2",
+      "model": "PowerStore 7000T",
+      "service_tag": "CN7K8N3",
+      "drive_failure_tolerance_level": 2,
+      "health": "OK"
+    }
+  ]
+}
+SSD SSD_Slot_1: Healthy
+SSD SSD_Slot_2: Healthy
+PSU PSU_1: Healthy
+FAN FAN_Module_3: Degraded
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify it's not being removed).
+    **`jq: command not found` or `python3: command not found`** — Install required JSON parser (`apt-get install python3` or `brew install jq`) on the management workstation.
+    **`{"error_code":-1,"error_msg":"Invalid session"}`** — Re-run the login curl command to refresh the session cookie in `/tmp/ps-cookie.txt` before retrying API calls.
 ---
 
 ## Step 2 — Check recent critical events
@@ -154,6 +191,33 @@ curl -sk -b /tmp/ps-cookie.txt \
   python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+[Critical] 2026-06-20T14:32:18.000Z: Storage array temperature threshold exceeded on SP-A
+[Major] 2026-06-20T13:47:52.000Z: Disk 14.2 predictive failure detected
+[Major] 2026-06-20T12:15:33.000Z: Replication link latency high (245ms) to remote site
+[Warning] 2026-06-20T11:09:14.000Z: Cache battery backup unit charge below 80%
+[Critical] 2026-06-19T22:58:41.000Z: Controller SP-B offline - failover in progress
+[Warning] 2026-06-19T18:22:07.000Z: NTP synchronization lost on management port
+[Major] 2026-06-19T16:45:19.000Z: Snapshot space utilization at 92%
+...
+
+{
+  "created_timestamp": "2026-06-18T09:33:22.000Z",
+  "description": "Scheduled maintenance window completed successfully",
+  "severity": "Informational"
+}
+{
+  "created_timestamp": "2026-06-17T14:12:55.000Z",
+  "description": "Thin provisioning reclamation job finished - 847GB freed",
+  "severity": "Informational"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify `/tmp/ps-cookie.txt` exists from prior authentication).
+    **`jq: command not found`** — Use `python3 -m json.tool` instead of piping to `jq`, or install jq with your package manager.
+    **`HTTP/1.1 401 Unauthorized`** — Re-authenticate and refresh the session cookie with `curl -sk -u admin:password "https://<powerstore-mgmt-ip>/api/rest/login" -c /tmp/ps-cookie.txt` before querying events.
 ---
 
 ## Step 3 — Check volume and host connectivity
@@ -181,6 +245,49 @@ curl -sk -b /tmp/ps-cookie.txt \
 # Look for: expected host-to-volume mappings present
 ```
 
+
+```text title="Expected output"
+PROBLEM: vol_backup_01 state=Initializing
+PROBLEM: vol_test_dr state=Unavailable
+
+[
+  {
+    "description": "Production ESXi Cluster",
+    "id": "host-789a2c1d-4e5f-11ec-81d3-0050569b1234",
+    "name": "esx-prod-01.corp.local",
+    "os_type": "ESXi"
+  },
+  {
+    "description": "DR Site Linux",
+    "id": "host-a1b2c3d4-5e6f-47ab-9012-3456789abcde",
+    "name": "linux-dr-app.corp.local",
+    "os_type": "Linux"
+  }
+]
+
+[
+  {
+    "host_id": "host-789a2c1d-4e5f-11ec-81d3-0050569b1234",
+    "logical_unit_number": 0,
+    "volume_id": "vol-5f8a9b2c-3d4e-5f6a-7b8c-9d0e1f2a3b4c"
+  },
+  {
+    "host_id": "host-789a2c1d-4e5f-11ec-81d3-0050569b1234",
+    "logical_unit_number": 1,
+    "volume_id": "vol-a1b2c3d4-e5f6-47ab-9012-3456789abcde"
+  },
+  {
+    "host_id": "host-a1b2c3d4-5e6f-47ab-9012-3456789abcde",
+    "logical_unit_number": 0,
+    "volume_id": "vol-c5d6e7f8-9a0b-1c2d-3e4f-5a6b7c8d9e0f"
+  }
+]
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present; if error persists, verify PowerStore management IP is reachable on port 443).
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the authentication cookie in `/tmp/ps-cookie.txt` is valid by re-running the login curl command with correct credentials.
+    **`curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused`** — Confirm the PowerStore management IP address is correct and the array is online and accessible from your network.
 ---
 
 ## Step 4 — Check FC and Ethernet port health
@@ -205,6 +312,48 @@ curl -sk -b /tmp/ps-cookie.txt \
 # Expected: all enabled ports link_state = Up
 ```
 
+
+```text title="Expected output"
+FC port a0: link_state=Down, speed=16Gbps
+FC port b1: link_state=Degraded, speed=8Gbps
+{
+  "list": [
+    {
+      "name": "eth0",
+      "link_state": "Up",
+      "current_speed": "10Gbps",
+      "mac_address": "52:54:00:a2:f1:8c",
+      "appliance_id": "A1"
+    },
+    {
+      "name": "eth1",
+      "link_state": "Up",
+      "current_speed": "10Gbps",
+      "mac_address": "52:54:00:b3:e2:9d",
+      "appliance_id": "A1"
+    },
+    {
+      "name": "eth2",
+      "link_state": "Down",
+      "current_speed": "0Gbps",
+      "mac_address": "52:54:00:c4:f3:ae",
+      "appliance_id": "A2"
+    },
+    {
+      "name": "eth3",
+      "link_state": "Up",
+      "current_speed": "25Gbps",
+      "mac_address": "52:54:00:d5:g4:bf",
+      "appliance_id": "A2"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the command).
+    **`jq: command not found` or `python3: command not found`** — Install the missing tool with `apt-get install python3` or `yum install python3` on the management station.
+    **`401 Unauthorized` in JSON response** — Regenerate the authentication cookie by running the login command: `curl -sk -X POST -d '{"username":"admin","password":"<pwd>"}' https://<powerstore-mgmt-ip>/api/rest/login -c /tmp/ps-cookie.txt`.
 ---
 
 ## Step 5 — Check NAS server and file system health
@@ -232,6 +381,74 @@ curl -sk -b /tmp/ps-cookie.txt \
   python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "name": "nas-prod-01",
+      "operational_status": "Started",
+      "current_node_id": "N1",
+      "health": {
+        "state": "Healthy"
+      }
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "name": "fs_data_01",
+      "size_total": 10995116277760,
+      "size_used": 4398046511104,
+      "health": {
+        "state": "Healthy"
+      }
+    },
+    {
+      "name": "fs_backup_01",
+      "size_total": 5497558138880,
+      "size_used": 2748779069440,
+      "health": {
+        "state": "Healthy"
+      }
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "name": "export_home",
+      "path": "/fs_data_01/home",
+      "export_hosts": ["10.20.30.0/24", "10.20.31.0/24"]
+    },
+    {
+      "name": "export_shared",
+      "path": "/fs_data_01/shared",
+      "export_hosts": ["*"]
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "name": "share_users",
+      "path": "/fs_data_01/users",
+      "file_system_id": "65a4c8d2-1f9e-4a2b-8c3d-9e7f2a1b5c4d"
+    },
+    {
+      "name": "share_archive",
+      "path": "/fs_backup_01/archive",
+      "file_system_id": "7b2d9f1a-4e6c-5d3a-9b8e-1c2f4a7d6e9b"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the PowerStore CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused`** — Verify the PowerStore management IP is correct and reachable; check network connectivity with `ping` and confirm the REST API service is running on the array.
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure the authentication cookie in `/tmp/ps-cookie.txt` is valid by re-authenticating to PowerStore; expired sessions will return HTML error pages instead of JSON.
 ---
 
 ## Step 6 — Check replication sessions
@@ -258,6 +475,32 @@ curl -sk -b /tmp/ps-cookie.txt \
 # Expected: connection_state = Connected
 ```
 
+
+```text title="Expected output"
+metro-sync-nyc: state=Synchronizing, lag=2048, last_sync=2024-01-15T14:32:18Z
+async-backup-dr: state=Synchronized, lag=0, last_sync=2024-01-15T14:35:22Z
+vault-archive: state=Synchronized, lag=0, last_sync=2024-01-15T14:30:45Z
+{
+  "content": [
+    {
+      "id": "remote_sys_001",
+      "name": "powerstore-dr-site",
+      "management_address": "192.168.100.45",
+      "connection_state": "Connected"
+    },
+    {
+      "id": "remote_sys_002",
+      "name": "powerstore-vault",
+      "management_address": "10.50.12.88",
+      "connection_state": "Connected"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify the management IP is correct and reachable on port 443).
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the authentication cookie in `/tmp/ps-cookie.txt` is valid by re-running the login curl command that created it.
 ---
 
 ## Step 7 — Collect SupportAssist bundle for Dell case
@@ -293,6 +536,42 @@ curl -sk -b /tmp/ps-cookie.txt \
 # - Time window of the issue
 ```
 
+
+```text title="Expected output"
+{
+  "id": "support_instance_1",
+  "status": "collecting",
+  "created_at": "2024-01-15T14:32:18Z",
+  "estimated_completion": "2024-01-15T14:47:18Z"
+}
+{
+  "entries": [
+    {
+      "id": "software_installed_1",
+      "release_version": "3.2.1.0"
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "id": "appliance_1",
+      "name": "powerstore-cluster-01",
+      "service_tag": "7X8K9M2"
+    },
+    {
+      "id": "appliance_2",
+      "name": "powerstore-cluster-02",
+      "service_tag": "8Y9L0N3"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in examples; if error persists, verify `/tmp/ps-cookie.txt` exists and contains valid session token).
+    **`curl: (35) error:1400D102:SSL routines:SSL_CTX_use_certificate:no certificates client cert`** — Ensure PowerStore Manager authentication cookie was created with `curl -sk -c /tmp/ps-cookie.txt -u admin:password https://<powerstore-mgmt-ip>/api/rest/login` before running API calls.
+    **`json.tool: error: Expecting value: line 1 column 1 (char 0)`** — Verify the REST API endpoint is correct and the session cookie has not expired; re-authenticate if needed.
 ---
 
 ## Log locations

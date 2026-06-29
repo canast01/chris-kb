@@ -99,6 +99,53 @@ PUT /rest/consistency_groups/{id}/clusters/{clusterId}/image_access/enable
 Body: {"scenario": "LOGGED_ACCESS", "consistency": "CRASH_CONSISTENT"}
 ```
 
+
+```text title="Expected output"
+{
+  "sessionID": "a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6",
+  "userID": "admin",
+  "createdTime": 1699564823000,
+  "expirationTime": 1699651223000
+}
+
+{
+  "consistency_groups": [
+    {
+      "id": "cg-prod-001",
+      "name": "Production_Database",
+      "status": "ACTIVE",
+      "replicationPairs": 2
+    },
+    {
+      "id": "cg-test-042",
+      "name": "Test_Environment",
+      "status": "ACTIVE",
+      "replicationPairs": 1
+    },
+    {
+      "id": "cg-archive-015",
+      "name": "Archive_Data",
+      "status": "PAUSED",
+      "replicationPairs": 1
+    }
+  ]
+}
+
+{
+  "taskID": "task-8f7e6d5c-4b3a-2f1e-0d9c-8b7a6f5e4d3c",
+  "status": "IN_PROGRESS",
+  "consistency_group_id": "cg-prod-001",
+  "cluster_id": "cluster-nyc-01",
+  "image_access_scenario": "LOGGED_ACCESS",
+  "consistency_level": "CRASH_CONSISTENT",
+  "estimatedCompletionTime": 180
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the RPA's certificate into your trusted store.
+    **`HTTP/1.1 401 Unauthorized`** — Verify the admin credentials are correct and the user has API access permissions enabled in RecoverPoint.
+    **`HTTP/1.1 404 Not Found`** — Confirm the consistency group ID and cluster ID exist by listing them first with GET /rest/consistency_groups and GET /rest/clusters.
 ---
 
 ## See also

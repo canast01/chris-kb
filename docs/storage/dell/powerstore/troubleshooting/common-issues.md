@@ -133,6 +133,47 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/host_volume_mapping?volume_id=<volume
 esxcli storage core adapter rescan --all
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "host_initiator_1",
+      "port_name": "50:00:14:40:5a:2b:c1:e3",
+      "port_type": "FC"
+    },
+    {
+      "id": "host_initiator_2",
+      "port_name": "50:00:14:40:5a:2b:c1:e4",
+      "port_type": "FC"
+    }
+  ]
+}
+
+{
+  "entries": [
+    {
+      "id": "host_volume_mapping_1",
+      "volume_id": "vol-0a1b2c3d",
+      "host_id": "host-prod-01",
+      "lun": 0
+    }
+  ]
+}
+
+zone: ZONE_ESXi_Prod_01
+  members:
+    50:00:14:40:5a:2b:c1:e3
+    50:00:09:73:8a:4f:d2:b1
+
+HBA Port 1 (vmhba1) rescan started.
+HBA Port 2 (vmhba2) rescan started.
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to the curl command to skip SSL verification, or import the PowerStore management certificate into your system's trusted store.
+    **`HTTP/1.1 401 Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the PowerStore API using your credentials.
+    **`zone: ZONE_ESXi_Prod_01 not found`** — Confirm the host WWN is spelled correctly and check that the zone exists on the active zoneset using `zoneshow` or `show zoneset active`.
 ### iSCSI Host Cannot Connect
 
 ```bash
@@ -156,6 +197,41 @@ iscsiadm -m session -P 3 | grep -i chap
 iscsiadm -m session --rescan
 ```
 
+
+```text title="Expected output"
+PING 10.50.12.45 (10.50.12.45) 8972(9000) bytes of data.
+8980 bytes from 10.50.12.45: icmp_seq=1 ttl=64 time=2.341 ms
+8980 bytes from 10.50.12.45: icmp_seq=2 ttl=64 time=2.156 ms
+8980 bytes from 10.50.12.45: icmp_seq=3 ttl=64 time=2.289 ms
+--- 10.50.12.45 statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/stddev = 2.156/2.262/2.341/0.078 ms
+
+10.50.12.45:3260,1 iqn.1991-05.com.dell:storage.powerstore.a1b2c3d4
+10.50.12.45:3260,2 iqn.1991-05.com.dell:storage.powerstore.a1b2c3d4
+
+InitiatorName=iqn.1993-08.org.linux-iscsi:host-esx01-5f8a9c2b
+
+{
+  "entries": [
+    {
+      "id": "host_init_001",
+      "port_name": "iqn.1993-08.org.linux-iscsi:host-esx01-5f8a9c2b"
+    }
+  ]
+}
+
+Current iSCSI sessions:
+sid 1: CHAP username: initiator_user
+sid 2: CHAP username: initiator_user
+
+iscsiadm: No active sessions.
+```
+
+!!! warning "Common errors"
+    **`ping: sendto: Operation not permitted`** — Add `-M do` flag to enforce DF bit and verify MTU settings match across network path (typically 9000 for jumbo frames).
+    **`iscsiadm: No records found`** — Verify the PowerStore iSCSI IP is reachable and the iSCSI service is running on the array; check firewall rules allowing port 3260.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification or import the PowerStore CA certificate into the host's certificate store.
 ### Multipath Not Working (Linux)
 
 ```bash
@@ -176,6 +252,50 @@ grep -A 5 'DELL' /etc/multipath.conf
 systemctl reload multipathd
 ```
 
+
+```text title="Expected output"
+● multipathd.service - Device-Mapper Multipath Daemon
+     Loaded: loaded (/usr/lib/systemd/system/multipathd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:32:18 UTC; 2 days ago
+       Main PID: 2847 (multipathd)
+        Tasks: 6 (limit: 4915)
+       Memory: 12.3M
+       CGroup: /system.slice/multipathd.service
+               └─2847 /sbin/multipathd -d
+
+mpatha (360060e80057900000057900000a0001) dm-0 DELL,PowerStore
+size=2.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:0:1 sdb 8:16 active ready running
+| `- 3:0:0:1 sdc 8:32 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 4:0:0:1 sdd 8:48 active faulty offline
+  `- 5:0:0:1 sde 8:64 active ready running
+
+mpathb (360060e80057900000057900000a0002) dm-1 DELL,PowerStore
+size=1.5T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+`-+- policy='service-time 0' prio=50 status=active
+  |- 2:0:1:1 sdf 8:80 active ready running
+  `- 3:0:1:1 sdg 8:96 active ready running
+
+devices {
+        device {
+                vendor "DELL"
+                product "PowerStore"
+                path_grouping_policy "group_by_prio"
+                path_checker "tur"
+                hardware_handler "1 alua"
+                failback "immediate"
+                rr_weight "priorities"
+        }
+}
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`multipathd.service is not running.`** — Run `systemctl start multipathd` and verify with `systemctl status multipathd`.
+    **`No multipath devices found. Is multipathd running?`** — Ensure multipath daemon is active and FC/iSCSI initiators are properly configured; check `dmesg` for device discovery errors.
+    **`grep: /etc/multipath.conf: No such file or directory`** — Create the multipath configuration file with `touch /etc/multipath.conf` or restore it from a backup, then add the DELL PowerStore device stanza.
 ## Replication Issues
 
 ### Replication Session in `Failed` State
@@ -209,6 +329,43 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/replication_session/<session-id>/res
   -H "DELL-EMC-TOKEN: <token>"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "repl_sess_12345",
+  "name": "prod-to-dr-sync",
+  "state": "paused",
+  "last_sync_time": "2024-01-15T14:32:18Z",
+  "failed_reason": "Remote system unreachable"
+}
+{
+  "id": "remote_sys_67890",
+  "name": "dr-powerstore-01",
+  "management_address": "192.168.100.50",
+  "replication_interfaces": [
+    {
+      "ip_address": "10.20.30.40",
+      "gateway": "10.20.30.1",
+      "netmask": "255.255.255.0"
+    }
+  ]
+}
+{
+  "id": "remote_sys_67890",
+  "password": "***",
+  "last_updated": "2024-01-15T15:47:22Z"
+}
+{
+  "id": "repl_sess_12345",
+  "state": "running",
+  "resumed_at": "2024-01-15T15:48:05Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass certificate verification, or import the PowerStore management certificate into your system's CA bundle.
+    **`{"error_code": 401, "message": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN by re-authenticating to the PowerStore management API and update the token in your request headers.
+    **`{"error_code": 404, "message": "Remote system not found"}`** — Verify the `<remote-id>` value matches an existing remote system by listing all remote systems with `curl -k -X GET "https://<mgmt-ip>/api/rest/remote_system" -H "DELL-EMC-TOKEN: <token>"`.
 ### Metro Volume Link Down
 
 ```bash
@@ -237,6 +394,37 @@ curl -k -X POST "https://<secondary-mgmt-ip>/api/rest/replication_session/<sessi
   -H "DELL-EMC-TOKEN: <token>"
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "repl_sess_001",
+      "name": "metro_vol_prod_01",
+      "state": "Paused",
+      "sync_state": "Unknown"
+    },
+    {
+      "id": "repl_sess_002",
+      "name": "metro_vol_prod_02",
+      "state": "Paused",
+      "sync_state": "Unknown"
+    }
+  ]
+}
+Connection to 192.168.50.45 6666 port [tcp/*] succeeded!
+Connection to 192.168.50.45 6666 port [tcp/*] succeeded!
+{
+  "id": "repl_sess_001",
+  "state": "Active",
+  "sync_state": "Synchronized"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass certificate verification, or import the PowerStore management certificate into your system trust store.
+    **`Connection to <mediator-ip> 6666 port [tcp/*] failed!`** — Verify mediator VM is running and network connectivity exists; check firewall rules allow TCP 6666 between PowerStore sites and mediator.
+    **`{"error_code":"REPL_SESSION_NOT_FOUND","message":"Session <session-id> not found"}`** — Confirm the session ID is correct by re-running the GET query to list all replication sessions and their IDs.
 ## Performance Issues
 
 ### High Latency
@@ -264,6 +452,60 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/pool?select=name,percent_used,size_us
 # - Deduplication disabled for a workload that would benefit from it
 ```
 
+
+```text title="Expected output"
+{
+  "metrics": [
+    {
+      "timestamp": "2024-01-15T14:32:00Z",
+      "avg_latency": 4.2,
+      "read_iops": 8420,
+      "write_iops": 3150,
+      "read_bandwidth": 267.8,
+      "write_bandwidth": 89.4
+    },
+    {
+      "timestamp": "2024-01-15T14:31:00Z",
+      "avg_latency": 3.8,
+      "read_iops": 7890,
+      "write_iops": 2980,
+      "read_bandwidth": 251.2,
+      "write_bandwidth": 84.6
+    }
+  ]
+}
+
+{
+  "entries": [
+    {
+      "id": "pool_1a2b3c4d",
+      "name": "SSD_Pool_01",
+      "percent_used": 78.4,
+      "size_used": 15.6,
+      "size_total": 19.9
+    },
+    {
+      "id": "pool_2e5f6g7h",
+      "name": "SSD_Pool_02",
+      "percent_used": 92.1,
+      "size_used": 46.2,
+      "size_total": 50.3
+    },
+    {
+      "id": "pool_3i8j9k0l",
+      "name": "Hybrid_Pool_03",
+      "percent_used": 68.9,
+      "size_used": 27.5,
+      "size_total": 39.9
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed in production use).
+    **`{"error": "Unauthorized", "error_code": "UNAUTHENTICATED"}`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating against the management IP.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP is reachable and the REST API service is running with `ping <mgmt-ip>` and check array status.
 ### Data Reduction Ratio Below Expectation
 
 ```bash
@@ -281,6 +523,39 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/volume_group/<vg-id>?select=name,is_r
   -H "DELL-EMC-TOKEN: <token>"
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "vg_12345abc",
+      "name": "prod-db-vg",
+      "data_reduction_ratio": 1.2
+    },
+    {
+      "id": "vg_67890def",
+      "name": "backup-vg",
+      "data_reduction_ratio": 1.0
+    },
+    {
+      "id": "vg_11223344",
+      "name": "media-archive-vg",
+      "data_reduction_ratio": 1.05
+    }
+  ]
+}
+{
+  "id": "vg_12345abc",
+  "name": "prod-db-vg",
+  "is_replication_destination": false,
+  "protection_policy_id": "pp_9876xyz"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to bypass SSL verification (already present in the example, but ensure it's included if removed).
+    **`{"error_code":"401","message":"Unauthorized"}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the management API.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP is correct and reachable on port 443 using `ping` or `nc -zv <mgmt-ip> 443`.
 ## Capacity Issues
 
 ### Pool Approaching Full Capacity
@@ -302,6 +577,68 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/volume_snapshot?select=name,size,crea
 # 5. Migrate volumes to a less-full pool or appliance (if cluster has multiple appliances)
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "vol-00a1b2c3d4e5f6g7",
+      "name": "prod-db-primary",
+      "size": 5368709120,
+      "size_used": 4831838208,
+      "type": "Primary"
+    },
+    {
+      "id": "vol-00a1b2c3d4e5f6g8",
+      "name": "backup-archive-2024",
+      "size": 2147483648,
+      "size_used": 2089582592,
+      "type": "Primary"
+    },
+    {
+      "id": "vol-00a1b2c3d4e5f6g9",
+      "name": "dev-test-clone",
+      "size": 1099511627776,
+      "size_used": 987654321,
+      "type": "Clone"
+    },
+    {
+      "id": "vol-00a1b2c3d4e5f6ga",
+      "name": "analytics-staging",
+      "size": 3298534883328,
+      "size_used": 2684354560,
+      "type": "Primary"
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "id": "snap-f7e6d5c4b3a29180",
+      "name": "prod-db-primary.snap.20240115-0200",
+      "size": 536870912,
+      "creation_timestamp": "2024-01-15T02:00:00Z"
+    },
+    {
+      "id": "snap-f7e6d5c4b3a29181",
+      "name": "backup-archive-2024.snap.20240114-2300",
+      "size": 429496729,
+      "creation_timestamp": "2024-01-14T23:00:00Z"
+    },
+    {
+      "id": "snap-f7e6d5c4b3a29182",
+      "name": "dev-test-clone.snap.20240110-1500",
+      "size": 268435456,
+      "creation_timestamp": "2024-01-10T15:00:00Z"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass SSL verification, or import the PowerStore management certificate into your system's CA bundle.
+    **`{"error_code":"401","message":"Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN via the PowerStore management UI (Settings > Security > API Tokens) and ensure it has not exceeded its expiration window.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the management IP is correct and reachable with `ping <mgmt-ip>`, and confirm the PowerStore management service is running with `ssh <mgmt-ip> systemctl status rest-server`.
 ## Snapshot Failures
 
 ```bash
@@ -320,6 +657,48 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/volume_snapshot?select=volume_id&volu
 # If snapshot count is very high (>100 per volume), review retention policy
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "job-5847291",
+      "type": "snapshot",
+      "state": "failed",
+      "start_time": "2024-01-15T14:32:18Z",
+      "end_time": "2024-01-15T14:33:22Z",
+      "error_code": "POOL_THRESHOLD_EXCEEDED",
+      "error_message": "Pool utilization 94% exceeds snapshot reserve threshold of 90%"
+    },
+    {
+      "id": "job-5847190",
+      "type": "snapshot",
+      "state": "failed",
+      "start_time": "2024-01-15T13:15:47Z",
+      "end_time": "2024-01-15T13:16:05Z",
+      "error_code": "CONCURRENT_JOB_LIMIT",
+      "error_message": "Maximum concurrent snapshot jobs (8) reached"
+    },
+    {
+      "id": "job-5847089",
+      "type": "snapshot",
+      "state": "failed",
+      "start_time": "2024-01-15T12:00:33Z",
+      "error_code": "POLICY_CONFIG_ERROR",
+      "error_message": "Protection policy 'daily-backup' references deleted replication target"
+    }
+  ],
+  "page": 1,
+  "per_page": 10,
+  "total": 47
+}
+287
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip SSL verification, or import the management node's certificate into your CA bundle.
+    **`{"error_code":"INVALID_TOKEN","message":"Authentication token expired or invalid"}`** — Regenerate the API token in the PowerStore management console and update the DELL-EMC-TOKEN header value.
+    **`jq: command not found`** — Install `jq` package (`apt install jq` or `yum install jq`) or use the provided `python3 -c` JSON parser instead.
 ## Management Plane Issues
 
 ### PowerStore Manager Inaccessible
@@ -355,6 +734,35 @@ TOKEN=$(curl -ks -X POST "https://<mgmt-ip>/api/rest/login_session" \
   | jq -r '.token')
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "user-001",
+      "name": "admin",
+      "is_locked": false
+    },
+    {
+      "id": "user-002",
+      "name": "readonly",
+      "is_locked": false
+    }
+  ]
+}
+{
+  "id": "user-001",
+  "name": "admin",
+  "lock_status": "Unlocked",
+  "last_modified": "2024-01-15T09:42:33Z"
+}
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTcwNTMzODk1MywiaWF0IjoxNzA1MzM4MzUzfQ.kR9mN2pQxL7vZ8wJ4sT6uY3aB5cD1eF9gH2jK4mN6oP
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the PowerStore management certificate into your system's CA bundle.
+    **`jq: parse error: Invalid numeric literal at line 1 column 10`** — Verify the API response is valid JSON by removing the `jq` filter temporarily and checking the raw response for error messages.
+    **`{"error":"Invalid or expired token"}`** — Re-authenticate using the login endpoint to obtain a fresh token, as the current token has exceeded its idle timeout or session limit.
 ---
 
 ## Verify resolution

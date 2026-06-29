@@ -81,6 +81,56 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/ntp_server" \
 # SCG web UI → Devices → Add Device → enter PowerStore management IP
 ```
 
+
+```text title="Expected output"
+{
+  "id": "software_installed_1",
+  "version": "3.0.0.0",
+  "release_date": "2024-01-15T00:00:00Z",
+  "build": "Build 1234.5"
+}
+{
+  "id": "hardware_1",
+  "status": "OK",
+  "components": [
+    {
+      "name": "SSD_1",
+      "status": "OK",
+      "health_score": 100
+    },
+    {
+      "name": "PSU_A",
+      "status": "OK",
+      "health_score": 100
+    },
+    {
+      "name": "PSU_B",
+      "status": "OK",
+      "health_score": 100
+    },
+    {
+      "name": "FAN_MODULE_1",
+      "status": "OK",
+      "health_score": 98
+    },
+    {
+      "name": "CTRL_A",
+      "status": "OK",
+      "health_score": 100
+    }
+  ]
+}
+{
+  "id": "ntp_server_1",
+  "addresses": ["192.168.1.252", "192.168.1.253"],
+  "status": "configured"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass certificate verification, or import the PowerStore management certificate into your system's trust store.
+    **`{"error_code": 401, "message": "Invalid or expired token"}`** — Regenerate the authentication token via the PowerStore Manager UI or re-authenticate using valid credentials.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the management IP address is correct and reachable, and confirm the PowerStore REST API service is running.
 ## Software Upgrade
 
 PowerStore software upgrades are non-disruptive to host I/O. The upgrade orchestrates a rolling restart of both nodes, maintaining continuous availability throughout.
@@ -108,6 +158,69 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/pool?select=name,percent_used" \
   -H "DELL-EMC-TOKEN: <token>"
 ```
 
+
+```text title="Expected output"
+{
+  "entries": []
+}
+{
+  "entries": [
+    {
+      "id": "drive_1",
+      "name": "drive_1",
+      "health_state": "Healthy"
+    },
+    {
+      "id": "drive_2",
+      "name": "drive_2",
+      "health_state": "Healthy"
+    },
+    {
+      "id": "drive_3",
+      "name": "drive_3",
+      "health_state": "Healthy"
+    },
+    {
+      "id": "drive_4",
+      "name": "drive_4",
+      "health_state": "Healthy"
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "id": "repl_session_prod_dr",
+      "name": "prod_dr",
+      "state": "Synchronized"
+    },
+    {
+      "id": "repl_session_backup",
+      "name": "backup",
+      "state": "Synchronized"
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "id": "pool_ssd_tier",
+      "name": "SSD_Tier",
+      "percent_used": 62.4
+    },
+    {
+      "id": "pool_capacity",
+      "name": "Capacity_Pool",
+      "percent_used": 71.8
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or import the management node's CA certificate into your system trust store.
+    **`{"error_code":"401","message":"Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN by authenticating to the management API and ensure the token has not exceeded its 24-hour expiration window.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the management IP address is correct, the PowerStore cluster is online, and port 443 is accessible from your client (check firewall rules and network connectivity).
 **Additional pre-upgrade checks:**
 
 - [ ] Check Dell PowerStore Interoperability Matrix for the target version against all connected components (vSphere, vCenter, SRA, Veeam)
@@ -152,6 +265,37 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/software_package/<package-id>/instal
   -d '{"appliance_ids": ["<appliance-id>"]}'
 ```
 
+
+```text title="Expected output"
+% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 2.4G  100 2.4G    0     0  45.2M      0 --:--:--  0:00:54 --:--:-- 0:00:54
+
+{
+  "id": "pkg-4f8c2a1b-9e3d-47c2-b1a2-8f5c3d2e1a9b",
+  "name": "PowerStoreOS_4.5.2.1.bin",
+  "version": "4.5.2.1",
+  "size": 2576980992,
+  "status": "Valid",
+  "upload_date": "2024-01-15T14:32:18Z",
+  "checksum": "a7f3c9e2b1d4f8a5c3e2b1d4f8a5c3e2"
+}
+
+{
+  "id": "job-5a2c8f1e-3b9d-42c1-a5d2-7e4c1f3a8b2d",
+  "status": "In Progress",
+  "appliance_id": "Appliance-1",
+  "package_id": "pkg-4f8c2a1b-9e3d-47c2-b1a2-8f5c3d2e1a9b",
+  "progress_percentage": 0,
+  "estimated_time_remaining": 1800,
+  "message": "Upgrade job initiated. System will reboot during upgrade."
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the PowerStore management certificate into your system's CA bundle.
+    **`{"error": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN via the Manager UI (Settings → API → Generate Token) and ensure it has not expired.
+    **`{"error": "Package not found or invalid checksum"}`** — Re-download the .bin file from Dell Support Portal and verify the SHA256 checksum matches the published value before uploading.
 ### Upgrade Timeline
 
 Typical upgrade durations:
@@ -181,6 +325,32 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/job?type=upgrade&state=running" \
 # Settings → Software → Current Upgrade → shows percentage complete and current step
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "job-upgrade-20240115-001",
+      "type": "upgrade",
+      "state": "running",
+      "progress_percentage": 67,
+      "current_step": "Updating appliance firmware on node-2",
+      "estimated_completion_time": "2024-01-15T14:32:00Z",
+      "start_time": "2024-01-15T13:15:00Z",
+      "nodes_completed": 1,
+      "nodes_total": 3
+    }
+  ],
+  "page": 1,
+  "per_page": 100,
+  "total": 1
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
+    **`{"error": "Unauthorized", "error_code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token via the login endpoint.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP is correct and the PowerStore cluster is accessible on the network; check firewall rules allowing HTTPS to the management interface.
 ### Post-Upgrade Validation
 
 ```bash
@@ -204,6 +374,71 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/replication_session?select=name,state
 # Log into cloudiq.dell.com; confirm system health score is visible
 ```
 
+
+```text title="Expected output"
+{
+  "software_installed": [
+    {
+      "id": "sw_installed_001",
+      "version": "3.2.1.0",
+      "release_date": "2024-01-15T00:00:00Z",
+      "build": "4567",
+      "status": "Installed"
+    }
+  ]
+}
+
+{
+  "alerts": [
+    {
+      "id": "alert_2847",
+      "severity": "Warning",
+      "message": "Replication session lag detected on session-prod-dr",
+      "state": "active",
+      "created_at": "2024-01-16T14:32:10Z"
+    },
+    {
+      "id": "alert_2851",
+      "severity": "Info",
+      "message": "Software upgrade completed successfully",
+      "state": "active",
+      "created_at": "2024-01-16T13:45:22Z"
+    }
+  ]
+}
+
+{
+  "replication_sessions": [
+    {
+      "name": "prod-to-dr-sync",
+      "state": "Running"
+    },
+    {
+      "name": "backup-async-session",
+      "state": "Running"
+    },
+    {
+      "name": "archive-weekly",
+      "state": "Paused"
+    }
+  ]
+}
+
+name                                    policy
+naa.6006016b8d0234a5c8e4f2a1b9c7d5e3f  service-time
+naa.6006016b8d0234a5c8e4f2a1b9c7d5e3g  service-time
+
+mpatha (36006016b8d0234a5c8e4f2a1b9c7d5) dm-0 DELL,PowerStore
+size=500G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+`-+- policy='service-time 0' prio=50 status=active
+  |- 2:0:0:1 sda 8:0  active ready running
+  `- 3:0:0:1 sdb 8:16 active ready running
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to bypass certificate validation, or import the PowerStore management certificate into your system trust store.
+    **`{"error": "Invalid or expired token"}`** — Regenerate the authentication token via the PowerStore management UI or API and update the DELL-EMC-TOKEN header value.
+    **`Connection refused on <mgmt-ip>:443`** — Verify the management IP is correct and reachable; confirm the PowerStore management interface is online and the network path is not blocked by firewalls.
 ## Appliance Lifecycle
 
 ### Adding a Second Appliance to a Cluster (PowerStore T only)
@@ -220,6 +455,24 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/appliance/join" \
   -d '{"management_address": "<new-appliance-mgmt-ip>"}'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "A1234567890BCDEF",
+  "name": "powerstore-node-03",
+  "management_address": "192.168.1.45",
+  "data_address": "192.168.2.45",
+  "status": "Joining",
+  "cluster_id": "cluster-prod-001",
+  "join_progress": 45,
+  "estimated_time_remaining": "8 minutes"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the appliance's CA certificate into your trust store.
+    **`{"error": "Invalid or expired token", "error_code": 401}`** — Regenerate a valid DELL-EMC-TOKEN via PowerStore Manager or ensure the token has not expired.
+    **`{"error": "Appliance already part of cluster", "error_code": 409}`** — Verify the management IP is correct and the appliance has not already been joined to this or another cluster.
 After joining, the new appliance appears in the cluster and its capacity is immediately available. Existing volumes can be migrated to the new appliance non-disruptively via the Data Migration feature in PowerStore Manager.
 
 ### Decommissioning an Appliance

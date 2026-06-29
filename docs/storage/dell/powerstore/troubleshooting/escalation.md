@@ -90,6 +90,30 @@ curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/appliance" \
   -H "Authorization: Basic <base64-user:pass>"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "0",
+  "release_version": "3.2.1.0",
+  "build_number": "7891",
+  "build_date": "2024-01-15T08:32:00Z",
+  "installed_date": "2024-02-10T14:22:15Z"
+}
+{
+  "id": "A1B2C3D4E5F6",
+  "name": "PowerStore-T",
+  "model": "DELL EMC PowerStore T630",
+  "serial_number": "PS-2024-001847",
+  "service_tag": "ABC1234",
+  "node_count": 3,
+  "management_address": "192.168.1.50"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, so ensure it's not removed).
+    **`curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused`** — Verify the PowerStore management IP is correct and the REST API service is running with `ssh admin@<ip>` and check service status.
+    **`{"error":"Unauthorized","code":"401"}`** — Ensure the base64-encoded credentials are correct by re-encoding with `echo -n "user:password" | base64` and updating the Authorization header.
 ### 2. Capture all active alerts
 
 ```bash
@@ -100,6 +124,45 @@ curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/alert?state=active" \
 # Alternative: PSM → Alerts → filter by Status=Active; Export to CSV
 ```
 
+
+```text title="Expected output"
+{
+  "alerts": [
+    {
+      "id": "alert-2847392",
+      "severity": "warning",
+      "state": "active",
+      "message": "Disk 14 in Enclosure 2 predicted failure",
+      "timestamp": "2024-01-15T09:23:47Z",
+      "resource_id": "disk-e2-14"
+    },
+    {
+      "id": "alert-2847391",
+      "severity": "critical",
+      "state": "active",
+      "message": "Array cache battery backup unit degraded",
+      "timestamp": "2024-01-15T08:15:22Z",
+      "resource_id": "battery-001"
+    },
+    {
+      "id": "alert-2847389",
+      "severity": "info",
+      "state": "active",
+      "message": "Replication lag detected on remote array",
+      "timestamp": "2024-01-15T07:42:10Z",
+      "resource_id": "remote-array-nyc"
+    }
+  ],
+  "page": 1,
+  "per_page": 100,
+  "total": 3
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example; if still failing, verify the management IP is correct).
+    **`curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused`** — Confirm the PowerStore management IP is reachable and the REST API service is running with `ping <powerstore-mgmt-ip>` and check network connectivity.
+    **`{"error": "Unauthorized"}`** — Verify the base64-encoded credentials are correct by re-encoding the username:password and ensure the user has API access permissions in PowerStore.
 ### 3. Check hardware health (controller and drive state)
 
 In PSM: click **Hardware → Appliance** and screenshot the hardware topology view showing controller and drive status.
@@ -114,6 +177,64 @@ curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/hardware?type=Drive" \
   -H "Authorization: Basic <base64-user:pass>"
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "N1",
+      "name": "node-01",
+      "health_state": "Healthy",
+      "status": "OK",
+      "power_supply_health": "Healthy",
+      "temperature": 42,
+      "cpu_usage": 18.5
+    },
+    {
+      "id": "N2",
+      "name": "node-02",
+      "health_state": "Healthy",
+      "status": "OK",
+      "power_supply_health": "Healthy",
+      "temperature": 39,
+      "cpu_usage": 22.1
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "id": "D1.0",
+      "name": "SSD_001",
+      "health_state": "Healthy",
+      "status": "OK",
+      "capacity_bytes": 1099511627776,
+      "used_bytes": 412316860416
+    },
+    {
+      "id": "D1.1",
+      "name": "SSD_002",
+      "health_state": "Healthy",
+      "status": "OK",
+      "capacity_bytes": 1099511627776,
+      "used_bytes": 389412864000
+    },
+    {
+      "id": "D2.0",
+      "name": "SSD_003",
+      "health_state": "Degraded",
+      "status": "Warning",
+      "capacity_bytes": 1099511627776,
+      "used_bytes": 521109504000
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
+    **`401 Unauthorized`** — Verify the base64-encoded credentials are correct by running `echo -n "user:password" | base64` and comparing the output to your Authorization header.
+    **`curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused`** — Confirm the PowerStore management IP is reachable and the REST API service is running with `ping <powerstore-mgmt-ip>` and check firewall rules.
 ### 4. Collect the support bundle
 
 The support bundle packages all PSM logs, configuration data, and event history.
@@ -135,6 +256,23 @@ curl -k -X POST "https://<powerstore-mgmt-ip>/api/rest/support_material" \
   -d '{"appliance_ids": ["<appliance-id>"]}'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "support_material_request_20250115_093847",
+  "state": "COLLECTION_IN_PROGRESS",
+  "appliance_ids": ["A1B2C3D4E5F6G7H8"],
+  "created_at": "2025-01-15T09:38:47Z",
+  "estimated_completion": "2025-01-15T10:15:00Z",
+  "bundle_size_mb": null,
+  "status_message": "Collecting diagnostic data from appliance A1B2C3D4E5F6G7H8"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, so ensure it's not being removed).
+    **`{"error": "401 Unauthorized", "message": "Invalid or expired credentials"}`** — Verify the base64-encoded credentials are correct by re-encoding `username:password` and ensure the user has REST API permissions.
+    **`{"error": "404 Not Found", "message": "Appliance ID not found"}`** — Confirm the appliance ID exists by running `curl -k -H "Authorization: Basic <base64>" https://<powerstore-mgmt-ip>/api/rest/appliances` to list valid IDs.
 ### 5. Write the timeline
 
 ```text
@@ -239,6 +377,100 @@ curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/replication_session" \
   -H "Authorization: Basic <base64-user:pass>"
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "alert-7f2c9e1a",
+      "severity": "critical",
+      "message": "Drive 2.0.3 predictive failure detected",
+      "state": "active",
+      "created_timestamp": "2024-01-15T09:42:31Z"
+    },
+    {
+      "id": "alert-5b8d4c2f",
+      "severity": "warning",
+      "message": "Node A temperature threshold exceeded",
+      "state": "active",
+      "created_timestamp": "2024-01-15T08:15:22Z"
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "id": "node-001",
+      "name": "Node-A",
+      "health_state": "degraded",
+      "status": "online"
+    },
+    {
+      "id": "node-002",
+      "name": "Node-B",
+      "health_state": "healthy",
+      "status": "online"
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "id": "drive-2-0-3",
+      "slot": "2.0.3",
+      "health_state": "degraded",
+      "predictive_failure": true
+    },
+    {
+      "id": "drive-1-1-5",
+      "slot": "1.1.5",
+      "health_state": "healthy",
+      "predictive_failure": false
+    }
+  ]
+}
+{
+  "entries": [
+    {"id": "evt-9847", "severity": "critical", "message": "Drive failure imminent", "created_timestamp": "2024-01-15T09:41:00Z"},
+    {"id": "evt-9846", "severity": "warning", "message": "Replication lag detected", "created_timestamp": "2024-01-15T08:30:15Z"},
+    {"id": "evt-9845", "severity": "info", "message": "Snapshot created", "created_timestamp": "2024-01-15T07:00:00Z"}
+  ]
+}
+{
+  "entries": [
+    {
+      "name": "prod-db-vol-01",
+      "state": "healthy",
+      "size": 1099511627776
+    },
+    {
+      "name": "backup-vol-02",
+      "state": "healthy",
+      "size": 549755813888
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "id": "repl-sess-001",
+      "name": "metro-sync-dc1",
+      "type": "Metro",
+      "state": "synchronized"
+    },
+    {
+      "id": "repl-sess-002",
+      "name": "async-dr-site",
+      "type": "Async",
+      "state": "synchronized"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in examples, but ensure it's not removed).
+    **`{"error": "Unauthorized"}`** — Verify base64 credentials are
 ---
 
 ## Support SLA Reference

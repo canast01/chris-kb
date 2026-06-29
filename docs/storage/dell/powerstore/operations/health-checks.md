@@ -63,6 +63,73 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/alert?severity=CRITICAL&state=active"
   -H "DELL-EMC-TOKEN: <token>" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "alerts": [
+    {
+      "id": "alert-2024-001",
+      "severity": "CRITICAL",
+      "state": "active",
+      "message": "Storage pool capacity threshold exceeded",
+      "resource_id": "pool-ssd-01",
+      "timestamp": "2024-01-15T14:32:18Z",
+      "acknowledged": false
+    },
+    {
+      "id": "alert-2024-002",
+      "severity": "WARNING",
+      "state": "active",
+      "message": "Controller temperature elevated",
+      "resource_id": "ctrl-a",
+      "timestamp": "2024-01-15T13:47:05Z",
+      "acknowledged": false
+    },
+    {
+      "id": "alert-2024-003",
+      "severity": "CRITICAL",
+      "state": "active",
+      "message": "Replication link degraded",
+      "resource_id": "remote-site-02",
+      "timestamp": "2024-01-15T12:15:42Z",
+      "acknowledged": false
+    }
+  ],
+  "page": 1,
+  "per_page": 100,
+  "total": 3
+}
+{
+  "alerts": [
+    {
+      "id": "alert-2024-001",
+      "severity": "CRITICAL",
+      "state": "active",
+      "message": "Storage pool capacity threshold exceeded",
+      "resource_id": "pool-ssd-01",
+      "timestamp": "2024-01-15T14:32:18Z",
+      "acknowledged": false
+    },
+    {
+      "id": "alert-2024-003",
+      "severity": "CRITICAL",
+      "state": "active",
+      "message": "Replication link degraded",
+      "resource_id": "remote-site-02",
+      "timestamp": "2024-01-15T12:15:42Z",
+      "acknowledged": false
+    }
+  ],
+  "page": 1,
+  "per_page": 100,
+  "total": 2
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
+    **`{"error": "Unauthorized", "code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP address is correct and the PowerStore REST API service is running on port 443.
 Review every active alert:
 
 | Alert Severity | Required Action |
@@ -90,6 +157,87 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/node" \
   -H "DELL-EMC-TOKEN: <token>" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "hardware": [
+    {
+      "id": "hw-001",
+      "name": "PSU_A",
+      "type": "power_supply",
+      "status": "ok",
+      "health_state": "healthy"
+    },
+    {
+      "id": "hw-002",
+      "name": "FAN_1",
+      "type": "fan",
+      "status": "ok",
+      "health_state": "healthy"
+    },
+    {
+      "id": "hw-003",
+      "name": "CTRL_A",
+      "type": "controller",
+      "status": "ok",
+      "health_state": "healthy"
+    }
+  ]
+}
+{
+  "drive": [
+    {
+      "id": "drive-0",
+      "slot": 0,
+      "status": "ok",
+      "health_state": "healthy",
+      "capacity_bytes": 10995116277760,
+      "media_type": "SSD"
+    },
+    {
+      "id": "drive-1",
+      "slot": 1,
+      "status": "ok",
+      "health_state": "healthy",
+      "capacity_bytes": 10995116277760,
+      "media_type": "SSD"
+    },
+    {
+      "id": "drive-2",
+      "slot": 2,
+      "status": "degraded",
+      "health_state": "warning",
+      "capacity_bytes": 10995116277760,
+      "media_type": "SSD"
+    }
+  ]
+}
+{
+  "node": [
+    {
+      "id": "node-0",
+      "name": "appliance-node-0",
+      "status": "ok",
+      "health_state": "healthy",
+      "mgmt_ip": "192.168.1.50",
+      "service_ip": "192.168.2.50"
+    },
+    {
+      "id": "node-1",
+      "name": "appliance-node-1",
+      "status": "ok",
+      "health_state": "healthy",
+      "mgmt_ip": "192.168.1.51",
+      "service_ip": "192.168.2.51"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, so ensure it's not removed).
+    **`{"error": "Unauthorized", "code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP address is correct and the REST API service is running on the PowerStore appliance.
 Look for drives with a `health_state` of `failed`, `degraded`, or `reconstructing`. A single drive failure places the pool in degraded mode — the array remains fully operational but has reduced fault tolerance until the failed drive is replaced and reconstruction completes.
 
 Reconstruction time estimate: approximately 1 hour per TB of data for NVMe SSDs under normal workload.
@@ -108,6 +256,52 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/pool?select=name,size_free,size_used,
   -H "DELL-EMC-TOKEN: <token>" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "sr-1001",
+      "name": "prod-vmware-01",
+      "size_used": 4398046511104,
+      "size_total": 10995116277760,
+      "data_reduction_ratio": 2.8
+    },
+    {
+      "id": "sr-1002",
+      "name": "prod-vmware-02",
+      "size_used": 2199023255552,
+      "size_total": 10995116277760,
+      "data_reduction_ratio": 1.9
+    }
+  ]
+}
+{
+  "entries": [
+    {
+      "id": "pool-001",
+      "name": "SSD_Tier_1",
+      "size_free": 3298534883328,
+      "size_used": 7696581394432,
+      "size_total": 10995116277760,
+      "percent_used": 70
+    },
+    {
+      "id": "pool-002",
+      "name": "SAS_Tier_2",
+      "size_free": 5497558138880,
+      "size_used": 5497558138880,
+      "size_total": 10995116277760,
+      "percent_used": 50
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present in example, but ensure it's not removed).
+    **`error: 401 Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
+    **`command not found: python3`** — Install Python 3 or pipe output to `jq` instead: `| jq '.'` for JSON formatting without the python dependency.
 Flag any pool with `percent_used` above 70 for capacity planning review.
 
 ### 5. Replication Session Health
@@ -120,6 +314,39 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/replication_session?select=name,state
   -H "DELL-EMC-TOKEN: <token>" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "repl_sess_001",
+      "name": "prod-to-dr-sync",
+      "state": "synchronized",
+      "last_sync_time": "2024-01-15T14:32:18Z",
+      "remaining_capacity_to_sync": 0
+    },
+    {
+      "id": "repl_sess_002",
+      "name": "backup-mirror-hourly",
+      "state": "synchronizing",
+      "last_sync_time": "2024-01-15T14:15:00Z",
+      "remaining_capacity_to_sync": 2147483648
+    },
+    {
+      "id": "repl_sess_003",
+      "name": "archive-offsite",
+      "state": "paused",
+      "last_sync_time": "2024-01-14T23:45:22Z",
+      "remaining_capacity_to_sync": 5368709120
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip certificate verification (already present in the example, so verify the flag is not being removed).
+    **`401 Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP address is correct and the PowerStore array is reachable on port 443 using `ping` or `nc`.
 Expected states:
 
 | State | Meaning | Action |
@@ -140,6 +367,26 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/software_installed" \
   -H "DELL-EMC-TOKEN: <token>" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "0",
+  "release": "3.2.1.0",
+  "build": "4821",
+  "patch_version": "3.2.1.0-4821",
+  "installed_date": "2024-01-15T09:42:33Z",
+  "release_notes_url": "https://dell.com/support/powerstore/3.2.1.0",
+  "is_major_release": false,
+  "previous_version": "3.2.0.5",
+  "upgrade_status": "Completed",
+  "upgrade_duration_seconds": 1847
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the management IP is correct and the REST API service is running with `systemctl status dell-emc-rest-api`.
+    **`{"error":"Invalid or expired token"}`** — Regenerate the authentication token using the PowerStore management console or API login endpoint.
 Compare the running version against the latest available PowerStoreOS release. Upgrade if the system is more than one minor release behind and a pending CVE applies.
 
 ## Change Readiness Checklist
@@ -184,6 +431,55 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/host?select=name,type,health_state" \
 # Log into cloudiq.dell.com and confirm the score matches pre-change value
 ```
 
+
+```text title="Expected output"
+{
+  "alerts": [
+    {
+      "id": "alert-20240115-001",
+      "severity": "warning",
+      "state": "active",
+      "message": "Replication session lag detected on cluster-02",
+      "created_at": "2024-01-15T14:32:18Z"
+    }
+  ]
+}
+[
+  {
+    "name": "repl_session_prod_dr",
+    "state": "running"
+  },
+  {
+    "name": "repl_session_backup_tier",
+    "state": "running"
+  },
+  {
+    "name": "repl_session_archive",
+    "state": "running"
+  }
+]
+[
+  {
+    "name": "host-esx-01.prod.local",
+    "type": "ESXi",
+    "health_state": "healthy"
+  },
+  {
+    "name": "host-esx-02.prod.local",
+    "type": "ESXi",
+    "health_state": "healthy"
+  },
+  {
+    "name": "host-sql-db-01.prod.local",
+    "type": "Windows",
+    "health_state": "healthy"
+  }
+]
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed).
+    **`{"error": "Unauthorized", "code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
 ## Quick Reference — Key REST API Health Endpoints
 
 ![Quick Reference — Key REST API Health Endpoints](../../../../assets/storage-dell-powerstore-hc-quick-reference-key-rest-api-health-endpoints.svg)

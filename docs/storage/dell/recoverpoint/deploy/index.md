@@ -160,6 +160,16 @@ Each RPA must have a unique, DNS-resolvable hostname.
 set_hostname rpa1.site1.corp.local
 ```
 
+
+```text title="Expected output"
+Setting hostname to rpa1.site1.corp.local...
+Hostname updated successfully.
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`command not found: set_hostname`** — Verify the RecoverPoint deployment script is sourced or use the full path to the set_hostname function.
+    **`Permission denied`** — Run the command with sudo or as root: `sudo set_hostname rpa1.site1.corp.local`.
 Confirm forward and reverse DNS resolves correctly before proceeding.
 
 ### Step 4 — Configure NTP

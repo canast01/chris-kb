@@ -71,6 +71,30 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/user/local" \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "user-00000001",
+  "name": "svc-veeam",
+  "role_name": "StorageOperator",
+  "is_built_in": false,
+  "created_at": "2024-01-15T09:42:18Z",
+  "updated_at": "2024-01-15T09:42:18Z"
+}
+{
+  "id": "user-00000002",
+  "name": "svc-monitoring",
+  "role_name": "Viewer",
+  "is_built_in": false,
+  "created_at": "2024-01-15T09:42:22Z",
+  "updated_at": "2024-01-15T09:42:22Z"
+}
+```
+
+!!! warning "Common errors"
+    **`"error_code": 400, "message": "User 'svc-veeam' already exists"`** — Check if the user exists with `curl -k -H "DELL-EMC-TOKEN: <token>" "https://<mgmt-ip>/api/rest/user/local?name=svc-veeam"` and delete it first if needed.
+    **`"error_code": 401, "message": "Invalid or expired token"`** — Regenerate the DELL-EMC-TOKEN by authenticating with valid admin credentials using the login endpoint.
+    **`"error_code": 422, "message": "Invalid role_name 'StorageOperator'"`** — Verify the exact role name matches your PowerStore version (use `curl -k -H "DELL-EMC-TOKEN: <token>" "https://<mgmt-ip>/api/rest/role"` to list available roles).
 ## User Account Management
 
 ### Audit All User Accounts
@@ -85,6 +109,56 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/ldap_domain_role_mapping" \
   -H "DELL-EMC-TOKEN: <token>"
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "user-001",
+      "name": "admin",
+      "role_name": "Administrator",
+      "is_built_in": true,
+      "is_default_password": false
+    },
+    {
+      "id": "user-042",
+      "name": "monitor_svc",
+      "role_name": "Monitor",
+      "is_built_in": false,
+      "is_default_password": true
+    },
+    {
+      "id": "user-156",
+      "name": "backup_operator",
+      "role_name": "Operator",
+      "is_built_in": false,
+      "is_default_password": false
+    }
+  ]
+}
+
+{
+  "entries": [
+    {
+      "id": "ldap-map-001",
+      "ldap_domain_id": "ldap-001",
+      "ldap_group_name": "cn=powerstore-admins,ou=groups,dc=corp,dc=local",
+      "role_name": "Administrator"
+    },
+    {
+      "id": "ldap-map-002",
+      "ldap_domain_id": "ldap-001",
+      "ldap_group_name": "cn=powerstore-operators,ou=groups,dc=corp,dc=local",
+      "role_name": "Operator"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed in production scripts).
+    **`{"error": "Unauthorized"}`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the login endpoint.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP is correct and the PowerStore REST API service is running with `systemctl status dell-emc-rest-api`.
 Perform a quarterly review of all user accounts:
 
 - [ ] No accounts using the default password (`is_default_password: true`)
@@ -105,6 +179,39 @@ curl -k -X DELETE "https://<mgmt-ip>/api/rest/user/local/<user-id>" \
   -H "DELL-EMC-TOKEN: <token>"
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "user-001",
+      "name": "admin",
+      "role_name": "Administrator"
+    },
+    {
+      "id": "user-042",
+      "name": "svc_backup",
+      "role_name": "Storage Administrator"
+    },
+    {
+      "id": "user-156",
+      "name": "legacy_operator",
+      "role_name": "Operator"
+    },
+    {
+      "id": "user-203",
+      "name": "temp_audit",
+      "role_name": "Read Only"
+    }
+  ]
+}
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
+    **`{"error":"Unauthorized","error_code":"401"}`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating and obtaining a fresh token.
+    **`{"error":"User not found","error_code":"404"}`** — Confirm the user-id exists in the system by running the GET query first to retrieve the correct id value.
 ## Host Access Control
 
 ### Host and Host Group Isolation
@@ -136,6 +243,44 @@ for vol, hosts in vol_hosts.items():
 "
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "host_id": "host-001",
+      "volume_id": "vol-7f3a9c2e",
+      "logical_unit_number": 0
+    },
+    {
+      "host_id": "host-002",
+      "volume_id": "vol-8b4d1f5a",
+      "logical_unit_number": 1
+    },
+    {
+      "host_id": "host-003",
+      "volume_id": "vol-9e2c6b7d",
+      "logical_unit_number": 0
+    },
+    {
+      "host_id": "host-001",
+      "volume_id": "vol-c1a5e9f3",
+      "logical_unit_number": 2
+    }
+  ],
+  "meta": {
+    "response_type": "collection",
+    "count": 4
+  }
+}
+Volume vol-7f3a9c2e is mapped to 2 hosts: ['host-001', 'host-004']
+Volume vol-c1a5e9f3 is mapped to 3 hosts: ['host-001', 'host-002', 'host-005']
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed).
+    **`error: 401 Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired; regenerate the token from the PowerStore management console if needed.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm the management IP is correct and the API endpoint is reachable; check network connectivity to the PowerStore array.
 ### Fibre Channel Access Control
 
 For FC-attached hosts, access control depends on correct SAN zoning in addition to PowerStore host objects. PowerStore only presents a volume to a host if both conditions are met:
@@ -157,6 +302,46 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/fc_port?select=name,wwn,current_speed
   -H "DELL-EMC-TOKEN: <token>"
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "061d8e4a-8f2e-4e9c-b1a2-7c3d9e2f1a4b",
+      "name": "FC0",
+      "wwn": "50:00:14:40:5d:2e:1a:4b",
+      "current_speed": 16,
+      "node_id": "node-1"
+    },
+    {
+      "id": "071d8e4a-8f2e-4e9c-b1a2-7c3d9e2f1a5c",
+      "name": "FC1",
+      "wwn": "50:00:14:40:5d:2e:1a:5c",
+      "current_speed": 16,
+      "node_id": "node-1"
+    },
+    {
+      "id": "081d8e4a-8f2e-4e9c-b1a2-7c3d9e2f1a6d",
+      "name": "FC2",
+      "wwn": "50:00:14:40:5d:2e:1a:6d",
+      "current_speed": 16,
+      "node_id": "node-2"
+    },
+    {
+      "id": "091d8e4a-8f2e-4e9c-b1a2-7c3d9e2f1a7e",
+      "name": "FC3",
+      "wwn": "50:00:14:40:5d:2e:1a:7e",
+      "current_speed": 16,
+      "node_id": "node-2"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the PowerStore certificate into your CA bundle; if still failing, verify the management IP is reachable with `ping <mgmt-ip>`.
+    **`{"error": "Unauthorized"}`** — Ensure the DELL-EMC-TOKEN is valid and not expired by regenerating it through the PowerStore GUI or API authentication endpoint.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the PowerStore management IP is correct and the REST API service is running with `ssh <mgmt-ip> systemctl status rest-api`.
 ### iSCSI CHAP Authentication
 
 For iSCSI-attached hosts, enforce CHAP authentication to prevent unauthorised iSCSI initiators from connecting.
@@ -172,6 +357,27 @@ curl -k -X PATCH "https://<mgmt-ip>/api/rest/host_initiator/<initiator-id>" \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "iscsi_initiator_1a2b3c4d",
+  "initiator_type": "iSCSI",
+  "initiator_iqn": "iqn.1991-05.com.example:host01.storage",
+  "chap_mutual_username": "host-chap-username",
+  "chap_mutual_password": "***",
+  "chap_single_username": "array-chap-user",
+  "chap_mode": "Mutual",
+  "host_id": "host_5f8e9c2a",
+  "host_name": "prod-db-server-01",
+  "creation_timestamp": "2024-01-15T10:23:45Z",
+  "last_modified_timestamp": "2024-01-16T14:52:18Z"
+}
+```
+
+!!! warning "Common errors"
+    **`"error": "Invalid token or token expired"`** — Regenerate the authentication token using the PowerStore management API login endpoint.
+    **`"error": "CHAP password must be at least 12 characters"`** — Increase the password length to a minimum of 12 characters and retry the PATCH request.
+    **`"error": "Initiator ID not found"`** — Verify the correct initiator ID by listing all initiators with `curl -k -H "DELL-EMC-TOKEN: <token>" "https://<mgmt-ip>/api/rest/host_initiator"`.
 On the Linux iSCSI initiator:
 
 ```bash
@@ -185,6 +391,14 @@ node.session.auth.username_in = <target-chap-username>
 node.session.auth.password_in = <target-chap-password>
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`iscsid: read-only file system`** — Ensure `/etc/iscsi/iscsid.conf` is writable and the filesystem is mounted read-write; check with `mount | grep /etc`.
+    **`iscsid: connection refused`** — Start or restart the iSCSI daemon with `systemctl restart iscsid` after editing the configuration file.
 ## NFS Export Access Control
 
 NFS exports are controlled by host IP allow lists in the PowerStore NFS export configuration. Always specify the narrowest set of allowed hosts:
@@ -206,6 +420,50 @@ curl -k -X PATCH "https://<mgmt-ip>/api/rest/nfs_export/<export-id>" \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "nfs_export_1a2b3c4d",
+      "name": "prod_data_export",
+      "rw_hosts": [
+        {"ip": "192.168.10.0", "prefix_length": 24}
+      ],
+      "ro_hosts": [
+        {"ip": "10.50.0.0", "prefix_length": 16}
+      ],
+      "no_access_hosts": []
+    },
+    {
+      "id": "nfs_export_5e6f7g8h",
+      "name": "backup_export",
+      "rw_hosts": [
+        {"ip": "192.168.15.5", "prefix_length": 32}
+      ],
+      "ro_hosts": [],
+      "no_access_hosts": [
+        {"ip": "172.16.0.0", "prefix_length": 12}
+      ]
+    }
+  ]
+}
+{
+  "id": "nfs_export_1a2b3c4d",
+  "name": "prod_data_export",
+  "rw_hosts": [
+    {"ip": "192.168.20.0", "prefix_length": 24}
+  ],
+  "ro_hosts": [],
+  "no_access_hosts": [],
+  "min_security": "sys"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to bypass certificate validation, or import the PowerStore management certificate into your system trust store.
+    **`{"error_code":"401","message":"Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it has not exceeded its expiration window.
+    **`{"error_code":"404","message":"Export not found"}`** — Verify the export-id exists by running the GET query first and confirm the UUID matches exactly.
 NFS export security levels:
 
 | Security Level | Description | Use |
@@ -225,6 +483,35 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/smb_share?select=name,path,filesystem
   -H "DELL-EMC-TOKEN: <token>"
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "name": "data_share",
+      "path": "/fs_001/shared_data",
+      "filesystem_id": "filesystem_5a8c2e1f-9b3d-4e7c-a2d1-6f9e3c1b5a8d",
+      "is_continuous_availability_enabled": true
+    },
+    {
+      "name": "backup_archive",
+      "path": "/fs_002/backups",
+      "filesystem_id": "filesystem_7d2f1a9c-3e5b-4f8a-9c2e-1d7f3a5b8c6e",
+      "is_continuous_availability_enabled": false
+    },
+    {
+      "name": "user_profiles",
+      "path": "/fs_001/profiles",
+      "filesystem_id": "filesystem_5a8c2e1f-9b3d-4e7c-a2d1-6f9e3c1b5a8d",
+      "is_continuous_availability_enabled": true
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to bypass SSL verification (already present in example; if error persists, verify the management IP is correct).
+    **`{"error": "Unauthorized"}`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the API.
 Best practices:
 
 - Grant `Full Control` share permission to the `Domain Admins` group and `Change` or `Read` to named groups — never grant `Full Control` to `Everyone`

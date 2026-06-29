@@ -50,6 +50,22 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/user/local?select=name,role_name" \
 # The local admin account is now the break-glass account — treat it accordingly
 ```
 
+
+```text title="Expected output"
+{"id":"user_local_admin_001","name":"admin","role_name":"administrator","password_change_required":false}
+
+[
+  {
+    "id": "user_local_admin_001",
+    "name": "admin",
+    "role_name": "administrator"
+  }
+]
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to the curl command to skip SSL certificate verification, or import the PowerStore certificate into your system's CA bundle.
+    **`{"error":"Invalid token or token expired","error_code":"UNAUTHENTICATED"}`** — Regenerate the DELL-EMC-TOKEN by authenticating first with valid credentials, or verify the token has not exceeded its session timeout.
 ### TLS Hardening
 
 ```bash
@@ -65,6 +81,38 @@ openssl s_client -connect <mgmt-ip>:443 -tls1_3 2>&1 | grep "Protocol"
 nmap --script ssl-enum-ciphers -p 443 <mgmt-ip>
 ```
 
+
+```text title="Expected output"
+CONNECTED(00000003)
+139876543210496:error:1410D0B9:SSL routines:SSL_CTX_set_tlsext_host_name:tlsv1 alert handshake failure:../ssl/statem/statem_clnt.c:948:
+CONNECTED(00000003)
+139876543210496:error:1410D0B9:SSL routines:SSL_CTX_set_tlsext_host_name:tlsv1_1 alert handshake failure:../ssl/statem/statem_clnt.c:948:
+Protocol  : TLSv1.2
+Protocol  : TLSv1.3
+Starting Nmap 7.92 ( https://nmap.org ) at 2024-01-15 14:32:18 UTC
+Nmap scan report for 192.168.1.45
+Host is up (0.0042s latency).
+PORT    STATE SERVICE
+443/tcp open  https
+| ssl-enum-ciphers:
+|   TLSv1.2:
+|     ciphers (8):
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+|       TLS_RSA_WITH_AES_256_GCM_SHA384
+|       TLS_RSA_WITH_AES_128_GCM_SHA256
+|   TLSv1.3:
+|     ciphers (3):
+|       TLS_AES_256_GCM_SHA384
+|       TLS_CHACHA20_POLY1305_SHA256
+|       TLS_AES_128_GCM_SHA256
+Nmap done at 2024-01-15 14:32:19 UTC (1 IP address scanned)
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify the management IP is correct and the array's HTTPS port 443 is accessible from your client (check firewall rules and network connectivity).
+    **`Name or service not known`** — Replace `<mgmt-ip>` with the actual PowerStore management IP address (e.g., 192.168.1.45).
+    **`Nmap: command not found`** — Install nmap using your package manager (e.g., `apt-get install nmap` on Ubuntu or `yum install nmap` on RHEL).
 PowerStore Manager → **Settings → Security → TLS Configuration**:
 
 | Setting | Required Value |
@@ -104,6 +152,31 @@ echo | openssl s_client -connect <mgmt-ip>:443 2>/dev/null \
   | openssl x509 -noout -issuer -subject -dates
 ```
 
+
+```text title="Expected output"
+Generating a 4096 bit RSA private key
+.....................................................................++
+...................................................................................++
+writing new certificate request
+
+-----BEGIN CERTIFICATE REQUEST-----
+MIIEwjCCAqoCAQAwbjELMAkGA1UEBhMCR0IxFjAUBgNVBAoTDUV4YW1wbGUgQ29y
+cDElMCMGA1UEAxMcbG9uMDEtcHN0b3JlLTAwMS5jb3JwLmV4YW1wbGUuY29tMIIB
+IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2x8vK9pL...
+-----END CERTIFICATE REQUEST-----
+
+{"id":"5f8c3a2b-9e1d-4f7a-b2c1-8d5e9f3a7c2b","service":"Manager","issuer":"CN=Example Corp Internal CA,O=Example Corp,C=GB","subject":"CN=lon01-pstore-001.corp.example.com,O=Example Corp,C=GB","valid_from":"2024-01-15T10:22:33Z","valid_until":"2026-01-15T10:22:33Z","thumbprint":"A7F2E8C1D9B3F5A2E8C7D1B9F3A5E2C8D7B1F9A3"}
+
+subject=CN = lon01-pstore-001.corp.example.com, O = Example Corp, C = GB
+issuer=CN=Example Corp Internal CA, O=Example Corp, C=GB
+notBefore=Jan 15 10:22:33 2024 GMT
+notAfter=Jan 15 10:22:33 2026 GMT
+```
+
+!!! warning "Common errors"
+    **`error:0900006e:PEM routines:PEM_read_bio:no start line`** — Ensure the base64-encoded certificate and key are properly formatted without line breaks; use `cat cert.pem | base64 -w 0` to encode without wrapping.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag only after certificate import completes; the flag bypasses verification during the import process itself.
+    **`unable to load Private Key`** — Verify the private key is in PKCS#8 format and matches the certificate; convert with `openssl pkey -in powerstore.key -out powerstore_pkcs8.key` if needed.
 Set a calendar reminder to renew the certificate 30 days before expiry. A monitoring script checking certificate expiry should be part of the daily health check.
 
 ### Network Access Hardening
@@ -124,6 +197,18 @@ nc -zv <untrusted-host> 443   # Should timeout or connection refused
 nc -zv <mgmt-workstation> 443 # Should succeed
 ```
 
+
+```text title="Expected output"
+success
+success
+success
+Connection to 10.45.200.18 443 port [tcp/https] succeeded!
+nc: connect to 10.45.200.18 port 443 (tcp) failed: Connection refused
+```
+
+!!! warning "Common errors"
+    **`Error: INVALID_RULE`** — Verify the rich rule syntax matches firewalld format (check for mismatched quotes or missing family attribute).
+    **`nc: getaddrinfo failed`** — Ensure the hostname or IP address is resolvable and reachable from the jump host; check DNS or network connectivity.
 The PowerStore management IP should only be reachable from:
 
 - Storage administrator workstations or jump hosts
@@ -163,6 +248,42 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/fc_port?select=name,wwn,node_id" \
   -H "DELL-EMC-TOKEN: <token>"
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "fc_port_1",
+      "name": "FC0",
+      "wwn": "50:00:14:40:5a:2c:b1:01",
+      "node_id": "node_0"
+    },
+    {
+      "id": "fc_port_2",
+      "name": "FC1",
+      "wwn": "50:00:14:40:5a:2c:b1:02",
+      "node_id": "node_0"
+    },
+    {
+      "id": "fc_port_3",
+      "name": "FC2",
+      "wwn": "50:00:14:40:5a:2c:b1:03",
+      "node_id": "node_1"
+    },
+    {
+      "id": "fc_port_4",
+      "name": "FC3",
+      "wwn": "50:00:14:40:5a:2c:b1:04",
+      "node_id": "node_1"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip certificate verification (already present in the example).
+    **`401 Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the PowerStore management API.
+    **`404 Not Found`** — Confirm the management IP address is correct and the PowerStore REST API endpoint is accessible on port 443.
 ### iSCSI Security
 
 ```bash
@@ -182,6 +303,24 @@ curl -k -X PATCH "https://<mgmt-ip>/api/rest/host_initiator/<initiator-id>" \
 # - Enable jumbo frames (MTU 9000) end-to-end on iSCSI VLANs
 ```
 
+
+```text title="Expected output"
+{
+  "id": "host_initiator_5f8c9a2e-1b4d-47e9-8f3c-2a91d5c8e7f1",
+  "name": "iqn.1991-05.com.example:storage.disk1.sys1.xyz",
+  "chap_mutual_username": "host-chap-user",
+  "chap_mutual_password": "***",
+  "chap_mode": "Mutual",
+  "initiator_type": "iSCSI",
+  "state": "logged_in",
+  "last_login_time": "2024-01-15T09:42:33Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed in production deployments).
+    **`{"error_code": "INVALID_CHAP_PASSWORD", "message": "CHAP password must be at least 12 characters"}`** — Ensure the `<chap-password-min-12>` placeholder is replaced with a password of minimum 12 characters.
+    **`curl: (401) Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the PowerStore management API.
 ### NFS Security
 
 ```bash
@@ -212,6 +351,21 @@ for e in data:
 "
 ```
 
+
+```text title="Expected output"
+{"id":"nfs_export_12847","name":"data_vol_prod","rw_hosts":[{"ip":"192.168.20.0","prefix_length":24}],"no_access_hosts":[],"min_security":"sys","no_suid":true}
+{"id":"nfs_export_12848","name":"backup_vol","rw_hosts":[{"ip":"10.0.0.0","prefix_length":8}],"ro_hosts":[],"min_security":"sys"}
+{"id":"nfs_export_12849","name":"archive_vol","rw_hosts":[{"ip":"172.16.0.0","prefix_length":12}],"ro_hosts":[],"min_security":"sys"}
+{"id":"nfs_export_12850","name":"shared_data","rw_hosts":[{"ip":"0.0.0.0","prefix_length":0}],"ro_hosts":[],"min_security":"none"}
+WARNING: Export backup_vol has broad RW access: 10.0.0.0/8
+WARNING: Export archive_vol has broad RW access: 172.16.0.0/12
+WARNING: Export shared_data has broad RW access: 0.0.0.0/0
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your CA bundle.
+    **`{"error":"Unauthorized","error_code":"401"}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
+    **`jq: command not found`** — Install `jq` package or use the inline Python JSON parser shown in the example instead of piping to jq.
 ## SupportAssist Hardening
 
 SupportAssist enables Dell to proactively monitor the array and create automated service requests.
@@ -250,6 +404,33 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/remote_syslog" \
   -H "DELL-EMC-TOKEN: <token>"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "remote_syslog_1",
+  "address": "192.168.10.200",
+  "port": 514,
+  "transport": "UDP",
+  "enabled": true,
+  "created_at": "2024-01-15T09:42:33Z",
+  "updated_at": "2024-01-15T09:42:33Z"
+}
+{
+  "id": "remote_syslog_1",
+  "address": "192.168.10.200",
+  "port": 514,
+  "transport": "UDP",
+  "enabled": true,
+  "created_at": "2024-01-15T09:42:33Z",
+  "updated_at": "2024-01-15T09:42:33Z",
+  "status": "connected"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the PowerStore certificate into your system's CA bundle.
+    **`{"error": "Unauthorized", "code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by regenerating it in the PowerStore management console.
+    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP is correct and the PowerStore API service is running with `systemctl status powerstore-api`.
 Audit events to monitor in the SIEM:
 
 | Event | Alert Threshold | Priority |

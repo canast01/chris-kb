@@ -78,6 +78,16 @@ nc -zv <site-b-rpa-ip> 11111
 nc -zv <site-b-rpa-ip> 7218
 ```
 
+
+```text title="Expected output"
+200
+Connection to 192.168.100.45 port 11111 [tcp/*] succeeded!
+Connection to 192.168.100.45 port 7218 [tcp/*] succeeded!
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the RP management certificate into your CA bundle.
+    **`nc: connect to 192.168.100.45 port 11111 (tcp) failed: Connection refused`** — Verify the Site B RPA is running, the WAN replication service is enabled, and firewall rules permit traffic on port 11111 between sites.
 ## See also
 
 - [Dell RecoverPoint — Architecture](../how-it-works/)

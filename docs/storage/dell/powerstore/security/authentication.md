@@ -58,6 +58,20 @@ curl -k -X PATCH "https://<mgmt-ip>/api/rest/user/local/<user-id>" \
   -d '{"is_built_in": false, "is_default_password": false}'
 ```
 
+
+```text title="Expected output"
+{"id":"admin","name":"Administrator","role":"administrator","is_built_in":true,"is_default_password":false,"password_expiration_days":90,"last_password_change":"2024-01-15T08:32:14Z"}
+{"id":"admin","name":"Administrator","role":"administrator","is_built_in":true,"is_default_password":false}
+{"id":"svc_backup","name":"Backup Service","role":"operator","is_built_in":false,"is_default_password":false}
+{"id":"monitor_user","name":"Monitoring User","role":"viewer","is_built_in":false,"is_default_password":true}
+{"id":"audit_admin","name":"Audit Administrator","role":"administrator","is_built_in":false,"is_default_password":false}
+{"id":"svc_backup","name":"Backup Service","role":"operator","is_built_in":false,"is_default_password":false,"last_modified":"2024-01-16T10:45:22Z"}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the PowerStore certificate into your system's trusted CA store.
+    **`{"error":"Invalid or expired token","error_code":"401"}`** — Regenerate the DELL-EMC-TOKEN by authenticating first with valid credentials and extract the token from the login response.
+    **`{"error":"Cannot modify built-in user account","error_code":"403"}`** — Ensure the `<user-id>` is not 'admin' or another built-in account; only custom local users can be disabled via this endpoint.
 Local account password policy defaults:
 
 | Parameter | Default | Recommended |
@@ -94,6 +108,32 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/ldap" \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "ldap-config-001",
+  "domain_name": "corp.example.com",
+  "server_address": [
+    "192.168.1.10",
+    "192.168.1.11"
+  ],
+  "protocol": "LDAPS",
+  "port": 636,
+  "bind_user": "CN=svc-powerstore-ldap,OU=Service Accounts,DC=corp,DC=example,DC=com",
+  "user_search_path": "OU=Users,OU=Corp,DC=corp,DC=example,DC=com",
+  "group_search_path": "OU=Groups,OU=Corp,DC=corp,DC=example,DC=com",
+  "user_id_attribute": "sAMAccountName",
+  "group_name_attribute": "cn",
+  "is_active_directory": true,
+  "status": "configured",
+  "created_at": "2024-01-15T10:32:47Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip SSL verification (already present in the example, but ensure it's not removed in production without proper CA certificate validation).
+    **`{"error": "Invalid token", "code": 401}`** — Regenerate the DELL-EMC-TOKEN via the PowerStore management interface and ensure it has not expired or been revoked.
+    **`{"error": "LDAP bind failed", "code": 400}`** — Verify the bind_user DN and bind_password are correct, and confirm the service account has permission to query the Active Directory domain.
 | LDAP Parameter | Recommended Setting | Notes |
 |---|---|---|
 | Protocol | LDAPS | Use LDAP over SSL; do not use plain LDAP in production |
@@ -138,6 +178,35 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/ldap_domain_role_mapping" \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "5f8c3a2b-1e4d-47f9-8c2a-9d7e1b5c3f2a",
+  "ldap_domain_id": "3c9e2f1a-5b7d-4e8c-9a1b-2c3d4e5f6a7b",
+  "group_cn": "GRP-Storage-Admins",
+  "role_name": "Administrator",
+  "created_at": "2024-01-15T09:23:47Z"
+}
+{
+  "id": "6g9d4b3c-2f5e-48g0-9d3b-0e8f2c6d4g3b",
+  "ldap_domain_id": "3c9e2f1a-5b7d-4e8c-9a1b-2c3d4e5f6a7b",
+  "group_cn": "GRP-Storage-Operators",
+  "role_name": "StorageOperator",
+  "created_at": "2024-01-15T09:23:48Z"
+}
+{
+  "id": "7h0e5c4d-3g6f-49h1-0e4c-1f9g3d7e5h4c",
+  "ldap_domain_id": "3c9e2f1a-5b7d-4e8c-9a1b-2c3d4e5f6a7b",
+  "group_cn": "GRP-Storage-Monitoring",
+  "role_name": "Viewer",
+  "created_at": "2024-01-15T09:23:49Z"
+}
+```
+
+!!! warning "Common errors"
+    **`{"error_code": 401, "message": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it has not exceeded its expiration window.
+    **`{"error_code": 404, "message": "LDAP domain not found"}`** — Verify the ldap_domain_id exists by listing configured LDAP domains with `GET /api/rest/ldap_domain` and use the correct domain ID.
+    **`{"error_code": 400, "message": "Invalid role_name"}`** — Confirm the role_name is one of the valid PowerStore roles (Administrator, StorageOperator, Viewer, OperatorMonitor) and check for typos.
 ### Testing LDAP Configuration
 
 Before relying on LDAP for all authentication, test with a named user:
@@ -154,6 +223,39 @@ ldapsearch -H ldaps://192.168.1.10:636 \
 # before disabling the local admin account
 ```
 
+
+```text title="Expected output"
+# extended LDIF
+#
+# LDAPv3
+# base <OU=Users,OU=Corp,DC=corp,DC=example,DC=com> with scope subtree
+# filter: (sAMAccountName=jsmith)
+# requesting: ALL
+#
+
+# jsmith, Users, Corp, corp.example.com
+dn: CN=John Smith,OU=Users,OU=Corp,DC=corp,DC=example,DC=com
+objectClass: person
+objectClass: organizationalPerson
+objectClass: user
+cn: John Smith
+sAMAccountName: jsmith
+userPrincipalName: jsmith@corp.example.com
+mail: jsmith@corp.example.com
+memberOf: CN=PowerStore-Admins,OU=Groups,OU=Corp,DC=corp,DC=example,DC=com
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+```
+
+!!! warning "Common errors"
+    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Verify the LDAP server IP (192.168.1.10) is reachable and port 636 is open using `telnet 192.168.1.10 636` or `nc -zv 192.168.1.10 636`.
+    **`ldap_bind: Invalid credentials (49)`** — Confirm the bind DN path and password are correct; test with a known working service account credential.
+    **`ldap_search_ext: No such object (32)`** — Verify the base DN path `OU=Users,OU=Corp,DC=corp,DC=example,DC=com` exists in Active Directory and matches your domain structure exactly.
 ## REST API Token Authentication
 
 The PowerStore REST API uses session-based token authentication via the `login_session` endpoint. Tokens are valid for the duration of the session or until explicitly logged out.
@@ -175,6 +277,35 @@ curl -k -X DELETE "https://<mgmt-ip>/api/rest/login_session" \
   -H "DELL-EMC-TOKEN: ${TOKEN}"
 ```
 
+
+```text title="Expected output"
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTcwOTMyMTYwMH0.a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+  "expires_in": 3600
+}
+[
+  {
+    "id": "vol-001a2b3c-4d5e-6f7g-8h9i-0j1k2l3m4n5o",
+    "name": "prod-db-vol-01",
+    "size": 1099511627776,
+    "state": "Ready",
+    "protection_policy_id": "pp-default"
+  },
+  {
+    "id": "vol-002x9y8z-7w6v-5u4t-3s2r-1q0p9o8n7m6l",
+    "name": "backup-vol-02",
+    "size": 549755813888,
+    "state": "Ready",
+    "protection_policy_id": "pp-backup"
+  }
+]
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip certificate verification, or import the PowerStore management certificate into your CA bundle.
+    **`jq: parse error: Cannot index string with string "token"`** — Verify the login credentials are correct and the API endpoint is responding with valid JSON; check the response with `curl -ks ... | cat` to inspect raw output.
+    **`{"error":"Invalid or expired token"}`** — Ensure the token variable is properly set by testing `echo $TOKEN` before the GET request, and verify the token hasn't expired (default 3600 seconds).
 For automation, use a dedicated service account with the minimum required role:
 
 | Integration | Recommended Role | Rationale |
@@ -237,6 +368,27 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/smb_server" \
     "password": "<domain-admin-password>"
   }'
 ```
+
+```text title="Expected output"
+{
+  "id": "smb_server_1",
+  "nas_server_id": "nas_1",
+  "netbios_name": "NASSERVER01",
+  "domain": "corp.example.com",
+  "organizational_unit": "OU=Storage,OU=Servers,DC=corp,DC=example,DC=com",
+  "domain_joined": true,
+  "domain_join_status": "SUCCESS",
+  "created_at": "2024-01-15T09:42:33.847Z",
+  "updated_at": "2024-01-15T09:42:45.123Z",
+  "admin_user": "domain-admin-account",
+  "workgroup": null
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the PowerStore management certificate into your system's trusted CA store.
+    **`{"error_code": "INVALID_FIELD", "message": "Invalid domain credentials"}`** — Verify the domain admin account exists, password is correct, and the account has permissions to join computers to the specified organizational unit.
+    **`{"error_code": "INVALID_FIELD", "message": "NAS server not found"}`** — Confirm the `nas_server_id` value matches an existing NAS server by querying `/api/rest/nas_server` first.
 ---
 
 ## Related Reference
