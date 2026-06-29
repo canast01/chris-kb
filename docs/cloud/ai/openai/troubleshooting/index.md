@@ -91,6 +91,38 @@ curl https://api.openai.com/v1/models \
 # x-ratelimit-reset-requests: 1s
 ```
 
+
+```text title="Expected output"
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "gpt-4-turbo",
+      "object": "model",
+      "created": 1704067755,
+      "owned_by": "openai-internal"
+    },
+    {
+      "id": "gpt-4",
+      "object": "model",
+      "created": 1687882411,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gpt-3.5-turbo",
+      "object": "model",
+      "created": 1677649963,
+      "owned_by": "openai-internal"
+    }
+  ]
+}
+HTTP 200
+```
+
+!!! warning "Common errors"
+    **`curl: (6) Could not resolve host: api.openai.com`** — Verify network connectivity and DNS resolution with `nslookup api.openai.com` or check firewall/proxy settings.
+    **`{"error":{"message":"Incorrect API key provided. You passed an empty string as an API key.","type":"invalid_request_error"}}`** — Ensure `$OPENAI_API_KEY` environment variable is set with `export OPENAI_API_KEY=sk-...` before running the command.
+    **`{"error":{"message":"You exceeded your current quota, please check your plan and billing settings.","type":"insufficient_quota"}}`** — Check your OpenAI account billing status and upgrade your plan or add a payment method at https://platform.openai.com/account/billing/overview.
 Rate limit tiers are linked to usage spend. Limits increase automatically as cumulative API spend grows.
 
 ## Token Limit Issues
@@ -138,6 +170,61 @@ curl https://api.openai.com/v1/models \
 # 3. Key scope too narrow — verify permissions in platform.openai.com
 ```
 
+
+```text title="Expected output"
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "gpt-4-turbo",
+      "object": "model",
+      "created": 1694767490,
+      "owned_by": "openai-dev"
+    },
+    {
+      "id": "gpt-4",
+      "object": "model",
+      "created": 1687882411,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gpt-3.5-turbo",
+      "object": "model",
+      "created": 1677649963,
+      "owned_by": "openai-dev"
+    }
+  ]
+}
+51
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "gpt-4-turbo",
+      "object": "model",
+      "created": 1694767490,
+      "owned_by": "openai-dev"
+    },
+    {
+      "id": "gpt-4",
+      "object": "model",
+      "created": 1687882411,
+      "owned_by": "openai"
+    },
+    {
+      "id": "gpt-3.5-turbo",
+      "object": "model",
+      "created": 1677649963,
+      "owned_by": "openai-dev"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`{"error":{"message":"Incorrect API key provided. You passed an empty string as an API key, but a string with 20+ characters was expected: . You can find your API key at https://platform.openai.com/account/api-keys.","type":"invalid_request_error","param":null,"code":"invalid_api_key"}}`** — Verify `$OPENAI_API_KEY` is set with `echo "$OPENAI_API_KEY"` and reload your shell session if recently added to `.bashrc` or `.env`.
+    **`{"error":{"message":"You exceeded your current quota, please check your plan and billing settings.","type":"insufficient_quota","param":null,"code":"insufficient_quota"}}`** — Check your OpenAI account billing status and ensure your payment method is valid at platform.openai.com/account/billing/overview.
+    **`{"error":{"message":"The organization ID provided in the request does not match the organization ID the API key belongs to.","type":"invalid_request_error","param":null,"code":"invalid_organization"}}`** — Verify the `OpenAI-Organization` header matches your actual org ID from platform.openai.com/account/org-settings, or remove the header if using a personal API key.
 ## Timeout and Latency
 
 ```python
@@ -188,6 +275,14 @@ curl -s https://status.openai.com/api/v2/status.json \
   | python3 -c "import sys,json; s=json.load(sys.stdin); print(s['status']['description'])"
 ```
 
+
+```text title="Expected output"
+All Systems Operational
+```
+
+!!! warning "Common errors"
+    **`curl: (6) Could not resolve host: status.openai.com`** — Verify network connectivity and DNS resolution with `ndig status.openai.com` or check if your firewall/proxy is blocking access to status.openai.com.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — The API endpoint returned empty or invalid JSON; try `curl -s https://status.openai.com/api/v2/status.json` alone to inspect the raw response.
 ## Common Issues Reference
 
 | Symptom | Cause | Fix |

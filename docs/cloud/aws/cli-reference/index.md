@@ -102,6 +102,48 @@ aws s3api list-object-versions --bucket <bucket>
 aws s3api put-bucket-lifecycle-configuration --bucket <bucket> --lifecycle-configuration file://lifecycle.json
 ```
 
+
+```text title="Expected output"
+2024-01-15 10:23:45 prod-app-backups
+2024-01-14 16:47:12 staging-logs
+2024-01-12 09:15:33 dev-scratch
+2024-01-10 14:22:01 archive-2023
+
+PRE logs/
+PRE config/
+2024-01-15T08:30:22.000Z       4521 app.log
+2024-01-15T07:45:11.000Z     156234 metrics.json
+2024-01-14T23:12:05.000Z      89012 backup.tar.gz
+
+upload: ./data.csv to s3://prod-app-backups/exports/data.csv
+download: s3://prod-app-backups/exports/data.csv to ./data.csv
+
+{
+    "Status": "Enabled",
+    "MFADelete": "Disabled"
+}
+
+{
+    "Rules": [
+        {
+            "ID": "archive-old-logs",
+            "Status": "Enabled",
+            "Prefix": "logs/",
+            "Transitions": [
+                {
+                    "Days": 30,
+                    "StorageClass": "GLACIER"
+                }
+            ]
+        }
+    ]
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (NoSuchBucket) when calling the ListObjects operation: The specified bucket does not exist`** — Verify the bucket name is correct and exists in your AWS account with `aws s3 ls`.
+    **`An error occurred (AccessDenied) when calling the PutObject operation: Access Denied`** — Ensure your IAM user/role has `s3:PutObject` permission for that bucket in the bucket policy or IAM policy.
+    **`fatal error: An error occurred (InvalidArgument) when calling the PutBucketLifecycleConfiguration operation: Invalid lifecycle configuration`** — Validate the JSON syntax in your lifecycle.json file and ensure it contains required fields like `Rules` and `Status`.
 ---
 
 ## VPC & Networking
@@ -135,6 +177,92 @@ aws ec2 associate-address --instance-id <id> --allocation-id <eip_id>
 aws ec2 release-address --allocation-id <eip_id>
 ```
 
+
+```text title="Expected output"
+{
+    "Vpcs": [
+        {
+            "VpcId": "vpc-0a1b2c3d4e5f6g7h8",
+            "CidrBlock": "10.0.0.0/16",
+            "State": "available",
+            "OwnerId": "123456789012"
+        },
+        {
+            "VpcId": "vpc-1x2y3z4a5b6c7d8e9",
+            "CidrBlock": "172.31.0.0/16",
+            "State": "available",
+            "OwnerId": "123456789012"
+        }
+    ]
+}
+
+{
+    "Vpc": {
+        "VpcId": "vpc-9f8e7d6c5b4a3z2y1",
+        "CidrBlock": "10.0.0.0/16",
+        "State": "pending",
+        "OwnerId": "123456789012"
+    }
+}
+
+{
+    "Subnets": [
+        {
+            "SubnetId": "subnet-0a1b2c3d4e5f6g7h8",
+            "VpcId": "vpc-0a1b2c3d4e5f6g7h8",
+            "CidrBlock": "10.0.1.0/24",
+            "AvailabilityZone": "us-east-1a",
+            "State": "available"
+        }
+    ]
+}
+
+{
+    "RouteTables": [
+        {
+            "RouteTableId": "rtb-0a1b2c3d4e5f6g7h8",
+            "VpcId": "vpc-0a1b2c3d4e5f6g7h8",
+            "Routes": [
+                {
+                    "DestinationCidrBlock": "10.0.0.0/16",
+                    "GatewayId": "local",
+                    "State": "active"
+                }
+            ]
+        }
+    ]
+}
+
+{
+    "InternetGateways": [
+        {
+            "InternetGatewayId": "igw-0a1b2c3d4e5f6g7h8",
+            "Attachments": [
+                {
+                    "VpcId": "vpc-0a1b2c3d4e5f6g7h8",
+                    "State": "available"
+                }
+            ]
+        }
+    ]
+}
+
+{
+    "Addresses": [
+        {
+            "InstanceId": "i-0a1b2c3d4e5f6g7h8",
+            "PublicIp": "203.0.113.45",
+            "AllocationId": "eipalloc-0a1b2c3d4e5f6g7h8",
+            "Domain": "vpc",
+            "AssociationId": "eipassoc-2bsum4arq"
+        }
+    ]
+}
+
+{
+    "PublicIp": "198.51.100.72",
+    "AllocationId": "eipalloc-1x2y3z4a5b6c7d8e9",
+```
 ---
 
 ## CloudWatch
@@ -165,6 +293,80 @@ aws logs tail <log_group> --follow             # live tail (like tail -f for clo
 aws logs filter-log-events --log-group-name <group> --filter-pattern "ERROR"
 ```
 
+
+```text title="Expected output"
+{
+    "MetricAlarms": [
+        {
+            "AlarmName": "prod-api-cpu-high",
+            "MetricName": "CPUUtilization",
+            "Namespace": "AWS/EC2",
+            "Statistic": "Average",
+            "Period": 300,
+            "EvaluationPeriods": 2,
+            "Threshold": 80.0,
+            "ComparisonOperator": "GreaterThanThreshold",
+            "StateValue": "OK",
+            "StateUpdatedTimestamp": "2024-01-15T14:32:10.000Z"
+        },
+        {
+            "AlarmName": "rds-connections-warning",
+            "MetricName": "DatabaseConnections",
+            "Namespace": "AWS/RDS",
+            "StateValue": "ALARM",
+            "StateUpdatedTimestamp": "2024-01-15T13:45:22.000Z"
+        }
+    ]
+}
+
+{
+    "MetricAlarms": [
+        {
+            "AlarmName": "rds-connections-warning",
+            "StateValue": "ALARM",
+            "StateReason": "Threshold Crossed: 1 out of 1 datapoints was greater than the threshold (85.0)."
+        }
+    ]
+}
+
+(no output — command completes silently)
+
+{
+    "Metrics": [
+        {
+            "Namespace": "AWS/EC2",
+            "MetricName": "CPUUtilization",
+            "Dimensions": [{"Name": "InstanceId", "Value": "i-0a1b2c3d4e5f6g7h8"}]
+        },
+        {
+            "Namespace": "AWS/EC2",
+            "MetricName": "NetworkIn",
+            "Dimensions": [{"Name": "InstanceId", "Value": "i-0a1b2c3d4e5f6g7h8"}]
+        }
+    ]
+}
+
+{
+    "Label": "CPUUtilization",
+    "Datapoints": [
+        {"Timestamp": "2024-01-15T14:00:00Z", "Average": 42.5},
+        {"Timestamp": "2024-01-15T14:05:00Z", "Average": 38.2},
+        {"Timestamp": "2024-01-15T14:10:00Z", "Average": 45.1}
+    ]
+}
+
+{
+    "logGroups": [
+        {"logGroupName": "/aws/lambda/auth-service", "creationTime": 1705334400000, "retentionInDays": 7},
+        {"logGroupName": "/aws/ecs/prod-api", "creationTime": 1705248000000, "retentionInDays": 30},
+        {"logGroupName": "/aws/rds/mysql-prod", "creationTime": 1704988800000}
+    ]
+}
+
+{
+    "logStreams": [
+        {"logStreamName": "2024/01/15/[$LATEST]a1b2c3d4e5f6g7h8", "creationTime": 1705334410000, "firstEventTimestamp": 1705334415000, "
+```
 ---
 
 ## CloudFormation
@@ -190,6 +392,77 @@ aws cloudformation wait stack-create-complete --stack-name <name>
 aws cloudformation validate-template --template-body file://template.yaml
 ```
 
+
+```text title="Expected output"
+{
+    "StackSummaries": [
+        {
+            "StackName": "prod-api-stack",
+            "StackId": "arn:aws:cloudformation:us-east-1:123456789012:stack/prod-api-stack/a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "StackStatus": "CREATE_COMPLETE",
+            "CreationTime": "2024-01-15T10:32:45.123Z"
+        },
+        {
+            "StackName": "dev-database-stack",
+            "StackId": "arn:aws:cloudformation:us-east-1:123456789012:stack/dev-database-stack/f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+            "StackStatus": "UPDATE_IN_PROGRESS",
+            "CreationTime": "2024-01-10T14:22:10.456Z"
+        }
+    ]
+}
+
+{
+    "Stacks": [
+        {
+            "StackName": "prod-api-stack",
+            "StackStatus": "CREATE_COMPLETE",
+            "Parameters": [
+                {
+                    "ParameterKey": "Env",
+                    "ParameterValue": "prod"
+                }
+            ],
+            "CreationTime": "2024-01-15T10:32:45.123Z"
+        }
+    ]
+}
+
+{
+    "StackId": "arn:aws:cloudformation:us-east-1:123456789012:stack/prod-api-stack/a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}
+
+{
+    "StackEvents": [
+        {
+            "EventId": "prod-api-stack-CREATE_COMPLETE-2024-01-15T10:35:22.123Z",
+            "StackName": "prod-api-stack",
+            "LogicalResourceId": "prod-api-stack",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "Timestamp": "2024-01-15T10:35:22.123Z"
+        },
+        {
+            "EventId": "ApiGateway-CREATE_COMPLETE-2024-01-15T10:35:10.456Z",
+            "LogicalResourceId": "ApiGateway",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "Timestamp": "2024-01-15T10:35:10.456Z"
+        }
+    ]
+}
+
+{
+    "Parameters": [
+        {
+            "ParameterKey": "Env",
+            "DefaultValue": "dev"
+        }
+    ],
+    "Description": "API deployment stack"
+}
+```
+
+!!! warning "Common errors"
+    **`Template format error: Every Mappings object member must contain a String key and an object value.`** — Validate your YAML syntax, especially in the Mappings section, using `aws cloudformation validate-template` before deployment.
+    **`User: arn:aws:iam::123456789012:user/admin is not authorized to perform: cloudformation:CreateStack`** — Ensure your IAM user or role has the `cloudformation:*
 ---
 
 ## RDS
@@ -214,6 +487,59 @@ aws rds restore-db-instance-from-db-snapshot \
   --db-snapshot-identifier <snap_name>
 ```
 
+
+```text title="Expected output"
+{
+    "DBInstances": [
+        {
+            "DBInstanceIdentifier": "prod-mysql-01",
+            "DBInstanceClass": "db.t3.medium",
+            "Engine": "mysql",
+            "DBInstanceStatus": "available",
+            "MasterUsername": "admin",
+            "AllocatedStorage": 100,
+            "EngineVersion": "8.0.35",
+            "DBInstanceArn": "arn:aws:rds:us-east-1:123456789012:db:prod-mysql-01"
+        },
+        {
+            "DBInstanceIdentifier": "staging-postgres-02",
+            "DBInstanceClass": "db.t3.small",
+            "Engine": "postgres",
+            "DBInstanceStatus": "available",
+            "MasterUsername": "postgres",
+            "AllocatedStorage": 50,
+            "EngineVersion": "15.3",
+            "DBInstanceArn": "arn:aws:rds:us-east-1:123456789012:db:staging-postgres-02"
+        }
+    ]
+}
+
+{
+    "DBSnapshots": [
+        {
+            "DBSnapshotIdentifier": "prod-mysql-01-snap-20240115",
+            "DBInstanceIdentifier": "prod-mysql-01",
+            "SnapshotCreateTime": "2024-01-15T02:30:00.000Z",
+            "Engine": "mysql",
+            "Status": "available",
+            "AllocatedStorage": 100,
+            "DBSnapshotArn": "arn:aws:rds:us-east-1:123456789012:snapshot:prod-mysql-01-snap-20240115"
+        }
+    ]
+}
+
+{
+    "DBInstance": {
+        "DBInstanceIdentifier": "prod-mysql-01",
+        "DBInstanceStatus": "started"
+    }
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (DBInstanceNotFound) when calling the DescribeDBInstances operation: DBInstance not found`** — Verify the instance identifier is correct with `aws rds describe-db-instances` and check you're querying the correct AWS region.
+    **`An error occurred (InvalidDBInstanceState) when calling the StartDBInstance operation: DB instance is not in stopped state`** — Confirm the instance is stopped before attempting to start it using `aws rds describe-db-instances --db-instance-identifier <id>`.
+    **`An error occurred (DBSnapshotAlreadyExists) when calling the CreateDBSnapshot operation: DB Snapshot already exists`** — Use a unique snapshot identifier or delete the existing snapshot with `aws rds delete-db-snapshot --db-snapshot-identifier <snap_name>`.
 ---
 
 ## EKS
@@ -233,6 +559,51 @@ aws eks list-nodegroups --cluster-name <cluster>
 aws eks describe-nodegroup --cluster-name <cluster> --nodegroup-name <ng>
 ```
 
+
+```text title="Expected output"
+{
+    "clusters": [
+        "production-cluster",
+        "staging-cluster",
+        "dev-cluster"
+    ]
+}
+{
+    "cluster": {
+        "name": "production-cluster",
+        "arn": "arn:aws:eks:us-east-1:123456789012:cluster/production-cluster",
+        "createdAt": "2024-01-15T10:32:45.000000+00:00",
+        "version": "1.28.5",
+        "endpoint": "https://ABC123DEF456.eks.us-east-1.amazonaws.com",
+        "status": "ACTIVE"
+    }
+}
+Added new context arn:aws:eks:us-east-1:123456789012:cluster/production-cluster to /home/user/.kube/config
+{
+    "nodegroups": [
+        "worker-nodes-1",
+        "worker-nodes-2",
+        "gpu-nodes"
+    ]
+}
+{
+    "nodegroup": {
+        "nodegroupName": "worker-nodes-1",
+        "nodegroupArn": "arn:aws:eks:us-east-1:123456789012:nodegroup/production-cluster/worker-nodes-1/a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "clusterName": "production-cluster",
+        "status": "ACTIVE",
+        "scalingConfig": {
+            "minSize": 2,
+            "maxSize": 10,
+            "desiredSize": 5
+        }
+    }
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (ResourceNotFoundException) when calling the ListClusters operation: No cluster found`** — Verify the cluster exists in your current AWS region with `aws eks list-clusters --region <region>`.
+    **`An error occurred (InvalidParameterException) when calling the UpdateKubeconfig operation: Cluster not found`** — Ensure the cluster name is correct and you have permissions; verify with `aws eks describe-cluster --name <cluster> --region <region>`.
 ---
 
 ## Systems Manager (SSM)
@@ -256,6 +627,48 @@ aws ssm put-parameter --name /my/param --value "value" --type SecureString
 aws ssm get-parameters-by-path --path /my/
 ```
 
+
+```text title="Expected output"
+Starting session with i-0a7f2c9d4e1b5f3a2...
+[ssm-user@ip-10-0-42-17 ~]$ 
+
+Command ID is 12a34b56-78cd-90ef-ghij-1234567890ab
+An error occurred (InvalidInstanceID.Malformed) when calling the SendCommand operation: The instance ID 'i-0a7f2c9d4e1b5f3a2' does not exist
+
+CommandId                                          Status      TargetCount  CompletedCount
+----------------------------------------------------  ---------   -----------  ---------------
+12a34b56-78cd-90ef-ghij-1234567890ab               Success     1            1
+
+InvocationId                                       CommandId                                        InstanceId             PluginName  DocumentName           DocumentVersion  CommandStatus  ExecutionStartDateTime  ExecutionElapsedTime
+----------------------------------------------------  ----------------------------------------------------  ---------------------  ----------  ---------------------  ----------------  -------  -----------------------  --------------------
+12a34b56-78cd-90ef-ghij-1234567890ab               12a34b56-78cd-90ef-ghij-1234567890ab               i-0a7f2c9d4e1b5f3a2    aws:runShellScript  AWS-RunShellScript     1.2.2          Success  2024-01-15T09:42:31Z    0.847
+
+ 10:42:31 up 18 days, 3:24, 2 users, load average: 0.12, 0.08, 0.05
+
+Name: /my/param
+Type: SecureString
+Value: ****
+Version: 3
+LastModifiedDate: 2024-01-15T08:15:22.000000+00:00
+ARN: arn:aws:ssm:us-east-1:123456789012:parameter/my/param
+
+(no output — command completes silently)
+
+Parameters:
+- Name: /my/param
+  Type: SecureString
+  Value: ****
+  Version: 3
+- Name: /my/param/db-host
+  Type: String
+  Value: db.internal.example.com
+  Version: 1
+```
+
+!!! warning "Common errors"
+    **`An error occurred (TargetNotConnected) when calling the SendCommand operation: The following instances are not connected: i-0a7f2c9d4e1b5f3a2`** — Verify the instance has the SSM agent running (`systemctl status amazon-ssm-agent`) and an IAM role with `AmazonSSMManagedInstanceCore` policy attached.
+    **`An error occurred (ParameterNotFound) when calling the GetParameter operation: Parameter /my/param not found.`** — Confirm the parameter name and path are correct with `aws ssm describe-parameters --filters "Key=Name,Values=/my/param"`.
+    **`An error occurred (AccessDenied) when calling the StartSession operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ssm:StartSession`** — Add the `AmazonSSMFullAccess` policy or a custom policy with `ssm:StartSession` and `ssm:GetConnectionStatus` permissions to the IAM user/role.
 ---
 
 ## Lambda
@@ -275,4 +688,58 @@ aws lambda update-function-code --function-name <name> --zip-file fileb://functi
 
 # Logs (CloudWatch logs for Lambda executions)
 aws logs tail /aws/lambda/<function_name> --follow
+```
+
+
+```text title="Expected output"
+{
+    "Functions": [
+        {
+            "FunctionName": "process-orders",
+            "FunctionArn": "arn:aws:lambda:us-east-1:123456789012:function:process-orders",
+            "Runtime": "python3.11",
+            "Handler": "index.handler",
+            "CodeSize": 2048576,
+            "MemorySize": 256,
+            "Timeout": 60,
+            "LastModified": "2024-01-15T10:32:45.000+0000"
+        },
+        {
+            "FunctionName": "send-notifications",
+            "FunctionArn": "arn:aws:lambda:us-east-1:123456789012:function:send-notifications",
+            "Runtime": "nodejs18.x",
+            "Handler": "app.handler",
+            "CodeSize": 1024000,
+            "MemorySize": 512,
+            "Timeout": 30,
+            "LastModified": "2024-01-14T14:22:10.000+0000"
+        }
+    ]
+}
+{
+    "Configuration": {
+        "FunctionName": "process-orders",
+        "FunctionArn": "arn:aws:lambda:us-east-1:123456789012:function:process-orders",
+        "Runtime": "python3.11",
+        "Handler": "index.handler",
+        "CodeSize": 2048576,
+        "MemorySize": 256,
+        "Timeout": 60,
+        "LastModified": "2024-01-15T10:32:45.000+0000"
+    }
+}
+{
+    "StatusCode": 200,
+    "ExecutedVersion": "$LATEST",
+    "LogResult": "U1RBUlQgUmVxdWVzdElkOiBhYzNkNDU2Yi1mZjg5LTQxZTItOGZkYS1jZjQ3ZjhhYzQ1ZTAgRHVyYXRpb246IDI4LjM2IG1zIEJpbGxlZCBEdXJhdGlvbjogMjkgbXMgTWVtb3J5IFVzZWQ6IDEyOCBNQiBFTkQ="
+}
+{
+    "FunctionArn": "arn:aws:lambda:us-east-1:123456789012:function:process-orders",
+    "CodeSize": 2048576,
+    "FunctionName": "process-orders",
+    "LastModified": "2024-01-15T11:05:22.000+0000"
+}
+2024-01-15T11:05:45.123Z	ac3d456b-ff89-41e2-8fda-cf47f8ac45e0	INFO	Processing order #ORD-2024-001
+2024-01-15T11:05:46.456Z	ac3d456b-ff89-41e2-8fda-cf47f8ac45e0	INFO	Order processed successfully
+2024-01-15T11:05:47.789Z	ac3d456b-ff89
 ```

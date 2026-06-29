@@ -67,6 +67,31 @@ aws s3 ls
 aws iam list-users
 ```
 
+
+```text title="Expected output"
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: us-east-1
+Default output format [None]: json
+
+RESERVATION-ID	OWNER-ID	GROUP-NAME
+r-0a1b2c3d4e5f6g7h8	123456789012	default
+
+BUCKET	CREATION-DATE
+my-app-bucket	2023-11-15T09:42:31.000Z
+logs-archive-prod	2023-10-22T14:18:22.000Z
+backup-2024	2024-01-08T16:55:47.000Z
+
+USER	ARN	CREATE-DATE
+admin-user	arn:aws:iam::123456789012:user/admin-user	2023-06-10T12:34:56+00:00
+dev-team-lead	arn:aws:iam::123456789012:user/dev-team-lead	2023-09-21T08:19:22+00:00
+ci-pipeline	arn:aws:iam::123456789012:user/ci-pipeline	2024-01-03T11:47:09+00:00
+```
+
+!!! warning "Common errors"
+    **`Unable to locate credentials`** — Run `aws configure` with valid AWS Access Key ID and Secret Access Key, or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    **`An error occurred (UnauthorizedOperation) when calling the DescribeInstances operation: You are not authorized to perform: ec2:DescribeInstances`** — Ensure the IAM user or role has the `ec2:DescribeInstances` permission attached in the IAM policy.
+    **`An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied`** — Verify the IAM user has `s3:ListAllMyBuckets` and `s3:GetBucketLocation` permissions in their policy.
 ## Renewal Notes
 
 AWS certifications typically require renewal every 3 years.

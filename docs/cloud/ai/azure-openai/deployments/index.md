@@ -45,6 +45,38 @@ az cognitiveservices account deployment create \
   --sku-name "Standard"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource/deployments/gpt4o-prod",
+  "name": "gpt4o-prod",
+  "properties": {
+    "model": {
+      "format": "OpenAI",
+      "name": "gpt-4o",
+      "version": "2024-11-20"
+    },
+    "provisioningState": "Succeeded",
+    "raiPolicyId": null,
+    "scaleSettings": {
+      "capacity": 100,
+      "scaleType": "Standard"
+    }
+  },
+  "systemData": {
+    "createdAt": "2024-12-19T14:32:18.456789+00:00",
+    "createdBy": "user@example.com",
+    "createdByType": "User",
+    "lastModifiedAt": "2024-12-19T14:32:18.456789+00:00"
+  },
+  "type": "Microsoft.CognitiveServices/accounts/deployments"
+}
+```
+
+!!! warning "Common errors"
+    **`(ResourceNotFound) The resource 'Microsoft.CognitiveServices/accounts/my-aoai-resource' under resource group 'my-rg' was not found.`** — Verify the resource name and resource group exist with `az cognitiveservices account show --name my-aoai-resource --resource-group my-rg`.
+    **`(InvalidParameter) The model version '2024-11-20' is not available for model 'gpt-4o'.`** — Check available versions with `az cognitiveservices model list --location eastus` and use a supported version.
+    **`(QuotaExceeded) Quota exceeded for deployment capacity. Current quota: 50, requested: 100.`** — Reduce `--sku-capacity` to a value within your quota or request a quota increase in the Azure portal.
 Or via the REST API:
 
 ```bash
@@ -60,6 +92,35 @@ curl -X PUT \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource/deployments/gpt4o-prod",
+  "name": "gpt4o-prod",
+  "type": "Microsoft.CognitiveServices/accounts/deployments",
+  "sku": {
+    "name": "Standard",
+    "capacity": 100
+  },
+  "properties": {
+    "model": {
+      "format": "OpenAI",
+      "name": "gpt-4o",
+      "version": "2024-11-20"
+    },
+    "provisioningState": "Succeeded",
+    "capabilities": {
+      "chat_completion": true,
+      "embeddings": false
+    }
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`"error":{"code":"InvalidAuthenticationTokenTenant","message":"The access token is from the wrong tenant."}`** — Ensure your Azure CLI is logged into the correct tenant with `az account set --subscription SUB_ID`.
+    **`"error":{"code":"DeploymentQuotaExceeded","message":"Quota exceeded for deployment capacity in this region."}`** — Reduce the capacity value or request a quota increase through the Azure portal for your cognitive services account.
+    **`"error":{"code":"ModelNotFound","message":"The model 'gpt-4o' version '2024-11-20' is not available in this region."}`** — Verify model availability in your region and use a supported version with `az cognitiveservices account deployment create --help`.
 ## Deployment Types: Consumption vs PTU
 
 | Type | Billing | Latency | Quota | Best For |
@@ -130,6 +191,36 @@ az cognitiveservices account deployment delete \
   --deployment-name gpt4o-old
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource/deployments/gpt4o-prod",
+  "name": "gpt4o-prod",
+  "properties": {
+    "model": {
+      "format": "OpenAI",
+      "name": "gpt-4o",
+      "version": "2024-08-06"
+    },
+    "scaleSettings": {
+      "scaleType": "Standard",
+      "capacity": 200
+    },
+    "raiPolicyName": null,
+    "versionUpgradeOption": "OnceNewDefaultVersionAvailable"
+  },
+  "systemData": {
+    "createdAt": "2024-01-15T10:22:33.456789Z",
+    "lastModifiedAt": "2024-01-20T14:47:12.123456Z"
+  }
+}
+Are you sure you want to perform this delete operation on deployment 'gpt4o-old'? (y/n): y
+(Deployment deleted successfully)
+```
+
+!!! warning "Common errors"
+    **`(ResourceNotFound) The resource 'gpt4o-prod' does not exist in resource group 'my-rg'.`** — Verify the deployment name matches exactly with `az cognitiveservices account deployment list --name my-aoai-resource --resource-group my-rg`.
+    **`(AuthorizationFailed) The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.CognitiveServices/accounts/deployments/write' over scope '/subscriptions/xxx/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource'.`** — Ensure your Azure account has Contributor or Cognitive Services User role assigned on the resource group or subscription.
 ## Common Deployment Issues
 
 | Issue | Cause | Fix |

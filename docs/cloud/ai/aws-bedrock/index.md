@@ -126,6 +126,47 @@ aws bedrock put-model-invocation-logging-configuration \
   --logging-config '{"cloudWatchConfig":{"logGroupName":"/aws/bedrock/invocations","roleArn":"arn:aws:iam::123456789012:role/BedrockLoggingRole"}}'
 ```
 
+
+```text title="Expected output"
+---------------------------------------------------------------------------
+|                       ListFoundationModels                             |
+---------------------------------------------------------------------------
+|  modelId                                      |  modelName              |
+---------------------------------------------------------------------------
+|  anthropic.claude-3-haiku-20240307-v1:0       |  Claude 3 Haiku         |
+|  anthropic.claude-3-sonnet-20240229-v1:0      |  Claude 3 Sonnet        |
+|  meta.llama2-13b-chat-v1                      |  Llama 2 Chat 13B       |
+|  amazon.titan-text-express-v1                 |  Titan Text Express     |
+|  cohere.command-light-text-v14                |  Command Light          |
+---------------------------------------------------------------------------
+
+{"content":[{"type":"text","text":"Hello! How can I help you today?"}],"stop_reason":"end_turn","usage":{"input_tokens":10,"output_tokens":12}}
+
+---------------------------------------------------------------------------
+|                       ListKnowledgeBases                               |
+---------------------------------------------------------------------------
+|  knowledgeBaseId          |  name              |  status    |
+---------------------------------------------------------------------------
+|  kb-a7f2e9c1d4b5         |  CompanyDocs       |  ACTIVE    |
+|  kb-b3f8e2a9c1d6         |  ProductGuides     |  ACTIVE    |
+---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
+|                         ListAgents                                     |
+---------------------------------------------------------------------------
+|  agentId              |  agentName         |  agentStatus   |
+---------------------------------------------------------------------------
+|  AGEN7F2E9C1D4B5A     |  SupportBot        |  PREPARED      |
+|  AGEN3F8E2A9C1D6B     |  DataAnalyzer      |  PREPARED      |
+---------------------------------------------------------------------------
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`An error occurred (AccessDeniedException) when calling the ListFoundationModels operation: User is not authorized to perform: bedrock:ListFoundationModels`** — Attach the `AmazonBedrockFullAccess` policy or a custom policy with `bedrock:ListFoundationModels` permission to your IAM user/role.
+    **`An error occurred (ValidationException) when calling the InvokeModel operation: Could not validate the provided model identifier`** — Verify the model ID is correct and that you have requested access to it in the AWS Bedrock console under Model access.
+    **`An error occurred (ValidationException) when calling the PutModelInvocationLoggingConfiguration operation: 1 validation error detected: Value 'arn:aws:iam::123456789012:role/BedrockLoggingRole' is invalid`** — Ensure the IAM role ARN exists, has a trust relationship with the Bedrock service, and has permissions to write to CloudWatch Logs.
 ## Key Considerations
 
 - **Model access is not automatic:** Each model must be individually enabled in the Bedrock console per AWS account per region. Access requests are usually approved instantly for most models, but some (e.g., Llama) may require a brief wait. Automation pipelines will fail with `AccessDeniedException` if model access is not enabled.

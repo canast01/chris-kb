@@ -117,6 +117,41 @@ snmpconfig --show snmpv1
 snmpget -v2c -c <community> <switch-mgmt-ip> 1.3.6.1.2.1.1.1.0
 ```
 
+
+```text title="Expected output"
+admin@workstation:~$ ssh admin@192.168.1.50
+Last login: Wed Mar 13 14:22:18 2024 from 192.168.1.10
+FOS_switch_01:admin>
+
+admin@workstation:~$ curl -sk -o /dev/null -w "%{http_code}" https://192.168.1.50/
+200
+
+FOS_switch_01:admin> tsclockserver show
+NTP Enabled: true
+NTP Server 1: 10.0.0.1 (synchronized)
+NTP Server 2: 10.0.0.2 (reachable)
+Last Update: 2024-03-13 14:25:33 UTC
+
+FOS_switch_01:admin> syslogdiagshow
+Syslog Server: 192.168.2.100
+Syslog Port: 514
+Syslog Status: Connected
+Messages Sent: 4521
+
+FOS_switch_01:admin> snmpconfig --show snmpv1
+SNMPv1 Enabled: true
+Read Community: public
+Trap Community: public
+Trap Receivers: 192.168.2.100
+
+admin@workstation:~$ snmpget -v2c -c public 192.168.1.50 1.3.6.1.2.1.1.1.0
+SNMPv2-MIB::sysDescr.0 = STRING: "Brocade G620 Fabric OS v9.1.0"
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host 192.168.1.50 port 22: Connection refused`** — Verify the switch management IP is correct and SSH service is enabled with `sshconfig --show` on the switch.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if your environment requires certificate validation, or ensure the switch certificate is trusted by your CA.
+    **`SNMP packet from 192.168.1.50:161 authentication failure`** — Verify the SNMP community string matches the switch configuration with `snmpconfig --show snmpv1` and check firewall rules allow UDP 161.
 ---
 
 ## See also

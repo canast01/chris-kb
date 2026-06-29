@@ -85,6 +85,32 @@ aaaconfig --show
 authutil --show
 ```
 
+
+```text title="Expected output"
+Adding TACACS+ server 192.168.100.50...
+TACACS+ server added successfully.
+Authentication order set to: TACACS+;LOCAL
+
+AAA Configuration:
+  TACACS+ Server: 192.168.100.50
+  Port: 49
+  Timeout: 5 seconds
+  Retries: 3
+  Authentication Order: TACACS+;LOCAL
+  Accounting: Disabled
+  Authorization: Disabled
+
+Authentication Utility Status:
+  Local User Database: Enabled
+  TACACS+ Status: Active
+  Last TACACS+ Contact: 2024-01-15 14:32:18
+  Failed Attempts (last 24h): 0
+```
+
+!!! warning "Common errors"
+    **`TACACS+ server 192.168.100.50 is unreachable on port 49`** — Verify network connectivity to the TACACS+ server and confirm the port is open in your firewall rules.
+    **`Invalid shared secret format: secret must be 8-32 characters`** — Ensure the shared secret meets length requirements and matches the TACACS+ server configuration exactly.
+    **`Authentication order syntax error: use semicolon separator`** — Correct the command to use `--authorder TACACS+;LOCAL` with a semicolon between methods, no spaces.
 ### TACACS+ vs RADIUS — Choosing Between Them
 
 | Feature | RADIUS | TACACS+ |
@@ -126,6 +152,40 @@ passwd <username>
 roleconfig --show
 ```
 
+
+```text title="Expected output"
+# userconfig --show
+User Name          Role              Login Method
+admin              admin             local
+monitor            user              local
+backup_svc         admin             local
+
+# userconfig --add testuser -r user -p MyP@ssw0rd
+User account 'testuser' created successfully with role 'user'
+
+# userconfig --change testuser -r admin
+User 'testuser' role changed to 'admin'
+
+# userconfig --delete testuser
+User account 'testuser' deleted successfully
+
+# passwd admin
+Changing password for user 'admin'
+New password: 
+Retype new password: 
+passwd: password updated successfully
+
+# roleconfig --show
+Available Roles:
+  admin          - Full administrative access
+  user           - Read-only access to fabric information
+  secadmin       - Security and user management only
+```
+
+!!! warning "Common errors"
+    **`Error: User 'testuser' already exists`** — Choose a different username or delete the existing account first with `userconfig --delete testuser`.
+    **`Error: Invalid role 'invalid_role' specified`** — Run `roleconfig --show` to list valid roles and use one of the available options.
+    **`Error: Password does not meet complexity requirements`** — Ensure the password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters.
 ### Built-in Roles
 
 | Role | Capabilities |
@@ -168,6 +228,38 @@ sshutil --add -user <username> -host <management-server-ip> -file /path/to/id_rs
 sshutil --show -user <username>
 ```
 
+
+```text title="Expected output"
+SSH Configuration and Enabled Services:
+  SSH Status: Enabled
+  SSH Port: 22
+  SSH Protocol Version: 2
+  Host Key Type: rsa
+  Host Key Fingerprint: 2048 SHA256:aBcD1EfGhIjKlMnOpQrStUvWxYz2345678901234567
+  Key Exchange Algorithms: diffie-hellman-group14-sha1, ecdh-sha2-nistp256
+  Encryption Algorithms: aes128-ctr, aes256-ctr
+  MAC Algorithms: hmac-sha2-256, hmac-sha2-512
+  Authentication Methods: password, publickey
+
+Generating RSA host key (2048-bit)...
+RSA host key generated successfully.
+Host Key Fingerprint: 2048 SHA256:xYz9876543210AbCdEfGhIjKlMnOpQrStUvWxYz12
+
+Generating ECDSA host key...
+ECDSA host key generated successfully.
+Host Key Fingerprint: 256 SHA256:pQrStUvWxYz1234567890AbCdEfGhIjKlMnOpQrSt
+
+Importing public key for user 'admin' from 192.168.1.50...
+Public key imported successfully.
+
+Authorized public keys for user 'admin':
+  Key 1: 2048 SHA256:aBcD1EfGhIjKlMnOpQrStUvWxYz2345678901234567 (imported: 2024-01-15 14:32:18)
+```
+
+!!! warning "Common errors"
+    **`sshutil: command not found`** — Verify you are running this command on a Brocade switch with FOS installed, not a Linux management server.
+    **`Error: Invalid file path /path/to/id_rsa.pub`** — Replace `/path/to/id_rsa.pub` with the actual absolute path to your public key file and ensure the file is readable.
+    **`Error: User <username> does not exist`** — Create the user account on the switch first using `userconfig --add -name <username>` before importing SSH keys.
 ### Disabling Telnet
 
 Telnet must be disabled on all production switches. Verify after every new switch deployment and firmware upgrade.
@@ -182,6 +274,30 @@ sshutil --show
 # Expected: "telnetd" = disabled
 ```
 
+
+```text title="Expected output"
+FOS Switch Configuration Utility
+Type "help" for command list.
+switch:admin> configure
+You are in configuration mode. Type "exit" to return to admin mode.
+switch:admin:config> System Services
+switch:admin:config:System Services> Telnet
+switch:admin:config:System Services:Telnet> 0
+Telnet service disabled.
+switch:admin:config:System Services:Telnet> exit
+switch:admin:config> exit
+switch:admin> sshutil --show
+SSH Status: enabled
+Telnet Status: disabled
+SSH Port: 22
+Telnet Port: 23
+switch:admin>
+```
+
+!!! warning "Common errors"
+    **`configure: command not found`** — Ensure you are logged into the Brocade switch CLI directly (not a Linux shell); type `exit` if in a nested shell context.
+    **`Telnet Status: enabled`** — Navigate to the correct menu path (System Services → Telnet) and confirm you entered `0` to disable, then run `configupload` to persist changes.
+    **`Permission denied: configure`** — Verify your user account has admin-level privileges; contact the fabric administrator to grant configuration rights.
 ---
 
 ## NTP Requirement

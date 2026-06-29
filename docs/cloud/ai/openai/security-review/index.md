@@ -49,6 +49,25 @@ curl https://api.openai.com/v1/organization/usage_limits \
   -H "Authorization: Bearer $OPENAI_API_KEY" | jq
 ```
 
+
+```text title="Expected output"
+{
+  "organization_id": "org-abc123def456ghi789",
+  "data_usage_policy": "opt_out",
+  "retention_days": 30,
+  "training_disabled": true,
+  "api_requests_limit": 10000,
+  "tokens_per_minute": 90000,
+  "monthly_spend_limit": 5000,
+  "current_month_spend": 1247.53,
+  "last_updated": "2024-01-15T09:42:17Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (6) Could not resolve host: api.openai.com`** — Verify network connectivity and DNS resolution; check if a corporate proxy or firewall is blocking the request.
+    **`{"error": {"message": "Unauthorized", "type": "invalid_request_error", "param": null, "code": "invalid_api_key"}}`** — Ensure `$OPENAI_API_KEY` is set correctly with `echo $OPENAI_API_KEY` and regenerate the key in your OpenAI dashboard if expired.
+    **`jq: parse error: Invalid JSON text at line 1`** — Remove `| jq` temporarily to see the raw response; the API may be returning an error message instead of JSON.
 ## Prompt Injection Risks
 
 Prompt injection occurs when untrusted input manipulates the model's behaviour beyond its intended scope.
@@ -137,6 +156,19 @@ def get_openai_key() -> str:
     return json.loads(secret["SecretString"])["api_key"]
 ```
 
+
+```text title="Expected output"
+{
+    "ARN": "arn:aws:secretsmanager:us-east-1:123456789012:secret:openai/api-key-AbCdEf",
+    "Name": "openai/api-key",
+    "VersionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (ResourceExistsException) when calling the CreateSecret operation: The secret openai/api-key already exists.`** — Use `aws secretsmanager update-secret` instead, or delete the existing secret first with `aws secretsmanager delete-secret --secret-id openai/api-key --force-delete-without-recovery`.
+    
+    **`botocore.exceptions.ClientError: An error occurred (AccessDenied) when calling the GetSecretValue operation: User is not authorized to perform: secretsmanager:GetSecretValue`** — Ensure the IAM role/user has the `secretsmanager:GetSecretValue` permission attached to their policy.
 ## Output Validation
 
 Do not trust model output unconditionally — validate and sanitise before downstream use.

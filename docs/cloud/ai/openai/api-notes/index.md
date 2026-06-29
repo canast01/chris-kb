@@ -77,6 +77,21 @@ curl -i https://api.openai.com/v1/chat/completions \
   2>&1 | grep -i "x-ratelimit"
 ```
 
+
+```text title="Expected output"
+HTTP/2 200
+x-ratelimit-limit-requests: 10000
+x-ratelimit-limit-tokens: 2000000
+x-ratelimit-remaining-requests: 9999
+x-ratelimit-remaining-tokens: 1999994
+x-ratelimit-reset-requests: 6s
+x-ratelimit-reset-tokens: 1m23s
+```
+
+!!! warning "Common errors"
+    **`curl: (6) Could not resolve host: api.openai.com`** — Verify network connectivity and DNS resolution with `nslookup api.openai.com` or check firewall/proxy settings.
+    **`HTTP/2 401 Unauthorized`** — Confirm `$OPENAI_API_KEY` is set correctly with `echo $OPENAI_API_KEY` and verify the key hasn't been revoked in your OpenAI account.
+    **`HTTP/2 429 Too Many Requests`** — Wait for the duration specified in `x-ratelimit-reset-requests` header before retrying, or upgrade your API plan.
 ## Token Counting
 
 Estimate token counts before sending requests to avoid `context_length_exceeded` errors.

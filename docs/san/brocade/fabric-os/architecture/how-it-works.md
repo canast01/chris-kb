@@ -122,6 +122,35 @@ nslookup <wwpn>
 portloginshow # FLOGI database — all logged-in devices
 ```
 
+
+```text title="Expected output"
+Node Name     Node Index  Fabric Index  IP Address      FC Port Count
+brocade-sw01  0           0             192.168.1.100   16
+brocade-sw02  1           1             192.168.1.101   16
+brocade-sw03  2           2             192.168.1.102   16
+
+Switch Name   Domain ID  Principal  IP Address      Status
+brocade-sw01  1          Yes        192.168.1.100   Online
+brocade-sw02  2          No         192.168.1.101   Online
+brocade-sw03  3          No         192.168.1.102   Online
+
+WWPN: 50:00:14:40:1b:2c:3d:4e
+Symbolic Node Name: esx-host-01.prod.local
+IP Address: 10.20.30.40
+Port Index: 5
+
+Port  Status  Speed  Connected Node Name        Connected WWPN
+0     Online  16Gb  storage-array-01           50:00:09:73:48:2f:1a:5b
+1     Online  16Gb  esx-host-02                50:00:14:40:1b:2c:3d:4f
+2     Online  16Gb  esx-host-03                50:00:14:40:1b:2c:3d:50
+3     Online  16Gb  tape-library-backup        50:00:0e:1e:59:3a:2b:6c
+4     Offline  —    —                          —
+...
+```
+
+!!! warning "Common errors"
+    **`nslookup: command not found`** — Use `nsshow` or `nslookup wwpn` with the full WWPN format (50:xx:xx:xx:xx:xx:xx:xx) instead.
+    **`portloginshow: Access denied`** — Run the command with admin credentials or ensure your user role has fabric-wide read permissions.
 ## Zoning
 
 | Zone Type | Definition | Use Case |
@@ -150,6 +179,31 @@ portperfshow               # show ISL throughput
 porttrunkarea --enable <slot/port>
 ```
 
+
+```text title="Expected output"
+ISL Status:
+  0/0: Online        Fabric_ID: 1  Speed: 16Gb  Distance: 2km
+  0/1: Online        Fabric_ID: 1  Speed: 16Gb  Distance: 2km
+  1/0: Online        Fabric_ID: 2  Speed: 8Gb   Distance: 5km
+  1/1: Offline       Fabric_ID: 2  Speed: N/A   Distance: N/A
+
+Trunk Group: TG_01
+  Master Port: 0/0
+  Member Ports: 0/0, 0/1, 0/2
+  Status: Active
+
+ISL Performance (last 10 seconds):
+  Port 0/0: TX: 2.4 Gbps  RX: 2.3 Gbps  Frames: 1,245,632
+  Port 0/1: TX: 1.8 Gbps  RX: 1.9 Gbps  Frames: 987,451
+  Port 1/0: TX: 0.6 Gbps  RX: 0.7 Gbps  Frames: 342,108
+
+Enabling trunk area on slot 1, port 0...
+Operation completed successfully.
+```
+
+!!! warning "Common errors"
+    **`porttrunkarea: Invalid slot/port format`** — Use the format `slot/port` (e.g., `1/0`) and verify the port exists with `islshow`.
+    **`porttrunkarea: Port is not an ISL`** — Trunk area can only be enabled on ISL ports; confirm the port is online and connected to another switch.
 ## Virtual Fabrics
 
 Virtual Fabrics (VF) partition a single physical chassis into multiple independent logical switches, each with its own Fabric ID (FID). Ports are assigned to exactly one logical switch at a time.
@@ -160,6 +214,28 @@ setContext <fid>           # switch CLI context to a specific FID
 lscfg --config <fid> -port <slot/port>   # assign port to logical switch
 ```
 
+
+```text title="Expected output"
+Fabric OS v9.1.0 (build 2024.02.15)
+Logical Switch Configuration:
+FID  Name              Status    Member Ports
+1    prod-fabric-01    Online    0/0-0/47
+2    dr-fabric-02      Online    1/0-1/47
+3    test-fabric-03    Offline   2/0-2/23
+4    maint-fabric-04   Online    3/0-3/15
+...
+
+Current context: FID 1 (prod-fabric-01)
+Context switched to FID 2 (dr-fabric-02)
+
+Port 0/24 successfully assigned to FID 2
+Configuration saved to flash memory
+```
+
+!!! warning "Common errors"
+    **`error: invalid FID <fid> -- FID does not exist`** — Verify the FID exists with `lscfg --show` and use a valid numeric FID value.
+    **`error: port <slot/port> already assigned to FID <fid>`** — Remove the port from its current FID using `lscfg --config <current_fid> -port <slot/port> -remove` before reassigning it.
+    **`error: insufficient privileges to modify fabric configuration`** — Ensure your user account has admin or fabric-admin role; check with `userconfig --show`.
 ## MAPS — Monitoring and Alerting Policy Suite
 
 MAPS provides threshold-based automated health monitoring. It monitors port error counters, ISL utilization, C3 discard rates, BB credit zero (slow drain), switch environment, fabric events, and security events.
@@ -170,6 +246,34 @@ mapsdb --show           # all triggered MAPS alerts
 mapspolicy --show       # active MAPS policy
 ```
 
+
+```text title="Expected output"
+MAPS Health Dashboard:
+  System Health: Healthy
+  CPU Usage: 42%
+  Memory Usage: 58%
+  Temperature: 38°C
+  Fan Status: OK
+  Power Supply: OK
+  Last Update: 2024-01-15 14:32:18 UTC
+
+MAPS Triggered Alerts:
+  Alert ID: 0x0042a1c8 | Severity: Warning | Rule: PortErrorThreshold | Port: 15 | Timestamp: 2024-01-15 13:45:22
+  Alert ID: 0x0042a1d2 | Severity: Info | Rule: MemoryUsage | Threshold: 65% | Timestamp: 2024-01-15 12:18:55
+  Alert ID: 0x0042a1e5 | Severity: Critical | Rule: FabricWildcardZone | Switch: switch-prod-02 | Timestamp: 2024-01-15 11:03:44
+
+Active MAPS Policy:
+  Policy Name: Production_Fabric_Policy
+  Status: Enabled
+  Rules Loaded: 47
+  Last Modified: 2024-01-10 09:22:15 UTC
+  Monitoring Interval: 30 seconds
+```
+
+!!! warning "Common errors"
+    **`mapsdashboard: command not found`** — Verify MAPS is installed and the admin CLI is in your PATH, or use the full path `/opt/brocade/bin/mapsdashboard`.
+    **`MAPS service is not running`** — Start the MAPS daemon with `systemctl start brocade-maps` or equivalent on your platform.
+    **`Permission denied`** — Run the commands with appropriate admin privileges using `sudo` or ensure your user is in the `brocade-admin` group.
 ## FCIP — Fibre Channel over IP
 
 FCIP extends a Fibre Channel fabric over an IP WAN connection for long-distance replication (SRDF, RecoverPoint). Brocade 7810/7840 extension platforms provide FCIP gateway functionality. Target IP network latency: <5 ms one-way for synchronous replication.
@@ -180,6 +284,25 @@ fcipcircuit --show      # FCIP circuit status
 fcipcircuit --show -perf
 ```
 
+
+```text title="Expected output"
+Tunnel Name          Admin Status  Oper Status  Remote IP       Local IP        Compression
+tunnel-1             Online        Online       192.168.100.45  192.168.100.10  None
+tunnel-2             Online        Online       192.168.100.46  192.168.100.11  None
+
+Circuit Name         Tunnel Name    Admin Status  Oper Status  Remote WWN
+circuit-dc1-dc2      tunnel-1       Online        Online       50:00:09:73:00:12:34:56
+circuit-dr-backup    tunnel-2       Online        Online       50:00:09:73:00:87:65:43
+
+Circuit Name         Tunnel Name    Throughput(MB/s)  Latency(ms)  Packet Loss(%)  Frame Loss(%)
+circuit-dc1-dc2      tunnel-1       487.3             2.1          0.0             0.0
+circuit-dr-backup    tunnel-2       412.8             3.7          0.0             0.0
+```
+
+!!! warning "Common errors"
+    **`fciptunnel: command not found`** — Verify Fabric OS version supports FCIP and load the appropriate license module with `licenseadd`.
+    **`No tunnels configured`** — Create at least one FCIP tunnel using `fciptunnel --create` before querying status.
+    **`Permission denied`** — Run commands with admin privileges using `sudo` or ensure your user account has fabric admin role assigned.
 ---
 
 ## See also

@@ -111,6 +111,54 @@ aws ec2 describe-security-groups --group-ids <sg-id>
 aws ec2 describe-flow-logs --filter Name=resource-id,Values=<vpc-id>
 ```
 
+
+```text title="Expected output"
+200
+{
+    "UserId": "AIDACKCEVSQ6C2EXAMPLE",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/admin"
+}
+200
+{
+    "SecurityGroups": [
+        {
+            "GroupId": "sg-0a1b2c3d4e5f6g7h8",
+            "GroupName": "web-tier-sg",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 443,
+                    "ToPort": 443,
+                    "IpRanges": [{"CidrIp": "10.0.0.0/8"}]
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "IpRanges": [{"CidrIp": "0.0.0.0/0"}]
+                }
+            ]
+        }
+    ]
+}
+{
+    "FlowLogs": [
+        {
+            "FlowLogId": "fl-0a1b2c3d4e5f6g7h8",
+            "ResourceId": "vpc-12345678",
+            "TrafficType": "ALL",
+            "LogDestinationType": "cloud-watch-logs",
+            "FlowLogStatus": "ACTIVE"
+        }
+    ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to ec2.us-east-1.amazonaws.com port 443: Connection timed out`** — Verify on-premises firewall allows outbound HTTPS (port 443) to AWS API endpoints, or check if the instance has internet connectivity.
+    **`An error occurred (UnauthorizedOperation) when calling the DescribeSecurityGroups operation: You are not authorized to perform: ec2:DescribeSecurityGroups`** — Ensure the IAM user or role has the `ec2:DescribeSecurityGroups` permission attached via an inline or managed policy.
+    **`Invalid id: "sg-invalid" does not exist`** — Verify the security group ID is correct and exists in the current AWS region by running `aws ec2 describe-security-groups --region <region>`.
 ## See also
 
 - [AWS EVS — Ports](../evs/architecture/ports.md)
