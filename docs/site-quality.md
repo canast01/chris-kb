@@ -6,7 +6,7 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 
 ![Site Quality Dashboard — Diagram](assets/site-quality-diagram.svg)
 
-Generated: 2026-06-29
+Generated: 2026-07-01
 
 ## Current state
 
@@ -19,7 +19,7 @@ Generated: 2026-06-29
 | Pages with SVG diagrams | 1,406 |
 | Pages with Mermaid diagrams | 162 |
 | Pages with tags | 2,819 |
-| Audit score | 36 / 37 |
+| Audit score | 54 / 55 |
 | MkDocs strict build warnings | 0 |
 
 ## Pages by section

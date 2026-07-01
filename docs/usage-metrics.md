@@ -4,7 +4,7 @@
 Knowledge base statistics: page counts, section distribution, and content type coverage.
 </div>
 
-Generated: 2026-06-29
+Generated: 2026-07-01
 
 ```d2
 direction: down
@@ -28,7 +28,7 @@ section_page_counts -> health_checks: uses
 | Pages with Mermaid diagrams | 162 |
 | Pages with kb-summary | 2,567 |
 | Pages with tags | 2,819 |
-| Audit score | 36 / 37 |
+| Audit score | 54 / 55 |
 
 ## Section page counts
 
