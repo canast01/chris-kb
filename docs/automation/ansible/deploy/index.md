@@ -36,6 +36,11 @@ install_required_collections_and_rol -> validate
 
 ## Before you begin
 
+<!-- video-link -->
+!!! tip "Video Walkthrough"
+    [:fontawesome-brands-youtube: Ansible 101 — Episode 1: Introduction to Ansible](https://www.youtube.com/watch?v=goclfp6a2IQ){ .md-button }
+<!-- /video-link -->
+
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled

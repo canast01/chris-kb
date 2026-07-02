@@ -43,70 +43,69 @@ Regular health checks confirm that FlashArray is operating within expected param
 
 Run from Pure1 UI or CLI. No impact to production.
 
-### Via Pure1 UI
+=== "Pure1 UI"
 
-![Via Pure1 UI](../../../../assets/storage-pure-evergreen-hc-via-pure1-ui.svg)
+    ![Via Pure1 UI](../../../../assets/storage-pure-evergreen-hc-via-pure1-ui.svg)
 
-```text
-Pure1 → Arrays → select array → Overview tab
+    ```text
+    Pure1 → Arrays → select array → Overview tab
 
-Check:
-  ✓ Array status: Green (no active alerts)
-  ✓ Both controllers: Online
-  ✓ All drives: Healthy
-  ✓ Phone Home: Last contact < 24 hours ago
-  ✓ Capacity: < 70% used
-```
+    Check:
+      ✓ Array status: Green (no active alerts)
+      ✓ Both controllers: Online
+      ✓ All drives: Healthy
+      ✓ Phone Home: Last contact < 24 hours ago
+      ✓ Capacity: < 70% used
+    ```
 
-### Via CLI
+=== "CLI (Purity)"
 
-![Via CLI](../../../../assets/storage-pure-evergreen-hc-via-cli.svg)
+    ![Via CLI](../../../../assets/storage-pure-evergreen-hc-via-cli.svg)
 
-```bash
-ssh pureuser@<flasharray-ip>
+    ```bash
+    ssh pureuser@<flasharray-ip>
 
-# 1. Overall hardware health
-purehw list | grep -v Healthy
-# Expected: no output (all components healthy)
+    # 1. Overall hardware health
+    purehw list | grep -v Healthy
+    # Expected: no output (all components healthy)
 
-# 2. Active alerts
-purealert list --flagged
-# Expected: no output (no open alerts)
+    # 2. Active alerts
+    purealert list --flagged
+    # Expected: no output (no open alerts)
 
-# 3. Controller status
-purehw list --type ct
-# Expected: CT0 and CT1 both Healthy
+    # 3. Controller status
+    purehw list --type ct
+    # Expected: CT0 and CT1 both Healthy
 
-# 4. Array capacity
-purearray list --space
-# Check: capacity_utilization < 0.70
+    # 4. Array capacity
+    purearray list --space
+    # Check: capacity_utilization < 0.70
 
-# 5. Phone Home status
-puresupport list
-# Check: phonehome_enabled = true, last_contact < 24h
-```
+    # 5. Phone Home status
+    puresupport list
+    # Check: phonehome_enabled = true, last_contact < 24h
+    ```
 
+    ```text title="Expected output"
+    pureuser@flasharray-ip> purehw list | grep -v Healthy
+    pureuser@flasharray-ip> purealert list --flagged
+    pureuser@flasharray-ip> purehw list --type ct
+    Name    Status    Model              Serial
+    CT0     Healthy   FA-405R3           PUREARRAY123456A
+    CT1     Healthy   FA-405R3           PUREARRAY123456B
+    pureuser@flasharray-ip> purearray list --space
+    Name           Capacity  Data_Reduction  Space_Used  Capacity_Utilization
+    flasharray-01  100.0T    3.2x            68.5T       0.685
+    pureuser@flasharray-ip> puresupport list
+    Name           Phonehome_Enabled  Last_Contact
+    flasharray-01  true               2h ago
+    pureuser@flasharray-ip> exit
+    ```
 
-```text title="Expected output"
-pureuser@flasharray-ip> purehw list | grep -v Healthy
-pureuser@flasharray-ip> purealert list --flagged
-pureuser@flasharray-ip> purehw list --type ct
-Name    Status    Model              Serial
-CT0     Healthy   FA-405R3           PUREARRAY123456A
-CT1     Healthy   FA-405R3           PUREARRAY123456B
-pureuser@flasharray-ip> purearray list --space
-Name           Capacity  Data_Reduction  Space_Used  Capacity_Utilization
-flasharray-01  100.0T    3.2x            68.5T       0.685
-pureuser@flasharray-ip> puresupport list
-Name           Phonehome_Enabled  Last_Contact
-flasharray-01  true               2h ago
-pureuser@flasharray-ip> exit
-```
-
-!!! warning "Common errors"
-    **`ssh: Could not resolve hostname <flasharray-ip>: Name or service not known`** — Replace `<flasharray-ip>` with the actual management IP address of your Pure Storage array.
-    **`ERROR: Invalid credentials`** — Verify the pureuser account exists and password is correct, or use SSH key authentication if configured.
-    **`ERROR: Command not found: purehw`** — Ensure you are connected to the Pure Storage array's management interface (SSH to the correct IP) and not a local shell.
+    !!! warning "Common errors"
+        **`ssh: Could not resolve hostname <flasharray-ip>: Name or service not known`** — Replace `<flasharray-ip>` with the actual management IP address of your Pure Storage array.
+        **`ERROR: Invalid credentials`** — Verify the pureuser account exists and password is correct, or use SSH key authentication if configured.
+        **`ERROR: Command not found: purehw`** — Ensure you are connected to the Pure Storage array's management interface (SSH to the correct IP) and not a local shell.
 ## Full Health Check (20 minutes)
 
 ![Full Health Check (20 minutes)](../../../../assets/storage-pure-evergreen-hc-full-health-check-20-minutes.svg)

@@ -39,6 +39,11 @@ prism_central_registration_optional -> validate
 
 ## Before you begin
 
+<!-- video-link -->
+!!! tip "Video Walkthrough"
+    [:fontawesome-brands-youtube: Installation for AOS and AHV | Nutanix Community Edition 2.1](https://www.youtube.com/watch?v=1Rq_mlwkPME){ .md-button }
+<!-- /video-link -->
+
 - **Access:** IPMI/iDRAC/iLO credentials for all nodes; network switch admin access
 - **Files:** AOS ISO and AHV ISO (download from Nutanix support portal: portal.nutanix.com)
 - **IPs allocated (per node):** IPMI IP, AHV host IP, CVM IP + 1 cluster VIP + 1 DSIP

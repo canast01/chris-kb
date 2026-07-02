@@ -34,6 +34,7 @@ configure_host_connectivity -> validate
     [:fontawesome-brands-youtube: Dell PowerStore Initial Configuration](https://www.youtube.com/watch?v=_zbJH90Muc4){ .md-button }
 <!-- /video-link -->
 
+
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)
 - **Timing:** safe to run during a scheduled maintenance window; allow 1-2 hours for initial deployment
 - **Dependencies:** network connectivity verified; DNS resolvable; NTP configured; any licence keys available

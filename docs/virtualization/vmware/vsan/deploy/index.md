@@ -49,6 +49,7 @@ phase_6_aria_suite_lifecycle_and_mon -> validate
     [:fontawesome-brands-youtube: How to Build a VMware vSAN Express Storage Architecture Cluster — Step by Step](https://www.youtube.com/watch?v=RDauebK14Nw){ .md-button }
 <!-- /video-link -->
 
+
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled

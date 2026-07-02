@@ -36,30 +36,32 @@ hardware_compatibility_hcl -> key_interoperability_rules: uses
 - When upgrading one component, check all dependent products in the matrix before proceeding.
 - VCF bundles validated component versions — use VCF BOM for VCF deployments rather than mixing versions independently.
 
-## vSphere 8.0 — Component Compatibility
+## Component Compatibility by Version
 
-| Component | Min Supported Version | Notes |
-|---|---|---|
-| NSX-T / NSX | NSX-T 3.2.x / NSX 4.x | NSX 4.x is current; 3.2 supported on vSphere 8.0 |
-| vSAN | 8.0 (same build as vSphere) | vSAN version always matches vSphere version |
-| SRM | 8.6+ | SRM 8.5 and earlier not supported on vSphere 8.0 |
-| vSphere Replication | 8.6+ | Must match or exceed SRM version |
-| Aria Operations | 8.12+ | 8.10 and earlier not supported on vSphere 8.0 |
-| Aria Automation | 8.12+ | Requires vCenter 8.0 plug-in compatibility |
-| Horizon | 8 (2206+) | Horizon 7.x not compatible with vSphere 8.0 |
-| VCF | 5.0+ | VCF 4.x uses vSphere 7.0; not compatible with 8.0 SDDC |
-| Tanzu (TKG) | TKG 2.x | TKG 1.x not supported on vSphere 8.0 Supervisor |
+=== "vSphere 8.0"
 
-## vSphere 7.0 — Component Compatibility
+    | Component | Min Supported Version | Notes |
+    |---|---|---|
+    | NSX-T / NSX | NSX-T 3.2.x / NSX 4.x | NSX 4.x is current; 3.2 supported on vSphere 8.0 |
+    | vSAN | 8.0 (same build as vSphere) | vSAN version always matches vSphere version |
+    | SRM | 8.6+ | SRM 8.5 and earlier not supported on vSphere 8.0 |
+    | vSphere Replication | 8.6+ | Must match or exceed SRM version |
+    | Aria Operations | 8.12+ | 8.10 and earlier not supported on vSphere 8.0 |
+    | Aria Automation | 8.12+ | Requires vCenter 8.0 plug-in compatibility |
+    | Horizon | 8 (2206+) | Horizon 7.x not compatible with vSphere 8.0 |
+    | VCF | 5.0+ | VCF 4.x uses vSphere 7.0; not compatible with 8.0 SDDC |
+    | Tanzu (TKG) | TKG 2.x | TKG 1.x not supported on vSphere 8.0 Supervisor |
 
-| Component | Supported Versions | Notes |
-|---|---|---|
-| NSX-T | 3.0 – 3.2, NSX 4.x | NSX 4.x backward-compatible with vSphere 7.0 |
-| vSAN | 7.0 (same build) | |
-| SRM | 8.3 – 8.8 | |
-| Aria Operations | 8.6 – 8.16 | |
-| Aria Automation | 8.6 – 8.16 | |
-| VCF | 4.3 – 4.5 | |
+=== "vSphere 7.0"
+
+    | Component | Supported Versions | Notes |
+    |---|---|---|
+    | NSX-T | 3.0 – 3.2, NSX 4.x | NSX 4.x backward-compatible with vSphere 7.0 |
+    | vSAN | 7.0 (same build) | |
+    | SRM | 8.3 – 8.8 | |
+    | Aria Operations | 8.6 – 8.16 | |
+    | Aria Automation | 8.6 – 8.16 | |
+    | VCF | 4.3 – 4.5 | |
 
 ## VCF 5.x BOM (Bill of Materials)
 

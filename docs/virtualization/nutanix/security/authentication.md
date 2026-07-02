@@ -74,71 +74,71 @@ User Information
 
 ## Active Directory / LDAP Integration
 
-### Prism Element — Add Directory
+=== "Prism Element"
 
-```text
-Prism Element → Settings → Authentication → Directory List → Add New Directory
-  Type: Active Directory
-  Name: corp-ad (label only)
-  Domain: corp.local
-  Directory URL: ldaps://dc1.corp.local:636
-  Username: svc-nutanix@corp.local
-  Password: <service account password>
-```
+    ```text
+    Prism Element → Settings → Authentication → Directory List → Add New Directory
+      Type: Active Directory
+      Name: corp-ad (label only)
+      Domain: corp.local
+      Directory URL: ldaps://dc1.corp.local:636
+      Username: svc-nutanix@corp.local
+      Password: <service account password>
+    ```
 
-After saving, verify connectivity:
-```text
-Test Directory → enter test user credentials → should return "User found"
-```
+    After saving, verify connectivity:
+    ```text
+    Test Directory → enter test user credentials → should return "User found"
+    ```
 
-### CLI Check
+=== "CLI (ncli)"
 
-```bash
-ncli authconfig get-directory-services   # list configured directories
-ncli authconfig add-directory-config \
-  directory-type=ACTIVE_DIRECTORY \
-  connection-type=LDAP \
-  directory-url=ldap://dc1.corp.local:389 \
-  domain=corp.local \
-  service-account-username=svc-nutanix \
-  service-account-password=<pass>
-```
+    ```bash
+    ncli authconfig get-directory-services   # list configured directories
+    ncli authconfig add-directory-config \
+      directory-type=ACTIVE_DIRECTORY \
+      connection-type=LDAP \
+      directory-url=ldap://dc1.corp.local:389 \
+      domain=corp.local \
+      service-account-username=svc-nutanix \
+      service-account-password=<pass>
+    ```
 
+    ```text title="Expected output"
+    Directory Services Configuration
+    =================================
 
-```text title="Expected output"
-Directory Services Configuration
-=================================
+    Directory Type       : ACTIVE_DIRECTORY
+    Connection Type      : LDAP
+    Directory URL        : ldap://dc1.corp.local:389
+    Domain               : corp.local
+    Service Account      : svc-nutanix
+    Status               : CONFIGURED
+    Last Sync            : 2024-01-15 14:32:18
+    Sync Interval        : 3600 seconds
 
-Directory Type       : ACTIVE_DIRECTORY
-Connection Type      : LDAP
-Directory URL        : ldap://dc1.corp.local:389
-Domain               : corp.local
-Service Account      : svc-nutanix
-Status               : CONFIGURED
-Last Sync            : 2024-01-15 14:32:18
-Sync Interval        : 3600 seconds
+    Adding directory configuration...
+    Directory configuration added successfully.
+    Config ID: 550e8400-e29b-41d4-a716-446655440000
+    ```
 
-Adding directory configuration...
-Directory configuration added successfully.
-Config ID: 550e8400-e29b-41d4-a716-446655440000
-```
+    !!! warning "Common errors"
+        **`Error: Connection refused (111)`** — Verify the LDAP server is reachable and listening on port 389 with `nc -zv dc1.corp.local 389`.
+        **`Error: Invalid credentials for service account 'svc-nutanix'`** — Confirm the service account password is correct and the account has directory query permissions in Active Directory.
+        **`Error: Domain 'corp.local' not found or unreachable`** — Ensure DNS resolution works for the domain with `nslookup corp.local` and that the domain name matches your Active Directory configuration.
 
-!!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the LDAP server is reachable and listening on port 389 with `nc -zv dc1.corp.local 389`.
-    **`Error: Invalid credentials for service account 'svc-nutanix'`** — Confirm the service account password is correct and the account has directory query permissions in Active Directory.
-    **`Error: Domain 'corp.local' not found or unreachable`** — Ensure DNS resolution works for the domain with `nslookup corp.local` and that the domain name matches your Active Directory configuration.
-### Prism Central — Add Directory
+=== "Prism Central"
 
-Prism Central manages authentication for multi-cluster environments. Configure once in PC to apply across all registered clusters.
+    Prism Central manages authentication for multi-cluster environments. Configure once in PC to apply across all registered clusters.
 
-```text
-Prism Central → Settings → Authentication
-  Click "+" → Add Directory
-  Type: Active Directory or OpenLDAP
-  Domain: corp.local
-  URL: ldaps://dc1.corp.local:636
-  Service account: svc-pc@corp.local
-```
+    ```text
+    Prism Central → Settings → Authentication
+      Click "+" → Add Directory
+      Type: Active Directory or OpenLDAP
+      Domain: corp.local
+      URL: ldaps://dc1.corp.local:636
+      Service account: svc-pc@corp.local
+    ```
 
 ---
 

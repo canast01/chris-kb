@@ -48,6 +48,7 @@ phase_6_endtoend_validation -> validate
     [:fontawesome-brands-youtube: VMware VCF 9 Lab Deployment — VCF Installer Walkthrough](https://www.youtube.com/watch?v=aP6AxsoNctw){ .md-button }
 <!-- /video-link -->
 
+
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled

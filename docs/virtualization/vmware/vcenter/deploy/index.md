@@ -49,6 +49,7 @@ s6 -> s7
     [:fontawesome-brands-youtube: How to Install VMware vCenter Server | Full Tutorial](https://www.youtube.com/watch?v=jrJnPkotRYI){ .md-button }
 <!-- /video-link -->
 
+
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled

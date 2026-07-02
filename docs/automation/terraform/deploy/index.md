@@ -29,6 +29,11 @@ configure_workspace_per_environment -> validate
 
 ## Before you begin
 
+<!-- video-link -->
+!!! tip "Video Walkthrough"
+    [:fontawesome-brands-youtube: Learn Terraform (and AWS) by Building a Dev Environment — Full Course for Beginners](https://www.youtube.com/watch?v=iRaai1IBlB0){ .md-button }
+<!-- /video-link -->
+
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)
 - **Timing:** safe to run during a scheduled maintenance window; allow 1-2 hours for initial deployment
 - **Dependencies:** network connectivity verified; DNS resolvable; NTP configured; any licence keys available

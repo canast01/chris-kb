@@ -49,6 +49,7 @@ phase_6_logical_networking_and_valid -> validate
     [:fontawesome-brands-youtube: How to Deploy and Create a VMware NSX-T Management Cluster](https://www.youtube.com/watch?v=RNrzwpiR-Zs){ .md-button }
 <!-- /video-link -->
 
+
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled

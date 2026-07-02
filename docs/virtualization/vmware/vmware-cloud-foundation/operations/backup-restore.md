@@ -63,175 +63,175 @@ flowchart LR
 
 ## NSX Manager Backup
 
-### Configure via NSX UI
+=== "NSX UI"
 
-1. Log in to **NSX Manager** (`https://<nsx-manager-vip>`).
-2. Navigate to **System → Backup & Restore**.
-3. Click **Edit** next to **SFTP Server**.
+    1. Log in to **NSX Manager** (`https://<nsx-manager-vip>`).
+    2. Navigate to **System → Backup & Restore**.
+    3. Click **Edit** next to **SFTP Server**.
 
-| Field | Value |
-|---|---|
-| Protocol | SFTP |
-| IP / FQDN | `backup-srv.corp.example.com` |
-| Port | 22 |
-| Username | `nsx-backup` |
-| Directory | `/vcf/nsx/` |
-| Passphrase | (encryption passphrase) |
-| Backup Frequency | Hourly |
+    | Field | Value |
+    |---|---|
+    | Protocol | SFTP |
+    | IP / FQDN | `backup-srv.corp.example.com` |
+    | Port | 22 |
+    | Username | `nsx-backup` |
+    | Directory | `/vcf/nsx/` |
+    | Passphrase | (encryption passphrase) |
+    | Backup Frequency | Hourly |
 
-4. Click **Save**, then **Backup Now** to test.
+    4. Click **Save**, then **Backup Now** to test.
 
-### Configure via NSX API
+=== "NSX API"
 
-```bash
-NSX_MGR="nsx-manager.corp.example.com"
-NSX_USER="admin"
-NSX_PASS="NSXAdminPassword"
+    ```bash
+    NSX_MGR="nsx-manager.corp.example.com"
+    NSX_USER="admin"
+    NSX_PASS="NSXAdminPassword"
 
-# Configure backup
-curl -sk -u "$NSX_USER:$NSX_PASS" \
-  -X PUT "https://$NSX_MGR/api/v1/cluster/backups/config" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "backup_enabled": true,
-    "remote_file_server": {
-      "server": "backup-srv.corp.example.com",
-      "port": 22,
-      "protocol": {"protocol_name": "sftp"},
-      "directory_path": "/vcf/nsx/",
-      "authentication": {
-        "authentication_scheme": {
-          "scheme_name": "PASSWORD",
-          "username": "nsx-backup",
-          "password": "SFTPPassword"
+    # Configure backup
+    curl -sk -u "$NSX_USER:$NSX_PASS" \
+      -X PUT "https://$NSX_MGR/api/v1/cluster/backups/config" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "backup_enabled": true,
+        "remote_file_server": {
+          "server": "backup-srv.corp.example.com",
+          "port": 22,
+          "protocol": {"protocol_name": "sftp"},
+          "directory_path": "/vcf/nsx/",
+          "authentication": {
+            "authentication_scheme": {
+              "scheme_name": "PASSWORD",
+              "username": "nsx-backup",
+              "password": "SFTPPassword"
+            }
+          }
+        },
+        "backup_schedule": {
+          "resource_type": "IntervalBackupSchedule",
+          "seconds_between_backups": 3600
+        },
+        "passphrase": "BackupEncryptionPassphrase"
+      }'
+
+    # Trigger manual backup
+    curl -sk -u "$NSX_USER:$NSX_PASS" \
+      -X POST "https://$NSX_MGR/api/v1/cluster/backups?action=start"
+
+    # List available backups
+    curl -sk -u "$NSX_USER:$NSX_PASS" \
+      "https://$NSX_MGR/api/v1/cluster/restore/backuptimestamps" | jq '.results[] | {backup_id, timestamp}'
+    ```
+
+    ```text title="Expected output"
+    {
+      "backup_enabled": true,
+      "remote_file_server": {
+        "server": "backup-srv.corp.example.com",
+        "port": 22,
+        "protocol": {
+          "protocol_name": "sftp"
+        },
+        "directory_path": "/vcf/nsx/",
+        "authentication": {
+          "authentication_scheme": {
+            "scheme_name": "PASSWORD",
+            "username": "nsx-backup"
+          }
         }
-      }
-    },
-    "backup_schedule": {
-      "resource_type": "IntervalBackupSchedule",
-      "seconds_between_backups": 3600
-    },
-    "passphrase": "BackupEncryptionPassphrase"
-  }'
-
-# Trigger manual backup
-curl -sk -u "$NSX_USER:$NSX_PASS" \
-  -X POST "https://$NSX_MGR/api/v1/cluster/backups?action=start"
-
-# List available backups
-curl -sk -u "$NSX_USER:$NSX_PASS" \
-  "https://$NSX_MGR/api/v1/cluster/restore/backuptimestamps" | jq '.results[] | {backup_id, timestamp}'
-```
-
-
-```text title="Expected output"
-{
-  "backup_enabled": true,
-  "remote_file_server": {
-    "server": "backup-srv.corp.example.com",
-    "port": 22,
-    "protocol": {
-      "protocol_name": "sftp"
-    },
-    "directory_path": "/vcf/nsx/",
-    "authentication": {
-      "authentication_scheme": {
-        "scheme_name": "PASSWORD",
-        "username": "nsx-backup"
+      },
+      "backup_schedule": {
+        "resource_type": "IntervalBackupSchedule",
+        "seconds_between_backups": 3600
       }
     }
-  },
-  "backup_schedule": {
-    "resource_type": "IntervalBackupSchedule",
-    "seconds_between_backups": 3600
-  }
-}
-{
-  "backup_id": "backup-20240115-143022",
-  "start_timestamp": 1705329622000
-}
-{
-  "backup_id": "backup-20240115-143022",
-  "timestamp": 1705329622000
-}
-{
-  "backup_id": "backup-20240114-091545",
-  "timestamp": 1705245345000
-}
-{
-  "backup_id": "backup-20240113-180030",
-  "timestamp": 1705162830000
-}
-```
+    {
+      "backup_id": "backup-20240115-143022",
+      "start_timestamp": 1705329622000
+    }
+    {
+      "backup_id": "backup-20240115-143022",
+      "timestamp": 1705329622000
+    }
+    {
+      "backup_id": "backup-20240114-091545",
+      "timestamp": 1705245345000
+    }
+    {
+      "backup_id": "backup-20240113-180030",
+      "timestamp": 1705162830000
+    }
+    ```
 
-!!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification or import the NSX Manager's CA certificate into your system trust store.
-    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify NSX_USER and NSX_PASS variables are correct and the admin account has not been locked after failed login attempts.
-    **`{"error_code":400,"error_message":"Connection to remote file server failed"** — Confirm the backup server hostname resolves, port 22 is open, and the nsx-backup user credentials have write permissions on the /vcf/nsx/ directory.
+    !!! warning "Common errors"
+        **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification or import the NSX Manager's CA certificate into your system trust store.
+        **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify NSX_USER and NSX_PASS variables are correct and the admin account has not been locked after failed login attempts.
+        **`{"error_code":400,"error_message":"Connection to remote file server failed"** — Confirm the backup server hostname resolves, port 22 is open, and the nsx-backup user credentials have write permissions on the /vcf/nsx/ directory.
+
 ---
 
 ## vCenter Server File-Based Backup (FBB)
 
-### Configure via VAMI
+=== "VAMI (UI)"
 
-1. Access vCenter VAMI: `https://<vcsa-fqdn>:5480`
-2. Navigate to **Backup**.
-3. Click **Configure**.
+    1. Access vCenter VAMI: `https://<vcsa-fqdn>:5480`
+    2. Navigate to **Backup**.
+    3. Click **Configure**.
 
-| Field | Value |
-|---|---|
-| Backup Protocol | SFTP |
-| Server | `backup-srv.corp.example.com` |
-| Port | 22 |
-| Username | `vcsa-backup` |
-| Password | (store in vault) |
-| Backup Directory | `/vcf/vcenter/` |
-| Encrypt backup | Yes |
-| Backup Password | (encryption passphrase) |
-| Schedule | Daily at 02:00 |
-| Retention | 3 copies |
+    | Field | Value |
+    |---|---|
+    | Backup Protocol | SFTP |
+    | Server | `backup-srv.corp.example.com` |
+    | Port | 22 |
+    | Username | `vcsa-backup` |
+    | Password | (store in vault) |
+    | Backup Directory | `/vcf/vcenter/` |
+    | Encrypt backup | Yes |
+    | Backup Password | (encryption passphrase) |
+    | Schedule | Daily at 02:00 |
+    | Retention | 3 copies |
 
-4. Click **Save**, then **Backup Now** to validate.
+    4. Click **Save**, then **Backup Now** to validate.
 
-### Trigger Backup via REST API
+=== "REST API"
 
-```bash
-VCSA="vcenter.corp.example.com"
+    ```bash
+    VCSA="vcenter.corp.example.com"
 
-# Authenticate (returns session ID)
-SESSION=$(curl -sk -u "administrator@vsphere.local:vSpherePassword" \
-  -X POST "https://$VCSA/rest/com/vmware/cis/session" \
-  -H "Content-Type: application/json" | tr -d '"')
+    # Authenticate (returns session ID)
+    SESSION=$(curl -sk -u "administrator@vsphere.local:vSpherePassword" \
+      -X POST "https://$VCSA/rest/com/vmware/cis/session" \
+      -H "Content-Type: application/json" | tr -d '"')
 
-# Create backup job
-curl -sk -H "vmware-api-session-id: $SESSION" \
-  -X POST "https://$VCSA/rest/appliance/recovery/backup/job" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "spec": {
-      "location_type": "SFTP",
-      "location": "sftp://backup-srv.corp.example.com/vcf/vcenter/",
-      "location_user": "vcsa-backup",
-      "location_password": "SFTPPassword",
-      "parts": ["common", "seat"],
-      "backup_password": "BackupEncryptionPassphrase",
-      "comment": "Scheduled backup"
-    }
-  }' | jq '.value.id'
-```
+    # Create backup job
+    curl -sk -H "vmware-api-session-id: $SESSION" \
+      -X POST "https://$VCSA/rest/appliance/recovery/backup/job" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "spec": {
+          "location_type": "SFTP",
+          "location": "sftp://backup-srv.corp.example.com/vcf/vcenter/",
+          "location_user": "vcsa-backup",
+          "location_password": "SFTPPassword",
+          "parts": ["common", "seat"],
+          "backup_password": "BackupEncryptionPassphrase",
+          "comment": "Scheduled backup"
+        }
+      }' | jq '.value.id'
+    ```
 
+    ```text title="Expected output"
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                     Dload  Upload   Total   Spent    Left  Speed
+    100   512  100   512    0     0   1847      0 --:--:-- 0:00:00 --:--:-- 0:00:00
+    "52d4a8f1-7c2e-4a9b-b3f2-9e1c6d5a2b8f"
+    ```
 
-```text title="Expected output"
-% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   512  100   512    0     0   1847      0 --:--:-- 0:00:00 --:--:-- 0:00:00
-"52d4a8f1-7c2e-4a9b-b3f2-9e1c6d5a2b8f"
-```
+    !!! warning "Common errors"
+        **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify if using different curl version).
+        **`{"type":"com.vmware.vapi.std.errors.unauthenticated"...}`** — Verify credentials are correct and VCSA is reachable; re-authenticate and capture SESSION variable before running backup job command.
+        **`jq: parse error: Cannot index string with string "value"`** — Ensure the backup job creation succeeded by checking the full response without piping to jq first; the API may have returned an error object instead of the expected job response.
 
-!!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify if using different curl version).
-    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"args":[],"default_message":"Invalid session.","id":"Com.Vmware.Vapi.Std.Errors.Unauthenticated"}]}}`** — Verify credentials are correct and VCSA is reachable; re-authenticate and capture SESSION variable before running backup job command.
-    **`jq: parse error: Cannot index string with string "value"`** — Ensure the backup job creation succeeded by checking the full response without piping to jq first; the API may have returned an error object instead of the expected job response.
 ---
 
 ## vSAN Configuration Backup

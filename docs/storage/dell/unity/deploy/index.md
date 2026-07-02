@@ -34,6 +34,7 @@ configure_iscsi_or_fc_host_access -> validate
     [:fontawesome-brands-youtube: Dell Unity: Storage Provisioning and Initial Setup](https://www.youtube.com/watch?v=UeUVvuu1vfE){ .md-button }
 <!-- /video-link -->
 
+
 - **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)
 - **Timing:** safe to run during a scheduled maintenance window; allow 1-2 hours for initial deployment
 - **Dependencies:** network connectivity verified; DNS resolvable; NTP configured; any licence keys available

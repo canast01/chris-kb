@@ -28,6 +28,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
     [:fontawesome-brands-youtube: How to Install & Configure VMware ESXi | Full Lab Setup + Real-World Guide](https://www.youtube.com/watch?v=gtlEhKQGd0k){ .md-button }
 <!-- /video-link -->
 
+
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled

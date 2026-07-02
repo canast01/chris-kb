@@ -39,6 +39,7 @@ verify -> validate
     [:fontawesome-brands-youtube: Pure Storage PurityFA v6.5 — FlashArray GUI and Management](https://www.youtube.com/watch?v=5S-ry04rc18){ .md-button }
 <!-- /video-link -->
 
+
 - **Access:** Storage admin credentials (cluster admin or equivalent)
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled

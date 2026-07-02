@@ -39,6 +39,11 @@ phase_6_endtoend_validation -> validate
 
 ## Before you begin
 
+<!-- video-link -->
+!!! tip "Video Walkthrough"
+    [:fontawesome-brands-youtube: HOW TO: Install, Configure and Manage VMware Aria Operations 8.17](https://www.youtube.com/watch?v=R-KfLZ4B4pc){ .md-button }
+<!-- /video-link -->
+
 - **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled

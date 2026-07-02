@@ -40,6 +40,11 @@ configure_windows_firewall -> validate
 
 ## Before you begin
 
+<!-- video-link -->
+!!! tip "Video Walkthrough"
+    [:fontawesome-brands-youtube: Learn Windows Server 2022 in Just 30 Mins](https://www.youtube.com/watch?v=QxsqVuwWrZs){ .md-button }
+<!-- /video-link -->
+
 - **Access:** Local Administrator or Domain Admin on target hosts
 - **Environment:** DNS, NTP, and network connectivity verified before starting
 - **Change management:** change request approved; maintenance window scheduled
