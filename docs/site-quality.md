@@ -12,7 +12,7 @@ Generated: 2026-07-01
 
 | Item | Count |
 |---|---:|
-| Total markdown pages | 2,846 |
+| Total markdown pages | 2,847 |
 | Sections | 11 |
 | Pages with kb-summary | 2,567 |
 | Pages with full-width ASCII diagram | 166 |
