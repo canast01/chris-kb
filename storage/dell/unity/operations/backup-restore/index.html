@@ -9515,19 +9515,7 @@ Backup & Restore reference covering Overview, Protection Method Selection, Nativ
 <p>Stack schedules on critical resources — assign both an hourly and a daily schedule to the same LUN or file system.</p>
 <h2 id="veeam-backup-replication-integration">Veeam Backup &amp; Replication Integration<a class="headerlink" href="#veeam-backup-replication-integration" title="Permanent link">&para;</a></h2>
 <p>Veeam integrates with Unity via the Dell Unity Storage Plugin for Veeam. When configured, Veeam triggers Unity snapshots as part of its backup job, enabling:</p>
-<pre class="mermaid"><code>sequenceDiagram
-  participant VBR as "Veeam B&amp;R Server"
-  participant UNITY as "Unity REST API"
-  participant VM as "VMware ESXi / VM"
-  participant REPO as "Veeam Repo"
-  VBR-&gt;&gt;VM: quiesce / VSS snapshot
-  VBR-&gt;&gt;UNITY: POST /prot/snap (storage snapshot)
-  UNITY--&gt;&gt;VBR: snapshot ID
-  VBR-&gt;&gt;UNITY: mount snapshot to proxy
-  VBR-&gt;&gt;REPO: transfer data from snapshot
-  REPO--&gt;&gt;VBR: transfer complete
-  VBR-&gt;&gt;UNITY: DELETE snapshot
-  note over VBR,UNITY: Snapshots accumulating = check&lt;br/&gt;Veeam job logs for delete errors</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNpdkcFuwjAQRO98xYpD1UpFuUctUlFyQGoKSiBqj4u7BLfEG9ZOW_6-dkAWytV-M_NkWzr1ZBRlGhvBdgLQoTitdIfGQb0oAS1MayJsYXFXQkXyQzIdcdu35eZjILdGuzOUebWBl_VyzNXFpa74RSHIq3cNiT8cY2W-Xt3sltRxQLzNbD6vixROvSarKISrCqzBzh7YRWTQSWG98hZJJ-ySgMC9dSzYUAw8-MTAzkLvokzjDSyzcVvLvVeLgGPwzX_niAXpFJygsXsS-ESHsBdub_UCE7ciqrjtjuRovJjlr_kmv80bdgTsPyCAj1esut5bQKX6tj-i06aBZ1AHUt9PO0nml3f84h0cubGwZ-9HYRJIhMVO_gHmCqdO?" /></p>
 <ul>
 <li>Crash-consistent Unity-level snapshots for VMs on Unity-backed datastores.</li>
 <li>Near-instant VM restore from Unity snapshots without reading backup media.</li>
@@ -9627,19 +9615,7 @@ Backup & Restore reference covering Overview, Protection Method Selection, Nativ
 </div>
 <p>Point the NDMP backup application to the NAS server IP and port 10000. Supported NDMP backup applications include Veritas NetBackup, IBM Tivoli Storage Manager, and Commvault (NDMP mode).</p>
 <h2 id="replication-failover-and-failback-flow">Replication Failover and Failback Flow<a class="headerlink" href="#replication-failover-and-failback-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  subgraph "Normal State"
-    SRC[("Source Unity\n(active)")]
-    DST[("Destination Unity\n(replica)")]
-    SRC --&gt;|"async / sync replication"| DST
-  end
-  FAIL{Source\nfails?}
-  SRC --&gt;|disaster| FAIL
-  FAIL --&gt;|Yes| FO["uemcli /prot/rep/session\n-id ... failover"]
-  FO --&gt; ACTIVE["Destination Unity\nnow active"]
-  ACTIVE --&gt; HOSTS(["Hosts redirect I/O\nto destination"])
-  HOSTS --&gt; FBCK["When source recovers\nuemcli ... reverse → sync → failback"]
-  FBCK --&gt; SRC</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptkE1uwjAQhfecYuQVWUBu0IpCI1BRIxHaqkpYGGcKVoMdeQwVKt32AD1iT9Kxg2DTjX-_9-bNbJxstzBf9ABov97Em3i0bicbKLz0KPgHoFiMy74o7N4phCej_bEyfam8PmAiklVkJsWSmQmS10Z6bc0FdNg2WskLyW4wGNychKSjUZBC3M5UUIpTcGMWTc1rNprNP7vilXmTuqHbr97VptYkyaM7RfDMx59XJH7MS7HHnWo0pK2zPuVCKSERF6rMQNcwHA4h2NoDOhEiZnmQw2i8nD3fl__1ZOwHdP1HQUdG0TQvlkW_FFNLnripWjtUHmZpXhlvob56iVXC0shHZXY3fijFyxYNUDdpVoZMVJlzAyGpw_CE8Pv90w0uHEL8tVTvXXw2io48od4fv--Z8g==?" /></p>
 <h2 id="replication-as-dr-protection">Replication as DR Protection<a class="headerlink" href="#replication-as-dr-protection" title="Permanent link">&para;</a></h2>
 <p>Unity asynchronous replication provides RPO-based protection to a secondary Unity or PowerStore array. See the <a href="../cli-reference/#replication">CLI Reference — Replication</a> section for full replication commands.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Show replication sessions with last sync time</span>

@@ -8901,30 +8901,7 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 </ul>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    adminUser(["Storage Admin\nor Automation Account"])
-
-    subgraph "Linux Host"
-        ssh["SSH (key-based auth)\nPAM / SSSD → AD"]
-        sudo["sudo → /usr/sbin/powermt\n(sudoers.d/powerpath)"]
-        svcAccount["Service Account\n(restricted sudo — display only)"]
-        ssh --&gt; sudo
-        ssh --&gt; svcAccount
-    end
-
-    subgraph "Windows Host"
-        winAuth["Windows Auth\n(Kerberos / NTLM)"]
-        localAdm["Local Administrators group\n(required for powermt)"]
-        jea["JEA Role Capability\n(optional: limit to display commands)"]
-        winAuth --&gt; localAdm
-        localAdm --&gt; jea
-    end
-
-    adminUser --&gt; ssh
-    adminUser --&gt; winAuth
-    sudo --&gt;|"powermt set / save / config"| ppCLI["powermt CLI"]
-    svcAccount --&gt;|"powermt display only"| ppCLI
-    jea --&gt;|"constrained commands"| ppCLI</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptUrtu3DAQ7O8rFqzOxfn6FAEEO4CdyEFgJUihc0FJtMRE4jJc8i4HuEiVDwj8hf4Sr6iHdXZUSOI-ZmdnWDtpG0hvV8CPrDptvpFy61xkHp2sFSR9bGfQQRI8dtJrNJCUJQbjxd3ZKjZSKOoIJFJtwm-4QvIiZmKWGsbLrmD9Ux03hSRVgQy-OduZL8kNbCHLskt4-vsPkktx99IWKsxF_465bSC3pUKbrcWDcp3fmXWfVI7OqyFmJYMuEfblyJTnK7fXpZqoc7NT5J0uPbMZhvx5hEqTbeUR0LTHEyRqYLN5HwvfBucxMaVM9VqV79pUeKBXuhy0YU1Zmyndn5jYJ-UK5ZBYmc9f05sljxZL2bIluUj7v8EdzXtItougdhhsXO1X0I4Xu2ffRrmWMD-UzMXHDwncYqvgQlpZ6Fb7I7ei7R2W7Ttodac9eJxFKbHrpKloiTTuEHWYyL1hG7M881Se-bYNIlLzn-gIv5ruQx98EONGQMqzRiT3ij8lmntdiwew9iK9zuciPox8X3w6hVmaPvWvRpmGSsbuNdaGJZ1UmCufAWlMB2M=?" /></p>
 <p>PowerPath does not implement its own authentication system. There is no PowerPath-native login, user database, or session management. Access to <code>powermt</code> CLI commands is controlled entirely by the host operating system's authentication and authorisation mechanisms.</p>
 <p>This design means PowerPath security is inherited from the host OS security posture. Any account with sufficient OS privilege can run any <code>powermt</code> command — there is no additional PowerPath credential check.</p>
 <hr />

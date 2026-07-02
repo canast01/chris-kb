@@ -7724,22 +7724,7 @@ Venafi TPP manages the full certificate lifecycle — discovery, policy enforcem
 <p>Policy violations are surfaced in the Venafi UI and via API. Non-compliant certificates generate alerts and block automated renewal until the violation is resolved.</p>
 <hr />
 <h2 id="automated-renewal-sequence">Automated Renewal Sequence<a class="headerlink" href="#automated-renewal-sequence" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant monitor as Venafi Monitor
-    participant tpp as TPP Policy Server
-    participant ca as CA Connector
-    participant caServer as CA Backend
-    participant target as Target System
-
-    monitor-&gt;&gt;tpp: Detect cert within renewal window (30 days)
-    tpp-&gt;&gt;tpp: Generate new CSR using stored key policy
-    tpp-&gt;&gt;ca: Submit CSR to configured CA connector
-    ca-&gt;&gt;caServer: Forward CSR (ADCS / DigiCert / Entrust)
-    caServer--&gt;&gt;ca: Issue new certificate
-    ca--&gt;&gt;tpp: Return issued certificate
-    tpp-&gt;&gt;tpp: Store new certificate in inventory
-    tpp-&gt;&gt;target: Push certificate to target (if driver configured)
-    tpp--&gt;&gt;monitor: Notify certificate owner (email / SNMP)</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptkcFugkAQhu8-xRzxYGzSGwcTC23Tg4ZI0_t0GXCi7NLdRcLbdxYwaiknwe-bmX_G0U9LWlHKWFmsFyBPg9az4ga1h9po9sYCOvgijSXDbvwyI33TBOozyyAzZ1Y95GQvNAcVBi7ZQmK0JvVfLYWjO4EvqE6ki3lLtBX5oev4K--dp3oxgNPkq81GJoshJS-9QJH10LE_sgZLmjo8y6suTAfR8xMU2LvloIt0Vd-Fs-gJBIckP0DrWFfgpDoVcKIemiHwnacwhrz9rtkPgjegjC65aoMhidRDdIWDMmaO4c3YDm0xmNE2TXJYQ8oVJ2H2Nbxqb1vnl5M6Wqup6Ydz7ThoSMolKxn82uQa6EC-tRo4sMUMvEueh4h_q4GsjvWFtPx5n3m8RgxZ644PvKSfLhVxCYXlcNnbPm77liLT1WLYG_H7hzqmkztARDXyWfaQ73fZcvELP7HrxA==?" /></p>
 <hr />
 <h2 id="renewal-automation">Renewal Automation<a class="headerlink" href="#renewal-automation" title="Permanent link">&para;</a></h2>
 <p>Venafi TPP monitors certificate validity and triggers renewal at the configured renewal window (typically 30 days before expiry). Renewal can be fully automated or require approval.</p>

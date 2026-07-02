@@ -7529,26 +7529,7 @@ Git is a distributed version control system where every working copy is a full r
 <hr />
 <h2 id="distributed-model">Distributed Model<a class="headerlink" href="#distributed-model" title="Permanent link">&para;</a></h2>
 <p>Unlike centralised VCS tools, every Git clone contains the entire repository history. By convention teams designate one remote (GitHub, GitLab, Bitbucket) as the integration point.</p>
-<pre class="mermaid"><code>graph LR
-    subgraph "Developer A"
-        WTA[Working Tree] --&gt; LA[Local Repo&lt;br/&gt;.git/]
-    end
-    subgraph "Developer B"
-        WTB[Working Tree] --&gt; LB[Local Repo&lt;br/&gt;.git/]
-    end
-    subgraph "Developer C — Fork"
-        WTC[Working Tree] --&gt; LC[Local Repo&lt;br/&gt;.git/]
-    end
-
-    LA --&gt;|git push| REMOTE[Remote — origin&lt;br/&gt;github.com / gitlab.com]
-    LB --&gt;|git push| REMOTE
-    REMOTE --&gt;|git pull / fetch| LA
-    REMOTE --&gt;|git pull / fetch| LB
-
-    REMOTE --&gt;|fork| FORK[Fork Remote&lt;br/&gt;github.com/user/repo]
-    FORK --&gt;|git push| LC
-    LC --&gt;|git push| FORK
-    FORK --&gt;|Pull Request / MR| REMOTE</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqdkE1OwzAQhfc9xaj71hdAlWzTbnBVZEXqIuoiCVMnwo2DE7PKgkNwQk6CfyQUoiAQs5rxPH_zZpQtuhqEXIGP3pUq1ut7fEVtOrRA17EV4pzR_Gzsc9MqyCziBTabHQiaC1MVGiR25q60ZLdVzUAu8Ru2Tz-S2ZTMlsjsn2QOH2_vcPDA6Qi-NIL_MiImggbx6DvQub4eQe6Pp2yfS7yZAeMwYxvVtJHgZbUrt5W5AQFf6CIWiSnYIir2Ujrpa-0JVxwqrxP0Dxq2mouufuURDif5kId7QLI880lcj5ZYf4JkMshnNgVP9vnsPUi__3kMliS-OOwHb-0ov3b8BP5budk=?" /></p>
 <hr />
 <h2 id="refs-and-branches">Refs and Branches<a class="headerlink" href="#refs-and-branches" title="Permanent link">&para;</a></h2>
 <p><img alt="Git — How It Works — Diagram" src="../../../../assets/itsm-git-architecture-how-it-works-diagram.svg" /></p>
@@ -7581,30 +7562,7 @@ Git is a distributed version control system where every working copy is a full r
 <hr />
 <h2 id="github-enterprise-gitlab-self-managed-architecture">GitHub Enterprise / GitLab Self-Managed Architecture<a class="headerlink" href="#github-enterprise-gitlab-self-managed-architecture" title="Permanent link">&para;</a></h2>
 <h3 id="github-enterprise-server-ghes">GitHub Enterprise Server (GHES)<a class="headerlink" href="#github-enterprise-server-ghes" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>graph LR
-    subgraph "GHES Primary Appliance"
-        HAPROXY[HAProxy / Load Balancer]
-        NGINX[Nginx — HTTPS / SSH]
-        GITALY[Gitaly&lt;br/&gt;Git RPC service]
-        RAILS[GitHub Rails App]
-        MYSQL[(MySQL — Metadata)]
-        REDIS[(Redis — Cache / Queues)]
-        ELASTIC[(Elasticsearch — Search)]
-        STORAGE[(NFS / Block Storage&lt;br/&gt;Git Object Data)]
-    end
-
-    subgraph "GHES Replica — HA"
-        REPLICA[Passive Replica&lt;br/&gt;Continuous replication]
-    end
-
-    DEV[Developers] --&gt;|HTTPS / SSH| HAPROXY
-    HAPROXY --&gt; NGINX
-    NGINX --&gt; RAILS
-    NGINX --&gt; GITALY
-    RAILS --&gt; MYSQL
-    RAILS --&gt; REDIS
-    GITALY --&gt; STORAGE
-    STORAGE -.-&gt;|rsync / drbd| REPLICA</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptktFugjAYhe95ij9euQvnCywmiAxIUJGSRdN4Ucof7cbAtGAk8WIPsSfck6zUCcSsNy2Hr_T0HA6SnY4Qxhbooer0YJ5Hnu8SiKT4ZLIB-3TKBSs4jgzVDt-O4vV2R_Usy0sDUwhLlsGc5S0n9x248oLVlq4OorjAz9c3-EkSEY0T4veQFyR2uKOeqFjevKRyOtNLiCMHFMqz4NijsR2EpCX9OoWYiVy19vr3yx3ZhHS8bPRkDlxixTJWsafBN9xFQOg4xkwowziMH1Gb2tRYoxqQbmiTJHDo2M2ZqgRXyCQ_mj3ELAcsSdax7bl0vHptLzjPS_4BpColO2B3p3X6jryCRW8Ii8z6L_wYdeic3UKzRwPzURg4No2YUuKMd86c4JRFJYq6rBXIm1yJsng4Z-G-0QWeMS9PKNUeJpPZddDK9d6tNei5hW5VWl2pRjN1PGi3Nq2uLSOaXh4004PV_wBG_IvRGkQKk2ftUaqm4NpjJtPseo_B-gVBRseD?" /></p>
 <h3 id="key-server-components">Key Server Components<a class="headerlink" href="#key-server-components" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -7646,24 +7604,7 @@ Git is a distributed version control system where every working copy is a full r
 </table>
 <hr />
 <h2 id="data-flow-git-push">Data Flow — git push<a class="headerlink" href="#data-flow-git-push" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Dev as Developer
-    participant Git as Git client
-    participant WH as Workhorse
-    participant Gitaly as Gitaly
-    participant Rails as Rails App
-    participant PG as PostgreSQL
-
-    Dev-&gt;&gt;Git: git push origin main
-    Git-&gt;&gt;WH: pack-objects stream
-    WH-&gt;&gt;Gitaly: SmartHTTP / SSHUploadPack RPC
-    Gitaly-&gt;&gt;Gitaly: receive-pack, update refs
-    Gitaly--&gt;&gt;WH: success
-    WH-&gt;&gt;Rails: POST /internal/allowed (auth check)
-    Rails-&gt;&gt;PG: validate permissions, record push event
-    Rails--&gt;&gt;WH: 200 OK
-    WH--&gt;&gt;Git: remote refs updated
-    Rails-&gt;&gt;Rails: trigger webhooks / CI pipelines (async)</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptkUFvwjAMhe_8Ch-HBALt2APSBBKdNomOMvUcUq_NmiZZnIL493Paom3qeklUf35-eSb86tBI3ClRedHOgD8nfFBSOWEC7PACguKB2jr0E2CvQgTiIbVCEyZEkUagsL6prSf8T0Ho2yjCtwlwFEpTrA-XJ-cmSLaP9cxSqDzmb6-znmDXy82GVROo2J_rqAbrVaUMtEKZnuEqM0WasJ5slvb8iTIQUPA4xlGkgwhbSyBveWp6OmWwgjxP3522osy4E47Z9i7I5K8WjxLVBZdRfwGdK0VA_vlBv_HRA3VSItHP3P7JCWSH_AQrZQJ6I_RKaG2vWMKD6EINskbZzPueHue2bJ_ARWjVz-K1tYpIWUOL6Mb6csiClzrua-gbTTyu13B4uXu4J-ixtaPx8RHln5Gj08D5Vujhiufa2oY4p-0zOOVQK4PElulm5Hz2Ddb4zAY=?" /></p>
 <hr />
 <h2 id="storage-layout">Storage Layout<a class="headerlink" href="#storage-layout" title="Permanent link">&para;</a></h2>
 <p><img alt="Git — How It Works — Diagram" src="../../../../assets/itsm-git-architecture-how-it-works-d2.svg" /></p>

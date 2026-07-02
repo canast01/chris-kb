@@ -9033,38 +9033,7 @@ Encryption reference covering Overview, Data at Rest Encryption (D@RE), Data in 
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>PowerMax provides encryption at three layers: data at rest on NVMe drives, data in flight over SRDF replication links, and management traffic over TLS. All three layers are independently configurable. Data at Rest Encryption (D@RE) is enabled by factory default on PowerMax 2000 and 8000 systems; replication encryption and management TLS require explicit configuration to enforce strong settings.</p>
-<pre class="mermaid"><code>graph LR
-    subgraph "Layer 3 — Management Traffic"
-        TLS_UNI["Unisphere HTTPS :8443\nTLS 1.2 / 1.3\nCA-signed certificate"]
-        TLS_SE["SYMAPI Daemon :2707\nTLS (SECURE flag in netcnfg)"]
-    end
-    subgraph "Layer 2 — Data in Flight (SRDF)"
-        SRDF_ENC["SRDF Encryption\nAES-256 at RDF director\nRequired for WAN/IP links\nBoth R1 + R2 must enable"]
-        SRDF_LINK["SRDF Link\n(dark fibre / DWDM / IP)"]
-        SRDF_ENC --&gt; SRDF_LINK
-    end
-    subgraph "Layer 1 — Data at Rest (D@RE)"
-        KEK["Key Encryption Key (KEK)\nEmbedded EKMS or\nexternal KMIP server"]
-        DEK["Data Encryption Key (DEK)\nper NVMe drive\nwrapped by KEK"]
-        NVME["NVMe Drive Media\nAES-256 hardware encryption\nenabled at factory"]
-        KEK --&gt; DEK --&gt; NVME
-    end
-    subgraph "KMIP External Key Manager (optional)"
-        KMIP["KMIP Server\n(Thales CipherTrust /\nEntrust KeyControl)\nTLS mTLS :5696"]
-        KMIP --&gt;|"KMIP Discover\n+ key delivery"| KEK
-    end
-
-    TLS_UNI --&gt; TLS_SE
-    SRDF_ENC --&gt; NVME
-
-    classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef inflight fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef atrest fill:#0f766e,stroke:#0d9488,color:#fff
-    classDef kmip fill:#92400e,stroke:#78350f,color:#fff
-    class TLS_UNI,TLS_SE mgmt
-    class SRDF_ENC,SRDF_LINK inflight
-    class KEK,DEK,NVME atrest
-    class KMIP kmip</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9U11v2jAUfedXXNEXUGF8lq-HaYykGuJDKKGrpjJVJr4JFonDnNAOqQ_7EfuF-yW7diikXbs8JHZ8z7nnHNuBYrsNTJ0C0JPs14GZF6fsgApa8OfXb5gxyQKMUKawVMz3hVc01fpZTt37m_n4rngjRbLboEL4slwuXBj02u3WStI6ND40oUZvmo6G1UQEEjl4qFJBVCzF4vcXdK59V3S_zYaLMVgMo1jCoNmtdzOukmuPbhwb_JAFICRITD3pB-UjB0r-ppGmMWKxlGnQdSiCTUpcjnVdPnvR03t7PqL2NAJbeuqwS0UsV3Jou9XmVQdYCnqJC4VeGquVdPDHniYc_FjB7XBeGy8gFHKbrOTnON2A04BLcJoQ7ZOU1LF1mLdrOk7H88mx5ZSQK1niTG3BF2sKswbWrTWjz3hRfg0kqVCtfjyz_DeCxjkC7QJJT8n65Ni5ACY2CZngIWcd9LREC-WVtKM1ck5e7cnMBe0ef6aoJAthMiPfCaoHVDmVluYzHV8TWoZwR7LmX2cIXIkHXMlH0rsj_vVBS8kRUREdClNq6VKYIRfsvC0bpvgjo7gwt2dZ2ly79ZnerUOOkfhNdtbxqzu8E5_xZp-ckvzsQigoxaYVC_MZUvVdhnFNHrSfyw0LMYGR0BdkqfRRqFGcMjVDYhzFNI7DcnbGI_0aXHX6nbxgzUhKnzJuSyRebNgvYUuSOIaUC1l80tZOTgq5O2p8Zhes8M8ZMv7Nby9kSWKhD1EQUXIiDAcXlHEL15WERG5xcNHgbeS9iheHsRpc-L7_Eiikn12wDNz1Wgz5CdzhzR7vvwtmqdJHM4PW_W6ngydonffbvff7biOxOwL7zXa9fgZ2e62ruv8m8DmdSpaMcZ1bfQ6pcrpkJ3u5Koq8QiepolM8Osiv6g3T4gp_AQTKns0=?" /></p>
 <h2 id="data-at-rest-encryption-dre">Data at Rest Encryption (D@RE)<a class="headerlink" href="#data-at-rest-encryption-dre" title="Permanent link">&para;</a></h2>
 <p>PowerMax implements D@RE using AES-256 hardware encryption on every NVMe drive. Encryption is transparent to hosts and applications — no performance impact, no configuration required on the host side.</p>
 <h3 id="how-dre-works">How D@RE Works<a class="headerlink" href="#how-dre-works" title="Permanent link">&para;</a></h3>

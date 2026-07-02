@@ -8907,31 +8907,7 @@ Authentication reference covering Overview, Active Directory Integration, Disabl
 </ul>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    adminUser(["Admin or Service Account"])
-
-    subgraph "Management Plane"
-        ldap["LDAP / Active Directory\n(primary — group → role mapping)"]
-        localFallback["Local Accounts\n(break-glass fallback)"]
-        ldap --&gt;|"role: admin"| ddCLI["DDOS CLI / System Manager"]
-        localFallback --&gt;|"break-glass only"| ddCLI
-    end
-
-    subgraph "DD Boost Plane"
-        ddboostUser["DD Boost User\nddboost-veeam / ddboost-netbackup"]
-        storageUnit["Storage Unit\n(su-veeam-prod)"]
-        ddboostUser --&gt; storageUnit
-    end
-
-    subgraph "Audit"
-        auditLog["log view audit\n(all CLI actions logged)"]
-        syslog["Syslog → SIEM\n(12-month retention)"]
-        auditLog --&gt; syslog
-    end
-
-    adminUser --&gt; ldap &amp; localFallback
-    adminUser --&gt; ddboostUser
-    ddCLI --&gt; auditLog</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1UrFOwzAQ3fsVJw8IhgjByIBUCEhIRSCiToHBjQ_XqmNHtlMUqQMTH4D4Qr6Es0NoCtRLfL577969nHS8WcLsYQJ0uKiVmXt0hyWbxjtYBwW6taoQplVlWxPY09EkFft2IROY3XLDJdZoAtxrbpClfDxa8KZks3x6D8dEENQaIVcOq2Bd92gOG6dq7jr4fP0A6WzbwOfbOzirEWreNMrII_a0ZbMV19dc6wWvVkQbw0GWJ7aFQ77KpObew_N32Q6e1ECWnW9Y7HDWj8s2IMTl7KZkeX5XAN1IatH5gDX0g7l9EnqucVdrdDcQJgwa8dutPIcLa_0fr4RYxOdof7ktiuGj-c5la0Rek74hNhiikLYZSfTkLameGxVKVvQBxIgc8m1PkTXOirE1o-ZxqjHJvjmmrVBhK5_HcGZlybSVsFb40j9RV7Ir-cppAazxZKKUuNPed15HaJG-aQmKm6tbwp6cZrU1YQkOAy0Y4ce4oWmvOYF35f5sdKpIC3Cw-xP_KRuZMenNiepjZug3-QLaHAHT?" /></p>
 <h3 id="ldap-role-mapping">LDAP Role Mapping<a class="headerlink" href="#ldap-role-mapping" title="Permanent link">&para;</a></h3>
 <p>After LDAP is configured, map LDAP groups to DDOS roles:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Map an LDAP group to the admin role</span>

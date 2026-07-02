@@ -8301,37 +8301,7 @@ Internal architecture and data-path reference: controller pair, NVRAM write path
 </ol>
 <p>Peak write throughput is bounded by NVRAM size (how much write burst the array can absorb). Sustained write throughput is bounded by flash write bandwidth. On FA//X models with multiple DFMs, sustained write bandwidth is typically in the tens of GB/s range.</p>
 <h2 id="mermaid-diagram-io-architecture">Mermaid Diagram: I/O Architecture<a class="headerlink" href="#mermaid-diagram-io-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph HOST["Host Layer"]
-        H1["Application Server\nFC / iSCSI / NVMe-oF HBA"]
-    end
-
-    subgraph CTRL["Controller Pair"]
-        CT0["CT0\nPurity OS\nNVMe Ports\nNVRAM"]
-        CT1["CT1\nPurity OS\nNVMe Ports\nNVRAM"]
-        CT0 &lt;--&gt;|"NVRAM Mirror\nHigh-speed interconnect\nWrite durable when both confirm"| CT1
-    end
-
-    subgraph FLASH["DirectFlash Layer"]
-        DFM1["DirectFlash Module 1\nNVMe raw NAND\nPurity-managed FTL"]
-        DFM2["DirectFlash Module 2\nNVMe raw NAND\nPurity-managed FTL"]
-        DFM3["DirectFlash Module N\nNVMe raw NAND\nPurity-managed FTL"]
-    end
-
-    H1 --&gt;|"FC / iSCSI / NVMe-oF\nALUA preferred path"| CT0
-    H1 -.-&gt;|"Non-optimised path\nActive on CT0 failure"| CT1
-    CT0 --&gt;|"Destage: dedup + compress\nthen write"| DFM1
-    CT0 --&gt;|"Destage"| DFM2
-    CT1 --&gt;|"Destage"| DFM3
-
-    classDef host fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef ctrl fill:#15803d,stroke:#14532d,color:#fff
-    classDef nvram fill:#b45309,stroke:#92400e,color:#fff
-    classDef flash fill:#7c3aed,stroke:#5b21b6,color:#fff
-
-    class H1 host
-    class CT0,CT1 ctrl
-    class DFM1,DFM2,DFM3 flash</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqVk9uO2jAQhu95ilH2sqTNAVoWVZVSUJRKwCJC2wvohZNMiNVgRxMHtNI-_NqB5aCC1M1FDh5_M57_n-Sl3KcFIwWTRQf0VTfJhlhVQPQUL1dWJGsdYs9I1p82bq7IXVlBVZU8ZYpLATHSDmktwhF8Ah6P4h_6Ofs1RVuGEH0PjiiKrHNdY7RcTFbWSApFsiyRYM74ZaHR0tHhpbMW84a4eoaneC1MYphLUrV5XwTTK8A1gPsOwIGvtv3txWojMOVEUrcS8U1h1xViBlwopFQKgalai986LULWEEtKhH2BAhKpCtAbck5b68Wc4U674SSIo5U15qRThSWri3-kHYdT93rHVGaNruQe-yC2h1kwG791aG-ZYBt9zHA5uc7j3czjvTuPfzPP7P_znISIXGilvjUnaxFMfgZQEeZIpPmKqaJV0zmxH1ufpLBlpfiW18ddGk0V3yHoUTR-5oyXDeGFFWa1rTzGWunTDSHDrKngg7Ztq0vWejKUsXJv3NWgseEmeYh5x5h7I-Yfek21WPUYcyjMH5Tzshw-uFkPs0G31tP-F_Un-mzAuqksJQ0f8jy_BlNF5RvYHzh-dgZ7fd_L7oJiR2x7JBO91Xk8kY9ez3HwLpm3Dh_IL6nP8Fyzn3hu8vmSPKPGHNPmxYrWrWv0MU1cLBtdu0ZAc_MP9Tqv6GFceA==?" /></p>
 <h2 id="protection-groups-and-snapshots">Protection Groups and Snapshots<a class="headerlink" href="#protection-groups-and-snapshots" title="Permanent link">&para;</a></h2>
 <p>A Protection Group (pgroup) defines a set of volumes that must be snapped together to form a crash-consistent point-in-time copy. All volumes in a pgroup are snapped atomically — the snapshot represents the exact same moment for every member volume.</p>
 <p>Snapshot behaviour:</p>
@@ -8469,66 +8439,7 @@ Internal architecture and data-path reference: controller pair, NVRAM write path
 <p><strong>Pure1</strong> is Pure Storage's cloud management portal. It ingests telemetry from all registered FlashArrays and provides centralised capacity planning, anomaly detection, AI-driven support case pre-population, and predictive replace notifications for hardware components — without requiring a separate on-premises management VM.</p>
 <h2 id="directflash-io-path-write-journey-with-inline-data-reduction">DirectFlash I/O Path — Write Journey with Inline Data Reduction<a class="headerlink" href="#directflash-io-path-write-journey-with-inline-data-reduction" title="Permanent link">&para;</a></h2>
 <p>The diagram below traces a single host write from the initiator HBA all the way to a DirectFlash Module, showing exactly where inline deduplication and compression occur, how the NVRAM mirror creates the durability guarantee before any ACK is sent, and how the destage pipeline lands data on raw NAND.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph INITIATOR["Initiator (Host)"]
-        APP["Application\nOracle / SQL / VMware\nIssues write I/O"]
-        HBA["Host HBA / NIC\nFC 32 Gb/s · iSCSI 25 GbE\nNVMe/FC · NVMe/RoCE · NVMe/TCP"]
-    end
-
-    subgraph FABRIC["Storage Fabric"]
-        FC_SW["FC Switch / IP Network\nZoned: HBA → CT0 port\nNon-preferred: HBA → CT1 port"]
-    end
-
-    subgraph PORTAL["FlashArray Portal (Active Controller — CT0)"]
-        PORT["Front-End Port\nFC target / iSCSI portal\nNVMe-oF subsystem"]
-        NVRAM0["CT0 NVRAM\nDRAM + capacitor backup\nWrite lands here first"]
-    end
-
-    subgraph MIRROR["NVRAM Mirror (CT1)"]
-        NVRAM1["CT1 NVRAM\nMirror copy of CT0 NVRAM\nHigh-speed dedicated link"]
-        ACK["Host ACK Issued\nOnly AFTER both NVRAMs confirm\nWrite is durable at this point"]
-    end
-
-    subgraph REDUCTION["Data Reduction Pipeline (background destage)"]
-        DEDUP["Global Deduplication\nSHA-256 content fingerprint\nZero-block pattern detect\nDuplicate → pointer only, no write"]
-        COMPRESS["Inline Compression\nLZ4 / zstd algorithm\nApplied to unique chunks only\nTypical ratio: 2:1 – 5:1"]
-        COALESCE["Write Coalescing\nSmall random I/Os batched\nSequential NVMe write to DFM\nReduces NAND write amplification"]
-    end
-
-    subgraph DFM_LAYER["DirectFlash Layer"]
-        DFM1["DirectFlash Module 1\nRaw NVMe NAND — no embedded FTL\nPurity manages wear-levelling\nBlock allocation by Purity OS"]
-        DFM2["DirectFlash Module 2\nNVMe raw NAND\nParallel write across modules"]
-        DFM3["DirectFlash Module N\nNVMe raw NAND\nStripe across all modules"]
-    end
-
-    APP --&gt;|"SCSI / NVMe write command"| HBA
-    HBA --&gt;|"FC frame / iSCSI PDU / NVMe capsule"| FC_SW
-    FC_SW --&gt;|"ALUA preferred path"| PORT
-    PORT --&gt;|"Stage write to local NVRAM"| NVRAM0
-    NVRAM0 &lt;--&gt;|"Mirror link — synchronous\nBoth must confirm before ACK"| NVRAM1
-    NVRAM1 --&gt; ACK
-    ACK --&gt;|"Write ACK returned to host\nLatency &lt; 1 ms at this step"| HBA
-
-    NVRAM0 --&gt;|"Background destage\nContinuous, non-blocking"| DEDUP
-    DEDUP --&gt;|"Unique chunks only pass through"| COMPRESS
-    COMPRESS --&gt;|"Compressed unique blocks"| COALESCE
-    COALESCE --&gt;|"Parallel NVMe write"| DFM1
-    COALESCE --&gt;|"Parallel NVMe write"| DFM2
-    COALESCE --&gt;|"Parallel NVMe write"| DFM3
-
-    classDef init fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef fabric fill:#374151,stroke:#1f2937,color:#fff
-    classDef portal fill:#15803d,stroke:#14532d,color:#fff
-    classDef mirror fill:#b45309,stroke:#92400e,color:#fff
-    classDef reduce fill:#0e7490,stroke:#155e75,color:#fff
-    classDef dfm fill:#7c3aed,stroke:#5b21b6,color:#fff
-
-    class APP,HBA init
-    class FC_SW fabric
-    class PORT,NVRAM0 portal
-    class NVRAM1,ACK mirror
-    class DEDUP,COMPRESS,COALESCE reduce
-    class DFM1,DFM2,DFM3 dfm</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqVVt2O2kYUvucpjshNooIWw5LNrqJKXgNZVP6K2UQNVNHYHmNr7RlnZhxElYte9QHavkvv-yh5kp6ZMWCaILVcIBuf75zvnPnOZ-KM78KECAWTZQPwI8tgK0iRwHg2Xo3d1Xy5bo5ZqlKiuIDnD1yqF82fTaj-uIvFuukWRZaGRKWcbdhckDCjcAX-jxP8fjvdEUE3bCxlSSXsRKoojK_mtRwP9-66qRPrK4TMxt6GjTzodeFNcCXh778g9T1_DN0-_jDcsNnbKb3CAHxgLpfcGx5vVt6iyk1Z1DjvaeTeL8feuuljL2RLYUQCkYY1KiPvg_9u3cTc_i5VYYJsxguYUbXj4mnD3nNGoztD88tvv4O36kDBhUJGnLULQWMqxHmAYwIuElrMlyt3ggUzIhNXCLKHBcaTDJ67oUo_UfA4U4JnGRXw5dc_dcn6-DUe0QKD2kMWGbCZnSJiSxXSt5MrTFI7uTYfaQJyLxXNa7lmb5futLNu6q7M9YYN8Bu-g5AUJEz1-QckfCqLDXtnjjEjLJKQUEEhToW83OZ0vFxqIZm0ME2F0FrC6bz4d31H13cO9avIkBd74DHUmD2k26QtC0ojiGikxYdXWcqe6tr0fqh0hVdgBBihPlm2B3e0Gi4h4CqxCSXWYNhDfmgtlRCVggSoZKJAJXhf8JRdbnE5HDx6q_F8tm4OiCKwpFEZ6o2ARVpQZEbhuZ7eVvCSadJSoQLr_Q8wAy7Tm4wHeP4DxNe2yn9w293-S01TUaZw3mxLRSGQEsqSCt4OMh4-QUGUooJhfkVDfDSoklCjR9MCKonjDFrAuF3HGgdvPl0sh76vd95w9niOupbSkJi8v0ZF_SJVBCTbcsQmODCz_Th9xaFk6ceSQpiU7EmaKhu22hdIIAOhO7mD7p2DQv4D-nfOWV13MvS94bppx-9xklEZYpPYek4yDWcRz7VzSFQhrqY-S59iOYbelJndr9wFiQxGqBFzBOg5M3c2qB6RHLnG1VQvniWiP0zcn4ao2EEqcI5mPWFC9lTUD2yk5VqPmPKoRMU4WJvsLCVTXG8uTpvmAY1QrjBaTTZsUSKlPeSEoRDQGSkR7Yx-ollm2r4354mtc8sWAvQGC5n75yy632TRteuOk9sZFliRCMxHs8MwQsGlhNyEy_OUvW-mnH2V0lcC5X1IpQ_qPN1xuPiigHb7-89N40dX9fMKeY5DiJqftW82qjeCDUYniwXJ6dHIFoPHAxhdSWIlhBnXbhz920LdyaMLR0_Wi5FgqDbMxsE5K0J6EU_S0fPOrCtgvDXFxskf4bUBVc6kHcecrtyzMEEb5qXEo9O-kpdoPJWrQEBjji6JPnTI6ZxyOpqHftaoXMvyspugbwVVpWB2xRL0M9xE3GgW7uE1OJDLo0WhoxfVGOuUTbr7r8xnw_TLJWUlktZuwKyHoPowh3GjxtGXbI7Hr_Yb54rnrrD1cqvnezCQRt1NLPhgJdhH5ROmnDQou_6NuhdY1FGzJ8FodqNqgP8xuPt_gnt2eCEqXw5oDCn-_UHDzbK7Z050TaNXLYmv5CeKt7RHXpFWyDMu7p7FcXwOjM3fiwrau7l2-s4JGndvezcXofaFfajaf9XpRSfodb_XjS5CcytNCw0wtnN7hN52rzsdehEqjGNW0A69ub7tnKr2-_SmfxEaxXmFuwl7hJ7Y9oOuE7ys405A7Qotvex6xLWf7Rrb8dV-1jvbqjRtB1R7aFeppffFTqD2zEi4dZBj66gD2289EHXV0nrRXz3dVOMf5Ox7cQ==?" /></p>
 <p>Key points illustrated:</p>
 <ul>
 <li>The host ACK is sent only after both CT0 and CT1 NVRAMs have recorded the write — durability is guaranteed before data ever reaches flash</li>

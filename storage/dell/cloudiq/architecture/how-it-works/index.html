@@ -8818,48 +8818,7 @@ How It Works reference covering Overview, Data Pipeline Topology, How It Works, 
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.</p>
 <h2 id="data-pipeline-topology">Data Pipeline Topology<a class="headerlink" href="#data-pipeline-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  subgraph SOURCES["Storage Systems"]
-    PM["PowerMax\n(embedded agent)"]
-    UN["Unity XT\n(collection service)"]
-    PS["PowerStore\n(REST API)"]
-    SC["PowerScale\n(OneFS agent)"]
-    SW["PowerPath / vSAN\n/ VMware"]
-  end
-
-  subgraph ONPREM["On-Premises Collection"]
-    SA["SupportAssist Agent\n(SCG VM)\npoll every 5 min\noutbound HTTPS 443"]
-  end
-
-  subgraph CLOUD["Dell CloudIQ Cloud Platform"]
-    AE["Analytics Engine\n(ML Models)"]
-    TM["Telemetry Store"]
-    ML["ML Models\n7-day baseline\nper metric"]
-    AE --&gt; ML
-    TM --&gt; AE
-  end
-
-  subgraph OUTPUT["Outputs"]
-    HS["Health Score\n0–100"]
-    CF["Capacity Forecast\n(runway days)"]
-    PA["Performance\nAnomalies"]
-    PR["Proactive\nRecommendations"]
-    AL["Alerts\n(email / webhook)"]
-  end
-
-  PM &amp; UN &amp; PS &amp; SC &amp; SW --&gt; SA
-  SA --&gt;|"TLS-encrypted\nbatch telemetry"| TM
-  ML --&gt; HS &amp; CF &amp; PA &amp; PR &amp; AL
-
-  classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef green fill:#15803d,stroke:#166534,color:#fff
-  classDef amber fill:#b45309,stroke:#92400e,color:#fff
-  classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-  class PM,UN,PS,SC,SW blue
-  class SA green
-  class AE,TM,ML amber
-  class HS,CF,PA,PR,AL purple</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1U8tu2zAQvPsrCAUIGkBGnPiRx6EAodh1ADtWTbkpYPdASWtHCEUKJOXUQA79h_5hv6RLVVJcILlQIjmzOzu73GlePJHZskOIKeNdtWOL1TIYs7XHrNJ8B4QdjIXceD8QRUg4X3uhegE95z838hPkMaQppASR0p7VoNXD2lvJzB7I9whBiRICEpspSQzofZZAAwxZHc0lA4QuxywiNLxvACxoAAkXDrCQMGH_Z2OPNSbk9omckz2jDxt5Tr7NX7iGCgQy7RwXuXgIl2OsZCG7oYY8M2BI0Kps4lI0oSwKpS01JjOWUJcWRbDgC0Y_28gCOQT2oA9kSPJMbqQqbaxKmZJpFIWMDAb9dwUEs8Xqbu3dAfIDocr0_uu_LwkFt1ul81oEHa89Krk42CwxZCx3mXQ2zGdkrlIQpjEhwmoiEJCDRTGVnfXNfLb2WvhGXnVTfiAxNyCqUAVo4khZ0mYk3e5npNVxqx0dv-fiKgpXEbpY2qK0zYRMsadT4AJ7wZKqq70_v35f9Hr1fTBZewEveOLmY4KAhBtnqi7lCypDdW1RIXYgBO3s4DLBSFSqnIsM2mlcIkArjm3b4_USEpXnKJO7NjYgigZQAdqaamB5JnBIXiB-Uur57Lg74Zyc4uzigp07xdlzy2NVP6MdNxDu_9WLZqwLMtGHwkK6kTG3yROxjfneK5rWcb5XzKkLFUxcUOqWJS505tIlghtzB1sSixLINhPi9uRyOOpD7Bur1TPcnlykA0ivfXxASt-ebLfbY9pOA8iadzG87vXTN95oNOwPPuBxfLO65sWDYb930_JuLge9HnzAK0pdiEboVdLn8JZwlF5epzfHxIaJrvqrBz9kPgt8dNMV296ho1UV7QEd-9HcR-sqke3xlPnBxA-pHy59OquVdP4Cv3V1XA==?" /></p>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Each on-premises Dell storage system is registered to an SCG appliance</li>

@@ -7775,25 +7775,7 @@ FabricOS access control: RBAC role assignment, `userconfig` CLI, default account
 </ul>
 <hr />
 <h2 id="access-control-architecture">Access Control Architecture<a class="headerlink" href="#access-control-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph "Management Plane"
-        ipfilter["IPfilter Policy\nsource IP restriction\nSSH · HTTPS · SNMP"]
-        rbac["RBAC Roles\nadmin · switchadmin\nzoneadmin · operator"]
-        aaa["AAA\nRADIUS / TACACS+\nlocal fallback"]
-        ipfilter --&gt; aaa --&gt; rbac
-    end
-
-    subgraph "Fabric Plane"
-        scc["SCC Policy\nSwitch Connection Control\npermitted switch WWNs"]
-        dcc["DCC Policy\nDevice Connection Control\npermitted device WWPNs per port"]
-        binding["Fabric Binding\nISL admission control"]
-        zoning["Zoning\ninitiator-to-target\nframe filtering"]
-        scc --&gt; binding --&gt; dcc --&gt; zoning
-    end
-
-    mgmtUsers["Management Users\n(ops, NOC, security)"] --&gt; ipfilter
-    switches["Switches / ISLs"] --&gt; scc
-    devices["Host HBAs\nStorage Targets"] --&gt; dcc</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9UsGO2yAQvecrRj5t1Y36B5UcR1Ui7aZWyCpSzR4InnjR4sEC0mr7Y733yzpgJ_LuoRxggDdv5j3ovBpe4GG_AB7hcuryvnhUpDrskSLUVhEW-T4NM5yNjeibYluPEdTOGv0mKbiL1wjbGjyG6I2OxpEkITbw9w9sDodapEDsHuvi-UboT0o3xX5VVrB3FoMk1faGEjL8MlG_5K2k347wduMG9Co6P-NRSjVFWZaS9uV6-yTgCxzKqqzEZ0nWaWXhrKzlYq-zpKsaWC6_Joa8po4yAqldfDDmmzqxsI-mBM0SRFXdrBC5c6gcEWYbUhi9s5K4897EiO0kD47HXZi11Cau9YxrjT8N2_p_rnYEHY_1LgAfw-B8nLGeDLWGuuYqYDXuJW3FAyRbQ0jMemSeJbLtOe9HXiVPJppk_TK6ZVS-wyjp7FWPMFrJqFk6O5M9nernuJ3ORur3TvddH58C-tDM_2A-kXTnhnAPu-_VPQTUF2_i26fiOXNdH3J8rmwsMoeYIv4MLDRMYG4q40bTGLZxIcJmVXINwdK4LByytGsGt7z4B6iiBW4=?" /></p>
 <blockquote>
 <p><strong>Warning:</strong> Always verify your management workstation's source IP is in the permitted range before activating an IPfilter policy. An incorrect policy will lock you out of the switch — recovery requires console access.</p>
 </blockquote>

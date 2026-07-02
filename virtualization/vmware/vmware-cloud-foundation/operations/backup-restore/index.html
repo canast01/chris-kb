@@ -2618,34 +2618,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="NSX Manager Backup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configure-via-nsx-ui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configure via NSX UI
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configure-via-nsx-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configure via NSX API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -2656,34 +2628,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="vCenter Server File-Based Backup (FBB)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configure-via-vami" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configure via VAMI
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#trigger-backup-via-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Trigger Backup via REST API
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -9496,23 +9440,12 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
 </blockquote>
 <hr />
 <h2 id="backup-architecture">Backup Architecture<a class="headerlink" href="#backup-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph VCF["VCF Management Domain"]
-        SDDC[SDDC Manager] -- "Generates backup\n(tar.gz)" --&gt; SFTP_S
-        NSX[NSX Manager\nCluster] -- "File-based backup\n(tar.gz)" --&gt; SFTP_S
-        VCSA[vCenter Server\nAppliance] -- "File-based backup\n(tar.gz)" --&gt; SFTP_S
-    end
-
-    SFTP_S[(SFTP / NFS\nBackup Target)]
-
-    subgraph DR["DR / Restore"]
-        SFTP_S --&gt; R1[Restore SDDC Manager]
-        R1 --&gt; R2[Restore NSX Manager]
-        R2 --&gt; R3[Restore vCenter]
-    end</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqVkF1rgzAUhu_9FQev2gs32t0PugR705WRlDKIMo72zMpslBg72K9fjFbs3XYgHyRPniTvZ1V_52c0FnYiAFdtlxUGmzMcWaxC18EraizoQtoCry9Y6jD1ZF-Sc6b6bqRMClEE4ZY0GbTUQob5V9ckemHRPBQ_y9DtP4OMD28fcrLs5bty7eZINKu61t5kcVlRlGFLp7_Zjkxu1JW595IBSebaGzdNU5Woc_q_k_Qp8JNhTS36ER5hH8tEv_jTcEBTkF2mwX2GXKiQC8cKam1taJ6cl_m7xEqN-3AX5cSK1cCtJ26W1gxbD9jThI0ppNM_fgF1JpB9?" /></p>
 <hr />
 <h2 id="nsx-manager-backup">NSX Manager Backup<a class="headerlink" href="#nsx-manager-backup" title="Permanent link">&para;</a></h2>
-<h3 id="configure-via-nsx-ui">Configure via NSX UI<a class="headerlink" href="#configure-via-nsx-ui" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">NSX UI</label><label for="__tabbed_1_2">NSX API</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <ol>
 <li>Log in to <strong>NSX Manager</strong> (<code>https://&lt;nsx-manager-vip&gt;</code>).</li>
 <li>Navigate to <strong>System → Backup &amp; Restore</strong>.</li>
@@ -9559,7 +9492,8 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
 <ol>
 <li>Click <strong>Save</strong>, then <strong>Backup Now</strong> to test.</li>
 </ol>
-<h3 id="configure-via-nsx-api">Configure via NSX API<a class="headerlink" href="#configure-via-nsx-api" title="Permanent link">&para;</a></h3>
+</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">NSX_MGR</span><span class="o">=</span><span class="s2">&quot;nsx-manager.corp.example.com&quot;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">NSX_USER</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">NSX_PASS</span><span class="o">=</span><span class="s2">&quot;NSXAdminPassword&quot;</span>
@@ -9642,9 +9576,14 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
 <strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Verify NSX_USER and NSX_PASS variables are correct and the admin account has not been locked after failed login attempts.
 <strong>`{"error_code":400,"error_message":"Connection to remote file server failed"</strong> — Confirm the backup server hostname resolves, port 22 is open, and the nsx-backup user credentials have write permissions on the /vcf/nsx/ directory.</p>
 </div>
+</div>
+</div>
+</div>
 <hr />
 <h2 id="vcenter-server-file-based-backup-fbb">vCenter Server File-Based Backup (FBB)<a class="headerlink" href="#vcenter-server-file-based-backup-fbb" title="Permanent link">&para;</a></h2>
-<h3 id="configure-via-vami">Configure via VAMI<a class="headerlink" href="#configure-via-vami" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">VAMI (UI)</label><label for="__tabbed_2_2">REST API</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <ol>
 <li>Access vCenter VAMI: <code>https://&lt;vcsa-fqdn&gt;:5480</code></li>
 <li>Navigate to <strong>Backup</strong>.</li>
@@ -9703,7 +9642,8 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
 <ol>
 <li>Click <strong>Save</strong>, then <strong>Backup Now</strong> to validate.</li>
 </ol>
-<h3 id="trigger-backup-via-rest-api">Trigger Backup via REST API<a class="headerlink" href="#trigger-backup-via-rest-api" title="Permanent link">&para;</a></h3>
+</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">VCSA</span><span class="o">=</span><span class="s2">&quot;vcenter.corp.example.com&quot;</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Authenticate (returns session ID)</span>
@@ -9735,8 +9675,11 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
 <p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but verify if using different curl version).
-<strong><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"args":[],"default_message":"Invalid session.","id":"Com.Vmware.Vapi.Std.Errors.Unauthenticated"}]}}</code></strong> — Verify credentials are correct and VCSA is reachable; re-authenticate and capture SESSION variable before running backup job command.
+<strong><code>{"type":"com.vmware.vapi.std.errors.unauthenticated"...}</code></strong> — Verify credentials are correct and VCSA is reachable; re-authenticate and capture SESSION variable before running backup job command.
 <strong><code>jq: parse error: Cannot index string with string "value"</code></strong> — Ensure the backup job creation succeeded by checking the full response without piping to jq first; the API may have returned an error object instead of the expected job response.</p>
+</div>
+</div>
+</div>
 </div>
 <hr />
 <h2 id="vsan-configuration-backup">vSAN Configuration Backup<a class="headerlink" href="#vsan-configuration-backup" title="Permanent link">&para;</a></h2>
@@ -9757,30 +9700,7 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
 <hr />
 <h2 id="restore-procedure">Restore Procedure<a class="headerlink" href="#restore-procedure" title="Permanent link">&para;</a></h2>
 <h3 id="restore-sequence">Restore Sequence<a class="headerlink" href="#restore-sequence" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Ops as Operations
-    participant SDDC as SDDC Manager
-    participant NSX as NSX Manager
-    participant VCSA as vCenter Server
-
-    Note over Ops: Disaster recovery initiated
-
-    Ops-&gt;&gt;SDDC: Deploy SDDC Manager OVA
-    SDDC--&gt;&gt;Ops: Appliance online
-    Ops-&gt;&gt;SDDC: Initiate restore from backup
-    SDDC--&gt;&gt;Ops: SDDC Manager restored
-
-    Ops-&gt;&gt;NSX: Deploy NSX Manager OVA(s)
-    NSX--&gt;&gt;Ops: Appliance(s) online
-    Ops-&gt;&gt;NSX: Restore from backup\n(API /cluster/restore)
-    NSX--&gt;&gt;Ops: NSX Manager restored
-
-    Ops-&gt;&gt;VCSA: Deploy VCSA OVA via\nvCenter Recovery wizard
-    VCSA--&gt;&gt;Ops: Appliance online
-    Ops-&gt;&gt;VCSA: Stage 2: point to backup\nand restore
-    VCSA--&gt;&gt;Ops: vCenter restored
-
-    Ops-&gt;&gt;Ops: Validate all components\nand workload connectivity</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNkrFuwjAQhnee4kY6IKSODEgRWRgKFZEQA8vVuaITxnZtE0SfvmeHIJBbqVmsOJ__-3yXQF9nMopqxoPH0wjkcegjK3ZoIqxdAAyykMfI1oSCaOp6kZC8vqHBA_kCWjW7xKTlL2S7aKrEdAsykTw05DvBMreykcDKa_KZQc0BQ2I8qbR7BTYcGSO1PS_UZD5PRgKT0_b6pAfrbZW5tDkRMqdWzmlG6QVYo9lQkbS8FZGyIVpP8OntCT5QHc-ujHsqeDvxpCfNuNs9NCbJjcNLf-9mV-rJx9Iwh21Kr70ZV-9LmCp9Th2b3kTK-EeD32zTeO66eVbiCR3j3gwT2wzTuPA3-jYfTuR_OtzHN1Hqw-sMnGX5JaK93wJNO2iVuYPAb94Z2KLmNk0OtQZlT84aORH62Iv1R22xlQ_GkIrccbyOfgA4DvzO?" /></p>
 <h3 id="step-1-restore-sddc-manager">Step 1 — Restore SDDC Manager<a class="headerlink" href="#step-1-restore-sddc-manager" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Deploy a new SDDC Manager OVA with the same IP, FQDN, and sizing as the original.</li>
@@ -10026,7 +9946,7 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 17:06:15 UTC"><span class="timeago" datetime="2026-06-29T17:06:15+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 17:06:15 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 2, 2026 01:09:10 UTC"><span class="timeago" datetime="2026-07-02T01:09:10+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 2, 2026 01:09:10 UTC">2026-07-02</span>
   </span>
 
     

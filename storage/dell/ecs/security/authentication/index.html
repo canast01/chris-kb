@@ -8778,24 +8778,7 @@ Authentication reference covering User Model Overview, Local Accounts, LDAP / Ac
 <hr />
 <h2 id="user-model-overview">User Model Overview<a class="headerlink" href="#user-model-overview" title="Permanent link">&para;</a></h2>
 <p>ECS has two distinct authentication contexts: <strong>management plane</strong> (portal/API administration) and <strong>data plane</strong> (S3/Swift/CAS object access). These use different identity sources and credential types.</p>
-<pre class="mermaid"><code>graph LR
-  subgraph "Management Plane"
-    PORTAL["ECS Portal\nREST API :4443"]
-    PORTAL --&gt; MAUTH{Auth}
-    MAUTH --&gt;|Local| MLOCAL["Local ECS account\n(sysadmin / svc-ecs-mgmt)"]
-    MAUTH --&gt;|LDAP| LDAPGRP["AD Group\n→ ECS role mapping\n(per namespace)"]
-  end
-  subgraph "Data Plane"
-    S3["S3 / Swift\nAPI :443 / :9021"]
-    S3 --&gt;|"Access Key + Secret Key\n(SigV4)"| OBJUSR["Object User\n(namespace-scoped)"]
-    OBJUSR --&gt; BPOL["Bucket Policy\n(least-privilege actions)"]
-  end
-  classDef mplane fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dplane fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef cred fill:#15803d,stroke:#166534,color:#fff
-  class PORTAL,MAUTH mplane
-  class S3,OBJUSR,BPOL dplane
-  class MLOCAL,LDAPGRP cred</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1Uk1vm0AQvedXjPClUUGNDXYdHyrhOEo_bIHA7sXuYb0MhGbZRbtLqqjuNT8gP7G_pLtAXSq1F6ThzXvz5u0UktT3sE4uAFRzLNrK2RBOCqyQa4gZ4egYFCCOkm243ju3NynEQmrCDjy5TbcQxh9gEQSB73wZNILnvYNNuNu-_x42-v5HC7W1RU5rQQk7wWYd3VjRtgQrTSgVDdcH_ko9KZJVJYc3oB6ph1R5VVHpy37MQGsVxiew37sk3jvhCu6kaOoD__n80mpKwRAqUtclL4xwjRI4qVDVhGInhzz7K4IV0WS4fOrvndQ3TtJvZW7M9TvbP4vrq8m492RarCEnpBSVgk_4BK8hRSpR28LMTsvic3DpnCBaftylyd6Jjl-RatgplAY-2_IUFTVmv5ftuttMl3FkAls29MGIxoKV1OoyJEp7tSwfS4YFmhh1KbgabkcZUWqFOVS1XQzykrHFaDKd-Xh0lZbiARejcRZgNnepYEIuRnmeD4nZkPiW-gSzM3GWTebZ9X-IJoCsp42n8yv_D208m0394B-0_ozc7pk7y2cs9d0uEdem0fs6o91Ruf1BtMMvfgFPcuSu?" /></p>
 <table>
 <thead>
 <tr>

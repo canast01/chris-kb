@@ -7833,41 +7833,7 @@ How It Works reference covering Overview, Deployment Models, Management Flow, Ne
 <h3 id="federation-mode">Federation Mode<a class="headerlink" href="#federation-mode" title="Permanent link">&para;</a></h3>
 <p>Multiple DCNM instances managing separate fabrics, federated under a single login (available in 11.5+). Useful for large environments spanning multiple data centres.</p>
 <h2 id="management-flow">Management Flow<a class="headerlink" href="#management-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  ADM(["Admin\nBrowser / REST API"])
-
-  subgraph DCNM["DCNM Server"]
-    LAN["LAN Controller\nNX-OS fabric management"]
-    SAN["SAN Controller\nVSAN / zone management"]
-    MED["Media Controller\nPrecision Time Protocol"]
-  end
-
-  subgraph NET["Network Fabric"]
-    NEX["Nexus Switches\nNX-API · SNMP · SSH · POAP"]
-  end
-
-  subgraph SANF["SAN Fabric"]
-    MDS["MDS Switches\nSNMP · FC · NX-OS CLI"]
-  end
-
-  MEDIA["Media Networks\nPTP-capable devices"]
-  VC(["vCenter\nVirtual port mapping"])
-
-  ADM --&gt;|"HTTPS 443"| LAN
-  ADM --&gt;|"HTTPS 443"| SAN
-  LAN --&gt;|"NX-API · SNMP · SSH · POAP"| NEX
-  SAN --&gt;|"SNMP · SSH"| MDS
-  MED --&gt;|"PTP"| MEDIA
-  LAN --&gt;|"REST API"| VC
-
-  classDef admin fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dcnm fill:#15803d,stroke:#166534,color:#fff
-  classDef fabric fill:#b45309,stroke:#92400e,color:#fff
-  classDef ext fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class ADM admin
-  class LAN,SAN,MED dcnm
-  class NEX,MDS,MEDIA fabric
-  class VC ext</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9ktFu2jAUhu95iqNws0lBpSQw4GJSloCKRNKojlAl2guTnFCrwUZOgGrivXa_J5vtpBS2shtb8u_v-Pz_8VrS7QvMH1oAXhB-WVpetmH8if-Q4lCihBt4mJAEvHhmPX9tqVvlbrU2TOBH4dLSKxCUe5TWs5IB5l60tNQCvuCVFEWB8olHj517AjldSZbChnK6xg3yqkGIRshfyEIf3MBPwfFfIpwESyvEjNELJpaYspIJDgnbIMRSVCIVhYGQZxf9R5NkaUVYHYR8hanprCkeTR618rYrgRxYlb5gaRyoEOD3LyBRGJud3OktvvfiTx9Q_U9rWxfVw4Co1gNyVvu94tTXa52VP5-dV1WGZ9675aZrRcZJ3Enplq4KhAz3LMXSUAtfjXLvq8BMlExWO1rAVshKZbndMr5uxqmGDp3O96N1lyQxAdd1rKMe4TWJGEmP10j_T-Woo2yZ-dbXzy4pUYVQO6tF5UUfaqPnT5z-31G50i2nBS3LAHOg-qtCzopi3O71Bw6u7FJ9hVcct28zF7OhrWYv5Lid5_k5l6V802C3_WHXyT6wwaDvuFew5vfW4MrtO93RCRz13G4Xr4D4VjXUt9Sh-PHcIOsNs9EnlMne2DudqDxslaOt49IGToKK2FZJ2ia4psmTuPD1660_5ZYxCw==?" /></p>
 <ol>
 <li><strong>Discovery</strong> — DCNM discovers switches via SNMP and SSH/Telnet (SNMPv3 preferred)</li>
 <li><strong>Inventory</strong> — Discovered devices added to inventory; topology built from CDP/LLDP and SNMP MIB data</li>

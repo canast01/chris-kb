@@ -9242,64 +9242,7 @@ How It Works reference covering Deployment Model, Application Discovery Mechanis
 </table>
 <p>Collectors maintain a persistent TLS connection back to the Platform VM on TCP 443. All raw flow data, API-pulled topology, and parsed configs are shipped from Collector to Platform for indexing. The Platform VM is the sole persistent data store — Collectors hold no long-term state.</p>
 <h3 id="aon-flow-data-pipeline">AON Flow Data Pipeline<a class="headerlink" href="#aon-flow-data-pipeline" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>graph LR
-    subgraph PUSH["Push Sources"]
-        NSX["NSX-T&lt;br/&gt;IPFIX UDP 2055"]
-        SW["Physical Switches&lt;br/&gt;NetFlow / sFlow"]
-        VPC["Cloud VPC Flow Logs&lt;br/&gt;REST Import"]
-    end
-
-    subgraph COLL["Collector VM"]
-        RECV["Receives IPFIX / NetFlow&lt;br/&gt;push traffic"]
-        POLL["Polls vCenter API&lt;br/&gt;and NSX-T API"]
-        SHIP["Ships all data to&lt;br/&gt;Platform on TCP 443"]
-    end
-
-    subgraph PLATFORM["Platform VM — Internal Services"]
-        KAFKA["Kafka&lt;br/&gt;message bus"]
-        CASS["Cassandra&lt;br/&gt;time-series flow store"]
-        ES["Elasticsearch&lt;br/&gt;search index"]
-        PG["Postgres&lt;br/&gt;config / metadata"]
-    end
-
-    subgraph OUT["Analytics Output"]
-        FM["Flow Map"]
-        PT["Path Trace"]
-        MS["Micro-seg&lt;br/&gt;Recommendations"]
-        AA["Anomaly Alerts"]
-        NLS["Natural Language&lt;br/&gt;Search"]
-    end
-
-    NSX --&gt; RECV
-    SW --&gt; RECV
-    VPC --&gt; RECV
-    RECV --&gt; SHIP
-    POLL --&gt; SHIP
-    SHIP --&gt; KAFKA
-    KAFKA --&gt; CASS
-    KAFKA --&gt; ES
-    KAFKA --&gt; PG
-    CASS --&gt; FM
-    CASS --&gt; PT
-    ES --&gt; MS
-    ES --&gt; AA
-    ES --&gt; NLS
-
-    style NSX fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style SW fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style VPC fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style RECV fill:#15803d,stroke:#166534,color:#fff
-    style POLL fill:#15803d,stroke:#166534,color:#fff
-    style SHIP fill:#15803d,stroke:#166534,color:#fff
-    style KAFKA fill:#b45309,stroke:#92400e,color:#fff
-    style CASS fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style ES fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style PG fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style FM fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style PT fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style MS fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style AA fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style NLS fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqdk91O2zAUx-_zFEfhlorSrwGakKKsgYqEWk3okKJduInzIZK4sh0Yd3uIPeGeZLZTwEEgLctF6nPq3_n4n5Oc4X0B_sYC-fB2l2sb3YXXsY1aXkBIW5YQbv_QN9RzG97HtnyNoq87dnK5Qt7qHu6-IZiM53PjXvhdhiieeZngCsKnUiQF4Rq5JcKr6BOcAFe_BrNFbmy7FW1TdQR9y6d5h22WYQSrek-ZOCCkSa1-5e7a92UEWlUkEZTBNjCib5buNrY3JCHlI-HQVX4Ch3J0jr3qWTCcZWVikEiHRTIsh0eXNIIwcNBKI7hJQcuhPGb_1ysU22FR7jngqoIUCwyCagZVWGSU1UAbiFwEs9n005aQ70TeehPI_C_UNoA_v37DStXRKHUJeyz7U7pxvBsntm9w9oB1yppwjnMCu9a85jphKPXC8r8mZd1NUdZkxAkrpUaZmgCXShIDWkpkWWEuyoQTzJJCY90RyiYlP03prpRwXOTsMP2ENlmZS91rIrAS5dPO13dRbDuywWeVCdat2LfCCO1JTfSKBHhvZpQUwqKAiOHErDuQdQdlwqjsLu9WiiS0rmVmLEramMI4jkpNa5kcnIow0fsEfBnpFouWSfF93OStVFYHDLUI7zuS6wGj0aVeQKv7Nvq2WvaeQx20R22R9bKCfY86aI-etfU6de1Tg33nWr53oCvrZQe07QV9G0VWN25tBaFpOY5pSUEOsxPPFdH9ZmVVXRxN5osp2R1zwegDuTg6TWckPTtOaEXZxVGWZQYkNRnMKN0GQ1rbjjqdn42n6Ru1WMyns48prf9gSs9oMNWNqMN2s_l0fP6KnU9m4zH5GNODGyzH8j8YdDWc8YID8yWZYvImxCKdnKXnn-SJhjNBOJxxnOGM3Pl_hf4COrMfMA==?" /></p>
 <h3 id="stage-4-push-to-nsx">Stage 4: Push to NSX<a class="headerlink" href="#stage-4-push-to-nsx" title="Permanent link">&para;</a></h3>
 <p>Recommendations can be exported or pushed directly:
 - <strong>Export</strong>: Download as CSV or JSON for manual review before applying

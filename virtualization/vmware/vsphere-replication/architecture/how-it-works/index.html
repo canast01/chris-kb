@@ -9461,37 +9461,7 @@ How It Works reference covering Replication Engine — ESXi Kernel Module, Data 
 </table>
 <hr />
 <h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph protected["Protected Site"]
-        VM["Source VM"]:::blue
-        HBR["VR kernel module\n(ESXi hbrsvc)"]:::blue
-        SVRA["VRA — vSphere Replication\nAppliance (source)"]:::green
-        SSRM["SRM Server\n(protected)"]:::amber
-    end
-
-    WAN(["WAN / MPLS"]):::purple
-
-    subgraph recovery["Recovery Site"]
-        TVRA["VRA — vSphere Replication\nAppliance (target)"]:::green
-        DS["Target datastore\n(replica VMDKs)"]:::blue
-        PVM["Placeholder VM\n(registered in vCenter)"]:::blue
-        RSRM["SRM Server\n(recovery)"]:::amber
-    end
-
-    VM --&gt;|"write I/Os tracked\nper hbr bitmap"| HBR
-    HBR --&gt;|"policy: RPO interval"| SVRA
-    HBR --&gt;|"changed blocks\n(TCP 31031)"| WAN
-    WAN --&gt;|"changed blocks\n(TCP 31031)"| TVRA
-    SVRA --&gt;|"management (TCP 443)"| WAN
-    WAN --&gt;|"management (TCP 443)"| TVRA
-    TVRA --&gt; DS
-    DS --&gt; PVM
-    SSRM &lt;--&gt;|"management (TCP 443 / 9086)"| RSRM
-
-    classDef blue   fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef green  fill:#15803d,stroke:#166534,color:#fff
-    classDef amber  fill:#b45309,stroke:#92400e,color:#fff
-    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqVU9GK2kAUfc9XXOKLC7tsNGo1lIJdCy1duyERW4g-TGauMTjOhEm0LOxDP6Jf2C_pTWK0dhXaPIS55Jxz75xzkxiWreExsICefBcnVZ0ZXSAvUES23xwhTAu0lxWwfObTyA71znCko730PC-WOzx-_vg-iOx5ABs0CiVstdhJXKj2h_BbCuvY5Ht-85oVzoNxSRvDrx8_YR9mazQIAWYy5axItVqocUYFU9S2nVfta5nEIKqTThiU4wVTCNHs0VDj451qPNvGaCo8KmFVh6_jL-3Ipjfcw9R_DO3lDQGznckkWucGGeSaZJ8jOzic_rZn9l83KZhJsLh0k0kY2bPqKwhWsLzQprTR1EJk_eRzfsFIv4zHl4zjWkuBhoAVK0nzggYRkCrYP6Ci4gI7eG1fc-Or7s2ncHf37sX-bsgI-HT_lENhGN-gWKiMBqDMIU6LLcvsl3I7rMOW1KxM03WePQj8JxqNptozSbhyH86BfM1UQvPHUvNNToPNHnxwO47buSE8hddE-S_wWSNf9qkJW6ZYgltyBipsr-deFL6COyrODooUoFXnWFWUi9UsKLy9pkQLOHKGg1KwjKI2mEuW5xNcQRkV1atUSq_V7Q9cjG_zwugNeq2O6KEY3nIttfFaq9XqnFrtVkPt9IeOK07UwaDv9q5Sq8gbatzru87oSB11e46DV6n1L3SgvuEuw1PXgegOxehP6m_-Ilz1?" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Source Site                                    Target Site
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>-----------                                    -----------
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>VM VMDK Write

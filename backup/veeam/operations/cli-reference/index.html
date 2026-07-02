@@ -7778,42 +7778,7 @@ CLI Reference reference covering Backup Infrastructure Topology, Sessions & Hist
 <hr />
 <h2 id="backup-infrastructure-topology">Backup Infrastructure Topology<a class="headerlink" href="#backup-infrastructure-topology" title="Permanent link">&para;</a></h2>
 <p>The Veeam component hierarchy governs how jobs are routed, where data lands, and which components need to be healthy for a job to succeed.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph controlPlane [Control Plane]
-        vbr["Veeam Backup &amp;\nReplication Server\n(job orchestration + config DB)"]
-        vone["Veeam ONE\n(monitoring + reporting)"]
-        vbr --&gt; vone
-    end
-
-    subgraph dataPath [Data Path — Site A]
-        proxy1["Backup Proxy 1\n(hot-add / SAN)"]
-        proxy2["Backup Proxy 2\n(NBD fallback)"]
-        sobr[("SOBR\nScale-Out Backup Repo\n(performance tier — fast disk)")]
-        proxy1 --&gt; sobr
-        proxy2 --&gt; sobr
-    end
-
-    subgraph offsite [Offsite / Cloud Tier]
-        obj[("Object Storage\nS3 / Azure Blob\n(capacity tier — immutable)")]
-        tape[("Tape Library\n(archival)")]
-    end
-
-    vcenter(["VMware vCenter\nSource VMs"])
-    vcenter --&gt; proxy1
-    vcenter --&gt; proxy2
-    vbr --&gt; proxy1
-    vbr --&gt; proxy2
-    sobr --&gt;|"capacity tier offload\n(after retention threshold)"| obj
-    sobr --&gt;|"tape offload"| tape
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-    class vbr,vone,proxy1,proxy2 ctrl
-    class sobr,tape store
-    class vcenter host
-    class obj cloud</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1k89O4zAQxu99ilGQVlTbCtrS0uWwEqV7A4oo4lI4TOxxE3DjyHHKgjjsQ-wT7pPs2OmftEAusZ35zXzzeaK0eREJWgeXtw3gpyjjucU8AWEyZ42-0ZgRzC6qHYTtY4j0zzK2s-ieCBcwQvFc5vDtIbulXKcCXWoymJJdkn3IDp9MDMaKhApnq0_ffQmVzmE8aka1lCajdc7J9S9GFyZLnbFpNmfGUm6s4_UOE1tot38GNhxSJhu77Uh0eIMugdmYVxCW__78hWnqCM63qXJrfr92ZtGqnRu_hQ6rSIxro5RwBNPz63rxQHT3iC4T16MxKNQ65g91oDDs2mE0nYxuH7KpQE3tSenWBrJ7huGcrDJ2gZkgcCnZIFZh4UCmBadr7ksOBvjUe8J2zz8aY5QqvAezyWpxBBfalBLuuOq2iImfWPMkfiLhYMrXgXNi9T0OP38rLcFIm5h1C8xRpO51KzpdLEqHsaYd0Q5z4oR3_ILLNLZoX5lGnpB0iXoTutG7FJQ5soc8GlcvyPWWF-GANZjSskn3V0X02KzHhs4rcz4_7jbqw1OPjD9EeQf92Xu02yHbpw1Kr1355JYcV_Hz7RJLRWK0bEbv3r69NN6ANc0Bflt1KjQWxZgUCGc1qFTrs4Nuf9CjuMX_jnmms4OOPCE5bAmjjT07UErtggVfD63IU9FDkhtyILtD-eNLMjE8YBXY6Q-Pe1uwMxj0eydfgiKMTEUeq9PBgDbkseyr_udivdEt_9O2KvNbq5H1ndeivGmt4FforM6vrtTrrh2z25Wixn_cB4gJ?" /></p>
 <hr />
 <h2 id="restore-points">Restore Points<a class="headerlink" href="#restore-points" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List restore points for a VM</span>

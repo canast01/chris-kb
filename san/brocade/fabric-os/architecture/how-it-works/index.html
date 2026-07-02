@@ -7748,43 +7748,7 @@ How It Works reference covering Overview, SAN Fabric Topology, Principal Switch 
 <h2 id="san-fabric-topology">SAN Fabric Topology<a class="headerlink" href="#san-fabric-topology" title="Permanent link">&para;</a></h2>
 <h2 id="fc-fabric-login-sequence">FC Fabric Login Sequence<a class="headerlink" href="#fc-fabric-login-sequence" title="Permanent link">&para;</a></h2>
 <p>The sequence below shows the complete login flow from a cold HBA to active SCSI I/O. WWN assignment happens at FLOGI; the fabric controller (principal switch) records the mapping in the distributed Name Server before the initiator can discover or contact any target.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    autonumber
-    participant HBA as Host HBA&lt;br/&gt;(Initiator)
-    participant FP as F_Port&lt;br/&gt;(Edge Switch)
-    participant PS as Principal Switch&lt;br/&gt;(Fabric Controller)
-    participant NS as Name Server&lt;br/&gt;(0xFFFFFC)
-    participant TGT as Storage Target&lt;br/&gt;(Storage Array Port)
-
-    Note over HBA,PS: Phase 1 — Fabric Login (FLOGI)
-    HBA-&gt;&gt;FP: FLOGI (WWPN, WWNN, BB_Credit, Class-of-Service)
-    FP-&gt;&gt;PS: Forward FLOGI — request Domain ID allocation
-    PS--&gt;&gt;FP: ACC — Domain ID confirmed, fabric parameters
-    FP--&gt;&gt;HBA: ACC (FCID assigned: Domain.Area.Port, fabric BB_Credit)
-    Note over HBA: HBA now has 24-bit FCID address
-
-    Note over HBA,NS: Phase 2 — Name Server Registration (PLOGI to NS)
-    HBA-&gt;&gt;NS: PLOGI — Port Login to Name Server (well-known addr 0xFFFFFC)
-    NS--&gt;&gt;HBA: ACC (Name Server session open)
-    HBA-&gt;&gt;NS: RFT_ID — Register FC-4 Types (e.g. FCP initiator)
-    NS--&gt;&gt;HBA: ACC
-    HBA-&gt;&gt;NS: RPN_ID — Register Port Name (WWPN → FCID binding)
-    NS--&gt;&gt;HBA: ACC
-    HBA-&gt;&gt;NS: GID_FT — Query: get all FCIDs with FC-4 type FCP target
-    NS--&gt;&gt;HBA: ACC (list of target FCIDs / WWPNs)
-    Note over NS: Name Server now holds WWN→FCID mapping&lt;br/&gt;Fabric-wide replication via FC-GS-7
-
-    Note over HBA,TGT: Phase 3 — Target Login (PLOGI → PRLI)
-    HBA-&gt;&gt;TGT: PLOGI — Port Login (negotiate buffer credits, data field size)
-    TGT--&gt;&gt;HBA: ACC (session parameters agreed)
-    HBA-&gt;&gt;TGT: PRLI — Process Login (FCP service parameters, task retry ID)
-    TGT--&gt;&gt;HBA: ACC (target ready, PRLI response with FCP_RSP flags)
-    Note over HBA,TGT: Phase 4 — SCSI I/O
-
-    HBA-&gt;&gt;TGT: FCP_CMND (SCSI CDB — e.g. READ 16, LUN 0)
-    TGT--&gt;&gt;HBA: FCP_XFER_RDY (if write) or FCP_DATA (read data frames)
-    TGT--&gt;&gt;HBA: FCP_RSP (SCSI status byte, sense data if any)
-    Note over HBA,TGT: Subsequent I/O reuses PRLI session&lt;br/&gt;Zone enforcement applied at ingress ASIC per frame</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNVcFu20YQvfsr5kgBpJ2kRgsIhQGZNB0BLsOKKtz2IqzIIb0ItavurqKqp576AUW_MF_S2VlKkSylqA6GTc-89-bNPMribxtUNWZSdEasroA-YuO02qyWaPjPtTBO1nItlIP39xMQFt5ry79_vzQ3d9FUSSeF02Z0Vp-XvjxflNq4UPzQdAjVVrr65by8rHx5aaTyD_qhLjTmYmlkDalWzui-xwtsBbcXYkUMaD6hCZ1vfs_9Jz1vmD_OfUdF2gXJmgvT4aBz_2xijNiB1z-64v5COwRN4N6AuKzGUL4Ii_AWPv_5Dwwqn3QnFUT504fHaaCl4uTuLi_HwA8hen4uixienwv6eX-_SA020sWQ9sLaRLeJn0DWGLrzkpo9V67NVphmAPGMxm-Q1pHplSDOaQai73UtnNSKe8sqGZgnacotX0prrVppVtjE0AblZA_559DYPTE1k_jQHeWpJ7BWdgqb8YB0PTEorr1HB5jDRKNz08Z8RkpvgYyDd7fJUtKlMHDTGLT2ktHFweh3PMPRlmGGnbTO8MgQlWyN03QOx9YzwME1L3bYkq88Aou22PfJR5KnWA-cnk9RnRpy3GpJu5eg16heU8_y-YIm9NxBLtXnaXIL890aLUR43V3TgxLkaZpO-V6DlsUZKE_GqvjE4PNffwdzl1I1UnX_A_Zxmi3yOcP-uEGzGwPFwp8VA1mgVL4E8Y7Es2rH0bnoUE-6QLdDyQBxA16cfX0dnv3YUT4S3TfWB4Um4UFWYr2mQTinIW_JVjZISVj3Mhw-fJLCK3ysku8uXRMFf39O3_CcIfr73A53Qs6Vs6eTAIfGS2cUKey03xzCctO2RFRzAGwMjXACWol9A1b-MUSakE592l_PlwQCvZMRm3N-EhXoja6p6_C6oUXY8No4QonJefuR3HFmR5n_CvuwHQpys4sDA0VxrRVZNOy7XMyqEtpedHb0357esroqraYwvflw9Vq_h0p_KDKIuCTN7rmeIzB7mGTw9tsYnn4q4M25WN_7c_4wW8yyXyCSLWyNdDgCbfhf2WQ-gchPMbjuXbCXYfw0QYF1wm0sLHcOY3LQz8zdBC_U7qvDVpul5e9P58ckvza0w-DdsEy-0V-1QkDValPjyhfT_fYSGxCO0t75Nx5MqmkKawJnwVf_ApwpWlE=?" /></p>
 <table>
 <thead>
 <tr>

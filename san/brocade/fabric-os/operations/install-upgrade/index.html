@@ -7848,23 +7848,7 @@ FabricOS install and upgrade: `firmwaredownload` from SCP/FTP, firmware commit p
 </ul>
 <hr />
 <h2 id="firmware-upgrade-sequence-ha-director">Firmware Upgrade Sequence (HA Director)<a class="headerlink" href="#firmware-upgrade-sequence-ha-director" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant StandbyCp as Standby CP
-    participant ActiveCp as Active CP
-    participant Fabric
-
-    Admin-&gt;&gt;Admin: Pre-checks: configupload, porterrshow, fabricshow
-    Admin-&gt;&gt;StandbyCp: firmwaredownload -s -b (non-disruptive)
-    StandbyCp-&gt;&gt;StandbyCp: Download and install firmware
-    StandbyCp--&gt;&gt;Admin: firmwaredownloadstatus — complete
-    Note over StandbyCp,ActiveCp: CP failover — non-disruptive to fabric I/O
-    StandbyCp-&gt;&gt;ActiveCp: haFailover (CP switchover)
-    ActiveCp--&gt;&gt;StandbyCp: Old active CP becomes standby
-    StandbyCp-&gt;&gt;StandbyCp: Install firmware on former active CP
-    StandbyCp--&gt;&gt;Admin: firmwaredownloadstatus — complete
-    Admin-&gt;&gt;Admin: version — confirm both CPs on new FOS
-    Admin-&gt;&gt;Fabric: switchshow, fabricshow — verify fabric intact</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqlUkFuwjAQvPOKPbYSUe85IFUgJC4FiRc4zoasmtiu7RBx6yP6wr6kaxuDEqpemkvszc7MzmQdfgyoJG5InKzoF8CPEdaTJCOUh9e6J_VQPXqh6uqyNiBcvsD68IiWns6Y2tL5t66tqCzJRaxHvWK1iu8SDhYL2aJ8dyVIrRo6DabTol6C0dajta7V4xKayBDOE5LbmCU0ZPtRWKz1qAIBFA6KCp6UVkVNzg4mTPcc4TfYlGKToVwBUs6LrrvxzoB3B3NhhvnBwffnFxvqTYc-Yd-0R9BntHeWZY6v5NTYI3Xxe4BOxwavrxHA7mX_4OFO04ptZnliSjeSl224JuO5sZga33fsOf89qJDnRgcuNfyV2G4WEmgFjbY9y4vJNvwnuNnGsBlHrJP6VGCBSvuWpVzQVzjCdn-cQNMCltc85isVqZiWmktOmZRnA4sfMtEehw==?" /></p>
 <ol>
 <li>Connect ISL cables to the edge ports of the core switch.</li>
 <li>Verify the new switch joins the fabric:</li>

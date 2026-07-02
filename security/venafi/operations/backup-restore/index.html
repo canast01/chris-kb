@@ -7700,23 +7700,7 @@ Venafi TPP state lives in two places: the SQL Server database and the applicatio
 </table>
 <hr />
 <h2 id="backup-workflow">Backup Workflow<a class="headerlink" href="#backup-workflow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph Daily["Daily (automated)"]
-        A[SQL Full Backup] --&gt; C[Encrypted backup\nto off-site target]
-        B[SQL Transaction\nLog Backup] --&gt; C
-    end
-
-    subgraph Weekly["Weekly"]
-        D[TPP Config\nFile Archive] --&gt; E[Encrypted archive\nto off-site target]
-        F[Adaptable App\nScripts] --&gt; E
-    end
-
-    subgraph OnChange["On Config Change"]
-        G[Export Policy\nXML] --&gt; H[Versioned config\narchive]
-        I[Platform /\nCredential export] --&gt; H
-    end
-
-    C &amp; E &amp; H --&gt; Z[(Secure Backup\nRepository)]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9kcFuwjAMQO98hcVhggPaH0yCUsakTnSAtmkpB5O6bURwojTd1r9faCsNDpulKJLtPD07hTZfskLnIdmOIETdHEuHtoIlKt2KcXfBBBtvzugpn44PXd8l5mL3ksCq0RoWKE-NPcBs9gCRiFm61oZuOHb5jL0BUxSzWnkCj64k_4tZdJi9Q65RemU448SUt8iumTgf3Uq-EZ0ulv19pbYU-zSFyHChyoxXShPMnazUJ_XA-MoR-8L_kisxz9F6PF5INky0k05ZXw-4P_w2HFXIJYnxhgcb6DNXro8i_rYmfEFqtJJtxu_PSY9di1dyddhIsJTDLIPt7_MnkWr0hXFnuM84cpQTe4UaqKMOpFvBCO4gDmfdFT_EZEeycTTsPOMtWRPWYFw7PYx-AMTrqeM=?" /></p>
 <hr />
 <h2 id="sql-server-database-backup">SQL Server Database Backup<a class="headerlink" href="#sql-server-database-backup" title="Permanent link">&para;</a></h2>
 <h3 id="full-database-backup-t-sql">Full Database Backup (T-SQL)<a class="headerlink" href="#full-database-backup-t-sql" title="Permanent link">&para;</a></h3>
@@ -7916,21 +7900,7 @@ Venafi TPP state lives in two places: the SQL Server database and the applicatio
 <hr />
 <h2 id="dr-failover-steps">DR Failover Steps<a class="headerlink" href="#dr-failover-steps" title="Permanent link">&para;</a></h2>
 <p>Use this procedure when the primary TPP server is unrecoverable and the DR instance must be promoted.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Ops as Operations
-    participant DNS as DNS / LB
-    participant DR as DR TPP Server
-    participant SQL as SQL (Restored)
-
-    Ops-&gt;&gt;SQL: Restore DB from backup\n(or fail over AG)
-    Ops-&gt;&gt;DR: Restore TPP config files
-    Ops-&gt;&gt;DR: Update SQL connection string
-    Ops-&gt;&gt;DR: Start VenafiPolicyServer
-    DR--&gt;&gt;Ops: Service running
-    Ops-&gt;&gt;DNS: Update TPP FQDN\nto DR server IP
-    DNS--&gt;&gt;Ops: DNS propagated
-    Ops-&gt;&gt;DR: Run post-restore validation
-    DR--&gt;&gt;Ops: All checks passed</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNplkTFvwjAQhXd-xY0wRN0ZkEBWq0ooDXHbieXqXIKFsd2zg9R_X9tFFCVebrjvnt-7C_Q9klUkNA6MlwWk55GjVtqjjfDmA2BIhRijdjbMCFHLTOTyBPvdvN-WdgvvTQOS-Eo8Y-Rhn6Fcli2F6Ji61aJgyUC12aTOGm4dEDvo2V3gC9V59Ee7dAw9agMuacP2ZfUwKNr_uWxAOdvrAXptKEywD99hpGIiUZZUzgshsrbDBJUxmYdPstjrxhmtfh6CibZKWILXJa5WBDxaO1Gp5f3H7Ov5IOqjjS4vKhQteG3-5Gp518tL9uw8Dmmum8YcLXgXYsW3vFc0uitXm_raGgPqROoc0hlCSFK_JX2jCw==?" /></p>
 <ol>
 <li>Restore SQL database on DR SQL instance (or fail over AG).</li>
 <li>Deploy TPP application on DR server from backup config.</li>

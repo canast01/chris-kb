@@ -9082,24 +9082,7 @@
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Verify host I/O at DR site (run from DR host)</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/sdX<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/null<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="nv">iflag</span><span class="o">=</span>direct
 </code></pre></div>
-<pre class="mermaid"><code>sequenceDiagram
-    participant ops as Operations Team
-    participant r1 as PowerMax R1
-    participant r2 as PowerMax R2
-    participant app as Application
-
-    ops-&gt;&gt;r1: verify -synchronized (confirm zero tracks)
-    r1--&gt;&gt;ops: All pairs Synchronized
-    ops-&gt;&gt;r1: symrdf suspend (pause replication)
-    r1--&gt;&gt;r2: Replication suspended
-    r2--&gt;&gt;ops: State: Suspended
-    Note over r1,r2: Maintenance window — R1 accepts writes, R2 is stale
-    ops-&gt;&gt;r1: symrdf resume (restart replication)
-    r1-&gt;&gt;r2: Send dirty tracks (incremental resync)
-    Note over r1,r2: SyncInProg — tracks flushing to R2
-    r2--&gt;&gt;r1: All tracks applied
-    r1--&gt;&gt;ops: State: Synchronized
-    ops-&gt;&gt;app: Maintenance window closed</code></pre>
+<img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptUTFuwkAQ7HnFliBBYZcUSEhpUiRBkA-czmtYxb677J7jmCqPyAvzkuwZQyD4mi1uZnZ2RvC9QWfxgcyeTT0BfcFwJEvBuAg-CBiBl4BsInkn8IojMM4SauNb5CfzCdvsHpHfIvI7hAkhQdYhVGT7ZZMeoxYWqxVnS_hAprKDhXTOHtg7OmIBU-tdSVzDEdlDZGPfZNYTOVsoUelLWFeV7iIW2F1x_8lLV3NRgjQS0KlwMI0gMF78XMtyvoTt39eZNYhyflm9iyaijpv_Zx8RvN6javMk9WTIRXRGq4CWXOFb-Pn61iDBWIshCrRMEWWuyQEJSDQVjvtnlKZGmOqMGu_oASf_u3RmQRy7ITeYkrOMNTqVT0Ia1mzccMrx0W3Y73ujA7-sGjmQ20P054pPUSR_qYQBZ1LJ56yyu6zGO1LSaFC28qLAX65U7Gs=?" />
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm current pair state before deciding resync direction</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>-detail
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>

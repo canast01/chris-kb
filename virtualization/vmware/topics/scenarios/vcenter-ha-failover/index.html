@@ -10782,21 +10782,7 @@ edge cases where VCHA gets stuck in Isolated state.
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-<pre class="mermaid"><code>sequenceDiagram
-    participant A as Active vCenter
-    participant P as Passive vCenter
-    participant W as Witness
-    participant C as vSphere Client
-
-    A-&gt;&gt;P: Heartbeat (every 5 s)
-    A-&gt;&gt;W: Heartbeat (every 5 s)
-    Note over A: Active node becomes unreachable
-    P-&gt;&gt;W: Heartbeat timeout detected (15 s × 3 = 45 s)
-    W--&gt;&gt;P: Quorum confirmed (witness votes for passive)
-    P-&gt;&gt;P: Promote — takes over virtual IP / DNS entry
-    P--&gt;&gt;C: vCenter API available on promoted node
-    C-&gt;&gt;P: Client reconnects (~4 min total outage)
-    Note over P,W: Old active becomes new passive candidate</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9kDFOw0AQRfuc4peJRIQQoYlEJMspSBMWpXA9WQ_JCnvX7I4dpUEcAokDcRNOwtrGKRIpLr3vz8x_gd9rtpqXhnaeyhHiV5EXo01FVpCAAhItpmE0KVthf8GollEUwjUoa6HMiOUQLh7T9rHZVHv2jLQwccSog5LpYqHmeOIIb5kEY27YH_GAMDkB2TVg7YTh4j8k86GIdTljy9qVHFBbz6T3tC24C6jziWJKdrUgZ2EtnGN8F6fj5xv3eMTstCmb9se-1M7XJbSzr8aXLX_oa6OJtwS8Oh_Ld7Ymp40xp7wr22N_P78g9BbJ7uzGeKmpwErhFsv1BlGOP_4HYzKdD86RqBWoIVO0ZeAsqn5k3jXuImm_q3cMHx1YG1sFjD9mKI2FOInLYl_a8blBdRPFPBc5qPc4KLR8GBpBk81NTsKjP9pdwpE=?" /></p>
 <h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

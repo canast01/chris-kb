@@ -8131,76 +8131,9 @@ NFS Versions reference covering Version Comparison, Recommended Version, Checkin
 </code></pre></div>
 <h2 id="nfsv41-session-model-and-pnfs-data-path">NFSv4.1 Session Model and pNFS Data Path<a class="headerlink" href="#nfsv41-session-model-and-pnfs-data-path" title="Permanent link">&para;</a></h2>
 <p>NFSv4.1 introduces a formal session abstraction (replacing the stateless NFSv3 model) and pNFS, which separates metadata operations from bulk data I/O. The Metadata Server (MDS) handles namespace, locking, and layout grants; Data Servers (DS) serve actual file data directly to the client.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    autonumber
-    participant CLI as NFS Client&lt;br/&gt;(Linux kernel nfs module)
-    participant MDS as Metadata Server (MDS)&lt;br/&gt;(NFS server — port 2049)
-    participant DS1 as Data Server 1 (DS)&lt;br/&gt;(Storage node A)
-    participant DS2 as Data Server 2 (DS)&lt;br/&gt;(Storage node B)
-
-    Note over CLI,MDS: Phase 1 — NFSv4.1 Session Establishment
-    CLI-&gt;&gt;MDS: EXCHANGE_ID (client owner, flags: SUPP_MOVED_REFER | USE_PNFS_MDS)
-    MDS--&gt;&gt;CLI: EXCHANGE_ID response (clientid, server owner, sequence window)
-    CLI-&gt;&gt;MDS: CREATE_SESSION (clientid, sequence, channel attrs: max ops, slots)
-    MDS--&gt;&gt;CLI: CREATE_SESSION response (sessionid, slot table size, max request size)
-    Note over CLI,MDS: Slot-based session replaces RPC request-response&lt;br/&gt;Each slot tracks sequence — enables exactly-once semantics
-
-    Note over CLI,MDS: Phase 2 — NFSv4.1 Compound Operations (metadata)
-    CLI-&gt;&gt;MDS: COMPOUND [ SEQUENCE | PUTROOTFH | LOOKUP "data" | GETATTR ]
-    MDS--&gt;&gt;CLI: COMPOUND response (fh, attrs: size, mtime, mode, ACL)
-    CLI-&gt;&gt;MDS: COMPOUND [ SEQUENCE | PUTFH | OPEN (file.vmdk, OPEN4_CREATE) | GETATTR ]
-    MDS--&gt;&gt;CLI: COMPOUND response (stateid, open delegation if granted)
-    Note over CLI: Client holds stateid — used for all lock/layout requests
-
-    Note over CLI,MDS: Phase 3 — pNFS Layout Grant (LAYOUTGET)
-    CLI-&gt;&gt;MDS: COMPOUND [ SEQUENCE | PUTFH | LAYOUTGET (type=FILE, offset=0, length=EOF) ]
-    MDS--&gt;&gt;CLI: COMPOUND response — layout: DS1 handles stripe 0..511MB, DS2 handles 512MB..EOF&lt;br/&gt;deviceid → DS1 addr (10.0.1.11:2049), DS2 addr (10.0.1.12:2049)
-    Note over CLI: Client now has full layout — MDS not in I/O path
-
-    Note over CLI,DS1,DS2: Phase 4 — Direct Client-to-DS I/O (pNFS data path)
-    CLI-&gt;&gt;DS1: COMPOUND [ SEQUENCE | PUTFH | READ offset=0 count=4MB ]
-    DS1--&gt;&gt;CLI: READ response (data, eof=false)
-    CLI-&gt;&gt;DS2: COMPOUND [ SEQUENCE | PUTFH | WRITE offset=512MB count=4MB ]
-    DS2--&gt;&gt;CLI: WRITE response (count, verifier)
-    Note over CLI,DS2: MDS receives NO data plane traffic&lt;br/&gt;Both DSes serve I/O in parallel → aggregate bandwidth
-
-    Note over CLI,MDS: Phase 5 — Layout Return and State Cleanup
-    CLI-&gt;&gt;MDS: COMPOUND [ SEQUENCE | PUTFH | LAYOUTRETURN (stateid, range) ]
-    MDS--&gt;&gt;CLI: COMPOUND response (layout returned)
-    CLI-&gt;&gt;MDS: COMPOUND [ SEQUENCE | PUTFH | CLOSE (stateid) ]
-    MDS--&gt;&gt;CLI: COMPOUND response (stateid invalidated)
-    CLI-&gt;&gt;MDS: DESTROY_SESSION (sessionid)
-    MDS--&gt;&gt;CLI: DESTROY_SESSION response</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqdVdFu6kYQfc9XjO4TSIYATR6KmkgENrmogCmGtldVhTb2GFYxu653TZKqD33qB1T9wn5JZ9c2hMBVkkZCAdtzzvE5M7Maf8tRhjgQfJXxzRnQH8-NkvnmHjP3M-WZEaFIuTTQHw2Ba5jcBtBPBErz3X12fl0bCZk_wQNmEhOQsYaNivIE60f140Fg68doeMQNhwCzLWZQo-v1AspC6-Lqv3_-A6nKDHRaF98eYw2CtsUavMBpQ20HFBiV8RWCVBFC71R553V552vlN_UzVz9RBkHZR8kIj0R3YbrmGonYiiXt24tmm-C0FkoC04bfJ0KvN-SUA6CyxvW1K2Q_9z_3JndsORxALXRmgnqUmHkQJ3yluxAsptPl2P-RDZYzdstm8AcsAracEs3SGuYQ6UuDIAn4EDJDnSpJ0kpsEXmVryWLLqOHRyEj9Vh_LbA_Y705WwYsCIb-5BCnqPQgXHNpM-fGZKR4w59ApZqeSJTRxwJfQe416sIxB06lYH1D0OJ34rCgmWXUxl2pfy2KgCob9xRHBCUe1aUJD1HDbNqvQBoVrQua8XBdcmY8fNB7W2yiKK0QDfjEQ5M8N5S9oXFDDSRC_UZTdA6aoq82qcplBH6KGTekTkNtUw7Csfn-eOovJgP4BQL2w4JN-oziny7mM9-f336m7yPf_34xhU-2_BP9vmPz3nw-g1-PXa-w9n7Ha6_KrDTZiI39R93uQa8_er8gJ8afMuqQWCTY3G6iB89duFgWedc_qo7GxqDtBZWihAgTXDnDQMRAW0oajE40QbdcSbBWSUQ5FiAug9z2RKwy4EkCiQofzhP-rHJTtcRbSX5T7CK7m0ZF4Z2VAbVR74u_mNPLfdCvXR3UzHOKV7fDEaPXjWON5qrlQYJyZdZXzL-tv8syK694pa7bizSWke1bbTKRIrSazct2e3zjua1X3bxsd8Y3zSaRuEmIcCtC59hffxfLNYpoNbdbzVaz3Wy3u24NFxCHtzrd_YY-HYlUj0SrIc5tAIWFVrM9DyTNnpAwPPdpP5v1qShIDX06VRwXrnYgMgxNydAwqkFYFqTmcnLHi8V7mQzhvJUMdexgFwSENLHm6mJ8U6ZAALsU3JP7prWEHqCKr2KeaDyk7bxF-9NsOGcVrwvmBHdnx108_mLH22c9IL9ELDCrn_SQRFi_yTUUW8p_4pcuJVyiXX9xLELXCjfKrInPNpA9MpytFBEdnzRAtO5th_DVKrNziXBP_fQootPRvZiiSxdbOUAzNHkmgUohsJNKOSKXefp_5mjG5ovZ5MXeoOFc4fsmp7bbBFZPtVjeLaA_8gO2Y65_aL-RpVueCMrgBO2ABbTrv-yP390ReXysvn62Yjr7DxZZCiM=?" /></p>
 <h3 id="mds-vs-ds-role-separation">MDS vs DS Role Separation<a class="headerlink" href="#mds-vs-ds-role-separation" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>graph LR
-    subgraph Client["NFS Client"]
-        APP["Application&lt;br/&gt;(read/write calls)"]
-        VFS["VFS Layer"]
-        NFS41["NFSv4.1 Module&lt;br/&gt;+ pNFS driver"]
-    end
-
-    subgraph Control["Control Plane"]
-        MDS["Metadata Server (MDS)&lt;br/&gt;── namespace / dentries&lt;br/&gt;── open / lock / delegation&lt;br/&gt;── layout grant (LAYOUTGET)&lt;br/&gt;── attribute updates&lt;br/&gt;── port 2049"]
-    end
-
-    subgraph Data["Data Plane (pNFS)"]
-        DS1["Data Server 1&lt;br/&gt;── file stripe 0 → 511 MB&lt;br/&gt;── direct TCP :2049&lt;br/&gt;── no MDS involvement"]
-        DS2["Data Server 2&lt;br/&gt;── file stripe 512 MB → EOF&lt;br/&gt;── direct TCP :2049&lt;br/&gt;── parallel to DS1"]
-    end
-
-    APP --&gt; VFS --&gt; NFS41
-    NFS41 --&gt;|"COMPOUND ops&lt;br/&gt;(metadata)"| MDS
-    MDS --&gt;|"layout + deviceid"| NFS41
-    NFS41 --&gt;|"READ / WRITE&lt;br/&gt;(data direct)"| DS1
-    NFS41 --&gt;|"READ / WRITE&lt;br/&gt;(data direct)"| DS2
-    DS1 &amp; DS2 -.-&gt;|"layout recall&lt;br/&gt;(CB_LAYOUTRECALL)"| NFS41
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef ds fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef cli fill:#15803d,stroke:#166534,color:#fff
-    class MDS ctrl
-    class DS1,DS2 ds
-    class APP,VFS,NFS41 cli</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqdUu2K2kAU_e9TXCIUZXU18aOulAXX6FLQVdRtKVLKmLnasGMmTEbLwv7orz5A6RPuk_TOJLjJskJpkJhM7rnnnnPPTrH4O0wWJaArOWx29n0oQoz02rkbL7Nn56utMNdgPl87gzgWYcB0KKMPG9W4rihkvPFDhRohYEIk1Rzi03i5dugGE_aIKveB-rddS3NsX7owlfwg0Pa7gNiQcxUeTwiMeOnVnDLSSoq1kz3AXLAIcwRTn5inqBlnmsESFXWDCp1WLcvzn5_0g4jtMYlZgNAATmJViEn-u4wxok9CBg-2QuDuRXlWI9ijPGiguSINlcngy-x-dTtaFXiYptabA1l0iGmgIkkslQav2b46q9YnDWvH3FOdUDEe5Y32l25WkEl18wzbUCAkNEKM0ITnX7-h45LpN_kaHioMNKyGc-ibYQo2SeMnhNFRiiPui6nwl16R2jtH3XE9IrX8o9n4X8ljpihWKEBLI_O1SRRKqNevTdTsv01W6ZQxc_bkDGfT-ez-zqeFptZX9lk0qs6T0VbKMpOWZyu9oI0fwwBDTkVv9l2MBj4F4_Pi42qU9rVxS-WY1jTwf2C8UrZTeGfeoH6Zm4rKyI8UObz5lgZuMRoOJpPqaU7bIBAsSXzcQqCVMJsQ_bLX6bZwU6ONyAfsl13eRt6rBVJI1S9vt9sikCcZ7H3QYshPsC73evzqLCwQYYZzO71m6wXndrudVvtNnHXfDJo7IgdqRj9Pcoe08Botu5ZaSlSlv443fWc=?" /></p>
 <table>
 <thead>
 <tr>

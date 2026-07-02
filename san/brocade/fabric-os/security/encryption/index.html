@@ -7848,27 +7848,7 @@ FabricOS encryption: in-flight data encryption via FC-SP-2, IPsec for FCIP tunne
 </ul>
 <hr />
 <h2 id="management-plane-encryption-stack">Management Plane Encryption Stack<a class="headerlink" href="#management-plane-encryption-stack" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph "Management Access"
-        ssh["SSH\nECDSA / RSA host key\nAES-256 transport"]
-        https["HTTPS — Web Tools / REST API\nTLS 1.2+\nCA-signed certificate"]
-        snmp3["SNMP v3\nSHA authentication\nAES-128 privacy"]
-    end
-
-    subgraph "Config Transfer"
-        scp["SCP (configupload)\nencrypted file transfer"]
-    end
-
-    subgraph "Disabled (Plaintext Protocols)"
-        telnet["Telnet — DISABLED"]
-        http["HTTP — DISABLED"]
-        snmp12["SNMPv1/v2c — DISABLED\n(no community strings)"]
-        ftp["FTP — DISABLED\n(use SCP only)"]
-    end
-
-    adminUser["Administrators"] --&gt; ssh &amp; https &amp; snmp3
-    backupServer["Backup Server"] --&gt; scp
-    monSystem["Monitoring Platform"] --&gt; snmp3</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1Ut1q2zAUvu9THHwxEkZW4rKxq4GbZKSQDFO57MLuhaLItqh9JKRjM9_tIfaEe5JJ8rp2gfrC8oHv73xWY7lp4XB_Bf5xw6mJc3LkyBvZSyTIhJDOJREQQa4tE8b2Fe42W5bBNdz7d6sdwZOcKsx2bJV-_ARkOTqjLSWP_7gtkXFlsi-KnMHvn7_guzxBoXXngsyOFZDldxUWBwbrD-n7CjfZyqkG5RmEtKRqJTjJV4IOe3Pj43w75jDeVMj2GfCBWh88QJXGOdA6_QzGqpGL6S9b4vnqYumNxlo1UITgtbSvVhbGe2xyWIgIGUyn-XlZoURhJ0M-Xq06Oa8cmG9abJXjp87jF3nHFZL8QZBbTVr4DpYvjiQ7lFQmRTxjVds7lt0edtuLOuc230KEftbpXNC4vh5T8R-ywgVqELrvB1Q0gSOrsPFBXhTqYPH1wsHzBichVKKxm5aXC_Nzr_DBSVsmWfhUXpiTti55hNXqS7hD8G6-Df6MPzHyTlw8DYZJOwbqbZxgHp-ZwkRkr5FNjmRfJkfts-sQHHypVGvbP4Oj8B_rnOSw?" /></p>
 <h3 id="test-snmp-v3-from-monitoring-server">Test SNMP v3 from Monitoring Server<a class="headerlink" href="#test-snmp-v3-from-monitoring-server" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From the monitoring server — verify SNMP v3 connectivity</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>&lt;snmp-username&gt;<span class="w"> </span><span class="se">\</span>

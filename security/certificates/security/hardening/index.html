@@ -7563,20 +7563,7 @@ Hardening reference covering OCSP Stapling Flow, OCSP Stapling, Security Checkli
 </ul>
 <hr />
 <h2 id="ocsp-stapling-flow">OCSP Stapling Flow<a class="headerlink" href="#ocsp-stapling-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant nginx as nginx / Web Server
-    participant ocsp as OCSP Responder
-    participant client as TLS Client
-
-    note over nginx: Server startup / cert load
-    nginx-&gt;&gt;ocsp: OCSP request for its own certificate
-    ocsp--&gt;&gt;nginx: OCSP response (cached — staple)
-    note over nginx: Response stapled to TLS handshake
-
-    client-&gt;&gt;nginx: TLS ClientHello
-    nginx--&gt;&gt;client: ServerHello + Certificate + Stapled OCSP response
-    client-&gt;&gt;client: Verify stapled OCSP signature (no external request)
-    client-&gt;&gt;nginx: TLS handshake complete (faster + private)</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1kL1OwzAUhfc8xR0boYq9Q5cwMCCBGgTzxblJLFzb2E4pGw_BE_IkXP-koaJkSSx9x9858fQ2kRZ0I3FwuK-AH4suSCEt6gB6kPoI6MvHNTzTC7TkDuT-sEZ4G9H7pn2AHXlrdHcBE0oSvxh8vGuhSacqUdoEAsNXZ9umiMAHjk-W7YJcAGWwy3yk1tttFG-y1sU9PkBvHMjgwbzrFJK9FBgoxSK-5liRlFys6wlWAsVIHXx_fkWvVVRf7rabE5nqIJg0aETd-RFfKW_KaxfbsvmWlDK_djCT4Xl3AuAKmqU_n9qiO6t9rpqveSIn-49TwZTwctAYJsdLtQE6BnIa1fzf6n87n2aBMHu-jrusevQc507WyQO3q6sfdXnHdw==?" /></p>
 <h2 id="ocsp-stapling">OCSP Stapling<a class="headerlink" href="#ocsp-stapling" title="Permanent link">&para;</a></h2>
 <p>Enforce OCSP stapling on all public TLS endpoints to avoid privacy leakage and improve connection performance.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># nginx — OCSP stapling configuration</span>

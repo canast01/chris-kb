@@ -8641,45 +8641,9 @@ Reference for creating, managing, sizing, and operating Azure Virtual Machines u
 
 <hr />
 <h2 id="azure-vm-architecture">Azure VM Architecture<a class="headerlink" href="#azure-vm-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph vmComponents["VM Components"]
-        compute["Compute\nvCPU · RAM (SKU)"]
-        osDisk["OS Disk\nManaged Disk (P/E/S)"]
-        dataDisks["Data Disks\nup to 64 per VM"]
-        nic["NIC\nIP · NSG · Accelerated Networking"]
-    end
-    subgraph platform["Platform Services"]
-        avail["Availability Zone / Set"]
-        ext["Extensions\nMonitor Agent · Defender · Custom Script"]
-        diagBoot["Boot Diagnostics\nserial console · screenshot"]
-    end
-    rg["Resource Group"]
-    vnet["Virtual Network / Subnet"]
-
-    rg --&gt; vmComponents
-    rg --&gt; platform
-    nic --&gt; vnet
-    avail --&gt; compute</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNpdUsFO4zAQvfcrRj7BAfWCOCKVFCEEKVUjeth0D647TS3SmcieBPgy7nzZjkMWUnyIx5M3b-Y9e1_zqzvYIPC4moCu2G6rYJsDdMeMjw0TksTSrHP4OZq_PTQtp8lWsDTZV7ChLls-w-cHrGY5nBUPz-cjNMe5jy-leSogBRvKLdkKd_0JzpbT22kxxu-s2PRLB5hr2MPihtoGhOHqEhoMsM5HBeRdaRb32Ybul2mIRXGXtplzWGOwoq0WKK8cXjxVQx3S7lR5U1vZcziWZjlEUGDovMOxcttZX5dmlja79bWXd_ij_sBU0TIC4puU5vZNkKJn0vFzJi8cYFapmWm8Oe51CNWicdZGYW3ogm_GLDtvqxtmpUpfdcJWxFG8U8KIwdta74Ii15hYoguo_Q4sv0SGqjQrjNwGh3AXuG0GQEeo3GsfpFWqwaSkpd1SL2coh4uL65O3Mc7_d24y3MUXWOsn3471qeHVTP4BSB_LNQ==?" /></p>
 <h2 id="azure-vm-deployment-flow">Azure VM Deployment Flow<a class="headerlink" href="#azure-vm-deployment-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    request["Deployment Request\nPortal · CLI · Terraform · ARM"]
-    rbacCheck["RBAC Check\nMicrosoft.Compute/virtualMachines/write"]
-    policyCheck["Azure Policy Evaluation\nallowed SKUs · location · tags"]
-    policyDeny["Deployment DENIED\npolicy non-compliant"]
-    armValidate["ARM Template Validation\nresource provider checks"]
-    resourceGroup["Resource Group\ncontainer for resources"]
-    subgraph provision["Provisioning"]
-        osDisk["OS Disk\nManaged Disk provisioned"]
-        nic["NIC\nIP allocated from subnet"]
-        compute["Compute\nVM SKU allocated in AZ"]
-    end
-    extensions["Extensions Applied\nMonitor Agent · Defender · Custom Script"]
-    running["VM Running\nProvisioning state: Succeeded"]
-
-    request --&gt; rbacCheck --&gt; policyCheck
-    policyCheck -- Non-compliant --&gt; policyDeny
-    policyCheck -- Compliant --&gt; armValidate --&gt; resourceGroup --&gt; provision
-    provision --&gt; extensions --&gt; running</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptUsFu2zAMvfcrCN-z3ncY4NnBEKxJA2frYfYOqswkQh3Ko6R02Y_tvi8bZdmNM8wXkxIf-fj09p191UfFHh6qO5CP8UdA5-usxL6zlxOShyqdNbS17FUHf35D8bCKvy_IrPaWTzHJq3X2PTV5Vro4on6ps-pjXsAQN7Q2mq2ze_-usKc-eLw_G_ZBdWulj4bQ3b-y8Tg26W1n9GVsk_8KjLAdjmB5Vl1Q3lhqSHWyAbaw-_zVRRKd1cNNjL06uJtmJdLlZrNyuVkty4bSNZClhRZqnVHkR6Ti05PqTKs8Co1qLTtLgWQwHg80GJ0NrBF6tmfTIoOOxKfx0_UntqEXUabqIW9IW_JKBGAQLd-KJ7ALzwdW_TH1djKvzrZTaOgwlsXPutI4ketxBzEQyRWpg8gTsyse2xmGjK6zzapoaLWFKKcIKIg921McTehnxTo9XJ2NL9jQ0zpqPwMagvzbCEFq0_-nR4qTXZ0t32LIe5EaW6Epi3hZPT_EV5GnK3EvWBEkei04L1x2mk0_ceFAcfU6k_FVisWeM1HAeWHzHnZBa8R22HhucFgsPlx9OmQzw_1rQLmHzdwcM0A01f_qi5vamY3S6LkjUreJfWo2ZcPdVb8EThvf_QWieEqI?" /></p>
 <h2 id="creating-vms">Creating VMs<a class="headerlink" href="#creating-vms" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a Linux VM with defaults</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>vm<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

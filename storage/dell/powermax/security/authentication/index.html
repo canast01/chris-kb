@@ -9112,26 +9112,7 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 - Rotate local account passwords on a 90-day schedule or per your organisation's password policy.</p>
 <h2 id="active-directory-ldap-integration">Active Directory / LDAP Integration<a class="headerlink" href="#active-directory-ldap-integration" title="Permanent link">&para;</a></h2>
 <p>Unisphere for PowerMax supports LDAP (including Active Directory via LDAP) for centrally-managed authentication. Users authenticate with their AD credentials; Unisphere maps AD group membership to internal roles.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant User as Admin Browser
-    participant UNI as Unisphere :8443
-    participant AD as Active Directory\n(LDAPS :636)
-    participant ARRAY as PowerMax Array
-
-    User-&gt;&gt;UNI: HTTPS login (username + password)
-    UNI-&gt;&gt;AD: LDAP bind (svc-powermax + bind_pw)
-    AD--&gt;&gt;UNI: bind success
-    UNI-&gt;&gt;AD: search user (sAMAccountName=username)
-    AD--&gt;&gt;UNI: user DN + group memberships
-    UNI-&gt;&gt;AD: verify password (bind as user DN)
-    AD--&gt;&gt;UNI: authentication OK
-    UNI-&gt;&gt;UNI: map AD group → Unisphere role\n(StorageAdmin / SecurityAdmin / etc.)
-    UNI--&gt;&gt;User: session cookie + dashboard
-    User-&gt;&gt;UNI: API call (GET /storagegroup)
-    UNI-&gt;&gt;UNI: RBAC check — role has permission?
-    UNI-&gt;&gt;ARRAY: SYMAPI / internal query
-    ARRAY--&gt;&gt;UNI: data
-    UNI--&gt;&gt;User: 200 OK + storage group list</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNplUkFu2zAQvPsVe1QQuA6aICgENAVTFW3Q2jVs5xCgQEFTW4uIRLJLyq5uOfUBRV-Yl3RJ2alh6SZydmZ2hh5_tmgUFlpuSDYj4M9JClppJ02Ae48E0oMoG23gluyOD4ao2V0E3RvtXYWEkL-5urocwESRqFTQW4RCE6pgqftmsi-FmC8hv768PhsOLRbiIc7N7Q5pKn-BIJLdKAGjvfHNDevn8Gm1YpLabtho1vKFkQ3COZN5v7NU9tQM5QFR5BBFYa1NCZnfqrGL9A3Tn6fD727XD4hifFBIYN8qhd6fkHmUpCqIskwnpkIp25owYwtvD14GfAldzFhxQ7Z10GCzRvKVdqf0WyT9o3tZBbJkhUPZUwyoZRsqNByiDNoa-Pr5iDABGuliH73w8-8_R-WRrZFLWXI5coN98xNYompJh-7wj0G9-h9ppGUrMQjvo6Ky9lHH-Evpq7WVVA4KE_M7ULKuIfv4YQUT3-slR2endhe34j2oCtUjPD_9TRah4v0dd6aT4rvjyOKbyWH5MI0aE9AmxApq4MdOXZ9VhLzEVcogh7u8vrjg5HiHvbV9WrX2YfQPDlYAkg==?" /></p>
 <h3 id="configuration-steps">Configuration Steps<a class="headerlink" href="#configuration-steps" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Navigate to <strong>Unisphere → Settings → Security → LDAP Configuration</strong>.</li>

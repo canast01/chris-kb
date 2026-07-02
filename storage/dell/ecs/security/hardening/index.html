@@ -8803,40 +8803,7 @@ Hardening reference covering Hardening Checklist, Network Segmentation, Operatin
 <li>[ ] Perform a quarterly access review: remove object users for decommissioned applications; rotate keys older than 12 months</li>
 </ul>
 <h2 id="network-segmentation">Network Segmentation<a class="headerlink" href="#network-segmentation" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  subgraph "Application / Backup VLANs"
-    APPS["App Servers\nBackup Proxies"]
-  end
-  subgraph "Management VLAN"
-    MGMT_HOST["Jump Hosts\nAdmin Workstations"]
-    MON["Monitoring Servers\n(SNMP / syslog)"]
-  end
-  subgraph "ECS Cluster"
-    S3EP["S3 API\n:443 / :9021 (HTTPS only)"]
-    MGMT_API["Management API\n:4443"]
-    PORTAL["ECS Portal\n:443"]
-    SSH_NODE["SSH\n:22"]
-    SNMP_SYS["SNMP / Syslog\n:161 / :514"]
-    GEOREP_PORT["Geo-replication\n:9100 (inter-VDC only)"]
-  end
-  subgraph "Remote VDC"
-    REMOTE_VDC["Remote ECS Nodes"]
-  end
-  subgraph "KMS"
-    KMS_SRV["KMIP Server\n:5696"]
-  end
-  APPS --&gt; S3EP
-  MGMT_HOST --&gt; MGMT_API &amp; PORTAL &amp; SSH_NODE
-  MON --&gt; SNMP_SYS
-  S3EP &amp; MGMT_API --&gt; GEOREP_PORT --&gt; REMOTE_VDC
-  S3EP -.-&gt;|"firewall DENY\nfrom mgmt VLAN\nto :9021 not needed;\nguard :4443"| MGMT_API
-  MGMT_API --&gt; KMS_SRV
-  classDef vlan fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef port fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef ext fill:#15803d,stroke:#166534,color:#fff
-  class S3EP,MGMT_API,PORTAL,SSH_NODE,SNMP_SYS,GEOREP_PORT port
-  class APPS,MGMT_HOST,MON vlan
-  class REMOTE_VDC,KMS_SRV ext</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1Umtvm0AQ_O5fscJS5UjQGoOp7UqRXBvFac1DHHIV4QoRc1BkuEMHThMpP77H06RKvt3dzuzOzlzMgvwP7J0RQHF5jOubsM7zNDkFZUIJfIHvwel8yeGwX5uFwHEAa9tGXoUChNkTZsWRtCCb0ecEF8JvjsMkfNPVCEgQ4wyTsu7VtDLuDNffWcj1hB-XLIcdLUrebh1mCYFflJ2LstbRtOR4y_QEg5KkpCwh8VXABJmGzdUWL0VK45t3FegbBJv0UpSYNdORotuegBS-0f2RrFRV4R1Wy-lMhsnOdW0ElKQvN93sSitHesNVOqaqtCjbctz13quH2ZSVQdp0bssI7XzT2up8LNrxymzWFbh-Hz1wY9tNUL0Jh8iaXMmay2oLvdMtR7f9apIn3GEqMdwHxvFLeTqFSUL4mtJhuxns8L8hDs5oiYGDGj8c3bBc3ed3r6tVa5g0_CDTnwZqmPzgI-fg8Zd7u02FS5lrS21ArD4OSNJtbfxokH792PkLn1oT-aGza1RH33Bbo0ZNfhzUE6vywJz6ft2pI0ifpdtXIUoY_hukKWx18-FIIkYzyOKs-ZxHUtL2IxBaAsE4xOG3I4kvAQuhifu1nzuCtxJaM_jzKQ2KYosjeEoDAlGSpqvxbK4p-FEsSkbPeDWWQxWHC_FEU8pW4yiKhrScf6CW9vWkBDjsaVo4W4TLD2j4uWPJ88VUubJkTZsr6jus2hmx20Js_Bc798XOc3HobiWu51fRin2eYhVWtXNfv8YgtvZUKkf_AGaQUjc=?" /></p>
 <table>
 <thead>
 <tr>

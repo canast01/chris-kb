@@ -9082,40 +9082,7 @@ RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency
 <p>Always verify the compatibility matrix in the Dell Simple Support Matrix (SSM) tool before planning any upgrade.</p>
 <hr />
 <h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph siteA [Site A — Protected]
-        hA["ESXi / Physical Hosts"]
-        spA["Array/VPLEX/Host Splitter"]
-        rpA1["RPA-A1"]
-        rpA2["RPA-A2"]
-        storA[("PowerMax / Unity\nPrimary Volumes")]
-    end
-
-    subgraph siteB [Site B — Recovery]
-        hB["ESXi / Physical Hosts"]
-        spB["Array/VPLEX/Host Splitter"]
-        rpB1["RPA-B1"]
-        rpB2["RPA-B2"]
-        storB[("PowerMax / Unity\nReplica Volumes")]
-    end
-
-    hA --&gt;|"Write I/O"| spA
-    spA --&gt;|"Split write"| rpA1
-    spA --&gt;|"Pass-through"| storA
-    rpA1 &lt;--&gt;|"Cluster heartbeat"| rpA2
-    rpA1 &lt;--&gt;|"WAN replication"| rpB1
-    rpB1 &lt;--&gt;|"Cluster heartbeat"| rpB2
-    rpB1 --&gt;|"Apply write"| storB
-    hB --&gt;|"Read (DR only)"| storB
-
-    classDef rpa fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef splitter fill:#b45309,stroke:#92400e,color:#fff
-    class rpA1,rpA2,rpB1,rpB2 rpa
-    class storA,storB storage
-    class hA,hB host
-    class spA,spB splitter</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNktFumzAUhu95CovctBJRAiRZEk2T7LXSJnUbIlpbKduFA4eA5mJkO0uRerGH2BPuSWYbQkjXTOUCJJ__P5zvP84Y3yc5FQrdxA7Sj9xttoJWOZKFAozWK_1BGP359RtFgitIFKTfrdI8OV6716v7Ao1QlNeySChDH7hU0j1qZKVFWAhaj26jm-v7kRGgVcUKpUD0hKLC_tqNIzzE_ulx0B4H_baKC7y-cCO-B_GJPuoRvpaFqr-VkSgeqKjRLWe7B5DuZWOCMnX-RSQtIrGIMST8J4i6R0heQ0heS0haQnJKSFpC8pyQvEgYg-6d0LOEOUbD4bsn904YtI-jL-6TWYPTrqMp2vnQ3kh02YR_Wo-olEOVC77b5sZv8nYOe0JvreY920mNiHLQV2gDVDWdgue6O_wZiWZoVfDSqojvHDL5bzcSHHVWhquK1d3gNqWGmjT1GGiKLq5ixEtWX3YSq0mYprqCTLejKCsYWw6C6SyEjSeV4D9gOfDTCaRzL-GMi-Ugy7JTn-lFt9B63yQhhbTzztJgni7OenNzLRqjP52Pw6PRn82m4eT8T9ur1Jo3k2k4XnTmRTAZj-FFs92BZzbimfzMKzDoPYXdq2cjOsD1qjn2dKxm8L6l0oaKdGM5fwFT7kXJ?" /></p>
 <hr />
 <h2 id="splitter-types">Splitter Types<a class="headerlink" href="#splitter-types" title="Permanent link">&para;</a></h2>
 <p>RecoverPoint uses a write-splitter to intercept host I/O and send a copy to the RPA for journal-based replication. Three splitter architectures are supported:</p>
@@ -9347,26 +9314,7 @@ RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency
 </div>
 <h3 id="rolling-upgrade-sequence">Rolling Upgrade Sequence<a class="headerlink" href="#rolling-upgrade-sequence" title="Permanent link">&para;</a></h3>
 <p>RecoverPoint upgrades use EasyInstaller and are performed in a rolling fashion — one RPA node at a time within each cluster, maintaining replication continuity throughout.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant EI as EasyInstaller
-    participant RPA1 as RPA-A1 (Active)
-    participant RPA2 as RPA-A2 (Standby)
-    participant RPAb as Site B Cluster
-
-    Admin-&gt;&gt;EI: Launch EasyInstaller, load upgrade ISO
-    EI-&gt;&gt;RPA1: Identify current version
-    EI-&gt;&gt;RPA2: Evacuate CG ownership to RPA2
-    RPA2--&gt;&gt;EI: CG ownership confirmed
-    EI-&gt;&gt;RPA1: Push upgrade image, reboot
-    RPA1--&gt;&gt;EI: Node upgraded, rejoined cluster
-    EI-&gt;&gt;RPA2: Evacuate CG ownership to RPA1
-    EI-&gt;&gt;RPA2: Push upgrade image, reboot
-    RPA2--&gt;&gt;EI: Node upgraded, rejoined cluster
-    EI--&gt;&gt;Admin: Site A upgrade complete
-    Admin-&gt;&gt;EI: Proceed to Site B
-    EI-&gt;&gt;RPAb: Repeat rolling process for Site B
-    RPAb--&gt;&gt;Admin: Site B upgrade complete</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqVkc1qwzAMgO97Ch07aA_NMYdC2oURGFtpn0Cx1dbDsT3_dPTtJ6c_LE1hzBcL80n6ZAX6SmQEvSjce-yegI9DH5VQDk2ESnbKjF7rBjBAjeHUmBBRa_IjZrOu5pnie8bRpBJRHen5EVfcuAIm24hGtqeHYJvBrYoES1jpFCL37blec7ZY1E0Jb5iMOAztpqAtSkiOh5QEzfajT6sbzsmiJTSSTFS7E4jkPYdwJB-UNQOuKKE-okjIBqtXsN-GoYNyEG0_Rw_nYHZxGUDCmp3yHcn73usUDjc31eGepuCptTZeC86vBd8tIxdUZurTKkMSxOU3_mE7v4f_1ij-qcF0v5nyvLTqVl3YzmmKNFre2ltBXIgVz3seSLYlbMgRRvBWa2X24DIfAuys_52Q2fvuy3H3H3EC7ds=?" /></p>
 <ol>
 <li>Boot EasyInstaller (ISO) on the management station.</li>
 <li>Connect to Site A cluster management IP.</li>

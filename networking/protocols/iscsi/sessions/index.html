@@ -8130,50 +8130,7 @@
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUijKTM8o4eJytFJQcsksTs4vSy2qVFKoLs5ILEgFygKVJeal56TWcjkBVfjkp2fmYZV1BsoGpxYXA81UcAQaXZaKVZkLyBqsMq5IBjjn5BenpmBV5oakLCgVj3O5HBV07RScuJxAlDOXCxLlyuUMoty43CCCAFWaVZs=?" /></p>
 <h2 id="session-establishment-and-multipath-data-flow">Session Establishment and Multipath Data Flow<a class="headerlink" href="#session-establishment-and-multipath-data-flow" title="Permanent link">&para;</a></h2>
 <p>The sequence below covers the full path from initial iSCSI discovery through SendTargets negotiation, session login, and MPIO/DM-Multipath path selection for active I/O.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    autonumber
-    participant INI as Initiator&lt;br/&gt;(Linux / Windows / ESXi)
-    participant ISW as IP Network&lt;br/&gt;(Storage VLAN)
-    participant TGT as iSCSI Target&lt;br/&gt;(Portal :3260)
-    participant MPIO as MPIO Layer&lt;br/&gt;(dm-multipath / NMP)
-
-    Note over INI,TGT: Phase 1 — Discovery (SendTargets)
-    INI-&gt;&gt;ISW: TCP SYN → Target IP:3260 (discovery session)
-    ISW--&gt;&gt;INI: TCP SYN-ACK
-    INI-&gt;&gt;TGT: iSCSI Login Request (discovery session type)
-    TGT--&gt;&gt;INI: Login Response (Auth negotiation if CHAP configured)
-    INI-&gt;&gt;TGT: SendTargets (text request)
-    TGT--&gt;&gt;INI: SendTargets response (IQN list + portal group addresses)
-    INI-&gt;&gt;TGT: Logout (discovery session closed)
-    Note over INI: Initiator now knows target IQNs and all portal IPs
-
-    Note over INI,TGT: Phase 2 — Normal Session Login (per path)
-    INI-&gt;&gt;ISW: TCP SYN → Portal A IP:3260  (path 1 — NIC0)
-    ISW--&gt;&gt;INI: TCP SYN-ACK
-    INI-&gt;&gt;TGT: Login Request (operational session, ISID, CmdSN=0)
-    TGT--&gt;&gt;INI: Login Response — negotiate MaxRecvDataSegmentLength, ImmediateData, HeaderDigest
-    INI-&gt;&gt;TGT: Login Request (final — transition to Full Feature Phase)
-    TGT--&gt;&gt;INI: Login Response (StatSN, TSIH assigned — session handle)
-    Note over INI,TGT: Session 1 active on path 1 (NIC0 → Portal A)
-
-    INI-&gt;&gt;ISW: TCP SYN → Portal B IP:3260  (path 2 — NIC1)
-    ISW--&gt;&gt;INI: TCP SYN-ACK
-    INI-&gt;&gt;TGT: Login Request (same ISID, new connection CID)
-    TGT--&gt;&gt;INI: Login Response (TSIH matches — MCS connection added to session)
-    Note over INI,TGT: Session 1 now has 2 TCP connections (MCS)&lt;br/&gt;OR Session 2 established independently for MPIO
-
-    Note over INI,MPIO: Phase 3 — MPIO Path Registration
-    INI-&gt;&gt;MPIO: Register block device sdb (path 1 — Portal A)
-    INI-&gt;&gt;MPIO: Register block device sdc (path 2 — Portal B)
-    MPIO-&gt;&gt;MPIO: ALUA query (Report Target Port Groups) → identify Active-Optimized vs Active-Non-Optimized
-    MPIO--&gt;&gt;INI: Expose single multipath device /dev/mapper/mpatha
-
-    Note over INI,MPIO: Phase 4 — I/O Path Selection
-    INI-&gt;&gt;MPIO: Write 512KB to /dev/mapper/mpatha
-    MPIO-&gt;&gt;MPIO: Path selector (Round Robin / Service-Time / Least-Queue)
-    MPIO-&gt;&gt;TGT: iSCSI SCSI Command PDU via active path (e.g. sdb — Portal A)
-    TGT--&gt;&gt;MPIO: iSCSI SCSI Response PDU (status 0x00 — success)
-    Note over MPIO: On path failure: MPIO marks path down,&lt;br/&gt;retries on remaining active path within error recovery window</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqlVk1z2zYQvftX7FGaSpGstD1oWs8oUhJzItO0qNTtESJXFMYkwAKgPnrqqT8gk1-YX9IFQOrDcq126oNlk3i7b_e9XUjj7xWKBCecZYoVV0A_rDJSVMUClfu3ZMrwhJdMGAjCAJiGQHDDmZHqp4Xq3bSmXFRb6MEjF6ncaPrrffwrb5-j40eHjiBEs5HqycNjCsQyhF-mo_AcNP84tyAej-MA5kxlaDwsksqwHIZvBz_2z2F3UXBvce5zynZYc02LblHlhg6ZFREN76L2lQOH0iDINSpbZIeyDiFaMY1wDd_-_AoTrhP7dgetGEXqiWiflwDdmxuqbgjzcQTxbyF8--tLTZbKdRShle5DaNSaS1Gj48euhYfBHt4djT8dRXZkfAOmMuMCZlY1bV4ICWZXoo9LqH3cBqZLKaik1qii6gVm0spoYXwJ49tRBIkUS55VCtP2cwJHZUPL4NaA8jTO0x0fVfukwUMIOSfa30HptcuUrEpgaUqHqICzlERbVi-WmeRSNxxPlBsezAlCbuBJWEeaWoqHUAMTKbA8bzgEkb5ggIEzQChVQcfjmoDvaKuk49ZKrxqhdupobwXCWft5Z4XBuP-fnPDMA5I4OBEpRd2eDoUKJh0YF2kc_ty_6AdLo3EDwh3bzjBZT5hhMWYFCjNFkZkVRS0KTO0Z-64Dt8hSVBOeEY8LJJfc0rN5jGJCc2c6I-FDRUp8QGbIcr7dl80bG2bisAPzOLilEdc8E5i62I07VqRxju1_krXR8BpYYviaXguoBWlZNU5Eq9fD69K-ey7toJH2-v9Iq1mBtZQCN3Y4BSaudeNgcrlRrkEFM8kKteNzN46Pg9DgUeNIhZN99GrD7EiRSlSfreIQi1YCBW-7HXs_2wMGQHWwBU39ijLR9YAlrQZyVL6DJU2o3c4vTZ993ozfW0_d7vHItnaGGS0Rb_mj_nmIf0lRFrlMniDFNU8QdLo4GbmDtv8Wn5zo2qju8Ra5DzCafh4ByWcvihnaHdPcAxYEH-3G023nHW4bwZc7GDkXdu9Lwwv-BzVqrZtnoRSH54dsjeLvtyXtQdBcZDnC4WKreffos1ewkjZEr7Av2KVmf-_qC3p1r2PMvb5njXpUnGL8cD349M466IVMZ61xEbWLSNK3ZrKiTTyTC_JsjzIpS7k752T5HkyRadN9qLDCkyYfXYXu11gWhV3o0eQzrDlrBto1oYVvsjdO-3PN67HxxI7i7YfHBmyRd02lob_t9_1-qZKEnP18TnyU-3qJLBnPaZsNvWULpp60f0HfjUTHTYhCozjNJE2IwoJxQfqdUN9ws6K2oFLUKYX15bdx36-u_gYoJBkw?" /></p>
 <table>
 <thead>
 <tr>

@@ -8979,33 +8979,7 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 *Applies to: VPLEX*
 </div>
 <p><img alt="Dell VPLEX — Integrations" src="../../../../../assets/storage-dell-vplex-architecture-integrations.svg" /></p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph "Site A"
-        hostA["ESXi / Linux Hosts\nSite A"]
-        dirA["VPLEX Cluster-1\nDirectors"]
-        arrA["PowerMax / Unity\nArray A"]
-    end
-    subgraph "Site B"
-        hostB["ESXi / Linux Hosts\nSite B"]
-        dirB["VPLEX Cluster-2\nDirectors"]
-        arrB["PowerMax / Unity\nArray B"]
-    end
-    witness["Witness VM\n(3rd failure domain)"]
-    vms["VMS\nUnisphere + vplexcli"]
-    cloudiq["Dell CloudIQ\nAIOps / health telemetry"]
-    siem["SIEM\nSyslog / SNMP traps"]
-
-    hostA --&gt;|"FC front-end\nSAN fabric A"| dirA
-    dirA --&gt;|"FC back-end\nzoning + masking"| arrA
-    hostB --&gt;|"FC front-end\nSAN fabric B"| dirB
-    dirB --&gt;|"FC back-end\nzoning + masking"| arrB
-    dirA &lt;--&gt;|"ICL — 10/25GbE\nsynchronous Metro"| dirB
-    witness -. "quorum" .- dirA
-    witness -. "quorum" .- dirB
-    vms --&gt;|"management"| dirA
-    vms --&gt;|"management"| dirB
-    vms --&gt;|"telemetry"| cloudiq
-    vms --&gt;|"syslog"| siem</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNkU1u2zAQhfc-xYCrFoGSJkV2RQHTcVsDVuJWiBvAyoKWaIsINXRIKrYKL3qInDAnyciW5R_EabkiOW_4Ps6baDNPMmE99H-1gJYrxlMrZhmwSHkJbba6rVZmnG-PWDe6U3AGfYXFAn7QnYuxlt432lRZkg4H_e4ddHThvLTBeYxXysrEG-t2pMJW0oGZSxuKBb18i8qXMbatFWXzqMT0LTy-j8ffweP7ePwQ7-IoHj-Oxw_w5sqjdG7Efq83MAxj_PDZpjARShdWQmpyofBj3feUk3YYRjHSs26WSVKcwNNMy0WiVS1KtClS9ThiV1Jr4qVT7ycR9G5mjoAyKbTPwEstc-ltWXc5JfMRi3pdIohKp82UtNF1OABPA6y-2GpShSD4umTfOjCxBn1Av6Ge9jVBj61KKITlKtHWJtpGPxbJw1r-x6DCKcHnwj3QjlqqZBsP_g8PvvbgGw_-3x58i_Vl1dPr9OHl7zOcfzq7uPw-7sboSkwysjWFg5BmZHbN6swgOAX2WBhb5AxOg-2Hj9f5JsM1ay5QTCkD9LvzOlo-6N7mt9wkvi9wqxCpWiXbegXXSyPO?" /></p>
 <h2 id="back-end-storage-arrays">Back-End Storage Arrays<a class="headerlink" href="#back-end-storage-arrays" title="Permanent link">&para;</a></h2>
 <p>VPLEX presents a virtualisation layer over heterogeneous back-end arrays. The back-end ports on each VPLEX director zone to the target ports on the back-end array, then VPLEX discovers and claims the LUNs exposed to those ports.</p>
 <h3 id="supported-back-end-arrays">Supported Back-End Arrays<a class="headerlink" href="#supported-back-end-arrays" title="Permanent link">&para;</a></h3>
@@ -9217,25 +9191,7 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 <li>RecoverPoint bookmarks enable point-in-time consistency for crash-consistent or application-consistent recovery.</li>
 <li>VPLEX Geo is typically used when Site A and Site B are separated by &gt;5ms RTT (city-to-city, region-to-region).</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    subgraph "Site A — Active"
-        hostA["Hosts — Active I/O"]
-        dirA["VPLEX Cluster-1"]
-        rpSplitter["RecoverPoint Splitter\nembedded in VPLEX"]
-        rpA["RecoverPoint\nCluster A"]
-    end
-    subgraph "Site B — DR Standby"
-        rpB["RecoverPoint\nCluster B"]
-        dirB["VPLEX Cluster-2"]
-        hostB["Hosts\nInactive until failover"]
-    end
-
-    hostA --&gt;|"FC I/O"| dirA
-    dirA --&gt; rpSplitter
-    rpSplitter --&gt;|"async journal\nWAN — any distance"| rpA
-    rpA --&gt;|"journal replication"| rpB
-    rpB --&gt; dirB
-    dirB -.-&gt;|"volumes activated\nafter RP failover"| hostB</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1kMFKAzEQhu_7FEPuVfQBhE1VLBQtW1Ch6yHdzNpIOilJtlLowYfwCX0SkzStu6K5BGb--Wf-r9XmvVkJ62FaFRCe65avVmxWwObKI5Tw9fEJZePVFlkSxLcyzpcLdhc-1xPA5PyBvZxUUtkgepxNb55hrDvn0Y4uen27mW-08qG8YBU2Zot2ZhR5OJZrwvUSpUQJiiAZDcbL4VxNeQuUWYYk_wrF083XFcy9ILncsZ4n_8-TD5Px38kue_3Ih2c-NU1IHPB05JWGVigd_Xs3FieoMBpd7dntOKHcJ4TFkWXs9aAVQ4aHSeF21MCb6SwJXdNTeZ-yCtoFCxfiNhhsA7o8nRfmAbAY3BrhlaEk41nG0-4Y-3hNqJzFya3R3RodpIjCo6xJtPGcavaTdH8gUnwDLmPB_A==?" /></p>
 <h3 id="failover-procedure-geo">Failover Procedure (Geo)<a class="headerlink" href="#failover-procedure-geo" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Initiate RecoverPoint failover for the target consistency group (from RecoverPoint management interface).</li>

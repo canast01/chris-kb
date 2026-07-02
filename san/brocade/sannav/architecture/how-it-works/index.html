@@ -7914,46 +7914,7 @@ How It Works reference covering Overview, Deployment Topology, Supported Hardwar
 </table>
 <p>Hypervisors supported: VMware ESXi 6.7+, 7.x; KVM.</p>
 <h2 id="internal-services">Internal Services<a class="headerlink" href="#internal-services" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  SW1["Brocade Switch A\nFabricOS · REST/SNMP telemetry"]
-  SW2["Brocade Switch B\nFabricOS · REST/SNMP telemetry"]
-  SW3["Brocade Switch C\nFabricOS · REST/SNMP telemetry"]
-
-  subgraph SANnav["SANnav Management Portal — Collection Layer"]
-    REST["REST API Server\nFOS northbound API client"]
-    SNMPR["SNMP Receiver\nv3 polling + trap ingestion"]
-  end
-
-  subgraph SVC["SANnav Internal Services"]
-    ES["Elasticsearch\nFabric topology &amp;amp; inventory"]
-    TSDB["TimescaleDB\nPerformance time-series data"]
-    AE["Alerting Engine\nMAPS events · threshold rules"]
-  end
-
-  OUT1["Fabric Map UI\nTopology visualisation"]
-  OUT2["Performance Dashboard\nPort utilisation · top talkers"]
-  OUT3["Alert Console\nEvent management · email/SNMP"]
-  OUT4["REST API\nThird-party integration"]
-
-  SW1 --&gt;|"REST + SNMP"| REST
-  SW2 --&gt;|"REST + SNMP"| REST
-  SW3 --&gt;|"SNMP trap"| SNMPR
-  REST --&gt; ES
-  REST --&gt; TSDB
-  SNMPR --&gt; AE
-  ES --&gt; OUT1
-  TSDB --&gt; OUT2
-  AE --&gt; OUT3
-  REST --&gt; OUT4
-
-  classDef switch fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef svc fill:#15803d,stroke:#166534,color:#fff
-  classDef db fill:#b45309,stroke:#92400e,color:#fff
-  classDef out fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class SW1,SW2,SW3 switch
-  class REST,SNMPR svc
-  class ES,TSDB,AE db
-  class OUT1,OUT2,OUT3,OUT4 out</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNU8tu2zAQvOsrFgrQS2TUsWw3SYECSqwCAeLEsJz24PRAUWuLCE0aJO3CQA79iP5L7_2UfkmXetgJ0hS5UCJXszucGS0NW5dwPQ0Asq8n8_DCaM4KhOy7cLyE5F59ZrkR_DaD379gmmaz99nNeAIOJa7QmV34rYL2XkAv3gqNX0Av3wIlrN3ky4p_ltwotp2H9RPGTLElfagcTLRxTMKfHz_hUkuJ3Amt4Jrt0FTjoeo-D_0KyeQKMjRbNESAZisCl7neqKIqcSmoZQPzfKY00dOaIkdRobYxrGmMUEs4BkfcgF7R-qEVDlXxnPiXyz3rK-XQKCLrKQiOtpmUZvMwlYyacIvM8LJVB5ymYXq5g3dstf5Io7bETzfCAsyy0cU8nIkVWs4kjsiRCZqFNiumOIKjQseiEWihYI41qCSdh4lE4_wlUrUUCu_VOJlkgL699Y640qAttSzAbGRDtLna7d2MYtQQHJMAd1f3atYS3Qq7YVJYtleEvqfsPOU1YpZEZ6YgumQAbJxoEdVsvQay9AGNbRvEDWOyWFktiW_qqcLqkAMC4ooJWeWoxfUPvhPHUpiis2bG7UhJh2RQQ7L-N6DT-fRYf39cuR8-Vtmp4__falxX6wiT71Sr4hPU6fNVcvnpzlsXNCGrDpI08Emo3r3EQW1vu-8F3rh2Fz9t5e_pr8ApQnaEC7D1T7YQUp4f9QbDGPPIOqMf8PzopOhjcRpxcsucHy0Wi2fALW9QJ4PTblwcUMPhIO6_giryBpT3B3H3bA866_W7XXwFpDeuQX3gMcPDqGHROy3O_oHyFkVkROTlrq-4L3ktolpLusP-OM0ir2FEwhX5_tSrG3lJ_RL7pe_pBH8BLh6hLQ==?" /></p>
 <table>
 <thead>
 <tr>

@@ -7605,44 +7605,7 @@ How It Works reference covering Overview, Component Topology, MediaAgent and Ded
 </tbody>
 </table>
 <h2 id="multi-site-topology">Multi-Site Topology<a class="headerlink" href="#multi-site-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph primarySite [Primary Site]
-        cs["CommServe\n(command &amp; control)"]
-        ma1["MediaAgent\ndc1-ma-01"]
-        diskLib1[("Disk Library\nDDB — Primary")]
-        clients1(["VMs / DBs / Files\nSite A"])
-        clients1 --&gt; ma1
-        ma1 --&gt; diskLib1
-        ma1 --&gt; cs
-    end
-
-    subgraph drSite [DR / Secondary Site]
-        ma2["MediaAgent\ndc2-ma-01"]
-        diskLib2[("Disk Library\nDDB — DR copy")]
-        clients2(["VMs / DBs / Files\nSite B"])
-        clients2 --&gt; ma2
-        ma2 --&gt; diskLib2
-        ma2 --&gt; cs
-    end
-
-    subgraph cloudTier [Cloud / Tape Tier]
-        cloud[("Cloud Library\nS3 / Azure Blob\nlong-term retention")]
-        tape[("Tape Library\narchival / compliance")]
-    end
-
-    diskLib1 --&gt;|"aux copy\n(scheduled)"| diskLib2
-    diskLib2 --&gt;|"aux copy\n(scheduled)"| cloud
-    diskLib1 --&gt;|"aux copy"| tape
-    cs --&gt; webUI["Command Center\nWeb UI — port 443"]
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-    class cs,ma1,ma2 ctrl
-    class diskLib1,diskLib2,tape store
-    class clients1,clients2 host
-    class cloud,webUI cloud</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9U8tu2zAQvOcrCBkobEBGLclWXB8K2BYKBEiAIk7ag5QDRVI2EYoUSDlpixz6Ef3CfkmXekWuHzoIfOzszsxyM6FeyQ7rEt3eXyH4zD7dalzsUKF5jvXPDS8Zir_WG2R3T1Wc_YiJnbXK8w3TLyyRQwJrLCn6gIiSpVZi5LwH59iLnTtGOV5umSwTSYk3zvF44vWCKDfPtzz14qETwRLBWkPdREbRCv39_Qc1RJxRj4XgkM94w9j5dmfQRxSt7P8LF8wksuK_dJ5GR_FoPP5sWfUZVmctiaMLYqojJunVoVdU1zZF91B4w0A9PXYrx_7_BvjnDPDPGgAliCpOGeBfMGB1wgC_McDvM-wbcHxx1gAi1J4-cKZRvLZLKP-AC4bsUZ8oXIGyOqSTtgkgfPlrr4GnUGkihZLbccl0jjQrgSpXsq-3hMyQpSrQJcGa7PgLFpAKnmEhOJaEtaiOcNtaq-bNwfsflZnwdA3ZMboXjI6ct0P97eYypJJ2oQSEWNpX9dhUZr6y9PGmHiA7NGsQynQiv7MUPd5UvS4UzOV0GsD7qIECGxOxDJFSC5RxIRYDfxYGLHUNjNszWww8OmV07hIllF4Msiw7BJpSgcs18poEmNEOGVJ_Tj-dRe6UKRugN5tPgnegF4azYHoWWDnTICfZdRiyDjmhs2x2miyY5MLYufblWbW9m9Zgt-2Ma52tpfUTNGPuds_dSjgIAGJu1YWmff8Ay8SFVQ==?" /></p>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

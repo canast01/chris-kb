@@ -8916,29 +8916,7 @@ Health Checks reference covering Health Check Layers, Daily Checks, Pre-Change H
 </ol>
 <h2 id="health-check-layers">Health Check Layers<a class="headerlink" href="#health-check-layers" title="Permanent link">&para;</a></h2>
 <p><img alt="Health Check Layers" src="../../../../../assets/storage-dell-ecs-hc-health-check-layers.svg" /></p>
-<pre class="mermaid"><code>graph LR
-  subgraph "REST API Layer"
-    NODES["GET /vdc/nodes\nAll nodes: GOOD?"]
-    CAP["GET /vdc/capacity\nUsed &lt; 70%?"]
-    ALERTS["GET /vdc/alerts\nNo ERROR/CRITICAL?"]
-    GEOREP["GET /vdc/geo-replication/status\nLag at zero?"]
-  end
-  subgraph "S3 Layer"
-    S3HC["aws s3api head-bucket\n200 OK within SLA?"]
-  end
-  subgraph "Node-Level SSH"
-    STOS["systemctl status storageos\nActive?"]
-    CASS["nodetool status\nAll nodes UN?"]
-    ZK["echo srvr | nc localhost 2181\nMode: leader/follower?"]
-    NTP["chronyc tracking\nOffset &lt; 100ms?"]
-  end
-  NODES &amp; CAP &amp; ALERTS &amp; GEOREP --&gt; S3HC --&gt; STOS &amp; CASS &amp; ZK &amp; NTP
-  classDef rest fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef s3 fill:#15803d,stroke:#166534,color:#fff
-  classDef node fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class NODES,CAP,ALERTS,GEOREP rest
-  class S3HC s3
-  class STOS,CASS,ZK,NTP node</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1kl-PmkAUxd_3U9xg2ieIKKtrTdOGKHGNVDbAvqh9GIeLEGdnzMyosemH7wC6ssn2Zf6Ec-7c37nsJDkUEMYPAOq43dU3Kw6SFPyXOYTkgtIy3wCW0TRI1tYsSKF7ymiXiwzVhvuMQX0cwyyKpj-t37V64r-0tJQcCC31ZcNfFWbwHZ7cLzelHwZx2i5MGEptKi8FBHEcxd1JPE_nEz-8OWZBFAft8jsUjsQDKynRpeBdpYk-mgoh2QHR8AelaLzIsw-cidcmTLznydoiZwXKI4cSCiSZsz3SPeoN77suRAs4l7ooOSSh_3nFpYnCCfGEDJLk-Vo3jQyfuiiNb1QzaNozm5DEtF6FSHV5wnt2idFXoWohbvJW0vC6vElXi7WFtBCg5EnCX-AUmKCEFUJp6PdGvQ3_ZSxjYIYFZTcXjIkzypt_mZocaSEFv1DQktB9yXcbHuW5Qm3m1HPdN9Umrf8C-FrN16zN7MyhGQk4zo86xeZgsGtlUm2rhVnMc6YGZUSpKeYg0XSZl4yNO_3B0MOtrbQUexx3etkjZiObCibkuJPnedumvKupNxi5XnY3DYcD7_E_piq5q-2JegTvtmHWH2XfPrE1sLZBtRtQ-4pZ9f0uqnmVd78bbLuCtlcL2wDXLz_8A9mnB_s=?" /></p>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <p><img alt="Daily Checks" src="../../../../../assets/storage-dell-ecs-hc-daily-checks.svg" /></p>
 <table>

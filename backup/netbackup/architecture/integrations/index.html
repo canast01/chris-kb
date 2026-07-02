@@ -7527,43 +7527,7 @@ NetBackup Integration reference covering Integration Architecture, SIEM Integrat
 </div>
 
 <h2 id="integration-architecture">Integration Architecture<a class="headerlink" href="#integration-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    master["NetBackup\nPrimary Server"]
-
-    subgraph storageIntegrations [Storage Integrations]
-        ostDD["Dell Data Domain\nOST / DD Boost\n(inline dedup)"]
-        msdpPool["MSDP Pool\nMedia Server Dedup\n(native dedup)"]
-        pureSnap["Pure FlashArray\nSnapshot Client\n(near-zero RPO)"]
-        s3Cloud["AWS S3\nCloud Storage Unit\n(Glacier archival)"]
-    end
-
-    subgraph sourceIntegrations [Source / Client Integrations]
-        vadp["VMware VADP\nbpvmutil — agentless VM backup"]
-        cyberark["CyberArk AAM\nruntime credential retrieval"]
-    end
-
-    subgraph operationsIntegrations [Operations Integrations]
-        opscenter["OpsCenter\ncentralised reporting + alerts"]
-        siem["SIEM\nsyslog audit log forwarding"]
-    end
-
-    master --&gt; ostDD
-    master --&gt; msdpPool
-    master --&gt; pureSnap
-    master --&gt; s3Cloud
-    master --&gt; vadp
-    master --&gt; cyberark
-    master --&gt; opscenter
-    master --&gt; siem
-
-    classDef master fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef source fill:#15803d,stroke:#166534,color:#fff
-    classDef ops fill:#b45309,stroke:#92400e,color:#fff
-    class master master
-    class ostDD,msdpPool,pureSnap,s3Cloud storage
-    class vadp,cyberark source
-    class opscenter,siem ops</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1U01vm0AQvedXjMilVYnqBNtNcqjkmLaqVNdWaNMD5LBmB3vlZRfNLo7cU39Ef2F_SZevhJCYC8ODN_vemyGT-iHdMrLw7fYE3JUzY5Fi7zvaG5buyiJRKxI5owNESHsk7_6k_tCU6w2xYgvGamIb_KosOsAKrQzEUQNCH72vedWljQ3D2AtRSgiZZRDqnAmVqGX0A95DGMKNdt8k6o1QUigEjrws3npPHXLDi5XWMvYWUbiCqkzUArlgrUwIK4rroNzh-1c6FCVhpFgReytXwWfJzHZGxA6JqmCz1RbmUqCqZChkdPYbScPtatnvYoK51CWPvdmvCKIgUfUjdPZ_KlHRv0iWCqeJUboVeya7Dqj4MExdUjrMssZcLo2cI5nuGXde7hYPzLm5m4WrRK2LfV5aIeHfn7_g5Cgr0Ri4W8C6Hm3PR3pYIzHaxd68qma0g9lskSgqlRU5QkrIHV8wCYSWBDoXR03oAlt5z40sH_Fje1GY1J1S7d-yMPO6TFQFEZPCIHeHF5qsUBt4B0wiWdMfhsA89qKvn5xwczBSb4CVXFioqkyTi4Y76lB3s_JwdvaxWcwh2O3aEO82aIi3OzGEqwENsS72Fzq6IF70dhYb1albWBNi1r3NhJTXpxeTaYBr31jSO7w-Pedj5Jd-qqWm69Msy55T21-35X5IA4b8kTvlF5f86ji32cqGej65HAVP1PPpdBKMj1Kdu5a3Hk-C0dUj7-piPBrhq7zOZnPr4fXI_G5GfjcUv51C57HHqAbhd8m3PvoNu-z9Kuzq8eQ_FWCs-w==?" /></p>
 <p>Alert on: <code>backup failed</code>, <code>policy modified</code>, <code>client deleted</code>, <code>catalog backup failed</code>.</p>
 <h2 id="cyberark-integration">CyberArk Integration<a class="headerlink" href="#cyberark-integration" title="Permanent link">&para;</a></h2>
 <p>NetBackup retrieves service account passwords from CyberArk at runtime:</p>

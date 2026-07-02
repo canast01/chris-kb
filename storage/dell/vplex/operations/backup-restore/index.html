@@ -8999,28 +8999,7 @@ Backup configuration, restore procedures, and validation for Dell VPLEX.
 - Hosts at the surviving site continue I/O on distributed volumes
 - After the failed site recovers: reconnect the ICL, verify Witness connectivity, allow distributed devices to resync
 - Monitor resync progress: <code>ll /distributed-storage/distributed-devices/*/health-indications/</code></p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph "VMS Loss"
-        vmsLost["VMS VM unavailable\n(management plane only)"]
-        ioOk["Host I/O continues\nDirectors unaffected"]
-        restoreVms["Restore VMS VM\nfrom snapshot / backup"]
-        vmsLost --&gt; ioOk
-        vmsLost --&gt; restoreVms
-    end
-    subgraph "Director Failure"
-        dirFail["Single director failure\nWithin a pair"]
-        pairDegraded["Director pair degraded\nCache on surviving director"]
-        replaceDir["Replace failed director\nDell FSE hardware replacement"]
-        verifyDir["ll /engines/*/directors/*/hardware/\nConfirm health-state: ok"]
-        dirFail --&gt; pairDegraded --&gt; replaceDir --&gt; verifyDir
-    end
-    subgraph "Metro Site Failure"
-        siteFail["Site failure / ICL down\nWitness grants quorum"]
-        survivorIo["Surviving cluster continues I/O\nDistributed volumes accessible"]
-        siteRecover["Site recovers\nICL reconnected"]
-        resync["Distributed devices resync\nmonitor rebuild-progress"]
-        siteFail --&gt; survivorIo --&gt; siteRecover --&gt; resync
-    end</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1Uz2P2zAM3fsrCE9tgcB7hy53PTRAggMSIB3sDopE20JkytWHg_z7Uv7u9U6TSIqPj49UZexdNsIFOJw-AR8fr7UTXQPZ5XiGg_U-G_zp9K1nRyiG0OUIkUQvtBFXgyV9bgWJGlukAJ0RhGDJPL5kv5d0bV9vRfaTEWCfv4K0FDRF9CU9a4cyWOcTZFXxHdUm0aHnIF5aX2Sn8Q4jhZIqZ1vwJDrf2AA5XIW8xW6TPJGG3e77wODdwFphCCOpN2LMDOGFG44OV1GUdslXZGdNtcFkjy-r8WVJv3RoNIGATmi3YZbMZ-QCClWxVkhuUJO_pCchm6Qlk3G97rnIUuIfiVhziQySJBruAwFUy2uWGY2Bl_MP4IGru2AVp7Q0tK1k6HT1GLA4IUeqNaHPv-YzVLrPGDlTtFRp10KDwoRm54MI-A3sbQM5qTSIve17Un8mP5hL-Q9mccTgLJx1wP-n4dk7jyPgPAPei_3TAZS90zAO7sYDo1Hw8CdaF9sN1VFn6_aWQRbNpYk-oFu3Nu1w2lwfnL5GXljorYktB4SUjK_5V2xRmc4JpeXmJm5utHj9E7dkEb2z-Q-SaTnWMgp7zQWmWEmtJZ32xuE1aqN2nbM1x_yb4ov8a3-juRKbvwLDLtL_BfFdWZQ=?" /></p>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
 <p>After any recovery:</p>
 <ul>

@@ -7716,25 +7716,7 @@ CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restor
 <hr />
 <h2 id="backup-job-lifecycle">Backup Job Lifecycle<a class="headerlink" href="#backup-job-lifecycle" title="Permanent link">&para;</a></h2>
 <p>From schedule trigger to media write, every CommVault backup job moves through a defined sequence of states.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Sched as Scheduler (CommServe)
-    participant JM as Job Manager
-    participant Client as Client Agent
-    participant MA as MediaAgent
-    participant DDB as DDB (dedup store)
-    participant Storage as Storage Library
-
-    Sched-&gt;&gt;JM: Trigger job per schedule policy
-    JM-&gt;&gt;Client: Initiate backup — send job token
-    Client-&gt;&gt;Client: Quiesce filesystem / app (VSS)
-    Client-&gt;&gt;MA: Stream data (TCP 8403)
-    MA-&gt;&gt;DDB: Deduplicate data blocks
-    DDB--&gt;&gt;MA: Unique blocks only
-    MA-&gt;&gt;Storage: Write to primary copy (disk library)
-    Storage--&gt;&gt;MA: Write confirmed
-    MA--&gt;&gt;JM: Job complete — update catalog
-    JM--&gt;&gt;Sched: Job status: Completed
-    note over MA,Storage: Auxiliary copy job (separate schedule)\ncopies from primary to secondary (offsite/tape/cloud)</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptks-O0zAQxu99ijmmEqsiwQHlsFJoL1RYAmWBCxfXmYSh_oftrMiNh-AJeRLGsdsFdXOIneT3Tb75xhF_zGgVHkhOQZoN8OVlSKTIS5ugV99wABnLZtYYoNk7Y3oMj7i9wY8is0d3AiGtnDDcEHtNyAtTdddNfL_BRJcRgQPJ54HD4W0m8tIM7MxDTC48Y6nn1-xk7aFu39MpyLBsVnZt7O7-_ihaeAg0sWn4zg14XmNtGrzTpJaVPwqGi_cW3llKJBPCSaoze_jz6zdEtMNaIbkz2lVT8H90H2fCqBBG0hiXmNDADqT30Hzu--3_GtG17DygNDDIJKF52H-AN69fviqc6JjhGFo45BjYZ_azkift1DmuFAN3tdYnSzzz-hGc1ctTnZpQC18CcZXkwAcynBUo5xdOmuIZdImv_L4qLsWLTjk7UjA4XCrXfPPBUM54jQzlrGY_ZLdsWWo3XfLNRnLyRRCTTHNsYV-Fpah1rHOPPCTRvbja7uafpOnqN0-hicjHIf_lMs3tV8tfeQAwBmeuHXKzEdn5kB8aN46RW9kl6XGntJuH7eYvyc4KsQ==?" /></p>
 <hr />
 <h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
 <h3 id="restore-workflow-decision-tree">Restore Workflow Decision Tree<a class="headerlink" href="#restore-workflow-decision-tree" title="Permanent link">&para;</a></h3>

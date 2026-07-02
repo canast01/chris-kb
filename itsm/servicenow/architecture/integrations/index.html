@@ -7980,35 +7980,7 @@ ServiceNow is designed as an integration hub as much as an ITSM platform. Integr
 
 <hr />
 <h2 id="integration-architecture-overview">Integration Architecture Overview<a class="headerlink" href="#integration-architecture-overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph ServiceNow Cloud
-        SNOW["ServiceNow Instance"]
-        REST["REST Message\n/ Scripted REST API"]
-        SOAP["SOAP Web Service"]
-        IMPORT["Import Set API"]
-    end
-
-    subgraph On-Premises Network
-        MID["MID Server\n(Java agent)"]
-        LDAP["Active Directory\n/ LDAP"]
-        DB["On-Prem DB"]
-        MON["Monitoring Tools\n(Dynatrace, Splunk)"]
-    end
-
-    subgraph External SaaS
-        PD["PagerDuty"]
-        DT["Dynatrace"]
-        SPL["Splunk"]
-    end
-
-    SNOW &lt;--&gt;|"HTTPS outbound\n(443)"| MID
-    MID --&gt; LDAP
-    MID --&gt; DB
-    MID --&gt; MON
-
-    SNOW &lt;--&gt;|"REST / Webhook"| PD
-    SNOW &lt;--&gt;|"REST / Webhook"| DT
-    SNOW &lt;--&gt;|"REST / Webhook"| SPL</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqFUc9rwjAUvvevePQ0YeJhHsdAF2Edtg2m4KHbIbaPWqxJSVOd4B-_l-IkbgxzeDR9X74f71VGtltYrgKg0_WbargLNIe6wEQf4bXRfTl03RFJus5Drx2pzkpVYPh5xawWIstDVyHGrpMVfqgJiMLUrcVyaMOMR94Lkc44sVKFNW5-1D1AFPN0RaTRvtXGEsB6DKjK4NZ-qsbc4L7usIME7VGb3ZUqjlgeUhlU0Hyoh3d5kEAulR15kkvmPM0KWx8QWG2wsNqcXBLX8YBsnocXQfr2GnGakJJWNT2sVQWZ1k1HeuykpDWywEcQbdOr3ejfIIsvi0bJBoSU4krMKQEnw4b19uQ7oQldyf3x8iVNd5D6reT2Cc_j8cs5fMsyLkD3dqN7VZLP6fRpFJ7dwILL4ICAQ_ybH2x-c6XYf7iHnU_ccrda74iUs7sQlt2FULDgG2FEwH8=?" /></p>
 <hr />
 <h2 id="soap-web-services">SOAP Web Services<a class="headerlink" href="#soap-web-services" title="Permanent link">&para;</a></h2>
 <p>Legacy integrations often use SOAP. ServiceNow auto-generates WSDL for every table:</p>
@@ -8020,17 +7992,7 @@ ServiceNow is designed as an integration hub as much as an ITSM platform. Integr
 <h2 id="mid-server-architecture">MID Server Architecture<a class="headerlink" href="#mid-server-architecture" title="Permanent link">&para;</a></h2>
 <p>The Management, Instrumentation, and Discovery (MID) Server is a Java application running on a customer-managed host. It bridges the ServiceNow cloud and on-premises resources.</p>
 <h3 id="mid-server-communication-flow">MID Server Communication Flow<a class="headerlink" href="#mid-server-communication-flow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant SNOW as ServiceNow Cloud
-    participant MID as MID Server (on-prem)
-    participant TGT as Target System
-
-    SNOW-&gt;&gt;MID: ECC Queue record (outbound probe)
-    Note right of MID: MID polls ECC Queue\nover HTTPS every 40ms
-    MID-&gt;&gt;TGT: SSH / WMI / SNMP / HTTP
-    TGT--&gt;&gt;MID: Response payload
-    MID-&gt;&gt;SNOW: ECC Queue record (inbound payload)
-    SNOW-&gt;&gt;SNOW: Process payload / update CMDB</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptj7tOwzAUhvc8xRnpEMHA1KEDCaIdEgK21IXFdQ7BUuJjfAHl7TlOqKhUPNgevv8W8DOh1VgbNXg1FcDHKR-NNk7ZCKJ9PoIKINB_GY0tfUM1UuqvwOZQZy4_mUUPN2RL53HaXLHySWZWKj8gR8wh4lQsVI4rdzt22cJjVcFLwoTgUZPv2TDFEyXbg_N0wtW3pciAGT4i0DsswtzB0TiGP4s3S7nSXspOAPJ3hvu7KSwOjHMkd9qCEHu4hWNz4Fu0TcdPliwYA-W52isGRzYgr5pHUv2FT17wX3djf6uvis3l3FXTedIYwpng7OR6xeuqpn4ofgCD0oLW?" /></p>
 <h3 id="ecc-queue">ECC Queue<a class="headerlink" href="#ecc-queue" title="Permanent link">&para;</a></h3>
 <p>The External Communication Channel (ECC) Queue is the asynchronous message bus between the instance and MID Servers. MID Servers long-poll the queue rather than listening on an open port.</p>
 <table>
@@ -8172,13 +8134,7 @@ ServiceNow is designed as an integration hub as much as an ITSM platform. Integr
 <p>Splunk App for ServiceNow (available on Splunkbase) provides pre-built dashboards that query the ServiceNow Table API for incident, change, and CMDB data.</p>
 <h3 id="pagerduty">PagerDuty<a class="headerlink" href="#pagerduty" title="Permanent link">&para;</a></h3>
 <p>Bidirectional integration:</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant SNOW as ServiceNow
-    participant PD as PagerDuty
-
-    SNOW-&gt;&gt;PD: Create Incident (via Events API v2)\nOn P1 incident creation
-    PD-&gt;&gt;SNOW: Webhook: acknowledge / resolve
-    SNOW-&gt;&gt;SNOW: Update incident state\nbased on PD webhook payload</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNplj8EKwjAMhu97ihz1IKLHHQSxHrxshSG7eIltmMWZzrZ27O1tFUUwpwS-_0vi6f4gViQMdg5vBaQa0AWjzIAcoKnqFtBDQy4aRZUd_xApMiCxIyceYSpeQM4tNhspStg5wkBwYGU0JX4WDcI-ptbDVh4grucnrhnkCsyHUTljLL9cUiRTFpbQ0vli7bUEVFe2Y0-6I1iCI2_7SL-b3_xx0Hn31-tDGk98Rk8aLOfbx7cyvTT1FnXxBPWSWbM=?" /></p>
 <p>Configure via <strong>PagerDuty</strong> spoke in Flow Designer (ServiceNow Integration Hub) or manually via REST Messages. Required fields:
 - <code>routing_key</code> (PagerDuty Integration Key)
 - <code>dedup_key</code> (ServiceNow <code>sys_id</code> — prevents duplicate PD incidents)</p>

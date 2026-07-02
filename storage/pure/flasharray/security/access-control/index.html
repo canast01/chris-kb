@@ -8227,40 +8227,7 @@ FlashArray uses a role-based access control (RBAC) model with four built-in role
 </ul>
 <hr />
 <h2 id="rbac-and-access-model">RBAC and Access Model<a class="headerlink" href="#rbac-and-access-model" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  subgraph "Identity Sources"
-    AD["Active Directory\n(AD group → role mapping)"]
-    SAML["SAML SSO IdP\n(Okta / Azure AD / ADFS)"]
-    LOCAL["Local Accounts\n(pureuser — break-glass only)"]
-    API["API Tokens\n(service accounts)"]
-  end
-
-  subgraph "Purity Roles"
-    AADR["array_admin\n(full control)"]
-    STOR["storage_admin\n(volumes / hosts / PGs)"]
-    OPS["ops_admin\n(alerts / diagnostics / replication)"]
-    RO["readonly\n(monitoring / audit)"]
-  end
-
-  subgraph "Audit"
-    AUDIT["pureaudit list\n(all actions logged)"]
-    SIEM["SIEM via TLS syslog"]
-  end
-
-  AD --&gt;|"group membership"| AADR &amp; STOR &amp; OPS &amp; RO
-  SAML --&gt;|"group claims"| AADR &amp; STOR &amp; OPS &amp; RO
-  LOCAL --&gt; AADR
-  API --&gt;|"inherits account role"| STOR &amp; RO
-
-  AADR &amp; STOR &amp; OPS &amp; RO --&gt; AUDIT
-  AUDIT --&gt; SIEM
-
-  classDef idp fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef role fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef audit fill:#b45309,stroke:#92400e,color:#fff
-  class AD,SAML,LOCAL,API idp
-  class AADR,STOR,OPS,RO role
-  class AUDIT,SIEM audit</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9k8GK2zAQhu9-isGB0oJD02R3u5tDwdRtCWRxiNOTW4oijx0RWTKSHUjZQ099gNIn3CfpSI6zKXR7kePo_0b6_xlXhjU7WK4DANttK_8WLgpUrWiPkOnOcLQh7QLESR7GvBUHhEQY5K02xy_qZZxAZXTXwOPPX2C0RKhZ0whVvQq_ei6L75d56FbIshQWxYqodN8yeA3x984gVXY_k4_ZgCzT9zExS82ZhJhz3anWEtWQurNo4PHHb9gaZPtxJZm1oJU8DnC8WtBFVwvY6D0qhxFxEByBnSr1SlRF8JftVWec6TV5GCzHyToPmTHs-I0VtVBUrOykBK5VS17PFjcp6Swlwio8Kw9adjVa8rbTtnXP1Sc7IOkqy0Pd2LOaSTReVAhWKQIEd28GGyk4a4VWA7pO85C8F840gbVWgk6mxEnOukK0z_iL3d7J2OdksclDl6cnQArb-ktISskdZkHqqsLibHHx4Z66SCscBIPNMgN7tKS5PIsaOR6_ewj7gaix3qKxO9GEDz5KeOGToge5p3WdBv14XFJcMlHb_xF-OhziJYHveF9BqB1SD-3QaT-PVOpUg-gAnqnb13OxBKd4_D_OsIO4G7MESxBFA6WQcj56gzN2XUaWBmGP89FsezstbyKupTbzEU7KaYmXoP80evItnzEszuRNMb0t7gayLMtLrG9Pz22vrmeTuzN3N72aTPAfHPUhcrFGPqnIxUPXftqlACJnPyLzEVl3V3vadd4j32h_dvAHxIJDgw==?" /></p>
 <hr />
 <h2 id="built-in-roles">Built-in Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h2>
 <table>

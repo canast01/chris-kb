@@ -7678,38 +7678,7 @@ Confluence is Atlassian's enterprise wiki and collaboration platform, available 
 <hr />
 <h2 id="deployment-topology">Deployment Topology<a class="headerlink" href="#deployment-topology" title="Permanent link">&para;</a></h2>
 <h3 id="data-center-activeactive-cluster">Data Center — Active/Active Cluster<a class="headerlink" href="#data-center-activeactive-cluster" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
-    Users["End Users / Browsers"] --&gt; LB
-
-    subgraph LB["Load Balancer (sticky sessions)"]
-        direction LR
-        LB1[nginx / F5 / ALB]
-    end
-
-    LB --&gt; N1
-    LB --&gt; N2
-    LB --&gt; N3
-
-    subgraph Cluster["Confluence Data Center Cluster"]
-        N1["Node 1\nTomcat JVM"]
-        N2["Node 2\nTomcat JVM"]
-        N3["Node 3\nTomcat JVM"]
-        N1 &lt;--&gt;|Hazelcast\ncluster bus| N2
-        N2 &lt;--&gt;|Hazelcast\ncluster bus| N3
-        N1 &lt;--&gt;|Hazelcast\ncluster bus| N3
-    end
-
-    subgraph Shared["Shared Tier"]
-        SH["Shared Home\n(NFS / EFS)\nAttachments, Index, Avatars"]
-        DB[("Database\nPostgreSQL")]
-    end
-
-    N1 --&gt; SH
-    N2 --&gt; SH
-    N3 --&gt; SH
-    N1 --&gt; DB
-    N2 --&gt; DB
-    N3 --&gt; DB</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNUl1vwiAUffdX3PCkiWapZG_LEvEj3dI12-r2Qn1AitqswgJ0usUfPyrWtCZmuw_AuRzux7msCrXjG6YtRK8dcPZmhDYUTWXmj3ADRKtddUQLGAzuISKdI9OUy7VmnxvnoChSLAPCCia50NA1Nucf32CEMbmSpocWxyeVZbkW3DpvnbGyiARUrnO5d-lmt24ZRcQ_ETLz6SJyzB4HLTRsIXxR2bgojRWaorGSq6IUrjiYMMtgLKTz1_eN6uKAolhlAoJUztWWMwuP709NwvBEGF4j4BMBXyMEcOeqPYTsRxScGZtK7uuAZWkOdU8-2R9U_P-ouC3nWaPETV9kFPkd5nlLjyQ834RqK1LZjWeJm890lvRSObKW8c3WiWn68CAzse_D6MsJXH2Wc4wJoV1Uyb5kxkV4VsautUheItS7mLFroppjEnZO3TcRbiHPnJAms0a4Rr9Z4sd4?" /></p>
 <hr />
 <h2 id="network-port-reference">Network Port Reference<a class="headerlink" href="#network-port-reference" title="Permanent link">&para;</a></h2>
 <table>

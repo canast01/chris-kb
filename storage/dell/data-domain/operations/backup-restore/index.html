@@ -9086,27 +9086,7 @@ Backup & Restore reference covering Overview, DDBoost Restore (Backup Applicatio
 </ul>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    backupApp(["Backup App\nVeeam / NetBackup / CommVault"])
-
-    subgraph "Restore Paths"
-        ddboostRestore["DDBoost Restore\n(fastest — app-aware)"]
-        nfsRestore["NFS Direct Mount\n/data/col1/mtree-name"]
-        cifsRestore["CIFS Share\n\\\\dd-host\\share-name"]
-        vtlRestore["VTL (FC)\nemulated tape restore"]
-    end
-
-    subgraph "Data Domain"
-        ddfs["[(DDFS)]\n(deduplicated store)"]
-    end
-
-    backupApp --&gt;|"initiate restore"| ddboostRestore
-    backupApp --&gt;|"granular file"| nfsRestore
-    backupApp --&gt;|"Windows file"| cifsRestore
-    backupApp --&gt;|"tape emulation"| vtlRestore
-
-    ddboostRestore &amp; nfsRestore &amp; cifsRestore &amp; vtlRestore --&gt; ddfs
-    ddfs --&gt;|"rehydrate on the fly"| restoreTarget(["Restore Target\nVM / file / database"])</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptksFugzAMhu99CovDVA4I7QUmrUWVJrXVtE7dofTgElOiQYKSsGlSD3uIPeGeZA5QyqrmAjb-fzsfPhqsC1i-TIDPAbP3pn6s6-kumLXvwEGqtkRYQQxrcn06hrmuqi02pQv24aRV2-ZwbN2CF7JOG4JndIUN2o_-CHHQ2rr-6y5IkpmPoU-kapqjdRzA7_cPYF1H-ImGwmA_WKjcDvL1YgOJNJQ5WOlGuVTFAh3GmS7v48oZokhhRSN1Jkfy-RPrNwX6xikfIaKCp0lT63PX0g9XDsrt6xKmi3mYKqqaEh0JcFgTmK6gV5ES11wSHg8SXaFUYyq53QW7aZIsNuGeIQgSTV3KrDVuHcNry-FHQRQ9nAKppJNcPkxwumJ9S8QzKZ7eQC5Lr7igvVX9JpXQn_ZcPCJ5q7rF0cGRWnH9BV93gf_jwd2oOwcjd44uWm_e8pqcwXXtDBVfwngAWoErCPLyi5v2NF7RHMnxSp9dugSv9Yr32F-IH35zDmjJb_MfdLMBMw==?" /></p>
 <p>Resume after the restore completes:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>filesys<span class="w"> </span>clean<span class="w"> </span>start
 </code></pre></div>

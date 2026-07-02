@@ -8792,25 +8792,7 @@ Integrations reference covering S3 Client Integration, Veeam Object Repository, 
 <p><img alt="Dell ECS — Integrations" src="../../../../../assets/storage-dell-ecs-architecture-integrations.svg" /></p>
 <h2 id="s3-client-integration">S3 Client Integration<a class="headerlink" href="#s3-client-integration" title="Permanent link">&para;</a></h2>
 <p>ECS exposes a native S3-compatible API on HTTPS port 443 (or 9021 for the non-standard S3 port; 9020 for plain HTTP in lab environments). Any S3-compatible client can connect using path-style or virtual-hosted-style addressing.</p>
-<pre class="mermaid"><code>graph LR
-  subgraph "Client Layer"
-    AWSCLI["aws CLI\n(SigV4)"]
-    S3CMD["s3cmd"]
-    JAVA["S3 SDK\n(Java / Python / Go)"]
-    VBR["Veeam B&amp;R\n(S3 compatible)"]
-  end
-  subgraph "ECS Endpoint"
-    LB["Load Balancer VIP\nHTTPS 443 / 9021"]
-    NODE1["ECS Node 1"]
-    NODE2["ECS Node 2"]
-    NODEN["ECS Node N"]
-    LB --&gt; NODE1 &amp; NODE2 &amp; NODEN
-  end
-  AWSCLI &amp; S3CMD &amp; JAVA &amp; VBR --&gt;|"HTTPS + SigV4"| LB
-  classDef client fill:#15803d,stroke:#166534,color:#fff
-  classDef ecs fill:#2563eb,stroke:#1d4ed8,color:#fff
-  class AWSCLI,S3CMD,JAVA,VBR client
-  class LB,NODE1,NODE2,NODEN ecs</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptUVFvgjAQfvdXXGpitgwzpWCcD0sEzKZjzFjDHnAPlRYlw9YA22Lij18pzLFkL7277-67--66y-lxD_6qA1B8bHc6Qm6WclGCT088RyoDMH0lrj-PEP0qQDkbcUXSXWhdozedJth99iJU4PjAGmgxDacRIhiI96TKF_STwi0sT-VeCuU8yB9u6KwiFHJOD-D0VlVnDLE8HGmZbjNeV3HB_gicuQRmgh1lKspaoO9EyJeUgUMzKmKeQzhfbsTjer0kYFlYjbwbmMNmZvDizYaRbhNIxqGNmy3cbOFBCw8a3Heg37-v20Gvpjc2uMiub6dgfSVlq9Mooxav2GdUi7wBfVJ0Vl0VK85oUXg8UY7-jCTNskl3aI8HmBlFmct3rsLRyMaWEctM5pNukiRtIo-LhmXaI8y3vyxmcTb-h9VINbRQo5JpVCJrBZci3zH0wvo19RtUwzrfEs6h7A==?" /></p>
 <p><strong>Connection parameters:</strong></p>
 <table>
 <thead>
@@ -8945,25 +8927,7 @@ Integrations reference covering S3 Client Integration, Veeam Object Repository, 
 </div>
 <h2 id="veeam-object-repository">Veeam Object Repository<a class="headerlink" href="#veeam-object-repository" title="Permanent link">&para;</a></h2>
 <p>ECS is a certified S3-compatible target for Veeam Backup &amp; Replication object repositories (Scale-out Backup Repository offload and Capacity Tier).</p>
-<pre class="mermaid"><code>graph LR
-  subgraph "Veeam Infrastructure"
-    VBR["Veeam B&amp;R Server"]
-    SOBR["Scale-out Backup Repo\n(Performance Tier)"]
-    VBR --&gt; SOBR
-  end
-  subgraph "ECS"
-    S3EP["ECS S3 Endpoint\nHTTPS 9021"]
-    NS["Namespace: veeam-prod"]
-    BKT["Bucket: veeam-prod-offload\n(Object Lock optional)"]
-    USR["Object User: svc-veeam-prod"]
-    S3EP --&gt; NS --&gt; BKT
-    USR --&gt; BKT
-  end
-  SOBR --&gt;|"offload — Capacity Tier\nHTTPS + SigV4"| S3EP
-  classDef veeam fill:#15803d,stroke:#166534,color:#fff
-  classDef ecs fill:#2563eb,stroke:#1d4ed8,color:#fff
-  class VBR,SOBR veeam
-  class S3EP,NS,BKT,USR ecs</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptUcFOwkAQvfMVk5IYjW0CFAj24KFIopEU0i1cqodlO4u1pdtsWxITDn6EX-iXuLsUxehpd-bNm_fe7lbS8gXmYQegajZbU1lrRLqDh4JLWtWyYXUj0VITAGs_jFvYvwiBoNyjtJ4NRhYaJIzm6IimBp-yrCkhxFI8FZdLlFzIHS0YQpSivGpZaiM4zq1hqwYWyS8rsyk5KhN3tox1qW4wK5JSpEX9VNxH0ZLATW_Qb_cFJLYCusOqpAw92GuvTilF0uL-YxRbfsMyrM9RR3CeC5oop4vNK7Ia5oJlIMo6FQXNT25XREVsB1YVSg-qPXP-iGizJlVAzKFET_Sz-phVB9fNg9VagM_3D5hS5T-t38xbnWJeA0m366F1MAKKy3JaVXfIj0GAp3nudfujSc9NbPVzIkNVjscjd2gzkQvpdTnn5zxkVcsajMYubn5YyRCTyT8s_WG28Ww0v9vakR0QW0WzdUy1ufMFM2i2PA==?" /></p>
 <p><strong>Integration steps:</strong></p>
 <ol>
 <li>Create a dedicated ECS namespace for Veeam: <code>veeam-prod</code></li>

@@ -8790,54 +8790,12 @@ Backup and restore in ONTAP is built around native snapshot technology. Snapshot
 </div>
 <hr />
 <h2 id="snapmirror-relationship-types">SnapMirror Relationship Types<a class="headerlink" href="#snapmirror-relationship-types" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph "Primary Site"
-        srcVol["Source Volume\n(SVM / vol)"]
-    end
-
-    subgraph "Secondary Site"
-        dstAsync["Async Destination\n(DP — XDP)"]
-        dstSync["Sync Destination\n(SM Sync)"]
-    end
-
-    subgraph "Vault Site"
-        dstVault["SnapVault Destination\n(XDP — vault policy)"]
-    end
-
-    subgraph "SMBC Peer"
-        dstSMBC["SMBC Destination\n(zero RPO/RTO)"]
-        mediator["ONTAP Mediator"]
-    end
-
-    srcVol --&gt;|"async replication\nlag: minutes–hours"| dstAsync
-    srcVol --&gt;|"synchronous write\nconfirmation"| dstSync
-    srcVol --&gt;|"long-term retention\nindependent snapshots"| dstVault
-    srcVol &lt;--&gt;|"bidirectional sync\ntransparent failover"| dstSMBC
-    mediator -. "quorum witness" .-&gt; dstSMBC</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9kcFuwjAMhu88hZXTdijcpwmJjeM6KooQUtkhtIZGapPOSUBMHHiH7Ql5kqVpQbBO9JLajj__-b0hXuXwNu2B-7RdbXzMIhIlpz3EwiDzNV-ndK6KhMXKUorg_m2JS_kQz0MYwFYVj-zDX0aZ9f4QY0yVzLrMTJuR3ss0Yf6AMWojJDdCSUceR3A6_sBiHJ3RbU_sW-JuRxxCnb2jZM5tYboqfNohJa-aG7fcRStl62uVKkS6v_fc8OUVIkS6mVFnk6Z2S_9CUjCNJoPpbHL90hIzwY2ihE3eZ6MIwjbuDPabgSAYHhj3PhJWTmLLL_jmCUohrUF9On7nbn-aHS7edxB1MiclldWwI-fUUrrtrQWVHti0xv91FkpuAoNUOgEGZTNeyAwrp9XFoJ2_Olemne-tvqY8e8xKZIIwrdt5AbWcpTTEpa441ZQ1F4XaOncPZ1t713ZB0Af2aRXZEnbCSNSaQT8YXi7_AgAv9W0=?" /></p>
 <hr />
 <h2 id="snapmirror-failover-dr-restore">SnapMirror Failover (DR Restore)<a class="headerlink" href="#snapmirror-failover-dr-restore" title="Permanent link">&para;</a></h2>
 <p>SnapMirror replicates volumes asynchronously to a destination cluster or SVM. The destination volume is read-only under normal operation. Failover (breaking the relationship) makes it writable for disaster recovery.</p>
 <h3 id="dr-failover-sequence">DR Failover Sequence<a class="headerlink" href="#dr-failover-sequence" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant SrcCluster as Source Cluster
-    participant DstCluster as Destination Cluster
-    participant DRHosts as DR Hosts
-
-    Admin-&gt;&gt;DstCluster: snapmirror show (check lag)
-    DstCluster--&gt;&gt;Admin: lag-time, last-transfer-end
-    Admin-&gt;&gt;DstCluster: snapmirror quiesce
-    DstCluster--&gt;&gt;Admin: quiesced
-    Admin-&gt;&gt;DstCluster: snapmirror break
-    DstCluster--&gt;&gt;Admin: destination now writable
-    Admin-&gt;&gt;DstCluster: volume mount / create shares
-    Admin-&gt;&gt;DRHosts: mount NFS / present iSCSI LUNs
-    DRHosts--&gt;&gt;Admin: I/O active on DR site
-
-    Note over SrcCluster,DstCluster: Primary site recovered
-    Admin-&gt;&gt;DstCluster: snapmirror resync (DR→Primary)
-    Admin-&gt;&gt;SrcCluster: snapmirror break (Primary)
-    Admin-&gt;&gt;DstCluster: snapmirror resync (restore original)</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNkkFuwjAQRfecYpYgEbFngVQRVUWqaEXUAxgzhRGxHcYTEBfoAXrEnqSDiZQgGpVsYjvv_xn_ScRDjd5iTmbLxg1An8qwkKXKeIGnjSN_d1qwnZd1FGQwEYpQs0VoTu7gPEoHzjEKeSMUfL9i9RKixISvIK0HCUrdZLNZazmF6E3liDkwxF04wdDu0O6hNNtR0rRspsrkML18zYQcjnUVJRM2Pn4qgX7zSKFDTRgt9vs3wENma0az77fadALzer8Tk5h1ib3Wx1DWDsGFWqOcgFV7Qc3GMMZb0TXmaYMunwvFK6VQd1TMiwW8fiyvmobt9LWYvIGxQkcE7UznFEnwOqZl0ILhqANvf5Rxt8V3Jmf4nCTAaC_sY2Fpd2dvYZivfr6-G5vRjbAteZ8yDP-U_FNL3xJYb8S01UmUo8EvueQW4Q==?" /></p>
 <h3 id="standard-failover-procedure">Standard Failover Procedure<a class="headerlink" href="#standard-failover-procedure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Confirm the relationship state and last successful transfer</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>

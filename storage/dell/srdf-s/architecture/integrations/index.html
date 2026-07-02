@@ -8775,33 +8775,7 @@ SRDF/S integrations: SRDF/Star three-site topology, Microsoft Cluster Services w
 <p><img alt="SRDF/S — Integrations" src="../../../../../assets/storage-dell-srdf-s-architecture-integrations.svg" /></p>
 <hr />
 <h2 id="vmsc-and-srm-integration-topology">vMSC and SRM Integration Topology<a class="headerlink" href="#vmsc-and-srm-integration-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph siteA ["Site A — Production"]
-        vcA["vCenter\n(Site A)"]
-        srmA["SRM Server\n(Protected Site)"]
-        sra1["Dell SRA"]
-        esxiA["ESXi Hosts\n(Active VMs)"]
-        r1["PowerMax R1"]
-        vcA --- srmA
-        srmA --- sra1
-        esxiA --&gt;|"FC / iSCSI paths"| r1
-    end
-
-    subgraph siteB ["Site B — Metro DR"]
-        vcB["vCenter\n(Site B)"]
-        srmB["SRM Server\n(Recovery Site)"]
-        sra2["Dell SRA"]
-        esxiB["ESXi Hosts\n(standby)"]
-        r2["PowerMax R2"]
-        vcB --- srmB
-        srmB --- sra2
-        esxiB -.-&gt;|"at failover only"| r2
-    end
-
-    r1 --&gt;|"SRDF/S synchronous"| r2
-    srmA &lt;--&gt;|"SRM pairing"| srmB
-    sra1 --&gt; r1
-    sra2 --&gt; r2</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1kdFKwzAUhu_3FIde6UUd7bUIzeZQsDASEGF6kbXHLVCTkWR1hV34ED6hT2KSrdpsmps2ycd_fr6sNN-s4YGOwC2zXa7C3giLBSwS5r5QwNfHJ8y1qreVFUomLwH2q62KRdJOUFrUz_LigF8OAKPfHMFoCQx1GyAXZLGyWIPHY5hni2SKTQOMFoMLNDvhYm7Zk4A7ZaxxMYXr0iI8lmYYoV3AXL2jLvkOaBZXhTRNQ6Oo3vGUZ_E4d3yzT2YTGINgE3YPG27XJtm7EQFEWY_OpZFeGgnSSrRawZRGPciZMnKijJwoo1gp99f9ZSz_1xg5MWYsl_Wyi3TlQ115XLPXRaJqva48ngXplffFLbxy0fi2oGTTeV957EtnB7WMTmdjBqaT1VorqbbmFw7vcn3ESqdeaCFX7v6njn8wn9M_h2902Oejb-40xoA=?" /></p>
 <hr />
 <h2 id="backup-from-r2">Backup from R2<a class="headerlink" href="#backup-from-r2" title="Permanent link">&para;</a></h2>
 <p>To offload backup I/O from production (R1), take SnapVX snapshots on the R2 side:</p>

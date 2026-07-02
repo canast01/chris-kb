@@ -8582,28 +8582,7 @@ Procedures reference covering Failover, Failback, Day-to-Day Operations.
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart LR
-    subgraph "Normal Operation"
-        prodCluster["Production\nPowerScale"]
-        synciq["SyncIQ Policy\n(prod → DR)"]
-        drCluster["DR\nPowerScale"]
-        prodCluster --&gt;|replicates| synciq --&gt; drCluster
-    end
-
-    subgraph "During Failover"
-        drActive["DR Cluster\nActive"]
-        revSync["Reverse SyncIQ\n(DR → prod)"]
-    end
-
-    subgraph "Failback"
-        prodRestore["Production\nCluster Restored"]
-        dnsBack["DNS → Production\nSmartConnect"]
-        validated(["Replication\nresumed prod → DR"])
-    end
-
-    drCluster --&gt;|"failover declared\nSyncIQ broken"| drActive
-    drActive --&gt;|"reverse sync\nuser data back to prod"| revSync --&gt; prodRestore
-    prodRestore --&gt; dnsBack --&gt; validated</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1kUFuwjAQRfc5xcgrWHCFSi2oUqWK0mRJWDj2ABHGTsdOEBLrHqBH7ElqOyE1qM0miT3z5_83W2VOYs_JwWuegX9sW-2IN3tgS0NHruCtQeKuNprF-_A0ZORctdYhrdnK_7QiFJR6ZU5IheAK2Wastmct6o81K_z75R1WRtXiXOpJUIHvzy9Y5NOkXNIovcj_kUwMwGz2cCFsvCh3aC_DuHD8KxUbUcvsLuKipVrv4JnXynRILDHx6CN1GDzAIFLq_izxQdiFVGuWo2-3CH1GH863hWjB6DXcH_PD4IqLwy3aHK0zhLdor3GHS5kS0_bJi3ivyyJOTfuKo1_u3GiNwiU9HVe19MDkJJjv6cV6QtseUUKyHbaZ3gYYuUb4bDvgA4lCce_NT-13XZE5oGaXkWeWwu27aUAX9lbq1gYd7jgELuBMNOIVBtRxrwmk7A5av_ceSPweg2Y_kyXzKA==?" /></p>
 <h3 id="pre-failback-checklist">Pre-Failback Checklist<a class="headerlink" href="#pre-failback-checklist" title="Permanent link">&para;</a></h3>
 <p><img alt="Pre-Failback Checklist" src="../../../../../assets/superna-eyeglass-proc-pre-failback-checklist.svg" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm production PowerScale cluster is online and healthy</span>

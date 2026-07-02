@@ -8927,30 +8927,7 @@ Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE),
 <hr />
 <h2 id="encryption-layers">Encryption Layers<a class="headerlink" href="#encryption-layers" title="Permanent link">&para;</a></h2>
 <p>Dell Unity provides encryption at multiple layers. Understanding which layer is active and how to verify it is essential for compliance audits and security assessments.</p>
-<pre class="mermaid"><code>graph LR
-  subgraph "In Transit"
-    HTTPS["Management: TLS 1.2+\nUnisphere · REST API · uemcli"]
-    CHAP["iSCSI: CHAP\nhost authentication"]
-    KRB["NFS v4: Kerberos\nkrb5i · krb5p"]
-    SMB["SMB 3.0: AES-128 encryption\nper-share or per-server"]
-  end
-  subgraph "At Rest"
-    DARE["D@RE: AES-256 SEDs\nenabled at pool creation"]
-    KMIP["Key management:\nInternal OE or external KMIP"]
-    DARE --&gt; KMIP
-  end
-  subgraph "Verification Commands"
-    VDARE["uemcli /stor/config/pool show -detail\ngrep encrypt"]
-    VTLS["openssl s_client -connect ip:443 -tls1_2"]
-  end
-  DARE -.-&gt;|verify| VDARE
-  HTTPS -.-&gt;|verify| VTLS
-  classDef transit fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef rest fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef verify fill:#b45309,stroke:#92400e,color:#fff
-  class HTTPS,CHAP,KRB,SMB transit
-  class DARE,KMIP rest
-  class VDARE,VTLS verify</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1ks-O2jAQxu88xSgcm_AnsFvIYVUKqRaxtCihXEi1cpIJsTbYkW1okfa9eu-T1U5culttL1HGnu-b34znIEhdwkPUAZCn9NBEzpLBVhAmqXL0OcD9druJ986aMHLAIzIVwPYhhmHPf5ewr4zKukSB8OsnRGG8hdlmaf5PeMwq6nxrLOb3s83eofE8XgZNkLCSSwXkpEptSDOiKGc2eRV93DufP8VwHgewQpGi4DJhTyK9ocbZ_NQ2N17rXP2BUW8QwCyMvaE_AWSZuNTGMmE1Ck-WRANyAU2A4oyi0SPLX3U-UxChtG0vZlG4dxYforA19m9uIQ4XmgQZSSvMgSioOa8gE_iKf73Uza7wAse_I0vYkikUjFTwJTQo-MOGJt0qTUnwvLvm7A2-HQpa2GHBnB-1fy5b2l2L204d-lJx0c84K-ih3zDKkn8HL0dFaJWwg8D6z5Rs7Z1-073Da2RS6vRHbaO5wdMmDDMFtA7G4xF4qpLDR__F-Fronnf3fDZ4l-eWpWMX558rXUXfZBWRcoEFqHbRoKBVFXT1iEeYulIJ_oRBd5iPMZ-4Ga-4CLpFUbxUCv1QVvY-GxHMr7Lb3J_k0__IWhArTMc3o8H0Kpz648EA3xC2nbhmcV29na5ZOEt-TTE9u-bdGrLrcTML17RtS3d-AyOWFlE=?" /></p>
 <table>
 <thead>
 <tr>

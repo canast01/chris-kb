@@ -8755,27 +8755,7 @@ ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and L
 </tbody>
 </table>
 <h2 id="rolling-node-upgrade-sequence">Rolling Node Upgrade Sequence<a class="headerlink" href="#rolling-node-upgrade-sequence" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant Node1 as Node 1 (non-epsilon)
-    participant Node2 as Node 2 (HA partner)
-
-    Admin-&gt;&gt;Admin: autosupport invoke — start maintenance
-    Admin-&gt;&gt;Admin: snapmirror quiesce all relationships
-    Admin-&gt;&gt;Node2: storage failover takeover -ofnode node1
-    Node2--&gt;&gt;Admin: takeover complete — node1 aggregates on node2
-    Admin-&gt;&gt;Node1: apply firmware / ONTAP upgrade
-    Node1--&gt;&gt;Admin: node1 back online
-    Admin-&gt;&gt;Node2: storage failover giveback -ofnode node1
-    Node2--&gt;&gt;Admin: giveback complete
-    Admin-&gt;&gt;Admin: cluster show — validate node1 healthy
-    Admin-&gt;&gt;Node1: storage failover takeover -ofnode node2
-    Node1--&gt;&gt;Admin: takeover complete
-    Admin-&gt;&gt;Node2: apply firmware / ONTAP upgrade
-    Node2--&gt;&gt;Admin: node2 back online
-    Admin-&gt;&gt;Node1: storage failover giveback -ofnode node2
-    Admin-&gt;&gt;Admin: snapmirror resume all relationships
-    Admin-&gt;&gt;Admin: autosupport invoke — end maintenance</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNU71uwjAQ3nmKG2GIqnjsgITUoRNl6AtckyM5YZ-N7QSx9SH6hH2SGtOmpUSQDI5l33ffj-1A-46koifGxqOZQfoc-sgVO5QIq9qwXK2ubU0lYMgTKGEuVgpygbWVxWi1GqoVzJ9XeV_IL2a5OrMUy2X-PwJ20YbOOesjsPR2R_D5_gEhJhAYZIkkmESPYYOgM-y99bDvmEJFgFqDJ42RrYSWXbjAZXUJF63HhmCLyURPHiLuKE8Ku5WT8NNQZmiGFL-cQ2lljdMUz3LlHFLTeGowUgAreU1d0ZfJsnP6CFv25oCe4AFe1q-rDXQunUpNA2v5h_Xc_w2rXeqsWWiSrYZ7ypj7tobSH1tjeVe6CzH1Da09ZNs9aq6T3299LaGO7XHM87TI1aj5q8jHzE8MVf0LVd0MtZwaqrpzPT2Fzty7nbdfBEl98R6-AI9HRmQ=?" /></p>
 <h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Send AutoSupport start-of-maintenance: <code>autosupport invoke -node * -type all -message "Maintenance window starting"</code></li>

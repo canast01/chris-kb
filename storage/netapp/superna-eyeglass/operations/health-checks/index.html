@@ -8371,35 +8371,7 @@ Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p><img alt="Overview" src="../../../../../assets/storage-netapp-superna-eyeglass-hc-overview.svg" /></p>
 <p>Eyeglass health checks cover the Eyeglass appliance itself, PowerScale cluster connectivity, SyncIQ policy status, and DR policy readiness. Run daily as a minimum; automated checks should run every 15–30 minutes.</p>
-<pre class="mermaid"><code>flowchart LR
-    start([Health Check Run]) --&gt; appSvc
-
-    subgraph "Eyeglass Appliance"
-        appSvc["egcli status\nAll services running?"]
-        licOk["egcli license status\nLicense valid?"]
-        clConn["egcli clusters status\nBoth clusters reachable?"]
-        appSvc --&gt; licOk --&gt; clConn
-    end
-
-    subgraph "DR Policy Layer"
-        drState["egcli drpolicy status --all\nAll policies Replicating?"]
-        rpoLag["SyncIQ lag within RPO?"]
-        dnsSync["DNS sync current?"]
-        drState --&gt; rpoLag --&gt; dnsSync
-    end
-
-    subgraph "PowerScale Clusters"
-        isiStatus["isi status\nAll nodes healthy?"]
-        alerts["isi alerts list --category critical\nNo critical alerts?"]
-        drives["isi devices drive list\nAll drives HEALTHY?"]
-        isiStatus --&gt; alerts --&gt; drives
-    end
-
-    clConn --&gt; drState
-    dnsSync --&gt; isiStatus
-    drives --&gt; result{All checks pass?}
-    result --&gt;|Yes| ok([DR Ready - Score 100%])
-    result --&gt;|No| investigate([Investigate and remediate])</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1U8Fq4zAQvecrBkMhPQS6P9CQTQspmCS191K8OajSrC2iSkaSE8xm_33HkuPYgfo0I703fu95_EeZM6-Y9ZBmM6DHeWrmxQaZ8hWsK-RHyBp9eITF4hlYXecnPovI5rO0rK4geW2xVMw5WNW1kkxzTAKieyKjSLDkSnbTfeN-65VS4NCeJEcHttFa6nKZHAaWknx3vJKoQe1wIKd9f2JKijGLq7XR-krjqnEerRt4Pw05Gk4tMjL-qXA8IaoNVoOEUMWxAYNa3Jt_yWBvCNxCylq0N-fC5vRivMoRto6wKIcmM6ViEuFCUhIZUn6c-bs0iJmyskjyVvO3d1CshLP0ldSQ7XdjoNCuwxTJyzYHRxXwxlrUfgKKuoK1ODmUPfc7m3tzRptzphDWfYQ3q9LJPLgqEionX1kbQcaqsE7tJGqF1veEWFPkzpMWCgBLY1vgVnqKg1LamqHpwVNH8oT9KIFxqcJZmBh1RAxsXlfpr83HmD2IjxsepYREAmUaSNyF_jrkOBsFH86HebObthg2ukb5v50a3v1XDmr6aZb_Ai5edrjLB7oLmOO8oNXKkIkWFpBzYxF-PD09HB7v8VtzAanpLV6WJGhevN0aYFoQ9guFpI64_wHA_j8h?" /></p>
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Eyeglass service health:</strong> browser to <code>https://&lt;eyeglass-appliance&gt;:443</code> — dashboard should load without errors</li>

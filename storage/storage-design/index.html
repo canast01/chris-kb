@@ -7124,40 +7124,7 @@ Effective usable capacity: approximately <strong>31 TB</strong> from a 92 TB raw
 <p>For ransomware protection, extend to <strong>3-2-1-1</strong>: one of the copies must be <strong>immutable</strong> (WORM), and optionally one copy must be <strong>air-gapped</strong> (offline or logically isolated).</p>
 <hr />
 <h2 id="storage-architecture-diagram">Storage Architecture Diagram<a class="headerlink" href="#storage-architecture-diagram" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph Host_Layer["Compute Layer"]
-        H1["ESXi Host 1\n2×FC HBA + 2×10GbE iSCSI"]
-        H2["ESXi Host 2\n2×FC HBA + 2×10GbE iSCSI"]
-    end
-
-    subgraph FC_SAN["FC SAN (Tier 0/1)"]
-        MDS_A["Cisco MDS 9396S\nFabric A"]
-        MDS_B["Cisco MDS 9396S\nFabric B"]
-        PowerMax["Dell PowerMax 2500\n(NVMe All-Flash)"]
-    end
-
-    subgraph IP_Storage["IP Storage (Tier 1/2)"]
-        SW_Storage["Dedicated Storage\nSwitch (MTU 9216)"]
-        Unity["Dell Unity XT 880\n(iSCSI + NFS)"]
-    end
-
-    subgraph NAS["NAS (File Workloads)"]
-        PowerScale["Dell PowerScale F200\n(NFS, SMB, S3)"]
-    end
-
-    subgraph Backup_Layer["Backup / Archive"]
-        Veeam["Veeam B&amp;R v12\n(Hardened Repository)"]
-        Object["Dell ECS / S3\n(Object Archive)"]
-    end
-
-    H1 --&gt; MDS_A &amp; MDS_B
-    H2 --&gt; MDS_A &amp; MDS_B
-    MDS_A &amp; MDS_B --&gt; PowerMax
-    H1 --&gt; SW_Storage
-    H2 --&gt; SW_Storage
-    SW_Storage --&gt; Unity &amp; PowerScale
-    Veeam --&gt; Object
-    PowerMax &amp; Unity &amp; PowerScale -.-&gt;|"Replication"| Veeam</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNUttu4jAQfc9XjPyAgrZZSNBW5aVSEsgGqWERphcprJBJLPDWjVES2iL1P_aD9sdqbCguVaT1g-0ZnzOX41mVZLOGm6kFclXb5UrZsajqxQ3Z0TJFoXjabGsKykS_FXC_YjdFQ_zAFBjceeH9-xuFEAc-fAN5d7s_l0NgOMQjk-WZLO8_WLTIrc_VReEC--MUSZ48wZ4xWkK347aNPMkAL3xZPKsysTeg3-tf4nkRkWXJMvDPoEEzNDCgE_FCy4S8pmhAOf8wwfvR7c4Le3yXUPA5dyJOqnW7sYHRZIFrUZIVTdFoAof7oRG345mN4PsTdkBzlpGa5kfKvMAvrM7WYCezW-h77qVJvS1YvTuUqu7wMIOrq32lSmCp-DjCzWWOfZwiuYEdMU7hXpSPXJC8ap8rgjPCqamJckDkaVUifAE4CeTWa04WkOxxuzkOnbagA36ZrdkzNTLeUUqeUqQOCFpTeHblGNkxKXNaSGmmdCMqJvXZmXX-Wv6hWX2ocRhiGRr3JE37j2m-lBe74DjXepqgpUdFP3gND588CnOcEjPg6VfNaGfek6le9Re2DIWtDz0UQPdimYMq4V9p4Hx3rt-QFIrvx4mJAr3pMNY71lolUA==?" /></p>
 <hr />
 <h2 id="dell-storage-platform-placement-guidance">Dell Storage Platform Placement Guidance<a class="headerlink" href="#dell-storage-platform-placement-guidance" title="Permanent link">&para;</a></h2>
 <table>

@@ -8640,21 +8640,7 @@ The Azure Activity Log is a platform log that records subscription-level events 
 </div>
 
 <h2 id="activity-log-data-flow">Activity Log Data Flow<a class="headerlink" href="#activity-log-data-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    events["Azure Control Plane Events\nresource create · modify · delete · admin ops"]
-    activityLog["Activity Log\n90-day native retention"]
-    subgraph export["Export Destinations"]
-        diagSetting["Diagnostic Settings\nto Log Analytics / Storage / Event Hub"]
-        logAnalytics["Log Analytics Workspace\nKQL queries · alerts"]
-        storage["Storage Account\nlong-term archival"]
-        eventHub["Event Hub\nstream to SIEM"]
-    end
-    alertRule["Activity Log Alert Rule\ne.g. resource deletion alert"]
-
-    events --&gt; activityLog
-    activityLog --&gt; diagSetting
-    diagSetting --&gt; logAnalytics &amp; storage &amp; eventHub
-    activityLog --&gt; alertRule</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptUj1PwzAQ3fsrThnYUlhZkCJaCUSRoB0YEgbjXFML5y7YTiH8MXZ-GRenqdIKL7nP9-7eZWv5U--UC7Baz0Ae7pGCz5Psu3UIt0zBsYUnqwhhGXMFOfTcOo2gHaqA8PsDNZdm2_VWiRaHmCprQ8CNT14jtNLB7E3oVlwJ_sEB8Qq6vkpL1QEpCSI4AaBgmA6Nvn2rnGp2gF8Nu5Any_iFBfpg-h6mkaN_pVHVBoOkhGchDrHUaTjEZIHAPS1kpGwnGQ-XsAnsVIVixS3hrn2bQFqujsV5ctr7wu7dN0pjQQ_PK_ho0Rn0UQCLLkwn8wNJnoxsmdbcUijIMlVpQFeDcnpn9spO2uJNZCBZfJytIB9E_Bpklc398vFQjVQOUvfM69biqdCQ9XHoEwXhvJrD8ZTxbCLk0Cpwk78B0vRmer3za8b8RPXZ2RVifiohXIxSiDVu9y_qcZHZH_MR57w=?" /></p>
 <h2 id="querying-the-activity-log">Querying the Activity Log<a class="headerlink" href="#querying-the-activity-log" title="Permanent link">&para;</a></h2>
 <p>Use <code>az monitor activity-log list</code> to retrieve events. Filter by resource group, resource type, time range, or caller.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List events for a resource group in the last 24 hours</span>

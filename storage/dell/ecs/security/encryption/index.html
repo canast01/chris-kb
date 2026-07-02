@@ -8822,28 +8822,7 @@ Encryption reference covering Encryption Layers, TLS Configuration, Data at Rest
 </ul>
 <hr />
 <h2 id="encryption-layers">Encryption Layers<a class="headerlink" href="#encryption-layers" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  subgraph "In Transit"
-    TLS_S3["S3 / Swift endpoints\nTLS 1.2+ (port 443/9021/9024)"]
-    TLS_MGMT["Management API\nTLS 1.2+ (port 4443)"]
-    TLS_REP["Geo-replication\nTLS on port 9100"]
-  end
-  subgraph "At Rest"
-    ENC_NS["Namespace Encryption\nAES-256 (per namespace)"]
-    KMS{Key Management}
-    KMS --&gt;|Internal| INT_KMS["Internal ECS KMS\n(Cassandra-stored keys)"]
-    KMS --&gt;|External| EXT_KMS["External KMIP KMS\nHashiCorp Vault · Thales\n(required for PCI / HIPAA)"]
-    ENC_NS --&gt; KMS
-  end
-  subgraph "Object-Level"
-    WORM["Object Lock (WORM)\nCompliance / Governance mode"]
-  end
-  classDef transit fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef rest fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef obj fill:#15803d,stroke:#166534,color:#fff
-  class TLS_S3,TLS_MGMT,TLS_REP transit
-  class ENC_NS,KMS,INT_KMS,EXT_KMS rest
-  class WORM obj</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1UtGOmkAUfd-vuMEXN4UqglZ9aGIoccmKa8S0TbAxI1yUFWfozLhb093v2vd-WQcB1yb2hWQO95w5c87dcJJvYTK_ARCH9eZ00jwKC06oSKWmcIDFJFgFVqgFFrQgeE4TCUjjnKVUiiVVf8H82PkAzZxxCbZttQbtjll87Fvtx1nBH_uLUPMJJRvcI5UwmnlX2LZ1SZq7s1AbIzM45lkaEZkyWpIYhRNjYLbbJ4Ky9M8rRhLmKKonuFNnNQ1CbUr2KHISIbg04se81Bu5gdHp9pQH5EDrkdrHvR_8vscjvFt_rXEwjM8vHpXIKclewJsuVgoNtRoC1wmKuSVtOkQIQmNODCEZxxh2eBQXV5yk3F-1lPu9kqohNePNSq07Irapw3gOX8khk_DnDRZbkqEqo8nx5yEt5BPGYeZ4qrE7bzYa1TeVQRSXFVpXYntYP2IkjQk-YVZm9-1h7ocVDhMW7aBZQLdL6rC9aoVQFWcLxuypMFoc9izGi06iTL39CyYgy62CJM2yYUMlbuFaF5KzHQ4bZmxj3NcjljE-bCRJcsnkqsmK9imyCMZnWi_u9OPBf2hs_VixzG6_bb2zzF6va9lXWNWy6_XG6tUW1t7Pc2WQugpRr2rXq85OZs9zRVSFj5u_lbAOuQ==?" /></p>
 <table>
 <thead>
 <tr>

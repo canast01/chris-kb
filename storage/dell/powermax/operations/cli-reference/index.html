@@ -9371,34 +9371,7 @@ Dell PowerMax (formerly VMAX) is Dell's enterprise all-flash storage platform. T
 </div>
 <h2 id="srdf-replication">SRDF — Replication<a class="headerlink" href="#srdf-replication" title="Permanent link">&para;</a></h2>
 <p>SRDF (Symmetrix Remote Data Facility) replicates data between PowerMax arrays.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph "SRDF Modes"
-        SRDF_S["SRDF/S\nSynchronous\nRPO = 0\nwrite ack after R2 confirms"]
-        SRDF_A["SRDF/A\nAsynchronous\nRPO = cycle time\n(10–30 sec typical)"]
-        SRDF_M["SRDF/Metro\nActive-Active\nRPO = 0\nauto-failover"]
-    end
-    subgraph "Key Operations"
-        ESTABLISH["establish\nstart replication\nR1→R2 initial sync"]
-        SUSPEND["suspend\npause replication\nR1 queues writes"]
-        RESUME["resume\nrestart replication\nresync R1→R2 delta"]
-        SPLIT["split\nR2 becomes R/W\n(dev/test or DR test)"]
-        FAILOVER["failover\nplanned: R2 primary\nR1 write-disabled"]
-        SWAP["swap\nswap R1↔R2 roles"]
-        RESTORE["restore\nfailback direction\nR1 resumes primary"]
-    end
-
-    ESTABLISH --&gt; SUSPEND --&gt; RESUME --&gt; ESTABLISH
-    ESTABLISH --&gt; SPLIT
-    SPLIT --&gt; ESTABLISH
-    ESTABLISH --&gt; FAILOVER --&gt; RESTORE --&gt; ESTABLISH
-    FAILOVER --&gt; SWAP --&gt; RESTORE
-
-    classDef mode fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef op fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-    class SRDF_S,SRDF_A,SRDF_M mode
-    class ESTABLISH,SUSPEND,RESUME,SPLIT op
-    class FAILOVER,SWAP,RESTORE dr</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqFlN9u0zAUxu_7FFZ2A1KqrS2MrRJIRe3ERLtWycYuGoRc-4Rac-1gO616xxUPADzhnoTj_FNaishF4iTnO-c7v-MklXrH1tQ4Mo06BA-br74amq1JEEfjGzLTHGxQvPGHf_YlXhbvzuNExXvF1kYrndtERYs5eUsuErUzwgGh7InQ1IEhUZ8wrVJhNjb4fJhrVOUaJWpk_07G9kwCcWIDiXrRu3j-_mtwQSww4vaZYFS-PM43q_LNwBmNOZkTW-iWl5ZDmjvdTamQegumygGKHxH4CHsyz8BQJ7RqUZjE96P309v4wzIA6-hKCrtOFK4Qo4FMojOvwHq95x8_sXuhhBNUEt9h2_FDvJjcjZeBzW2G5ROV0dzCcQ7yLYccLCmwtglGk_hhNlkGBmzuCRk44QEfYlVSW-EgHW17WExv79EBKhwW65MVML3BatH5IzLnsD3Hoo5oQ8YR8cs285vR7XT-aRItgxom9iCpUsCHfuyZERtq9kUXhf0uFxaBAW9beBwt0MGOZggRz4XX36g2Wh73ez-PyoadNtixr7ryG40LA6wBVgKxdfnWgDsH8yPd7rt6CsW6JFosm6BTEg-t0-D7b3yNqa7huzghOgjzVNrxpXUmqbVjSMkGP0ySCimHZ_3XlwNYhRZ3_BMMz3r8FfCrkGmpzfAsTdNDoc4q2Rs2oMAb2SXvX_Hrf8q4qWQr6PUHrJFdp3h7Wlb9LcLyQy8vs8J4K6YhEFZzCMsZhCVZnbViaz6hZxPWHLnp_AGp0XRG?" /></p>
 <table>
 <thead>
 <tr>

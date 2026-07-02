@@ -7791,25 +7791,7 @@ Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS 
 <hr />
 <h2 id="vmware-fc-connectivity">VMware FC Connectivity<a class="headerlink" href="#vmware-fc-connectivity" title="Permanent link">&para;</a></h2>
 <p>ESXi hosts connect to storage via FC HBAs, which log into the MDS fabric and are zoned to storage target ports.</p>
-<pre class="mermaid"><code>sequenceDiagram
-  participant ESXi as ESXi Host
-  participant MDSA as MDS Fabric A
-  participant MDSB as MDS Fabric B
-  participant FA as FlashArray
-
-  ESXi-&gt;&gt;MDSA: HBA0 FLOGI (Fabric A, VSAN 10)
-  MDSA--&gt;&gt;ESXi: FCID assigned
-  ESXi-&gt;&gt;MDSB: HBA1 FLOGI (Fabric B, VSAN 11)
-  MDSB--&gt;&gt;ESXi: FCID assigned
-
-  Note over MDSA,FA: Admin creates device aliases and zones
-
-  MDSA-&gt;&gt;MDSA: device-alias commit&lt;br/&gt;zone create + zoneset activate (VSAN 10)
-  MDSB-&gt;&gt;MDSB: device-alias commit&lt;br/&gt;zone create + zoneset activate (VSAN 11)
-
-  ESXi-&gt;&gt;FA: PLOGI + PRLI to CT0 via Fabric A
-  ESXi-&gt;&gt;FA: PLOGI + PRLI to CT1 via Fabric B
-  FA--&gt;&gt;ESXi: Volumes visible via both paths (ALUA)</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqlklFPwjAQgN_3K-4RAkT2SgxJC1aWIBJR4uuta9gl24ptWaK_3nYwHTP64lPT3tfvene16u2kKqmWhAeDZQRwRONI0hErB3e7VwK053WlrevFH5Y7FuJ-BYGpIQnsJ8J7CO8honGIAm3OjMH3yMdDxsl8HhLMYMXZFMT68T6BQZtmDPsd20A8HXo6YBOPh1szEItk6Y2WDpXKrly8ccU9F29d8cXFf3P58EY7BbpWpkk6Fv55LCupAmkUOmUhUzVJBVgQWr_FKoMPXSkbte9sqzqDkwYEqcuS3G1qbuaBvthgdL6rHKB0VIejwXXd_Kuy__l87d-tClVtmx6NYPu0TsBpWDxPoSbszvlPOu7SYeSiM6K9Lk6l705NltJCNWiqXe7_hcstDNj6hQ2jT3EHyes=?" /></p>
 <hr />
 <h2 id="dell-powermax-integration">Dell PowerMax Integration<a class="headerlink" href="#dell-powermax-integration" title="Permanent link">&para;</a></h2>
 <p>PowerMax FA (Front-End Adapter) ports log into the MDS fabric. Each FA port is registered as a device alias.</p>

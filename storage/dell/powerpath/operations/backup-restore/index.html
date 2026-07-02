@@ -9019,30 +9019,7 @@ Backup & Restore reference covering Overview, Configuration File Location, Confi
 </ul>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph "Items to Preserve"
-        cfg["powermt.custom\n(policy + device settings)"]
-        baseline["Dated Baseline Snapshot\npowermt display dev=all output"]
-        licKey["License Key\n(registration key)"]
-    end
-
-    subgraph "Backup Actions"
-        save["powermt save\n(after every change)"]
-        snap["Capture baseline to file\n(before every maintenance)"]
-        fileCopy["cp /etc/powermt.custom *.bak\n(before upgrade)"]
-    end
-
-    subgraph "Restore Actions"
-        restore["powermt restore\n(reload config + retry paths)"]
-        manualCopy["Restore powermt.custom from backup\nthen systemctl restart PowerPath"]
-    end
-
-    cfg --&gt; save
-    baseline --&gt; snap
-    cfg --&gt; fileCopy
-    save &amp; snap &amp; fileCopy --&gt;|"Store in change ticket\nor config repo"| stored[(Stored)]
-    stored --&gt; restore
-    stored --&gt; manualCopy</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9Ustu3DAMvPsrCB2KJEWSL2iBZHsJksMiOXp7oGXaFlaWBInewkA-vrRs7ytAdLDB15AzZBsxdPD2XoC8NFRtttULU5-APWwjJYoHUjlherppSxX8P4o9P-ghse937iZ4a_QIP6Gmg9EEiZiNa9Ot-nusrDCRNY5K9QeZanhebPhwGFLneecWXKhNChbHCe0XWgt-4DDwGZZ0e6WxVG_SzCUCMWSKSK1JHJGNd7Cnce1Ori6uGD6j3g8BnvSUm070Eh7oyC9bgosNUwQ6UBxBd-haOueVZPxSbTDwEOnIclKvMXYqr6jxEpnrezSOyaHTFyBT6sYHoaQDPBLrx0uN4e6hwv0JbAhCpKZvGL6T1EnmF4pxDpxYLo4soPVYg_auMa1sMxLLyAG5u9hkj25AO4-7trkat4nyqbLIO8cdOUhjkqvSbHM_jAzbqWQr4Nck5Mbg_v53lr84P53ZK3pfpK3aFesC4UdOkt8amvI-1Uee1LhlicBG70nOzseVcqTg1SdkSnV5kwvq23m82Zk7Lopdu0-6FP8BqQAWxA==?" /></p>
 <p>PowerPath does not store data — it manages the path layer between host and storage array. "Backup" in the PowerPath context means preserving three things:</p>
 <ol>
 <li><strong>Active configuration</strong> — the policies, device registrations, and options written to disk by <code>powermt save</code></li>

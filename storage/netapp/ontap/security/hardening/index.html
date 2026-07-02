@@ -8476,36 +8476,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </ul>
 <hr />
 <h2 id="hardening-control-layers">Hardening Control Layers<a class="headerlink" href="#hardening-control-layers" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph "Network Layer"
-        mgmtVlan["Mgmt LIF — dedicated VLAN\nfirewall-restricted"]
-        icVlan["Intercluster LIF — dedicated VLAN"]
-        dataVlan["Data LIFs — separate from mgmt"]
-    end
-
-    subgraph "Protocol Layer"
-        tls["TLS 1.2+ minimum\nHTTPS · SnapMirror"]
-        sshKeys["SSH — public key only\nno password auth for admin"]
-        noLegacy["Telnet / RSH disabled\nSNMPv1/v2c removed"]
-        smb3["SMB 3.x only\nSMB1 disabled"]
-    end
-
-    subgraph "Identity Layer"
-        rbac["RBAC — least privilege\ncustom roles per team"]
-        mfa["SAML SSO + MFA\nfor System Manager"]
-        diag["diag account locked"]
-    end
-
-    subgraph "Data Layer"
-        nve["NVE / NAE encryption\non sensitive volumes"]
-        audit["Admin audit log\n+ EMS → SIEM"]
-        fpolicy["FPolicy — file access\naudit for NAS"]
-    end
-
-    mgmtVlan --&gt; sshKeys
-    sshKeys --&gt; rbac
-    rbac --&gt; audit
-    tls --&gt; nve</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9U02OmzAU3nOKJ7ZRZpSZfSWmTTRRgUZxlA3MwjEPYsXYyDZM2XXVA1S9S_c9ypykDzIZMZGmLMA2-b58P4_K8uYI8TYAulx7qMZ9mKJ_NvYEMe_RhuPL4aqr2u8V11mY0Ari9QpefvyGAgspuMcC9nGU5rqUFp-5UnOLzlsp6E349EYixZlirT1aoVpHjw-oJqiCe37GfaHV8Hs3Ahw23BIASmvqUeArCHURXLnaWOONMOrallcuC3cxg8XN3QxqqWXd1rl-3O02DP7-AaZ5k0hrjZ0Icu74FXsCMvY4Kmnag5ICTtiD0arPtTbQcOcoyAJ4649QGgu8IP4JjTYxVlz0JACVRg-3sCXCQjp-UFjkmqXJplvcdncCLName5elqw_3pCB5gPub769_S7vFG_7jMNYFai99fx2GPXCRhduH6PPoSiF3HhorO6mwwlwLKoyStkahg4aq88jriaS65KQoSmJg7BvMIFlFNBHknPXUdA0J17zCaZKF5FUWDnfgQphWe1BGnP4n_jwD74XrDrMw3S8pwTRaEkrYvvHS6FwbTXOinfSyQ-iMamt0EwG8LaTPwmio5rwhAVWuZ7BMGLz8_AVsvUwmgLIxVDV1ttqMizGpkgIaDKBzuT6zDLbTiF37uHxGMJ9_usxRMJmp8XzoIbgUMp6MnMHrwI4nZDn4ByOPLBs=?" /></p>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
 <h3 id="authentication-and-access">Authentication and Access<a class="headerlink" href="#authentication-and-access" title="Permanent link">&para;</a></h3>
 <ul>

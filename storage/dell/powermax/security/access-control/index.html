@@ -9007,45 +9007,7 @@ Access Control reference covering Overview, Unisphere Role-Based Access Control 
 <p>Access control on PowerMax operates at two levels: <strong>management plane access</strong> (who can administer the array) and <strong>data plane access</strong> (which hosts can see which storage). Management plane access is controlled through Unisphere RBAC and Solutions Enabler daemon authentication. Data plane access is controlled through masking views — the combination of storage groups, port groups, and initiator groups that determine LUN visibility.</p>
 <h2 id="unisphere-role-based-access-control-rbac">Unisphere Role-Based Access Control (RBAC)<a class="headerlink" href="#unisphere-role-based-access-control-rbac" title="Permanent link">&para;</a></h2>
 <p>Unisphere for PowerMax implements RBAC through five built-in roles. There are no custom roles — access must be delegated using these predefined tiers.</p>
-<pre class="mermaid"><code>graph LR
-    subgraph "Active Directory Groups"
-        AD_ADMIN["GRP-PowerMax-Admins"]
-        AD_SA["GRP-PowerMax-StorageAdmins"]
-        AD_SEC["GRP-PowerMax-SecurityAdmins"]
-        AD_OP["GRP-PowerMax-Operators"]
-        AD_MON["GRP-PowerMax-Monitor"]
-    end
-    subgraph "Unisphere Roles"
-        R_ADMIN["Administrator\n(full access incl. user mgmt)"]
-        R_SA["StorageAdmin\n(full storage R/W)"]
-        R_SEC["SecurityAdmin\n(users + certs + LDAP only)"]
-        R_OP["Operator\n(ops tasks + alert ack)"]
-        R_MON["Monitor\n(read-only)"]
-    end
-    subgraph "Permitted Operations"
-        OPS_PROV["Provision: SG, MV, TDEV\nSRDF: suspend/resume\nSnapVX: establish/terminate"]
-        OPS_SEC["Manage users\nRotate certs\nConfigure LDAP"]
-        OPS_OPS["Acknowledge alerts\nView performance\nRead-only config"]
-        OPS_MON["View dashboards\nRead metrics\nNo changes"]
-    end
-
-    AD_ADMIN --&gt;|"maps to"| R_ADMIN
-    AD_SA --&gt;|"maps to"| R_SA
-    AD_SEC --&gt;|"maps to"| R_SEC
-    AD_OP --&gt;|"maps to"| R_OP
-    AD_MON --&gt;|"maps to"| R_MON
-    R_ADMIN --&gt; OPS_PROV &amp; OPS_SEC
-    R_SA --&gt; OPS_PROV
-    R_SEC --&gt; OPS_SEC
-    R_OP --&gt; OPS_OPS
-    R_MON --&gt; OPS_MON
-
-    classDef ad fill:#92400e,stroke:#78350f,color:#fff
-    classDef role fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef ops fill:#0f766e,stroke:#0d9488,color:#fff
-    class AD_ADMIN,AD_SA,AD_SEC,AD_OP,AD_MON ad
-    class R_ADMIN,R_SA,R_SEC,R_OP,R_MON role
-    class OPS_PROV,OPS_SEC,OPS_OPS,OPS_MON ops</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1k2tr2zAUhr_7VwgXxsaUNeslTfNhYOquDJrGOFs2aEZR5ONExJaMJPcC_fGT5EscJzMY46P3PTp6js5akmKD7mMPmUeVq7X79wOq2TOgkEmgWsg3dCdFWSjfyewThE9BOP3x8OjfxdEgEi8gp-R1ECQ548r_29XNg55objKSNRzV3t70xUBLyfTbMfUs6olnBUhisvd001m_zqngzOhqGfCkd_5fnKliAxJQLDLonDtuju3qYUq7_Zb8Y1pmGSKUglKIcZp9QaUCifJ1rj91qokdji6BxquqGIpPf_cMlskeBmOxyRX6jChIbb_3YRAhwbO3fa8l1EAxLlEopInaWgfJjNVUvN13OFY1HuOQQJJBN-8hqwhkzrSGBFU7McE7wGbR_CmKZ4tHP5LimSmzOkHzO4ymC4x-hreLJZ_H4feJSagKk_xUgipzMFFOisWfCQKlySpjanOq7UacaOgUbNM7QFPCLT3HZcljoY2uorPkN4KnbF2ablpMPbd5TTfplouXDBKTwoExrgWDF2ROlAqZE05NSXEDA1GXsZfJoXOuhKjNShCZqMqEctCSUfP3IBDdEL4G1eHpdScKDQbf3v2c2FYJ_725cV47TYeCeeDt5ufI8u2N107M4fIs8nZzcrhsgl7n5ltB21T0oWmA11zuvXWvvcFteKetaml64LXXr43anV2YZkSpEFJkSKYsyyYn12cXwyFgM35iC5OTq_H55TDFVGRCTk7SNN23STPDtfHscnQOq9b4NbmAZPxfo52XyjdMr0aj3YbD5PpifNzXNhK7buGqK9jBxzVkknT0NVhs6WEHC1s4uIJha--IG7K4ZolrfLgGZkv2_gGCW71a?" /></p>
 <table>
 <thead>
 <tr>
@@ -9290,55 +9252,7 @@ Access Control reference covering Overview, Unisphere Role-Based Access Control 
 </div>
 <h2 id="data-plane-access-control-masking-views">Data Plane Access Control — Masking Views<a class="headerlink" href="#data-plane-access-control-masking-views" title="Permanent link">&para;</a></h2>
 <p>LUN visibility is controlled by <strong>masking views</strong>. A host can only read or write to a device if that device's storage group is part of a masking view that includes the host's initiator (WWN or IQN) and an appropriate array port. No masking view = no LUN visibility, regardless of physical connectivity.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph "Production Hosts"
-        DB01["db01\n(Oracle)"]
-        DB02["db02\n(SQL Server)"]
-    end
-    subgraph "Cluster"
-        RAC01["rac01"] &amp; RAC02["rac02"]
-        RAC_IG["ORACLE_RAC_IG\n(parent: rac01_IG + rac02_IG)"]
-        RAC01 &amp; RAC02 --&gt; RAC_IG
-    end
-    subgraph "Initiator Groups"
-        DB01_IG["db01_IG\n{WWN_db01_hba0\nWWN_db01_hba1}"]
-        DB02_IG["db02_IG\n{WWN_db02_hba0\nWWN_db02_hba1}"]
-    end
-    subgraph "Port Groups"
-        FAB_A_PG["FABRIC_A_PG\n{01E:4, 02E:4}"]
-        FAB_B_PG["FABRIC_B_PG\n{01F:4, 02F:4}"]
-    end
-    subgraph "Storage Groups"
-        DB01_SG["db01_SG\n{DEV001–DEV005}"]
-        DB02_SG["db02_SG\n{DEV006–DEV010}"]
-        RAC_SG["ORACLE_RAC_SG\n{DEV011–DEV020}"]
-    end
-    subgraph "Masking Views"
-        MV1["db01_FABRIC_A_MV"]
-        MV2["db01_FABRIC_B_MV"]
-        MV3["db02_FABRIC_A_MV"]
-        MV4["ORACLE_RAC_MV"]
-    end
-
-    DB01 --&gt; DB01_IG --&gt; MV1 &amp; MV2
-    DB02 --&gt; DB02_IG --&gt; MV3
-    RAC_IG --&gt; MV4
-    FAB_A_PG --&gt; MV1 &amp; MV3 &amp; MV4
-    FAB_B_PG --&gt; MV2
-    DB01_SG --&gt; MV1 &amp; MV2
-    DB02_SG --&gt; MV3
-    RAC_SG --&gt; MV4
-
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef ig fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef pg fill:#0f766e,stroke:#0d9488,color:#fff
-    classDef sg fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef mv fill:#92400e,stroke:#78350f,color:#fff
-    class DB01,DB02,RAC01,RAC02 host
-    class DB01_IG,DB02_IG,RAC_IG ig
-    class FAB_A_PG,FAB_B_PG pg
-    class DB01_SG,DB02_SG,RAC_SG sg
-    class MV1,MV2,MV3,MV4 mv</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1VNtuozAQfc9XWFRabbVUMoaQy0OlkEs3UrJNg5Q-tBUiYAgqC5Eh7UNVaf9h_3C_ZAcHYyAFicT2nDPnMDMQxOm7d3BZjlbbHoIrO-1D5h4PSNmw1D95eZQm6Gea5ZnC48U1s7D2pPh7rD0n3--Z68X0WnmphwkPEwjbDytkU_ZGmYDQxG8pTeNTllMmBbaTaaEAmbGmvKBv_ICcD0hNCY6d5d2Tcg-L1dw5b0H06DKa5GPEE8AR-sGXBJbXTTrWRHZ0c3NbJuywuUyiPHLzlKE7lp6OrYJwI0VNuIWPx8dfDt8d9i5-Tupb7bNVLEElDSppUkmDeuluk0IT28YWE8uZOBtID6vtcso3IIG1-dhQESbwV3dT4K063hL4xRm_kPhLCzbUxg3p1-WxRXnsIuFsvsNY-_fnL1_0Lypii4pItFmiNfzZGgG7OQIVRRMCBHebXrvZa5SEaBfR95rn9a4ccaeq3HpX013vSDNuteN6-QRdfKNhugoWDnuianwoy-nia7AFAwviAkIEhEiI3pMvR3lk9Orj0Eil818JsCSgUim61qEvI1LWlrL8zIvdLJvRAB3gQ4KCKI7HV1p_iHVfzXKWvlLYmmZfN1QvjVM2vgqCoEmMwpI28HSXSprpk6E_6qQdBQ0HA9OkFQ37I2M47KRlgkb6pk730qRvUL-b9vutpI2IgbFUGwz1Pg6-pPHiqkUdVf41Us_foqJOLRD0Ui3brJatjcIaRvRWrXp4DNsp7DKFfU4BbcrqGGiuCq2FW4fbgOfp_Qf8maL_?" /></p>
 <h3 id="masking-view-components">Masking View Components<a class="headerlink" href="#masking-view-components" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

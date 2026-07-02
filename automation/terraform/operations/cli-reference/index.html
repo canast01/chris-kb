@@ -7719,35 +7719,7 @@ Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired 
 </ul>
 <hr />
 <h2 id="state-backend-topology">State Backend Topology<a class="headerlink" href="#state-backend-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    tfClient["Terraform Client\n(local / CI runner)"]
-
-    subgraph localBackend["Local Backend"]
-        localState["terraform.tfstate\n(local disk)"]
-    end
-
-    subgraph remoteBackendAWS["Remote Backend — AWS"]
-        s3Bucket["S3 Bucket\n(state file)"]
-        dynamoLock["DynamoDB Table\n(state lock)"]
-    end
-
-    subgraph remoteBackendAzure["Remote Backend — Azure"]
-        blobStorage["Azure Blob\n(state file)"]
-        blobLease["Blob Lease\n(state lock)"]
-    end
-
-    subgraph tfc["Terraform Cloud / Enterprise"]
-        tfcState["TFC Workspace\n(state + lock)"]
-        tfcRuns["Managed Runs\n(plan + apply)"]
-    end
-
-    tfClient --&gt;|local| localState
-    tfClient --&gt;|backend s3| s3Bucket
-    s3Bucket --&gt; dynamoLock
-    tfClient --&gt;|backend azurerm| blobStorage
-    blobStorage --&gt; blobLease
-    tfClient --&gt;|backend remote| tfcState
-    tfcState --&gt; tfcRuns</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNUrFOwzAQ3fMVJ09UqDB0RyItSEhlaSp1CAyXxClRHDuynaEoAx_BF_IlXFw3uC2V6ul8fnfv-d5tNbYfsFxFQMeWc1FxaVO25lpjqXQD-8ybvBEqRwH3MH8B3UnJ9YS9R67MdNnWtXGQGPOayyJlS1fgr4QFfxwqsWh5yuyB586WZkiNREVl6omvovoTJs0bZbnv_bhJUrZymQMd_Hx9A-UDWjOLO3qjzyUz2IdE5kihrASfBNhiJ7FR9IE6ZQsXL2JYYyb4WEIqr9b32Wn-v8LhJeDNhMoSqzRuCe8eIabURZ0DfsnREHrAgYuvlGjL_Nhn1RVk75MkT1pdmVAXYb1h6-c5bJSuTYv5H9PtEZevWHXSpOwVJf2mgOFG-FagJDi2rdidaTvsH0ynD71bgz7YlnNI5kdpZv1obxR6PaACMy93wGHWuulDB6ITR1yzceKXe-2978ehReEEXRM_nOgXxoEdvQ==?" /></p>
 <hr />
 <h2 id="validate-format-providers">Validate, Format &amp; Providers<a class="headerlink" href="#validate-format-providers" title="Permanent link">&para;</a></h2>
 <p>Check syntax, auto-format code, and inspect provider dependencies. Run <code>validate</code> and <code>fmt -check</code> in CI before planning.</p>

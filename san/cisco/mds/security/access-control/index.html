@@ -7913,31 +7913,7 @@ Cisco MDS access control: RBAC role assignment with `role name`, network-admin v
 <p>Access control on Cisco MDS operates at two levels: <strong>management plane</strong> (who can log into the switch and run commands) and <strong>data plane</strong> (which initiators can communicate with which targets via zoning). Both layers must be configured correctly for a secure SAN environment.</p>
 <hr />
 <h2 id="access-control-architecture">Access Control Architecture<a class="headerlink" href="#access-control-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  subgraph "Management Plane — Who can log in"
-    MGMT["mgmt0 interface\n(SSH port 22 / HTTPS 443)"]
-    ACL["IP ACL: permit mgmt subnet only"]
-    MGMT --&gt; ACL
-    ACL --&gt; AAA2["AAA: TACACS+ primary\nlocal break-glass"]
-    AAA2 --&gt; RBAC["RBAC Role Assignment\n(network-admin / operator / san-admin)"]
-  end
-
-  subgraph "Data Plane — Which devices can communicate"
-    FC["FC Fabric"]
-    VSAN["VSAN isolation\n(separate name server + zone DB per VSAN)"]
-    ZONE["Zoning\n(single-initiator enhanced mode)"]
-    FC --&gt; VSAN
-    VSAN --&gt; ZONE
-    ZONE --&gt;|"FLOGI allowed"| FCID["Device gets FCID\n(can communicate with zoned peers only)"]
-    ZONE --&gt;|"not zoned / no FLOGI"| DENY["Default-deny\n(no communication)"]
-  end
-
-  classDef plane fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef allow fill:#15803d,stroke:#166534,color:#fff
-  classDef block fill:#991b1b,stroke:#7f1d1d,color:#fff
-  class ACL,AAA2,RBAC,VSAN,ZONE plane
-  class FCID allow
-  class DENY block</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptks9uGjEQxu95ipG5tAoo_G_CodIGQoIEBAFq1Wx68O7OLhZeG9kmiCiHPkSfsE9S28uuoOrFux75N_PNN5MputvAdHkFoPdR5m9kRgXNMEdhYMGpQPjz6zd830iIqQAuM2CCWABg9jhbhyTPctO0MYMqpTG-ik-r1RPspDLQbsMNPK3XixV0u53P5KfHguE0JJOF-w5ghypnBlwSJ0GgASn48fTUVYBG46t7W7LFPQjaIbHnANbBMBiurmGnWE7V8VVwGVMOkUK6bWScal3WtYyHl_fBMCTuhKXkCIHWLBOuYSveKjhItW3QJGfCypdWITVS2V9NRREuOkGRXF0YN6KGXljG4g0k-MZi1N68WOb5XrCYGiwcHFsd4yGMaaRYfJL5bRXMQ-JOYFpyapgUVpfGHbVCEATNETSqN1RwDe_SVhvdOx89WZr88jx_CMmLFExkjrYfjg0mmGG-GxQbKmJMIJcJlpCV4vxxeSopPuKyVWld5IOMp8-PE6CcywMm5MOyk1FIRr5byNBoH7Gl_2kcDsxsvOzEikal_bzPZRf5hTSnVzcgJPhytszoYf7DlUnpnptGguLoZibPKli7LuYTuxWwAOz8ZFLG-aDWwg7tpXVtlNzioNaJbttpvx5LLtWghs20neI56tss0d5ts5NUaKvf73W6JZqm6TkX2V3cnri7u1bUiiruS9pKWsl_OLfjdberdbehdTeDurfF669eOXcLXVXIeVOUvPoL_z4v3A==?" /></p>
 <h3 id="vsan-scoped-roles">VSAN-Scoped Roles<a class="headerlink" href="#vsan-scoped-roles" title="Permanent link">&para;</a></h3>
 <p>For environments where different teams own different VSANs, VSAN-scoped roles restrict a user's configuration rights to specific VSANs:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a VSAN-scoped role for VSAN 20 (replication team)</span>

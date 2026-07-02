@@ -7568,58 +7568,7 @@ How It Works reference covering Deployment Models, Data Center Reference Archite
 </div>
 <hr />
 <h2 id="data-center-reference-architecture">Data Center Reference Architecture<a class="headerlink" href="#data-center-reference-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph Users["Users / Clients"]
-        B[Browser]
-        API[API Consumers]
-    end
-
-    subgraph LB["Load Balancer Tier"]
-        HAP["HAProxy / F5 / AWS ALB&lt;br/&gt;(sticky sessions)"]
-    end
-
-    subgraph App["Application Tier (Active-Active)"]
-        N1["Jira Node 1&lt;br/&gt;jira-app-01"]
-        N2["Jira Node 2&lt;br/&gt;jira-app-02"]
-        N3["Jira Node 3&lt;br/&gt;jira-app-03"]
-    end
-
-    subgraph Search["Search Tier"]
-        OS["OpenSearch / Elasticsearch&lt;br/&gt;(clustered, 3 nodes)"]
-    end
-
-    subgraph Data["Data Tier"]
-        PG[("PostgreSQL&lt;br/&gt;Primary")]
-        PGR[("PostgreSQL&lt;br/&gt;Read Replica")]
-    end
-
-    subgraph Storage["Shared File Storage"]
-        NFS["NFS / SMB Share&lt;br/&gt;(jira-home shared)"]
-        S3["Object Storage&lt;br/&gt;(attachments, avatars)"]
-    end
-
-    subgraph Cache["Distributed Cache"]
-        EH["Ehcache / Hazelcast&lt;br/&gt;(in-process cluster)"]
-    end
-
-    B --&gt; HAP
-    API --&gt; HAP
-    HAP --&gt;|sticky session| N1
-    HAP --&gt;|sticky session| N2
-    HAP --&gt;|sticky session| N3
-    N1 &lt;--&gt; EH
-    N2 &lt;--&gt; EH
-    N3 &lt;--&gt; EH
-    N1 --&gt; PG
-    N2 --&gt; PG
-    N3 --&gt; PG
-    PG --&gt; PGR
-    N1 --&gt; OS
-    N2 --&gt; OS
-    N3 --&gt; OS
-    N1 --&gt; NFS
-    N2 --&gt; NFS
-    N3 --&gt; NFS</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9U11v2jAUfedXXPkJpEaMRHurKiWUj01ZyZJNe7D2YIxF3IUksk03pv743tikc-hKJK51fI_vuV_sFWtLSPMR4KeP273F37VQmhJ7wBTmlRS10eSnZXVfQhPV_Eb3v6s4-0TxB_Om1scDPnQuUe9Gw-BpQknasB0krGI1Fwq-SaG84Os4owSNav6cUH35EU38o4A4TW63ano31kbyXyfQQmuJahPynlTctpSgqSRnBqlWCcYxN_JJBO6YeMoPM0o-S8XgodkJmFm1R8QBa9vgw8xnhj4zvGCGPjPymdEFM3o390IwxUtK3HnZo01ByaYV9dk7hUXFurZoi12beHXURiixu4EIalS_0ql7Zhglnb1UylZ0TLJGm70SxdfUhs6UPDB1IhOflr_l5QLHnAvb_578n0pNo9heYKklw2xhKSvRX_qNXGLNaLDY4ksCluwKte0sm4MAbSP4Iy2w_Zvto-CmD-neMGMYLw_dXt8Ae8LC1ZX2zJGLCd5LbZTcHg1maa88ocWakkXJu1vMcM3-iorjSJyarINWNRwXFs5TeaOVQBDcdbs_Ov-bBhjPDj8PV_8ZN_a6O7zujkZu7eG2E1usHQyHMBrCmU0sW_VcH0U-ylZnlPsPN4X_sEfRADkmztqnvsLoFb4AX8NMcw==?" /></p>
 <p>NFS mount options:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>nfs-server:/jira-shared /var/atlassian/application-data/jira/shared \
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  nfs4 rw,sync,hard,intr,noatime,rsize=131072,wsize=131072 0 0
@@ -7660,24 +7609,7 @@ How It Works reference covering Deployment Models, Data Center Reference Archite
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">last_heartbeat</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="cluster-traffic-flow">Cluster Traffic Flow<a class="headerlink" href="#cluster-traffic-flow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant U as User Browser
-    participant LB as Load Balancer
-    participant N1 as Node 1
-    participant N2 as Node 2
-    participant DB as PostgreSQL
-    participant FS as Shared Home
-
-    U-&gt;&gt;LB: HTTPS request (create issue)
-    LB-&gt;&gt;N1: Route (sticky session)
-    N1-&gt;&gt;DB: INSERT into jiraissue
-    DB--&gt;&gt;N1: Commit OK
-    N1-&gt;&gt;FS: Write attachment
-    N1--&gt;&gt;LB: HTTP 200
-    LB--&gt;&gt;U: Response
-
-    Note over N1,N2: Cache invalidation via Hazelcast
-    N1-&gt;&gt;N2: Invalidate issue cache [key=PRJ-123]</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNplkcFOwkAQhu99ijliYhNabyRyqJWANmulNByMh0k7gRW6iztLDT690wpi0r1ssv-33_6TZfo8kqko1bhx2AQg64DO60of0HgoARlKJgeJs1-yD4gs6ZDMYg0J7lFcQ0ZFHaNsTRANw_gvjAdh2ttzy37jqHjNBsCs6IBii45qmNuGgh4pw-k0SyYwX63yAlw3JXsYVY7QE2jmI930YJYIqaIJLO1RkhGLeXcCJmZtzS-jImFSsS1U8bhcgTbewod22Ht6JE3Cs-fBNo328PJ8vTorJrB2WvToPVbbhoy_pP96QjweXzrJcSmdiA_W8HkmZcVgW_kLFd2qWJ4SlwxjWtzrGr30hVYjzPGb9hWyvzbo6MWFO88PVX_9bUen-3z5FEbx3XvwA-JNn8Y=?" /></p>
 <hr />
 <h2 id="port-reference">Port Reference<a class="headerlink" href="#port-reference" title="Permanent link">&para;</a></h2>
 <table>

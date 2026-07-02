@@ -8506,29 +8506,7 @@ AWS architecture design standards: multi-account landing zone layout, VPC CIDR a
 - <code>us-east-1</code> — if required for global AWS services</p>
 <p>Deploying to other regions requires an exception approved by InfoSec.</p>
 <h2 id="vpc-architecture">VPC Architecture<a class="headerlink" href="#vpc-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph vpc["VPC — 10.x.0.0/16"]
-        subgraph az1["Availability Zone A"]
-            pubSubA["Public Subnet /24\nALB · NAT GW"]
-            privSubA["Private Subnet /24\nEC2 · ECS · Lambda"]
-            isoSubA["Isolated Subnet /24\nRDS · ElastiCache"]
-        end
-        subgraph az2["Availability Zone B"]
-            pubSubB["Public Subnet /24"]
-            privSubB["Private Subnet /24"]
-            isoSubB["Isolated Subnet /24"]
-        end
-        igw["Internet Gateway"]
-        natGw["NAT Gateway"]
-        sg["Security Groups\nstateful · deny-all default"]
-    end
-    internet["Internet"]
-    onprem["On-Premises\nvia Transit Gateway"]
-
-    internet &lt;--&gt; igw &lt;--&gt; pubSubA &amp; pubSubB
-    pubSubA --&gt; natGw --&gt; privSubA --&gt; isoSubA
-    pubSubB --&gt; privSubB --&gt; isoSubB
-    onprem &lt;--&gt; privSubA &amp; privSubB</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1kk1OwzAQhfc9xSiL7tI_IVYIKQ5VhFRB1VYgkbJwEre15DpRbKeUFYfgLuw5CifBThNwivEmY-V7z_NGs2H5Id3hUsJs0QN9hEq2JS52UBVp7D3MQ_h6e4fxaPAyGA1Gw_Gl91xzHRa_jmMvqDBlOKGMyiM85ZxAYLHmFCpZqiSIvblKGE1BXziRMJxcrHkwQ_D5AXfBCqLHc11Jq0aoKyxJRzkNJ0Y5DZfmM8P7JMNnBlTkJ_2tyJnWZx2DxU2tnDIsJA1xuiOWnPDMlXfiyouceZEjrzsgcgV0RkHOKP-0TbcHjXNJSsNFWnTAR4vlWEaaqEf_56fYxt6SpKo0KaMyV4VYcyE1t1HMjC0j_OhjxnSxwYrJRts2QJt3fztogJwXJdnH3j3357qggmjjimJYlZgLajfaMYIr3782mU5Fs1PQb6fdszYNDFHHq6t2j-pLsxMWjmwIWRCyGm5ebZ36P3zvG7tk-oA=?" /></p>
 <h2 id="network-standards">Network Standards<a class="headerlink" href="#network-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

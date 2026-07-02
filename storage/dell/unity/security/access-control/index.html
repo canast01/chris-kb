@@ -8916,37 +8916,7 @@ Access Control reference covering Role-Based Access Control (RBAC), Local User M
 <hr />
 <h2 id="role-based-access-control-rbac">Role-Based Access Control (RBAC)<a class="headerlink" href="#role-based-access-control-rbac" title="Permanent link">&para;</a></h2>
 <p>Unisphere for Unity implements role-based access control for all administrative operations. Every Unisphere user — whether a local account or an LDAP/AD-mapped user — is assigned one of four built-in roles. There are no custom roles; access is controlled entirely by role assignment.</p>
-<pre class="mermaid"><code>graph LR
-  subgraph "Identity Sources"
-    LOCAL["Local Accounts\n(break-glass only)"]
-    AD["Active Directory\nGroups"]
-  end
-  subgraph "Unity Roles"
-    ADMIN["Administrator\nFull access"]
-    SADMIN["Storage Administrator\nProvisioning only"]
-    OPS["Operator\nACK alerts · read"]
-    VIEW["Viewer\nRead-only"]
-  end
-  subgraph "Actions"
-    PROV["Create LUNs\nManage pools\nConfigure replication"]
-    MON["View health\nAcknowledge alerts"]
-    AUD["Read capacity\nAudit review"]
-  end
-  LOCAL --&gt; ADMIN
-  AD --&gt;|"CN=Unity-Admins"| ADMIN
-  AD --&gt;|"CN=Unity-StorageAdmins"| SADMIN
-  AD --&gt;|"CN=Unity-Operators"| OPS
-  AD --&gt;|"CN=Unity-Viewers"| VIEW
-  ADMIN --&gt; PROV &amp; MON &amp; AUD
-  SADMIN --&gt; PROV &amp; MON
-  OPS --&gt; MON &amp; AUD
-  VIEW --&gt; AUD
-  classDef role fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef src fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef act fill:#15803d,stroke:#166534,color:#fff
-  class ADMIN,SADMIN,OPS,VIEW role
-  class LOCAL,AD src
-  class PROV,MON,AUD act</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1kt-KGjEUxu_nKcIIpYUZqOtqrdDCMLZF6j8U7YX2IiaZMZgmQ5JxEfa9et8n60kmuq6sNwOZfN853_mdlBpXezReRAiZelf6UzyiTFpuT2ipak2YieEWofEsz8abeKwIFigjRNXSmq18v9MMH9JSYGOQkuL0If7t9dlwE2fE8iNDQ64ZsUqftvKHVnVlvIRJ-qrtSrqeCyXOHbPhZDSFIvQPl9xYjaHEVn6vhUCYQC4TOi2DcAn3uGToxjDX6sgNV5LL0icMttl8uYlnFQuyLP-JsGDaGvTvL4KhaNCtR99-beI1Z08MZAu4SC9VbmdwAysZ8s8Xs_UmzqGUZWi8mgKtCZYuYaWUgFOuZMHLWjNoVwlOsDOHrpPZtGmK9gwLu4eA5CDVk2AUCjRBz6RXgNrlQgRXmABFENeUWyh7hApXSf0SUZp-beBGDrI7Psf59ItfQOrpmfj5viJwvgiXd5Vnuk4FuN-SNFydwHGOwtZ9RMcPvXMk4AtDRudV39xGfpf-57XW1WtG9UfiXuiQFUjDC0MFF2LQeuj2OmyXwFNRBzZotekjo_2EKKH0oFUUxbXNaBJcn0gHM3px9ehDn36-48LEBle72__YeXG1e71u5_ENVwMgaSZNYLDED-JSXyR-jQmwhFCXnw5IAgASmNf1jf4DnjAxfQ==?" /></p>
 <table>
 <thead>
 <tr>
@@ -9123,22 +9093,7 @@ Access Control reference covering Role-Based Access Control (RBAC), Local User M
 </div>
 <h2 id="iscsi-chap-authentication">iSCSI CHAP Authentication<a class="headerlink" href="#iscsi-chap-authentication" title="Permanent link">&para;</a></h2>
 <p>For iSCSI host access, Unity supports CHAP (Challenge Handshake Authentication Protocol) to authenticate initiators. This prevents unauthorised hosts from connecting to Unity iSCSI targets.</p>
-<pre class="mermaid"><code>sequenceDiagram
-  participant HOST as "iSCSI Initiator\n(host)"
-  participant UNITY as "Unity iSCSI Target"
-  HOST-&gt;&gt;UNITY: Login Request (IQN)
-  UNITY--&gt;&gt;HOST: CHAP Challenge
-  HOST-&gt;&gt;UNITY: CHAP Response (username + hash)
-  note over UNITY: Verify CHAP username and\npassword hash match configured credentials
-  alt One-way CHAP
-    UNITY--&gt;&gt;HOST: Login Accept
-  else Mutual CHAP
-    HOST--&gt;&gt;UNITY: Reverse Challenge
-    UNITY-&gt;&gt;HOST: Reverse Response
-    HOST--&gt;&gt;UNITY: Reverse Verify OK
-    UNITY--&gt;&gt;HOST: Login Accept
-  end
-  HOST-&gt;&gt;UNITY: SCSI Commands (I/O)</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNkUFrwkAQhe_-isGTUkLvHgRJD4a2ptVYKHgZNmOysJlNdzcV_30nG1NLhdLLHna-93hvxtNHR6zoQWPlsJkAtOiCVrpFDrDOdwWgh6nepbsMMtZBY7DuwLPa-jCf_uL3m6x4j4K9oGcYZAW6ikLP9n7JchmxBTzZSjNs-wQ-wCx73cyFicNEqB5eQLpevUBaozHEFd14xPGWfGvZE8w6T46xIbiDGn3d-7ENBPaTHFwkb-T08Twov3nk8sAten-yroxaaDCoGpTlo646RyUoeYhlA8aLL5oAOVNywsFLvm7CDw1XSlEbZE5GMj53oUNzlcQ-10JbkqiC_aw8-o62IzP2_svn0jZ__E8-Lm8WHC-Y2qaRDXk50n0-n3wByLWvJQ==?" /></p>
 <table>
 <thead>
 <tr>

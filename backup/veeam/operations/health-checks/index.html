@@ -7779,26 +7779,7 @@ The primary review surface is the **Home** view in the VBR console, which shows 
 <hr />
 <h2 id="surebackup-verification-sequence">SureBackup Verification Sequence<a class="headerlink" href="#surebackup-verification-sequence" title="Permanent link">&para;</a></h2>
 <p>SureBackup starts VMs in an isolated virtual lab and runs application-level tests — it is the only way to confirm a backup is truly restorable.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant VBR as VBR Server
-    participant VLab as Virtual Lab
-    participant IsolatedProxy as Isolated Proxy VM
-    participant RecoveredVM as Recovered VM (from backup)
-    participant TestScript as Test Script / Heartbeat
-
-    VBR-&gt;&gt;VLab: Start SureBackup job
-    VLab-&gt;&gt;VLab: Publish isolated network (bubble)
-    VBR-&gt;&gt;IsolatedProxy: Mount backup restore point as NFS
-    IsolatedProxy-&gt;&gt;RecoveredVM: Power on VM in isolated lab
-    RecoveredVM--&gt;&gt;IsolatedProxy: VM heartbeat received
-    IsolatedProxy-&gt;&gt;RecoveredVM: Run ping test
-    IsolatedProxy-&gt;&gt;RecoveredVM: Run application test script\n(SQL port check / Exchange health)
-    RecoveredVM--&gt;&gt;IsolatedProxy: Test results returned
-    IsolatedProxy--&gt;&gt;VBR: Report: Pass / Fail per VM
-    VBR-&gt;&gt;RecoveredVM: Power off test VM
-    VBR-&gt;&gt;VLab: Tear down virtual lab
-    VBR--&gt;&gt;VBR: Record verification result in job session
-    note over VBR: Failure = backup not confirmed restorable\nEscalate immediately</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNUstOwzAQvPcr9tgeEHckOFSAQKIIGtQTl42zaZa6tvGjhb9n7TTQKkiQi2N7xjszu4HeExlF14xrj9sJyOfQR1bs0ERYzZeAoSwV-R35MeIB6wJhHxNqkO0Icx-sxkjNk7cfnxk8HEB_slqMKEtSVspRs1pkwvdWsDBtvd1CjWqT3GzEfKEQK-XZxUzMOzhsz-GOBFgTxkmhia2zq6vs4AKqKFdQJU_z8jC82d5Ivv5GPaVac-iABwOG4t76DUzrVNeaZkfvnri-gIVNoq5XDV5kWU_gLJui8_G2KtQTkjxylINUt3vyYE0Ogc2PCH3I_Ah8NhYgpG7wLwIU8Y6av4sukwHHZg1RNP8Pjs5pVhhZpGYWhNKAVzOtnh_EswStOlIb6cjNh-rQrClL07Gb_cNHaakEmHQMssbkza8-ctPmS1FEuaKkhyFIxVtkDU5yPExd36zfcm7bXv0JsJ-DFwkSGrs3sDvM_dCDjPqprKxvQN7ldsijF57bJwMGgUKQ08I0NhJkEVDIWadMI1wOMyP3oKxp2W-l5_0Eoczcq7kJCrNx4K1csfzpz8kXTm1MJA==?" /></p>
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
 <p>Run these commands on the VBR server each morning for a complete health snapshot.</p>
 <ol>

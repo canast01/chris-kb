@@ -8839,26 +8839,7 @@ SRDF/S design standards: maximum distance and latency requirements for synchrono
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>graph LR
-    subgraph siteA ["Site A — Production"]
-        hostA["Production Hosts"]
-        r1["PowerMax R1"]
-        hostA --&gt;|"write I/O"| r1
-    end
-
-    subgraph fabric ["Dark Fibre / FCIP — Metro"]
-        linkLabel["RTT ≤ 10ms\nSynchronous"]
-    end
-
-    subgraph siteB ["Site B — Metro DR"]
-        r2["PowerMax R2"]
-        hostB["Standby Hosts\n(inactive)"]
-        r2 -.-&gt;|"at failover only"| hostB
-    end
-
-    r1 --&gt;|"sync write commit"| linkLabel
-    linkLabel --&gt;|"ack to R1"| r1
-    linkLabel --&gt; r2</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNplUUFuwjAQvOcVK5_oIaXhAZWSIlQkUFHgFnpwEpdYSWy0dqCROPTae5_Ql_GSbhIBCd2LZe_s7Mx4h3yfwSJ0gMpU8a69G2mFDxFb0wk-nL9-YIU6rRIrtWLvLbipTBvrR-zWg1d6MT0EetTWR4FL_gmhdz8Lrvt8Ykds9szHb-xEAy1CqNQZavrgMcqERE055jCTMQoYw-xlvmr1LYVF3aMvpMoXPBZFxMLNBs7fv-A9lWar1rVKMtRKVxed_3c1_oOL_-DGD9Ow723S9za58xbQuOUqjesulK0aScUppYN4GJCA-9iEwC1ZlIU-CAStipqyaGmGEtHrIjPkArrcEl2W0hL8atkZBNAN8CQHq5svuGY8QJAQ5w89FJye?" /></p>
 <p>Where 1.25 = 25% headroom for burst absorption.</p>
 <p>Measure peak write throughput:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="m">12</span><span class="w">   </span><span class="c1"># 5-second samples, 12 cycles = 1 minute</span>

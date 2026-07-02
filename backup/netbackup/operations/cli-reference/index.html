@@ -7716,51 +7716,7 @@ NetBackup CLI Reference reference covering Master → Media → Client Topology,
 <hr />
 <h2 id="master-media-client-topology">Master → Media → Client Topology<a class="headerlink" href="#master-media-client-topology" title="Permanent link">&para;</a></h2>
 <p>Understanding the three-tier topology is essential before using the CLI — commands execute at the correct tier.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph masterTier [Primary / Master Server]
-        master["Primary Server\n(catalog, policy DB,\njob scheduler, EMM)"]
-        catalog[("NetBackup Catalog\nbpdbm — image metadata")]
-        master --&gt; catalog
-    end
-
-    subgraph mediaTier [Media Servers]
-        ms1["Media Server 1\nSite A — OST/Data Domain"]
-        ms2["Media Server 2\nSite B / DR — MSDP pool"]
-        ms3["Media Server 3\nCloud gateway — S3"]
-    end
-
-    subgraph clientTier [Clients]
-        vmHost(["VMware backup host\nVADP proxy"])
-        dbHost(["Oracle / MSSQL host\nbpcd agent"])
-        nasHost(["NAS — NDMP\ndirect connect"])
-    end
-
-    subgraph storageTier [Storage Units]
-        dd[("Data Domain\nOST dedup pool")]
-        msdp[("MSDP\nMedia Server\nDedup Pool")]
-        s3[("AWS S3 / Cloud\nlong-term archive")]
-    end
-
-    master --&gt;|"policy / job control\nTCP 1556"| ms1
-    master --&gt;|"policy / job control"| ms2
-    master --&gt;|"policy / job control"| ms3
-
-    ms1 --&gt; dd
-    ms2 --&gt; msdp
-    ms3 --&gt; s3
-
-    vmHost --&gt;|"TCP 13724 bpcd"| ms1
-    dbHost --&gt;|"TCP 13724 bpcd"| ms1
-    nasHost --&gt;|"NDMP port 10000"| ms1
-
-    classDef master fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef media fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef client fill:#15803d,stroke:#166534,color:#fff
-    classDef storage fill:#b45309,stroke:#92400e,color:#fff
-    class master,catalog master
-    class ms1,ms2,ms3 media
-    class vmHost,dbHost,nasHost client
-    class dd,msdp,s3 storage</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNlM9ymzAQxu95ih1ycWbIxIDt_Dl0xjGd6SGkbkjTg8lBSLJNIyRGkpN6Joc-RJ-wT1IhCYc6zTRcQNL-lv32W1gy8YTXSGq4ujkAc6lNuZKoWUONlKbytqISFnNZ1Uhu4QQyuws5lY9U3luivVzwIugC3XnBBxhpxMQqhEawCm8hvQwL_l2UoPCakg2jMoSPWXYUvOTyyGIQXFN9ifDDpoGZ2yt42ZCyht8_f4F50YpCTTUi5jA42i8Gjo8_dLnsEeXkYE8iJRVyCrP20ZeteqlUtAj6ZxAVPK80hakt4nN-e5Kad0AqalTxoE_Ge2TsyUvTxvTG4lmezk1nBPsLTPbApOAzJjYEVkjTJ7S1aJ545rUszCrKtdM1s889RY_1J6H0YBHcZU9IUihdg9dms-B307YeKX5sg_ujHUJKj3yWCDPaTkGef7nyTNlgAsYKrvsMR8pD19PcFnydZvOCk0pSrAELzs29I15rUFpIk9SJyN0CvvKqL4UQMyO97hfc2AHEjFXjmtqfCUUaE902vOD97hY8tcB8DzAuDILpt9w02gi2_S84E3x1bGarBiTxunqkHbET8DJ7z4Ef-RNo590o1lKwgt_O5hCNx5PguZ2ud0E2NH5_aOJrUZH9CAjxy9gu21b4jcRudPFuNFxuW2VyGo-g9bdXqxuG_wR5911Ua7zxw_xioqG5fJiNwwwpldJlJ2tZMXZxGI8nCS1DZfQ80IvDiIwoOQuxYEJeHC6Xyz3UmunIU5wgSnbkhMRn5PxN0n0nHo3GZ8PkBY0mk3EyehP14-nZcjROhuc79jweDYf0n6wXGvr_kl_2z1UUGqPC1hurrHfm_AmdA2HXY6eiF0ZI2Focmgy-zIM_N_3QLQ==?" /></p>
 <p>Run restores from the CLI. Always verify client name, backup time, and policy before executing.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Restore files for a client</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>bprestore<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>-t<span class="w"> </span>&lt;policy_type&gt;<span class="w"> </span>-L<span class="w"> </span>/tmp/restore.log<span class="w"> </span>&lt;file_path&gt;

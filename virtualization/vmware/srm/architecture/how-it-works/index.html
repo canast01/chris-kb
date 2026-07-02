@@ -9493,45 +9493,7 @@ How It Works (VMware Platform) reference covering Site Topology, Test Failover W
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a vCenter plugin on both the protected and recovery sites. It automates VM failover by coordinating storage presentation, VM registration, power-on sequencing, IP customisation, and custom scripts — without manual intervention at the storage or compute layer. SRM supports both array-based replication (via SRAs) and built-in vSphere Replication.</p>
 <h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    subgraph Protected["Protected Site"]
-        PVMs["VMs&lt;br/&gt;production workloads"]
-        PvCenter["vCenter&lt;br/&gt;compute management"]
-        PSRMServer["SRM Server&lt;br/&gt;protection groups&lt;br/&gt;vCenter plugin"]
-        Replication["Replication Engine&lt;br/&gt;vSphere Replication&lt;br/&gt;or array-based (SRA)"]
-    end
-
-    subgraph WAN["WAN / MPLS"]
-        Link["replication link&lt;br/&gt;async TCP 31031&lt;br/&gt;mgmt TCP 443, 9086"]
-    end
-
-    subgraph Recovery["Recovery Site"]
-        RVMs["Placeholder VMs&lt;br/&gt;shadow inventory"]
-        RvCenter["vCenter&lt;br/&gt;compute management"]
-        RSRMServer["SRM Server&lt;br/&gt;recovery plans&lt;br/&gt;vCenter plugin"]
-        RecoveryPlan["Recovery Plan&lt;br/&gt;power-on order&lt;br/&gt;IP customisation"]
-    end
-
-    PVMs --- PvCenter
-    PvCenter --- PSRMServer
-    PSRMServer --- Replication
-    Replication --&gt;|"async replication (TCP 31031)"| Link
-    PSRMServer --&gt;|"management (TCP 443, 9086)"| Link
-    Link --&gt;|"async replication (TCP 31031)"| RVMs
-    Link --&gt;|"management (TCP 443, 9086)"| RSRMServer
-    RSRMServer --- RecoveryPlan
-    RecoveryPlan --&gt;|"recovery plan execution"| RVMs
-    RVMs --- RvCenter
-
-    style PVMs fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style PvCenter fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style PSRMServer fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style Replication fill:#2563eb,stroke:#1d4ed8,color:#fff
-    style Link fill:#b45309,stroke:#92400e,color:#fff
-    style RVMs fill:#15803d,stroke:#166534,color:#fff
-    style RvCenter fill:#15803d,stroke:#166534,color:#fff
-    style RSRMServer fill:#15803d,stroke:#166534,color:#fff
-    style RecoveryPlan fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqVkk2PmzAQhu_8CotcdqWNlgSSJlG10mrVQ6WkQrBqD6gHx54QFIORgaSR9sfX2AEMVdrCAY0_npnx-04scH5E28BC8iuqfazWvuAlkBJoZLchCpMS7J_qYv3533dFZMvf5714fskFpxUpE56hCxcnxjEtzMvnN8hKEJF9CxREeJpXJaAUZziGVB6YSBjsQhDnGpIh0nFTrO6pLhYLXuW6hVtmlLMqTjIjUwA5Swiu70e2sUBfMnkRNBzmRxBg3lX7XCAsBL5O97iQGjyEwevjLTVk1OrL9uP1W2TLH3pGO38bGi1sk-wU2cKozeSOqoCLa0bQ-5uP3JnjztReGqel2vI89wmtndXybs0ACJe6XOuX6WhoVKCM8hkmcOSMSoUa04ojpvyCkuwslePiakLjDQvuGyaa1nKGs3-6pe_KhjPjUfVSm88vIKZSQS7oLf1XH5GqKHmaFErcoVj1qKLpdNqOoWXOpD5pm7f6w6dOjamwBhMlz18-bG2i6e9D6-ij_aH8_zOxBDslNdEa3qPq4P8K1WYPkL-WCPrvDobv7rywhubo7D1rEfwCUikLjFaCRv5mqG4jXF4ZaG8OCWObyXyxdGH_VJSCn2AzmVEP6OqJcMbFZnI4HEyq8W482b1wNGvaPhpWhmhq7y1cZ91S67nnOHCnZCfPbLFyXNrVWi4XrneH6sszhhzKM4Y1h0PTn4iLoaOXdL6ia5P-DfO3B9Y=?" /></p>
 <h2 id="recovery-plan-modes">Recovery Plan Modes<a class="headerlink" href="#recovery-plan-modes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

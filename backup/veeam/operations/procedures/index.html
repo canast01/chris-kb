@@ -7778,28 +7778,7 @@ Operational procedures covering backup job creation, copy job setup, SOBR manage
 <hr />
 <h2 id="instant-vm-recovery-flow">Instant VM Recovery Flow<a class="headerlink" href="#instant-vm-recovery-flow" title="Permanent link">&para;</a></h2>
 <p>The Instant VM Recovery (IVR) sequence mounts the backup file directly as an NFS datastore — the VM starts from the backup without waiting for a full restore.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant VBR as VBR Server
-    participant Proxy as Backup Proxy
-    participant Repo as Backup Repository
-    participant ESXi as Recovery ESXi Host
-    participant vCenter as vCenter
-
-    Admin-&gt;&gt;VBR: Start Instant VM Recovery
-    VBR-&gt;&gt;Proxy: Mount backup file as vPower NFS datastore
-    Proxy-&gt;&gt;Repo: Access latest restore point (.vbk / .vib)
-    Repo--&gt;&gt;Proxy: Backup file accessible
-    Proxy-&gt;&gt;ESXi: Publish NFS datastore (vPower NFS service)
-    ESXi--&gt;&gt;Proxy: NFS datastore mounted
-    VBR-&gt;&gt;vCenter: Register VM from NFS datastore
-    vCenter--&gt;&gt;VBR: VM registered
-    VBR-&gt;&gt;ESXi: Power on VM (isolated network)
-    ESXi--&gt;&gt;Admin: VM online — validate services
-    note over Admin,ESXi: Test OK — choose: Undo IVR (discard)\nor Migrate to production storage (commit)
-    Admin-&gt;&gt;VBR: Undo Instant Recovery
-    VBR-&gt;&gt;vCenter: Unregister IVR VM
-    VBR-&gt;&gt;Proxy: Unmount vPower NFS datastore</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptU0Fu20AMvOcVPNpAnd51CBA3KRoETgy7NnLIZbViHMLSUtldKc2tj-gL-5JyKTmVIOsi7WKGMxxSAd8adBZvyBy8qS5Antr4SJZq4yJcFxW5ye1-uQET9LVF36KfINaef30kzNLYY1N35wlqgzUPQOkYKLKfIm-3T5SQG7Qseh_dxQ8OcQJtv6GL6BO6_7xQjLayuLoS1xlsozDgzoWo_aw-CytUIAJUzxmsuBFI3ll8oRK18prfRePh-xYKE00Q06hUJQk59ZLBtbUYApQmYojgUXFQM0nF2WWbH-ErXLaUz5WbOIv_wsuhpBaivByrpBQyWDd5SeF17AZmA49BpkQWO5lEGsiMWVXqFotBDH2Imdg7UEjJSlwvnqsz3ffYxSlmQfqeNarZ-1Z_7BJsRoFTTAU4jO_sj2OvOjytx64kh_D39x9oTUmij6f2glIcy02aZTfxL53WzzSAx3vl2VfmgBnsXMFwt9_ArKBgjS_mz449rEh-BakRGWrPRWMjicfUpDlIrJariuJ8ulNduX6lzuzTZ5A7dwpF1fer6dLtnA7i_J79A9C-OBI=?" /></p>
 <hr />
 <h2 id="configure-veeam-backup-job-granular-options">Configure Veeam Backup Job (Granular Options)<a class="headerlink" href="#configure-veeam-backup-job-granular-options" title="Permanent link">&para;</a></h2>
 <p>The backup job wizard exposes advanced options beyond the defaults — configure these for production workloads to meet RPO and retention requirements.</p>

@@ -8954,33 +8954,7 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Status, Dir
 </ol>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <p><img alt="Daily Checks" src="../../../../../assets/storage-dell-vplex-hc-daily-checks.svg" /></p>
-<pre class="mermaid"><code>flowchart LR
-    start(["Daily check run"]) --&gt; cl
-
-    subgraph "Cluster Layer"
-        cl["ll /clusters/*/health-indications/\nAll health-state: ok?"]
-        eng["ll /engines/*/directors/*/hardware/\nAll directors healthy?"]
-        cl --&gt; eng
-    end
-
-    subgraph "Metro Layer"
-        dd["ll /distributed-storage/distributed-devices/*/health-indications/\nAll devices in-sync?"]
-        wit["ll /metro-node/*/witness/\nWitness connected + reachable?"]
-        cg["ll /distributed-storage/consistency-groups/\nAll CGs operational-status: ok?"]
-        dd --&gt; wit --&gt; cg
-    end
-
-    subgraph "Access Layer"
-        sv["ll /clusters/*/exports/storage-views/\nStorage views intact?"]
-        hcFull["health-check --full\nNo warnings or errors?"]
-        sv --&gt; hcFull
-    end
-
-    eng --&gt; dd
-    cg --&gt; sv
-    hcFull --&gt; result{All OK?}
-    result --&gt;|Yes| done(["Daily check passed"])
-    result --&gt;|No| investigate(["Investigate per\ncomponent section"])</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9U8FO3DAQvecrRjmVVlHuPYAQVRGCUqk9VBXLwWsPiYWxoxkn26jbf-_YTmE3FeSUmfE8vzfz_ODCTveKItx8q0A-jhK8u6s_Ketm0D3qR6DR1_cn0DSnoF1Vjo3bjtTQQ33hRo5IcKNmpDoX06fdXe0ctLqUuX3f9qhc7BvrjdUq2uC53fhzObQU5OqIHyE8ntX3zzjouwIkP9ZjwjGWUMdQMBWZnSJckJ5LC-Z8CKVdliBAVUE2ay1fMFJYKzGmEDCWI9ntGNEI1UCqw6OcwclqfFPocgSsb3j2-pDczsZyzVPi0PhgUJAkK5pT-4_yBzp4LxLRwAcgVLK7rcMjld3rdKWZJY1ez01HYRz-Ebu4ZAgDUmarXF7FyOtdGJMHKKSKF16d47nWietqkDz9Zwn8NQSK3C4Em8niLnH6XmLIsYwrKh0PmfT68-jEYcuki02b5kGSG38bQCzhre9EFAESiSEOu3nK_AvIsQYxR64ZU5Vh5oin6uXWnCHk0cXfaXZfr8_-5HLJpfL-J_IeTPC4ekmDYkYjj2ndcBv2InNCjraTVyBtVy8RyGY2XoenQRB9BBYDyJ4SzF8GmDDV?" /></p>
 <table>
 <thead>
 <tr>

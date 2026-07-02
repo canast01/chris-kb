@@ -8427,57 +8427,7 @@ Internal architecture and data-path reference: HA pair design, WAFL filesystem, 
 </table>
 <p>All protocols are served from the same physical hardware and the same underlying volumes and aggregates. An NFS export and an iSCSI LUN can coexist in the same aggregate and even the same SVM.</p>
 <h2 id="mermaid-diagram-io-architecture">Mermaid Diagram: I/O Architecture<a class="headerlink" href="#mermaid-diagram-io-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph HOSTS["Host Layer"]
-        H1["NAS Client\nNFS / SMB"]
-        H2["SAN Host\niSCSI / FC / NVMe"]
-    end
-
-    subgraph SVM["SVM — Protocol Layer"]
-        SVMN["NAS SVM\nNFS exports\nSMB shares\nData LIFs"]
-        SVMS["SAN SVM\niSCSI target\nFC WWPNs\nNVMe subsystem"]
-    end
-
-    subgraph VOL["Volume Layer"]
-        V1["FlexVol A\nNFS junction\nSnapshots"]
-        V2["FlexVol B\nLUN or Namespace\nSnapshots"]
-    end
-
-    subgraph AGG["Aggregate Layer"]
-        AGG1["Aggregate 1\nRAID-DP\nNode 1 ownership"]
-        AGG2["Aggregate 2\nRAID-DP\nNode 2 ownership"]
-    end
-
-    subgraph MEDIA["Physical Media"]
-        M1["NVMe / SSD / HDD\nRAID-protected drives"]
-    end
-
-    REMOTE["Remote ONTAP\nor Cloud Volumes ONTAP"]
-
-    H1 --&gt;|"NFS / SMB"| SVMN
-    H2 --&gt;|"iSCSI / FC / NVMe"| SVMS
-    SVMN --&gt; V1
-    SVMS --&gt; V2
-    V1 --&gt; AGG1
-    V2 --&gt; AGG2
-    AGG1 --&gt; M1
-    AGG2 --&gt; M1
-    V1 --&gt;|"SnapMirror\nasync or sync"| REMOTE
-    V2 --&gt;|"SnapMirror\nasync or sync"| REMOTE
-
-    classDef host fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef svm fill:#15803d,stroke:#14532d,color:#fff
-    classDef vol fill:#15803d,stroke:#14532d,color:#fff
-    classDef agg fill:#b45309,stroke:#92400e,color:#fff
-    classDef media fill:#b45309,stroke:#92400e,color:#fff
-    classDef snap fill:#7c3aed,stroke:#5b21b6,color:#fff
-
-    class H1,H2 host
-    class SVMN,SVMS svm
-    class V1,V2 vol
-    class AGG1,AGG2 agg
-    class M1 media
-    class REMOTE snap</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqdk99u2jAUxu95Ciu9pRoJ7db2YlJKoCCRgHCXXoRdmOQQsgUb2aEtUi_6EHvCPcmOYxhmEdLUXCQ5f7745-Mvy1K8pCsmKzKetQhearvIJdusyHBCH2niDIXCGtuBdL7XDfoauokT-ZT0ygJ4NefRgJJPhIb3do-XONSPiP7AnBe0R0fYM-jhLYpD2HcCz1qn69I4RGEckt_vv8hUikqkomwQYENkGPDNAMDrRshKzTlyEIV7AnwPWMXIeDRQp1pq2GqtQauYzAFBEfDpaRqhVFNqLLVTFazP8saTceLEotyuoUEZ45wGJbximfiG8seWp1UhOGJytlErUdlosXcU3M_5-FtEhCQRW4PasBSaoiaP__CQOH6eS8hZ1UTCsmvX3Tmf-aPgMpgin8gwQcQLB6lWxeZU5tky71-Z15A10cJ-MPITZ7raqSJlJQkhK5i1SKhtpaeOXqIB3odBsF9ng0aAtIKMZLJ4hsb2Z_1w8thPnBmssZFMokcfyXB2vVJsM2LOR5k8alvGxeTy8uubc3TvW-0rU_RMsWncuom2Di7UbXjQh5ia2GuZ868jPXMTe4fY1HWhzoTuIfbsON4T6lMPCymFnHOmdjzVrtBPhDE7tz7_X-11f1oypQJYkpX-yZdFWd5duNkVZDdtVUnxEzCELrthbfwFhby7WC6Xp0L1vD7orm863eyou7ruetlZ3TP6-yM6lud73QIbO7d_dbfeVacDZ3Vr7bQPKRXOci_8knYZHFGvF567-GwLj0r0VhsdpOdqJbVd2rVHcG5WPnbbeHQ4EyunrdGu_YB7tvKhazZjpcyR1qStP7U_rGY=?" /></p>
 <h2 id="snapmirror-and-snapvault">SnapMirror and SnapVault<a class="headerlink" href="#snapmirror-and-snapvault" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNp1k7Fu2zAQhnc-xSGTA8QJOmTxUCS1OhSokMBynaULTZ0rwtQdS1IO3KkP0Sfsk_Qo2a7VOiv13X_fT0kPMemQutapuLXkddAtRPzeIRl8DIFfl401W8IY4d3t_RkUuKPacCAMcK-UHCZrrNeU4KriLhiEalV-pclzsK0O--sr0BGqxfwiumLXtTggq6fP_zCkfWlFJsBH-mbpwJVjqsCYLOlkmQ6bKzRM9Wl3US3fnhgEZKh4ht8_f0FAXU-Z3HE2Symxh-l72TyDT2ST1c7-QEFdnxEb61VV9oTgM5hLSEJY64hOrCH3iA2nAyQ-M1gGTXEjd3iiJpvOOTDs99dKkJ7s416CPUtT-RCmB50Px2nDrXeYUCnH7KEyDdadwxo6X2eZSSMX7vZwB7W20k4BXFAmfP1reyJkz1ziOwEsmYAtUtIOanRJwyZwC07HBOlY6b-EceNhbu3YbKMgo66P3otkT-RH51W_DEVORccFCsyH4APuLHfxggxSrRSxQLzL5-VNr_VEUCxAm2R3wxeRv4K1XMd29IJvJJrbPN1LJYbF3Yt6kND8D_0BpGwcIA==?" /></p>
 <p>SnapMirror is ONTAP's native data replication engine. It operates at the volume level and transfers only changed WAFL blocks between snapshots — making replication incremental and network-efficient.</p>
@@ -8586,84 +8536,7 @@ Internal architecture and data-path reference: HA pair design, WAFL filesystem, 
 <p>SnapCenter manages retention policies at the backup job level. Expired backup copies are deleted from both the source ONTAP snapshot and the SnapVault destination, ensuring no orphaned snapshots accumulate on the array.</p>
 <h2 id="storage-hierarchy-aggregate-svm-volume-lunqtree-with-multi-tenancy">Storage Hierarchy — Aggregate → SVM → Volume → LUN/qtree with Multi-Tenancy<a class="headerlink" href="#storage-hierarchy-aggregate-svm-volume-lunqtree-with-multi-tenancy" title="Permanent link">&para;</a></h2>
 <p>The diagram below shows how ONTAP layers physical drives, RAID groups, aggregates, SVMs, volumes, and sub-volume constructs (LUNs, qtrees, shares) into a coherent hierarchy. The SVM boundary is where multi-tenancy is enforced — each tenant sees only its own namespace, LIFs, and data.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph PHYSICAL["Physical Layer — Node-Owned Hardware"]
-        DRIVES["Physical Drives\nNVMe SSDs · SATA HDDs · SAS HDDs\nMixed media supported per aggregate"]
-        RAIDG["RAID Groups\nRAID-DP: 2 parity disks, 2-drive fault tolerance\nRAID-TEC: 3 parity disks, 3-drive fault tolerance\nTypical group: 12–28 data drives"]
-    end
-
-    subgraph AGG_LAYER["Aggregate Layer — Physical Storage Pool"]
-        AGG1["Aggregate 1\nOwned by Node 1\nPool of RAID groups\nSingle disk type per aggregate\nCapacity drawn by thin volumes"]
-        AGG2["Aggregate 2\nOwned by Node 2\nSeparate pool\nFailover: Node 1 adopts AGG2\non partner takeover"]
-    end
-
-    subgraph SVM_A["SVM — Tenant A (Production)"]
-        SVMA_LIF["LIF Set\niSCSI 192.168.10.10\nFC WWPN AA:BB:CC\nNFS 192.168.10.11"]
-        SVMA_ISCSI["iSCSI Target\niqn.2010-01.com.netapp:svm-a\nPortal group on data LIFs"]
-        SVMA_NFS["NFS Export\n/vol/oracle_data → NFS v4.1\n/vol/oracle_logs → NFS v3"]
-    end
-
-    subgraph SVM_B["SVM — Tenant B (DevTest)"]
-        SVMB_LIF["LIF Set\nSMB 192.168.20.10\nNFS 192.168.20.11"]
-        SVMB_SMB["CIFS/SMB Share\n\\\\svm-b\\projects\nAD-integrated auth"]
-        SVMB_NFS["NFS Export\n/vol/devtest → NFS v3\nSquash root, read-write"]
-    end
-
-    subgraph VOL_LAYER["Volume Layer — Logical Containers"]
-        VOL1["FlexVol: oracle_data\nSize: 5 TB (thin)\nSnap reserve: 20%\nAggregate: AGG1"]
-        VOL2["FlexVol: oracle_logs\nSize: 1 TB (thin)\nSnap reserve: 10%\nAggregate: AGG1"]
-        VOL3["FlexVol: devtest\nSize: 2 TB (thin)\nSnap reserve: 5%\nAggregate: AGG2"]
-        SNAP1["Snapshot Copies\nWAFL copy-on-write PiT copies\nInstant creation, no data copy\nRetained per volume policy"]
-    end
-
-    subgraph SUBVOL["Sub-Volume Constructs"]
-        LUN["LUN\nBlock device inside a volume\niSCSI or FC mapped via igroup\nThin-provisioned inside FlexVol"]
-        QTREE["qtree\nNFS sub-directory with own quota\nCIFS share root\nOplock and security-style scoped"]
-        SHARE["SMB Share\nMapped to a volume junction\nor qtree within SVM namespace"]
-        NS["NVMe Namespace\nNVMe/FC or NVMe/TCP\nMapped via subsystem (host group)\nLike a LUN but NVMe-native"]
-    end
-
-    DRIVES --&gt;|"RAID-DP or RAID-TEC groups"| RAIDG
-    RAIDG --&gt;|"Aggregate pools\nRAID groups added to aggregate"| AGG1
-    RAIDG --&gt;|"Aggregate pools"| AGG2
-
-    AGG1 --&gt;|"Volume carved from aggregate\ncapacity pool"| VOL1
-    AGG1 --&gt;|"Volume carved from aggregate"| VOL2
-    AGG2 --&gt;|"Volume carved from aggregate"| VOL3
-
-    VOL1 --&gt; SNAP1
-    VOL2 --&gt; SNAP1
-    VOL3 --&gt; SNAP1
-
-    VOL1 --&gt;|"LUN inside volume\nSAN access path"| LUN
-    VOL3 --&gt;|"qtree inside volume\nNAS quota boundary"| QTREE
-    VOL3 --&gt;|"SMB share on volume\nor qtree root"| SHARE
-    VOL1 --&gt;|"NVMe Namespace\nin NVMe-capable volume"| NS
-
-    SVMA_ISCSI --&gt;|"igroup maps LUN\nto SVM-A iSCSI target"| LUN
-    SVMA_NFS --&gt;|"Junction-path mounts\nvolume into SVM namespace"| VOL1
-    SVMA_NFS --&gt;|"Junction-path mount"| VOL2
-    SVMA_LIF --- SVMA_ISCSI
-    SVMA_LIF --- SVMA_NFS
-
-    SVMB_SMB --&gt;|"Share root is qtree\nor volume junction"| SHARE
-    SVMB_NFS --&gt;|"Export policy applied\nto volume"| VOL3
-    SVMB_LIF --- SVMB_SMB
-    SVMB_LIF --- SVMB_NFS
-
-    classDef physical fill:#374151,stroke:#1f2937,color:#fff
-    classDef agg fill:#b45309,stroke:#92400e,color:#fff
-    classDef svmA fill:#15803d,stroke:#14532d,color:#fff
-    classDef svmB fill:#0e7490,stroke:#155e75,color:#fff
-    classDef vol fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef subvol fill:#7c3aed,stroke:#5b21b6,color:#fff
-
-    class DRIVES,RAIDG physical
-    class AGG1,AGG2 agg
-    class SVMA_LIF,SVMA_ISCSI,SVMA_NFS svmA
-    class SVMB_LIF,SVMB_SMB,SVMB_NFS svmB
-    class VOL1,VOL2,VOL3,SNAP1 vol
-    class LUN,QTREE,SHARE,NS subvol</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqVVt1uIjcUvs9THLGqtCvNJMwQNgkXlQbIDxVhaYbNagVVZGYMzGZiT2xDlioXe9UHaPsuve-j7JP02PODIWW3RVESbH_Hx5-_7xzPUv4ULYhQ0L85APzI5XQuSLaA4dXHsNcJ-uPacLGWSURS6JM1FfD1y58w4DF13z0xGsMVEfETEbT2i8HrT_emd3seWsCuSFZUTtjg9ppCGHYl_P0XhMEogKtu-SU0_0_YdfIZoz7QOCGYTJZxofB7hhuT-VzQOVH2VjdBr3s5ruk_cCn4MsMI-ovbHbbAh4yIRK0hTuS9dMB3Y50IzMgyVaB4SgVhES0Qo_NOCxo7kMY-yGidmaPN9aYt8PyvX_7wTyEmioCByCJLyuKDbWaDy8u7fvDx_GZcC8ojWdxWrIWKCzKnMOQ8tY6McM9GehOW38R0be5FD2gI8JmhJ08ReQkTNk-pORmodUa3SZ2wDslIZM4uyBPT4dQiYbDi6fKhOk6RgW9n4O9mgAMhRSL1ZIapTNgFSVK-oqJVpAgk5pmSJtSEcaZpVwzzUeSe6oV72Qtvr--CcQ3_GLZGlBGmIIDXQ8HjZaQSzt5YueK64K7fuxjX8BeEVE1YEnbCHnhn_qH39vTQq-MPJtiBDx-GAwiCVrvd6nRQrBfh1iJvN2pPxxnX8nAjIuYm-CM79Ote3a17hxF_OGRUkSxrydWDS_S9CFWKBvDURi6YmNyNjZuPazqD88_aARN2hNdwhHqIUnpnUF9_-x30gtXxobc9nfK53Ew3vslk-wWTbXjdpasRlWqHxvYOjeF1u-LHz0m0KfNfUta-Q8y41uldhEcaHWLhQd1N8KP5mU4mmeCfaKRQrEHXTZiic62hGMhSLXZj_TtFMV0pzN06P2b6uCRyAYJz5YCgJHaf0ON0LzG37_qlQW-N-C139vncmLPDmSIJKta-OgSiNS9S-hlxLbCuS7vvV9qCJoyQYO2rNzjESIb5SCpWOOXXf8Bjl6ZqGZ9vx_ZfxtZ3Xcb29sf2vhu7YcUuOCzj-vvjNl-E9e1rGgRD5END5IIr5CxLdBv4EFz0IeLZ2uUsvwoYJiM9YqZ7TCqtxAivStvZAcZzp2gMVmtqmM-bQl6dsMqkSbTeL_X3bTwjprKcusWV4gVKJbBg2BfYfz9Ahb8fTFg75dG9ZiKJKCRMJli1SLFbWUK4ACwbD-hvTGaF_SoxxsbmgFy5qOVVIjF_nCwCFAxbG_48ujk_H9celaA09w_m7MaJQBdwsYanRC2AYzV-XHKtIu0dkNo3Rs5YeDOTKGExSBotde9ypVpjnZfIFo3t67gKbnAvy3nXeeqKV0eDT0tmaigWZQEmLZMD9gFdJxjBToBdwm7BA21D3dgH5WTe6I-QG4xh_h11htVuK9PYp3ItFX2A1wuObjW8obr6yb2mGW8ApktlsC5DEaxemDV_Y4Dr_vhcKxq-3q3s5EXTqz3nL4SD6q2QIza9S7en4s1QYLA1xQUp1YPj2TjmO1HyVX6en16fryr0FhF0TAwzwR_sphuVTVeHwAi6hPyPADnCLxH-f0U08iz1bhqSW7Uc8l8ONayhLeSztkup79IeYTAAEkVUSuzrWLmf9Y1uhXrOJb8LHOAz0CgdpnzJYiLWiDUe2UFrEec24KxCV4rV1kCgEfxOtrtKRWEblel7mKZlJggehPlBN60-D5B7XLtegqkUKBRc4waQFwVlHgLWkct-nsN_KvzlamLgAU-pu11hvqQIZvnMUsR3A9liKN89uNi1zrBnDqNWpzVdumC5KjSQSCiKFBe7tWKL6rI35xHy3lyUZ8ACkCY0NpxVRBs12m-MMi2TyJ6ZKuEoJVJ26Qyy8tk8S9K09apxcuw1PQdLPL-nrVfezD9rnDgRT7lovZrNZttgdEeBmx43G_WzCnfmH9frdC8Ony1BAfSap_VGvNkQ4_jxt4DtAlinJ8dn9Q2w2aQnzb1ApK3cMD6m8ekGRxvklOzfcDndQE-iBqGbXJtT35u-taEbbFFonbzslSRb87pOOab0IInWeCkyZyM-p1Kw5m17bbtca27dqVSkibJWajM4WuT6V8MxBUlzYi1B3zmmZDhGlM4gLA5_8A9YrKiM?" /></p>
 <p>Key points illustrated:</p>
 <ul>
 <li><strong>Aggregate ownership</strong> is per-node. AGG1 lives on Node 1; AGG2 on Node 2. During HA takeover, the surviving node temporarily adopts the failed partner's aggregates — this is why both nodes must be able to see all disk shelves.</li>

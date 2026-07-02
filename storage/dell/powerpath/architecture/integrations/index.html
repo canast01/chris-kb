@@ -8756,23 +8756,7 @@ Integrations reference covering Windows HBA Integration, Linux DM-Multipath Comp
 - After any HBA driver update on Windows, run <code>powermt config</code> and <code>powermt display dev=all</code> to confirm path rediscovery
 - PowerPath on Windows integrates with Windows Server Failover Clustering (WSFC); verify the shared disk path counts from both cluster nodes after any fabric change</p>
 <h2 id="linux-dm-multipath-comparison">Linux DM-Multipath Comparison<a class="headerlink" href="#linux-dm-multipath-comparison" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-    scsiDevs["Raw SCSI Devices\n/dev/sdX"]
-
-    subgraph "PowerPath path (recommended for Dell/EMC)"
-        ppKernel["PowerPath Kernel Module\n(emcp)"]
-        ppPseudo["Pseudo Device\n/dev/emcpowerX"]
-        ppKernel --&gt; ppPseudo
-    end
-
-    subgraph "DM-Multipath path (conflict — must blacklist)"
-        dmKernel["DM-Multipath\n(multipathd)"]
-        dmDevice["DM Device\n/dev/mapper/WWID"]
-        dmKernel --&gt; dmDevice
-    end
-
-    scsiDevs --&gt; ppKernel
-    scsiDevs -.-&gt;|"CONFLICT — blacklist\nDell/EMC WWIDs\nin multipath.conf"| dmKernel</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNpdkU1ugzAQhfecwvIqWRBukA20EmpoUVIpkUIXxJ4kVv0nG5JNFj1ET9iT1OYvgBdg4_dm3sdcTKmvaLMNkFuWWJbAzR7xtryjXbxLkTsyAraQEYVbZOkBfwWttj5dGi_O1R1MXlZXpP1jYYAoIUBSoOisjCvBefSSxUvcGP3S-g2MBH4cmdsvKFO05lDIBQiil67b05NbqKlynubdReuSebUvdZg4upphuB7sza0LN6dIsjCrecX0E4QoeeaMVOjv5xeJ2lboxEvyzZmtRixU9CzjEg5A9Hs6xqCize3lUwRRag0m2u_TZKIfQfTmGUQ3to6z1c9uVuH6geOP99dNGn82QANLIfsJId_bzZpJNIRf-b-AH0OO4B9RDrIx?" /></p>
 <p>PowerPath and DM-Multipath (<code>multipathd</code>) both manage multipath devices on Linux but must not manage the same device simultaneously.</p>
 <table>
 <thead>

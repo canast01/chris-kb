@@ -8097,37 +8097,7 @@ Network File System (NFS) allows hosts to mount remote directories over TCP. Cov
 
 <h2 id="nfsv41-session-and-pnfs-data-path">NFSv4.1 Session and pNFS Data Path<a class="headerlink" href="#nfsv41-session-and-pnfs-data-path" title="Permanent link">&para;</a></h2>
 <p>NFSv4.1 introduces explicit sessions (slot tables replacing per-RPC XIDs) and pNFS, which allows clients to perform I/O directly to data servers without routing data through the metadata server.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    autonumber
-    participant C as NFS Client
-    participant MS as Metadata Server&lt;br/&gt;(MDS, port 2049)
-    participant DS1 as Data Server 1&lt;br/&gt;(pNFS DS)
-    participant DS2 as Data Server 2&lt;br/&gt;(pNFS DS)
-
-    Note over C,MS: NFSv4.1 — Session Establishment
-    C-&gt;&gt;MS: EXCHANGE_ID (client_owner verifier)
-    MS--&gt;&gt;C: clientid (64-bit), server_owner, server_scope
-    C-&gt;&gt;MS: CREATE_SESSION (clientid, fore/back channel attrs, slot table size)
-    MS--&gt;&gt;C: sessionid (128-bit), negotiated slot table depth
-
-    Note over C,MS: File Open — Compound Procedure (single RTT)
-    C-&gt;&gt;MS: COMPOUND [SEQUENCE + PUTROOTFH + LOOKUP("path/file") + OPEN(RW) + GETFH]
-    MS--&gt;&gt;C: filehandle, open_stateid, change_info, caching delegation
-
-    Note over C,MS: pNFS — Layout Acquisition
-    C-&gt;&gt;MS: LAYOUTGET (filehandle, iomode=RW, offset=0, length=EOF, layout_type=files)
-    MS--&gt;&gt;C: layout (stripe_unit=1 MiB, DS1 → stripes 0,2,4…  DS2 → stripes 1,3,5…)
-
-    Note over C,DS2: pNFS — Parallel Direct I/O to Data Servers (MDS not in data path)
-    C-&gt;&gt;DS1: WRITE stripe 0 direct to DS1
-    C-&gt;&gt;DS2: WRITE stripe 1 direct to DS2 (parallel)
-    DS1--&gt;&gt;C: Write response
-    DS2--&gt;&gt;C: Write response
-
-    Note over C,MS: Close — Layout Return
-    C-&gt;&gt;MS: LAYOUTRETURN (filehandle, range, layout stateid)
-    C-&gt;&gt;MS: CLOSE (open_stateid)
-    MS--&gt;&gt;C: new_stateid, layout committed to stable storage</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNptU8Fu00AQvfMVo54c4ZI4FAQVqRRsp41I7GA7CgihaGNPkhXOrru7blVOPfEBiG_gw_ol7NouddL4tOuZN_vevBmJ1yWyFD1KNoLsXoD-SKk4K3crFNW1IELRlBaEKXCBSAhGMbg5RaaexaexSZiiIhlRBGIUNyg-rET3wpp6sQ0FFwr6vbP3nWdQL3YM1nvCgVMjC_OgFx-D9A8h_QNIhQm4QuAm7NrT-NwIuDl75cDD_R-Nk5JyBr5UZJVTud096nJPLy5Mtv_FvRoGl_5y7IGVVrqX_JbparoiXVMUNbNpfKoR7jnUOTQD6-3Z6Yqqjg2yYlfD_t9kygvce8qN_GHiL2M_jsdh8PgazWxYc4HdFUl_QLoljGEORCkhda2cKzDUEST9iQdUZK3OcHH67xoyDDdcUaIwa6MzLNT2eL9GVMfDAlnVMZfvCl6yDGaCp5iVAsGSlG10TpQknX1B4XQWzgMPvsX-57kfuD68hNk8icIwGV3p8yQMP81n1klB1La71u-cdPTfcOYHVrQwx0tfJ37fV2XydBeyHG3QLWRL7Z1C0ybTnA0uKVtzfSHpVvPSynLcEKX7cFxeNSxG2YTc8VLBML0uqaQVoC1mMvwazhNNCKw2A8p3PMNBtNBk1muJatCzIUe2UduBH470uSq7VHcFDgxQHphUx3UTlaAFLktG1cCBKf1oV0vx8Os31CEJPbtvnz3c_4Vq9tsRx35tv9GRIyOvU1siZ0SQPNcD5FGBqYJxNwTF20skwSwrMD0alEG1yMaeJ2c1q3NYROPEb56HHmR1NVMpdlqZ_YNMZy-zD1bR8KnLa3DTlYWgWoJAWXAmsQn2jweP2urmXGLb1whVKY5ZGvnJPAr2XRVmkB69g2bADoZ7EsY-WO0JPHCW4e3TbDalUr7bUWWWT3dANpuruCAbfPEPEhS-QA==?" /></p>
 <table>
 <thead>
 <tr>

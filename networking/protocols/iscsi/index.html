@@ -8099,32 +8099,7 @@ iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands ove
 </code></pre></div>
 <h2 id="iscsi-session-establishment">iSCSI Session Establishment<a class="headerlink" href="#iscsi-session-establishment" title="Permanent link">&para;</a></h2>
 <p>The sequence below traces a complete iSCSI session from TCP connection through discovery, CHAP authentication, operational parameter negotiation, and SCSI command flow.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    autonumber
-    participant I as Initiator&lt;br/&gt;(Host IQN)
-    participant T as Target&lt;br/&gt;(Array port 3260)
-
-    Note over I,T: Discovery Phase
-    I-&gt;&gt;T: TCP connect to port 3260
-    I-&gt;&gt;T: Text Request — SendTargets=All
-    T--&gt;&gt;I: Text Response — TargetName + TargetAddress list
-    Note over I: Initiator selects target IQN and portal IP for login
-
-    Note over I,T: Login Phase — Security Negotiation
-    I-&gt;&gt;T: LoginRequest (CSG=SecurityNeg) — InitiatorName IQN, ISID, TSIH=0
-    T--&gt;&gt;I: LoginResponse — AuthMethod=CHAP, CHAP_A=5 (MD5), CHAP_I, CHAP_C (challenge)
-    I-&gt;&gt;T: LoginRequest — CHAP_N=username, CHAP_R=MD5(CHAP_I+secret+CHAP_C)
-    T--&gt;&gt;I: LoginResponse (NSG=OpNeg) — CHAP verified, TSIH assigned, transit approved
-
-    Note over I,T: Login Phase — Operational Parameter Negotiation
-    I-&gt;&gt;T: LoginRequest (CSG=OpNeg) — MaxRecvDataSegmentLength, ImmediateData, InitialR2T
-    T--&gt;&gt;I: LoginResponse (NSG=FullFeature) — agreed parameters, Login Final=Yes
-
-    Note over I,T: Full Feature Phase — SCSI I/O
-    I-&gt;&gt;T: SCSI CMD PDU (CmdSN=1, opcode=READ, LUN=0, ExpDataTransferLength=512K)
-    T--&gt;&gt;I: Data-In PDU (DataSN=0..N — multiple 65 kB segments until Final flag set)
-    T--&gt;&gt;I: SCSI Response PDU (Status=Good, ExpCmdSN=2, ResidualCount=0)
-    Note over I,T: Second TCP session on separate NIC+portal = second path&lt;br/&gt;dm-multipath (Linux) / MPIO (Windows) selects or balances across paths</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNVF1v2jAUfe-vuI9EhJYy0YdqqcRCP6KVwAjVtKfJTS7BmmNnttPRt_2I_cL9kl07KYWt24oQyPG5J-cc-16DXxuUOU45KzWrjoA-rLFKNtU9ar-smbY85zWTFhJgBhLJLWdW6bf3-uSid6MMbXxIgz_QK4deMV2ibaETrdkj1EpbeDM6GwZHviRVFkE9oIYkXJ3DlJvcrR5hsWEGPSQZXFzQ1ipeQK6kxNyCVc9EBxjcWlg6WyTr5_cfkKEsWhEmmgjhsasBgZMd2NRKGvToFpmyCqHfLSZFodEYENzY3wWfP6cBBgUJM2B9lYsEmCy8SiYgWcCaQEKVXL7o-9bttJ473XmjuX2EFEvlXsGV3Dfq8U9Ge3F2HT1VUEHgKXbavB8SFEKSJdMQVllyEw0Poujo9qKYNHYzQ7tRRRTfTBYhuN_Pk2gMvdl0HHTrpPuPoZdvmBAoSwz-qtPxengaNQa1JF1d_TIi0l5L2TeYa7T9ljj4h85eSr7n9c6xqwCKlK85Fq1PuoSGl9ItrWbScAusrjUFX7zqHOY1ah8-HeKCUZOgJeirD2VP3Ixtl5g_TJllGZYVSntLadkNnUpVYUFs6PbC7tzEcrT6n_WrRogrZLbR2L6D2hixcG3YCjVhZ-iKk4HoE5oXTTse6Ij272CcJZCczPct-mfxbAqL6R1ZrIosjU5DUHWuCoyWlxO6X7d3aTQM4XJbO0MrF_sades2Gp-O3h-eqQMNEtky-nio_Pg49RqqRlheC4SzMXx5R13mkzPQSMtFawvWgpW0Yw9pvdJdXp48s2TRRNdKFV5eK38UOhgvGiZiRbzRMHgpJOovRQ3tppChgUBHD_Q16MImYJrE_a7ZI3rqsTWzGz_7imrQGqEH0LvlstkGcAKzRTKH3kcuC_XNBLsRQoPinglGg9kAy7Wi6eMKzdEvENvXVw==?" /></p>
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="initiators/">

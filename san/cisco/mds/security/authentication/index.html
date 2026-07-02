@@ -7935,37 +7935,7 @@ Cisco MDS authentication: TACACS+ and RADIUS integration via `aaa group server t
 <p>Both layers should be configured in enterprise environments. Management plane AAA is mandatory; FC-SP is strongly recommended for high-security fabrics.</p>
 <hr />
 <h2 id="authentication-architecture">Authentication Architecture<a class="headerlink" href="#authentication-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-  subgraph "Management Plane"
-    SSH["SSH / HTTPS Login"]
-    SSH --&gt; AAA{"AAA method list"}
-    AAA --&gt;|"primary"| TACP["TACACS+ Server\n(ISE / ACS)"]
-    AAA --&gt;|"fallback if unreachable"| RAD["RADIUS Server"]
-    AAA --&gt;|"last resort"| LOCAL["Local Account\n(break-glass only)"]
-    TACP --&gt;|"auth + role AV-pair"| ROLE["Assign NX-OS Role\n(network-admin / operator)"]
-    RAD --&gt;|"auth"| ROLE
-    LOCAL --&gt;|"auth"| ROLE
-    ROLE --&gt; CMD["Command Authorization\n&amp; Accounting"]
-    CMD --&gt; SIEM["Syslog / SIEM\n(audit trail)"]
-  end
-
-  subgraph "Fabric Plane"
-    HBA2["FC Host HBA"]
-    HBA2 --&gt;|"FLOGI"| FCSP{"FC-SP DHCHAP\nenabled?"}
-    FCSP --&gt;|"Yes — authenticate"| DHCHAP["DHCHAP challenge\n(shared secret by pWWN)"]
-    DHCHAP --&gt;|"success"| FABRIC["Device joins fabric\n(FCID assigned)"]
-    DHCHAP --&gt;|"fail"| REJECT["FLOGI rejected\nDevice cannot join"]
-    FCSP --&gt;|"No — open"| FABRIC
-  end
-
-  classDef aaaNode fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef goodNode fill:#15803d,stroke:#166534,color:#fff
-  classDef badNode fill:#991b1b,stroke:#7f1d1d,color:#fff
-  classDef decisionNode fill:#b45309,stroke:#92400e,color:#fff
-  class TACP,RAD,LOCAL,DHCHAP aaaNode
-  class ROLE,CMD,FABRIC,SIEM goodNode
-  class REJECT badNode
-  class AAA,FCSP decisionNode</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1VNtu2kAQfc9XjBypahWjcglpyEMrx0ChIoAwbVpBH9b22Gyz7KLdJRFNKvUj-oX9ko4vGFqlLwvePefsmZljJ0I9RCumLYxmJwBmG6aabVbg3DDJUlyjtDAVTKJDpwBBMFg4tMBrGMzn0wBGKuXS-bo_hFrtLXie9-jQAmu0KxWD4MY6P3JItkuQJ2ej-ZrpnfMEc8-fLhxaPT84gwD1PeqlfDkMenQJ7b0q1StqwoQIWXQHPIGt1MjIfyiQpGZed-HQMvwYlEL_cgUzFjQapS3hRxPfGy2ckYqYAC-K1FZaujokzbtaSlgDSord3kHmtJBhW7uCM9BKIHifahvGdXb9ZNRbOJ4xPJUw_lybBDAjBClKtA9K39VYvOaSylIb1MwqvVcmzwfhUik_yB0-f5T9ydvt31DVvlqvmYzBI5TS_DuzXMmlfLEvi8u0vIvgOS0Y9m5oljsjVEqWskdyyrYxt2A146IwhzI--SsYfRZqHh2HYnDtNRdO34eBou7SU3lTtl94748m74dkvu8H00dC1oIpdAf-wJsuJcpsevG7MiEZpCB9QQO_f_6CrHCKIY-YzYZc8BZO8Qs0fCFQplmbDQUZYzAYabQQ7mBzezve97jE59JmG0VoTObIu54NfVLDex4hfFNcGkjyEkmw7w-7wPKBYvycUEJ9yobS-9Dz54uiTsrXN4wsxktZqkZMSmVz8VLjUOVY5UVSImRl59D2KAthFxNgjI1VjJBwIa5OG9hi7cQ1Vqs7vDpthZfN5MKNlFD66hTrSTPBY3KqVHzMbl_WW3HFblxctFvne3aSJMfUkB0zO51G2Agr5pukETfi_zBjjLihEB7Rw_N2q96p6J3meb2Oz9DzN82ll8LN8--WHS97UKGyN8ClOLtF19wswlWtB1Q-m30h1TZ9Etx8Csc-T_4AuRyHxw==?" /></p>
 <h3 id="tacacs-key-encryption">TACACS+ Key Encryption<a class="headerlink" href="#tacacs-key-encryption" title="Permanent link">&para;</a></h3>
 <p>Shared keys must be stored encrypted in the configuration. NX-OS uses type-7 encryption by default — use <code>key 7</code> to store pre-encrypted keys, or use <code>key 0</code> when entering plaintext (NX-OS will encrypt automatically):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># NX-OS encrypts the key automatically if entered as plaintext</span>

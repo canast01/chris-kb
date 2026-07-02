@@ -8161,27 +8161,7 @@ Integrations reference covering NetApp PowerScale (SyncIQ), Syslog / SIEM, Email
 </div>
 <p><img alt="Superna Eyeglass — Integrations" src="../../../../../assets/storage-netapp-superna-eyeglass-architecture-integrations.svg" /></p>
 <h2 id="netapp-powerscale-synciq">NetApp PowerScale (SyncIQ)<a class="headerlink" href="#netapp-powerscale-synciq" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph "Production Site"
-        primaryPS["PowerScale Cluster A\n(Production)"]
-        synciqPol["SyncIQ Policies\nContinuous / Scheduled"]
-    end
-    subgraph "DR Site"
-        drPS["PowerScale Cluster B\n(DR)"]
-    end
-    subgraph "Management Plane"
-        eyeglass["Superna Eyeglass\nDR Assistant"]
-        ad["Active Directory\nAD group ACLs"]
-        dns["DNS Server\nWindows DNS / BIND"]
-        siem["SIEM / Monitoring\nSNMP / Syslog"]
-    end
-
-    primaryPS --&gt;|"SyncIQ replication"| drPS
-    eyeglass --&gt;|"OneFS REST API\nmonitors SyncIQ"| primaryPS
-    eyeglass --&gt;|"OneFS REST API\nchecks DR readiness"| drPS
-    ad --&gt;|"AD group mapping\nfor share ACLs"| eyeglass
-    eyeglass --&gt;|"DNS cutover\nzone delegation"| dns
-    eyeglass --&gt;|"SNMP traps\nsyslog events"| siem</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqNUs1q4zAQvucpBp_aQ-kbLLhxCoEm61oLe4j3oEpTR6w88uonwUsefsd267qlhdVJSPp-R8_WndVR-ggP1Qp4hfTUeNkdISu900lF4wiEiZiN18PqvGml70txyEp3Ri-UtAhrm0JED3lNV2_Q6-zXjAs9KfOndPaQCd5uH4H3RhkMNa0dRUPJpQC3INQRdbKoX8BI-oO3ovrgSfsv7NyxnaK6_pJpJ0k22CJFKK2kBSX22FgZArtNHXqSsHk5qYn18xBMiJLiIqHUhyzn3CeEwnhU0fm-pryAxrvUQb5-CIvXmpi72AsQ6E_oa_ppSLtzgOHsFu62-2LZnsGWrWw3O77bOTJMbqipSex35VBaH6xrFjlX72YFNzffLq-9e-y4eDkMKLuM3a2Wiae33wnvBVQb8QPycltTO2kGmEgYOJP_B5pHqn5ztIrFpTaEISylpZ5gc1et7Lox3rPzEPiH4lTfZdb5RHQoTqXoxjb_OkLQaLGZg9JnoLG_yL-B5xrGEgFP_B8GraH01T9qy_5k?" /></p>
 <h2 id="syslog-siem">Syslog / SIEM<a class="headerlink" href="#syslog-siem" title="Permanent link">&para;</a></h2>
 <p>Forward Eyeglass audit trail to SIEM:</p>
 <ol>

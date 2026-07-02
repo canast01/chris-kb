@@ -8806,31 +8806,7 @@ Access Control reference covering RBAC, Namespace Isolation, Compliance, Access 
 <hr />
 <h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
 <p>ECS implements role-based access at two levels: system management and object (data) access.</p>
-<pre class="mermaid"><code>graph LR
-  subgraph "Management Plane (portal/API)"
-    SYSADMIN["System Admin\n(global — all VDCs)"]
-    SYSMON["System Monitor\n(global, read-only)"]
-    NSADMIN["Namespace Admin\n(per namespace)"]
-    NSUSER["Namespace User\n(per namespace, read-only)"]
-  end
-  subgraph "Data Plane (S3/Swift)"
-    OBJ["Object User\n(per namespace, IAM identity)"]
-    BPOL["Bucket Policy\n(s3:GetObject, s3:PutObject…)"]
-    OBJ --&gt; BPOL
-  end
-  subgraph "Scope"
-    NS1["Namespace: analytics-prod\n(isolated boundary)"]
-    NS2["Namespace: finance-prod\n(isolated boundary)"]
-  end
-  NSADMIN --&gt;|"creates"| OBJ
-  OBJ -.-&gt;|"cannot cross\nnamespace boundary"| NS2
-  OBJ --&gt;|"accesses"| NS1
-  classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef data fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef ns fill:#15803d,stroke:#166534,color:#fff
-  class SYSADMIN,SYSMON,NSADMIN,NSUSER mgmt
-  class OBJ,BPOL data
-  class NS1,NS2 ns</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqFk89uGjEQxu88xchcEmlJChso5VAJSlVRZQFllUgV6cFrz2638dor2yhC4pCH6DP0wfIkNfvHkDZRj2PPb-b7ZuxM0_IHXN90AMw2yaqIRFTSDAuUFtaCSoSzUmlLxeV0vTgnLhUg_hZP59FiuSHxzlgsYMqLXN7Ls0yohAp4fvoFVAi4m38y5-R7y0SrIxEpmVulPROARsp7SopdSyzbJktaoCkpQ9-nRA2yPT3m38afb07Tbw3qv7P_aYSSv_A_p5a2zuPwMn7MU9v4Xs2-bsgq-YnMvlF7MY0g5252ufU-ZuvV9YbMtuwB3UiVyNnOgSacfEFbFwvARettEz0__W5R1xB6vY9ViVekxkyVSBrz_RPnE3BLFDubM9MrteKuX26UoBY5JGorOdUnYx68INNcUsnwP1wtpVnRQeOeMDdYi4bsD7I7jfiL6oZKqSwwrYy5l35cvqRDnIqO97snlDE0pirmnLkbJqgxc0yhyArrNAox6Q6GoxCTwFitHnDS7fMr5OOAKaH0pJum6SnGD1utsfcspMg9NuKDMf_wBiZNA_WH43fhEeqPRsPw6hXI_42gfvBBM6Kgfp2VfJ_r7AaH1Vbq_Kkz7LIHrnfnDzdUJi8=?" /></p>
 <h3 id="system-management-roles">System Management Roles<a class="headerlink" href="#system-management-roles" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

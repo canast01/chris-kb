@@ -8267,36 +8267,7 @@ Authentication reference covering Authentication Architecture, Local Accounts, A
 </ul>
 <hr />
 <h2 id="authentication-architecture">Authentication Architecture<a class="headerlink" href="#authentication-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-  subgraph "Human Admin Login"
-    BROWSER["Browser / SSH"]
-    BROWSER --&gt; SAML2{"SAML SSO\nconfigured?"}
-    SAML2 --&gt;|"Yes"| IDP["Enterprise IdP\n(Okta / Azure AD / ADFS)\nenforces MFA"]
-    IDP --&gt;|"SAML assertion\n+ group claims"| PURITY["Purity RBAC\n(maps group → role)"]
-    SAML2 --&gt;|"No"| ADCHECK{"AD / LDAP\nconfigured?"}
-    ADCHECK --&gt;|"Yes"| AD["Active Directory\n(ldaps:// bind)"]
-    AD --&gt;|"group membership"| PURITY
-    ADCHECK --&gt;|"No"| LOCAL2["Local Account\n(break-glass pureuser)"]
-    LOCAL2 --&gt; PURITY
-  end
-
-  subgraph "Automation Login"
-    SCRIPT["Script / Terraform\n/ Ansible"]
-    SCRIPT --&gt;|"x-auth-token header"| APITOKEN["API Token\n(inherits account role)"]
-    APITOKEN --&gt; PURITY
-  end
-
-  PURITY --&gt; ROLE2["Assign Role\n(array_admin / storage_admin\n/ ops_admin / readonly)"]
-  ROLE2 --&gt; AUDIT2["All actions logged\n(pureaudit list → SIEM)"]
-
-  classDef idp fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef purity fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef audit fill:#b45309,stroke:#92400e,color:#fff
-  classDef decision fill:#4b5563,stroke:#374151,color:#fff
-  class IDP,AD,LOCAL2,APITOKEN idp
-  class PURITY,ROLE2 purity
-  class AUDIT2 audit
-  class SAML2,ADCHECK decision</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp1U81um0AQvucpRuTSqLb8nyY-tNoYR0EhMQJHVWRX1QILXgV20S4kdZNe-wB9xD5JB9amjpqebJj5fuabIcnkU7ShqgTXPwLQVZgqWmzAuqpyKoDEORfgypQLC8sAF_7iczD3V9aFkk-aKehBEFxZXw6L0O1-hIDcuMNnq_7BjsVaRFIkPK0Uiz9ZP5r2pqVufrHumbZewLG9lTUXJVOF4pqBE3tr8W7xUFKUId8RC8Su_9qXwclaMJFIFTENN5dk5wAZDGGjSzU6LLkUa_EeUiWrAqKM8rzW8u58Z3m_srxK8XIL_gWZoVZOC73r_P3zFyiZsZMd9YHbW4kExJ5dzWfXz1ZjybWJ99aMu67DKYm9skhU8kcGNlcsKqXaonQWo_a014OQi3gvitwN0ljKWR4ypTe8aAf4V6Qx5y5mxB2uLFdGNAMSRbISJYqEitGHbpphMlCgzwoD2msZTLO8lpuJ-OjVWZCqlDmtMz28imDmO95yZQWR4kWJcSyZUhS3k68FrktoHmZsn2PTa7x-69Kq3HRL-cAEbBiNmaoD8pzl4np-izF5DizrIlrnYsNwVRqomebVcvaQN92b56bkL9w5xkK05qkAHxmQmaLX7VfanHoPNO6Dpsw81_ZlodsixhdLkW2NbsPW8JI721nWxFmG_up4NGQyTVmM_HXQtIp5CRnXZXNYgTO_qTmQJKqXYbMEeFxAwrNsejxgIzpJOrpUOPv0eBSeDZPTTiQzqabHrJ8ME3YILMwJG-xwcjpiYYsdxGMWn-2xSZIcAo0pgwvHk1H_vMWdD8f9PvsPLmYR1_UJGOg4nKDoX7sfxoPJ4A1o_XV2iN0xh9Zpd4aDty1mVx2TrBmsrZmQjev2ZfNZdvZfwN7Z0R_Mi35V?" /></p>
 <h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
 <p>Local accounts are stored on the array itself and are independent of any directory service. Use them for break-glass access and initial setup. Minimise the number of local accounts in production — prefer AD or LDAP for human admin access.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a local admin account with a specific role</span>

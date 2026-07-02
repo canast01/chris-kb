@@ -9263,19 +9263,7 @@ Dell ECS operational procedures — namespace and bucket provisioning, IAM user 
 </table>
 <h2 id="creating-iam-object-users-and-access-keys">Creating IAM Object Users and Access Keys<a class="headerlink" href="#creating-iam-object-users-and-access-keys" title="Permanent link">&para;</a></h2>
 <p>Object users are per-namespace IAM identities. Each application or service should have a dedicated object user.</p>
-<pre class="mermaid"><code>graph LR
-  subgraph "Key Rotation (zero downtime)"
-    NEWKEY["1. Create new key\necscli user secret-key create"]
-    DEPLOY["2. Deploy new key\nto app / secrets manager"]
-    VERIFY["3. Verify app is using\nnew key (access logs)"]
-    DELOLD["4. Delete old key\necscli user secret-key delete"]
-    NEWKEY --&gt; DEPLOY --&gt; VERIFY --&gt; DELOLD
-  end
-  note1(["ECS allows up to 2 active keys per user\nenabling zero-downtime rotation"])
-  classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef note fill:#b45309,stroke:#92400e,color:#fff
-  class NEWKEY,DEPLOY,VERIFY,DELOLD step
-  class note1 note</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9kcFPwjAYxe_8FV_GBZINYQwjHLywmRgWMZhgDHDoum9zobRLWyTzr7frKnowXpq2eb_vvdeWktTvkG56AOqclfbkrbCBjdBEV4LD4BOlgFxcuK5OOPSMEuApeV0lbztvMoKlRKIROF7giM2eI1WUVXBWKEEhlagDcw_UyryDxePkOV0bPBxBjDUTzQ-uBZC6hhvHKjgRTkqUjtwmm8cHQ05HsEVZFY1VV8r4VbzcczcHBoRSVAqYKNXw6pqu03jnRa0rQxNasPzf0LmVObzrDEFw7_LbbRfI3bbzjRZ5blYuNE4GOy9ZvgBhTFxMyBpMvxAI1dUHttYKamPZ-poQnGTMtID2xYPvFwfpfsI7DM1UyohSMRagNNZQVIwt-uHsdoqZr7QUR1z0J3mE-Z1PBRNy0S-K4jfWpnJYFs2m4_kVm4fReIx_YK6537X2u8Z-19bGuAptZbv2vgCPR799?" /></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create an object user in a namespace</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ecscli<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--namespace<span class="w"> </span>analytics-prod<span class="w"> </span><span class="se">\</span>

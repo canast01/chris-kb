@@ -9419,48 +9419,7 @@ How It Works reference covering vSphere with Tanzu Architecture, TKG Standalone 
 <p><img alt="Kroki" src="https://kroki.io/plantuml/svg/eNpVkkFv2kAQhe_7K0acQFFa9ZALhyiUIIpoiBW7tIdchvUUVqxn3dldouTXZ2xCFV93vvfmPY_vYkJJufEmHh23KNhApH-Z2NJMJLxUB2ePTDHCty83nyAJmWsbhEngxhi0KQiMCo_pb5AGHlsS1KcRYITHorwA93QiH3TYD-4XW6N2yVnXIicYlVlHJxcVnfscE8kzj09leyAhuIJTOdtMemX5qxgqK-S3DOu8I42UKD7zUlwN42q9nIA9e_VKfRgqN-Uf-Aqz7UpX-YA17NCj1pfzps2iGvI_UHaa74n2LiZ57aGnxdIYrQnXt120KSwYd57gd5Bj7_mAjHtqiJPR-X9sLoSJ4FNtxoZii5YGdh9ctZ7D-KgdbfKAbetfJxc7rTWFQoK6uMDwoov1MhxqijDePsSJUaIDtc9Uw-uJY4Kfmu37R11YFUaHcH1x264K7Rbdnqk2eqpOrUV1TY4HsIETuu78rtFqF6BXDiL2WbqPcE6gjKJqEmqQzOx4b-6I6-4ffAfU4dhZ?" /></p>
 <h2 id="vsphere-with-tanzu-architecture">vSphere with Tanzu Architecture<a class="headerlink" href="#vsphere-with-tanzu-architecture" title="Permanent link">&para;</a></h2>
 <p>vSphere with Tanzu (Workload Management) embeds Kubernetes natively into the ESXi hypervisor layer. The Supervisor cluster runs directly on ESXi hosts via the Spherelet component — a kubelet-equivalent that executes in the ESXi kernel space. Supervisor control plane VMs and workload VMs are scheduled as native vSphere VMs, but managed by Kubernetes APIs exposed through vCenter.</p>
-<pre class="mermaid"><code>graph LR
-    VC["vCenter Server\n(Workload Management enabled)"]:::blue
-
-    subgraph SUP["Supervisor Cluster"]
-        direction TB
-        CP1["Supervisor Control Plane VM 1\n(K8s API · etcd · scheduler)"]:::blue
-        CP2["Supervisor Control Plane VM 2\n(K8s API · etcd · scheduler)"]:::blue
-        CP3["Supervisor Control Plane VM 3\n(K8s API · etcd · scheduler)"]:::blue
-        ESX1["ESXi Host (Spherelet)\nvSphere Pods host"]:::green
-        ESX2["ESXi Host (Spherelet)\nvSphere Pods host"]:::green
-    end
-
-    subgraph NS1["Supervisor Namespace 1\n(resource quota enforced)"]
-        direction TB
-        TKG1CP["TKG Control Plane VMs\n(kubeadm / KCP)"]:::blue
-        TKG1W["TKG Worker VMs\n(MachineDeployment)"]:::green
-        SEG1["NSX-T Segment\n(isolated per namespace)"]:::amber
-        LB1["Load Balancer VIP\n(NSX-T or AVI — TKG API server)"]:::amber
-    end
-
-    subgraph NS2["Supervisor Namespace 2\n(resource quota enforced)"]
-        direction TB
-        TKG2CP["TKG Control Plane VMs\n(kubeadm / KCP)"]:::blue
-        TKG2W["TKG Worker VMs\n(MachineDeployment)"]:::green
-        SEG2["NSX-T Segment\n(isolated per namespace)"]:::amber
-        LB2["Load Balancer VIP\n(NSX-T or AVI — TKG API server)"]:::amber
-    end
-
-    HAR["Harbor Registry\n(image supply for TKG nodes)"]:::purple
-
-    VC --&gt;|"workload management\nenables Supervisor"| SUP
-    SUP --&gt;|"vSphere Namespace\nprovisioning"| NS1
-    SUP --&gt;|"vSphere Namespace\nprovisioning"| NS2
-    HAR --&gt;|"OCI images pulled\nby worker nodes"| TKG1W
-    HAR --&gt;|"OCI images pulled\nby worker nodes"| TKG2W
-    LB1 --&gt;|"exposes K8s API"| TKG1CP
-    LB2 --&gt;|"exposes K8s API"| TKG2CP
-
-    classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef green fill:#15803d,stroke:#166534,color:#fff
-    classDef amber fill:#b45309,stroke:#92400e,color:#fff
-    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNqtlMtO20AUhvc8xZHZgARqMk7SkEUlMAgiLrUwDUiExdhz4lhMZtwZG4jEog_Rd-m-j9In6fElCVCIBKkXGU083-85_7nEhqdjODlfA3oG3rVz56HK0ECA5g7NUG1canMrNRdwyhWPcUKvARUPJYpN56bX64Uyx7WSt3kYl3rBN__aCfKUNBKrDXgytyTq3JTHikckBqMs0Qou9uZ_en7zOaZVZrQEX3KFMDiFJt3nuGth1-_D71-AWSSK1UZjFLlE8-RCC022XJN9RNNdrum-X_MguKLg6TeBI20z2AjSMRqUmG0O1V21AV8LC2N6XfKxQVRPBdiHBVCJFyk8C57n4oxP0KY8wjIJBq3ODW2-5zrjhI807YqCWJ7hi-PDpke1Qes_rlnSvc1D5GICn-DY819xqeAvK7yoS6rTijvl0ThRuI-p1NOiRDdfcSg4OKSYzoKr7Qsq77g4RihFJ3mGAihUULMoK55PQjRz_mSP8JOiFfY43Tkqvt73SaKSJJN2B3348-Nncc0y97Zsopdar5nN3jCbrWY2W9FstorZbDWz2f81-2j3_No54iYk9BzjxGZmWtxoQkONMpGmcgpkbCmntEBbKaW5SWU93wYebG9_eXTuZyNxMh-JQ1XNRAuLNDqPxSAsSVordNaI8wwPVWo0HafcJSomhBrv_QibhVghX70-lIFZSHNJk3qowincV0ksgyOq7KWPcaziqCEqDh9SbQmqZ14t7vn1KbbkFFVoZW4kubX7OIKiBmGUSNlbZ-2Oi-EWpUrfYm-9KVoouluRltr01kej0XOwLMCabLa7DVcsyE6n7bbeJMtyqcmw1XYbO3Nyh7UaDXyTrMqjRj9HLsfFRzuCdcXOU_QvmylSFA==?" /></p>
 <h3 id="supervisor-cluster-components">Supervisor Cluster Components<a class="headerlink" href="#supervisor-cluster-components" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

@@ -7700,28 +7700,7 @@ FabricOS integrations: DCNM and Brocade Network Advisor connectivity, SANnav man
 <p><img alt="FabricOS — Integrations" src="../../../../../assets/san-brocade-fabric-os-architecture-integrations.svg" /></p>
 <hr />
 <h2 id="fc-login-sequence-flogi-plogi-prli">FC Login Sequence (FLOGI / PLOGI / PRLI)<a class="headerlink" href="#fc-login-sequence-flogi-plogi-prli" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant HBA as Host HBA (N_Port)
-    participant Switch as Brocade Switch (F_Port)
-    participant NS as Name Server
-    participant Storage as Storage Target
-
-    Note over HBA,Switch: Link comes up — fabric login begins
-    HBA-&gt;&gt;Switch: FLOGI (Fabric Login)\nWWPN, WWNN, FC4 capabilities
-    Switch--&gt;&gt;HBA: ACC (Accept)\nassign F_Port address (N_Port_ID)
-    Switch-&gt;&gt;NS: Register WWPN in name server
-    NS--&gt;&gt;Switch: Registered
-
-    Note over HBA,NS: Host discovers targets via name server
-    HBA-&gt;&gt;NS: GID_FT (Get IDs by FC4 Type)\nquery for FCP targets
-    NS--&gt;&gt;HBA: List of target N_Port_IDs in zone
-
-    Note over HBA,Storage: Host logs into each target
-    HBA-&gt;&gt;Storage: PLOGI (Port Login)\nestablish N_Port session
-    Storage--&gt;&gt;HBA: ACC (Accept)
-    HBA-&gt;&gt;Storage: PRLI (Process Login)\nnegotiate FCP parameters
-    Storage--&gt;&gt;HBA: ACC — FCP ready
-    Note over HBA,Storage: LUN discovery and I/O can begin</code></pre>
+<p><img alt="Kroki" src="https://kroki.io/mermaid/svg/eNp9UsFuGjEQvfMVcwQpqJeeOCAREGSllYMCFZdKaNY7bKyCvfE4ibanfkS_sF_S8RqnSJDuwbK8772ZeW-YXl7JaloYbDyeBiBfiz4YbVq0AR7uZ4AMD47Tfaj2a-fD6Aq4eTdBP0fsvXcaa8ovw-UnDLWJaIUngZJ_I3-tGZzHhiIsX7foGwqDHqpcIHBCjJ3dpXITKI39AdqdiOG1hT-_fsMBK280HF1jLFQkJ_d8YY2n08xblo-rQrpN4DKCR9_tbrdWd7DbKTmX86-gscXKHE0wlEQSfSxCIjeB2XwOw5nW1AZhI7NpLCQHAOvaE3P2cF8sRpcS06naTOBJ-uMgM8XKIA3baBD_M0htxhddZzjVtzyJgn10tWEdXxlCbyDDm8Er6WRIJK2KxX65heGKAhQLhqrrp992LclYsjK-g4Pz8rjOihfN9U6U0he4w_k3fMzMcaifztLNEFPM564lsYgODghlk5LSZXQZvU7Z9S7n5IgDVkfDz-fSMqik4WyyPDFvxnazwFMZ9WWzY4C5hKXGBYMyQPRBNlf8lCz40xJxGyPUE9bd_8Yvv6mPzDpAW0Px5VGW77y_g79YYC9T?" /></p>
 <hr />
 <h2 id="dell-powermax-integration">Dell PowerMax Integration<a class="headerlink" href="#dell-powermax-integration" title="Permanent link">&para;</a></h2>
 <p>PowerMax FA (Front-End Adapter) ports are registered as aliases in each Brocade fabric.</p>
