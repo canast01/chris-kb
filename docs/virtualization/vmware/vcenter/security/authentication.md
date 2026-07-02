@@ -23,6 +23,31 @@ Authentication reference covering SSO Security, TLS Configuration, Certificates 
 
 ---
 
+## SSO Login Flow
+
+```plantuml
+@startuml
+skinparam sequenceMessageAlign center
+
+participant "Admin Browser" as Browser
+participant "vSphere Client" as Client
+participant "SSO / STS" as SSO
+participant "Identity Source\n(AD / LDAP)" as AD
+participant "vCenter Server" as VC
+
+Browser -> Client: HTTPS login request
+Client -> SSO: Redirect to SSO login page
+Browser -> SSO: Submit credentials (user@domain)
+SSO -> AD: LDAP bind — validate credentials
+AD --> SSO: Bind success + group membership
+SSO --> Browser: Signed SAML token
+Browser -> Client: Submit SAML token
+Client -> VC: Validate token with SSO
+VC --> Client: Session established
+Client --> Browser: vSphere inventory
+@enduml
+```
+
 ## TLS Configuration
 
 vCenter enforces TLS 1.2 minimum by default (vSphere 7.0+). TLS 1.0 and 1.1 are disabled.

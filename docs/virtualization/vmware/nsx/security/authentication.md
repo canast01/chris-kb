@@ -10,6 +10,31 @@ tags:
 *Applies to: VMware NSX-T 3.x / 4.x*
 ![NSX — Authentication](../../../../assets/virtualization-vmware-nsx-security-authentication.svg)
 
+## API Authentication Flow
+
+```plantuml
+@startuml
+skinparam sequenceMessageAlign center
+
+participant "API Client" as Client
+participant "NSX Manager" as NSX
+participant "VIDM / LDAP\n(external IdP)" as IdP
+
+Client -> NSX: POST /api/session/create\n(Basic Auth: admin:password)
+NSX -> IdP: Validate credentials + roles
+IdP --> NSX: Auth OK + role assignments
+NSX --> Client: 200 OK\nSet-Cookie: JSESSIONID\nX-XSRF-TOKEN: <token>
+
+note over Client: Subsequent API calls must include\nboth Cookie and X-XSRF-TOKEN header
+
+Client -> NSX: GET /api/v1/fabric/nodes\n(Cookie + X-XSRF-TOKEN)
+NSX --> Client: 200 OK + node list
+
+Client -> NSX: DELETE /api/session/create\n(Cookie + X-XSRF-TOKEN)
+NSX --> Client: 200 OK — session invalidated
+@enduml
+```
+
 ```bash
 curl -sk -u 'admin:password' \
   -X PUT \

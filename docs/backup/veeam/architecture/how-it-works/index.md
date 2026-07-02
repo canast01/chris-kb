@@ -55,6 +55,34 @@ Console -> VeeamONE
 | Monthly | 12 | Active full (monthly) | SOBR capacity tier offload |
 | Yearly | 7 | Active full (yearly) | Object storage archive |
 
+## Backup Job Execution Flow
+
+```plantuml
+@startuml
+skinparam sequenceMessageAlign center
+
+participant "Backup Server\n(Scheduler)" as Sched
+participant "Backup Job\nEngine" as Job
+participant "Backup Proxy" as Proxy
+participant "VMware vCenter\n(VADP / VDDK)" as VC
+participant "Backup Repository\n(SOBR)" as Repo
+
+Sched -> Job: Trigger job per schedule
+Job -> VC: Create VM snapshot + enable CBT
+VC --> Job: Snapshot ID returned
+Job -> Proxy: Start transport session\n(SAN / HotAdd / NBD)
+Proxy -> VC: Read changed blocks via VDDK
+VC --> Proxy: Block data stream
+Proxy -> Proxy: Compress + deduplicate
+Proxy -> Repo: Write .vbk (full) or .vib (incremental)
+Repo --> Proxy: Write confirmed
+Proxy --> Job: Session complete
+Job -> VC: Delete VM snapshot
+VC --> Job: Snapshot removed
+Job --> Sched: Job result (Success / Warnings / Failed)
+@enduml
+```
+
 ## Sizing Guidelines
 
 | Scale | Backup Server | Proxies per Site |

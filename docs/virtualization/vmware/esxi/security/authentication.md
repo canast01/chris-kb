@@ -16,6 +16,32 @@ Authentication reference covering Create a Break-Glass Local Account, Password P
 
 ESXi Authentication Paths
 
+## Authentication Flow
+
+```plantuml
+@startuml
+skinparam sequenceMessageAlign center
+
+participant "Admin" as Admin
+participant "vCenter\n(via vSphere Client)" as VC
+participant "ESXi Host" as ESXi
+participant "AD Domain\nController" as AD
+
+note over Admin,AD: Path 1 — Login via vCenter (recommended)
+Admin -> VC: Login (DOMAIN\\user)
+VC -> AD: Validate via SSO identity source
+AD --> VC: Auth OK + group membership
+VC -> ESXi: Propagate session token
+ESXi --> Admin: Access granted per role
+
+note over Admin,AD: Path 2 — Direct ESXi login (LDAP/AD joined host)
+Admin -> ESXi: SSH or DCUI (DOMAIN\\user)
+ESXi -> AD: Kerberos / LDAP bind (svc-esxi account)
+AD --> ESXi: Auth result + ESX Admins group check
+ESXi --> Admin: Shell session opened
+@enduml
+```
+
 ## Local Account Management
 
 ### List and Remove Unused Local Accounts

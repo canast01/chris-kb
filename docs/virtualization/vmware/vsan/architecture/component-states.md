@@ -210,31 +210,37 @@ esxcli vsan debug resync throttle set --throttle 0
 
 ## State Transition Diagram
 
-```text
-                    Host rebooted / network partition
-                              │
-                              ▼
-                          ABSENT
-                     (clomRepairDelay timer)
-                         /          \
-              Host returns        Timer expires
-              (< 60 min)          (default 60 min)
-                  │                      │
-                  ▼                      ▼
-               HEALTHY             DEGRADED
-                                        │
-                              CLOM schedules rebuild
-                                        │
-                                        ▼
-                                  REBUILDING
-                                        │
-                              Rebuild completes
-                                        │
-                                        ▼
-                                    HEALTHY
+```d2
+direction: down
 
-Host returns after write-divergence:
-    ABSENT → (reconnect) → STALE → (delta-sync) → HEALTHY
+healthy: HEALTHY {
+  style.fill: "#e8f8e8"
+  style.stroke: "#22a35a"
+}
+absent: ABSENT {
+  style.fill: "#e8f4fd"
+  style.stroke: "#1a8cd8"
+}
+stale: STALE {
+  style.fill: "#fff8e8"
+  style.stroke: "#e89a25"
+}
+degraded: DEGRADED {
+  style.fill: "#ffe8e8"
+  style.stroke: "#d44c4c"
+}
+rebuilding: REBUILDING {
+  style.fill: "#f0e8ff"
+  style.stroke: "#8040c0"
+}
+
+healthy -> absent: "Host reboot / network partition"
+absent -> healthy: "Host returns (write-consistent, < clomRepairDelay)"
+absent -> stale: "Host returns after writes missed (write-divergence)"
+absent -> degraded: "clomRepairDelay timer expires (default 60 min)"
+stale -> healthy: "Delta-sync completes"
+degraded -> rebuilding: "CLOM schedules component rebuild"
+rebuilding -> healthy: "Full rebuild completes"
 ```
 
 ---

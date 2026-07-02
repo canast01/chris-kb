@@ -92,6 +92,45 @@ Algorithm: AES-256.
 
 ## Sizing Guidelines
 
+```vegalite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {"text": "Backup Server — vCPU and RAM by Scale", "fontSize": 13, "fontWeight": "normal"},
+  "width": 360,
+  "height": 180,
+  "data": {
+    "values": [
+      {"scale": "<100 VMs",     "metric": "vCPU",    "val": 4},
+      {"scale": "<100 VMs",     "metric": "RAM (GB)", "val": 8},
+      {"scale": "100–500 VMs",  "metric": "vCPU",    "val": 8},
+      {"scale": "100–500 VMs",  "metric": "RAM (GB)", "val": 16},
+      {"scale": "500–2000 VMs", "metric": "vCPU",    "val": 16},
+      {"scale": "500–2000 VMs", "metric": "RAM (GB)", "val": 32}
+    ]
+  },
+  "mark": {"type": "bar", "cornerRadiusEnd": 3},
+  "encoding": {
+    "x": {
+      "field": "scale", "type": "nominal",
+      "sort": ["<100 VMs", "100–500 VMs", "500–2000 VMs"],
+      "axis": {"title": "Deployment Scale"}
+    },
+    "y": {"field": "val", "type": "quantitative", "axis": {"title": "Count / GB"}},
+    "color": {
+      "field": "metric", "type": "nominal",
+      "scale": {"domain": ["vCPU", "RAM (GB)"], "range": ["#1d4ed8", "#15803d"]},
+      "legend": {"title": "Resource"}
+    },
+    "xOffset": {"field": "metric", "type": "nominal"},
+    "tooltip": [
+      {"field": "scale",  "type": "nominal",     "title": "Scale"},
+      {"field": "metric", "type": "nominal",     "title": "Resource"},
+      {"field": "val",    "type": "quantitative","title": "Value"}
+    ]
+  }
+}
+```
+
 | Scale | Backup Server | Proxies per Site |
 |---|---|---|
 | < 100 VMs | 4 vCPU, 8 GB RAM | 1–2 |

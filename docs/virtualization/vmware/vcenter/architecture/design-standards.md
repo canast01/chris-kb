@@ -117,6 +117,47 @@ All production VMs must be placed in a DRS-enabled cluster. DRS automation level
 
 vCPU and memory allocations must be sized to the approved tier:
 
+```vegalite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {"text": "VM Sizing Tiers — vCPU and RAM", "fontSize": 13, "fontWeight": "normal"},
+  "width": 360,
+  "height": 200,
+  "data": {
+    "values": [
+      {"tier": "Small",  "metric": "vCPU",     "val": 2},
+      {"tier": "Small",  "metric": "RAM (GB)",  "val": 4},
+      {"tier": "Medium", "metric": "vCPU",     "val": 4},
+      {"tier": "Medium", "metric": "RAM (GB)",  "val": 8},
+      {"tier": "Large",  "metric": "vCPU",     "val": 8},
+      {"tier": "Large",  "metric": "RAM (GB)",  "val": 16},
+      {"tier": "XL",     "metric": "vCPU",     "val": 16},
+      {"tier": "XL",     "metric": "RAM (GB)",  "val": 32}
+    ]
+  },
+  "mark": {"type": "bar", "cornerRadiusEnd": 3},
+  "encoding": {
+    "x": {
+      "field": "tier", "type": "nominal",
+      "sort": ["Small", "Medium", "Large", "XL"],
+      "axis": {"title": "Tier"}
+    },
+    "y": {"field": "val", "type": "quantitative", "axis": {"title": "Count / GB"}},
+    "color": {
+      "field": "metric", "type": "nominal",
+      "scale": {"domain": ["vCPU", "RAM (GB)"], "range": ["#1d4ed8", "#15803d"]},
+      "legend": {"title": "Resource"}
+    },
+    "xOffset": {"field": "metric", "type": "nominal"},
+    "tooltip": [
+      {"field": "tier",   "type": "nominal",     "title": "Tier"},
+      {"field": "metric", "type": "nominal",     "title": "Resource"},
+      {"field": "val",    "type": "quantitative","title": "Value"}
+    ]
+  }
+}
+```
+
 | Tier | vCPU | RAM |
 |---|---|---|
 | Small | 2 | 4 GB |
