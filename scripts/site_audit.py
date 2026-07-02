@@ -31,7 +31,7 @@ def warn(issues, msg):
 
 def all_md():
     for root, dirs, files in os.walk(DOCS):
-        dirs[:] = sorted([d for d in dirs if not d.startswith('.')])
+        dirs[:] = sorted([d for d in dirs if not d.startswith('.') and d != 'includes'])
         for f in sorted(files):
             if f.endswith('.md'):
                 yield os.path.join(root, f)
@@ -118,7 +118,7 @@ for path in all_md():
 
 # ── Check 6: Orphaned directories (no index.md) ───────────────────────────────
 # Asset/tooling dirs that legitimately have no index.md
-NO_INDEX_OK = {'assets', 'javascripts', 'stylesheets', 'overrides', 'images', 'icons', 'offline', 'stats'}
+NO_INDEX_OK = {'assets', 'javascripts', 'stylesheets', 'overrides', 'images', 'icons', 'offline', 'stats', 'includes'}
 issues = check(6, 'Orphaned directories')
 for root, dirs, files in os.walk(DOCS):
     rel = os.path.relpath(root, DOCS)
