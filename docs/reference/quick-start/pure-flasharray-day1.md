@@ -328,7 +328,7 @@ host-prod-01     backup-vol-002   2
 
 ## See Also
 
-- [Pure FlashArray Cheat Sheet](../cheat-sheets/pure/) — top CLI commands
+- [Pure FlashArray Cheat Sheet](../../cheat-sheets/pure-flasharray-cli/) — top CLI commands
 - [Pure FlashArray Architecture](../../../storage/pure/flasharray/architecture/)
-- [Pure FlashArray Health Check Runbook](../../storage/pure/flasharray/health-checks/)
+- [Pure FlashArray Health Check Runbook](../../../storage/pure/flasharray/operations/health-checks/)
 - [ONTAP Day 1](../ontap-day1/) — if NetApp is also in the environment

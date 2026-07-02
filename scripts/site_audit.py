@@ -814,6 +814,9 @@ def _page_anchors(path):
         m = re.match(r'^(#{1,6})\s+(.+)', line)
         if m:
             anchors.add(_slug(m.group(2)))
+        # attr_list explicit ids, e.g. **Term**{: #custom-id } or ## Heading {: #custom-id }
+        for am in re.finditer(r'\{:\s*#([\w-]+)', line):
+            anchors.add(am.group(1))
     return anchors
 
 issues = check(36, 'Anchor fragment validity (internal #links)')
@@ -821,7 +824,7 @@ _anchor_cache = {}
 for _path in all_md():
     _c = open(_path).read()
     _page_dir = os.path.dirname(_path)
-    for _lm in re.finditer(r'\[.*?\]\(([^)#"]+)#([^)"]+)\)', _c):
+    for _lm in re.finditer(r'\[.*?\]\(([^)#"]*)#([^)"]+)\)', _c):
         _file_ref, _fragment = _lm.group(1), _lm.group(2)
         if _file_ref.startswith('http'):
             continue
@@ -1229,6 +1232,67 @@ for _md in all_md():
         _pos = _mc.end()
 if _missing55:
     warn(issues, f'{_missing55}/{_total55} bash blocks site-wide are missing example output (run add_command_output.py)')
+
+
+# ── Check 56: Directory-style relative links to nonexistent pages ────────────
+# mkdocs --strict flags ANY link it can't statically pattern-match (including
+# valid directory-style links like "../foo/" pointing at foo.md or foo/index.md,
+# which resolve fine at runtime via directory URLs). This check instead verifies
+# real existence using the same site/-relative effective-directory logic as
+# Check 35 (flat file.md gets promoted to file/index.html, shifting relative
+# link depth by one), to catch genuine 404s among non-.md-suffixed links
+# anywhere in page content (not just "## See also" sections).
+def _strip_fences56(text):
+    out = []
+    in_fence = False
+    for line in text.splitlines(keepends=True):
+        s = line.strip()
+        if s.startswith('```') or s.startswith('~~~'):
+            in_fence = not in_fence
+            out.append(line)
+            continue
+        out.append('' if in_fence else line)
+    return ''.join(out)
+
+issues = check(56, 'Directory-style relative links to nonexistent pages')
+for _path in all_md():
+    _content = _strip_fences56(open(_path, errors='replace').read())
+    if _use_site:
+        _rel_to_docs = os.path.relpath(_path, DOCS)
+        _p = Path(_rel_to_docs)
+        if _p.name == 'index.md':
+            _eff_dir = os.path.join(_SITE, str(_p.parent))
+        else:
+            _eff_dir = os.path.join(_SITE, str(_p.parent), _p.stem)
+    else:
+        _p = Path(os.path.relpath(_path, DOCS))
+        if _p.name == 'index.md':
+            _eff_dir = os.path.dirname(_path)
+        else:
+            _eff_dir = os.path.join(os.path.dirname(_path), _p.stem)
+    _ASSET_EXT56 = ('.svg', '.png', '.jpg', '.jpeg', '.gif', '.css', '.js', '.pdf', '.yml', '.yaml', '.zip', '.json')
+    for _lm in re.finditer(r'\[[^\]]*\]\(([^)"]+)\)', _content):
+        if _lm.start() > 0 and _content[_lm.start() - 1] == '!':
+            continue  # image embed — different resolution rule, Check 5's job
+        _href = _lm.group(1).split('#')[0]
+        if not _href or _href.startswith(('http', 'mailto', 'data', '#')):
+            continue
+        if _href.endswith('.md') or _href.lower().endswith(_ASSET_EXT56):
+            continue  # Check 53's / Check 5's job
+        if _href.startswith('/'):
+            _root56 = _SITE if _use_site else DOCS
+            _target = os.path.normpath(os.path.join(_root56, _href.lstrip('/')))
+        else:
+            _target = os.path.normpath(os.path.join(_eff_dir, _href))
+        if _use_site:
+            _exists = os.path.exists(_target) or os.path.exists(os.path.join(_target, 'index.html'))
+        else:
+            _exists = (os.path.exists(_target)
+                       or os.path.exists(_target + '.md')
+                       or os.path.exists(os.path.join(_target, 'index.md')))
+        if not _exists:
+            _rel = os.path.relpath(_path, REPO)
+            warn(issues, f'{_rel}: directory-style link "{_href}" resolves to no real page')
 
 
 # ── Report ────────────────────────────────────────────────────────────────────

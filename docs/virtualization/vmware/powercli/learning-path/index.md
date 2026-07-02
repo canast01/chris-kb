@@ -31,7 +31,7 @@ S4 -> S5
 **Goal**: Understand how PowerCLI modules map to vSphere API objects and how the session model works across multiple vCenter connections.
 **Read in this order**:
 - [How It Works](../architecture/how-it-works/) — module structure (VMware.VimAutomation.Core, vSAN, NSX-T, HCX modules), VI session model (Connect-VIServer), the $global:DefaultVIServer pattern, and object pipeline conventions
-- [Design Standards](../architecture/design-standards/) — script file layout standards, error handling patterns, pipeline vs. loop performance trade-offs, and credential management approaches (SecureString vs. credential store)
+- [Design Standards](../architecture/) — script file layout standards, error handling patterns, pipeline vs. loop performance trade-offs, and credential management approaches (SecureString vs. credential store)
 - [Integrations](../architecture/integrations/) — vCenter and ESXi direct connections, vSAN management via VMware.VimAutomation.vDS and vSAN module, NSX cmdlets, and REST API via Invoke-VMwareRestMethod as fallback
 
 **Why first**: PowerCLI's multi-server session model and object pipeline behaviour differ from typical PowerShell patterns; understanding them prevents silent scope errors when scripting across multiple vCenters.

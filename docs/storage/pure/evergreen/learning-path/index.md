@@ -75,10 +75,10 @@ S4 -> S5
 
 **Read**:
 
-- [Access Control](../security/access-control/) — Pure1 role-based access (org admin/array admin/read-only), per-array permission scoping, and API token management for automation
-- [Authentication](../security/authentication/) — Pure1 SSO (SAML 2.0), MFA enforcement for Pure1 portal access, and audit log access for compliance reporting
-- [Encryption](../security/encryption/) — encryption validation post-controller upgrade, FIPS 140-2 compliance continuity through controller swap, and KMIP external key management continuity
-- [Hardening](../security/hardening/) — SafeMode snapshot protection maintained through controller upgrades, audit log continuity during Purity upgrades, and Pure1 network access restrictions
+- [Access Control](../security/) — Pure1 role-based access (org admin/array admin/read-only), per-array permission scoping, and API token management for automation
+- [Authentication](../security/) — Pure1 SSO (SAML 2.0), MFA enforcement for Pure1 portal access, and audit log access for compliance reporting
+- [Encryption](../security/) — encryption validation post-controller upgrade, FIPS 140-2 compliance continuity through controller swap, and KMIP external key management continuity
+- [Hardening](../security/) — SafeMode snapshot protection maintained through controller upgrades, audit log continuity during Purity upgrades, and Pure1 network access restrictions
 
 **Why fourth**: Controller upgrades change physical hardware but must not change the security posture. Validate encryption key continuity and SafeMode status after every controller swap.
 
@@ -90,9 +90,9 @@ S4 -> S5
 
 **Read**:
 
-- [Common Issues](../troubleshooting/common-issues/) — controller upgrade stalls, post-upgrade path connectivity loss, capacity-on-demand provisioning delays, Pure1 connectivity loss, and SLA metric anomalies
-- [Diagnostics](../troubleshooting/diagnostics/) — Pure1 alert review, controller upgrade log analysis, pre- and post-upgrade comparison reports, and diagnostic bundle collection for Pure Support
-- [Escalation](../troubleshooting/escalation/) — Evergreen SLA escalation contacts, SLA breach documentation, Pure Support case creation via Pure1, and on-site hardware intervention workflow
+- [Common Issues](../troubleshooting/) — controller upgrade stalls, post-upgrade path connectivity loss, capacity-on-demand provisioning delays, Pure1 connectivity loss, and SLA metric anomalies
+- [Diagnostics](../troubleshooting/) — Pure1 alert review, controller upgrade log analysis, pre- and post-upgrade comparison reports, and diagnostic bundle collection for Pure Support
+- [Escalation](../troubleshooting/) — Evergreen SLA escalation contacts, SLA breach documentation, Pure Support case creation via Pure1, and on-site hardware intervention workflow
 
 **Why last**: Troubleshooting makes most sense once you know the normal operating state — expected controller upgrade duration, capacity-on-demand SLA timeframes, and Pure1 reporting baselines.
 

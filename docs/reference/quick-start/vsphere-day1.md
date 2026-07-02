@@ -204,7 +204,7 @@ Recommended baseline settings:
 
 ## See Also
 
-- [vSphere Cheat Sheet](../cheat-sheets/vsphere/) — top CLI and PowerCLI commands
-- [vSphere Architecture Overview](../../virtualization/vmware/vsphere/architecture/)
-- [vSphere Health Check Runbook](../../virtualization/vmware/vsphere/health-checks/)
+- [vSphere Cheat Sheet](../../cheat-sheets/vcenter/) — top CLI and PowerCLI commands
+- [vSphere Architecture Overview](../../../virtualization/vmware/vcenter/architecture/)
+- [vSphere Health Check Runbook](../../../virtualization/vmware/vcenter/operations/health-checks/)
 - [NSX-T Day 1](../nsx-day1/) — if NSX is in the environment

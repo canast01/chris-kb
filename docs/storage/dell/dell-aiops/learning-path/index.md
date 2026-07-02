@@ -53,9 +53,9 @@ S4 -> S5
 **Goal**: Review and act on AIOps recommendations daily, integrate predictive alerts into the change management workflow, and use insights to drive proactive maintenance.
 
 **Read in this order**:
-- [Health Checks](../operations/health-checks/) — run the routine first on every shift; covers open AIOps recommendations by severity, predictive failure alerts with estimated time-to-failure, and cross-product anomaly correlations.
+- [Health Checks](../operations/) — run the routine first on every shift; covers open AIOps recommendations by severity, predictive failure alerts with estimated time-to-failure, and cross-product anomaly correlations.
 - [CLI Reference](../cli-reference/) — AIOps REST API endpoints for recommendation retrieval, alert status updates, insight queries, and telemetry health checks.
-- [Procedures](../operations/procedures/) — Acting on a predictive failure recommendation (raise change request, coordinate maintenance), dismissing false-positive recommendations, tuning alert sensitivity thresholds, and exporting recommendation history for capacity planning.
+- [Procedures](../operations/) — Acting on a predictive failure recommendation (raise change request, coordinate maintenance), dismissing false-positive recommendations, tuning alert sensitivity thresholds, and exporting recommendation history for capacity planning.
 - [Insights](../insights/) — How to interpret cross-product correlation insights and use them to identify systemic infrastructure issues before they surface as incidents.
 - [Recommendations](../recommendations/) — Recommendation types taxonomy (hardware replacement, configuration change, capacity expansion), how to evaluate confidence scores, and how to feed outcomes back to improve model accuracy.
 - [Alerts](../alerts/) — Alert severity tiers, routing rules, and how AIOps alerts differ from CloudIQ threshold alerts.
@@ -70,10 +70,10 @@ S4 -> S5
 **Goal**: Control access to AIOps recommendations, secure the REST API, and understand data handling for ML telemetry sent to Dell's SaaS platform.
 
 **Read**:
-- [Access Control](../security/access-control/) — AIOps user roles (Administrator, Operator, Observer), system-level visibility scoping, and REST API service account permission boundaries.
-- [Authentication](../security/authentication/) — SSO configuration for AIOps portal access, MFA enforcement, and OAuth2 token management for REST API integrations.
-- [Encryption](../security/encryption/) — Telemetry encryption in transit (TLS), Dell data handling policy for ML training data, data residency options, and anonymisation of customer-identifying metadata in telemetry.
-- [Hardening](../security/hardening/) — Restricting API token scope, audit log review for recommendation access, MFA mandate for all admin roles, and Secure Connect Gateway egress restriction to approved Dell AIOps endpoints.
+- [Access Control](../security/) — AIOps user roles (Administrator, Operator, Observer), system-level visibility scoping, and REST API service account permission boundaries.
+- [Authentication](../security/) — SSO configuration for AIOps portal access, MFA enforcement, and OAuth2 token management for REST API integrations.
+- [Encryption](../security/) — Telemetry encryption in transit (TLS), Dell data handling policy for ML training data, data residency options, and anonymisation of customer-identifying metadata in telemetry.
+- [Hardening](../security/) — Restricting API token scope, audit log review for recommendation access, MFA mandate for all admin roles, and Secure Connect Gateway egress restriction to approved Dell AIOps endpoints.
 
 **Why fourth**: AIOps telemetry leaves the on-premises environment and is used for ML model training. Compliance teams need to review the data handling model before sign-off.
 

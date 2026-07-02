@@ -13,7 +13,7 @@ tags:
 Minimum product versions for 65+ features across vSphere Compute/HA, Storage/vSAN, NSX/Networking, VCF, Aria Suite, and Tanzu. Use this page to check whether a feature is available before upgrading.
 </div>
 
-Jump: [Compute / HA / DRS](#compute--ha--drs) · [Storage / vSAN](#storage--vsan) · [NSX / Networking](#nsx--networking) · [VCF](#vcf) · [Aria Suite](#aria-suite) · [Tanzu](#tanzu) · [Release timeline](#release-timeline)
+Jump: [Compute / HA / DRS](#compute-ha-drs) · [Storage / vSAN](#storage-vsan) · [NSX / Networking](#nsx-networking) · [VCF](#vcf) · [Aria Suite](#aria-suite) · [Tanzu](#tanzu) · [Release timeline](#release-timeline)
 
 ---
 

@@ -55,7 +55,7 @@ S4 -> S5
 
 **Read**:
 
-- [Deploy](../deploy/) — TPP server installation, SQL database configuration, CA connector setup, policy tree creation, network discovery configuration, Aperture management console setup
+- [Deploy](../operations/install-upgrade/) — TPP server installation, SQL database configuration, CA connector setup, policy tree creation, network discovery configuration, Aperture management console setup
 - [Install & Upgrade](../operations/install-upgrade/) — TPP version upgrade procedure, database backup before upgrade, CA connector re-validation after upgrade, Venafi Agent update to endpoints
 
 ---

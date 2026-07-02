@@ -39,13 +39,13 @@ e -> f: uses
 
 ## A
 
-**Admission Control** — vSphere HA mechanism reserving cluster capacity to guarantee VM restart after a host failure. Configured as a percentage of cluster resources or as a fixed number of host failures to tolerate.
+**Admission Control**{: #admission-control } — vSphere HA mechanism reserving cluster capacity to guarantee VM restart after a host failure. Configured as a percentage of cluster resources or as a fixed number of host failures to tolerate.
 
-**Affinity Rule** — DRS rule keeping specified VMs on the same ESXi host. Used for performance (shared memory, low latency) or licensing requirements. See also: [Anti-Affinity Rule](#anti-affinity-rule).
+**Affinity Rule**{: #affinity-rule } — DRS rule keeping specified VMs on the same ESXi host. Used for performance (shared memory, low latency) or licensing requirements. See also: [Anti-Affinity Rule](#anti-affinity-rule).
 
 **Alarm** — vSphere monitoring trigger fired when a metric crosses a threshold or an event occurs. Alarms can trigger actions such as email, SNMP trap, or running a script.
 
-**Anti-Affinity Rule** — DRS rule separating specified VMs onto different ESXi hosts for HA purposes. Commonly applied to primary/secondary database nodes. See also: [Affinity Rule](#affinity-rule).
+**Anti-Affinity Rule**{: #anti-affinity-rule } — DRS rule separating specified VMs onto different ESXi hosts for HA purposes. Commonly applied to primary/secondary database nodes. See also: [Affinity Rule](#affinity-rule).
 
 **Antrea** — VMware open-source CNI plugin for Kubernetes providing pod networking and NetworkPolicy enforcement using OVS (Open vSwitch). Native CNI for Tanzu clusters.
 
@@ -67,11 +67,11 @@ e -> f: uses
 
 **Backup Proxy** — server or VM running the backup agent that handles data movement between source VMs and backup storage. In Veeam, the proxy offloads the backup server; multiple proxies parallelise jobs.
 
-**Bare-Metal Edge** — NSX Edge deployed on a physical server using DPDK and SR-IOV NICs. Required for throughput above 25 Gbps. Cannot share the host with ESXi hypervisor workloads. See also: [DPDK](#dpdk-data-plane-development-kit).
+**Bare-Metal Edge**{: #bare-metal-edge } — NSX Edge deployed on a physical server using DPDK and SR-IOV NICs. Required for throughput above 25 Gbps. Cannot share the host with ESXi hypervisor workloads. See also: [DPDK](#dpdk-data-plane-development-kit).
 
 **BFD (Bidirectional Forwarding Detection)** — lightweight protocol detecting link or path failures in milliseconds. Used by NSX T0/T1 gateways alongside BGP for fast failover without waiting for BGP hold-down timers.
 
-**BGP (Border Gateway Protocol)** — dynamic exterior routing protocol. NSX T0 gateways use eBGP to peer with physical ToR switches. Required for ECMP Active/Active HA. See also: [ECMP](#ecmp-equal-cost-multi-path).
+**BGP (Border Gateway Protocol)**{: #bgp-border-gateway-protocol } — dynamic exterior routing protocol. NSX T0 gateways use eBGP to peer with physical ToR switches. Required for ECMP Active/Active HA. See also: [ECMP](#ecmp-equal-cost-multi-path).
 
 ---
 
@@ -117,7 +117,7 @@ e -> f: uses
 
 **DLR (Distributed Logical Router)** — legacy NSX-V component providing east-west routing in the ESXi kernel. Replaced by T1 Gateways in NSX-T. See also: [T1 Gateway](#t1-gateway).
 
-**DPDK (Data Plane Development Kit)** — user-space networking framework bypassing the OS kernel for packet processing. Used by NSX bare-metal Edge nodes to achieve line-rate throughput exceeding 25 Gbps. See also: [Bare-Metal Edge](#bare-metal-edge).
+**DPDK (Data Plane Development Kit)**{: #dpdk-data-plane-development-kit } — user-space networking framework bypassing the OS kernel for packet processing. Used by NSX bare-metal Edge nodes to achieve line-rate throughput exceeding 25 Gbps. See also: [Bare-Metal Edge](#bare-metal-edge).
 
 **DPU (Data Processing Unit)** — SmartNIC with an embedded processor that can offload NSX DFW and data plane operations from the ESXi host CPU. Supported on select VMware versions.
 
@@ -127,17 +127,17 @@ e -> f: uses
 
 ## E
 
-**ECMP (Equal-Cost Multi-Path)** — routing technique distributing traffic across multiple equal-cost paths. NSX T0 gateways use ECMP in Active/Active HA mode with BGP, providing higher aggregate throughput. Requires stateless data plane. See also: [BGP](#bgp-border-gateway-protocol).
+**ECMP (Equal-Cost Multi-Path)**{: #ecmp-equal-cost-multi-path } — routing technique distributing traffic across multiple equal-cost paths. NSX T0 gateways use ECMP in Active/Active HA mode with BGP, providing higher aggregate throughput. Requires stateless data plane. See also: [BGP](#bgp-border-gateway-protocol).
 
 **Edge Cluster** — NSX grouping of two to eight Edge nodes providing redundant north-south routing. All T0 gateways are placed on an Edge cluster. Minimum two nodes for production HA.
 
 **Edge Node** — NSX gateway appliance (VM or bare-metal) running T0/T1 gateways and providing north-south routing, NAT, load balancing, DNS forwarder, and VPN services.
 
-**ELM (Enhanced Linked Mode)** — vCenter federation connecting multiple vCenter instances to share a common inventory view, roles, tags, permissions, and policies. Requires vCenter 7.0+; no separate PSC needed.
+**ELM (Enhanced Linked Mode)**{: #elm-enhanced-linked-mode } — vCenter federation connecting multiple vCenter instances to share a common inventory view, roles, tags, permissions, and policies. Requires vCenter 7.0+; no separate PSC needed.
 
-**Erasure Coding** — vSAN space-efficient redundancy method using parity striping. RAID-5 (FTT=1, minimum 4 hosts, 1.33× overhead) and RAID-6 (FTT=2, minimum 6 hosts, 1.5× overhead). See also: [FTT](#ftt-failures-to-tolerate).
+**Erasure Coding**{: #erasure-coding } — vSAN space-efficient redundancy method using parity striping. RAID-5 (FTT=1, minimum 4 hosts, 1.33× overhead) and RAID-6 (FTT=2, minimum 6 hosts, 1.5× overhead). See also: [FTT](#ftt-failures-to-tolerate).
 
-**ESA (Express Storage Architecture)** — vSAN 8.x architecture requiring NVMe-only devices. Eliminates disk groups in favour of a single-tier storage pool. Supports per-object compression (no dedup). See also: [OSA](#osa-original-storage-architecture).
+**ESA (Express Storage Architecture)**{: #esa-express-storage-architecture } — vSAN 8.x architecture requiring NVMe-only devices. Eliminates disk groups in favour of a single-tier storage pool. Supports per-object compression (no dedup). See also: [OSA](#osa-original-storage-architecture).
 
 **ESXi** — VMware type-1 bare-metal hypervisor. Runs the VMkernel directly on hardware, managing VMs, vNICs, VMkernel ports, and datastores. Configurable via DCUI, SSH, PowerCLI, or the vCenter REST API.
 
@@ -159,7 +159,7 @@ e -> f: uses
 
 **FT (Fault Tolerance)** — vSphere feature maintaining a live shadow VM on a second host using continuous, synchronous replication. Provides zero RPO and near-zero RTO. Limited to 4 vCPUs and restricted workload types.
 
-**FTT (Failures to Tolerate)** — vSAN storage policy parameter defining how many component failures (host, disk, or network partition) a VM object can survive. FTT=1 is the production minimum; FTT=2 is recommended for Tier-1 workloads.
+**FTT (Failures to Tolerate)**{: #ftt-failures-to-tolerate } — vSAN storage policy parameter defining how many component failures (host, disk, or network partition) a VM object can survive. FTT=1 is the production minimum; FTT=2 is recommended for Tier-1 workloads.
 
 ---
 
@@ -207,7 +207,7 @@ e -> f: uses
 
 ## K
 
-**KMIP (Key Management Interoperability Protocol)** — OASIS standard for communication between a KMS and a storage or compute client. vSAN and vCenter use KMIP to retrieve and return data encryption keys for D@RE and VM encryption.
+**KMIP (Key Management Interoperability Protocol)**{: #kmip-key-management-interoperability-protocol } — OASIS standard for communication between a KMS and a storage or compute client. vSAN and vCenter use KMIP to retrieve and return data encryption keys for D@RE and VM encryption.
 
 **KMS (Key Management Server)** — external appliance storing and managing encryption keys. vCenter registers KMS clusters for vSAN D@RE and VM encryption. Common providers: HyTrust, Thales, HashiCorp Vault, and AWS KMS.
 
@@ -269,7 +269,7 @@ e -> f: uses
 
 ## O
 
-**OSA (Original Storage Architecture)** — vSAN disk group model used in versions prior to 8.0. Each disk group contains one cache tier (SSD) and one or more capacity tiers. Supports dedup+compression on all-flash configurations. See also: [ESA](#esa-express-storage-architecture).
+**OSA (Original Storage Architecture)**{: #osa-original-storage-architecture } — vSAN disk group model used in versions prior to 8.0. Each disk group contains one cache tier (SSD) and one or more capacity tiers. Supports dedup+compression on all-flash configurations. See also: [ESA](#esa-express-storage-architecture).
 
 **OSPF (Open Shortest Path First)** — link-state IGP routing protocol. Not used by NSX gateways for external ToR peering (BGP is the standard), but commonly deployed in the underlay physical network.
 
@@ -309,7 +309,7 @@ e -> f: uses
 
 **RDM (Raw Device Mapping)** — vSphere feature presenting a physical SAN LUN directly to a VM as a virtual disk. Used for shared disk clustering (MSCS) or applications requiring direct SCSI command access to the LUN.
 
-**Recovery Plan** — SRM object defining the ordered sequence for failing over a set of VMs: power-on order, IP customization, network mapping, and pre/post recovery scripts. Tested non-disruptively via planned migration.
+**Recovery Plan**{: #recovery-plan } — SRM object defining the ordered sequence for failing over a set of VMs: power-on order, IP customization, network mapping, and pre/post recovery scripts. Tested non-disruptively via planned migration.
 
 **RPO (Recovery Point Objective)** — maximum acceptable data loss in a DR event, expressed as time (e.g., 15 minutes). RPO drives replication frequency and technology choice: array replication gives near-zero; backup gives hours to days.
 
@@ -353,7 +353,7 @@ e -> f: uses
 
 **T0 Gateway** — NSX Tier-0 logical router handling north-south routing between the overlay network and the physical underlay. Peers with ToR switches via eBGP. Supports Active/Standby or ECMP Active/Active HA modes.
 
-**T1 Gateway** — NSX Tier-1 logical router providing east-west routing and services (NAT, load balancing, DNS forwarder) for tenant workloads. Connected to the T0 via a transit segment. Typically one T1 per tenant or application tier.
+**T1 Gateway**{: #t1-gateway } — NSX Tier-1 logical router providing east-west routing and services (NAT, load balancing, DNS forwarder) for tenant workloads. Connected to the T0 via a transit segment. Typically one T1 per tenant or application tier.
 
 **Tag (vSphere)** — metadata label applied to vSphere inventory objects (VMs, hosts, datastores, networks). Used to drive DRS affinity rules, SPBM storage policies, backup tool policies, and Aria Operations dashboards.
 
@@ -373,7 +373,7 @@ e -> f: uses
 
 **Transport Node** — ESXi host or Edge node configured for the NSX data plane. Transport nodes have TEP (Tunnel Endpoint) VMkernel interfaces carrying Geneve-encapsulated overlay traffic. See also: [Transport Zone](#transport-zone).
 
-**Transport Zone** — NSX logical boundary defining which transport nodes share an overlay (Geneve) or VLAN-backed network. Segments created in a transport zone are reachable only by hosts registered to that zone.
+**Transport Zone**{: #transport-zone } — NSX logical boundary defining which transport nodes share an overlay (Geneve) or VLAN-backed network. Segments created in a transport zone are reachable only by hosts registered to that zone.
 
 **Thick / Thin Provisioning** — vSphere disk allocation strategies. Thick Eager Zeroed pre-allocates and zeros all blocks at creation for best performance. Thin allocates blocks on first write, conserving datastore space at the cost of potential performance variance.
 
@@ -421,7 +421,7 @@ e -> f: uses
 
 **vSwitch (vSphere Standard Switch)** — per-host virtual switch in ESXi providing basic port groups and uplink teaming. Configuration is host-local and not centrally managed; replaced by vDS for cluster-wide consistency.
 
-**VXLAN (Virtual Extensible LAN)** — UDP-based Layer 2 overlay encapsulation (RFC 7348) used by NSX-V. Replaced by Geneve in NSX-T. Still appears in third-party SDN solutions and legacy NSX-V environments.
+**VXLAN (Virtual Extensible LAN)**{: #vxlan-virtual-extensible-lan } — UDP-based Layer 2 overlay encapsulation (RFC 7348) used by NSX-V. Replaced by Geneve in NSX-T. Still appears in third-party SDN solutions and legacy NSX-V environments.
 
 **VxRail** — Dell Technologies HCI appliance built on VMware vSAN. Shipped as a pre-validated node running ESXi + vSAN, with optional NSX and VCF integration. Managed via the VxRail Manager plugin in vCenter.
 

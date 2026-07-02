@@ -79,6 +79,6 @@ Essential Pure Storage FlashArray CLI commands for array status, volume manageme
 
 ## See Also
 
-- [Pure Storage FlashArray Operations](../../storage/pure-storage/flasharray/operations/procedures/)
-- [Pure Storage FlashArray Health Checks](../../storage/pure-storage/flasharray/operations/health-checks/)
-- [Pure Storage FlashArray Troubleshooting](../../storage/pure-storage/flasharray/troubleshooting/common-issues/)
+- [Pure Storage FlashArray Operations](../../../storage/pure/flasharray/operations/procedures/)
+- [Pure Storage FlashArray Health Checks](../../../storage/pure/flasharray/operations/health-checks/)
+- [Pure Storage FlashArray Troubleshooting](../../../storage/pure/flasharray/troubleshooting/common-issues/)

@@ -802,7 +802,7 @@ Aria Operations for Networks (vRNI) is upgraded via Aria Suite Lifecycle for man
 
 ![Option A — Upgrade via Aria Suite Lifecycle (Recommended)](../../../../assets/aria-operations-for-networks-proc-option-a-upgrade-via-aria-suite-lifecycle-.svg)
 
-Follow the standard LCM upgrade procedure: LCM → Lifecycle Operations → Environments → select the environment → **Upgrade** → select Aria Operations for Networks. See the [Aria Suite Lifecycle — Upgrade a Product via LCM](../../aria-suite-lifecycle/operations/procedures/#upgrade-a-product-via-lcm) procedure for full steps.
+Follow the standard LCM upgrade procedure: LCM → Lifecycle Operations → Environments → select the environment → **Upgrade** → select Aria Operations for Networks. See the [Aria Suite Lifecycle — Upgrade a Product via LCM](../../../aria-suite-lifecycle/operations/procedures/#upgrade-a-product-via-lcm) procedure for full steps.
 
 ### Option B — Standalone Upgrade (No LCM)
 

@@ -59,7 +59,7 @@ S4 -> S5
 
 **Read in this order**:
 
-- [Health Checks](../operations/health-checks/) — run the routine first on every shift; covers fleet health summary (arrays at WARN/ERROR), capacity utilisation and days-to-full forecast, anomaly detection alerts, open support cases, and Purity version currency across the fleet
+- [Health Checks](../operations/) — run the routine first on every shift; covers fleet health summary (arrays at WARN/ERROR), capacity utilisation and days-to-full forecast, anomaly detection alerts, open support cases, and Purity version currency across the fleet
 - [Capacity](../capacity/) — capacity forecasting methodology, how to interpret days-to-full projections, capacity trend graphs, and using Pure1 to build the business case for capacity-on-demand requests
 - [Performance](../performance/) — workload latency and throughput trend analysis, identifying noisy-neighbour workloads, and Pure1 Workload Planner recommendations for array placement
 - [Scripts](../scripts/) — Pure1 REST API automation for fleet health reporting, capacity trend exports, anomaly alert polling, and support case status queries
@@ -75,10 +75,10 @@ S4 -> S5
 
 **Read**:
 
-- [Access Control](../security/access-control/) — Pure1 org-level RBAC (org admin/array admin/read-only), per-array access scoping, and delegating finance-team access for Evergreen//One billing views
-- [Authentication](../security/authentication/) — Pure1 SSO configuration (SAML 2.0 / OIDC), MFA enforcement for all users, API token generation and rotation, and session timeout policy
-- [Encryption](../security/encryption/) — Pure1 telemetry data in transit (TLS 1.2+), data residency and retention policy for call-home telemetry, and what array data Pure1 does and does not collect (no user data, only array metadata)
-- [Hardening](../security/hardening/) — IP allowlisting for Pure1 portal access, audit log review for Pure1 user actions, and restricting API token scope to least-privilege for automation accounts
+- [Access Control](../security/) — Pure1 org-level RBAC (org admin/array admin/read-only), per-array access scoping, and delegating finance-team access for Evergreen//One billing views
+- [Authentication](../security/) — Pure1 SSO configuration (SAML 2.0 / OIDC), MFA enforcement for all users, API token generation and rotation, and session timeout policy
+- [Encryption](../security/) — Pure1 telemetry data in transit (TLS 1.2+), data residency and retention policy for call-home telemetry, and what array data Pure1 does and does not collect (no user data, only array metadata)
+- [Hardening](../security/) — IP allowlisting for Pure1 portal access, audit log review for Pure1 user actions, and restricting API token scope to least-privilege for automation accounts
 
 **Why fourth**: Pure1 API tokens with org-admin scope can read health and capacity data across your entire fleet. Token rotation discipline and least-privilege scoping protect against credential compromise.
 
@@ -90,9 +90,9 @@ S4 -> S5
 
 **Read**:
 
-- [Common Issues](../troubleshooting/common-issues/) — array not appearing in Pure1 (call-home connectivity failure), stale capacity data (telemetry gap), anomaly alerts on healthy workloads, and Pure1 API authentication errors
-- [Diagnostics](../troubleshooting/diagnostics/) — call-home connectivity test from Purity CLI (`purearray --list`), Pure1 telemetry last-seen timestamp, API debug logging, and fleet health report export for offline analysis
-- [Escalation](../troubleshooting/escalation/) — Pure Support case creation for Pure1 portal issues, telemetry gap investigation, and escalation path for Workload Planner recommendation disputes
+- [Common Issues](../troubleshooting/) — array not appearing in Pure1 (call-home connectivity failure), stale capacity data (telemetry gap), anomaly alerts on healthy workloads, and Pure1 API authentication errors
+- [Diagnostics](../troubleshooting/) — call-home connectivity test from Purity CLI (`purearray --list`), Pure1 telemetry last-seen timestamp, API debug logging, and fleet health report export for offline analysis
+- [Escalation](../troubleshooting/) — Pure Support case creation for Pure1 portal issues, telemetry gap investigation, and escalation path for Workload Planner recommendation disputes
 
 **Why last**: Troubleshooting makes most sense once you know the normal operating state — expected telemetry refresh frequency, normal anomaly alert rates for your workload types, and what capacity forecast accuracy to expect from Pure1's AI model.
 

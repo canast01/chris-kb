@@ -72,10 +72,10 @@ S4 -> S5
 
 **Read**:
 
-- [Access Control](../security/access-control/) — InsightIQ local user roles (Admin, Analyst, Viewer), AD group mapping, per-cluster visibility scoping
-- [Authentication](../security/authentication/) — Active Directory integration for SSO, local admin account hardening, certificate-based HTTPS access
-- [Encryption](../security/encryption/) — HTTPS enforcement for the InsightIQ web UI, encrypted storage of cluster credentials, TLS for ONTAP/Isilon API connections
-- [Hardening](../security/hardening/) — Restrict management network access to the InsightIQ VM, disable unused API endpoints, log access and report downloads
+- [Access Control](../security/) — InsightIQ local user roles (Admin, Analyst, Viewer), AD group mapping, per-cluster visibility scoping
+- [Authentication](../security/) — Active Directory integration for SSO, local admin account hardening, certificate-based HTTPS access
+- [Encryption](../security/) — HTTPS enforcement for the InsightIQ web UI, encrypted storage of cluster credentials, TLS for ONTAP/Isilon API connections
+- [Hardening](../security/) — Restrict management network access to the InsightIQ VM, disable unused API endpoints, log access and report downloads
 
 ---
 
@@ -85,9 +85,9 @@ S4 -> S5
 
 **Read**:
 
-- [Common Issues](../troubleshooting/common-issues/) — Cluster collection stopped, data gap in throughput charts, performance percentiles not calculated, login failure after AD group change
-- [Diagnostics](../troubleshooting/diagnostics/) — InsightIQ collection log (`/var/log/iiq`), PostgreSQL query performance checks, cluster credential re-validation, API connectivity tests
-- [Escalation](../troubleshooting/escalation/) — NetApp support case for InsightIQ bugs, log bundle collection procedure, ONTAP statistics API troubleshooting with NetApp
+- [Common Issues](../troubleshooting/) — Cluster collection stopped, data gap in throughput charts, performance percentiles not calculated, login failure after AD group change
+- [Diagnostics](../troubleshooting/) — InsightIQ collection log (`/var/log/iiq`), PostgreSQL query performance checks, cluster credential re-validation, API connectivity tests
+- [Escalation](../troubleshooting/) — NetApp support case for InsightIQ bugs, log bundle collection procedure, ONTAP statistics API troubleshooting with NetApp
 
 **Why last**: Troubleshooting InsightIQ data gaps requires knowing the expected collection cadence and data model — context built in the Architecture and Operations stages.
 

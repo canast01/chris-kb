@@ -82,7 +82,7 @@ cert.crt: OK
     **`Verify return code: 1 (self signed certificate)`** — For self-signed certificates in testing, use `openssl verify -CAfile cert.crt cert.crt` or add the cert to your trust store.
 **Expected output:** Chain check shows `verify return:1` for each cert in the chain and `Verification: OK` at the end. `openssl verify` returns `cert.crt: OK`. Absence of `OK` or presence of `verify error:num=` indicates a chain or trust store problem.
 
-See [TLS Troubleshooting](../../protocols/tls/troubleshooting/) for detailed steps.
+See [TLS Troubleshooting](../../networking/protocols/tls/troubleshooting/) for detailed steps.
 
 ## CyberArk Vault Connectivity
 

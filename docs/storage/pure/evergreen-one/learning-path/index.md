@@ -59,11 +59,11 @@ S4 -> S5
 
 **Read in this order**:
 
-- [Health Checks](../operations/health-checks/) — run the routine first on every shift; covers Pure1 array health dashboard, capacity utilisation vs reserved tier, on-demand capacity buffer remaining, billing cycle consumption trend, and open support cases
-- [CLI Reference](../operations/cli-reference/) — Pure1 API queries for consumption reporting, capacity utilisation by workload, and SLA metric export for internal reporting
-- [Procedures](../operations/procedures/) — on-demand capacity request process via Pure1, hardware maintenance coordination with Pure (your role: schedule the window, Pure executes), SLA breach escalation workflow, and subscription renewal process
-- [Backup & Restore](../operations/backup-restore/) — snapshot and replication management within Evergreen//One (same Purity capabilities as owned arrays), and ensuring backup SLA aligns with Evergreen//One availability guarantee
-- [Scripts](../operations/scripts/) — Pure1 API scripts for consumption trend reporting, on-demand capacity threshold alerting, and SLA metric dashboards for management
+- [Health Checks](../operations/) — run the routine first on every shift; covers Pure1 array health dashboard, capacity utilisation vs reserved tier, on-demand capacity buffer remaining, billing cycle consumption trend, and open support cases
+- [CLI Reference](../operations/) — Pure1 API queries for consumption reporting, capacity utilisation by workload, and SLA metric export for internal reporting
+- [Procedures](../operations/) — on-demand capacity request process via Pure1, hardware maintenance coordination with Pure (your role: schedule the window, Pure executes), SLA breach escalation workflow, and subscription renewal process
+- [Backup & Restore](../operations/) — snapshot and replication management within Evergreen//One (same Purity capabilities as owned arrays), and ensuring backup SLA aligns with Evergreen//One availability guarantee
+- [Scripts](../operations/) — Pure1 API scripts for consumption trend reporting, on-demand capacity threshold alerting, and SLA metric dashboards for management
 
 **Why third**: The primary operational discipline in Evergreen//One is consumption monitoring. Reactive capacity requests cause SLA delays — proactive requests (before hitting the reserved tier ceiling) keep workloads running without interruption.
 
@@ -75,10 +75,10 @@ S4 -> S5
 
 **Read**:
 
-- [Access Control](../security/access-control/) — Pure1 org and array-level RBAC, scoping Pure Support access windows, and delegating read-only Pure1 access to finance teams for billing reports
-- [Authentication](../security/authentication/) — Pure1 SSO/SAML 2.0, MFA enforcement for all Pure1 portal users, API token lifecycle management, and audit log access for compliance
-- [Encryption](../security/encryption/) — customer-managed encryption keys (KMIP) vs Pure-managed keys, encryption continuity through hardware maintenance by Pure, and data sovereignty considerations for regulated workloads
-- [Hardening](../security/hardening/) — restricting Pure Support access to approved maintenance windows, audit log review cadence, SafeMode configuration for ransomware protection, and Pure1 network egress controls
+- [Access Control](../security/) — Pure1 org and array-level RBAC, scoping Pure Support access windows, and delegating read-only Pure1 access to finance teams for billing reports
+- [Authentication](../security/) — Pure1 SSO/SAML 2.0, MFA enforcement for all Pure1 portal users, API token lifecycle management, and audit log access for compliance
+- [Encryption](../security/) — customer-managed encryption keys (KMIP) vs Pure-managed keys, encryption continuity through hardware maintenance by Pure, and data sovereignty considerations for regulated workloads
+- [Hardening](../security/) — restricting Pure Support access to approved maintenance windows, audit log review cadence, SafeMode configuration for ransomware protection, and Pure1 network egress controls
 
 **Why fourth**: The shared responsibility model means Pure accesses your hardware for maintenance. Defining and auditing those access windows — and ensuring encryption key custody remains with you — is the most important security discipline in Evergreen//One.
 
@@ -90,9 +90,9 @@ S4 -> S5
 
 **Read**:
 
-- [Common Issues](../troubleshooting/common-issues/) — on-demand capacity provisioning delays, Pure1 connectivity and reporting gaps, SLA metric discrepancies, and billing dispute resolution
-- [Diagnostics](../troubleshooting/diagnostics/) — Pure1 SLA compliance reports, consumption vs billing reconciliation, support case history review, and capacity trend analysis for renewal negotiations
-- [Escalation](../troubleshooting/escalation/) — Evergreen//One SLA breach escalation path, account team vs support team contact routing, and documentation requirements for SLA credit claims
+- [Common Issues](../troubleshooting/) — on-demand capacity provisioning delays, Pure1 connectivity and reporting gaps, SLA metric discrepancies, and billing dispute resolution
+- [Diagnostics](../troubleshooting/) — Pure1 SLA compliance reports, consumption vs billing reconciliation, support case history review, and capacity trend analysis for renewal negotiations
+- [Escalation](../troubleshooting/) — Evergreen//One SLA breach escalation path, account team vs support team contact routing, and documentation requirements for SLA credit claims
 
 **Why last**: Troubleshooting makes most sense once you know the normal operating state — expected on-demand provisioning timeframes, Pure1 reporting refresh cadence, and what SLA metrics Pure guarantees vs what falls in your operational boundary.
 

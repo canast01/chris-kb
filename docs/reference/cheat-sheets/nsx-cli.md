@@ -126,6 +126,6 @@ Policies: 12
 
 ## See Also
 
-- [NSX-T Operations](../../virtualization/vmware/nsx/operations/procedures/)
-- [NSX-T Health Checks](../../virtualization/vmware/nsx/operations/health-checks/)
-- [NSX-T Troubleshooting](../../virtualization/vmware/nsx/troubleshooting/common-issues/)
+- [NSX-T Operations](../../../virtualization/vmware/nsx/operations/procedures/)
+- [NSX-T Health Checks](../../../virtualization/vmware/nsx/operations/health-checks/)
+- [NSX-T Troubleshooting](../../../virtualization/vmware/nsx/troubleshooting/common-issues/)

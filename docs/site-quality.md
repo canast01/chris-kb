@@ -6,7 +6,7 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 
 ![Site Quality Dashboard — Diagram](assets/site-quality-diagram.svg)
 
-Generated: 2026-07-01
+Generated: 2026-07-02
 
 ## Current state
 

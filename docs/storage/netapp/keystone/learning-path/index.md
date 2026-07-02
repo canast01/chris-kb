@@ -72,10 +72,10 @@ S4 -> S5
 
 **Read**:
 
-- [Access Control](../security/access-control/) — SVM-scoped ONTAP RBAC for tenant teams; restricting BlueXP access to authorized Keystone administrators
-- [Authentication](../security/authentication/) — BlueXP SSO, ONTAP cluster management authentication, Keystone Collector service account security
-- [Encryption](../security/encryption/) — NVE/NAE for data at rest on Keystone AFF/ASA hardware; encryption key management responsibilities (customer vs NetApp)
-- [Hardening](../security/hardening/) — Restrict SVM management to dedicated LIFs, audit log export, disable unused protocols per SVM
+- [Access Control](../security/) — SVM-scoped ONTAP RBAC for tenant teams; restricting BlueXP access to authorized Keystone administrators
+- [Authentication](../security/) — BlueXP SSO, ONTAP cluster management authentication, Keystone Collector service account security
+- [Encryption](../security/) — NVE/NAE for data at rest on Keystone AFF/ASA hardware; encryption key management responsibilities (customer vs NetApp)
+- [Hardening](../security/) — Restrict SVM management to dedicated LIFs, audit log export, disable unused protocols per SVM
 
 ---
 
@@ -85,9 +85,9 @@ S4 -> S5
 
 **Read**:
 
-- [Common Issues](../troubleshooting/common-issues/) — Unexpected burst billing, Keystone Collector not reporting, SVM throughput below committed tier SLA, BlueXP dashboard data lag
-- [Diagnostics](../troubleshooting/diagnostics/) — Active IQ event logs, Keystone Collector log review, ONTAP AutoSupport data for NetApp escalation, dashboard vs CLI capacity reconciliation
-- [Escalation](../troubleshooting/escalation/) — Keystone Success Manager engagement, NetApp support case for hardware faults, SLA breach reporting procedure
+- [Common Issues](../troubleshooting/) — Unexpected burst billing, Keystone Collector not reporting, SVM throughput below committed tier SLA, BlueXP dashboard data lag
+- [Diagnostics](../troubleshooting/) — Active IQ event logs, Keystone Collector log review, ONTAP AutoSupport data for NetApp escalation, dashboard vs CLI capacity reconciliation
+- [Escalation](../troubleshooting/) — Keystone Success Manager engagement, NetApp support case for hardware faults, SLA breach reporting procedure
 
 **Why last**: Keystone troubleshooting blends ONTAP diagnostic skills (built in Stage 3) with understanding the subscription model and NetApp support boundary (built in Stage 1).
 

@@ -289,7 +289,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [PKI and Certificate Management](../../standards/) | VMCA, certificate replacement, VECS, certificate stores |
+| [PKI and Certificate Management](../../../../security/certificates/) | VMCA, certificate replacement, VECS, certificate stores |
 | [vCenter Security](../../../vmware/vcenter/) | Certificate management from vCenter UI and certmgr |
 
 ---
