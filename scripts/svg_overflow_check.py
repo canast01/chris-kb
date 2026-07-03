@@ -83,6 +83,39 @@ def is_bold(elem) -> bool:
     return fw in ('bold', '700', '800', '900')
 
 
+def canvas_clipped_rects(path: Path):
+    """Find <rect> elements (after resolving transforms) that fall partly or
+    fully outside the SVG's own declared width/height -- i.e. content
+    rendered off-canvas, invisible to the user."""
+    try:
+        tree = ET.parse(path)
+    except ET.ParseError:
+        return []
+    root = tree.getroot()
+    try:
+        cw = float(root.get('width'))
+        ch = float(root.get('height'))
+    except (TypeError, ValueError):
+        return []
+
+    clipped = []
+    for elem, ox, oy in walk_absolute(root):
+        if elem.tag != f'{NS}rect':
+            continue
+        try:
+            x = float(elem.get('x', 0)) + ox
+            y = float(elem.get('y', 0)) + oy
+            w = float(elem.get('width', 0))
+            h = float(elem.get('height', 0))
+        except ValueError:
+            continue
+        if w <= 0 or h <= 0:
+            continue
+        if y + h > ch + 1 or x + w > cw + 1 or x < -1 or y < -1:
+            clipped.append((x, y, w, h, cw, ch))
+    return clipped
+
+
 def analyze_svg(path: Path):
     try:
         tree = ET.parse(path)
@@ -144,10 +177,15 @@ def analyze_svg(path: Path):
 
         # Smallest-area enclosing rect whose box contains the anchor point (x, y),
         # with a little vertical slack since y is a text baseline near the box bottom.
+        # Require a small horizontal margin from the box edges: a text start that
+        # sits exactly on (or past) a box's edge is a floating arrow-caption label
+        # next to the box, not content inside it, not something we should evaluate
+        # for overflow against that box.
+        MARGIN = 5
         best = None
         best_area = None
         for (rx, ry, rw, rh) in rects:
-            if rx <= x <= rx + rw and (ry - 4) <= y <= (ry + rh + 4):
+            if (rx + MARGIN) <= x <= (rx + rw - MARGIN) and (ry - 4) <= y <= (ry + rh + 4):
                 area = rw * rh
                 if best_area is None or area < best_area:
                     best, best_area = (rx, ry, rw, rh), area
@@ -180,6 +218,7 @@ def main():
 
     results = []
     errors = []
+    clipped_files = []
     for svg in svgs:
         findings, err = analyze_svg(svg)
         if err:
@@ -187,6 +226,17 @@ def main():
             continue
         if findings:
             results.append((svg, findings))
+        clipped = canvas_clipped_rects(svg)
+        if clipped:
+            clipped_files.append((svg, clipped))
+
+    if clipped_files:
+        print(f'\n{len(clipped_files)} SVGs have <rect> elements rendered '
+              f'partly/fully off-canvas (content invisible):')
+        for svg, clipped in clipped_files:
+            for (x, y, w, h, cw, ch) in clipped:
+                print(f'  {svg}: rect at ({x:.0f},{y:.0f}) {w:.0f}x{h:.0f} '
+                      f'vs canvas {cw:.0f}x{ch:.0f}')
 
     total_findings = sum(len(f) for _, f in results)
     print(f'\n{len(results)}/{len(svgs)} SVGs have at least one likely overflow '
