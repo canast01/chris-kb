@@ -8477,11 +8477,7 @@
 
 
 <h1 id="inventory-environment-mapping">Inventory — Environment Mapping<a class="headerlink" href="#inventory-environment-mapping" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```d2
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>direction: down
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>application_payments_api: &quot;Application: Payments API&quot; {shape: rectangle}
-</code></pre></div>
+<p><img alt="Kroki" src="https://kroki.io/d2/svg/eNpLySxKTS7JzM-zUkjJL8_j4kosKMjJTE4ECcUXJFbmpuaVFMcnFmRaKSg5IqSsFAKgcgqOAZ5KCtXFGYkFqVYKIMMS89JzUmu5uAAR5CDo?" /></p>
 <h2 id="application-payments-api">Application: Payments API<a class="headerlink" href="#application-payments-api" title="Permanent link">&para;</a></h2>
 <p><strong>Tier:</strong> Production
 <strong>Hosts:</strong> pay-api-01, pay-api-02, pay-api-03 (load balanced via alb-pay-prod)
@@ -8576,59 +8572,58 @@
 <li>Load Balancer: alb-pay-prod (AWS ALB)</li>
 <li>DNS: api.payments.example.com → alb-pay-prod CNAME</li>
 <li>TLS cert: *.payments.example.com — expires 2027-03-01</li>
-<li>Secrets: vault path <code>secret/payments/db_password</code>, <code>secret/payments/fraud_api_key</code>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># netstat — find connections on a host
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ss -tnp    # established TCP connections and owning process
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ss -tlnp   # listening ports
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Find which process owns a port
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>lsof -i :&lt;port&gt;
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Trace network path to a service
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>traceroute &lt;target-host&gt;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>mtr --report &lt;target-host&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># DNS record discovery
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>dig &lt;hostname&gt; ANY
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>dig -t SRV _service._proto.&lt;domain&gt;
-</code></pre></div></li>
+<li>Secrets: vault path <code>secret/payments/db_password</code>, <code>secret/payments/fraud_api_key</code></li>
 </ul>
-<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>$ ss -tnp
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>State      Recv-Q Send-Q Local Address:Port       Peer Address:Port Process
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ESTAB      0      0      192.168.1.42:52847      10.240.15.8:443   users:((&quot;chrome&quot;,pid=3847,fd=24))
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ESTAB      0      0      192.168.1.42:52891      172.16.0.5:3306   users:((&quot;mysql&quot;,pid=2156,fd=12))
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ESTAB      0      0      192.168.1.42:22         203.0.113.99:54321 users:((&quot;sshd&quot;,pid=1024,fd=3))
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>$ ss -tlnp
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>State      Recv-Q Send-Q Local Address:Port       Peer Address:Port Process
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>LISTEN     0      128    127.0.0.1:5432          0.0.0.0:*         users:((&quot;postgres&quot;,pid=891,fd=5))
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>LISTEN     0      128    0.0.0.0:80              0.0.0.0:*         users:((&quot;nginx&quot;,pid=1205,fd=6))
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>LISTEN     0      128    0.0.0.0:443             0.0.0.0:*         users:((&quot;nginx&quot;,pid=1205,fd=7))
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>$ lsof -i :8080
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>COMMAND   PID     USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>java      2847    appuser 45u  IPv4  0x12a4f5c0      0t0  TCP localhost:8080 (LISTEN)
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>$ traceroute api-prod.internal.corp
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>traceroute to api-prod.internal.corp (10.50.12.33), 30 hops max, 60 byte packets
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a> 1  gateway.local (192.168.1.1)  2.341 ms  2.156 ms  2.089 ms
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a> 2  core-router-01.dc1 (10.0.0.1)  5.623 ms  5.401 ms  5.512 ms
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a> 3  10.240.15.1  8.934 ms  9.012 ms  8.876 ms
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a> 4  api-prod.internal.corp (10.50.12.33)  12.445 ms  12.389 ms  12.567 ms
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>$ dig api-prod.internal.corp ANY
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; api-prod.internal.corp ANY
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>;; ANSWER SECTION:
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>api-prod.internal.corp. 300 IN A 10.50.12.33
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>api-prod.internal.corp. 300 IN AAAA 2001:db8::1
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>api-prod.internal.corp. 300 IN MX 10 mail.internal.corp.
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>$ dig -t SRV _ldap._tcp.internal.corp
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; -t SRV _ldap._tcp.internal.corp
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>;; ANSWER SECTION:
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>_ldap._tcp.internal.corp. 3600 IN SRV 10 60 389 ldap-01.internal.corp.
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>_ldap._tcp.internal.corp. 3600 IN SRV 10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># netstat — find connections on a host</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ss<span class="w"> </span>-tnp<span class="w">    </span><span class="c1"># established TCP connections and owning process</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ss<span class="w"> </span>-tlnp<span class="w">   </span><span class="c1"># listening ports</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Find which process owns a port</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:&lt;port&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Trace network path to a service</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>traceroute<span class="w"> </span>&lt;target-host&gt;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>mtr<span class="w"> </span>--report<span class="w"> </span>&lt;target-host&gt;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># DNS record discovery</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>dig<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>ANY
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>dig<span class="w"> </span>-t<span class="w"> </span>SRV<span class="w"> </span>_service._proto.&lt;domain&gt;
+</code></pre></div>
+<div class="highlight"><span class="filename">Expected output</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$ ss -tnp
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>State      Recv-Q Send-Q Local Address:Port       Peer Address:Port Process
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ESTAB      0      0      192.168.1.42:52847      10.240.15.8:443   users:((&quot;chrome&quot;,pid=3847,fd=24))
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ESTAB      0      0      192.168.1.42:52891      172.16.0.5:3306   users:((&quot;mysql&quot;,pid=2156,fd=12))
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ESTAB      0      0      192.168.1.42:22         203.0.113.99:54321 users:((&quot;sshd&quot;,pid=1024,fd=3))
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>$ ss -tlnp
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>State      Recv-Q Send-Q Local Address:Port       Peer Address:Port Process
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>LISTEN     0      128    127.0.0.1:5432          0.0.0.0:*         users:((&quot;postgres&quot;,pid=891,fd=5))
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>LISTEN     0      128    0.0.0.0:80              0.0.0.0:*         users:((&quot;nginx&quot;,pid=1205,fd=6))
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>LISTEN     0      128    0.0.0.0:443             0.0.0.0:*         users:((&quot;nginx&quot;,pid=1205,fd=7))
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>$ lsof -i :8080
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>COMMAND   PID     USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>java      2847    appuser 45u  IPv4  0x12a4f5c0      0t0  TCP localhost:8080 (LISTEN)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>$ traceroute api-prod.internal.corp
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>traceroute to api-prod.internal.corp (10.50.12.33), 30 hops max, 60 byte packets
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a> 1  gateway.local (192.168.1.1)  2.341 ms  2.156 ms  2.089 ms
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a> 2  core-router-01.dc1 (10.0.0.1)  5.623 ms  5.401 ms  5.512 ms
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a> 3  10.240.15.1  8.934 ms  9.012 ms  8.876 ms
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a> 4  api-prod.internal.corp (10.50.12.33)  12.445 ms  12.389 ms  12.567 ms
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>$ dig api-prod.internal.corp ANY
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; api-prod.internal.corp ANY
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>;; ANSWER SECTION:
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>api-prod.internal.corp. 300 IN A 10.50.12.33
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>api-prod.internal.corp. 300 IN AAAA 2001:db8::1
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>api-prod.internal.corp. 300 IN MX 10 mail.internal.corp.
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>$ dig -t SRV _ldap._tcp.internal.corp
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; -t SRV _ldap._tcp.internal.corp
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>;; ANSWER SECTION:
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>_ldap._tcp.internal.corp. 3600 IN SRV 10 60 389 ldap-01.internal.corp.
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>_ldap._tcp.internal.corp. 3600 IN SRV 10
 </code></pre></div>
 
 
@@ -8652,7 +8647,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 3, 2026 16:25:36 UTC"><span class="timeago" datetime="2026-07-03T16:25:36+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 3, 2026 16:25:36 UTC">2026-07-03</span>
   </span>
 
     
