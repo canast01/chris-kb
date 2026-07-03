@@ -25,29 +25,7 @@ FabricOS encryption: in-flight data encryption via FC-SP-2, IPsec for FCIP tunne
 
 ## Management Plane Encryption Stack
 
-```mermaid
-graph LR
-    subgraph "Management Access"
-        ssh["SSH\nECDSA / RSA host key\nAES-256 transport"]
-        https["HTTPS — Web Tools / REST API\nTLS 1.2+\nCA-signed certificate"]
-        snmp3["SNMP v3\nSHA authentication\nAES-128 privacy"]
-    end
-
-    subgraph "Config Transfer"
-        scp["SCP (configupload)\nencrypted file transfer"]
-    end
-
-    subgraph "Disabled (Plaintext Protocols)"
-        telnet["Telnet — DISABLED"]
-        http["HTTP — DISABLED"]
-        snmp12["SNMPv1/v2c — DISABLED\n(no community strings)"]
-        ftp["FTP — DISABLED\n(use SCP only)"]
-    end
-
-    adminUser["Administrators"] --> ssh & https & snmp3
-    backupServer["Backup Server"] --> scp
-    monSystem["Monitoring Platform"] --> snmp3
-```
+![Management Plane Encryption Stack](../../../../assets/san-brocade-fabric-os-security-encryption-mermaid-svg.svg)
 
 ### Test SNMP v3 from Monitoring Server
 

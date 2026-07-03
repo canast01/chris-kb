@@ -223,23 +223,7 @@ CyberArk's built-in DR solution replicates the Vault database to a secondary Vau
 
 ### DR Replication Architecture
 
-```mermaid
-flowchart LR
-    subgraph Primary["Primary Site"]
-        V1[Production Vault\nActive] -- "DR Replication\nTCP 1858" --> V2
-        V1 --- K1[("server.key\n(local)")]
-    end
-
-    subgraph DR["DR Site"]
-        V2[DR Vault\nPassive / Standby]
-        V2 --- K2[("server.key\n(offline copy)")]
-    end
-
-    subgraph Clients["Clients"]
-        CPM[CPM / PSM / PVWA] --> V1
-        CPM -.->|"Failover"| V2
-    end
-```
+![See also](../../../../assets/security-cyberark-operations-backup-restore-mermaid-svg.svg)
 
 ### DR Vault dbparm.ini Settings (Primary)
 

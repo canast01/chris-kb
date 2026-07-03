@@ -25,33 +25,7 @@ Access Control reference covering RBAC, Namespace Isolation, Compliance, Access 
 
 ECS implements role-based access at two levels: system management and object (data) access.
 
-```mermaid
-graph LR
-  subgraph "Management Plane (portal/API)"
-    SYSADMIN["System Admin\n(global — all VDCs)"]
-    SYSMON["System Monitor\n(global, read-only)"]
-    NSADMIN["Namespace Admin\n(per namespace)"]
-    NSUSER["Namespace User\n(per namespace, read-only)"]
-  end
-  subgraph "Data Plane (S3/Swift)"
-    OBJ["Object User\n(per namespace, IAM identity)"]
-    BPOL["Bucket Policy\n(s3:GetObject, s3:PutObject…)"]
-    OBJ --> BPOL
-  end
-  subgraph "Scope"
-    NS1["Namespace: analytics-prod\n(isolated boundary)"]
-    NS2["Namespace: finance-prod\n(isolated boundary)"]
-  end
-  NSADMIN -->|"creates"| OBJ
-  OBJ -.->|"cannot cross\nnamespace boundary"| NS2
-  OBJ -->|"accesses"| NS1
-  classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef data fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef ns fill:#15803d,stroke:#166534,color:#fff
-  class SYSADMIN,SYSMON,NSADMIN,NSUSER mgmt
-  class OBJ,BPOL data
-  class NS1,NS2 ns
-```
+![RBAC](../../../../assets/storage-dell-ecs-security-access-control-mermaid-svg.svg)
 
 ### System Management Roles
 

@@ -31,33 +31,7 @@ Access control on Cisco MDS operates at two levels: **management plane** (who ca
 
 ## Access Control Architecture
 
-```mermaid
-graph LR
-  subgraph "Management Plane — Who can log in"
-    MGMT["mgmt0 interface\n(SSH port 22 / HTTPS 443)"]
-    ACL["IP ACL: permit mgmt subnet only"]
-    MGMT --> ACL
-    ACL --> AAA2["AAA: TACACS+ primary\nlocal break-glass"]
-    AAA2 --> RBAC["RBAC Role Assignment\n(network-admin / operator / san-admin)"]
-  end
-
-  subgraph "Data Plane — Which devices can communicate"
-    FC["FC Fabric"]
-    VSAN["VSAN isolation\n(separate name server + zone DB per VSAN)"]
-    ZONE["Zoning\n(single-initiator enhanced mode)"]
-    FC --> VSAN
-    VSAN --> ZONE
-    ZONE -->|"FLOGI allowed"| FCID["Device gets FCID\n(can communicate with zoned peers only)"]
-    ZONE -->|"not zoned / no FLOGI"| DENY["Default-deny\n(no communication)"]
-  end
-
-  classDef plane fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef allow fill:#15803d,stroke:#166534,color:#fff
-  classDef block fill:#991b1b,stroke:#7f1d1d,color:#fff
-  class ACL,AAA2,RBAC,VSAN,ZONE plane
-  class FCID allow
-  class DENY block
-```
+![Access Control Architecture](../../../../assets/san-cisco-mds-security-access-control-mermaid-svg.svg)
 
 ### VSAN-Scoped Roles
 

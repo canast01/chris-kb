@@ -124,59 +124,7 @@ All protocols are served from the same physical hardware and the same underlying
 
 ## Mermaid Diagram: I/O Architecture
 
-```mermaid
-flowchart LR
-    subgraph HOSTS["Host Layer"]
-        H1["NAS Client\nNFS / SMB"]
-        H2["SAN Host\niSCSI / FC / NVMe"]
-    end
-
-    subgraph SVM["SVM — Protocol Layer"]
-        SVMN["NAS SVM\nNFS exports\nSMB shares\nData LIFs"]
-        SVMS["SAN SVM\niSCSI target\nFC WWPNs\nNVMe subsystem"]
-    end
-
-    subgraph VOL["Volume Layer"]
-        V1["FlexVol A\nNFS junction\nSnapshots"]
-        V2["FlexVol B\nLUN or Namespace\nSnapshots"]
-    end
-
-    subgraph AGG["Aggregate Layer"]
-        AGG1["Aggregate 1\nRAID-DP\nNode 1 ownership"]
-        AGG2["Aggregate 2\nRAID-DP\nNode 2 ownership"]
-    end
-
-    subgraph MEDIA["Physical Media"]
-        M1["NVMe / SSD / HDD\nRAID-protected drives"]
-    end
-
-    REMOTE["Remote ONTAP\nor Cloud Volumes ONTAP"]
-
-    H1 -->|"NFS / SMB"| SVMN
-    H2 -->|"iSCSI / FC / NVMe"| SVMS
-    SVMN --> V1
-    SVMS --> V2
-    V1 --> AGG1
-    V2 --> AGG2
-    AGG1 --> M1
-    AGG2 --> M1
-    V1 -->|"SnapMirror\nasync or sync"| REMOTE
-    V2 -->|"SnapMirror\nasync or sync"| REMOTE
-
-    classDef host fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef svm fill:#15803d,stroke:#14532d,color:#fff
-    classDef vol fill:#15803d,stroke:#14532d,color:#fff
-    classDef agg fill:#b45309,stroke:#92400e,color:#fff
-    classDef media fill:#b45309,stroke:#92400e,color:#fff
-    classDef snap fill:#7c3aed,stroke:#5b21b6,color:#fff
-
-    class H1,H2 host
-    class SVMN,SVMS svm
-    class V1,V2 vol
-    class AGG1,AGG2 agg
-    class M1 media
-    class REMOTE snap
-```
+![SnapMirror and SnapVault](../../../../assets/storage-netapp-ontap-architecture-how-it-works-mermaid-svg.svg)
 
 ## SnapMirror and SnapVault
 
@@ -284,86 +232,7 @@ SnapCenter manages retention policies at the backup job level. Expired backup co
 
 The diagram below shows how ONTAP layers physical drives, RAID groups, aggregates, SVMs, volumes, and sub-volume constructs (LUNs, qtrees, shares) into a coherent hierarchy. The SVM boundary is where multi-tenancy is enforced — each tenant sees only its own namespace, LIFs, and data.
 
-```mermaid
-flowchart LR
-    subgraph PHYSICAL["Physical Layer — Node-Owned Hardware"]
-        DRIVES["Physical Drives\nNVMe SSDs · SATA HDDs · SAS HDDs\nMixed media supported per aggregate"]
-        RAIDG["RAID Groups\nRAID-DP: 2 parity disks, 2-drive fault tolerance\nRAID-TEC: 3 parity disks, 3-drive fault tolerance\nTypical group: 12–28 data drives"]
-    end
-
-    subgraph AGG_LAYER["Aggregate Layer — Physical Storage Pool"]
-        AGG1["Aggregate 1\nOwned by Node 1\nPool of RAID groups\nSingle disk type per aggregate\nCapacity drawn by thin volumes"]
-        AGG2["Aggregate 2\nOwned by Node 2\nSeparate pool\nFailover: Node 1 adopts AGG2\non partner takeover"]
-    end
-
-    subgraph SVM_A["SVM — Tenant A (Production)"]
-        SVMA_LIF["LIF Set\niSCSI 192.168.10.10\nFC WWPN AA:BB:CC\nNFS 192.168.10.11"]
-        SVMA_ISCSI["iSCSI Target\niqn.2010-01.com.netapp:svm-a\nPortal group on data LIFs"]
-        SVMA_NFS["NFS Export\n/vol/oracle_data → NFS v4.1\n/vol/oracle_logs → NFS v3"]
-    end
-
-    subgraph SVM_B["SVM — Tenant B (DevTest)"]
-        SVMB_LIF["LIF Set\nSMB 192.168.20.10\nNFS 192.168.20.11"]
-        SVMB_SMB["CIFS/SMB Share\n\\\\svm-b\\projects\nAD-integrated auth"]
-        SVMB_NFS["NFS Export\n/vol/devtest → NFS v3\nSquash root, read-write"]
-    end
-
-    subgraph VOL_LAYER["Volume Layer — Logical Containers"]
-        VOL1["FlexVol: oracle_data\nSize: 5 TB (thin)\nSnap reserve: 20%\nAggregate: AGG1"]
-        VOL2["FlexVol: oracle_logs\nSize: 1 TB (thin)\nSnap reserve: 10%\nAggregate: AGG1"]
-        VOL3["FlexVol: devtest\nSize: 2 TB (thin)\nSnap reserve: 5%\nAggregate: AGG2"]
-        SNAP1["Snapshot Copies\nWAFL copy-on-write PiT copies\nInstant creation, no data copy\nRetained per volume policy"]
-    end
-
-    subgraph SUBVOL["Sub-Volume Constructs"]
-        LUN["LUN\nBlock device inside a volume\niSCSI or FC mapped via igroup\nThin-provisioned inside FlexVol"]
-        QTREE["qtree\nNFS sub-directory with own quota\nCIFS share root\nOplock and security-style scoped"]
-        SHARE["SMB Share\nMapped to a volume junction\nor qtree within SVM namespace"]
-        NS["NVMe Namespace\nNVMe/FC or NVMe/TCP\nMapped via subsystem (host group)\nLike a LUN but NVMe-native"]
-    end
-
-    DRIVES -->|"RAID-DP or RAID-TEC groups"| RAIDG
-    RAIDG -->|"Aggregate pools\nRAID groups added to aggregate"| AGG1
-    RAIDG -->|"Aggregate pools"| AGG2
-
-    AGG1 -->|"Volume carved from aggregate\ncapacity pool"| VOL1
-    AGG1 -->|"Volume carved from aggregate"| VOL2
-    AGG2 -->|"Volume carved from aggregate"| VOL3
-
-    VOL1 --> SNAP1
-    VOL2 --> SNAP1
-    VOL3 --> SNAP1
-
-    VOL1 -->|"LUN inside volume\nSAN access path"| LUN
-    VOL3 -->|"qtree inside volume\nNAS quota boundary"| QTREE
-    VOL3 -->|"SMB share on volume\nor qtree root"| SHARE
-    VOL1 -->|"NVMe Namespace\nin NVMe-capable volume"| NS
-
-    SVMA_ISCSI -->|"igroup maps LUN\nto SVM-A iSCSI target"| LUN
-    SVMA_NFS -->|"Junction-path mounts\nvolume into SVM namespace"| VOL1
-    SVMA_NFS -->|"Junction-path mount"| VOL2
-    SVMA_LIF --- SVMA_ISCSI
-    SVMA_LIF --- SVMA_NFS
-
-    SVMB_SMB -->|"Share root is qtree\nor volume junction"| SHARE
-    SVMB_NFS -->|"Export policy applied\nto volume"| VOL3
-    SVMB_LIF --- SVMB_SMB
-    SVMB_LIF --- SVMB_NFS
-
-    classDef physical fill:#374151,stroke:#1f2937,color:#fff
-    classDef agg fill:#b45309,stroke:#92400e,color:#fff
-    classDef svmA fill:#15803d,stroke:#14532d,color:#fff
-    classDef svmB fill:#0e7490,stroke:#155e75,color:#fff
-    classDef vol fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef subvol fill:#7c3aed,stroke:#5b21b6,color:#fff
-
-    class DRIVES,RAIDG physical
-    class AGG1,AGG2 agg
-    class SVMA_LIF,SVMA_ISCSI,SVMA_NFS svmA
-    class SVMB_LIF,SVMB_SMB,SVMB_NFS svmB
-    class VOL1,VOL2,VOL3,SNAP1 vol
-    class LUN,QTREE,SHARE,NS subvol
-```
+![Key Terms Glossary](../../../../assets/storage-netapp-ontap-architecture-how-it-works-mermaid-svg-1.svg)
 
 Key points illustrated:
 

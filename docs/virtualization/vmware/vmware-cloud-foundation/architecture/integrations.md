@@ -28,7 +28,7 @@ Get-Cluster "ClusterName" | Get-VMHost | ForEach-Object {
   Set-VMHostSysLogServer -VMHost $_ -SysLogServer "udp://<siem-ip>:514"
   Restart-VMHostService -VMHost $_ -Key "syslog" -Confirm:$false
 }
-```text
+```
 
 ## See also
 

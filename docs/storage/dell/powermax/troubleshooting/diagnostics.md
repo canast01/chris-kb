@@ -215,36 +215,7 @@ FA-5C  12c       FC        16Gb   72.1         8765       5432
     **`symstat: Error: Access denied — insufficient privileges`** — Run the commands with `sudo` or ensure your user is in the `symcli` group via `usermod -aG symcli $USER`.
 ### Key Metrics and Thresholds
 
-```mermaid
-graph LR
-    subgraph "Host Tier"
-        HOST_LAT["Host Response Time\nNormal: < 1 ms\nWarn: 1–3 ms\nCrit: > 3 ms"]
-    end
-    subgraph "Front-End"
-        FA_UTIL["FA Port Utilisation\nNormal: < 50%\nWarn: 50–70%\nCrit: > 70%"]
-    end
-    subgraph "Cache"
-        CACHE_WP["Cache Write Pending %\nNormal: < 15%\nWarn: 15–30%\nCrit: > 31%"]
-    end
-    subgraph "Back-End"
-        BE_UTIL["BE Utilisation %\nNormal: < 60%\nWarn: 60–80%\nCrit: > 80%"]
-    end
-    subgraph "Pool"
-        SRP_SUB["SRP Subscription %\nNormal: < 70%\nWarn: 70–85%\nCrit: > 85%"]
-    end
-
-    HOST_LAT -->|"high latency\n→ check"| FA_UTIL
-    FA_UTIL -->|"FA saturated\n→ check"| CACHE_WP
-    CACHE_WP -->|"WP% high\n→ check"| BE_UTIL
-    BE_UTIL -->|"BE busy\n→ check"| SRP_SUB
-
-    classDef ok fill:#15803d,stroke:#166534,color:#fff
-    classDef warn fill:#b45309,stroke:#92400e,color:#fff
-    classDef crit fill:#be123c,stroke:#9f1239,color:#fff
-    class HOST_LAT,FA_UTIL ok
-    class CACHE_WP,BE_UTIL warn
-    class SRP_SUB crit
-```
+![See also](../../../../assets/storage-dell-powermax-troubleshooting-diagnostics-mermaid-svg.svg)
 
 | Metric | Normal | Warning | Critical |
 |---|---|---|---|

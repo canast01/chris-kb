@@ -25,32 +25,7 @@ Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE),
 
 Dell Unity provides encryption at multiple layers. Understanding which layer is active and how to verify it is essential for compliance audits and security assessments.
 
-```mermaid
-graph LR
-  subgraph "In Transit"
-    HTTPS["Management: TLS 1.2+\nUnisphere · REST API · uemcli"]
-    CHAP["iSCSI: CHAP\nhost authentication"]
-    KRB["NFS v4: Kerberos\nkrb5i · krb5p"]
-    SMB["SMB 3.0: AES-128 encryption\nper-share or per-server"]
-  end
-  subgraph "At Rest"
-    DARE["D@RE: AES-256 SEDs\nenabled at pool creation"]
-    KMIP["Key management:\nInternal OE or external KMIP"]
-    DARE --> KMIP
-  end
-  subgraph "Verification Commands"
-    VDARE["uemcli /stor/config/pool show -detail\ngrep encrypt"]
-    VTLS["openssl s_client -connect ip:443 -tls1_2"]
-  end
-  DARE -.->|verify| VDARE
-  HTTPS -.->|verify| VTLS
-  classDef transit fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef rest fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef verify fill:#b45309,stroke:#92400e,color:#fff
-  class HTTPS,CHAP,KRB,SMB transit
-  class DARE,KMIP rest
-  class VDARE,VTLS verify
-```
+![Encryption Layers](../../../../assets/storage-dell-unity-security-encryption-mermaid-svg.svg)
 
 | Layer | Method | Status by Default | Notes |
 |---|---|---|---|

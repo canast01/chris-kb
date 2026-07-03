@@ -25,35 +25,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 
 ## Encryption Layer Architecture
 
-```mermaid
-graph LR
-    subgraph "Data In Transit"
-        tlsMgmt["TLS 1.2/1.3\nHTTPS · REST API · ONTAPI"]
-        kerbNFS["NFS Kerberos krb5p\nAES-256 NFS traffic"]
-        smbEnc["SMB 3.0 Encryption\nPer-share or per-SVM"]
-        smTLS["SnapMirror over TLS\nReplication traffic"]
-    end
-
-    subgraph "Data At Rest — Software"
-        nve["NVE — NetApp Volume Encryption\nAES-256 per-volume DEK"]
-        nae["NAE — NetApp Aggregate Encryption\nAES-256 per-aggregate AEK"]
-    end
-
-    subgraph "Data At Rest — Hardware"
-        nse["NSE — Self-Encrypting Drives\nHW-level AES at drive firmware"]
-    end
-
-    subgraph "Key Management"
-        okm["Onboard Key Manager\nOKM — cluster passphrase"]
-        kmip["External KMIP\nThales · IBM · HashiCorp"]
-    end
-
-    nve --> okm
-    nve --> kmip
-    nae --> okm
-    nae --> kmip
-    nse --> kmip
-```
+![Encryption Layer Architecture](../../../../assets/storage-netapp-ontap-security-encryption-mermaid-svg.svg)
 
 ## Encryption Architecture Overview
 

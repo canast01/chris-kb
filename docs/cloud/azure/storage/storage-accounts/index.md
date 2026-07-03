@@ -16,25 +16,7 @@ A Storage Account is the top-level namespace for all Azure Storage services (Blo
 
 ## Storage Account Service Hierarchy
 
-```mermaid
-flowchart LR
-    storageAccount["Storage Account\nGPv2 (recommended)"]
-    subgraph services["Storage Services"]
-        blobs["Blob Storage\nBlock · Append · Page"]
-        files["Azure Files\nSMB · NFS shares"]
-        queues["Queue Storage\nmessage queues"]
-        tables["Table Storage\nNoSQL key-value"]
-    end
-    subgraph replication["Replication Tiers"]
-        lrs["LRS\n3 copies — 1 DC"]
-        zrs["ZRS\n3 copies — 3 zones"]
-        grs["GRS\n6 copies — 2 regions"]
-        gzrs["GZRS\nzone + geo redundant"]
-    end
-
-    storageAccount --> services
-    storageAccount --> replication
-```
+![Storage Account Service Hierarchy](../../../../assets/cloud-azure-storage-storage-accounts-mermaid-svg.svg)
 
 ## Account Types
 

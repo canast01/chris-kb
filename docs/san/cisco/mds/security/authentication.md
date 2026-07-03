@@ -36,39 +36,7 @@ Both layers should be configured in enterprise environments. Management plane AA
 
 ## Authentication Architecture
 
-```mermaid
-flowchart LR
-  subgraph "Management Plane"
-    SSH["SSH / HTTPS Login"]
-    SSH --> AAA{"AAA method list"}
-    AAA -->|"primary"| TACP["TACACS+ Server\n(ISE / ACS)"]
-    AAA -->|"fallback if unreachable"| RAD["RADIUS Server"]
-    AAA -->|"last resort"| LOCAL["Local Account\n(break-glass only)"]
-    TACP -->|"auth + role AV-pair"| ROLE["Assign NX-OS Role\n(network-admin / operator)"]
-    RAD -->|"auth"| ROLE
-    LOCAL -->|"auth"| ROLE
-    ROLE --> CMD["Command Authorization\n& Accounting"]
-    CMD --> SIEM["Syslog / SIEM\n(audit trail)"]
-  end
-
-  subgraph "Fabric Plane"
-    HBA2["FC Host HBA"]
-    HBA2 -->|"FLOGI"| FCSP{"FC-SP DHCHAP\nenabled?"}
-    FCSP -->|"Yes — authenticate"| DHCHAP["DHCHAP challenge\n(shared secret by pWWN)"]
-    DHCHAP -->|"success"| FABRIC["Device joins fabric\n(FCID assigned)"]
-    DHCHAP -->|"fail"| REJECT["FLOGI rejected\nDevice cannot join"]
-    FCSP -->|"No — open"| FABRIC
-  end
-
-  classDef aaaNode fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef goodNode fill:#15803d,stroke:#166534,color:#fff
-  classDef badNode fill:#991b1b,stroke:#7f1d1d,color:#fff
-  classDef decisionNode fill:#b45309,stroke:#92400e,color:#fff
-  class TACP,RAD,LOCAL,DHCHAP aaaNode
-  class ROLE,CMD,FABRIC,SIEM goodNode
-  class REJECT badNode
-  class AAA,FCSP decisionNode
-```
+![Authentication Architecture](../../../../assets/san-cisco-mds-security-authentication-mermaid-svg.svg)
 
 ### TACACS+ Key Encryption
 

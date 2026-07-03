@@ -14,29 +14,7 @@ Integrations reference covering NetApp PowerScale (SyncIQ), Syslog / SIEM, Email
 
 ## NetApp PowerScale (SyncIQ)
 
-```mermaid
-flowchart LR
-    subgraph "Production Site"
-        primaryPS["PowerScale Cluster A\n(Production)"]
-        synciqPol["SyncIQ Policies\nContinuous / Scheduled"]
-    end
-    subgraph "DR Site"
-        drPS["PowerScale Cluster B\n(DR)"]
-    end
-    subgraph "Management Plane"
-        eyeglass["Superna Eyeglass\nDR Assistant"]
-        ad["Active Directory\nAD group ACLs"]
-        dns["DNS Server\nWindows DNS / BIND"]
-        siem["SIEM / Monitoring\nSNMP / Syslog"]
-    end
-
-    primaryPS -->|"SyncIQ replication"| drPS
-    eyeglass -->|"OneFS REST API\nmonitors SyncIQ"| primaryPS
-    eyeglass -->|"OneFS REST API\nchecks DR readiness"| drPS
-    ad -->|"AD group mapping\nfor share ACLs"| eyeglass
-    eyeglass -->|"DNS cutover\nzone delegation"| dns
-    eyeglass -->|"SNMP traps\nsyslog events"| siem
-```
+![NetApp PowerScale (SyncIQ)](../../../../assets/storage-netapp-superna-eyeglass-architecture-integrations-mermaid-svg.svg)
 
 ## Syslog / SIEM
 

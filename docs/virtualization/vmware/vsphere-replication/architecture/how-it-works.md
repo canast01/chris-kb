@@ -116,39 +116,7 @@ hbr 1.0.0 loaded
 
 ## Data Flow
 
-```mermaid
-graph LR
-    subgraph protected["Protected Site"]
-        VM["Source VM"]:::blue
-        HBR["VR kernel module\n(ESXi hbrsvc)"]:::blue
-        SVRA["VRA — vSphere Replication\nAppliance (source)"]:::green
-        SSRM["SRM Server\n(protected)"]:::amber
-    end
-
-    WAN(["WAN / MPLS"]):::purple
-
-    subgraph recovery["Recovery Site"]
-        TVRA["VRA — vSphere Replication\nAppliance (target)"]:::green
-        DS["Target datastore\n(replica VMDKs)"]:::blue
-        PVM["Placeholder VM\n(registered in vCenter)"]:::blue
-        RSRM["SRM Server\n(recovery)"]:::amber
-    end
-
-    VM -->|"write I/Os tracked\nper hbr bitmap"| HBR
-    HBR -->|"policy: RPO interval"| SVRA
-    HBR -->|"changed blocks\n(TCP 31031)"| WAN
-    WAN -->|"changed blocks\n(TCP 31031)"| TVRA
-    SVRA -->|"management (TCP 443)"| WAN
-    WAN -->|"management (TCP 443)"| TVRA
-    TVRA --> DS
-    DS --> PVM
-    SSRM <-->|"management (TCP 443 / 9086)"| RSRM
-
-    classDef blue   fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef green  fill:#15803d,stroke:#166534,color:#fff
-    classDef amber  fill:#b45309,stroke:#92400e,color:#fff
-    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
-```
+![Delta](../../../../assets/virtualization-vmware-vsphere-replication-architecture-how-it-works-mermaid-svg.svg)
 
 ```text
 Source Site                                    Target Site

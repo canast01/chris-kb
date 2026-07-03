@@ -34,31 +34,7 @@ Health Checks reference covering Health Check Layers, Daily Checks, Pre-Change H
 
 ![Health Check Layers](../../../../assets/storage-dell-ecs-hc-health-check-layers.svg)
 
-```mermaid
-graph LR
-  subgraph "REST API Layer"
-    NODES["GET /vdc/nodes\nAll nodes: GOOD?"]
-    CAP["GET /vdc/capacity\nUsed < 70%?"]
-    ALERTS["GET /vdc/alerts\nNo ERROR/CRITICAL?"]
-    GEOREP["GET /vdc/geo-replication/status\nLag at zero?"]
-  end
-  subgraph "S3 Layer"
-    S3HC["aws s3api head-bucket\n200 OK within SLA?"]
-  end
-  subgraph "Node-Level SSH"
-    STOS["systemctl status storageos\nActive?"]
-    CASS["nodetool status\nAll nodes UN?"]
-    ZK["echo srvr | nc localhost 2181\nMode: leader/follower?"]
-    NTP["chronyc tracking\nOffset < 100ms?"]
-  end
-  NODES & CAP & ALERTS & GEOREP --> S3HC --> STOS & CASS & ZK & NTP
-  classDef rest fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef s3 fill:#15803d,stroke:#166534,color:#fff
-  classDef node fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class NODES,CAP,ALERTS,GEOREP rest
-  class S3HC s3
-  class STOS,CASS,ZK,NTP node
-```
+![Health Check Layers](../../../../assets/storage-dell-ecs-operations-health-checks-mermaid-svg.svg)
 
 ## Daily Checks
 

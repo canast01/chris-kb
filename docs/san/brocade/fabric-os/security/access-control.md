@@ -25,27 +25,7 @@ FabricOS access control: RBAC role assignment, `userconfig` CLI, default account
 
 ## Access Control Architecture
 
-```mermaid
-graph LR
-    subgraph "Management Plane"
-        ipfilter["IPfilter Policy\nsource IP restriction\nSSH · HTTPS · SNMP"]
-        rbac["RBAC Roles\nadmin · switchadmin\nzoneadmin · operator"]
-        aaa["AAA\nRADIUS / TACACS+\nlocal fallback"]
-        ipfilter --> aaa --> rbac
-    end
-
-    subgraph "Fabric Plane"
-        scc["SCC Policy\nSwitch Connection Control\npermitted switch WWNs"]
-        dcc["DCC Policy\nDevice Connection Control\npermitted device WWPNs per port"]
-        binding["Fabric Binding\nISL admission control"]
-        zoning["Zoning\ninitiator-to-target\nframe filtering"]
-        scc --> binding --> dcc --> zoning
-    end
-
-    mgmtUsers["Management Users\n(ops, NOC, security)"] --> ipfilter
-    switches["Switches / ISLs"] --> scc
-    devices["Host HBAs\nStorage Targets"] --> dcc
-```
+![Access Control Architecture](../../../../assets/san-brocade-fabric-os-security-access-control-mermaid-svg.svg)
 
 > **Warning:** Always verify your management workstation's source IP is in the permitted range before activating an IPfilter policy. An incorrect policy will lock you out of the switch — recovery requires console access.
 

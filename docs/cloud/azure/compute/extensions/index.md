@@ -14,21 +14,7 @@ Azure VM Extensions are small applications that perform post-deployment configur
 
 ## VM Extension Deployment Model
 
-```mermaid
-flowchart LR
-    arm["ARM Deployment\nor Azure Portal / CLI"]
-    vmAgent["Azure VM Agent\n(waagent / WindowsAzureGuestAgent)"]
-    subgraph extensions["Common Extensions"]
-        monitorAgent["Azure Monitor Agent\nmetrics · logs collection"]
-        defenderExt["Microsoft Defender\nendpoint protection"]
-        dscExt["DSC Extension\ndesired state config"]
-        customScript["Custom Script Extension\nrun scripts post-deploy"]
-        diagExt["Diagnostics Extension\nboot diagnostics · perf counters"]
-    end
-    status["Extension Status\nSucceeded · Failed · Transitioning"]
-
-    arm --> vmAgent --> extensions --> status
-```
+![VM Extension Deployment Model](../../../../assets/cloud-azure-compute-extensions-mermaid-svg.svg)
 
 ## Extension Architecture
 

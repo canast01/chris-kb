@@ -40,24 +40,7 @@ Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share
 
 ## Backup Architecture
 
-```mermaid
-flowchart LR
-    subgraph "Eyeglass Appliance"
-        EG[Eyeglass Engine]
-        CFG[Config Store]
-        SCHED[Backup Scheduler]
-    end
-    subgraph "Backup Targets"
-        LOCAL[Local Disk\n/home/admin/backups]
-        NFS[NFS Share\nNAS Backup Target]
-        SFTP[SFTP Server]
-    end
-    SCHED --> EG
-    EG --> CFG
-    EG --> LOCAL
-    EG --> NFS
-    EG --> SFTP
-```
+![Backup Architecture](../../../../assets/storage-netapp-superna-eyeglass-operations-backup-restore-mermaid-svg.svg)
 
 ### Restore to New/Replacement Appliance
 

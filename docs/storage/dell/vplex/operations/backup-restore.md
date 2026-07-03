@@ -86,30 +86,7 @@ support_bundle.tar.gz                                    100%  487MB   12.4MB/s 
 - After the failed site recovers: reconnect the ICL, verify Witness connectivity, allow distributed devices to resync
 - Monitor resync progress: `ll /distributed-storage/distributed-devices/*/health-indications/`
 
-```mermaid
-flowchart LR
-    subgraph "VMS Loss"
-        vmsLost["VMS VM unavailable\n(management plane only)"]
-        ioOk["Host I/O continues\nDirectors unaffected"]
-        restoreVms["Restore VMS VM\nfrom snapshot / backup"]
-        vmsLost --> ioOk
-        vmsLost --> restoreVms
-    end
-    subgraph "Director Failure"
-        dirFail["Single director failure\nWithin a pair"]
-        pairDegraded["Director pair degraded\nCache on surviving director"]
-        replaceDir["Replace failed director\nDell FSE hardware replacement"]
-        verifyDir["ll /engines/*/directors/*/hardware/\nConfirm health-state: ok"]
-        dirFail --> pairDegraded --> replaceDir --> verifyDir
-    end
-    subgraph "Metro Site Failure"
-        siteFail["Site failure / ICL down\nWitness grants quorum"]
-        survivorIo["Surviving cluster continues I/O\nDistributed volumes accessible"]
-        siteRecover["Site recovers\nICL reconnected"]
-        resync["Distributed devices resync\nmonitor rebuild-progress"]
-        siteFail --> survivorIo --> siteRecover --> resync
-    end
-```
+![Verify](../../../../assets/storage-dell-vplex-operations-backup-restore-mermaid-svg.svg)
 
 ## Validation
 

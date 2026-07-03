@@ -12,25 +12,7 @@ VPLEX access control operates at two layers: management plane access (who can ch
 </div>
 ![Dell VPLEX — Access Control](../../../../assets/storage-dell-vplex-security-access-control.svg)
 
-```mermaid
-flowchart LR
-    subgraph "Management Plane"
-        adminRole["Administrator\nFull read/write\nProvisioning + config"]
-        monitorRole["Monitor\nRead-only\nHealth + inventory"]
-        svcRole["Service\nvplexcli SSH access\nAutomation accounts"]
-    end
-    subgraph "Data Plane — Host Access"
-        sanZone["SAN Fabric Zone\nHost HBA → VPLEX FE port"]
-        storView["Storage View\nInitiator + FE port + virtual volume"]
-        virtVol["Virtual Volume\nPresented to host"]
-    end
-
-    adminRole -->|"Unisphere / vplexcli"| storView
-    monitorRole -->|"read-only\nUnisphere"| storView
-    svcRole -->|"SSH vplexcli"| storView
-    sanZone -->|"enforcement at\nSAN switch"| storView
-    storView --> virtVol
-```
+![Dell VPLEX — Access Control](../../../../assets/storage-dell-vplex-security-access-control-mermaid-svg.svg)
 
 ## Before you begin
 

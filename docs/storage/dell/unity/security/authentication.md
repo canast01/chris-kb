@@ -25,29 +25,7 @@ Authentication reference covering Authentication Overview, Unisphere — Active 
 
 Dell Unity supports two authentication pathways that serve distinct purposes:
 
-```mermaid
-graph LR
-  subgraph "Management Plane"
-    GUI["Unisphere GUI\nREST API · uemcli"]
-    GUI --> MAUTH{Auth method}
-    MAUTH -->|Local account| LOCL["Local user DB\n(array-local)"]
-    MAUTH -->|AD/LDAP| LDAP["LDAP / AD\ngroup → role mapping"]
-  end
-  subgraph "NAS Plane"
-    SMB["SMB / CIFS Clients"]
-    NFS4["NFS v4 Clients"]
-    SMB -->|Kerberos / NTLM| ADOM["AD Domain\n(NAS server joined)"]
-    NFS4 -->|krb5i / krb5p| ADOM
-  end
-  subgraph "Block Plane"
-    ISCSI["iSCSI Initiators"]
-    ISCSI -->|CHAP| CTARGET["Unity iSCSI Target\n(per-host credentials)"]
-  end
-  classDef auth fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef plane fill:#2563eb,stroke:#1d4ed8,color:#fff
-  class MAUTH auth
-  class LOCL,LDAP,ADOM,CTARGET plane
-```
+![Authentication Overview](../../../../assets/storage-dell-unity-security-authentication-mermaid-svg.svg)
 
 | Authentication Target | Mechanism | Purpose |
 |---|---|---|

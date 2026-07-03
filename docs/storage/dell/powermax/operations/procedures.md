@@ -71,44 +71,7 @@ Run these checks after any change to the PowerMax to confirm the array is health
 
 A Masking View on PowerMax connects three components — a Storage Group (volumes), a Port Group (FA ports), and an Initiator Group (host HBAs) — to grant a host access to storage. All three must exist before the Masking View can be created.
 
-```mermaid
-flowchart LR
-    subgraph "Host Side"
-        HBA_A["HBA Port A\n(WWN)"]
-        HBA_B["HBA Port B\n(WWN)"]
-    end
-    subgraph "Array: Masking View"
-        IG["Initiator Group\nhostname_IG\n{WWN_A, WWN_B}"]
-        MV["Masking View\nhostname_MV"]
-        PG["Port Group\nfabric_PG\n{01E:4, 02E:4}"]
-        SG["Storage Group\nhostname_SG\n{DEV001…DEV005}"]
-    end
-    subgraph "Array: Storage"
-        TDEV["TDEV Volumes\n100 GB each\nSLO: Diamond"]
-        SRP["SRP_1\n(Storage Resource Pool)"]
-        TDEV --> SRP
-    end
-    subgraph "Array: Front-End"
-        FA_A["FA Dir 01E Port 4\n(Fabric A)"]
-        FA_B["FA Dir 02E Port 4\n(Fabric B)"]
-    end
-
-    HBA_A & HBA_B --> IG
-    IG --> MV
-    PG --> MV
-    SG --> MV
-    SG --> TDEV
-    PG --> FA_A & FA_B
-
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef mv fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef store fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef port fill:#0f766e,stroke:#0d9488,color:#fff
-    class HBA_A,HBA_B host
-    class IG,MV,PG,SG mv
-    class TDEV,SRP store
-    class FA_A,FA_B port
-```
+![Masking Views](../../../../assets/storage-dell-powermax-operations-procedures-mermaid-svg.svg)
 
 ### List and Inspect
 

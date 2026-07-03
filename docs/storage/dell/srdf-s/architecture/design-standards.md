@@ -25,28 +25,7 @@ SRDF/S commits every host write synchronously across the replication link. The h
 | Metro (> 100km) | 5–10ms | ≤ 10ms | Latency penalty becomes noticeable on high-IOPS workloads | Borderline — test under peak load |
 | WAN (> 200km) | > 10ms | Not recommended | Synchronous commit would add > 20ms to every write — use SRDF/A | Use SRDF/A instead |
 
-```mermaid
-graph LR
-    subgraph siteA ["Site A — Production"]
-        hostA["Production Hosts"]
-        r1["PowerMax R1"]
-        hostA -->|"write I/O"| r1
-    end
-
-    subgraph fabric ["Dark Fibre / FCIP — Metro"]
-        linkLabel["RTT ≤ 10ms\nSynchronous"]
-    end
-
-    subgraph siteB ["Site B — Metro DR"]
-        r2["PowerMax R2"]
-        hostB["Standby Hosts\n(inactive)"]
-        r2 -.->|"at failover only"| hostB
-    end
-
-    r1 -->|"sync write commit"| linkLabel
-    linkLabel -->|"ack to R1"| r1
-    linkLabel --> r2
-```
+![RTT and Latency Budget](../../../../assets/storage-dell-srdf-s-architecture-design-standards-mermaid-svg.svg)
 
 Where 1.25 = 25% headroom for burst absorption.
 

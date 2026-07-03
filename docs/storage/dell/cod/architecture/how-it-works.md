@@ -118,41 +118,7 @@ The metadata service uses an **eventual consistency** model for cross-node propa
 
 ## COD Data Flow and Geo-Replication Architecture
 
-```mermaid
-graph LR
-  subgraph SITEA["Site A (Primary)"]
-    CLIENT["Client Application\n(S3-compatible)"]
-    LBA["COD Load Balancer\n(HTTPS / TLS 1.2+)"]
-    META["Metadata Service\neventual consistency\nobject key index"]
-    NODES["Object Nodes\ndata shards\nerasure coded 10+2"]
-    CLIENT -->|"S3 API\nHTTPS PUT / GET"| LBA
-    LBA -->|"route request"| META
-    LBA -->|"write data\nfragments"| NODES
-    META <-->|"metadata lookup\n/ update"| NODES
-  end
-
-  subgraph SITEB["Site B (Secondary / DR)"]
-    LBB["COD Load Balancer"]
-    METAB["Metadata Service"]
-    NODESB["Object Nodes\nerasure coded 10+2"]
-    LBB --> METAB
-    LBB --> NODESB
-    METAB <--> NODESB
-  end
-
-  NODES -->|"async CRR\ngeo-replication"| NODESB
-  META -->|"metadata sync"| METAB
-
-  classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef green fill:#15803d,stroke:#166534,color:#fff
-  classDef amber fill:#b45309,stroke:#92400e,color:#fff
-  classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-  class CLIENT blue
-  class LBA,LBB amber
-  class NODES,NODESB green
-  class META,METAB purple
-```
+![See also](../../../../assets/storage-dell-cod-architecture-how-it-works-mermaid-svg.svg)
 
 ---
 

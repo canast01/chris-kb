@@ -59,37 +59,7 @@ sequenceDiagram
 
 ### MDS vs DS Role Separation
 
-```mermaid
-graph LR
-    subgraph Client["NFS Client"]
-        APP["Application<br/>(read/write calls)"]
-        VFS["VFS Layer"]
-        NFS41["NFSv4.1 Module<br/>+ pNFS driver"]
-    end
-
-    subgraph Control["Control Plane"]
-        MDS["Metadata Server (MDS)<br/>── namespace / dentries<br/>── open / lock / delegation<br/>── layout grant (LAYOUTGET)<br/>── attribute updates<br/>── port 2049"]
-    end
-
-    subgraph Data["Data Plane (pNFS)"]
-        DS1["Data Server 1<br/>── file stripe 0 → 511 MB<br/>── direct TCP :2049<br/>── no MDS involvement"]
-        DS2["Data Server 2<br/>── file stripe 512 MB → EOF<br/>── direct TCP :2049<br/>── parallel to DS1"]
-    end
-
-    APP --> VFS --> NFS41
-    NFS41 -->|"COMPOUND ops<br/>(metadata)"| MDS
-    MDS -->|"layout + deviceid"| NFS41
-    NFS41 -->|"READ / WRITE<br/>(data direct)"| DS1
-    NFS41 -->|"READ / WRITE<br/>(data direct)"| DS2
-    DS1 & DS2 -.->|"layout recall<br/>(CB_LAYOUTRECALL)"| NFS41
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef ds fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef cli fill:#15803d,stroke:#166534,color:#fff
-    class MDS ctrl
-    class DS1,DS2 ds
-    class APP,VFS,NFS41 cli
-```
+![Mount — Client Side](../../../../assets/networking-protocols-nfs-versions-mermaid-svg.svg)
 
 | Concept | NFSv3 | NFSv4.0 | NFSv4.1 |
 |---|---|---|---|

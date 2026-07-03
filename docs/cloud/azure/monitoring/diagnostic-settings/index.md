@@ -12,23 +12,7 @@ Diagnostic settings control which resource logs and metrics are exported from an
 
 ## Diagnostic Settings Routing
 
-```mermaid
-flowchart LR
-    resource["Azure Resource\nVM · KeyVault · NSG · Firewall"]
-    diagSetting["Diagnostic Setting\nselected log categories + metrics"]
-    subgraph destinations["Destinations (1–4 per resource)"]
-        la["Log Analytics Workspace\nKQL · alerts · workbooks"]
-        storage["Storage Account\nlong-term archival"]
-        eventhub["Event Hub\nstream to SIEM · Splunk"]
-        partnersol["Partner Solution\ne.g. Datadog"]
-    end
-
-    resource --> diagSetting
-    diagSetting --> la
-    diagSetting --> storage
-    diagSetting --> eventhub
-    diagSetting --> partnersol
-```
+![Diagnostic Settings Routing](../../../../assets/cloud-azure-monitoring-diagnostic-settings-mermaid-svg.svg)
 
 ## Enabling Diagnostic Settings
 

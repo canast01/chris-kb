@@ -527,21 +527,7 @@ Point the NDMP backup application to the NAS server IP and port 10000. Supported
 
 ## Replication Failover and Failback Flow
 
-```mermaid
-graph LR
-  subgraph "Normal State"
-    SRC[("Source Unity\n(active)")]
-    DST[("Destination Unity\n(replica)")]
-    SRC -->|"async / sync replication"| DST
-  end
-  FAIL{Source\nfails?}
-  SRC -->|disaster| FAIL
-  FAIL -->|Yes| FO["uemcli /prot/rep/session\n-id ... failover"]
-  FO --> ACTIVE["Destination Unity\nnow active"]
-  ACTIVE --> HOSTS(["Hosts redirect I/O\nto destination"])
-  HOSTS --> FBCK["When source recovers\nuemcli ... reverse → sync → failback"]
-  FBCK --> SRC
-```
+![See also](../../../../assets/storage-dell-unity-operations-backup-restore-mermaid-svg.svg)
 
 ## Replication as DR Protection
 

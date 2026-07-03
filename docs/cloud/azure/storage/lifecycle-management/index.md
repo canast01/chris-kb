@@ -16,21 +16,7 @@ Azure Storage lifecycle management policies automate blob tier transitions and d
 
 ## Lifecycle Policy Evaluation
 
-```mermaid
-flowchart LR
-    policy["Lifecycle Management Policy\nrules run daily"]
-    filter["Filter\nblob prefix · tag · container"]
-    blobAge["Blob Age Evaluation\ndaysSinceModification"]
-    subgraph actions["Actions"]
-        toHot["Move to Hot\n(or stay)"]
-        toCool["Move to Cool\nafter N days"]
-        toCold["Move to Cold\nafter N days"]
-        toArchive["Move to Archive\nafter N days"]
-        deleteBlob["Delete Blob\nafter N days"]
-    end
-
-    policy --> filter --> blobAge --> toHot & toCool & toCold & toArchive & deleteBlob
-```
+![Lifecycle Policy Evaluation](../../../../assets/cloud-azure-storage-lifecycle-management-mermaid-svg.svg)
 
 ## Policy Structure
 

@@ -24,27 +24,7 @@ Microsoft Defender for Cloud (formerly Security Center / Azure Defender) is a cl
 
 ## Defender for Cloud Coverage
 
-```mermaid
-flowchart LR
-    dfc["Defender for Cloud"]
-    subgraph cspm["CSPM — Posture Management"]
-        secScore["Secure Score\nrecommendations"]
-        compAssess["Compliance Assessment\nCIS · NIST · PCI DSS"]
-        attackPath["Attack Path Analysis"]
-    end
-    subgraph cwpp["CWPP — Workload Protection"]
-        defVMs["Defender for Servers\nMDI + Qualys / MDVM"]
-        defSQL["Defender for SQL"]
-        defStorage["Defender for Storage"]
-        defContainers["Defender for Containers\nAKS runtime"]
-    end
-    subgraph remediation["Remediation"]
-        govRules["Governance Rules\nowner assignment"]
-        workflowAuto["Workflow Automation\nLogic App trigger"]
-    end
-
-    dfc --> cspm & cwpp & remediation
-```
+![Defender for Cloud Coverage](../../../../assets/cloud-azure-security-defender-for-cloud-mermaid-svg.svg)
 
 ## Security Posture Overview
 

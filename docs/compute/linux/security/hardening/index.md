@@ -39,34 +39,7 @@ pam_password_policy -> file_system_hardening: hardens
 
 ## Linux Hardening Layers
 
-```mermaid
-flowchart LR
-    subgraph kernel["Kernel Hardening"]
-        sysctl["sysctl\nnetwork · ASLR · ptrace"]
-        secBoot["Secure Boot\nUEFI · GRUB password"]
-        mods["Kernel modules\ndisable unused FS/protocols"]
-    end
-    subgraph mac["Mandatory Access Control"]
-        selinux["SELinux\nRHEL — enforcing mode"]
-        apparmor["AppArmor\nUbuntu — enforce profiles"]
-    end
-    subgraph auth["Authentication Controls"]
-        pam["PAM\npwquality · faillock · access.conf"]
-        loginDefs["login.defs\npassword aging · umask"]
-        ssh["SSH\nPubkeyAuth · no root login"]
-    end
-    subgraph audit["Audit and Monitoring"]
-        auditd["auditd\nsyscall · file · identity events"]
-        logFwd["rsyslog / syslog-ng\nSIEM forwarding"]
-    end
-    subgraph fs["Filesystem Hardening"]
-        mntOpts["Mount options\nnoexec · nosuid · nodev"]
-        chattr["chattr +i\nimmutable critical files"]
-    end
-
-    kernel --> mac --> auth --> audit
-    fs --> audit
-```
+![auditd — System Call and Fil](../../../../assets/compute-linux-security-hardening-mermaid-svg.svg)
 
 ## Kernel Hardening — sysctl
 

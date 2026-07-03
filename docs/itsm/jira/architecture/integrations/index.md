@@ -13,53 +13,7 @@ Integrations reference covering Integration Landscape, GitHub Integration, Bitbu
 
 ## Integration Landscape
 
-```mermaid
-graph LR
-    subgraph Core["Jira Core"]
-        J[Jira]
-    end
-
-    subgraph Atlassian["Atlassian Suite"]
-        C[Confluence]
-        BB[Bitbucket]
-        JSM[Jira Service Management]
-    end
-
-    subgraph DevOps["DevOps / SCM"]
-        GH[GitHub]
-        GL[GitLab]
-        JK[Jenkins]
-        GHA[GitHub Actions]
-    end
-
-    subgraph ITSM["ITSM / Enterprise"]
-        SN[ServiceNow]
-        PD[PagerDuty]
-        LDAP[LDAP / AD]
-        IDP[SAML IdP]
-    end
-
-    subgraph Consumers["API Consumers"]
-        DASH[Dashboards]
-        SCRIPTS[Automation Scripts]
-        EXT[External Apps]
-    end
-
-    J <-->|App Link| C
-    J <-->|App Link| BB
-    J <-->|App Link| JSM
-    J <-->|Webhook / App| GH
-    J <-->|Webhook / App| GL
-    J <-->|Webhook| JK
-    J <-->|Webhook| GHA
-    J <-->|REST API| SN
-    J <-->|Webhook| PD
-    J <-->|User sync| LDAP
-    J <-->|SAML 2.0| IDP
-    J <-->|REST API| DASH
-    J <-->|REST API| SCRIPTS
-    J <-->|REST API| EXT
-```
+![Integration Landscape](../../../../assets/itsm-jira-architecture-integrations-mermaid-svg.svg)
 
 ### Commit Message Convention
 

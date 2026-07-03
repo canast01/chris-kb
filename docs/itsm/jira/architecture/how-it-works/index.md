@@ -28,60 +28,7 @@ Jira is available in three deployment models, each with distinct architectural c
 
 ## Data Center Reference Architecture
 
-```mermaid
-graph LR
-    subgraph Users["Users / Clients"]
-        B[Browser]
-        API[API Consumers]
-    end
-
-    subgraph LB["Load Balancer Tier"]
-        HAP["HAProxy / F5 / AWS ALB<br/>(sticky sessions)"]
-    end
-
-    subgraph App["Application Tier (Active-Active)"]
-        N1["Jira Node 1<br/>jira-app-01"]
-        N2["Jira Node 2<br/>jira-app-02"]
-        N3["Jira Node 3<br/>jira-app-03"]
-    end
-
-    subgraph Search["Search Tier"]
-        OS["OpenSearch / Elasticsearch<br/>(clustered, 3 nodes)"]
-    end
-
-    subgraph Data["Data Tier"]
-        PG[("PostgreSQL<br/>Primary")]
-        PGR[("PostgreSQL<br/>Read Replica")]
-    end
-
-    subgraph Storage["Shared File Storage"]
-        NFS["NFS / SMB Share<br/>(jira-home shared)"]
-        S3["Object Storage<br/>(attachments, avatars)"]
-    end
-
-    subgraph Cache["Distributed Cache"]
-        EH["Ehcache / Hazelcast<br/>(in-process cluster)"]
-    end
-
-    B --> HAP
-    API --> HAP
-    HAP -->|sticky session| N1
-    HAP -->|sticky session| N2
-    HAP -->|sticky session| N3
-    N1 <--> EH
-    N2 <--> EH
-    N3 <--> EH
-    N1 --> PG
-    N2 --> PG
-    N3 --> PG
-    PG --> PGR
-    N1 --> OS
-    N2 --> OS
-    N3 --> OS
-    N1 --> NFS
-    N2 --> NFS
-    N3 --> NFS
-```
+![Data Center Reference Architecture](../../../../assets/itsm-jira-architecture-how-it-works-mermaid-svg.svg)
 
 NFS mount options:
 

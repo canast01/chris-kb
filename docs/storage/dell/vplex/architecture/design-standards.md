@@ -12,23 +12,7 @@ Design standards, sizing guidelines, naming conventions, and configuration basel
 </div>
 ![Dell VPLEX — Standards](../../../../assets/storage-dell-vplex-architecture-design-standards.svg)
 
-```mermaid
-flowchart LR
-    subgraph "Naming Convention"
-        vv["Virtual Volume\nvv-oracle-prod-01"]
-        ld["Local Device\nld-oracle-prod-01"]
-        dd["Distributed Device\ndd-vv-oracle-prod-01"]
-        cg["Consistency Group\ncg-oracle-prod"]
-        sv["Storage View\nsv-db-prod-01"]
-        init["Initiator Port\ndb-prod-01-hba0"]
-    end
-
-    init --> sv
-    sv --> vv
-    vv --> dd
-    dd --> ld
-    cg -->|"member volumes"| vv
-```
+![Dell VPLEX — Standards](../../../../assets/storage-dell-vplex-architecture-design-standards-mermaid-svg.svg)
 
 ```vegalite
 {
@@ -184,29 +168,7 @@ All VPLEX objects must follow a consistent naming convention to allow rapid iden
 
 Every production VPLEX Metro deployment must meet these requirements before go-live:
 
-```mermaid
-flowchart LR
-    subgraph "Site A"
-        hostA["vSphere Cluster A\nESXi hosts"]
-        dirA["VPLEX Cluster-1\nDirectors — engine-1-1"]
-        arrA["PowerMax Array A"]
-        fabricA["SAN Fabric A"]
-    end
-    subgraph "Site B"
-        hostB["vSphere Cluster B\nESXi hosts"]
-        dirB["VPLEX Cluster-2\nDirectors — engine-2-1"]
-        arrB["PowerMax Array B"]
-        fabricB["SAN Fabric B"]
-    end
-    witness["Witness VM\n3rd failure domain\n2 vCPU / 4 GB RAM"]
-    iclLink["ICL — 2x 25GbE\nindependent paths\nRTT ≤5ms"]
-
-    hostA --> fabricA --> dirA --> arrA
-    hostB --> fabricB --> dirB --> arrB
-    dirA <--> iclLink <--> dirB
-    witness -. "quorum heartbeat" .- dirA
-    witness -. "quorum heartbeat" .- dirB
-```
+![Consistency Group Policy](../../../../assets/storage-dell-vplex-architecture-design-standards-mermaid-svg-1.svg)
 
 | Requirement | Detail |
 |---|---|

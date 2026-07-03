@@ -177,42 +177,7 @@ For ransomware protection, extend to **3-2-1-1**: one of the copies must be **im
 
 ## Storage Architecture Diagram
 
-```mermaid
-graph LR
-    subgraph Host_Layer["Compute Layer"]
-        H1["ESXi Host 1\n2×FC HBA + 2×10GbE iSCSI"]
-        H2["ESXi Host 2\n2×FC HBA + 2×10GbE iSCSI"]
-    end
-
-    subgraph FC_SAN["FC SAN (Tier 0/1)"]
-        MDS_A["Cisco MDS 9396S\nFabric A"]
-        MDS_B["Cisco MDS 9396S\nFabric B"]
-        PowerMax["Dell PowerMax 2500\n(NVMe All-Flash)"]
-    end
-
-    subgraph IP_Storage["IP Storage (Tier 1/2)"]
-        SW_Storage["Dedicated Storage\nSwitch (MTU 9216)"]
-        Unity["Dell Unity XT 880\n(iSCSI + NFS)"]
-    end
-
-    subgraph NAS["NAS (File Workloads)"]
-        PowerScale["Dell PowerScale F200\n(NFS, SMB, S3)"]
-    end
-
-    subgraph Backup_Layer["Backup / Archive"]
-        Veeam["Veeam B&R v12\n(Hardened Repository)"]
-        Object["Dell ECS / S3\n(Object Archive)"]
-    end
-
-    H1 --> MDS_A & MDS_B
-    H2 --> MDS_A & MDS_B
-    MDS_A & MDS_B --> PowerMax
-    H1 --> SW_Storage
-    H2 --> SW_Storage
-    SW_Storage --> Unity & PowerScale
-    Veeam --> Object
-    PowerMax & Unity & PowerScale -.->|"Replication"| Veeam
-```
+![Tiering and Archiving to Cloud](../../assets/storage-storage-design-mermaid-svg.svg)
 
 ---
 

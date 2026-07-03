@@ -167,30 +167,7 @@ Failback is the process of returning data and user access from the DR PowerScale
 | DNS cutover | Return DNS entries to production SmartConnect zones |
 | Validation | Confirm client access and data integrity on production |
 
-```mermaid
-flowchart LR
-    subgraph "Normal Operation"
-        prodCluster["Production\nPowerScale"]
-        synciq["SyncIQ Policy\n(prod → DR)"]
-        drCluster["DR\nPowerScale"]
-        prodCluster -->|replicates| synciq --> drCluster
-    end
-
-    subgraph "During Failover"
-        drActive["DR Cluster\nActive"]
-        revSync["Reverse SyncIQ\n(DR → prod)"]
-    end
-
-    subgraph "Failback"
-        prodRestore["Production\nCluster Restored"]
-        dnsBack["DNS → Production\nSmartConnect"]
-        validated(["Replication\nresumed prod → DR"])
-    end
-
-    drCluster -->|"failover declared\nSyncIQ broken"| drActive
-    drActive -->|"reverse sync\nuser data back to prod"| revSync --> prodRestore
-    prodRestore --> dnsBack --> validated
-```
+![Access Zone Cutover Back to Production](../../../../assets/storage-netapp-superna-eyeglass-operations-procedures-mermaid-svg.svg)
 
 ### Pre-Failback Checklist
 

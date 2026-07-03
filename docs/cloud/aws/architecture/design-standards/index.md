@@ -107,31 +107,7 @@ Deploying to other regions requires an exception approved by InfoSec.
 
 ## VPC Architecture
 
-```mermaid
-flowchart LR
-    subgraph vpc["VPC — 10.x.0.0/16"]
-        subgraph az1["Availability Zone A"]
-            pubSubA["Public Subnet /24\nALB · NAT GW"]
-            privSubA["Private Subnet /24\nEC2 · ECS · Lambda"]
-            isoSubA["Isolated Subnet /24\nRDS · ElastiCache"]
-        end
-        subgraph az2["Availability Zone B"]
-            pubSubB["Public Subnet /24"]
-            privSubB["Private Subnet /24"]
-            isoSubB["Isolated Subnet /24"]
-        end
-        igw["Internet Gateway"]
-        natGw["NAT Gateway"]
-        sg["Security Groups\nstateful · deny-all default"]
-    end
-    internet["Internet"]
-    onprem["On-Premises\nvia Transit Gateway"]
-
-    internet <--> igw <--> pubSubA & pubSubB
-    pubSubA --> natGw --> privSubA --> isoSubA
-    pubSubB --> privSubB --> isoSubB
-    onprem <--> privSubA & privSubB
-```
+![See also](../../../../assets/cloud-aws-architecture-design-standards-mermaid-svg.svg)
 
 ## Network Standards
 

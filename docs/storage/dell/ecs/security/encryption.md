@@ -23,30 +23,7 @@ Encryption reference covering Encryption Layers, TLS Configuration, Data at Rest
 
 ## Encryption Layers
 
-```mermaid
-graph LR
-  subgraph "In Transit"
-    TLS_S3["S3 / Swift endpoints\nTLS 1.2+ (port 443/9021/9024)"]
-    TLS_MGMT["Management API\nTLS 1.2+ (port 4443)"]
-    TLS_REP["Geo-replication\nTLS on port 9100"]
-  end
-  subgraph "At Rest"
-    ENC_NS["Namespace Encryption\nAES-256 (per namespace)"]
-    KMS{Key Management}
-    KMS -->|Internal| INT_KMS["Internal ECS KMS\n(Cassandra-stored keys)"]
-    KMS -->|External| EXT_KMS["External KMIP KMS\nHashiCorp Vault · Thales\n(required for PCI / HIPAA)"]
-    ENC_NS --> KMS
-  end
-  subgraph "Object-Level"
-    WORM["Object Lock (WORM)\nCompliance / Governance mode"]
-  end
-  classDef transit fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef rest fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef obj fill:#15803d,stroke:#166534,color:#fff
-  class TLS_S3,TLS_MGMT,TLS_REP transit
-  class ENC_NS,KMS,INT_KMS,EXT_KMS rest
-  class WORM obj
-```
+![Encryption Layers](../../../../assets/storage-dell-ecs-security-encryption-mermaid-svg.svg)
 
 | Layer | Method | Notes |
 |---|---|---|

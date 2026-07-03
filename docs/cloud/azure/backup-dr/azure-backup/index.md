@@ -14,28 +14,7 @@ Azure Backup is a cloud-native backup service that provides simple, secure, and 
 
 ## Azure Backup Architecture
 
-```mermaid
-flowchart LR
-    subgraph sources["Protected Sources"]
-        azureVMs["Azure VMs\nLinux · Windows"]
-        sqlInVM["SQL Server in VM"]
-        azureFiles["Azure Files"]
-        onpremWS["On-Premises\nMARS Agent"]
-    end
-    vault["Recovery Services Vault\nBackup Policies · Retention"]
-    subgraph storage["Backup Storage"]
-        lrs["LRS Storage\nlocally redundant"]
-        grs["GRS Storage\ngeo-redundant (default)"]
-    end
-    restore["Restore\nVM · File · DB"]
-
-    azureVMs --> vault
-    sqlInVM --> vault
-    azureFiles --> vault
-    onpremWS --> vault
-    vault --> lrs & grs
-    vault --> restore
-```
+![Azure Backup Architecture](../../../../assets/cloud-azure-backup-dr-azure-backup-mermaid-svg.svg)
 
 ## Recovery Services Vault Setup
 

@@ -50,42 +50,7 @@ Apply these controls at initial deployment and validate at each quarterly securi
 
 ## Network Segmentation
 
-```mermaid
-graph LR
-  subgraph "Application / Backup VLANs"
-    APPS["App Servers\nBackup Proxies"]
-  end
-  subgraph "Management VLAN"
-    MGMT_HOST["Jump Hosts\nAdmin Workstations"]
-    MON["Monitoring Servers\n(SNMP / syslog)"]
-  end
-  subgraph "ECS Cluster"
-    S3EP["S3 API\n:443 / :9021 (HTTPS only)"]
-    MGMT_API["Management API\n:4443"]
-    PORTAL["ECS Portal\n:443"]
-    SSH_NODE["SSH\n:22"]
-    SNMP_SYS["SNMP / Syslog\n:161 / :514"]
-    GEOREP_PORT["Geo-replication\n:9100 (inter-VDC only)"]
-  end
-  subgraph "Remote VDC"
-    REMOTE_VDC["Remote ECS Nodes"]
-  end
-  subgraph "KMS"
-    KMS_SRV["KMIP Server\n:5696"]
-  end
-  APPS --> S3EP
-  MGMT_HOST --> MGMT_API & PORTAL & SSH_NODE
-  MON --> SNMP_SYS
-  S3EP & MGMT_API --> GEOREP_PORT --> REMOTE_VDC
-  S3EP -.->|"firewall DENY\nfrom mgmt VLAN\nto :9021 not needed;\nguard :4443"| MGMT_API
-  MGMT_API --> KMS_SRV
-  classDef vlan fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef port fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef ext fill:#15803d,stroke:#166534,color:#fff
-  class S3EP,MGMT_API,PORTAL,SSH_NODE,SNMP_SYS,GEOREP_PORT port
-  class APPS,MGMT_HOST,MON vlan
-  class REMOTE_VDC,KMS_SRV ext
-```
+![Network Segmentation](../../../../assets/storage-dell-ecs-security-hardening-mermaid-svg.svg)
 
 | Traffic Type | Source Networks | Destination Port | Action |
 |---|---|---|---|

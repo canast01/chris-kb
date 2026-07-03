@@ -26,37 +26,7 @@ Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired 
 
 ## State Backend Topology
 
-```mermaid
-graph LR
-    tfClient["Terraform Client\n(local / CI runner)"]
-
-    subgraph localBackend["Local Backend"]
-        localState["terraform.tfstate\n(local disk)"]
-    end
-
-    subgraph remoteBackendAWS["Remote Backend — AWS"]
-        s3Bucket["S3 Bucket\n(state file)"]
-        dynamoLock["DynamoDB Table\n(state lock)"]
-    end
-
-    subgraph remoteBackendAzure["Remote Backend — Azure"]
-        blobStorage["Azure Blob\n(state file)"]
-        blobLease["Blob Lease\n(state lock)"]
-    end
-
-    subgraph tfc["Terraform Cloud / Enterprise"]
-        tfcState["TFC Workspace\n(state + lock)"]
-        tfcRuns["Managed Runs\n(plan + apply)"]
-    end
-
-    tfClient -->|local| localState
-    tfClient -->|backend s3| s3Bucket
-    s3Bucket --> dynamoLock
-    tfClient -->|backend azurerm| blobStorage
-    blobStorage --> blobLease
-    tfClient -->|backend remote| tfcState
-    tfcState --> tfcRuns
-```
+![State Backend Topology](../../../../assets/automation-terraform-operations-cli-reference-mermaid-svg.svg)
 
 ---
 

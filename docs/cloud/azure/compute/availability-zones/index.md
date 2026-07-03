@@ -14,26 +14,7 @@ Availability Zones are physically separate datacenters within an Azure region, e
 
 ## Availability Zone Architecture
 
-```mermaid
-flowchart LR
-    region["Azure Region\ne.g. West Europe"]
-    subgraph az1["Zone 1\nPhysical DC A"]
-        vm1["VM Instance 1"]
-        disk1["Managed Disk 1\nZone 1"]
-    end
-    subgraph az2["Zone 2\nPhysical DC B"]
-        vm2["VM Instance 2"]
-        disk2["Managed Disk 2\nZone 2"]
-    end
-    subgraph az3["Zone 3\nPhysical DC C"]
-        vm3["VM Instance 3"]
-        disk3["Managed Disk 3\nZone 3"]
-    end
-    lb["Zone-Redundant Load Balancer\nor Application Gateway"]
-
-    region --> az1 & az2 & az3
-    lb --> vm1 & vm2 & vm3
-```
+![Availability Zone Architecture](../../../../assets/cloud-azure-compute-availability-zones-mermaid-svg.svg)
 
 ## Core Concepts
 

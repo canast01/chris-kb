@@ -13,22 +13,7 @@ Azure Network Watcher provides tools for monitoring, diagnosing, and gaining ins
 
 ## Network Watcher Toolset
 
-```mermaid
-flowchart LR
-    nw["Network Watcher\n(region-scoped)"]
-    subgraph diagnostic["Diagnostic Tools"]
-        ipFlow["IP Flow Verify\nNSG allow/deny check"]
-        nextHop["Next Hop\nrouting table check"]
-        connCheck["Connectivity Check\nend-to-end TCP test"]
-        packetCapture["Packet Capture\nNIC-level capture"]
-    end
-    subgraph monitoring["Monitoring Tools"]
-        flowLogs["VNet Flow Logs\nall traffic · Traffic Analytics"]
-        connMonitor["Connection Monitor\ncontinuous path monitoring"]
-    end
-
-    nw --> diagnostic & monitoring
-```
+![Network Watcher Toolset](../../../../assets/cloud-azure-networking-network-watcher-mermaid-svg.svg)
 
 ## Enabling Network Watcher
 

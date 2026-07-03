@@ -76,40 +76,7 @@ Confluence uses an embedded **Apache Lucene** index for full-text search. In Dat
 
 ### Data Center — Active/Active Cluster
 
-```mermaid
-flowchart LR
-    Users["End Users / Browsers"] --> LB
-
-    subgraph LB["Load Balancer (sticky sessions)"]
-        direction LR
-        LB1[nginx / F5 / ALB]
-    end
-
-    LB --> N1
-    LB --> N2
-    LB --> N3
-
-    subgraph Cluster["Confluence Data Center Cluster"]
-        N1["Node 1\nTomcat JVM"]
-        N2["Node 2\nTomcat JVM"]
-        N3["Node 3\nTomcat JVM"]
-        N1 <-->|Hazelcast\ncluster bus| N2
-        N2 <-->|Hazelcast\ncluster bus| N3
-        N1 <-->|Hazelcast\ncluster bus| N3
-    end
-
-    subgraph Shared["Shared Tier"]
-        SH["Shared Home\n(NFS / EFS)\nAttachments, Index, Avatars"]
-        DB[("Database\nPostgreSQL")]
-    end
-
-    N1 --> SH
-    N2 --> SH
-    N3 --> SH
-    N1 --> DB
-    N2 --> DB
-    N3 --> DB
-```
+![Data Center — Active/Active Cluster](../../../../assets/itsm-confluence-architecture-how-it-works-mermaid-svg.svg)
 
 ---
 

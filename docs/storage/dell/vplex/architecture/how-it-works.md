@@ -74,29 +74,7 @@ virtVol -> storageView
 
 ## VPLEX Metro Topology
 
-```mermaid
-graph LR
-  W(["Witness VM\nSite C — 3rd domain"])
-  subgraph "Site A"
-    HA(["Hosts A"]) --> DIR_A["VPLEX Cluster-1\nDirector Pair A"]
-    DIR_A --> STG_A[("Array A\nPowerMax / Unity")]
-  end
-  subgraph "Site B"
-    HB(["Hosts B"]) --> DIR_B["VPLEX Cluster-2\nDirector Pair B"]
-    DIR_B --> STG_B[("Array B\nPowerMax / Unity")]
-  end
-  DIR_A <-->|"ICL — 10/25GbE\n≤5ms RTT"| DIR_B
-  W -. "Quorum" .- DIR_A
-  W -. "Quorum" .- DIR_B
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef wit fill:#b45309,stroke:#92400e,color:#fff
-  class DIR_A,DIR_B ctrl
-  class STG_A,STG_B store
-  class HA,HB host
-  class W wit
-```
+![Witness (Quorum Arbitrator)](../../../../assets/storage-dell-vplex-architecture-how-it-works-mermaid-svg.svg)
 
 ## Director Architecture
 

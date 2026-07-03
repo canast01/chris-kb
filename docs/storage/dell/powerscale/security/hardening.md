@@ -23,31 +23,7 @@ Security baselines and compliance configuration for Dell PowerScale.
 
 ## Hardening Checklist
 
-```mermaid
-graph LR
-    cluster["PowerScale Cluster"]
-
-    subgraph "Network Layer"
-        netHard["Back-end VLAN isolated\nManagement VLAN firewall\nSSH source-IP restricted"]
-    end
-
-    subgraph "Protocol Layer"
-        protoHard["SMB1 disabled\nSMB signing required\nNFS root squash enabled\nUnused protocols disabled"]
-    end
-
-    subgraph "Authentication Layer"
-        authHard["AD / LDAP per access zone\nNTP sync (Kerberos req)\nPassword complexity enforced\nRBAC roles assigned"]
-    end
-
-    subgraph "Audit Layer"
-        auditHard["Protocol audit enabled\nSyslog → SIEM\nSNMP v3 only\nSupportAssist active"]
-    end
-
-    cluster --> netHard
-    cluster --> protoHard
-    cluster --> authHard
-    cluster --> auditHard
-```
+![Hardening Checklist](../../../../assets/storage-dell-powerscale-security-hardening-mermaid-svg.svg)
 
 Apply all items before placing a cluster into production. Re-verify after each major upgrade.
 

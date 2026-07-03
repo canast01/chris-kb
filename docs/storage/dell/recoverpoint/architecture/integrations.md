@@ -16,29 +16,7 @@ RecoverPoint integrations: vSphere plugin registration, VMAX and XtremIO product
 
 ## Splitter Topology
 
-```mermaid
-graph LR
-    subgraph esxiHost ["ESXi Host (RP4VM)"]
-        vmApp["Protected VM"]
-        softSplitter["Software Splitter\n(vSphere Kernel Module)"]
-        vmdk["VMDK — Datastore"]
-        vmApp -->|"write I/O"| softSplitter
-        softSplitter -->|"pass-through write"| vmdk
-        softSplitter -->|"capture copy"| rpaA
-    end
-
-    subgraph powermax ["PowerMax Array"]
-        hwSplitter["Hardware Splitter\n(Array Microcode)"]
-        prodLUN["Production LUN"]
-        hwSplitter -->|"pass-through"| prodLUN
-        hwSplitter -->|"capture copy"| rpaA
-    end
-
-    rpaA["RPA Cluster Site A"]
-    rpaA -->|"WAN replication"| rpaB["RPA Cluster Site B"]
-    rpaB --> drJournal["DR Journal Volumes"]
-    drJournal --> drReplica["DR Replica Volumes"]
-```
+![Splitter Topology](../../../../assets/storage-dell-recoverpoint-architecture-integrations-mermaid-svg.svg)
 
 ---
 

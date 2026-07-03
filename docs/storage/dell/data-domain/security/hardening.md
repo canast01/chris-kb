@@ -23,31 +23,7 @@ Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, 
 
 ## Overview
 
-```mermaid
-graph LR
-    dd["Data Domain Appliance"]
-
-    subgraph "Account Security"
-        acct["sysadmin → break-glass only\nNamed admins via LDAP/AD\nPassword policy: 12+ chars, 90-day max"]
-    end
-
-    subgraph "Network Access"
-        net["Management VLAN isolated\nSSH restricted to jump host IPs\nHTTPS-only (HTTP disabled)\nIdle timeout 15 min"]
-    end
-
-    subgraph "Protocol Controls"
-        proto["Unused protocols disabled\n(CIFS / NFS / VTL)\nSNMPv3 only\nSyslog → SIEM"]
-    end
-
-    subgraph "Data Protection"
-        enc["D@RE AES-256 enabled\nFIPS mode active\nCA-signed management cert\nKey backup in secure vault"]
-    end
-
-    dd --> acct
-    dd --> net
-    dd --> proto
-    dd --> enc
-```
+![Overview](../../../../assets/storage-dell-data-domain-security-hardening-mermaid-svg.svg)
 
 ### Login Banner
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 42 checks.
+KB site audit — 61 checks.
 
 Usage:
     python3 scripts/site_audit.py               # run all checks, print summary
@@ -10,6 +10,8 @@ Usage:
 
 import os, re, sys, xml.etree.ElementTree as ET
 from pathlib import Path
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(REPO, 'docs')
@@ -1178,8 +1180,13 @@ for _md in all_md():
 
 # ── Check 54: Mermaid linear TD / subgraph diagrams (should be SVG or D2) ────
 # Mermaid graph TB / flowchart TD render as narrow left-aligned diagrams that
-# don't fill the content width.  Mermaid subgraph layouts cross arrows.
-# Both should be replaced with D2 direction:right or custom SVGs.
+# don't fill the content width.  Mermaid subgraph layouts cross arrows
+# regardless of direction (LR subgraphs cross just as much as TD ones) --
+# fixed 2026-07-03: the direction-only regex below let 130 LR-direction
+# subgraph diagrams silently pass this check for days (a prior "fix" just
+# changed TD->LR to satisfy the pattern-match, without removing the
+# subgraphs that actually cause the crossing-arrow problem this check
+# exists to catch). Both patterns should be replaced with D2 or custom SVG.
 issues = check(54, 'Mermaid linear TD or subgraph diagrams (use D2/SVG instead)')
 _MM_BLOCK = re.compile(r'```mermaid\n(.*?)\n```', re.DOTALL)
 _MM_LINEAR = re.compile(r'^(flowchart|graph)\s+(TD|TB)\b', re.MULTILINE)
@@ -1188,7 +1195,7 @@ for _md in all_md():
     if '```mermaid' not in _txt:
         continue
     for _blk in _MM_BLOCK.findall(_txt):
-        if _MM_LINEAR.search(_blk):
+        if _MM_LINEAR.search(_blk) or 'subgraph' in _blk:
             _label = 'subgraph' if 'subgraph' in _blk else 'linear TD'
             warn(issues, f'{os.path.relpath(_md, DOCS)}: Mermaid {_label} — replace with D2 or SVG')
             break
@@ -1293,6 +1300,155 @@ for _path in all_md():
         if not _exists:
             _rel = os.path.relpath(_path, REPO)
             warn(issues, f'{_rel}: directory-style link "{_href}" resolves to no real page')
+
+
+# ── Check 57: SVG canvas smaller than its actual content ─────────────────────
+# Found 2026-07-03: several diagram generators computed row Y-positions
+# correctly but left a stale top-level <svg width height viewBox>, so footers
+# and in a few cases entire rows rendered below/right of the visible canvas —
+# invisible content, not just a cosmetic overflow. scripts/svg_canvas_fix.py
+# (--apply) grows (never shrinks) the canvas to fit; this check just detects.
+issues = check(57, 'SVG canvas smaller than actual content (invisible off-canvas elements)')
+try:
+    from svg_canvas_fix import content_extent
+    if os.path.isdir(ASSETS):
+        import re as _re57
+        _SVG_TAG57 = _re57.compile(r'<svg\b[^>]*\bwidth="(\d+(?:\.\d+)?)"[^>]*\bheight="(\d+(?:\.\d+)?)"')
+        for fname in sorted(os.listdir(ASSETS)):
+            if not fname.endswith('.svg'):
+                continue
+            path = Path(os.path.join(ASSETS, fname))
+            m = _SVG_TAG57.search(open(path, errors='replace').read())
+            if not m:
+                continue
+            cur_w, cur_h = float(m.group(1)), float(m.group(2))
+            extent = content_extent(path)
+            if extent is None:
+                continue
+            max_x, max_y = extent
+            if max_x > cur_w + 1 or max_y > cur_h + 1:
+                warn(issues, f'assets/{fname}: canvas {cur_w:.0f}x{cur_h:.0f} but content '
+                             f'reaches {max_x:.0f}x{max_y:.0f}')
+except ImportError:
+    pass
+
+
+# ── Check 58: SVG "Diagram Type:" footer positioned before later content ─────
+# Found 2026-07-03: distinct from Check 57 -- canvas can already be big enough
+# to contain everything, but a nested <g transform="translate(...)"> pushes
+# some content past a footer bar sized/positioned for shorter content, so the
+# gray footer renders in the *middle* of the diagram instead of at the bottom.
+issues = check(58, 'SVG footer bar rendered before (above) later diagram content')
+try:
+    from svg_overflow_check import NS as _NS58, walk_absolute as _walk58, local_text as _ltext58
+    if os.path.isdir(ASSETS):
+        for fname in sorted(os.listdir(ASSETS)):
+            if not fname.endswith('.svg'):
+                continue
+            path = os.path.join(ASSETS, fname)
+            try:
+                _root58 = ET.parse(path).getroot()
+            except ET.ParseError:
+                continue
+            _rects58, _footer_text_y = [], None
+            for _elem, _ox, _oy in _walk58(_root58):
+                if _elem.tag == f'{_NS58}rect':
+                    try:
+                        _x = float(_elem.get('x', 0)) + _ox
+                        _y = float(_elem.get('y', 0)) + _oy
+                        _w = float(_elem.get('width', 0))
+                        _h = float(_elem.get('height', 0))
+                    except ValueError:
+                        continue
+                    _rects58.append((_x, _y, _w, _h))
+                elif _elem.tag == f'{_NS58}text':
+                    _content = _ltext58(_elem)
+                    if _content.strip().startswith('Diagram Type'):
+                        _y_attr = _elem.get('y')
+                        if _y_attr is not None:
+                            _footer_text_y = float(_y_attr) + _oy
+            if _footer_text_y is None or not _rects58:
+                continue
+            _footer_candidates = [r for r in _rects58 if r[1] <= _footer_text_y <= r[1] + r[3] + 5]
+            if not _footer_candidates:
+                continue
+            _footer58 = max(_footer_candidates, key=lambda r: r[2])  # widest = real footer bar
+            _fy, _fh = _footer58[1], _footer58[3]
+            _other58 = [r for r in _rects58 if r != _footer58]
+            _max_bottom58 = max((r[1] + r[3] for r in _other58), default=0)
+            if _max_bottom58 - (_fy + _fh) > 5:
+                warn(issues, f'assets/{fname}: footer at y={_fy:.0f} but content reaches y={_max_bottom58:.0f}')
+except ImportError:
+    pass
+
+
+# ── Check 59: SVG text likely wider than its enclosing box ───────────────────
+# Heuristic (no real font metrics) -- estimates text width per character
+# class and flags where it exceeds the smallest enclosing <rect>. Known
+# false-positive source (documented 2026-07-03): in diagrams with many small
+# adjacent/stacked boxes, "smallest enclosing" can pick a nearby box that
+# spatially overlaps the text's anchor point but isn't the semantically
+# correct one -- always spot-check a flagged file's actual box before
+# treating this as confirmed, don't batch-fix on the numbers alone.
+issues = check(59, 'SVG text likely wider than its enclosing box (heuristic, verify before fixing)')
+try:
+    from svg_overflow_check import analyze_svg as _analyze59
+    if os.path.isdir(ASSETS):
+        for fname in sorted(os.listdir(ASSETS)):
+            if not fname.endswith('.svg'):
+                continue
+            path = Path(os.path.join(ASSETS, fname))
+            findings, err = _analyze59(path)
+            if findings:
+                worst = max(f['overflow_px'] for f in findings)
+                warn(issues, f'assets/{fname}: worst={worst:.0f}px over, {len(findings)} flagged text element(s)')
+except ImportError:
+    pass
+
+
+# ── Check 60: Unconverted <br/> line-break tags leaking into SVG text ────────
+# Found 2026-07-03 in mermaid_subgraph_to_svg.py: Mermaid labels using
+# <br/>/<br> for line breaks (instead of \n) weren't being split, so the
+# literal tag text rendered on the page (e.g. "Fork Remote<br/>github.com").
+issues = check(60, 'Literal <br/> tags leaking into rendered SVG text')
+if os.path.isdir(ASSETS):
+    _BR_LEAK_RE = re.compile(r'<text\b[^>]*>[^<]*(?:&lt;br\s*/?&gt;)[^<]*</text>', re.IGNORECASE)
+    for fname in sorted(os.listdir(ASSETS)):
+        if not fname.endswith('.svg'):
+            continue
+        path = os.path.join(ASSETS, fname)
+        _txt59 = open(path, errors='replace').read()
+        if _BR_LEAK_RE.search(_txt59):
+            warn(issues, f'assets/{fname}: literal <br/> tag found inside <text> content')
+
+
+# ── Check 61: Code fence close line carries a language tag ───────────────────
+# Found 2026-07-03 while investigating a wrong-title bug in a mermaid-to-SVG
+# conversion: a real closing ``` fence should never have a language tag --
+# if it does, that's proof an EARLIER fence was never properly closed (two
+# opens got merged, one masquerading as the other's close). This causes
+# real damage beyond cosmetics: any Markdown heading/prose that falls
+# between the true unclosed open and this point gets silently swallowed as
+# literal code-block text instead of rendering normally. Found and fixed 20
+# instances across 14 files this way (2 independent bugs per file on
+# average: an orphaned empty fence AND, separately, a heading+commands
+# section missing its opening fence -- the two coincidentally canceled out
+# in raw fence-count parity, which is why simple odd/even counting (see
+# Check 49) didn't catch them).
+issues = check(61, 'Code fence close line has a language tag (proof an earlier fence was never closed)')
+for _md in all_md():
+    _txt = open(_md, errors='replace').read()
+    if '```' not in _txt and '~~~' not in _txt:
+        continue
+    _in_fence61 = False
+    for _i, _line in enumerate(_txt.splitlines()):
+        _s = _line.strip()
+        if _s.startswith(('```', '~~~')):
+            _tag61 = _s[3:].strip()
+            if _in_fence61 and _tag61:
+                warn(issues, f'{os.path.relpath(_md, DOCS)}:{_i+1}: "{_line.strip()}" '
+                             f'closes a fence but carries a language tag')
+            _in_fence61 = not _in_fence61
 
 
 # ── Report ────────────────────────────────────────────────────────────────────

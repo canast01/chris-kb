@@ -14,51 +14,11 @@ Reference for creating, managing, sizing, and operating Azure Virtual Machines u
 
 ## Azure VM Architecture
 
-```mermaid
-flowchart LR
-    subgraph vmComponents["VM Components"]
-        compute["Compute\nvCPU · RAM (SKU)"]
-        osDisk["OS Disk\nManaged Disk (P/E/S)"]
-        dataDisks["Data Disks\nup to 64 per VM"]
-        nic["NIC\nIP · NSG · Accelerated Networking"]
-    end
-    subgraph platform["Platform Services"]
-        avail["Availability Zone / Set"]
-        ext["Extensions\nMonitor Agent · Defender · Custom Script"]
-        diagBoot["Boot Diagnostics\nserial console · screenshot"]
-    end
-    rg["Resource Group"]
-    vnet["Virtual Network / Subnet"]
-
-    rg --> vmComponents
-    rg --> platform
-    nic --> vnet
-    avail --> compute
-```
+![Azure VM Architecture](../../../../assets/cloud-azure-compute-virtual-machines-mermaid-svg.svg)
 
 ## Azure VM Deployment Flow
 
-```mermaid
-flowchart LR
-    request["Deployment Request\nPortal · CLI · Terraform · ARM"]
-    rbacCheck["RBAC Check\nMicrosoft.Compute/virtualMachines/write"]
-    policyCheck["Azure Policy Evaluation\nallowed SKUs · location · tags"]
-    policyDeny["Deployment DENIED\npolicy non-compliant"]
-    armValidate["ARM Template Validation\nresource provider checks"]
-    resourceGroup["Resource Group\ncontainer for resources"]
-    subgraph provision["Provisioning"]
-        osDisk["OS Disk\nManaged Disk provisioned"]
-        nic["NIC\nIP allocated from subnet"]
-        compute["Compute\nVM SKU allocated in AZ"]
-    end
-    extensions["Extensions Applied\nMonitor Agent · Defender · Custom Script"]
-    running["VM Running\nProvisioning state: Succeeded"]
-
-    request --> rbacCheck --> policyCheck
-    policyCheck -- Non-compliant --> policyDeny
-    policyCheck -- Compliant --> armValidate --> resourceGroup --> provision
-    provision --> extensions --> running
-```
+![Creating VMs](../../../../assets/cloud-azure-compute-virtual-machines-mermaid-svg-1.svg)
 
 ## Creating VMs
 

@@ -12,24 +12,7 @@ Azure Monitor Metrics is a time-series database that stores numeric data from Az
 
 ## Metrics Collection and Consumption
 
-```mermaid
-flowchart LR
-    subgraph sources["Metric Sources"]
-        platformMetrics["Platform Metrics\nVM · Storage · Network (auto)"]
-        guestMetrics["Guest OS Metrics\nAMA + DCR"]
-        customMetrics["Custom Metrics\nSDK · REST API"]
-        prometheus["Prometheus\nAKS · containers"]
-    end
-    metricsStore["Azure Monitor Metrics Store\n93-day retention · time-series DB"]
-    subgraph consume["Consumption"]
-        metricsExplorer["Metrics Explorer\ninteractive charts"]
-        alertRulesM["Metric Alert Rules\nthreshold triggers"]
-        autoscaleRules["Autoscale Rules\nVMSS · App Service"]
-        dashboardsM["Dashboards / Workbooks"]
-    end
-
-    sources --> metricsStore --> consume
-```
+![Metrics Collection and Consumption](../../../../assets/cloud-azure-monitoring-metrics-mermaid-svg.svg)
 
 ## Platform Metrics vs Custom Metrics
 

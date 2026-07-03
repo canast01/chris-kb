@@ -41,8 +41,6 @@ server {
 }
 ```
 
-```text
-
 ```d2
 direction: down
 
@@ -74,8 +72,6 @@ store_the_database_password_encrypte -> use_confluences_builtin_password_enc: ha
 Confluence stores all content (pages, comments, attachments metadata) in its database. Protect the database connection and data at rest.
 
 ### Encrypted Database Connection
-
-```
 
 ```xml
 <!-- /opt/atlassian/confluence/confluence/WEB-INF/classes/confluence-init.properties -->

@@ -27,42 +27,7 @@ FlashArray uses a role-based access control (RBAC) model with four built-in role
 
 ## RBAC and Access Model
 
-```mermaid
-graph LR
-  subgraph "Identity Sources"
-    AD["Active Directory\n(AD group → role mapping)"]
-    SAML["SAML SSO IdP\n(Okta / Azure AD / ADFS)"]
-    LOCAL["Local Accounts\n(pureuser — break-glass only)"]
-    API["API Tokens\n(service accounts)"]
-  end
-
-  subgraph "Purity Roles"
-    AADR["array_admin\n(full control)"]
-    STOR["storage_admin\n(volumes / hosts / PGs)"]
-    OPS["ops_admin\n(alerts / diagnostics / replication)"]
-    RO["readonly\n(monitoring / audit)"]
-  end
-
-  subgraph "Audit"
-    AUDIT["pureaudit list\n(all actions logged)"]
-    SIEM["SIEM via TLS syslog"]
-  end
-
-  AD -->|"group membership"| AADR & STOR & OPS & RO
-  SAML -->|"group claims"| AADR & STOR & OPS & RO
-  LOCAL --> AADR
-  API -->|"inherits account role"| STOR & RO
-
-  AADR & STOR & OPS & RO --> AUDIT
-  AUDIT --> SIEM
-
-  classDef idp fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef role fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef audit fill:#b45309,stroke:#92400e,color:#fff
-  class AD,SAML,LOCAL,API idp
-  class AADR,STOR,OPS,RO role
-  class AUDIT,SIEM audit
-```
+![RBAC and Access Model](../../../../assets/storage-pure-flasharray-security-access-control-mermaid-svg.svg)
 
 ---
 

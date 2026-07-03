@@ -33,22 +33,7 @@ All Azure Storage data is encrypted at rest by default using Storage Service Enc
 
 ## Storage Encryption Key Model
 
-```mermaid
-flowchart LR
-    data["Data\nblobs · files · disks"]
-    sse["SSE — AES-256\ntransparent encryption"]
-    subgraph keyMgmt["Key Management Options"]
-        pmk["PMK\nMicrosoft-managed\n(default)"]
-        cmk["CMK\nCustomer-managed\nvia Key Vault"]
-        cpk["CPK\nCustomer-provided\nper-request"]
-    end
-    kv["Azure Key Vault\nHSM-backed keys · RBAC"]
-    storage["Encrypted at Rest\nStorage Account"]
-
-    data --> sse --> storage
-    cmk --> kv
-    sse --> pmk & cmk & cpk
-```
+![Checking Encryption Status](../../../../assets/cloud-azure-storage-encryption-mermaid-svg.svg)
 
 ## Encryption Key Options
 

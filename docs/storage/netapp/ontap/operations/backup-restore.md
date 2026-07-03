@@ -240,32 +240,7 @@ Clone deletion completed.
 
 ## SnapMirror Relationship Types
 
-```mermaid
-graph LR
-    subgraph "Primary Site"
-        srcVol["Source Volume\n(SVM / vol)"]
-    end
-
-    subgraph "Secondary Site"
-        dstAsync["Async Destination\n(DP — XDP)"]
-        dstSync["Sync Destination\n(SM Sync)"]
-    end
-
-    subgraph "Vault Site"
-        dstVault["SnapVault Destination\n(XDP — vault policy)"]
-    end
-
-    subgraph "SMBC Peer"
-        dstSMBC["SMBC Destination\n(zero RPO/RTO)"]
-        mediator["ONTAP Mediator"]
-    end
-
-    srcVol -->|"async replication\nlag: minutes–hours"| dstAsync
-    srcVol -->|"synchronous write\nconfirmation"| dstSync
-    srcVol -->|"long-term retention\nindependent snapshots"| dstVault
-    srcVol <-->|"bidirectional sync\ntransparent failover"| dstSMBC
-    mediator -. "quorum witness" .-> dstSMBC
-```
+![Restoring from SnapVault](../../../../assets/storage-netapp-ontap-operations-backup-restore-mermaid-svg.svg)
 
 ---
 

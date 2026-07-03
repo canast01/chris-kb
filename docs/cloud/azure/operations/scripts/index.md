@@ -24,24 +24,7 @@ Azure operational scripts: PowerShell and `az cli` automation for resource provi
 
 ## Script Categories
 
-```mermaid
-flowchart LR
-    subgraph healthScripts["Health Check Scripts"]
-        subHealth["Subscription Health Check\nVMs · LBs · SQL · Activity Log"]
-        vmHealth["VM Health Report\npower state · provisioning"]
-    end
-    subgraph govScripts["Governance Scripts"]
-        tagAudit["Tag Compliance Audit\nuntagged resources report"]
-        rbacAudit["RBAC Audit\nstale assignments"]
-    end
-    subgraph costScripts["Cost Scripts"]
-        costReport["Cost Report\nspend by RG · service"]
-        unusedResources["Unused Resources\nunattached disks · idle VMs"]
-    end
-    output["Output\nConsole · CSV · Email"]
-
-    healthScripts & govScripts & costScripts --> output
-```
+![Script Categories](../../../../assets/cloud-azure-operations-scripts-mermaid-svg.svg)
 
 ## Azure Subscription Health Check
 

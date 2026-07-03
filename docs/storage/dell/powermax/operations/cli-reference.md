@@ -444,36 +444,7 @@ Bay  Disk Name  State      Temp(C)  Status
 
 SRDF (Symmetrix Remote Data Facility) replicates data between PowerMax arrays.
 
-```mermaid
-flowchart LR
-    subgraph "SRDF Modes"
-        SRDF_S["SRDF/S\nSynchronous\nRPO = 0\nwrite ack after R2 confirms"]
-        SRDF_A["SRDF/A\nAsynchronous\nRPO = cycle time\n(10–30 sec typical)"]
-        SRDF_M["SRDF/Metro\nActive-Active\nRPO = 0\nauto-failover"]
-    end
-    subgraph "Key Operations"
-        ESTABLISH["establish\nstart replication\nR1→R2 initial sync"]
-        SUSPEND["suspend\npause replication\nR1 queues writes"]
-        RESUME["resume\nrestart replication\nresync R1→R2 delta"]
-        SPLIT["split\nR2 becomes R/W\n(dev/test or DR test)"]
-        FAILOVER["failover\nplanned: R2 primary\nR1 write-disabled"]
-        SWAP["swap\nswap R1↔R2 roles"]
-        RESTORE["restore\nfailback direction\nR1 resumes primary"]
-    end
-
-    ESTABLISH --> SUSPEND --> RESUME --> ESTABLISH
-    ESTABLISH --> SPLIT
-    SPLIT --> ESTABLISH
-    ESTABLISH --> FAILOVER --> RESTORE --> ESTABLISH
-    FAILOVER --> SWAP --> RESTORE
-
-    classDef mode fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef op fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-    class SRDF_S,SRDF_A,SRDF_M mode
-    class ESTABLISH,SUSPEND,RESUME,SPLIT op
-    class FAILOVER,SWAP,RESTORE dr
-```
+![See also](../../../../assets/storage-dell-powermax-operations-cli-reference-mermaid-svg.svg)
 
 | Mode | Description | RPO |
 |---|---|---|

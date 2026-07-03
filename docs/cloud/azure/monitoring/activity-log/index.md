@@ -12,23 +12,7 @@ The Azure Activity Log is a platform log that records subscription-level events 
 
 ## Activity Log Data Flow
 
-```mermaid
-flowchart LR
-    events["Azure Control Plane Events\nresource create · modify · delete · admin ops"]
-    activityLog["Activity Log\n90-day native retention"]
-    subgraph export["Export Destinations"]
-        diagSetting["Diagnostic Settings\nto Log Analytics / Storage / Event Hub"]
-        logAnalytics["Log Analytics Workspace\nKQL queries · alerts"]
-        storage["Storage Account\nlong-term archival"]
-        eventHub["Event Hub\nstream to SIEM"]
-    end
-    alertRule["Activity Log Alert Rule\ne.g. resource deletion alert"]
-
-    events --> activityLog
-    activityLog --> diagSetting
-    diagSetting --> logAnalytics & storage & eventHub
-    activityLog --> alertRule
-```
+![Activity Log Data Flow](../../../../assets/cloud-azure-monitoring-activity-log-mermaid-svg.svg)
 
 ## Querying the Activity Log
 

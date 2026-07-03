@@ -132,28 +132,7 @@ Lockout policy (separate from password policy): **Administration → SSO → Con
 
 Lockdown mode prevents direct root access to ESXi hosts — all management must go through vCenter. Configure via **vCenter → Host → Configure → System → Security Profile → Edit → Lockdown Mode**.
 
-```mermaid
-graph LR
-    admin["Admin / Operator"]
-    vc["vCenter Server"]
-    host["ESXi Host"]
-    dcui["DCUI (Direct Console)"]
-
-    subgraph "Lockdown Disabled"
-        ld_admin["Admin"] -->|"direct SSH/API"| ld_host["ESXi"]
-        ld_admin -->|"via vCenter"| ld_vc["vCenter"] --> ld_host
-    end
-
-    subgraph "Normal Lockdown"
-        nl_admin["Admin"] -->|"via vCenter only"| nl_vc["vCenter"] --> nl_host["ESXi"]
-        nl_ex["Exception list\nusers only"] -->|"SSH still allowed"| nl_host
-    end
-
-    subgraph "Strict Lockdown"
-        sl_admin["Admin"] -->|"via vCenter only"| sl_vc["vCenter"] --> sl_host["ESXi"]
-        sl_note["No exceptions;\nDCUI needs vCenter login"]
-    end
-```
+![Syslog Forwarding to SIEM](../../../../assets/virtualization-vmware-vcenter-security-hardening-mermaid-svg.svg)
 
 | Mode | Direct Root SSH | Direct API | vCenter Required |
 |---|---|---|---|

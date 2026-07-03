@@ -128,39 +128,7 @@ Peak write throughput is bounded by NVRAM size (how much write burst the array c
 
 ## Mermaid Diagram: I/O Architecture
 
-```mermaid
-flowchart LR
-    subgraph HOST["Host Layer"]
-        H1["Application Server\nFC / iSCSI / NVMe-oF HBA"]
-    end
-
-    subgraph CTRL["Controller Pair"]
-        CT0["CT0\nPurity OS\nNVMe Ports\nNVRAM"]
-        CT1["CT1\nPurity OS\nNVMe Ports\nNVRAM"]
-        CT0 <-->|"NVRAM Mirror\nHigh-speed interconnect\nWrite durable when both confirm"| CT1
-    end
-
-    subgraph FLASH["DirectFlash Layer"]
-        DFM1["DirectFlash Module 1\nNVMe raw NAND\nPurity-managed FTL"]
-        DFM2["DirectFlash Module 2\nNVMe raw NAND\nPurity-managed FTL"]
-        DFM3["DirectFlash Module N\nNVMe raw NAND\nPurity-managed FTL"]
-    end
-
-    H1 -->|"FC / iSCSI / NVMe-oF\nALUA preferred path"| CT0
-    H1 -.->|"Non-optimised path\nActive on CT0 failure"| CT1
-    CT0 -->|"Destage: dedup + compress\nthen write"| DFM1
-    CT0 -->|"Destage"| DFM2
-    CT1 -->|"Destage"| DFM3
-
-    classDef host fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef ctrl fill:#15803d,stroke:#14532d,color:#fff
-    classDef nvram fill:#b45309,stroke:#92400e,color:#fff
-    classDef flash fill:#7c3aed,stroke:#5b21b6,color:#fff
-
-    class H1 host
-    class CT0,CT1 ctrl
-    class DFM1,DFM2,DFM3 flash
-```
+![Protection Groups and Snapshots](../../../../assets/storage-pure-flasharray-architecture-how-it-works-mermaid-svg.svg)
 
 ## Protection Groups and Snapshots
 
@@ -234,68 +202,7 @@ Host configuration guidelines:
 
 The diagram below traces a single host write from the initiator HBA all the way to a DirectFlash Module, showing exactly where inline deduplication and compression occur, how the NVRAM mirror creates the durability guarantee before any ACK is sent, and how the destage pipeline lands data on raw NAND.
 
-```mermaid
-flowchart LR
-    subgraph INITIATOR["Initiator (Host)"]
-        APP["Application\nOracle / SQL / VMware\nIssues write I/O"]
-        HBA["Host HBA / NIC\nFC 32 Gb/s · iSCSI 25 GbE\nNVMe/FC · NVMe/RoCE · NVMe/TCP"]
-    end
-
-    subgraph FABRIC["Storage Fabric"]
-        FC_SW["FC Switch / IP Network\nZoned: HBA → CT0 port\nNon-preferred: HBA → CT1 port"]
-    end
-
-    subgraph PORTAL["FlashArray Portal (Active Controller — CT0)"]
-        PORT["Front-End Port\nFC target / iSCSI portal\nNVMe-oF subsystem"]
-        NVRAM0["CT0 NVRAM\nDRAM + capacitor backup\nWrite lands here first"]
-    end
-
-    subgraph MIRROR["NVRAM Mirror (CT1)"]
-        NVRAM1["CT1 NVRAM\nMirror copy of CT0 NVRAM\nHigh-speed dedicated link"]
-        ACK["Host ACK Issued\nOnly AFTER both NVRAMs confirm\nWrite is durable at this point"]
-    end
-
-    subgraph REDUCTION["Data Reduction Pipeline (background destage)"]
-        DEDUP["Global Deduplication\nSHA-256 content fingerprint\nZero-block pattern detect\nDuplicate → pointer only, no write"]
-        COMPRESS["Inline Compression\nLZ4 / zstd algorithm\nApplied to unique chunks only\nTypical ratio: 2:1 – 5:1"]
-        COALESCE["Write Coalescing\nSmall random I/Os batched\nSequential NVMe write to DFM\nReduces NAND write amplification"]
-    end
-
-    subgraph DFM_LAYER["DirectFlash Layer"]
-        DFM1["DirectFlash Module 1\nRaw NVMe NAND — no embedded FTL\nPurity manages wear-levelling\nBlock allocation by Purity OS"]
-        DFM2["DirectFlash Module 2\nNVMe raw NAND\nParallel write across modules"]
-        DFM3["DirectFlash Module N\nNVMe raw NAND\nStripe across all modules"]
-    end
-
-    APP -->|"SCSI / NVMe write command"| HBA
-    HBA -->|"FC frame / iSCSI PDU / NVMe capsule"| FC_SW
-    FC_SW -->|"ALUA preferred path"| PORT
-    PORT -->|"Stage write to local NVRAM"| NVRAM0
-    NVRAM0 <-->|"Mirror link — synchronous\nBoth must confirm before ACK"| NVRAM1
-    NVRAM1 --> ACK
-    ACK -->|"Write ACK returned to host\nLatency < 1 ms at this step"| HBA
-
-    NVRAM0 -->|"Background destage\nContinuous, non-blocking"| DEDUP
-    DEDUP -->|"Unique chunks only pass through"| COMPRESS
-    COMPRESS -->|"Compressed unique blocks"| COALESCE
-    COALESCE -->|"Parallel NVMe write"| DFM1
-    COALESCE -->|"Parallel NVMe write"| DFM2
-    COALESCE -->|"Parallel NVMe write"| DFM3
-
-    classDef init fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef fabric fill:#374151,stroke:#1f2937,color:#fff
-    classDef portal fill:#15803d,stroke:#14532d,color:#fff
-    classDef mirror fill:#b45309,stroke:#92400e,color:#fff
-    classDef reduce fill:#0e7490,stroke:#155e75,color:#fff
-    classDef dfm fill:#7c3aed,stroke:#5b21b6,color:#fff
-
-    class APP,HBA init
-    class FC_SW fabric
-    class PORT,NVRAM0 portal
-    class NVRAM1,ACK mirror
-    class DEDUP,COMPRESS,COALESCE reduce
-    class DFM1,DFM2,DFM3 dfm
-```
+![Key Terms Glossary](../../../../assets/storage-pure-flasharray-architecture-how-it-works-mermaid-svg-1.svg)
 
 Key points illustrated:
 

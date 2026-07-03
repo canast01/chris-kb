@@ -24,44 +24,7 @@ CLI Reference reference covering Backup Infrastructure Topology, Sessions & Hist
 
 The Veeam component hierarchy governs how jobs are routed, where data lands, and which components need to be healthy for a job to succeed.
 
-```mermaid
-flowchart LR
-    subgraph controlPlane [Control Plane]
-        vbr["Veeam Backup &\nReplication Server\n(job orchestration + config DB)"]
-        vone["Veeam ONE\n(monitoring + reporting)"]
-        vbr --> vone
-    end
-
-    subgraph dataPath [Data Path — Site A]
-        proxy1["Backup Proxy 1\n(hot-add / SAN)"]
-        proxy2["Backup Proxy 2\n(NBD fallback)"]
-        sobr[("SOBR\nScale-Out Backup Repo\n(performance tier — fast disk)")]
-        proxy1 --> sobr
-        proxy2 --> sobr
-    end
-
-    subgraph offsite [Offsite / Cloud Tier]
-        obj[("Object Storage\nS3 / Azure Blob\n(capacity tier — immutable)")]
-        tape[("Tape Library\n(archival)")]
-    end
-
-    vcenter(["VMware vCenter\nSource VMs"])
-    vcenter --> proxy1
-    vcenter --> proxy2
-    vbr --> proxy1
-    vbr --> proxy2
-    sobr -->|"capacity tier offload\n(after retention threshold)"| obj
-    sobr -->|"tape offload"| tape
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-    class vbr,vone,proxy1,proxy2 ctrl
-    class sobr,tape store
-    class vcenter host
-    class obj cloud
-```
+![Backup Infrastructure Topology](../../../../assets/backup-veeam-operations-cli-reference-mermaid-svg.svg)
 
 ---
 

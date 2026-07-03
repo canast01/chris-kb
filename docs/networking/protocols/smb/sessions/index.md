@@ -4,8 +4,6 @@ tags:
 ---
 # SMB — Sessions
 
-```powershell
-
 ```d2
 direction: down
 
@@ -35,8 +33,6 @@ An SMB session is established after a client authenticates to a server. Sessions
 | `Get-SmbServerConfiguration` | View SMB signing and version settings |
 
 ## Listing and Managing Sessions
-
-```
 
 ```powershell
 ## List all active SMB sessions

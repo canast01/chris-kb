@@ -26,27 +26,7 @@ Commonly used Linux administration commands, grouped by category. Applies to RHE
 
 ## Command Categories
 
-```mermaid
-flowchart LR
-    subgraph compute["Compute"]
-        svcMgmt["systemctl\nservice management"]
-        procMgmt["ps · top · pidstat\nprocess inspection"]
-    end
-    subgraph storage["Storage"]
-        lvmCmds["pvs · vgs · lvs\nLVM management"]
-        diskCmds["lsblk · df · du\ndisk inspection"]
-        ioCmds["iostat · iotop\nI/O performance"]
-    end
-    subgraph network["Network"]
-        ifCmds["ip addr · ip route\ninterface management"]
-        connCmds["ss · netstat\nconnections · ports"]
-        diagCmds["ping · traceroute · tcpdump\ndiagnostics"]
-    end
-    subgraph logs["Logs"]
-        journalCmds["journalctl\nsystemd journal"]
-        auditCmds["ausearch · aureport\nauditd"]
-    end
-```
+![Command Categories](../../../../assets/compute-linux-operations-cli-reference-mermaid-svg.svg)
 
 ## Process Management
 

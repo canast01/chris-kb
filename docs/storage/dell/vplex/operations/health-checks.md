@@ -34,35 +34,7 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Status, Dir
 
 ![Daily Checks](../../../../assets/storage-dell-vplex-hc-daily-checks.svg)
 
-```mermaid
-flowchart LR
-    start(["Daily check run"]) --> cl
-
-    subgraph "Cluster Layer"
-        cl["ll /clusters/*/health-indications/\nAll health-state: ok?"]
-        eng["ll /engines/*/directors/*/hardware/\nAll directors healthy?"]
-        cl --> eng
-    end
-
-    subgraph "Metro Layer"
-        dd["ll /distributed-storage/distributed-devices/*/health-indications/\nAll devices in-sync?"]
-        wit["ll /metro-node/*/witness/\nWitness connected + reachable?"]
-        cg["ll /distributed-storage/consistency-groups/\nAll CGs operational-status: ok?"]
-        dd --> wit --> cg
-    end
-
-    subgraph "Access Layer"
-        sv["ll /clusters/*/exports/storage-views/\nStorage views intact?"]
-        hcFull["health-check --full\nNo warnings or errors?"]
-        sv --> hcFull
-    end
-
-    eng --> dd
-    cg --> sv
-    hcFull --> result{All OK?}
-    result -->|Yes| done(["Daily check passed"])
-    result -->|No| investigate(["Investigate per\ncomponent section"])
-```
+![Daily Checks](../../../../assets/storage-dell-vplex-operations-health-checks-mermaid-svg.svg)
 
 | Check | Command | Notes |
 |---|---|---|

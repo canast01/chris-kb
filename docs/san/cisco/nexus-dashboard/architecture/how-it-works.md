@@ -109,43 +109,7 @@ Nexus Dashboard runs as a 3-node or 5-node cluster. Each node is a physical appl
 
 A 3-node cluster tolerates the loss of one node. For upgrades, always upgrade the ND platform before upgrading hosted application versions.
 
-```mermaid
-graph LR
-  subgraph ND["Nexus Dashboard Cluster (3 Nodes)"]
-    N1["Node 1 — Primary\netcd leader · cluster control"]
-    N2["Node 2 — Worker\napplication pods"]
-    N3["Node 3 — Worker\napplication pods"]
-  end
-
-  NDFC["NDFC\nFabric lifecycle\nVXLAN / LAN / SAN"]
-  NDI["NDI\nTelemetry &amp; insights\nAnomaly detection"]
-  NDO["NDO\nMulti-site orchestration\nACI + NDFC policy"]
-
-  FAB1["Data Centre Fabric A\nNexus switches · ACI"]
-  FAB2["Data Centre Fabric B\nNexus switches · NDFC"]
-  FAB3["SAN Fabric\nMDS switches"]
-
-  N1 --- N2
-  N2 --- N3
-  N1 --- N3
-  ND --> NDFC
-  ND --> NDI
-  ND --> NDO
-  NDFC -->|"NX-API / POAP"| FAB1
-  NDFC -->|"NX-API / POAP"| FAB2
-  NDFC -->|"SNMP / SSH"| FAB3
-  NDI -->|"gRPC telemetry"| FAB1
-  NDI -->|"gRPC telemetry"| FAB2
-  NDO -->|"REST to APIC"| FAB1
-  NDO -->|"REST to NDFC"| FAB2
-
-  classDef ndnode fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef svc fill:#15803d,stroke:#166534,color:#fff
-  classDef fab fill:#b45309,stroke:#92400e,color:#fff
-  class N1,N2,N3 ndnode
-  class NDFC,NDI,NDO svc
-  class FAB1,FAB2,FAB3 fab
-```
+![See also](../../../../assets/san-cisco-nexus-dashboard-architecture-how-it-works-mermaid-svg.svg)
 
 ---
 

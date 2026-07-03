@@ -13,7 +13,6 @@ tags:
 SDDC Manager → Security → Password Management
 → Select component → Rotate Password
 ```
-```bash
 
 ```plantuml
 @startuml
@@ -43,6 +42,7 @@ SDDC --> ADM: Workload domain live
 ```text title="Expected output"
 (no output — this is a PlantUML diagram definition block, not executable bash code)
 ```
+```bash
 ## API — rotate a single credential
 curl -sk -u 'admin@local:password' \
   -X POST \
@@ -77,8 +77,8 @@ SDDC Manager → Network Settings → Network Pools
    → SDDC Manager validates: HCL, SSH, DNS, NTP
 5. Host enters "Unassigned" state — available for domain expansion
 ```
-```bash
-## SSH to SDDC Manager appliance (vcf user → sudo)
+```text
+SSH to SDDC Manager appliance (vcf user → sudo), then check:
 /var/log/vmware/vcf/sddc-manager/vcfops.log     # LCM and orchestration
 /var/log/vmware/vcf/sddc-manager/sddc-svc.log   # core SDDC Manager service
 /var/log/vmware/vcf/lcm/lcm-debug.log           # Lifecycle Management detail
@@ -86,53 +86,7 @@ SDDC Manager → Network Settings → Network Pools
 /var/log/vmware/vcf/commonsvcs/audit.log        # Admin actions and API calls
 ```
 
-```mermaid
-graph LR
-    CB["☁ Cloud Builder<br/>(initial bring-up only)"]
-    SM["⚙ SDDC Manager<br/>Lifecycle &amp; Orchestration Hub"]
-
-    subgraph MD["Management Domain"]
-        VCA["vCenter A"]
-        NSXM["NSX Manager"]
-        VSANA["vSAN Cluster A"]
-    end
-
-    subgraph WD1["Workload Domain 1"]
-        VCB["vCenter B"]
-        NSXS["NSX (Shared or Dedicated)"]
-        VSANB["vSAN Cluster B"]
-    end
-
-    subgraph WD2["Workload Domain 2"]
-        VCC["vCenter C"]
-        VSANC["vSAN Cluster C"]
-    end
-
-    subgraph FP["Free Pool"]
-        UH1["Unassigned Host 1"]
-        UH2["Unassigned Host 2"]
-    end
-
-    CB -->|"Initial bringup only"| SM
-    SM -->|"Deploys &amp; manages"| MD
-    SM -->|"Deploys &amp; manages"| WD1
-    SM -->|"Deploys &amp; manages"| WD2
-    SM -->|"Commissions hosts"| FP
-    MD -->|"Lifecycle events"| SM
-    WD1 -->|"Lifecycle events"| SM
-    WD2 -->|"Lifecycle events"| SM
-    FP -->|"Assigned to domain"| SM
-
-    classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef green fill:#15803d,stroke:#166534,color:#fff
-    classDef amber fill:#b45309,stroke:#92400e,color:#fff
-    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-    class SM,CB blue
-    class VCA,NSXM,VSANA green
-    class VCB,NSXS,VSANB,VCC,VSANC amber
-    class UH1,UH2 purple
-```
+![VMware Cloud Foundation — How It Works](../../../../assets/virtualization-vmware-vmware-cloud-foundation-architecture-how-it-works-mermaid-svg.svg)
 
 ## See also
 

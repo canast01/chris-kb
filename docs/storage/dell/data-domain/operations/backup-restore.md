@@ -23,29 +23,7 @@ Backup & Restore reference covering Overview, DDBoost Restore (Backup Applicatio
 
 ## Overview
 
-```mermaid
-graph LR
-    backupApp(["Backup App\nVeeam / NetBackup / CommVault"])
-
-    subgraph "Restore Paths"
-        ddboostRestore["DDBoost Restore\n(fastest — app-aware)"]
-        nfsRestore["NFS Direct Mount\n/data/col1/mtree-name"]
-        cifsRestore["CIFS Share\n\\\\dd-host\\share-name"]
-        vtlRestore["VTL (FC)\nemulated tape restore"]
-    end
-
-    subgraph "Data Domain"
-        ddfs["[(DDFS)]\n(deduplicated store)"]
-    end
-
-    backupApp -->|"initiate restore"| ddboostRestore
-    backupApp -->|"granular file"| nfsRestore
-    backupApp -->|"Windows file"| cifsRestore
-    backupApp -->|"tape emulation"| vtlRestore
-
-    ddboostRestore & nfsRestore & cifsRestore & vtlRestore --> ddfs
-    ddfs -->|"rehydrate on the fly"| restoreTarget(["Restore Target\nVM / file / database"])
-```
+![Overview](../../../../assets/storage-dell-data-domain-operations-backup-restore-mermaid-svg.svg)
 
 Resume after the restore completes:
 

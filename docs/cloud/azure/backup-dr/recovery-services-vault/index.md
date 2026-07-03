@@ -14,27 +14,7 @@ The Recovery Services Vault is the top-level management container for both Azure
 
 ## Recovery Services Vault Structure
 
-```mermaid
-flowchart LR
-    vault["Recovery Services Vault\nmanagement container"]
-    subgraph backup["Azure Backup"]
-        vmBackup["VM Backup\nAzure IaaS VMs"]
-        sqlBackup["SQL Server Backup\nin Azure VMs"]
-        filesBackup["Azure Files Backup"]
-        onpremBackup["On-Premises\nMARS Agent"]
-    end
-    subgraph asr["Azure Site Recovery"]
-        azureToAzure["Azure-to-Azure\nVM replication"]
-        onpremToAzure["On-Premises-to-Azure\nHyper-V · VMware"]
-    end
-    subgraph settings["Vault Settings"]
-        redundancy["Redundancy\nGRS (default) · ZRS · LRS"]
-        softDelete["Soft Delete\n14-day protection"]
-        encryption["Encryption\nPMK · CMK"]
-    end
-
-    vault --> backup & asr & settings
-```
+![Recovery Services Vault Structure](../../../../assets/cloud-azure-backup-dr-recovery-services-vault-mermaid-svg.svg)
 
 ## Vault Creation
 

@@ -93,26 +93,7 @@ S3 bucket names must comply with S3 naming rules: 3–63 characters, lowercase l
 
 ## Replication Group Design
 
-```mermaid
-graph LR
-  subgraph "Site A — lon01-ecs-vdc1"
-    NS_A["Namespace: analytics-prod\nBuckets + IAM users"]
-    NODES_A["ECS Nodes (N≥4)\n12+4 EC within VDC"]
-    NS_A --- NODES_A
-  end
-  subgraph "Site B — ams01-ecs-vdc1"
-    NS_B["Namespace: analytics-prod\n(replica)"]
-    NODES_B["ECS Nodes (N≥4)\n12+4 EC within VDC"]
-    NS_B --- NODES_B
-  end
-  RG["Replication Group\nlon01-ams01-rg1\n(async · 15 min RPO)"]
-  NS_A --> RG --> NS_B
-  WAN(["WAN link · port 9100\nSize for 110% of peak ingest"]) -. "geo-replication" .- RG
-  classDef vdc fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef rg fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class NODES_A,NODES_B,NS_A,NS_B vdc
-  class RG rg
-```
+![Replication Group Design](../../../../assets/storage-dell-ecs-architecture-design-standards-mermaid-svg.svg)
 
 | Decision | Guidance |
 |---|---|

@@ -42,48 +42,7 @@ MGR --> ADM: Policy enforced
 
 ### NSX 3-Plane Architecture
 
-```mermaid
-graph LR
-    subgraph MGMT["Management Plane — NSX Manager Cluster"]
-        MGR1["NSX Manager 1<br/>Policy API · REST · UI"]
-        MGR2["NSX Manager 2<br/>Policy API · REST · UI"]
-        MGR3["NSX Manager 3<br/>Policy API · REST · UI"]
-        MGR1 <--> MGR2
-        MGR2 <--> MGR3
-        MGR1 <--> MGR3
-    end
-
-    subgraph CTRL["Control Plane — Central Control Plane (CCP)"]
-        CCP["Central Control Plane<br/>Embedded in NSX Manager<br/>Computes forwarding tables<br/>Pushes config via RPC/messaging"]
-    end
-
-    subgraph DATA["Data Plane — Transport Nodes"]
-        HOST1["ESXi Host 1<br/>VMkernel NSX module<br/>DLR · DFW · TEP vmknic"]
-        HOST2["ESXi Host 2<br/>VMkernel NSX module<br/>DLR · DFW · TEP vmknic"]
-        EDGE["Edge VM / Bare-Metal<br/>Service Router<br/>BGP · NAT · LB · VPN"]
-    end
-
-    subgraph TUNNEL["GENEVE Overlay Tunnels"]
-        GEN["GENEVE UDP 6081<br/>VNI-tagged frames<br/>TEP-to-TEP encapsulation"]
-    end
-
-    MGMT -->|"Config sync — Policy API"| CTRL
-    CTRL -->|"State push via RPC<br/>forwarding tables · segment state<br/>DFW rules · TEP assignments"| HOST1
-    CTRL -->|"State push via RPC<br/>forwarding tables · segment state<br/>DFW rules · TEP assignments"| HOST2
-    CTRL -->|"State push via RPC<br/>routing config · gateway state"| EDGE
-    HOST1 <-->|"GENEVE tunnel<br/>E-W overlay traffic"| GEN
-    HOST2 <-->|"GENEVE tunnel<br/>E-W overlay traffic"| GEN
-
-    classDef mgmtStyle fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef ctrlStyle fill:#15803d,stroke:#166534,color:#fff
-    classDef dataStyle fill:#b45309,stroke:#92400e,color:#fff
-    classDef tunnelStyle fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-    class MGR1,MGR2,MGR3 mgmtStyle
-    class CCP ctrlStyle
-    class HOST1,HOST2,EDGE dataStyle
-    class GEN tunnelStyle
-```
+![Edge Node Transport Nodes](../../../../assets/virtualization-vmware-nsx-architecture-how-it-works-mermaid-svg.svg)
 
 ### Edge Node Transport Nodes
 

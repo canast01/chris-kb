@@ -23,28 +23,7 @@ Encryption reference covering Overview, Key Management, Key Rotation, FIPS Mode,
 
 ## Overview
 
-```mermaid
-graph LR
-    subgraph "Data at Rest — D@RE"
-        dare["AES-256 CBC\n(FIPS 140-2 validated)"]
-        km{{"Key Manager"}}
-        internal["Internal\n(embedded key store)"]
-        kmip["KMIP External\nThales / Vault / RSA DPM"]
-        dare --> km
-        km --> internal
-        km --> kmip
-    end
-
-    subgraph "Data in Transit"
-        mgmtTLS["Management HTTPS\nTLS 1.2+ (port 3009/443)"]
-        replEnc["Replication TLS\n(encryption aes128 per context)"]
-        boostEnc["DD Boost Transport\nEncryption (optional)"]
-    end
-
-    subgraph "Cloud Tier"
-        cloudEnc["D@RE before cloud offload\nCloud provider does NOT hold keys"]
-    end
-```
+![Overview](../../../../assets/storage-dell-data-domain-security-encryption-mermaid-svg.svg)
 
 ### Enable Encryption at Initial Commissioning
 

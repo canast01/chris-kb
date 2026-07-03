@@ -39,50 +39,7 @@ Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives t
 
 ## Data Pipeline Topology
 
-```mermaid
-graph LR
-  subgraph SOURCES["Storage Systems"]
-    PM["PowerMax\n(embedded agent)"]
-    UN["Unity XT\n(collection service)"]
-    PS["PowerStore\n(REST API)"]
-    SC["PowerScale\n(OneFS agent)"]
-    SW["PowerPath / vSAN\n/ VMware"]
-  end
-
-  subgraph ONPREM["On-Premises Collection"]
-    SA["SupportAssist Agent\n(SCG VM)\npoll every 5 min\noutbound HTTPS 443"]
-  end
-
-  subgraph CLOUD["Dell CloudIQ Cloud Platform"]
-    AE["Analytics Engine\n(ML Models)"]
-    TM["Telemetry Store"]
-    ML["ML Models\n7-day baseline\nper metric"]
-    AE --> ML
-    TM --> AE
-  end
-
-  subgraph OUTPUT["Outputs"]
-    HS["Health Score\n0–100"]
-    CF["Capacity Forecast\n(runway days)"]
-    PA["Performance\nAnomalies"]
-    PR["Proactive\nRecommendations"]
-    AL["Alerts\n(email / webhook)"]
-  end
-
-  PM & UN & PS & SC & SW --> SA
-  SA -->|"TLS-encrypted\nbatch telemetry"| TM
-  ML --> HS & CF & PA & PR & AL
-
-  classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef green fill:#15803d,stroke:#166534,color:#fff
-  classDef amber fill:#b45309,stroke:#92400e,color:#fff
-  classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-  class PM,UN,PS,SC,SW blue
-  class SA green
-  class AE,TM,ML amber
-  class HS,CF,PA,PR,AL purple
-```
+![How It Works](../../../../assets/storage-dell-cloudiq-architecture-how-it-works-mermaid-svg.svg)
 
 ## How It Works
 

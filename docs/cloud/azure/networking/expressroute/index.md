@@ -13,20 +13,7 @@ Azure ExpressRoute provides dedicated private connectivity between on-premises n
 
 ## ExpressRoute Connectivity Model
 
-```mermaid
-flowchart LR
-    onprem["On-Premises\nNetwork"]
-    cePE["CE Router\nCustomer Edge"]
-    provider["Connectivity Provider\nEquinix · Megaport"]
-    msPE["Microsoft Edge Router\nMEE"]
-    subgraph azure["Azure"]
-        ergw["ExpressRoute GW\nhub VNet"]
-        hub["Hub VNet"]
-        spokes["Spoke VNets\nvia peering"]
-    end
-
-    onprem --> cePE -->|"Dual circuits\n(redundancy)"| provider --> msPE --> ergw --> hub --> spokes
-```
+![ExpressRoute Connectivity Model](../../../../assets/cloud-azure-networking-expressroute-mermaid-svg.svg)
 
 ## Circuit Creation
 

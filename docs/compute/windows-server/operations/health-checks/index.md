@@ -248,34 +248,7 @@ if (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -N
 
 ## Performance Counter Hierarchy
 
-```mermaid
-flowchart LR
-    subgraph cpu["CPU"]
-        cpuTotal["Processor Total %"]
-        cpuPerCore["Per-core %"]
-        ctxSwitch["Context Switches/sec"]
-    end
-    subgraph mem["Memory"]
-        memAvail["Available MBytes"]
-        pagesSec["Pages/sec"]
-        nonPagePool["NonPaged Pool"]
-    end
-    subgraph disk["Disk"]
-        diskTime["% Disk Time"]
-        diskLatency["Avg Disk sec/Transfer"]
-        diskIops["Disk Transfers/sec"]
-    end
-    subgraph net["Network"]
-        bytesTotal["Bytes Total/sec"]
-        pktErrors["Packets Errors/sec"]
-    end
-    perfMon["PerfMon\nData Collector Set"]
-
-    cpu --> perfMon
-    mem --> perfMon
-    disk --> perfMon
-    net --> perfMon
-```
+![See also](../../../../assets/compute-windows-server-operations-health-checks-mermaid-svg.svg)
 
 ## Health Check Summary
 

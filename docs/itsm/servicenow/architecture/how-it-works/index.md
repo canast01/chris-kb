@@ -32,20 +32,7 @@ Each instance receives a URL in the form `https://<instance-name>.service-now.co
 
 Most enterprise deployments maintain a minimum of three instances arranged in a promotion pipeline:
 
-```mermaid
-flowchart LR
-    DEV["Dev Instance\n(sub-production)"]
-    TEST["Test / UAT Instance\n(sub-production)"]
-    PROD["Production Instance"]
-
-    DEV -- "Update Set export" --> TEST
-    TEST -- "Update Set export" --> PROD
-
-    subgraph Sub-Production
-        DEV
-        TEST
-    end
-```
+![Instance Hierarchy](../../../../assets/itsm-servicenow-architecture-how-it-works-mermaid-svg.svg)
 
 | Phase | Owner | Duration |
 |---|---|---|

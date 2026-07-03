@@ -25,55 +25,7 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 
 PowerMax hardening focuses on three areas: securing the management interfaces (Unisphere and Solutions Enabler), securing replication and host connectivity, and reducing the attack surface through configuration discipline. PowerMax is a closed, purpose-built appliance — the hardening surface is primarily the management plane, not the array OS itself which is not directly user-accessible.
 
-```mermaid
-graph LR
-    subgraph "Network Perimeter"
-        FW["Firewall\nAllow :8443 from mgmt VLAN only\nDeny all other inbound"]
-        SRS["SRS-VE Gateway\n(DMZ — Dell remote support)"]
-    end
-    subgraph "Management Plane"
-        UNI["Unisphere :8443\nTLS 1.2+ only\nCA-signed cert\n15-min idle timeout"]
-        AD["Active Directory\nLDAPS :636\nGroup-to-role mapping"]
-        LDAP_MAP["Role Mapping\nStorageAdmin / SecurityAdmin\nOperator / Monitor"]
-        SE_HOST["SE Host\ndaemon_users restrict by IP\nSYMCLI binaries chmod 750\nauditd enabled"]
-    end
-    subgraph "Data Plane"
-        MV["Masking Views\nOne IG per host\nSeparate prod / dev PGs\nNo shared IGs"]
-        ZONE["SAN Fabric Zoning\nOne initiator + one target\nper zone (single-initiator)"]
-    end
-    subgraph "Encryption Layer"
-        DARE["D@RE\nAES-256 per drive\nFactory enabled"]
-        SRDF_ENC["SRDF Encryption\nAES-256 in-flight\nRequired for WAN/IP links"]
-        TLS["TLS 1.2/1.3\nManagement traffic\nSYMAPI SECURE flag"]
-    end
-    subgraph "Audit and Compliance"
-        SYMAUDIT["symaudit / symevent\nAll config changes logged"]
-        SIEM["SIEM Forwarding\nSyslog + SNMP\n12-month retention"]
-    end
-
-    FW --> UNI
-    SRS --> UNI
-    AD -->|"LDAPS"| UNI
-    UNI --> LDAP_MAP
-    UNI --> SE_HOST
-    SE_HOST --> MV
-    MV --> ZONE
-    DARE --> UNI
-    SRDF_ENC --> UNI
-    TLS --> UNI
-    UNI --> SYMAUDIT --> SIEM
-
-    classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
-    classDef mgmt fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef data fill:#0f766e,stroke:#0d9488,color:#fff
-    classDef enc fill:#be123c,stroke:#9f1239,color:#fff
-    classDef audit fill:#92400e,stroke:#78350f,color:#fff
-    class FW,SRS net
-    class UNI,AD,LDAP_MAP,SE_HOST mgmt
-    class MV,ZONE data
-    class DARE,SRDF_ENC,TLS enc
-    class SYMAUDIT,SIEM audit
-```
+![Overview](../../../../assets/storage-dell-powermax-security-hardening-mermaid-svg.svg)
 
 ## Unisphere Hardening
 

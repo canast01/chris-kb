@@ -12,21 +12,7 @@ Azure Advisor analyses your usage and configuration and surfaces personalised re
 
 ## Advisor Recommendation Categories
 
-```mermaid
-flowchart LR
-    advisor["Azure Advisor\npersonalised recommendations"]
-    subgraph categories["Recommendation Categories"]
-        cost["Cost\nright-size · unused resources · reservations"]
-        security["Security\nDefender for Cloud integration"]
-        reliability["Reliability\nHA · backup · recovery"]
-        performance["Performance\nthroughput · latency improvements"]
-        opExcellence["Operational Excellence\nconfiguration · automation"]
-    end
-    actions["Actions\napply · postpone · dismiss"]
-
-    advisor --> cost & security & reliability & performance & opExcellence
-    cost & security & reliability & performance & opExcellence --> actions
-```
+![Advisor Recommendation Categories](../../../../assets/cloud-azure-cost-advisor-recommendations-mermaid-svg.svg)
 
 ## Viewing Recommendations
 

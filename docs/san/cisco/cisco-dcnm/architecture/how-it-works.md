@@ -56,43 +56,7 @@ Multiple DCNM instances managing separate fabrics, federated under a single logi
 
 ## Management Flow
 
-```mermaid
-graph LR
-  ADM(["Admin\nBrowser / REST API"])
-
-  subgraph DCNM["DCNM Server"]
-    LAN["LAN Controller\nNX-OS fabric management"]
-    SAN["SAN Controller\nVSAN / zone management"]
-    MED["Media Controller\nPrecision Time Protocol"]
-  end
-
-  subgraph NET["Network Fabric"]
-    NEX["Nexus Switches\nNX-API · SNMP · SSH · POAP"]
-  end
-
-  subgraph SANF["SAN Fabric"]
-    MDS["MDS Switches\nSNMP · FC · NX-OS CLI"]
-  end
-
-  MEDIA["Media Networks\nPTP-capable devices"]
-  VC(["vCenter\nVirtual port mapping"])
-
-  ADM -->|"HTTPS 443"| LAN
-  ADM -->|"HTTPS 443"| SAN
-  LAN -->|"NX-API · SNMP · SSH · POAP"| NEX
-  SAN -->|"SNMP · SSH"| MDS
-  MED -->|"PTP"| MEDIA
-  LAN -->|"REST API"| VC
-
-  classDef admin fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dcnm fill:#15803d,stroke:#166534,color:#fff
-  classDef fabric fill:#b45309,stroke:#92400e,color:#fff
-  classDef ext fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class ADM admin
-  class LAN,SAN,MED dcnm
-  class NEX,MDS,MEDIA fabric
-  class VC ext
-```
+![Network Requirements](../../../../assets/san-cisco-cisco-dcnm-architecture-how-it-works-mermaid-svg.svg)
 
 1. **Discovery** — DCNM discovers switches via SNMP and SSH/Telnet (SNMPv3 preferred)
 2. **Inventory** — Discovered devices added to inventory; topology built from CDP/LLDP and SNMP MIB data

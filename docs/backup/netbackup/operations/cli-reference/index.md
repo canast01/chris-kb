@@ -24,53 +24,7 @@ NetBackup CLI Reference reference covering Master → Media → Client Topology,
 
 Understanding the three-tier topology is essential before using the CLI — commands execute at the correct tier.
 
-```mermaid
-flowchart LR
-    subgraph masterTier [Primary / Master Server]
-        master["Primary Server\n(catalog, policy DB,\njob scheduler, EMM)"]
-        catalog[("NetBackup Catalog\nbpdbm — image metadata")]
-        master --> catalog
-    end
-
-    subgraph mediaTier [Media Servers]
-        ms1["Media Server 1\nSite A — OST/Data Domain"]
-        ms2["Media Server 2\nSite B / DR — MSDP pool"]
-        ms3["Media Server 3\nCloud gateway — S3"]
-    end
-
-    subgraph clientTier [Clients]
-        vmHost(["VMware backup host\nVADP proxy"])
-        dbHost(["Oracle / MSSQL host\nbpcd agent"])
-        nasHost(["NAS — NDMP\ndirect connect"])
-    end
-
-    subgraph storageTier [Storage Units]
-        dd[("Data Domain\nOST dedup pool")]
-        msdp[("MSDP\nMedia Server\nDedup Pool")]
-        s3[("AWS S3 / Cloud\nlong-term archive")]
-    end
-
-    master -->|"policy / job control\nTCP 1556"| ms1
-    master -->|"policy / job control"| ms2
-    master -->|"policy / job control"| ms3
-
-    ms1 --> dd
-    ms2 --> msdp
-    ms3 --> s3
-
-    vmHost -->|"TCP 13724 bpcd"| ms1
-    dbHost -->|"TCP 13724 bpcd"| ms1
-    nasHost -->|"NDMP port 10000"| ms1
-
-    classDef master fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef media fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef client fill:#15803d,stroke:#166534,color:#fff
-    classDef storage fill:#b45309,stroke:#92400e,color:#fff
-    class master,catalog master
-    class ms1,ms2,ms3 media
-    class vmHost,dbHost,nasHost client
-    class dd,msdp,s3 storage
-```
+![Master → Media → Client Topology](../../../../assets/backup-netbackup-operations-cli-reference-mermaid-svg.svg)
 
 Run restores from the CLI. Always verify client name, backup time, and policy before executing.
 

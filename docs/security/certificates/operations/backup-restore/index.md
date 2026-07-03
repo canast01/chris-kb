@@ -74,25 +74,7 @@ ENG --> SRC: Done
 
 ## Backup / Restore Workflow
 
-```mermaid
-flowchart LR
-    subgraph Backup["Backup (scheduled)"]
-        A[CA Private Key] --> E[Encrypt & store\nin offline HSM/vault]
-        B[CA Database] --> F[Encrypted archive\nto backup target]
-        C[CA Configuration] --> F
-        D[CRL & AIA] --> F
-    end
-
-    subgraph Restore["Restore (disaster recovery)"]
-        G[Retrieve key from vault] --> H[Restore CA service\non new OS]
-        I[Restore CA database] --> H
-        J[Restore configuration] --> H
-        H --> K[Validate CA\nwith certutil -verify]
-        K --> L[Re-publish CRL & AIA]
-    end
-
-    Backup -->|"Quarterly key ceremony\ntest"| Restore
-```
+![PKCS#12 (PFX) Export](../../../../assets/security-certificates-operations-backup-restore-mermaid-svg.svg)
 
 ---
 

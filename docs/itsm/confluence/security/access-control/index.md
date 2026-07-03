@@ -18,8 +18,6 @@ Many spaces default to allowing all logged-in users to view and edit. Restrict t
 
 ```
 
-```bash
-
 ```d2
 direction: down
 
@@ -59,6 +57,7 @@ or_via_api -> resources: access
 
 ---
 
+```bash
 ## Audit space permissions via REST API
 curl -u admin:password \
   "https://confluence.example.local/rest/api/space/INFRA/permission" \

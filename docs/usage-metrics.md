@@ -24,8 +24,8 @@ section_page_counts -> health_checks: uses
 | Total markdown pages | 2,847 |
 | Sections | 11 |
 | Pages with full-width ASCII diagrams | 166 |
-| Pages with SVG diagrams | 1,406 |
-| Pages with Mermaid diagrams | 162 |
+| Pages with SVG diagrams | 1,450 |
+| Pages with Mermaid diagrams | 44 |
 | Pages with kb-summary | 2,567 |
 | Pages with tags | 2,819 |
 | Audit score | 54 / 55 |

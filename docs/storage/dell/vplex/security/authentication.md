@@ -12,25 +12,7 @@ Authentication for VPLEX management is split across two interfaces: SSH-based `v
 </div>
 ![Dell VPLEX — Authentication](../../../../assets/storage-dell-vplex-security-authentication.svg)
 
-```mermaid
-flowchart LR
-    subgraph "CLI Access"
-        operator(["Operator"])
-        jumpHost["Jump Host\nSSH key auth"]
-        vms["VMS\nservice@VMS_IP"]
-        vplexcli["vplexcli shell"]
-    end
-    subgraph "Web GUI Access"
-        browser(["Admin Browser"])
-        unisphere["Unisphere for VPLEX\nhttps://VMS_IP"]
-        ldap["Active Directory\nLDAP / LDAPS"]
-    end
-
-    operator --> jumpHost
-    jumpHost -->|"SSH key\ned25519"| vms --> vplexcli
-    browser --> unisphere
-    unisphere -->|"LDAP bind\ngroup-to-role mapping"| ldap
-```
+![Dell VPLEX — Authentication](../../../../assets/storage-dell-vplex-security-authentication-mermaid-svg.svg)
 
 ## Before you begin
 

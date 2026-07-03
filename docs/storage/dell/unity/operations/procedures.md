@@ -437,28 +437,7 @@ NAS server lifecycle management — create, configure, and troubleshoot NAS serv
 
 A NAS server on Dell Unity is a logical entity that owns file interfaces (network ports), AD/LDAP authentication configuration, and NFS/SMB protocol settings. Each NAS server runs on one storage processor and can fail over to the peer SP.
 
-```mermaid
-graph LR
-  subgraph "Unity SP"
-    NAS["NAS Server\n(logical entity)"]
-    IF["File Interface\n(IP address on SP port)"]
-    NAS --> IF
-  end
-  subgraph "Identity"
-    AD["Active Directory\n(machine account + Kerberos)"]
-    LDAP["LDAP\n(UID/GID mapping for NFS)"]
-    NAS --> AD
-    NAS --> LDAP
-  end
-  subgraph "Shares"
-    FS["File System\n(pool-backed)"]
-    NFS["NFS Export"]
-    SMB["SMB Share"]
-    FS --> NFS & SMB
-    NAS --> FS
-  end
-  IF --> CL(["NFS / SMB Clients"])
-```
+![Expand a Pool](../../../../assets/storage-dell-unity-operations-procedures-mermaid-svg.svg)
 
 ### List and Inspect
 

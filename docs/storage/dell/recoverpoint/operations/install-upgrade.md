@@ -43,42 +43,7 @@ Always verify the compatibility matrix in the Dell Simple Support Matrix (SSM) t
 
 ## Architecture Overview
 
-```mermaid
-flowchart LR
-    subgraph siteA [Site A — Protected]
-        hA["ESXi / Physical Hosts"]
-        spA["Array/VPLEX/Host Splitter"]
-        rpA1["RPA-A1"]
-        rpA2["RPA-A2"]
-        storA[("PowerMax / Unity\nPrimary Volumes")]
-    end
-
-    subgraph siteB [Site B — Recovery]
-        hB["ESXi / Physical Hosts"]
-        spB["Array/VPLEX/Host Splitter"]
-        rpB1["RPA-B1"]
-        rpB2["RPA-B2"]
-        storB[("PowerMax / Unity\nReplica Volumes")]
-    end
-
-    hA -->|"Write I/O"| spA
-    spA -->|"Split write"| rpA1
-    spA -->|"Pass-through"| storA
-    rpA1 <-->|"Cluster heartbeat"| rpA2
-    rpA1 <-->|"WAN replication"| rpB1
-    rpB1 <-->|"Cluster heartbeat"| rpB2
-    rpB1 -->|"Apply write"| storB
-    hB -->|"Read (DR only)"| storB
-
-    classDef rpa fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef splitter fill:#b45309,stroke:#92400e,color:#fff
-    class rpA1,rpA2,rpB1,rpB2 rpa
-    class storA,storB storage
-    class hA,hB host
-    class spA,spB splitter
-```
+![Architecture Overview](../../../../assets/storage-dell-recoverpoint-operations-install-upgrade-mermaid-svg.svg)
 
 ---
 

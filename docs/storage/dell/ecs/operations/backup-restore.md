@@ -33,27 +33,7 @@ ECS does not have a traditional backup agent. Configuration backup covers the ma
 
 ## Data Durability Model
 
-```mermaid
-graph LR
-  subgraph "VDC-Level Protection"
-    VDC1[("VDC 1 — Site A\n(primary)")]
-    VDC2[("VDC 2 — Site B\n(replica)")]
-    VDC1 -->|"geo-replication\nasync or sync"| VDC2
-  end
-  subgraph "Within-VDC Protection"
-    FRAG["Object split into\nEC fragments"]
-    N1["Node 1"] & N2["Node 2"] & N3["Node 3"] & N4["Node 4+"]
-    FRAG --> N1 & N2 & N3 & N4
-  end
-  WORM["Object Lock (WORM)\nper-object retention"]
-  VER["Bucket Versioning\npoint-in-time recovery"]
-  classDef vdc fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef node fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef protect fill:#15803d,stroke:#166534,color:#fff
-  class VDC1,VDC2 vdc
-  class N1,N2,N3,N4,FRAG node
-  class WORM,VER protect
-```
+![Data Durability Model](../../../../assets/storage-dell-ecs-operations-backup-restore-mermaid-svg.svg)
 
 | Protection Layer | Scope | Failure Domain Covered |
 |---|---|---|

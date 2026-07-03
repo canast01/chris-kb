@@ -5,8 +5,6 @@ tags:
 ---
 # ServiceNow Access Control
 
-```text
-
 ---
 
 ```d2
@@ -34,8 +32,6 @@ access_control_lists_acls -> resources: access
 ACLs define who can perform which operations on which data. Navigate to: System Security → Access Control (ACL).
 
 ### ACL Structure
-
-```
 
 ```yaml
 Name:       <operation>_<table>_<field>

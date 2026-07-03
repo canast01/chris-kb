@@ -12,28 +12,7 @@ Azure Log Analytics is the primary platform for collecting, querying, and alerti
 
 ## Log Analytics Data Flow
 
-```mermaid
-flowchart LR
-    subgraph ingest["Data Ingestion"]
-        diagSettings["Diagnostic Settings\nplatform logs + metrics"]
-        dcr["Data Collection Rules\nVM guest OS logs"]
-        customApi["Custom Logs\nData Collector API"]
-        sentinel["Microsoft Sentinel\nconnectors"]
-    end
-    workspace["Log Analytics Workspace\nKQL engine · retention"]
-    subgraph consume["Consumption"]
-        kql["KQL Queries\nLog search"]
-        alertRules["Alert Rules\nlog search alerts"]
-        workbooksOut["Workbooks\nvisualisation"]
-        grafanaOut["Managed Grafana"]
-    end
-
-    diagSettings --> workspace
-    dcr --> workspace
-    customApi --> workspace
-    sentinel --> workspace
-    workspace --> kql & alertRules & workbooksOut & grafanaOut
-```
+![Log Analytics Data Flow](../../../../assets/cloud-azure-monitoring-log-analytics-mermaid-svg.svg)
 
 ## Workspace Configuration
 

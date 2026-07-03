@@ -15,37 +15,7 @@ ServiceNow is designed as an integration hub as much as an ITSM platform. Integr
 
 ## Integration Architecture Overview
 
-```mermaid
-graph LR
-    subgraph ServiceNow Cloud
-        SNOW["ServiceNow Instance"]
-        REST["REST Message\n/ Scripted REST API"]
-        SOAP["SOAP Web Service"]
-        IMPORT["Import Set API"]
-    end
-
-    subgraph On-Premises Network
-        MID["MID Server\n(Java agent)"]
-        LDAP["Active Directory\n/ LDAP"]
-        DB["On-Prem DB"]
-        MON["Monitoring Tools\n(Dynatrace, Splunk)"]
-    end
-
-    subgraph External SaaS
-        PD["PagerDuty"]
-        DT["Dynatrace"]
-        SPL["Splunk"]
-    end
-
-    SNOW <-->|"HTTPS outbound\n(443)"| MID
-    MID --> LDAP
-    MID --> DB
-    MID --> MON
-
-    SNOW <-->|"REST / Webhook"| PD
-    SNOW <-->|"REST / Webhook"| DT
-    SNOW <-->|"REST / Webhook"| SPL
-```
+![Integration Architecture Overview](../../../../assets/itsm-servicenow-architecture-integrations-mermaid-svg.svg)
 
 ---
 

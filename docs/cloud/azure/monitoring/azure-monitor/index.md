@@ -12,37 +12,7 @@ Azure Monitor is the unified observability platform for Azure. It collects metri
 
 ## Azure Monitor Data Flow
 
-```mermaid
-flowchart LR
-    subgraph sources["Data Sources"]
-        azResources["Azure Resources\nVM · Storage · Network"]
-        guestOS["Guest OS\nAzure Monitor Agent"]
-        apps["Applications\nApp Insights SDK"]
-        custom["Custom Sources\nREST API · DCR"]
-    end
-    subgraph pipeline["Collection Pipeline"]
-        dcr["Data Collection Rules\nDCR"]
-        diagSettings["Diagnostic Settings\nplatform logs + metrics"]
-    end
-    subgraph stores["Data Stores"]
-        metricsDB["Metrics Store\n93-day retention"]
-        logAnalytics["Log Analytics Workspace\nKQL query engine"]
-    end
-    subgraph consume["Consumption"]
-        alerts["Alert Rules\nMetric · Log · Activity"]
-        workbooks["Workbooks\nDashboards"]
-        grafana["Managed Grafana"]
-    end
-
-    azResources --> diagSettings
-    guestOS --> dcr
-    apps --> dcr
-    custom --> dcr
-    dcr --> logAnalytics & metricsDB
-    diagSettings --> logAnalytics & metricsDB
-    metricsDB --> alerts & grafana
-    logAnalytics --> alerts & workbooks & grafana
-```
+![Azure Monitor Data Flow](../../../../assets/cloud-azure-monitoring-azure-monitor-mermaid-svg.svg)
 
 ## Metrics vs Logs
 

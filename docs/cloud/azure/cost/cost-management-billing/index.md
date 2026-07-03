@@ -12,22 +12,7 @@ Azure Cost Management + Billing is the central hub for understanding, analysing,
 
 ## Cost Management Flow
 
-```mermaid
-flowchart LR
-    usage["Azure Resource Usage\ncompute · storage · network · PaaS"]
-    billing["Billing Meter\nusage units recorded"]
-    costMgmt["Cost Management + Billing\nanalysis · budgets · exports"]
-    subgraph actions["Optimisation Actions"]
-        reservations["Reservations\n1-yr / 3-yr commitments"]
-        savingsPlans["Savings Plans\ncompute flexibility"]
-        rightsizing["Right-sizing\nAdvisor recommendations"]
-        tagging["Tag-based chargebacks\ncost allocation"]
-    end
-    reports["Reports / Exports\nfinance · teams"]
-
-    usage --> billing --> costMgmt --> actions
-    costMgmt --> reports
-```
+![Cost Management Flow](../../../../assets/cloud-azure-cost-cost-management-billing-mermaid-svg.svg)
 
 ## Cost Analysis Views
 

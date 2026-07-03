@@ -42,22 +42,7 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
 
 ## Backup Architecture
 
-```mermaid
-flowchart LR
-    subgraph VCF["VCF Management Domain"]
-        SDDC[SDDC Manager] -- "Generates backup\n(tar.gz)" --> SFTP_S
-        NSX[NSX Manager\nCluster] -- "File-based backup\n(tar.gz)" --> SFTP_S
-        VCSA[vCenter Server\nAppliance] -- "File-based backup\n(tar.gz)" --> SFTP_S
-    end
-
-    SFTP_S[(SFTP / NFS\nBackup Target)]
-
-    subgraph DR["DR / Restore"]
-        SFTP_S --> R1[Restore SDDC Manager]
-        R1 --> R2[Restore NSX Manager]
-        R2 --> R3[Restore vCenter]
-    end
-```
+![Backup Architecture](../../../../assets/virtualization-vmware-vmware-cloud-foundation-operations-backup-restore-mermaid-svg.svg)
 
 ---
 

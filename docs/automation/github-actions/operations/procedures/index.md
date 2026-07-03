@@ -247,34 +247,7 @@ Upload build outputs to persist them between jobs or download after a workflow r
 
 ### Matrix Builds
 
-```mermaid
-flowchart LR
-    trigger(["push to main"])
-    matrixJob["Job: test\nstrategy.matrix"]
-
-    subgraph "ubuntu-24.04"
-        u310["Python 3.10"]
-        u311["Python 3.11"]
-        u312["Python 3.12"]
-    end
-    subgraph "windows-latest"
-        w311["Python 3.11"]
-        w312["Python 3.12"]
-    end
-    subgraph "macos-latest"
-        m311["Python 3.11"]
-        m312["Python 3.12"]
-    end
-
-    trigger --> matrixJob
-    matrixJob --> u310
-    matrixJob --> u311
-    matrixJob --> u312
-    matrixJob --> w311
-    matrixJob --> w312
-    matrixJob --> m311
-    matrixJob --> m312
-```
+![Required Status Checks](../../../../assets/automation-github-actions-operations-procedures-mermaid-svg.svg)
 
 Matrix strategy runs the same job across multiple combinations of parameters.
 

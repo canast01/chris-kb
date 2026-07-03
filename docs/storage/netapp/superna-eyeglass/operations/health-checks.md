@@ -26,37 +26,7 @@ Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale
 
 Eyeglass health checks cover the Eyeglass appliance itself, PowerScale cluster connectivity, SyncIQ policy status, and DR policy readiness. Run daily as a minimum; automated checks should run every 15–30 minutes.
 
-```mermaid
-flowchart LR
-    start([Health Check Run]) --> appSvc
-
-    subgraph "Eyeglass Appliance"
-        appSvc["egcli status\nAll services running?"]
-        licOk["egcli license status\nLicense valid?"]
-        clConn["egcli clusters status\nBoth clusters reachable?"]
-        appSvc --> licOk --> clConn
-    end
-
-    subgraph "DR Policy Layer"
-        drState["egcli drpolicy status --all\nAll policies Replicating?"]
-        rpoLag["SyncIQ lag within RPO?"]
-        dnsSync["DNS sync current?"]
-        drState --> rpoLag --> dnsSync
-    end
-
-    subgraph "PowerScale Clusters"
-        isiStatus["isi status\nAll nodes healthy?"]
-        alerts["isi alerts list --category critical\nNo critical alerts?"]
-        drives["isi devices drive list\nAll drives HEALTHY?"]
-        isiStatus --> alerts --> drives
-    end
-
-    clConn --> drState
-    dnsSync --> isiStatus
-    drives --> result{All checks pass?}
-    result -->|Yes| ok([DR Ready - Score 100%])
-    result -->|No| investigate([Investigate and remediate])
-```
+![Overview](../../../../assets/storage-netapp-superna-eyeglass-operations-health-checks-mermaid-svg.svg)
 
 ## Run This Routine
 

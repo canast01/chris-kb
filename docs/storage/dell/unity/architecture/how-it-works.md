@@ -87,24 +87,7 @@ Unity XT uses an active-active dual-SP model:
 
 ## Storage Pool Architecture
 
-```mermaid
-graph LR
-  subgraph "Unity Array"
-    subgraph "Storage Pool"
-      DG1["Disk Group 1\nRAID-5 · SAS SSD"]
-      DG2["Disk Group 2\nRAID-5 · NL-SAS"]
-      DG3["Disk Group 3\nRAID-10 · NVMe"]
-    end
-    LUN["Block LUN\n(thin-provisioned)"]
-    FS["File System\n(NFS / SMB)"]
-  end
-  DG1 & DG2 & DG3 --> LUN
-  DG1 & DG2 & DG3 --> FS
-  classDef dg fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef res fill:#2563eb,stroke:#1d4ed8,color:#fff
-  class DG1,DG2,DG3 dg
-  class LUN,FS res
-```
+![Networking](../../../../assets/storage-dell-unity-architecture-how-it-works-mermaid-svg.svg)
 
 | Drive Type | Tier | Use |
 |---|---|---|

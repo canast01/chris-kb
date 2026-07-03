@@ -122,37 +122,7 @@ Keystone includes **Evergreen Storage**, NetApp's proactive hardware refresh pro
 
 The customer's subscription price may be adjusted at the time of refresh if the new hardware tier results in a different cost basis, but the service continues uninterrupted.
 
-```mermaid
-graph LR
-  WL(["Customer Workloads\nVMs · Databases · Files · Object"])
-
-  subgraph KS["NetApp Keystone Storage (On-Prem, Managed by NetApp)"]
-    HW["NetApp Hardware\nAFF / FAS / StorageGRID"]
-    ONTAP["ONTAP\nExtreme · Premium · Performance · Standard tiers"]
-  end
-
-  COL["Keystone Collector\nLinux VM · ONTAP REST poll\nEvery 5 min"]
-
-  subgraph CLOUD["NetApp Cloud"]
-    AIQ["Active IQ\nBilling engine · SLA reporting"]
-    BXP["BlueXP\nUnified management · Tiering"]
-  end
-
-  WL -->|"NFS · iSCSI · FC · S3"| HW
-  HW --- ONTAP
-  ONTAP -->|"REST API metrics"| COL
-  COL -->|"HTTPS / TLS 1.2+\nCompressed JSON"| AIQ
-  AIQ --> BXP
-
-  classDef wl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef ks fill:#15803d,stroke:#166534,color:#fff
-  classDef col fill:#b45309,stroke:#92400e,color:#fff
-  classDef cloud fill:#7c3aed,stroke:#6d28d9,color:#fff
-  class WL wl
-  class HW,ONTAP ks
-  class COL col
-  class AIQ,BXP cloud
-```
+![See also](../../../../assets/storage-netapp-keystone-architecture-how-it-works-mermaid-svg.svg)
 
 ---
 

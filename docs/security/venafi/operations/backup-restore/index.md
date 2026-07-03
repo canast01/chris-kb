@@ -74,25 +74,7 @@ ENG --> SRC: Done
 
 ## Backup Workflow
 
-```mermaid
-flowchart LR
-    subgraph Daily["Daily (automated)"]
-        A[SQL Full Backup] --> C[Encrypted backup\nto off-site target]
-        B[SQL Transaction\nLog Backup] --> C
-    end
-
-    subgraph Weekly["Weekly"]
-        D[TPP Config\nFile Archive] --> E[Encrypted archive\nto off-site target]
-        F[Adaptable App\nScripts] --> E
-    end
-
-    subgraph OnChange["On Config Change"]
-        G[Export Policy\nXML] --> H[Versioned config\narchive]
-        I[Platform /\nCredential export] --> H
-    end
-
-    C & E & H --> Z[(Secure Backup\nRepository)]
-```
+![Export Policy XML via TPP API](../../../../assets/security-venafi-operations-backup-restore-mermaid-svg.svg)
 
 ---
 

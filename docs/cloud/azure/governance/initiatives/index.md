@@ -12,22 +12,7 @@ An initiative (formerly called a policy set definition) groups multiple related 
 
 ## Initiative (Policy Set) Structure
 
-```mermaid
-flowchart LR
-    initiative["Initiative Definition\norg-baseline-security"]
-    subgraph policies["Contained Policy Definitions"]
-        p1["Require tags on resources"]
-        p2["Allowed locations"]
-        p3["Deny public IP addresses"]
-        p4["Require diagnostic settings"]
-        p5["Audit VMs without backup"]
-    end
-    assignment["Initiative Assignment\nat Management Group scope"]
-    compliance["Compliance Dashboard\nper-policy + aggregate score"]
-
-    initiative --> p1 & p2 & p3 & p4 & p5
-    initiative --> assignment --> compliance
-```
+![Initiative (Policy Set) Structure](../../../../assets/cloud-azure-governance-initiatives-mermaid-svg.svg)
 
 ## Creating an Initiative
 

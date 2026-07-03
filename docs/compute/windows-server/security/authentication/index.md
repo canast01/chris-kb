@@ -20,8 +20,6 @@ sequenceDiagram
     client->>server: Application request (authorised session)
 ```
 
-```text
-
 ```plantuml
 @startuml
 skinparam sequenceArrowThickness 1.5
@@ -62,8 +60,6 @@ end note
 Kerberos is the default domain authentication protocol (port 88 TCP/UDP). The Key Distribution Center (KDC) runs on each domain controller.
 
 ### Verify Kerberos Tickets
-
-```
 
 ```cmd
 REM View current Kerberos tickets

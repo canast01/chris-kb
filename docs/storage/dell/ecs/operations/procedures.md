@@ -267,21 +267,7 @@ Bucket: analytics-prod-raw
 
 Object users are per-namespace IAM identities. Each application or service should have a dedicated object user.
 
-```mermaid
-graph LR
-  subgraph "Key Rotation (zero downtime)"
-    NEWKEY["1. Create new key\necscli user secret-key create"]
-    DEPLOY["2. Deploy new key\nto app / secrets manager"]
-    VERIFY["3. Verify app is using\nnew key (access logs)"]
-    DELOLD["4. Delete old key\necscli user secret-key delete"]
-    NEWKEY --> DEPLOY --> VERIFY --> DELOLD
-  end
-  note1(["ECS allows up to 2 active keys per user\nenabling zero-downtime rotation"])
-  classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef note fill:#b45309,stroke:#92400e,color:#fff
-  class NEWKEY,DEPLOY,VERIFY,DELOLD step
-  class note1 note
-```
+![Common Bucket Operations](../../../../assets/storage-dell-ecs-operations-procedures-mermaid-svg.svg)
 
 ```bash
 # Create an object user in a namespace

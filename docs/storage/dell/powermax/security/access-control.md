@@ -29,47 +29,7 @@ Access control on PowerMax operates at two levels: **management plane access** (
 
 Unisphere for PowerMax implements RBAC through five built-in roles. There are no custom roles — access must be delegated using these predefined tiers.
 
-```mermaid
-graph LR
-    subgraph "Active Directory Groups"
-        AD_ADMIN["GRP-PowerMax-Admins"]
-        AD_SA["GRP-PowerMax-StorageAdmins"]
-        AD_SEC["GRP-PowerMax-SecurityAdmins"]
-        AD_OP["GRP-PowerMax-Operators"]
-        AD_MON["GRP-PowerMax-Monitor"]
-    end
-    subgraph "Unisphere Roles"
-        R_ADMIN["Administrator\n(full access incl. user mgmt)"]
-        R_SA["StorageAdmin\n(full storage R/W)"]
-        R_SEC["SecurityAdmin\n(users + certs + LDAP only)"]
-        R_OP["Operator\n(ops tasks + alert ack)"]
-        R_MON["Monitor\n(read-only)"]
-    end
-    subgraph "Permitted Operations"
-        OPS_PROV["Provision: SG, MV, TDEV\nSRDF: suspend/resume\nSnapVX: establish/terminate"]
-        OPS_SEC["Manage users\nRotate certs\nConfigure LDAP"]
-        OPS_OPS["Acknowledge alerts\nView performance\nRead-only config"]
-        OPS_MON["View dashboards\nRead metrics\nNo changes"]
-    end
-
-    AD_ADMIN -->|"maps to"| R_ADMIN
-    AD_SA -->|"maps to"| R_SA
-    AD_SEC -->|"maps to"| R_SEC
-    AD_OP -->|"maps to"| R_OP
-    AD_MON -->|"maps to"| R_MON
-    R_ADMIN --> OPS_PROV & OPS_SEC
-    R_SA --> OPS_PROV
-    R_SEC --> OPS_SEC
-    R_OP --> OPS_OPS
-    R_MON --> OPS_MON
-
-    classDef ad fill:#92400e,stroke:#78350f,color:#fff
-    classDef role fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef ops fill:#0f766e,stroke:#0d9488,color:#fff
-    class AD_ADMIN,AD_SA,AD_SEC,AD_OP,AD_MON ad
-    class R_ADMIN,R_SA,R_SEC,R_OP,R_MON role
-    class OPS_PROV,OPS_SEC,OPS_OPS,OPS_MON ops
-```
+![Unisphere Role-Based Access Control (RBAC)](../../../../assets/storage-dell-powermax-security-access-control-mermaid-svg.svg)
 
 | Role | Storage Operations | Security / User Mgmt | Alert Mgmt | Read-Only Access | Notes |
 |---|---|---|---|---|---|
@@ -271,57 +231,7 @@ On multi-user management hosts, restrict SYMCLI execution using sudo:
 
 LUN visibility is controlled by **masking views**. A host can only read or write to a device if that device's storage group is part of a masking view that includes the host's initiator (WWN or IQN) and an appropriate array port. No masking view = no LUN visibility, regardless of physical connectivity.
 
-```mermaid
-flowchart LR
-    subgraph "Production Hosts"
-        DB01["db01\n(Oracle)"]
-        DB02["db02\n(SQL Server)"]
-    end
-    subgraph "Cluster"
-        RAC01["rac01"] & RAC02["rac02"]
-        RAC_IG["ORACLE_RAC_IG\n(parent: rac01_IG + rac02_IG)"]
-        RAC01 & RAC02 --> RAC_IG
-    end
-    subgraph "Initiator Groups"
-        DB01_IG["db01_IG\n{WWN_db01_hba0\nWWN_db01_hba1}"]
-        DB02_IG["db02_IG\n{WWN_db02_hba0\nWWN_db02_hba1}"]
-    end
-    subgraph "Port Groups"
-        FAB_A_PG["FABRIC_A_PG\n{01E:4, 02E:4}"]
-        FAB_B_PG["FABRIC_B_PG\n{01F:4, 02F:4}"]
-    end
-    subgraph "Storage Groups"
-        DB01_SG["db01_SG\n{DEV001–DEV005}"]
-        DB02_SG["db02_SG\n{DEV006–DEV010}"]
-        RAC_SG["ORACLE_RAC_SG\n{DEV011–DEV020}"]
-    end
-    subgraph "Masking Views"
-        MV1["db01_FABRIC_A_MV"]
-        MV2["db01_FABRIC_B_MV"]
-        MV3["db02_FABRIC_A_MV"]
-        MV4["ORACLE_RAC_MV"]
-    end
-
-    DB01 --> DB01_IG --> MV1 & MV2
-    DB02 --> DB02_IG --> MV3
-    RAC_IG --> MV4
-    FAB_A_PG --> MV1 & MV3 & MV4
-    FAB_B_PG --> MV2
-    DB01_SG --> MV1 & MV2
-    DB02_SG --> MV3
-    RAC_SG --> MV4
-
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef ig fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef pg fill:#0f766e,stroke:#0d9488,color:#fff
-    classDef sg fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef mv fill:#92400e,stroke:#78350f,color:#fff
-    class DB01,DB02,RAC01,RAC02 host
-    class DB01_IG,DB02_IG,RAC_IG ig
-    class FAB_A_PG,FAB_B_PG pg
-    class DB01_SG,DB02_SG,RAC_SG sg
-    class MV1,MV2,MV3,MV4 mv
-```
+![Access Review Checklist](../../../../assets/storage-dell-powermax-security-access-control-mermaid-svg-1.svg)
 
 ### Masking View Components
 

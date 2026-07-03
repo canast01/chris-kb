@@ -16,20 +16,7 @@ Azure managed disk snapshots capture the full state of a managed disk at a point
 
 ## Snapshot Lifecycle
 
-```mermaid
-flowchart LR
-    sourceDisk["Source Managed Disk\n(OS or data disk)"]
-    snapshot["Snapshot\npoint-in-time · incremental"]
-    subgraph uses["Snapshot Uses"]
-        restoreDisk["Restore to same disk\ndisk reset"]
-        newDisk["Create new disk\nfrom snapshot"]
-        crossRegion["Copy to another region\ndisaster recovery"]
-        exportVHD["Export as VHD\nfor migration"]
-    end
-
-    sourceDisk -->|"az snapshot create"| snapshot
-    snapshot --> restoreDisk & newDisk & crossRegion & exportVHD
-```
+![Snapshot Lifecycle](../../../../assets/cloud-azure-storage-disk-snapshots-mermaid-svg.svg)
 
 ## Creating Snapshots
 

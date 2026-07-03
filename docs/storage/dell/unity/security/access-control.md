@@ -25,39 +25,7 @@ Access Control reference covering Role-Based Access Control (RBAC), Local User M
 
 Unisphere for Unity implements role-based access control for all administrative operations. Every Unisphere user — whether a local account or an LDAP/AD-mapped user — is assigned one of four built-in roles. There are no custom roles; access is controlled entirely by role assignment.
 
-```mermaid
-graph LR
-  subgraph "Identity Sources"
-    LOCAL["Local Accounts\n(break-glass only)"]
-    AD["Active Directory\nGroups"]
-  end
-  subgraph "Unity Roles"
-    ADMIN["Administrator\nFull access"]
-    SADMIN["Storage Administrator\nProvisioning only"]
-    OPS["Operator\nACK alerts · read"]
-    VIEW["Viewer\nRead-only"]
-  end
-  subgraph "Actions"
-    PROV["Create LUNs\nManage pools\nConfigure replication"]
-    MON["View health\nAcknowledge alerts"]
-    AUD["Read capacity\nAudit review"]
-  end
-  LOCAL --> ADMIN
-  AD -->|"CN=Unity-Admins"| ADMIN
-  AD -->|"CN=Unity-StorageAdmins"| SADMIN
-  AD -->|"CN=Unity-Operators"| OPS
-  AD -->|"CN=Unity-Viewers"| VIEW
-  ADMIN --> PROV & MON & AUD
-  SADMIN --> PROV & MON
-  OPS --> MON & AUD
-  VIEW --> AUD
-  classDef role fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef src fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef act fill:#15803d,stroke:#166534,color:#fff
-  class ADMIN,SADMIN,OPS,VIEW role
-  class LOCAL,AD src
-  class PROV,MON,AUD act
-```
+![Role-Based Access Control (RBAC)](../../../../assets/storage-dell-unity-security-access-control-mermaid-svg.svg)
 
 | Role | Permissions | Typical Assignment |
 |---|---|---|

@@ -10,10 +10,6 @@ tags:
 
 
 
-```bash
-
----
-
 ```d2
 direction: right
 
@@ -112,8 +108,6 @@ Collect before starting:
 - vCenter, ESXi, vSAN, and iDRAC logs if issues exist
 
 Save with standard name:
-
-```
 
 ```text
 vxrail-support-bundle-CLUSTERNAME-YYYY-MM-DD.zip

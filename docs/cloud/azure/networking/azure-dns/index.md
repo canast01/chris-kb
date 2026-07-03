@@ -13,22 +13,7 @@ Azure DNS hosts DNS zones and provides name resolution using the Azure infrastru
 
 ## Azure DNS Resolution Flow
 
-```mermaid
-flowchart LR
-    client["Client / VM"]
-    subgraph publicDNS["Public DNS (internet)"]
-        publicZone["Azure DNS Public Zone\nexample.com"]
-        internet["Internet\nauthoritative resolution"]
-    end
-    subgraph privateDNS["Private DNS (VNet)"]
-        privateZone["Private DNS Zone\ncorp.local · privatelink.*.azure.net"]
-        vnetLink["VNet Link\nauto-registration optional"]
-    end
-    result["Resolved IP Address"]
-
-    client -->|"public query"| publicZone --> internet --> result
-    client -->|"private query"| vnetLink --> privateZone --> result
-```
+![Azure DNS Resolution Flow](../../../../assets/cloud-azure-networking-azure-dns-mermaid-svg.svg)
 
 ## Public DNS Zones
 

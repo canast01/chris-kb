@@ -16,26 +16,7 @@ Azure Files provides fully managed cloud file shares accessible via SMB (2.1, 3.
 
 ## Azure Files Architecture
 
-```mermaid
-flowchart LR
-    subgraph clients["Clients"]
-        windows["Windows\nSMB 3.x"]
-        linux["Linux\nSMB 3.x / NFS 4.1"]
-        macos["macOS\nSMB"]
-    end
-    subgraph hybrid["Hybrid (Azure File Sync)"]
-        onpremServer["On-Premises\nWindows Server"]
-        syncAgent["Azure File Sync Agent"]
-    end
-    sa["Storage Account"]
-    share["Azure File Share\nStandard · Premium"]
-    snapshots["Share Snapshots\npoint-in-time"]
-
-    clients --> share
-    onpremServer --> syncAgent --> share
-    sa --> share
-    share --> snapshots
-```
+![Azure Files Architecture](../../../../assets/cloud-azure-storage-azure-files-mermaid-svg.svg)
 
 ## Creating File Shares
 

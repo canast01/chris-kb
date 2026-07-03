@@ -308,48 +308,7 @@ docker push ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA
   "search.followSymlinks": false
 }
 ```
-```mermaid
-graph LR
-    subgraph "Git Platform"
-        GIT[GitHub / GitLab]
-    end
-
-    subgraph "Identity"
-        SAML[SAML IdP<br/>Okta / ADFS]
-        LDAP[LDAP / AD]
-    end
-
-    subgraph "Dev Tools"
-        IDE[IDEs<br/>VS Code / JetBrains]
-        CLI[git CLI / gh / glab]
-    end
-
-    subgraph "CI/CD"
-        ACTIONS[GitHub Actions<br/>/ GitLab CI]
-        RUNNER[Self-hosted Runners]
-    end
-
-    subgraph "Registries & Artifacts"
-        REG[Container Registry<br/>GHCR / GitLab Registry]
-        ART[Artifact Store<br/>Nexus / Artifactory]
-    end
-
-    subgraph "Issue Tracking"
-        JIRA[Jira]
-        WH[Webhooks<br/>Slack / PagerDuty]
-    end
-
-    IDE -->|SSH / HTTPS| GIT
-    CLI -->|SSH / HTTPS| GIT
-    GIT -->|SAML Auth| SAML
-    GIT -->|LDAP Auth| LDAP
-    GIT -->|trigger| ACTIONS
-    ACTIONS -->|runs on| RUNNER
-    ACTIONS -->|push image| REG
-    ACTIONS -->|upload artifact| ART
-    GIT -->|webhook| JIRA
-    GIT -->|webhook| WH
-```
+![See also](../../../../assets/itsm-git-architecture-integrations-mermaid-svg.svg)
 
 ---
 

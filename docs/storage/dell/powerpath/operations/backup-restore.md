@@ -23,32 +23,7 @@ Backup & Restore reference covering Overview, Configuration File Location, Confi
 
 ## Overview
 
-```mermaid
-graph LR
-    subgraph "Items to Preserve"
-        cfg["powermt.custom\n(policy + device settings)"]
-        baseline["Dated Baseline Snapshot\npowermt display dev=all output"]
-        licKey["License Key\n(registration key)"]
-    end
-
-    subgraph "Backup Actions"
-        save["powermt save\n(after every change)"]
-        snap["Capture baseline to file\n(before every maintenance)"]
-        fileCopy["cp /etc/powermt.custom *.bak\n(before upgrade)"]
-    end
-
-    subgraph "Restore Actions"
-        restore["powermt restore\n(reload config + retry paths)"]
-        manualCopy["Restore powermt.custom from backup\nthen systemctl restart PowerPath"]
-    end
-
-    cfg --> save
-    baseline --> snap
-    cfg --> fileCopy
-    save & snap & fileCopy -->|"Store in change ticket\nor config repo"| stored[(Stored)]
-    stored --> restore
-    stored --> manualCopy
-```
+![Overview](../../../../assets/storage-dell-powerpath-operations-backup-restore-mermaid-svg.svg)
 
 PowerPath does not store data — it manages the path layer between host and storage array. "Backup" in the PowerPath context means preserving three things:
 
