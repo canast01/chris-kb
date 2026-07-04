@@ -15,6 +15,7 @@ Usage:
   python3 scripts/mermaid_subgraph_to_svg.py --dry-run     # generate SVGs only, report
   python3 scripts/mermaid_subgraph_to_svg.py --apply       # generate SVGs + inject into pages
   python3 scripts/mermaid_subgraph_to_svg.py --apply path/to/one.md   # single file
+  python3 scripts/mermaid_subgraph_to_svg.py --selftest    # run parser regression tests
 """
 import re
 import sys
@@ -34,7 +35,34 @@ PALETTE = [
 
 MERMAID_RE = re.compile(r'```mermaid\n(.*?)\n```', re.DOTALL)
 ARROW_RE = re.compile(r'(<-->|-\.->|--[ox]|-->)\s*(?:\|"?([^|]*?)"?\|)?\s*')
-SUBGRAPH_START_RE = re.compile(r'^subgraph\s+(\S+?)(?:\s*\[(.*)\])?\s*$')
+SUBGRAPH_START_RE = re.compile(r'^subgraph\s+(.+)$')
+SUBGRAPH_ID_BRACKET_RE = re.compile(r'^(\S+)\s*\[(.*)\]$')
+SUBGRAPH_QUOTED_ONLY_RE = re.compile(r'^"(.*)"$')
+
+
+def slugify(s: str) -> str:
+    s = re.sub(r'[^a-zA-Z0-9]+', '_', s).strip('_')
+    return s or 'sg'
+
+
+def split_unquoted(text: str, sep: str) -> list:
+    """Split text on sep, but never inside a "..." quoted region -- a label
+    like ["Command Authorization\\n& Accounting"] contains a literal & that
+    must not be mistaken for the fan-out A --> B & C syntax."""
+    parts = []
+    buf = []
+    in_quotes = False
+    for ch in text:
+        if ch == '"':
+            in_quotes = not in_quotes
+            buf.append(ch)
+        elif ch == sep and not in_quotes:
+            parts.append(''.join(buf))
+            buf = []
+        else:
+            buf.append(ch)
+    parts.append(''.join(buf))
+    return parts
 NODE_DECL_RE = re.compile(r'^(\w+)\s*(\(\[|\[\(|\(\(|\[\[|\{\{|\[|\(|\{)(.*)$')
 CLOSE_FOR = {'([': '])', '[(': ')]', '((': '))', '[[': ']]', '{{': '}}',
              '[': ']', '(': ')', '{': '}'}
@@ -102,12 +130,24 @@ def parse_mermaid(src: str) -> Graph:
             continue
         m = SUBGRAPH_START_RE.match(line)
         if m:
-            sg_id, sg_title_raw = m.group(1), m.group(2)
-            title = sg_id
-            if sg_title_raw:
-                title = sg_title_raw.strip()
+            rest = m.group(1).strip()
+            mb = SUBGRAPH_ID_BRACKET_RE.match(rest)
+            mq = SUBGRAPH_QUOTED_ONLY_RE.match(rest)
+            if mb:
+                # subgraph id["Title"]  or  subgraph id[Title]
+                sg_id, title = mb.group(1), mb.group(2).strip()
                 if title.startswith('"') and title.endswith('"'):
                     title = title[1:-1]
+            elif mq:
+                # subgraph "Title"  -- no separate id, derive one from the title
+                title = mq.group(1)
+                sg_id = slugify(title)
+                while sg_id in g.subgraphs:
+                    sg_id += '_'
+            else:
+                # subgraph id  -- bare id, no title
+                sg_id = rest
+                title = sg_id
             g.subgraphs[sg_id] = {'title': title, 'members': []}
             g.sg_order.append(sg_id)
             sg_stack.append(sg_id)
@@ -141,7 +181,7 @@ def parse_mermaid(src: str) -> Graph:
 
         def parse_group(text, subgraph_hint):
             ids = []
-            for tok in text.split('&'):
+            for tok in split_unquoted(text, '&'):
                 tok = tok.strip()
                 if not tok:
                     continue
@@ -537,7 +577,57 @@ def process_file(md_path: Path, assets_dir: Path, dry_run: bool):
     return results
 
 
+# ── Regression tests ─────────────────────────────────────────────────────────
+# Both found 2026-07-04, AFTER the initial 137-diagram conversion had already
+# shipped and been verified "clean" -- the bugs didn't crash anything, they
+# silently produced wrong/garbage output that only surfaced on a second,
+# closer look. Encoded here so the parser can never silently regress on
+# these two syntax forms again.
+
+def _selftest():
+    cases_passed = 0
+
+    # Bug 1: `subgraph "Title"` (quoted title, no separate id) was completely
+    # unrecognized -- SUBGRAPH_START_RE required an id before an optional
+    # [bracketed] title, so a bare quoted title matched nothing at all and
+    # its member nodes silently fell out of the subgraph entirely.
+    src1 = '''graph LR
+  subgraph "My Title"
+    A["Node A"]
+    B["Node B"]
+  end
+  A --> B
+'''
+    g1 = parse_mermaid(src1)
+    assert len(g1.subgraphs) == 1, f'expected 1 subgraph, got {len(g1.subgraphs)}'
+    title = list(g1.subgraphs.values())[0]['title']
+    assert title == 'My Title', f'expected title "My Title", got {title!r}'
+    assert g1.nodes['A']['subgraph'] is not None, 'node A should be inside the subgraph'
+    cases_passed += 1
+
+    # Bug 2: a literal & inside a quoted label (e.g. "Authorization\n& Accounting")
+    # was mistaken for the A --> B & C fan-out syntax, splitting one label into
+    # a garbage node whose id was literally the tail of the label plus a
+    # trailing quote/bracket.
+    src2 = '''graph LR
+  A["Start"]
+  A --> B["Command Authorization\\n& Accounting"]
+'''
+    g2 = parse_mermaid(src2)
+    assert 'B' in g2.nodes, 'node B should exist'
+    assert g2.nodes['B']['label'] == 'Command Authorization\n& Accounting', \
+        f'label corrupted: {g2.nodes["B"]["label"]!r}'
+    assert len(g2.nodes) == 2, f'expected exactly 2 nodes, got {len(g2.nodes)}: {list(g2.nodes)}'
+    cases_passed += 1
+
+    print(f'selftest: {cases_passed}/2 regression cases passed')
+    return 0
+
+
 def main():
+    if '--selftest' in sys.argv:
+        return _selftest()
+
     dry_run = '--apply' not in sys.argv
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
 

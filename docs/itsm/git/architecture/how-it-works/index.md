@@ -38,7 +38,7 @@ Unlike centralised VCS tools, every Git clone contains the entire repository his
 
 ### GitHub Enterprise Server (GHES)
 
-![Key Server Components](../../../../assets/itsm-git-architecture-how-it-works-mermaid-svg-1.svg)
+![GitHub Enterprise Server (GHES)](../../../../assets/itsm-git-architecture-how-it-works-mermaid-svg-1.svg)
 
 ### Key Server Components
 

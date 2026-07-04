@@ -206,7 +206,7 @@ VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a 
 
 ## Topology
 
-![vSphere Replication](../../../../assets/virtualization-vmware-srm-architecture-how-it-works-mermaid-svg.svg)
+![Topology](../../../../assets/virtualization-vmware-srm-architecture-how-it-works-mermaid-svg.svg)
 
 ## Recovery Plan Modes
 

@@ -211,7 +211,7 @@ The RecoverPoint splitter is embedded within VPLEX and intercepts writes to copy
 - RecoverPoint bookmarks enable point-in-time consistency for crash-consistent or application-consistent recovery.
 - VPLEX Geo is typically used when Site A and Site B are separated by >5ms RTT (city-to-city, region-to-region).
 
-![Syslog Forwarding](../../../../assets/storage-dell-vplex-architecture-integrations-mermaid-svg-1.svg)
+![Key Points](../../../../assets/storage-dell-vplex-architecture-integrations-mermaid-svg-1.svg)
 
 ### Failover Procedure (Geo)
 

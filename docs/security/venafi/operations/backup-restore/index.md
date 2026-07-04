@@ -74,7 +74,7 @@ ENG --> SRC: Done
 
 ## Backup Workflow
 
-![Export Policy XML via TPP API](../../../../assets/security-venafi-operations-backup-restore-mermaid-svg.svg)
+![Backup Workflow](../../../../assets/security-venafi-operations-backup-restore-mermaid-svg.svg)
 
 ---
 

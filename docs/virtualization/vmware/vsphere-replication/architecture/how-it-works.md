@@ -116,7 +116,7 @@ hbr 1.0.0 loaded
 
 ## Data Flow
 
-![Delta](../../../../assets/virtualization-vmware-vsphere-replication-architecture-how-it-works-mermaid-svg.svg)
+![Data Flow](../../../../assets/virtualization-vmware-vsphere-replication-architecture-how-it-works-mermaid-svg.svg)
 
 ```text
 Source Site                                    Target Site

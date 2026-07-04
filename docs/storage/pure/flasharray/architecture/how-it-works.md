@@ -128,7 +128,7 @@ Peak write throughput is bounded by NVRAM size (how much write burst the array c
 
 ## Mermaid Diagram: I/O Architecture
 
-![Protection Groups and Snapshots](../../../../assets/storage-pure-flasharray-architecture-how-it-works-mermaid-svg.svg)
+![Mermaid Diagram: I/O Architecture](../../../../assets/storage-pure-flasharray-architecture-how-it-works-mermaid-svg.svg)
 
 ## Protection Groups and Snapshots
 
@@ -202,7 +202,7 @@ Host configuration guidelines:
 
 The diagram below traces a single host write from the initiator HBA all the way to a DirectFlash Module, showing exactly where inline deduplication and compression occur, how the NVRAM mirror creates the durability guarantee before any ACK is sent, and how the destage pipeline lands data on raw NAND.
 
-![Key Terms Glossary](../../../../assets/storage-pure-flasharray-architecture-how-it-works-mermaid-svg-1.svg)
+![DirectFlash I/O Path — Write Journey with Inline Data Reduction](../../../../assets/storage-pure-flasharray-architecture-how-it-works-mermaid-svg-1.svg)
 
 Key points illustrated:
 

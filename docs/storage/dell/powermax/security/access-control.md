@@ -231,7 +231,7 @@ On multi-user management hosts, restrict SYMCLI execution using sudo:
 
 LUN visibility is controlled by **masking views**. A host can only read or write to a device if that device's storage group is part of a masking view that includes the host's initiator (WWN or IQN) and an appropriate array port. No masking view = no LUN visibility, regardless of physical connectivity.
 
-![Access Review Checklist](../../../../assets/storage-dell-powermax-security-access-control-mermaid-svg-1.svg)
+![Data Plane Access Control — Masking Views](../../../../assets/storage-dell-powermax-security-access-control-mermaid-svg-1.svg)
 
 ### Masking View Components
 

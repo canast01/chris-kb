@@ -74,7 +74,7 @@ ENG --> SRC: Done
 
 ## Backup / Restore Workflow
 
-![PKCS#12 (PFX) Export](../../../../assets/security-certificates-operations-backup-restore-mermaid-svg.svg)
+![Backup / Restore Workflow](../../../../assets/security-certificates-operations-backup-restore-mermaid-svg.svg)
 
 ---
 

@@ -107,7 +107,7 @@ Deploying to other regions requires an exception approved by InfoSec.
 
 ## VPC Architecture
 
-![See also](../../../../assets/cloud-aws-architecture-design-standards-mermaid-svg.svg)
+![VPC Architecture](../../../../assets/cloud-aws-architecture-design-standards-mermaid-svg.svg)
 
 ## Network Standards
 

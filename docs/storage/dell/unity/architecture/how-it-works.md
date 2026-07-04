@@ -87,7 +87,7 @@ Unity XT uses an active-active dual-SP model:
 
 ## Storage Pool Architecture
 
-![Networking](../../../../assets/storage-dell-unity-architecture-how-it-works-mermaid-svg.svg)
+![Storage Pool Architecture](../../../../assets/storage-dell-unity-architecture-how-it-works-mermaid-svg.svg)
 
 | Drive Type | Tier | Use |
 |---|---|---|

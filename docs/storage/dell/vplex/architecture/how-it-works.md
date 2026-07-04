@@ -74,7 +74,7 @@ virtVol -> storageView
 
 ## VPLEX Metro Topology
 
-![Witness (Quorum Arbitrator)](../../../../assets/storage-dell-vplex-architecture-how-it-works-mermaid-svg.svg)
+![VPLEX Metro Topology](../../../../assets/storage-dell-vplex-architecture-how-it-works-mermaid-svg.svg)
 
 ## Director Architecture
 

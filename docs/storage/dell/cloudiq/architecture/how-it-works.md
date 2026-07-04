@@ -39,7 +39,7 @@ Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives t
 
 ## Data Pipeline Topology
 
-![How It Works](../../../../assets/storage-dell-cloudiq-architecture-how-it-works-mermaid-svg.svg)
+![Data Pipeline Topology](../../../../assets/storage-dell-cloudiq-architecture-how-it-works-mermaid-svg.svg)
 
 ## How It Works
 

@@ -124,7 +124,7 @@ All protocols are served from the same physical hardware and the same underlying
 
 ## Mermaid Diagram: I/O Architecture
 
-![SnapMirror and SnapVault](../../../../assets/storage-netapp-ontap-architecture-how-it-works-mermaid-svg.svg)
+![Mermaid Diagram: I/O Architecture](../../../../assets/storage-netapp-ontap-architecture-how-it-works-mermaid-svg.svg)
 
 ## SnapMirror and SnapVault
 
@@ -232,7 +232,7 @@ SnapCenter manages retention policies at the backup job level. Expired backup co
 
 The diagram below shows how ONTAP layers physical drives, RAID groups, aggregates, SVMs, volumes, and sub-volume constructs (LUNs, qtrees, shares) into a coherent hierarchy. The SVM boundary is where multi-tenancy is enforced — each tenant sees only its own namespace, LIFs, and data.
 
-![Key Terms Glossary](../../../../assets/storage-netapp-ontap-architecture-how-it-works-mermaid-svg-1.svg)
+![Storage Hierarchy — Aggregate → SVM → Volume → LUN/qtree with Multi-Tenancy](../../../../assets/storage-netapp-ontap-architecture-how-it-works-mermaid-svg-1.svg)
 
 Key points illustrated:
 

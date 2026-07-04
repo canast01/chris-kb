@@ -167,7 +167,7 @@ Failback is the process of returning data and user access from the DR PowerScale
 | DNS cutover | Return DNS entries to production SmartConnect zones |
 | Validation | Confirm client access and data integrity on production |
 
-![Access Zone Cutover Back to Production](../../../../assets/storage-netapp-superna-eyeglass-operations-procedures-mermaid-svg.svg)
+![Failback](../../../../assets/storage-netapp-superna-eyeglass-operations-procedures-mermaid-svg.svg)
 
 ### Pre-Failback Checklist
 

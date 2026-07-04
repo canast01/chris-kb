@@ -109,7 +109,7 @@ Nexus Dashboard runs as a 3-node or 5-node cluster. Each node is a physical appl
 
 A 3-node cluster tolerates the loss of one node. For upgrades, always upgrade the ND platform before upgrading hosted application versions.
 
-![See also](../../../../assets/san-cisco-nexus-dashboard-architecture-how-it-works-mermaid-svg.svg)
+![High Availability Architecture](../../../../assets/san-cisco-nexus-dashboard-architecture-how-it-works-mermaid-svg.svg)
 
 ---
 

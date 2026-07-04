@@ -141,7 +141,7 @@ Done. Synced 3 files.
 
 ECS is a certified S3-compatible target for Veeam Backup & Replication object repositories (Scale-out Backup Repository offload and Capacity Tier).
 
-![Commvault Integration](../../../../assets/storage-dell-ecs-architecture-integrations-mermaid-svg-1.svg)
+![Veeam Object Repository](../../../../assets/storage-dell-ecs-architecture-integrations-mermaid-svg-1.svg)
 
 **Integration steps:**
 

@@ -240,7 +240,7 @@ Clone deletion completed.
 
 ## SnapMirror Relationship Types
 
-![Restoring from SnapVault](../../../../assets/storage-netapp-ontap-operations-backup-restore-mermaid-svg.svg)
+![SnapMirror Relationship Types](../../../../assets/storage-netapp-ontap-operations-backup-restore-mermaid-svg.svg)
 
 ---
 

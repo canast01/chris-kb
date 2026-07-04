@@ -527,7 +527,7 @@ Point the NDMP backup application to the NAS server IP and port 10000. Supported
 
 ## Replication Failover and Failback Flow
 
-![See also](../../../../assets/storage-dell-unity-operations-backup-restore-mermaid-svg.svg)
+![Replication Failover and Failback Flow](../../../../assets/storage-dell-unity-operations-backup-restore-mermaid-svg.svg)
 
 ## Replication as DR Protection
 

@@ -86,7 +86,7 @@ support_bundle.tar.gz                                    100%  487MB   12.4MB/s 
 - After the failed site recovers: reconnect the ICL, verify Witness connectivity, allow distributed devices to resync
 - Monitor resync progress: `ll /distributed-storage/distributed-devices/*/health-indications/`
 
-![Verify](../../../../assets/storage-dell-vplex-operations-backup-restore-mermaid-svg.svg)
+![Recovery Scenarios](../../../../assets/storage-dell-vplex-operations-backup-restore-mermaid-svg.svg)
 
 ## Validation
 

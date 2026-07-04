@@ -118,7 +118,7 @@ The metadata service uses an **eventual consistency** model for cross-node propa
 
 ## COD Data Flow and Geo-Replication Architecture
 
-![See also](../../../../assets/storage-dell-cod-architecture-how-it-works-mermaid-svg.svg)
+![COD Data Flow and Geo-Replication Architecture](../../../../assets/storage-dell-cod-architecture-how-it-works-mermaid-svg.svg)
 
 ---
 

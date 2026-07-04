@@ -215,7 +215,7 @@ FA-5C  12c       FC        16Gb   72.1         8765       5432
     **`symstat: Error: Access denied — insufficient privileges`** — Run the commands with `sudo` or ensure your user is in the `symcli` group via `usermod -aG symcli $USER`.
 ### Key Metrics and Thresholds
 
-![See also](../../../../assets/storage-dell-powermax-troubleshooting-diagnostics-mermaid-svg.svg)
+![Key Metrics and Thresholds](../../../../assets/storage-dell-powermax-troubleshooting-diagnostics-mermaid-svg.svg)
 
 | Metric | Normal | Warning | Critical |
 |---|---|---|---|

@@ -49,7 +49,7 @@ Collectors maintain a persistent TLS connection back to the Platform VM on TCP 4
 
 ### AON Flow Data Pipeline
 
-![Application Discovery Mechanism](../../../../assets/virtualization-vmware-aria-operations-for-networks-architecture-how-it-works-mermaid-svg.svg)
+![AON Flow Data Pipeline](../../../../assets/virtualization-vmware-aria-operations-for-networks-architecture-how-it-works-mermaid-svg.svg)
 
 ### Stage 4: Push to NSX
 

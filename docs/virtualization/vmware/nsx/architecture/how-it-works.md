@@ -42,7 +42,7 @@ MGR --> ADM: Policy enforced
 
 ### NSX 3-Plane Architecture
 
-![Edge Node Transport Nodes](../../../../assets/virtualization-vmware-nsx-architecture-how-it-works-mermaid-svg.svg)
+![NSX 3-Plane Architecture](../../../../assets/virtualization-vmware-nsx-architecture-how-it-works-mermaid-svg.svg)
 
 ### Edge Node Transport Nodes
 

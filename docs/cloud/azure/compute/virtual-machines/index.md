@@ -18,7 +18,7 @@ Reference for creating, managing, sizing, and operating Azure Virtual Machines u
 
 ## Azure VM Deployment Flow
 
-![Creating VMs](../../../../assets/cloud-azure-compute-virtual-machines-mermaid-svg-1.svg)
+![Azure VM Deployment Flow](../../../../assets/cloud-azure-compute-virtual-machines-mermaid-svg-1.svg)
 
 ## Creating VMs
 

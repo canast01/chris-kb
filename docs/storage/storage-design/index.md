@@ -177,7 +177,7 @@ For ransomware protection, extend to **3-2-1-1**: one of the copies must be **im
 
 ## Storage Architecture Diagram
 
-![Tiering and Archiving to Cloud](../../assets/storage-storage-design-mermaid-svg.svg)
+![Storage Architecture Diagram](../../assets/storage-storage-design-mermaid-svg.svg)
 
 ---
 

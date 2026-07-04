@@ -247,7 +247,7 @@ Upload build outputs to persist them between jobs or download after a workflow r
 
 ### Matrix Builds
 
-![Required Status Checks](../../../../assets/automation-github-actions-operations-procedures-mermaid-svg.svg)
+![Matrix Builds](../../../../assets/automation-github-actions-operations-procedures-mermaid-svg.svg)
 
 Matrix strategy runs the same job across multiple combinations of parameters.
 

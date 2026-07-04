@@ -59,7 +59,7 @@ sequenceDiagram
 
 ### MDS vs DS Role Separation
 
-![Mount — Client Side](../../../../assets/networking-protocols-nfs-versions-mermaid-svg.svg)
+![MDS vs DS Role Separation](../../../../assets/networking-protocols-nfs-versions-mermaid-svg.svg)
 
 | Concept | NFSv3 | NFSv4.0 | NFSv4.1 |
 |---|---|---|---|

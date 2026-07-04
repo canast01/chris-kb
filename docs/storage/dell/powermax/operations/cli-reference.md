@@ -444,7 +444,7 @@ Bay  Disk Name  State      Temp(C)  Status
 
 SRDF (Symmetrix Remote Data Facility) replicates data between PowerMax arrays.
 
-![See also](../../../../assets/storage-dell-powermax-operations-cli-reference-mermaid-svg.svg)
+![SRDF — Replication](../../../../assets/storage-dell-powermax-operations-cli-reference-mermaid-svg.svg)
 
 | Mode | Description | RPO |
 |---|---|---|

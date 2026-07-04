@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 61 checks.
+KB site audit — 62 checks.
 
 Usage:
     python3 scripts/site_audit.py               # run all checks, print summary
@@ -1449,6 +1449,33 @@ for _md in all_md():
                 warn(issues, f'{os.path.relpath(_md, DOCS)}:{_i+1}: "{_line.strip()}" '
                              f'closes a fence but carries a language tag')
             _in_fence61 = not _in_fence61
+
+
+# ── Check 62: Empty <text> elements in generated SVGs ────────────────────────
+# Found 2026-07-04: mermaid_subgraph_to_svg.py's fan-out parser split labels
+# on every "&", including one that was a literal character inside a quoted
+# label (e.g. "Command Authorization\n& Accounting"), producing a phantom
+# garbage node and leaving an empty <text> element for the truncated
+# original. An empty <text> element is never legitimate (there's nothing to
+# render), so this is precise -- confirmed 0 false positives site-wide,
+# unlike a broader "stray leading/trailing quote or bracket" heuristic tried
+# first, which flagged 129 completely normal instances of instructional text
+# that legitimately quotes an example phrase. Also confirmed via
+# `python3 scripts/mermaid_subgraph_to_svg.py --selftest` that both known
+# root causes (bare-quoted subgraph titles, and & inside quoted labels) are
+# now regression-tested at the parser level, so this check is a second,
+# independent safety net rather than the only line of defense.
+issues = check(62, 'Empty <text> elements in generated SVGs (label-parsing failure signature)')
+if os.path.isdir(ASSETS):
+    _TEXT_CONTENT_RE = re.compile(r'<text\b[^>]*>([^<]*)</text>')
+    for fname in sorted(os.listdir(ASSETS)):
+        if not fname.endswith('.svg'):
+            continue
+        path = os.path.join(ASSETS, fname)
+        _txt62 = open(path, errors='replace').read()
+        for _m in _TEXT_CONTENT_RE.finditer(_txt62):
+            if not _m.group(1).strip():
+                warn(issues, f'assets/{fname}: empty <text> element (likely a truncated label)')
 
 
 # ── Report ────────────────────────────────────────────────────────────────────

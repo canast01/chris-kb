@@ -63,7 +63,7 @@ MediaAgent best practices:
 
 ## Multi-Site Topology
 
-![See also](../../../../assets/backup-commvault-architecture-how-it-works-mermaid-svg.svg)
+![Multi-Site Topology](../../../../assets/backup-commvault-architecture-how-it-works-mermaid-svg.svg)
 
 ---
 

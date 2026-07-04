@@ -33,7 +33,7 @@ All Azure Storage data is encrypted at rest by default using Storage Service Enc
 
 ## Storage Encryption Key Model
 
-![Checking Encryption Status](../../../../assets/cloud-azure-storage-encryption-mermaid-svg.svg)
+![Storage Encryption Key Model](../../../../assets/cloud-azure-storage-encryption-mermaid-svg.svg)
 
 ## Encryption Key Options
 

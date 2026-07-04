@@ -248,7 +248,7 @@ if (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -N
 
 ## Performance Counter Hierarchy
 
-![See also](../../../../assets/compute-windows-server-operations-health-checks-mermaid-svg.svg)
+![Performance Counter Hierarchy](../../../../assets/compute-windows-server-operations-health-checks-mermaid-svg.svg)
 
 ## Health Check Summary
 

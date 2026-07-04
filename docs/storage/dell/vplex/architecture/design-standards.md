@@ -168,7 +168,7 @@ All VPLEX objects must follow a consistent naming convention to allow rapid iden
 
 Every production VPLEX Metro deployment must meet these requirements before go-live:
 
-![Consistency Group Policy](../../../../assets/storage-dell-vplex-architecture-design-standards-mermaid-svg-1.svg)
+![Metro Configuration Standards](../../../../assets/storage-dell-vplex-architecture-design-standards-mermaid-svg-1.svg)
 
 | Requirement | Detail |
 |---|---|

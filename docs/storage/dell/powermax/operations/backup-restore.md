@@ -134,7 +134,7 @@ PowerMax backup strategy centres on SnapVX (formerly TimeFinder/SnapVX) for loca
 
 SnapVX is the native snapshot engine on PowerMax. A snapshot captures a point-in-time view of all devices in a storage group simultaneously. Snapshots are crash-consistent by default; application-consistent snapshots require host-side quiesce (VSS on Windows, Oracle RMAN freeze, or FSFreeze on Linux) before the `establish` call.
 
-![List and Inspect Snapshots](../../../../assets/storage-dell-powermax-operations-backup-restore-mermaid-svg.svg)
+![SnapVX Architecture](../../../../assets/storage-dell-powermax-operations-backup-restore-mermaid-svg.svg)
 
 | Parameter | Value | Description |
 |---|---|---|
@@ -605,7 +605,7 @@ TEST_SG_001: 34 snapshots
 
 An advanced pattern for combined DR and backup is to use SRDF/A to replicate to a remote PowerMax, then take SnapVX snapshots on the R2 side (DR site). This provides:
 
-![See also](../../../../assets/storage-dell-powermax-operations-backup-restore-mermaid-svg-1.svg)
+![Snapshot-Based DR with SRDF + SnapVX](../../../../assets/storage-dell-powermax-operations-backup-restore-mermaid-svg-1.svg)
 
 - Zero production I/O impact (snapshots taken at DR site)
 - RPO = SRDF/A cycle time (typically 10–30 seconds)

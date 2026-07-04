@@ -267,7 +267,7 @@ Bucket: analytics-prod-raw
 
 Object users are per-namespace IAM identities. Each application or service should have a dedicated object user.
 
-![Common Bucket Operations](../../../../assets/storage-dell-ecs-operations-procedures-mermaid-svg.svg)
+![Creating IAM Object Users and Access Keys](../../../../assets/storage-dell-ecs-operations-procedures-mermaid-svg.svg)
 
 ```bash
 # Create an object user in a namespace

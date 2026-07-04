@@ -40,7 +40,7 @@ Aria Operations (formerly vRealize Operations) is an analytics cluster that coll
 
 ## Cluster Topology
 
-![Sizing](../../../../assets/virtualization-vmware-aria-operations-architecture-how-it-works-mermaid-svg.svg)
+![Cluster Topology](../../../../assets/virtualization-vmware-aria-operations-architecture-how-it-works-mermaid-svg.svg)
 
 ## Node Roles
 

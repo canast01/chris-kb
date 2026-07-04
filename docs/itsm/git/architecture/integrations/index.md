@@ -308,7 +308,7 @@ docker push ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA
   "search.followSymlinks": false
 }
 ```
-![See also](../../../../assets/itsm-git-architecture-integrations-mermaid-svg.svg)
+![Git — Integrations](../../../../assets/itsm-git-architecture-integrations-mermaid-svg.svg)
 
 ---
 

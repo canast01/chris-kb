@@ -122,7 +122,7 @@ Keystone includes **Evergreen Storage**, NetApp's proactive hardware refresh pro
 
 The customer's subscription price may be adjusted at the time of refresh if the new hardware tier results in a different cost basis, but the service continues uninterrupted.
 
-![See also](../../../../assets/storage-netapp-keystone-architecture-how-it-works-mermaid-svg.svg)
+![Evergreen Storage (Hardware Refresh)](../../../../assets/storage-netapp-keystone-architecture-how-it-works-mermaid-svg.svg)
 
 ---
 

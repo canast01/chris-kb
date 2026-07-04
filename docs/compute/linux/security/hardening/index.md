@@ -39,7 +39,7 @@ pam_password_policy -> file_system_hardening: hardens
 
 ## Linux Hardening Layers
 
-![auditd — System Call and Fil](../../../../assets/compute-linux-security-hardening-mermaid-svg.svg)
+![Linux Hardening Layers](../../../../assets/compute-linux-security-hardening-mermaid-svg.svg)
 
 ## Kernel Hardening — sysctl
 

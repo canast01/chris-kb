@@ -437,7 +437,7 @@ NAS server lifecycle management — create, configure, and troubleshoot NAS serv
 
 A NAS server on Dell Unity is a logical entity that owns file interfaces (network ports), AD/LDAP authentication configuration, and NFS/SMB protocol settings. Each NAS server runs on one storage processor and can fail over to the peer SP.
 
-![Expand a Pool](../../../../assets/storage-dell-unity-operations-procedures-mermaid-svg.svg)
+![Overview](../../../../assets/storage-dell-unity-operations-procedures-mermaid-svg.svg)
 
 ### List and Inspect
 

@@ -56,7 +56,7 @@ Multiple DCNM instances managing separate fabrics, federated under a single logi
 
 ## Management Flow
 
-![Network Requirements](../../../../assets/san-cisco-cisco-dcnm-architecture-how-it-works-mermaid-svg.svg)
+![Management Flow](../../../../assets/san-cisco-cisco-dcnm-architecture-how-it-works-mermaid-svg.svg)
 
 1. **Discovery** — DCNM discovers switches via SNMP and SSH/Telnet (SNMPv3 preferred)
 2. **Inventory** — Discovered devices added to inventory; topology built from CDP/LLDP and SNMP MIB data

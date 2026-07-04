@@ -223,7 +223,7 @@ CyberArk's built-in DR solution replicates the Vault database to a secondary Vau
 
 ### DR Replication Architecture
 
-![See also](../../../../assets/security-cyberark-operations-backup-restore-mermaid-svg.svg)
+![DR Replication Architecture](../../../../assets/security-cyberark-operations-backup-restore-mermaid-svg.svg)
 
 ### DR Vault dbparm.ini Settings (Primary)
 
