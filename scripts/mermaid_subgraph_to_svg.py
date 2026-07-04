@@ -34,7 +34,14 @@ PALETTE = [
 ]
 
 MERMAID_RE = re.compile(r'```mermaid\n(.*?)\n```', re.DOTALL)
-ARROW_RE = re.compile(r'(<-->|-\.->|--[ox]|-->)\s*(?:\|"?([^|]*?)"?\|)?\s*')
+# Two ways Mermaid attaches a label to an edge: `-->|"label"|` (pipe-delimited,
+# label comes after the arrow) and `-- "label" -->` (double-dash, quoted label
+# comes BEFORE the arrow head). Both are matched here; group('label1')/
+# ('arrow1') fire for the second form, group('label2')/('arrow2') for the first.
+ARROW_RE = re.compile(
+    r'--\s*"(?P<label1>[^"]*)"\s*(?P<arrow1>-->|--[ox])'
+    r'|(?P<arrow2><-->|-\.->|--[ox]|-->|---)\s*(?:\|"?(?P<label2>[^|]*?)"?\|)?\s*'
+)
 SUBGRAPH_START_RE = re.compile(r'^subgraph\s+(.+)$')
 SUBGRAPH_ID_BRACKET_RE = re.compile(r'^(\S+)\s*\[(.*)\]$')
 SUBGRAPH_QUOTED_ONLY_RE = re.compile(r'^"(.*)"$')
@@ -78,6 +85,16 @@ BR_RE = re.compile(r'<br\s*/?>', re.IGNORECASE)
 HTML_ENTITIES = {'&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'"}
 
 
+def norm_single_line(s: str) -> str:
+    """Like norm_label but for text that's always rendered as one <text>
+    line (subgraph titles, edge labels) -- \\n/<br/> become a space, not a
+    real newline the renderer has no multi-line handling for."""
+    for ent, ch in HTML_ENTITIES.items():
+        s = s.replace(ent, ch)
+    s = BR_RE.sub(' ', s)
+    return s.replace('\\n', ' ')
+
+
 def norm_label(s: str) -> str:
     """Normalize a Mermaid label: unescape HTML entities (source often has
     &amp; for a literal &, which our own xe() would otherwise double-escape
@@ -108,13 +125,30 @@ class Graph:
         self.sg_order = []    # order subgraphs first appear
         self.edges = []       # (src_id, dst_id, label, style)
 
-    def ensure_node(self, node_id, label=None, subgraph=None):
+    def ensure_node(self, node_id, label=None, subgraph=None, explicit=False):
+        """explicit=True means this mention had a real bracket declaration
+        (a[...]) -- as opposed to a bare reference in an edge like `a --> b`.
+        Mermaid allows a node to be referenced by a bare edge before its
+        real declaration appears (possibly inside a different subgraph than
+        where it's first mentioned); an explicit declaration's subgraph
+        membership must win over an earlier bare reference's, or the node
+        silently ends up grouped in the wrong (or no) subgraph."""
         if node_id not in self.nodes:
-            self.nodes[node_id] = {'label': label or node_id, 'subgraph': subgraph}
+            self.nodes[node_id] = {'label': label or node_id, 'subgraph': subgraph,
+                                    'sg_explicit': explicit}
             if subgraph:
                 self.subgraphs[subgraph]['members'].append(node_id)
-        elif label and self.nodes[node_id]['label'] == node_id:
-            self.nodes[node_id]['label'] = label
+            return
+        entry = self.nodes[node_id]
+        if label and entry['label'] == node_id:
+            entry['label'] = label
+        if subgraph and explicit and not entry.get('sg_explicit'):
+            old_sg = entry['subgraph']
+            if old_sg and node_id in self.subgraphs.get(old_sg, {}).get('members', []):
+                self.subgraphs[old_sg]['members'].remove(node_id)
+            entry['subgraph'] = subgraph
+            entry['sg_explicit'] = True
+            self.subgraphs[subgraph]['members'].append(node_id)
 
 
 def parse_mermaid(src: str) -> Graph:
@@ -138,9 +172,10 @@ def parse_mermaid(src: str) -> Graph:
                 sg_id, title = mb.group(1), mb.group(2).strip()
                 if title.startswith('"') and title.endswith('"'):
                     title = title[1:-1]
+                title = norm_single_line(title)
             elif mq:
                 # subgraph "Title"  -- no separate id, derive one from the title
-                title = mq.group(1)
+                title = norm_single_line(mq.group(1))
                 sg_id = slugify(title)
                 while sg_id in g.subgraphs:
                     sg_id += '_'
@@ -159,14 +194,20 @@ def parse_mermaid(src: str) -> Graph:
 
         cur_sg = sg_stack[-1] if sg_stack else None
 
-        # A pure node declaration line (no arrow on it)
+        # A pure node declaration line (no arrow on it). May declare more than
+        # one node separated by & (e.g. `RAC01["rac01"] & RAC02["rac02"]`),
+        # same combinator as the fan-out/fan-in edge syntax but with no edge.
         if '-->' not in line and '-.->' not in line and '<-->' not in line \
-                and '--x' not in line and '--o' not in line:
-            m = NODE_DECL_RE.match(line)
-            if m:
-                node_id, open_tok, rest = m.groups()
-                label = norm_label(strip_label(rest, open_tok))
-                g.ensure_node(node_id, label, cur_sg)
+                and '--x' not in line and '--o' not in line and '---' not in line:
+            for tok in split_unquoted(line, '&'):
+                tok = tok.strip()
+                if not tok:
+                    continue
+                m = NODE_DECL_RE.match(tok)
+                if m:
+                    node_id, open_tok, rest = m.groups()
+                    label = norm_label(strip_label(rest, open_tok))
+                    g.ensure_node(node_id, label, cur_sg, explicit=True)
             continue
 
         # An edge line, possibly a chain and/or with & fan-out/fan-in
@@ -175,7 +216,9 @@ def parse_mermaid(src: str) -> Graph:
         arrows = []
         for am in ARROW_RE.finditer(line):
             groups.append(line[pos:am.start()])
-            arrows.append((am.group(1), am.group(2)))
+            arrow = am.group('arrow1') or am.group('arrow2')
+            label = am.group('label1') if am.group('arrow1') else am.group('label2')
+            arrows.append((arrow, label))
             pos = am.end()
         groups.append(line[pos:])
 
@@ -189,11 +232,17 @@ def parse_mermaid(src: str) -> Graph:
                 if m2:
                     nid, open_tok, rest = m2.groups()
                     label = norm_label(strip_label(rest, open_tok))
-                    g.ensure_node(nid, label, subgraph_hint)
+                    g.ensure_node(nid, label, subgraph_hint, explicit=True)
                     ids.append(nid)
                 else:
                     nid = tok.split()[0] if tok.split() else tok
-                    g.ensure_node(nid, None, subgraph_hint)
+                    # A bare identifier that's already a subgraph's own id
+                    # means this edge connects directly to that subgraph as
+                    # a whole (valid Mermaid) -- don't create a phantom node
+                    # for it, unit_of() will resolve it straight to the
+                    # subgraph unit.
+                    if nid not in g.subgraphs:
+                        g.ensure_node(nid, None, subgraph_hint)
                     ids.append(nid)
             return ids
 
@@ -202,16 +251,19 @@ def parse_mermaid(src: str) -> Graph:
             style = 'dotted' if arrow == '-.->' else ('bidir' if arrow == '<-->' else 'solid')
             for src in node_groups[i]:
                 for dst in node_groups[i + 1]:
-                    edge_label = BR_RE.sub(' ', (label or '')).replace('\\n', ' ')
-                    for _ent, _ch in HTML_ENTITIES.items():
-                        edge_label = edge_label.replace(_ent, _ch)
+                    edge_label = norm_single_line(label or '')
                     g.edges.append((src, dst, edge_label, style))
     return g
 
 
-def unit_of(g: Graph, node_id: str) -> str:
-    sg = g.nodes[node_id]['subgraph']
-    return f'sg:{sg}' if sg else f'n:{node_id}'
+def unit_of(g: Graph, ref_id: str) -> str:
+    """ref_id is normally a node id, but Mermaid also allows an edge to name
+    a subgraph's own id directly (e.g. `region --> az1` where az1 is itself
+    a subgraph) -- resolve that straight to the subgraph unit."""
+    if ref_id in g.subgraphs:
+        return f'sg:{ref_id}'
+    sg = g.nodes[ref_id]['subgraph']
+    return f'sg:{sg}' if sg else f'n:{ref_id}'
 
 
 def layout(g: Graph):
@@ -620,7 +672,75 @@ def _selftest():
     assert len(g2.nodes) == 2, f'expected exactly 2 nodes, got {len(g2.nodes)}: {list(g2.nodes)}'
     cases_passed += 1
 
-    print(f'selftest: {cases_passed}/2 regression cases passed')
+    # Bug 3: found by a parallel-agent audit pass (2026-07-04) -- multiple
+    # node declarations separated by & on one line with NO edge on that line
+    # (e.g. `RAC01["rac01"] & RAC02["rac02"]`) went through the pure
+    # node-declaration branch, which only ever matched a single NODE_DECL_RE
+    # from line start, so the second node's brackets/quotes leaked into the
+    # first node's "label" as garbage.
+    src3 = '''graph LR
+  RAC01["rac01"] & RAC02["rac02"]
+  RAC_IG["parent"]
+  RAC01 & RAC02 --> RAC_IG
+'''
+    g3 = parse_mermaid(src3)
+    assert g3.nodes['RAC01']['label'] == 'rac01', f'RAC01 label corrupted: {g3.nodes["RAC01"]["label"]!r}'
+    assert g3.nodes['RAC02']['label'] == 'rac02', f'RAC02 label corrupted: {g3.nodes["RAC02"]["label"]!r}'
+    assert len(g3.nodes) == 3, f'expected exactly 3 nodes, got {len(g3.nodes)}: {list(g3.nodes)}'
+    cases_passed += 1
+
+    # Bug 4: found by a parallel-agent audit pass (2026-07-04) -- an edge
+    # naming a SUBGRAPH's own id directly (`region --> az1 & az2`, valid
+    # Mermaid meaning "connects to that whole subgraph") created a spurious
+    # phantom node with the raw id as its label, duplicating the subgraph
+    # that was already drawn correctly elsewhere.
+    src4 = '''graph LR
+  region["Region"]
+  subgraph az1["Zone 1"]
+    vm1["VM"]
+  end
+  region --> az1
+'''
+    g4 = parse_mermaid(src4)
+    assert 'az1' not in g4.nodes, f'az1 should resolve to the subgraph, not become a phantom node: {list(g4.nodes)}'
+    rows4, unit_edges4, _ = layout(g4)
+    assert ('n:region', 'sg:az1') in unit_edges4, f'edge should target the subgraph unit: {unit_edges4}'
+    cases_passed += 1
+
+    # Bug 5: found by a parallel-agent audit pass (2026-07-04) -- a node
+    # referenced by a bare edge (e.g. `LB --> N1`) BEFORE its real bracketed
+    # declaration appears inside a subgraph got its subgraph membership
+    # locked in at "None" (or wherever it was first mentioned) and never
+    # corrected once the real declaration inside a subgraph showed up --
+    # Mermaid allows forward references, so this silently dropped nodes out
+    # of their intended subgraph (or the whole subgraph looked empty).
+    src5 = '''graph LR
+  Users["Users"] --> LB
+  LB --> N1
+  subgraph Cluster["Data Center Cluster"]
+    N1["Node 1"]
+  end
+'''
+    g5 = parse_mermaid(src5)
+    assert g5.nodes['N1']['subgraph'] == 'Cluster', \
+        f'N1 should belong to Cluster (explicit decl must win over the earlier bare reference), got {g5.nodes["N1"]["subgraph"]!r}'
+    assert 'N1' in g5.subgraphs['Cluster']['members']
+    cases_passed += 1
+
+    # Bug 6: found by a parallel-agent audit pass (2026-07-04) -- the plain
+    # undirected-line syntax `A --- B[...]` (three dashes, no arrowhead) was
+    # not recognized as an edge at all (only -->, -.->, <-->, --x, --o were),
+    # so both the line-routing guard and NODE_DECL_RE silently dropped the
+    # entire line -- the target node never got created.
+    src6 = '''graph LR
+  V1["Vault"] --- K1[("server.key")]
+'''
+    g6 = parse_mermaid(src6)
+    assert 'K1' in g6.nodes, f'K1 should exist (--- edges must be recognized): {list(g6.nodes)}'
+    assert g6.nodes['K1']['label'] == 'server.key', f'K1 label wrong: {g6.nodes["K1"]["label"]!r}'
+    cases_passed += 1
+
+    print(f'selftest: {cases_passed}/6 regression cases passed')
     return 0
 
 
