@@ -632,22 +632,40 @@ if os.path.isdir(ASSETS):
 
 
 # ── Check 30: External link rot ───────────────────────────────────────────────
+# Delegates both URL collection and HTTP checking to check_external_links.py
+# rather than keeping a second copy of the same logic here. That script fixed
+# two real bugs found 2026-07-04/07-08:
+# 1. SSL: this Python install can't find the system CA bundle by default, so
+#    every HTTPS url failed certificate verification regardless of validity.
+# 2. Scope: the original URL collection here (and in check_external_links.py's
+#    own first version) matched every bare http(s):// substring anywhere in a
+#    page, including inside code fences. This KB's command/config examples are
+#    full of intentionally-fake illustrative addresses (10.0.1.10,
+#    jira.company.local, *.example.com, 169.254.169.254 cloud metadata,
+#    localhost:PORT) that were never meant to resolve -- that version flagged
+#    1441/1666 URLs as "dead", nearly all false positives. Real reference
+#    links only appear as markdown `[text](https://...)` links outside code
+#    fences; check_external_links.collect_urls() now matches only those.
+# check_external_links.py also runs the requests concurrently (a plain
+# sequential loop over ~1,100 URLs at an 8s timeout each is a ~2.4hr
+# worst case, which is almost certainly why --check-links was never
+# actually run in practice before now).
 issues = check(30, 'External link rot')
-_ext_urls = set()
-for _path in all_md():
-    for _m in re.finditer(r'https?://[^\s\)\]"\'<>]+', open(_path).read()):
-        _ext_urls.add(_m.group(0).rstrip('.,;)>'))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from check_external_links import collect_urls as _collect_urls
+_ext_urls = set(_collect_urls())
 results[30]['url_count'] = len(_ext_urls)
 if CHECK_LINKS:
-    import urllib.request as _ur
-    for _url in sorted(_ext_urls):
-        try:
-            _req = _ur.Request(_url, headers={'User-Agent': 'Mozilla/5.0'})
-            _resp = _ur.urlopen(_req, timeout=8)
-            if _resp.status >= 400:
-                warn(issues, f'HTTP {_resp.status}: {_url}')
-        except Exception as _e:
-            warn(issues, f'Error ({_e}): {_url}')
+    from check_external_links import check_one as _check_one
+    from concurrent.futures import ThreadPoolExecutor as _TPE, as_completed as _as_completed
+    with _TPE(max_workers=20) as _pool:
+        _futures = {_pool.submit(_check_one, _url): _url for _url in _ext_urls}
+        for _fut in _as_completed(_futures):
+            _url, _status, _err = _fut.result()
+            if _err:
+                warn(issues, f'Error ({_err}): {_url}')
+            elif _status and _status >= 400:
+                warn(issues, f'HTTP {_status}: {_url}')
 
 
 # ── Check 31: SVG per-section coverage (procedures / health-checks) ───────────
