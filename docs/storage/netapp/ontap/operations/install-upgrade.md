@@ -32,7 +32,7 @@ Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tr
 | ONTAP 9.14.1 | Dec 2023 | Dec 2025 | Dec 2027 | Active — recommended baseline |
 | ONTAP 9.15.1 | Jun 2024 | Jun 2026 | Jun 2028 | Active — current latest |
 
-Verify exact dates on the [NetApp Product Lifecycle page](https://support.netapp.com/) before planning any upgrade.
+Verify exact dates on the [NetApp Product Lifecycle page](https://mysupport.netapp.com/) before planning any upgrade.
 
 ## Upgrade Paths
 

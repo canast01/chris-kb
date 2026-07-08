@@ -31,7 +31,7 @@ eol_tracking -> validate
 
 ## Compatibility Validation
 
-Before any InsightIQ upgrade, or before upgrading a monitored OneFS cluster, validate compatibility using the [NetApp Interoperability Matrix Tool (IMT)](https://imt.netapp.com/matrix/imt.html).
+Before any InsightIQ upgrade, or before upgrading a monitored OneFS cluster, validate compatibility using the [NetApp Interoperability Matrix Tool (IMT)](https://mysupport.netapp.com/matrix).
 
 Search for: **InsightIQ** → confirm supported OneFS versions for the target InsightIQ release.
 
@@ -69,7 +69,7 @@ Adding a new PowerScale cluster to InsightIQ:
 
 ## EOL Tracking
 
-InsightIQ EOL dates are published on the [NetApp Support Lifecycle page](https://support.netapp.com/).
+InsightIQ EOL dates are published on the [NetApp Support Lifecycle page](https://mysupport.netapp.com/).
 
 - Review EOL status annually
 - Plan upgrades to avoid running EOL software in production

@@ -11,7 +11,7 @@ tags:
 <div class="kb-summary">
 Version lifecycle and End of General Support (EOGS) / End of Technical Guidance (EOTG) reference for VMware / Broadcom products. Use this page to plan upgrades, assess risk from running unsupported versions, and identify which versions receive security patches.
 
-*Source: [Broadcom Product Lifecycle Policy](https://support.broadcom.com/lifecycle-policy) — verify dates before planning upgrades.*
+*Source: [Broadcom Product Lifecycle Policy](https://knowledge.broadcom.com/external/article/150550/product-lifecycle-and-end-of-life-inform.html) — verify dates before planning upgrades.*
 </div>
 
 ```d2

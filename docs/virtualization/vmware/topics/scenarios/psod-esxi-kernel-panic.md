@@ -237,7 +237,7 @@ Common modules and their hardware components:
 
 Most production PSODs are caused by a mismatch between NIC or HBA driver version on ESXi and the firmware on the hardware — the HCL lists validated combinations.
 
-Navigate to `www.vmware.com/resources/compatibility` and search for your hardware model and ESXi version. The HCL entry shows:
+Navigate to `www.vmware.com/resources/compatibility/search.php` and search for your hardware model and ESXi version. The HCL entry shows:
 
 - Supported firmware versions for the device
 - Supported driver versions for that firmware

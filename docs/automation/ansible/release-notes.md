@@ -38,4 +38,4 @@ Version history and release notes for Ansible.
 
 ## Upgrade Path
 
-Upgrade ansible-core via `pip install --upgrade ansible-core==<version>`. When moving to a new major version review the [porting guide](https://docs.ansible.com/ansible/latest/porting_guides/). Test all existing playbooks in a staging inventory before rolling to production controllers. For AAP, use the installer bundle and follow the in-place upgrade procedure documented in the AAP Installation Guide.
+Upgrade ansible-core via `pip install --upgrade ansible-core==<version>`. When moving to a new major version review the [porting guide](https://docs.ansible.com/projects/ansible/latest/porting_guides/porting_guides.html). Test all existing playbooks in a staging inventory before rolling to production controllers. For AAP, use the installer bundle and follow the in-place upgrade procedure documented in the AAP Installation Guide.

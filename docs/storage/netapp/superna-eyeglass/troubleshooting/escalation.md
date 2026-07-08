@@ -477,7 +477,7 @@ ID      Policy                  State       Progress    Bytes Transferred
 
 Licensing issues (appliance reporting "Unlicensed") are handled via the Superna licensing portal:
 
-1. Go to [https://superna.net/support/](https://superna.net/support/)
+1. Go to [https://support.superna.net/hc/en-us](https://support.superna.net/hc/en-us)
 2. Locate your license by the serial number provided by Superna
 3. Confirm the license UUID matches the UUID shown in Admin UI → License → UUID
 4. If UUID mismatch (typically after OVA redeployment): request license re-issue via the portal

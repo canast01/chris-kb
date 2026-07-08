@@ -31,7 +31,7 @@ Add-SmStorageConnection -StorageName <cluster-mgmt-fqdn> -Protocol HTTPS -Port 4
 
 The **SnapCenter Plug-in for VMware vSphere** is deployed as a separate OVA and registered with vCenter:
 
-1. Deploy the OVA from [mysupport.netapp.com](https://support.netapp.com) into vCenter
+1. Deploy the OVA from [mysupport.netapp.com](https://mysupport.netapp.com) into vCenter
 2. After deployment, access the plugin UI at `https://<plugin-vm-ip>:8144`
 3. Register the plugin with vCenter: Settings → vCenter registration → enter vCenter credentials
 4. Add ONTAP storage systems to the plugin (separate from the SnapCenter Server connections)

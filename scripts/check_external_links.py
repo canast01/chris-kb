@@ -77,18 +77,14 @@ def collect_urls():
 
 
 def check_one(url):
+    # GET, not HEAD: several vendor sites (confirmed: mysupport.netapp.com)
+    # return 404 to HEAD but 200 to GET -- a small enough URL set (dozens, not
+    # thousands) that the HEAD optimization isn't worth the false positives.
     try:
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'}, method='HEAD')
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         resp = urllib.request.urlopen(req, timeout=TIMEOUT, context=SSL_CONTEXT)
         return url, resp.status, None
     except urllib.error.HTTPError as e:
-        if e.code == 405:  # HEAD not allowed, retry with GET
-            try:
-                req2 = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                resp2 = urllib.request.urlopen(req2, timeout=TIMEOUT, context=SSL_CONTEXT)
-                return url, resp2.status, None
-            except Exception as e2:
-                return url, None, str(e2)
         return url, e.code, None
     except Exception as e:
         return url, None, str(e)

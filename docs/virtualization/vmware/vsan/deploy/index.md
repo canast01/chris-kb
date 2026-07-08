@@ -96,7 +96,7 @@ Configure on each host:
 
 ### HCL Verification
 
-Before installation, verify every component against the [VMware Compatibility Guide](https://www.vmware.com/resources/compatibility):
+Before installation, verify every component against the [VMware Compatibility Guide](https://www.vmware.com/resources/compatibility/search.php):
 
 - Server model and BIOS version
 - NIC model and firmware

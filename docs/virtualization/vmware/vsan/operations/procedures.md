@@ -802,7 +802,7 @@ Get-VsanSpaceUsage -Cluster (Get-Cluster "VSAN-LON-01") |
 
 **Step 1 — Validate hardware against the vSAN HCL**
 
-Confirm host model, NIC, SSD, and NVMe devices are on the [VMware Compatibility Guide](https://www.vmware.com/resources/compatibility) for the current ESXi version.
+Confirm host model, NIC, SSD, and NVMe devices are on the [VMware Compatibility Guide](https://www.vmware.com/resources/compatibility/search.php) for the current ESXi version.
 
 **Step 2 — Add host to vCenter and the cluster**
 
@@ -1504,7 +1504,7 @@ Adding a host expands cluster capacity and can increase FTT headroom.
 
 Before racking the host, verify it is on the vSAN Hardware Compatibility List (HCL):
 
-- Check the [VMware Compatibility Guide](https://www.vmware.com/resources/compatibility) for the host model, NIC, HBA, SSD, and NVMe devices.
+- Check the [VMware Compatibility Guide](https://www.vmware.com/resources/compatibility/search.php) for the host model, NIC, HBA, SSD, and NVMe devices.
 - Confirm disk model and firmware match HCL entries exactly — firmware version matters.
 - Verify NIC speed (minimum 10 GbE; 25 GbE recommended).
 
