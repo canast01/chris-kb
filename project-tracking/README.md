@@ -7,16 +7,22 @@ execution of `project_certification_grade_kb.md` (in Claude's memory system).
 
 - `cert_kb_queue.md` — the task list. One unchecked `[ ]` item = one day's work.
 - `daily_prompt.txt` — the exact prompt sent to Claude Code each day.
-- `daily_run.log` — combined output of every daily run (grows over time).
-- `launchd_stdout.log` / `launchd_stderr.log` — raw launchd-level output, mostly empty
-  unless something fails before Claude even starts.
+- `precheck.sh` — environment health check run before each day's work (clean git tree,
+  network reachable, items remaining). Not committed to run if this fails.
+- `run_daily.sh` — the actual entry point: precheck → run → verify → notify on failure.
+- `verify_daily_run.py` — post-hoc check that a run's claims match what really happened
+  (real web search occurred, audit ran, exactly one item completed, push landed).
+- `daily_run.log` / `runs/*.json` — gitignored (would bloat the repo like `.cache/` did
+  otherwise). Local-only, grows over time, safe to prune periodically.
 
 ## The scheduled job
 
 Installed at `~/Library/LaunchAgents/com.chrisanastasiadis.chriskb.cert-daily.plist`,
-runs daily at 9:13am local time. Fires `claude -p "$(cat daily_prompt.txt)"
---dangerously-skip-permissions` from this repo's directory — fully unattended, commits
-and pushes automatically each day per your instruction (2026-07-09).
+runs daily at 9:13am local time via `run_daily.sh` — fully unattended, commits and
+pushes automatically each day per your instruction (2026-07-09). If a day's run fails
+precheck or fails post-hoc verification, it sends a real push notification instead of
+silently trusting a bad result (added 2026-07-09 after finding a trial run had skipped
+steps and fabricated a "verified" claim with zero actual web searches performed).
 
 **Check status:**
 ```
