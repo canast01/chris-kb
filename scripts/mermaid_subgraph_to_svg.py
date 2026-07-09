@@ -106,9 +106,18 @@ def norm_label(s: str) -> str:
     return s.replace('\\n', '\n')
 
 
+CLASS_SUFFIX_RE = re.compile(r':::[\w-]+\s*$')
+
+
 def strip_label(raw: str, open_tok: str) -> str:
     """Given text after the opening bracket token, strip the matching close
     and any surrounding quotes, return the inner label."""
+    # Mermaid's inline class shorthand (`id["label"]:::className`) sits right
+    # after the shape's closing bracket. Without stripping it first, the
+    # `raw.endswith(close)` check below fails (raw ends with ":::className",
+    # not the bracket), so the *entire* unparsed fragment -- quotes, bracket,
+    # class name and all -- leaked straight into the rendered label.
+    raw = CLASS_SUFFIX_RE.sub('', raw.rstrip())
     close = CLOSE_FOR[open_tok]
     if raw.endswith(close):
         raw = raw[: -len(close)]
@@ -740,7 +749,25 @@ def _selftest():
     assert g6.nodes['K1']['label'] == 'server.key', f'K1 label wrong: {g6.nodes["K1"]["label"]!r}'
     cases_passed += 1
 
-    print(f'selftest: {cases_passed}/6 regression cases passed')
+    # Bug 7: found 2026-07-09 (user-reported: "text boxes spilling over") --
+    # Mermaid's inline class shorthand (`id["label"]:::className`) broke
+    # strip_label()'s `raw.endswith(close)` check, since raw ended with
+    # ":::className" instead of the shape's closing bracket. The entire
+    # unparsed fragment -- quotes, bracket, class name and all -- leaked
+    # straight into the rendered label instead of just "Source VM".
+    src7 = '''graph LR
+  VM["Source VM"]:::blue
+  WAN(["WAN / MPLS"]):::purple
+  VM --> WAN
+  classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
+'''
+    g7 = parse_mermaid(src7)
+    assert g7.nodes['VM']['label'] == 'Source VM', f'VM label corrupted: {g7.nodes["VM"]["label"]!r}'
+    assert g7.nodes['WAN']['label'] == 'WAN / MPLS', f'WAN label corrupted: {g7.nodes["WAN"]["label"]!r}'
+    cases_passed += 1
+
+    print(f'selftest: {cases_passed}/7 regression cases passed')
     return 0
 
 
