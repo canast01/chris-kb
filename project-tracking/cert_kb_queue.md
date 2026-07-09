@@ -46,7 +46,42 @@ community standard). Research via WebSearch, verify, don't assume from memory.
   - Gap vs blueprint: KB's `operations/` and `security/` cover controller RBAC/creds
     reasonably well already; missing dedicated coverage of collections authoring, EE
     build/publish workflow, and lookup/filter plugin usage — flagged for Phase B.
-- [ ] automation/github-actions
+- [x] automation/github-actions
+  - Audit (2026-07-09): KB has 5 top-level sections (architecture, deploy, operations,
+    security, troubleshooting) plus a learning-path guide. Content covers: runner specs
+    and execution model, concurrency/artifacts/platform limits (architecture); reusable
+    workflows, composite actions, action version pinning, caching, matrix strategy
+    (design-standards); basic pipeline setup and self-hosted runner registration (deploy);
+    workflow/build/publish procedures and CLI reference (operations); hardening, access
+    control, authentication (PAT/token), encryption/secrets masking (security); known
+    issues, diagnostics, escalation (troubleshooting). No dedicated content yet on
+    authoring/publishing custom actions (JS/Docker/composite action.yml metadata,
+    Marketplace publishing), OIDC cloud federation detail, or enterprise-scale governance
+    (org policies, IP allow lists, artifact attestations/SLSA provenance).
+  - Cert research (2026-07-09): Real, named, published cert exists — **GitHub Actions
+    Certification (exam GH-200)**, an official GitHub certification administered via
+    Microsoft Learn / Pearson VUE (confirmed on GitHub's own docs.github.com
+    certifications page). Intermediate level, 100 minutes, proctored. Skills measured as
+    of January 2026, five domains: Author and manage workflows (20–25%) — triggers/events,
+    workflow_dispatch inputs, workflow_call, jobs/steps/conditionals, service containers,
+    matrix strategy, YAML anchors/aliases, contexts, expressions, caching, artifacts,
+    GITHUB_STEP_SUMMARY; Consume and troubleshoot workflows (15–20%) — diagnosing failed
+    runs, matrix expansion analysis, starter vs reusable workflows vs composite actions;
+    Author and maintain actions (15–20%) — action types (JS/Docker/composite), metadata,
+    Marketplace distribution, versioning; Manage GitHub Actions for the enterprise
+    (20–25%) — org policies, runner groups/IP allow lists, encrypted secrets/variables at
+    org/repo/env scope; Secure and optimize automation (10–15%) — environment protections,
+    script-injection mitigation, GITHUB_TOKEN lifecycle, OIDC federation, SHA pinning,
+    artifact attestations/SLSA, caching/retention for cost.
+    Source (primary, GitHub's own confirmation): https://docs.github.com/en/get-started/showcase-your-expertise-with-github-certifications/about-github-certifications
+    Source (official exam study guide, administered on GitHub's behalf via Microsoft
+    Learn/Pearson VUE): https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/gh-200
+    Source (official exam page): https://learn.microsoft.com/en-us/credentials/certifications/github-actions/
+  - Gap vs blueprint: biggest gap is "Author and maintain actions" (15–20% of exam) —
+    KB has no dedicated custom-action-authoring content at all. Also missing: OIDC
+    federation walkthrough (mentioned only implicitly), artifact attestations/SLSA
+    provenance, enterprise-level org policy/IP allow list detail, YAML anchors/aliases,
+    GITHUB_STEP_SUMMARY job summaries. Flagged for Phase B.
 - [ ] automation/powershell
 - [ ] automation/python
 - [ ] automation/terraform
