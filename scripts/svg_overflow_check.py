@@ -123,9 +123,19 @@ def analyze_svg(path: Path):
         return [], f'PARSE ERROR: {e}'
     root = tree.getroot()
 
-    rects = []
-    texts = []
-    for elem, ox, oy in walk_absolute(root):
+    # Single document-order pass, each rect/text tagged with its order index.
+    # Every generator in this KB draws a label's background rect immediately
+    # before that label's <text> (verified 2026-07-09 against 6 files flagged
+    # as "overflow" that turned out to be false positives -- the real,
+    # correctly-sized rect was always the nearest PRECEDING one in document
+    # order, not the smallest-area rect among all spatially-overlapping
+    # candidates, which is what this used to pick). Multiple small edge-label
+    # rects often overlap in x-range at similar y (adjacent edges on the same
+    # rank), so spatial containment alone is ambiguous; document-order
+    # proximity resolves that ambiguity correctly.
+    rects = []  # (order_index, x, y, w, h)
+    texts = []  # (order_index, elem, ox, oy)
+    for i, (elem, ox, oy) in enumerate(walk_absolute(root)):
         tag = elem.tag
         if tag == f'{NS}rect':
             try:
@@ -137,12 +147,12 @@ def analyze_svg(path: Path):
                 continue
             if w <= 0 or h <= 0:
                 continue
-            rects.append((x, y, w, h))
+            rects.append((i, x, y, w, h))
         elif tag == f'{NS}text':
-            texts.append((elem, ox, oy))
+            texts.append((i, elem, ox, oy))
 
     findings = []
-    for t, ox, oy in texts:
+    for text_i, t, ox, oy in texts:
         x_attr = t.get('x')
         y_attr = t.get('y')
         if x_attr is None:
@@ -175,23 +185,31 @@ def analyze_svg(path: Path):
         else:
             left, right = x, x + width
 
-        # Smallest-area enclosing rect whose box contains the anchor point (x, y),
-        # with a little vertical slack since y is a text baseline near the box bottom.
-        # Require a small horizontal margin from the box edges: a text start that
-        # sits exactly on (or past) a box's edge is a floating arrow-caption label
-        # next to the box, not content inside it, not something we should evaluate
-        # for overflow against that box.
+        # Enclosing rect whose box contains the anchor point (x, y), with a
+        # little vertical slack since y is a text baseline near the box bottom.
+        # Require a small horizontal margin from the box edges: a text start
+        # that sits exactly on (or past) a box's edge is a floating
+        # arrow-caption label next to the box, not content inside it.
+        #
+        # Among all spatially-containing candidates, prefer the one nearest
+        # in document order BEFORE this text (its own background rect, per
+        # every generator's draw-rect-then-draw-text convention) over the
+        # old smallest-area heuristic, which picked unrelated overlapping
+        # rects when multiple edge labels sit close together.
         MARGIN = 5
-        best = None
-        best_area = None
-        for (rx, ry, rw, rh) in rects:
+        candidates = []
+        for (rect_i, rx, ry, rw, rh) in rects:
             if (rx + MARGIN) <= x <= (rx + rw - MARGIN) and (ry - 4) <= y <= (ry + rh + 4):
-                area = rw * rh
-                if best_area is None or area < best_area:
-                    best, best_area = (rx, ry, rw, rh), area
+                candidates.append((rect_i, rx, ry, rw, rh))
 
-        if best is None:
+        if not candidates:
             continue
+
+        preceding = [c for c in candidates if c[0] < text_i]
+        if preceding:
+            best = max(preceding, key=lambda c: c[0])[1:]
+        else:
+            best = min(candidates, key=lambda c: c[3] * c[4])[1:]
 
         rx, ry, rw, rh = best
         overflow_left = rx - left

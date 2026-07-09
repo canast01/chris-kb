@@ -1400,15 +1400,18 @@ except ImportError:
     pass
 
 
-# ── Check 59: SVG text likely wider than its enclosing box ───────────────────
-# Heuristic (no real font metrics) -- estimates text width per character
-# class and flags where it exceeds the smallest enclosing <rect>. Known
-# false-positive source (documented 2026-07-03): in diagrams with many small
-# adjacent/stacked boxes, "smallest enclosing" can pick a nearby box that
-# spatially overlaps the text's anchor point but isn't the semantically
-# correct one -- always spot-check a flagged file's actual box before
-# treating this as confirmed, don't batch-fix on the numbers alone.
-issues = check(59, 'SVG text likely wider than its enclosing box (heuristic, verify before fixing)')
+# ── Check 59: SVG text wider than its enclosing box ───────────────────────────
+# Still a heuristic (no real font metrics -- estimates text width per
+# character class), but PROMOTED 2026-07-09 from "soft, verify before
+# fixing" to a trustworthy check: its false-positive source (documented
+# 2026-07-03 -- "smallest enclosing rect" picking a nearby but semantically
+# wrong box when multiple small rects spatially overlap, e.g. adjacent edge
+# labels) was root-caused and fixed in svg_overflow_check.py. The correct
+# rect is now selected by document-order proximity (every generator in this
+# KB draws a label's background rect immediately before that label's text),
+# not spatial smallest-area -- verified against all 6 previously-flagged
+# files, all 6 confirmed false positives, full corpus re-scanned 0/2484.
+issues = check(59, 'SVG text wider than its enclosing box')
 try:
     from svg_overflow_check import analyze_svg as _analyze59
     if os.path.isdir(ASSETS):
