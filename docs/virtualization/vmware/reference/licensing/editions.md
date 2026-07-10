@@ -207,5 +207,5 @@ vCenter → Administration → Licensing → Assets
 
 ## Related Pages
 
-- [VMware Cloud Foundation](../../vmware-cloud-foundation/index.md) — VCF architecture, SDDC Manager, and workload domains.
-- [vCenter](../../vcenter/index.md) — licensing assignment and compliance view in vCenter.
+- [VMware Cloud Foundation](../../products/vmware-cloud-foundation/index.md) — VCF architecture, SDDC Manager, and workload domains.
+- [vCenter](../../products/vcenter/index.md) — licensing assignment and compliance view in vCenter.

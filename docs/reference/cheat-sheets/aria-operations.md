@@ -127,5 +127,5 @@ curl -sk $AUTH -X POST "$BASE/adapters/<id>/monitoringstate/start"        # star
     **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present
 ## See also
 
-- [Aria Operations Procedures](../../../virtualization/vmware/aria-operations/operations/procedures/)
-- [Aria Operations Troubleshooting](../../../virtualization/vmware/aria-operations/troubleshooting/common-issues/)
+- [Aria Operations Procedures](../../../virtualization/vmware/products/aria-operations/operations/procedures/)
+- [Aria Operations Troubleshooting](../../../virtualization/vmware/products/aria-operations/troubleshooting/common-issues/)

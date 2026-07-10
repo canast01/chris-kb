@@ -229,7 +229,7 @@ This deploys a new vCenter, a new NSX domain (or reuse the management NSX cluste
 
 ## Next Steps
 
-- [VCF Architecture](../../../virtualization/vmware/vmware-cloud-foundation/architecture/)
+- [VCF Architecture](../../../virtualization/vmware/products/vmware-cloud-foundation/architecture/)
 - [NSX Topology Decision Tree](../../../reference/decision-trees/nsx-topology/)
 - [vSAN Cheat Sheet](../../../reference/cheat-sheets/vsan/)
 - [NSX Cheat Sheet](../../../reference/cheat-sheets/nsx/)

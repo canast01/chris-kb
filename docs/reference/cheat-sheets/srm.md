@@ -103,5 +103,5 @@ curl -sk $AUTH $BASE/plans/<id>/history | python3 -m json.tool             # pla
     **`jq: parse error: Invalid JSON`** — Ensure the API endpoint is correct and the SRM service is running; check response with `curl -sk $AUTH $BASE/pairing` without piping to json.tool first.
 ## See also
 
-- [SRM Operations](../../../virtualization/vmware/srm/operations/procedures/)
-- [SRM Troubleshooting](../../../virtualization/vmware/srm/troubleshooting/common-issues/)
+- [SRM Operations](../../../virtualization/vmware/products/srm/operations/procedures/)
+- [SRM Troubleshooting](../../../virtualization/vmware/products/srm/troubleshooting/common-issues/)

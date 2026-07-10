@@ -160,4 +160,4 @@ master-node-03.ocp4    Ready    control-plane   45d   v1.27.8+4fab27 10.0.1.7   
 - [OpenShift — Architecture](../how-it-works/)
 - [OpenShift — Deploy](../../deploy/)
 - [OpenShift — Operations](../../operations/)
-- [Tanzu — Ports](../../vmware/tanzu/architecture/ports.md)
+- [Tanzu — Ports](../../vmware/products/tanzu/architecture/ports.md)

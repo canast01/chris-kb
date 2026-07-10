@@ -1,0 +1,459 @@
+---
+tags:
+  - esxi
+  - troubleshooting
+  - vmware
+  - vsphere-8
+search:
+  boost: 1.5
+---
+# ESXi — Escalation
+
+<div class="kb-summary">
+How to escalate ESXi host issues to Broadcom support: what data to collect, how to run the support bundle, step-by-step SR submission on the Broadcom portal, and the escalation path when progress stalls.
+
+*Applies to: ESXi 7.x / 8.x*
+</div>
+![ESXi — Escalation](../../../../../assets/virtualization-vmware-esxi-troubleshooting-escalation.svg)
+
+
+
+
+---
+
+```d2
+direction: down
+
+symptom: Identify Symptom {shape: diamond}
+preescalation_selfcheck: "Pre-Escalation Self-Check" {shape: rectangle}
+stepbystep_data_collection: "Step-by-Step Data Collection" {shape: rectangle}
+how_to_open_the_sr_on_broadcom_suppo: "How to Open the SR on Broadcom Support Portal" {shape: rectangle}
+escalation_path: "Escalation Path" {shape: rectangle}
+what_not_to_do: "What NOT to Do" {shape: rectangle}
+useful_commands_for_case_updates: "Useful Commands for Case Updates" {shape: rectangle}
+resolution: Resolve or Escalate {shape: oval}
+
+symptom -> preescalation_selfcheck: investigate
+symptom -> stepbystep_data_collection: investigate
+symptom -> how_to_open_the_sr_on_broadcom_suppo: investigate
+symptom -> escalation_path: investigate
+symptom -> what_not_to_do: investigate
+symptom -> useful_commands_for_case_updates: investigate
+preescalation_selfcheck -> resolution
+stepbystep_data_collection -> resolution
+how_to_open_the_sr_on_broadcom_suppo -> resolution
+escalation_path -> resolution
+what_not_to_do -> resolution
+useful_commands_for_case_updates -> resolution
+```
+
+## Before you begin
+
+- **Access required:** SSH access to the ESXi host (root or equivalent); vSphere Client read access; Broadcom support account with entitlement to vSphere
+- **Do this first:** collect all data below before touching anything. Broadcom will ask for the bundle and timeline in their first response
+- **Do NOT reboot:** if the host has PSOD'd, leave it. A reboot overwrites the memory dump stored in `/vmfs/volumes/<local-ds>/vmkdump/`. Broadcom needs that dump to diagnose the crash
+- **Do NOT enter maintenance mode** unless Broadcom specifically instructs you to — evacuating VMs may mask the issue or make diagnosis harder
+
+---
+
+## Pre-Escalation Self-Check
+
+Run these before opening the SR. Many ESXi issues are resolvable without Broadcom.
+
+| Check | Command | Expected result |
+|---|---|---|
+| ESXi version | `esxcli system version get` | Matches your change record |
+| Host connectivity | `ping <host-mgmt-ip>` from management workstation | Replies received |
+| Storage paths | `esxcli storage nmp path list \| grep -i dead` | Empty output (no dead paths) |
+| vSAN health (if applicable) | `esxcli vsan health cluster list` | All checks GREEN |
+| HA status | vSphere Client → Host → Summary → HA state | Connected and protected |
+| HCL status | [https://compatibilityguide.broadcom.com](https://compatibilityguide.broadcom.com) | NIC/HBA on HCL for this ESXi build |
+| Recent VIBs installed | `esxcli software vib list \| sort -k5 -r \| head -10` | No unexpected recent installs |
+| Uptime | `esxcli system stats uptime get` | Consistent with known reboots |
+
+---
+
+## Step-by-Step Data Collection
+
+Run all of these before opening the SR. SSH to the ESXi host as root.
+
+### 1. Get the ESXi version and build number
+
+```bash
+# ESXi version — note the full build number, not just the release
+esxcli system version get
+# Example output:
+#   Product: VMware ESXi
+#   Version: 8.0.2
+#   Build: Releasebuild-23305546
+
+# Also get hardware info for the SR description
+esxcli hardware cpu get | grep -E "CPU Packages|CPU Cores|Hyperthreading"
+esxcli hardware memory get
+```
+
+
+```text title="Expected output"
+Product: VMware ESXi
+Version: 8.0.2
+Build: Releasebuild-23305546
+   CPU Packages: 2
+   CPU Cores: 16
+   Hyperthreading: Enabled
+Physical Memory: 256 GB
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to the host`** — Verify SSH is enabled on the ESXi host and your network connectivity is correct.
+    **`Unknown command or namespace`** — Ensure you are running this command directly on the ESXi host console or via SSH; esxcli is not available remotely without proper configuration.
+### 2. Run the vm-support diagnostic bundle (takes 5–15 minutes)
+
+```bash
+# Generate the support bundle — run from ESXi SSH shell
+vm-support
+
+# The bundle is saved to /var/core/ or /scratch/
+# Find it:
+ls -lh /var/core/
+# Example: vm-support-esx-hostname-2026-06-14--15.45.tar.gz
+
+# If /var/core/ is full, specify an alternate location:
+vm-support -w /vmfs/volumes/<datastore>/support-bundle/
+```
+
+
+```text title="Expected output"
+Generating support bundle, this may take a few minutes...
+Collecting system logs...
+Collecting hardware information...
+Collecting network configuration...
+Bundle generation complete.
+Bundle saved to: /var/core/vm-support-esx-prod-01-2026-06-14--15.45.tar.gz
+
+total 2847652
+-rw-r--r--  1 root root 2.8G Jun 14 15:45 vm-support-esx-prod-01-2026-06-14--15.45.tar.gz
+-rw-r--r--  1 root root 1.9G Jun 13 08:22 vm-support-esx-prod-01-2026-06-13--08.22.tar.gz
+-rw-r--r--  1 root root 2.1G Jun 12 14:10 vm-support-esx-prod-01-2026-06-12--14.10.tar.gz
+```
+
+!!! warning "Common errors"
+    **`vm-support: /var/core/ filesystem is full`** — Specify an alternate writable datastore path using the `-w` flag with sufficient free space.
+    **`vm-support: cannot access /vmfs/volumes/<datastore>/support-bundle/: No such file or directory`** — Create the target directory first with `mkdir -p /vmfs/volumes/<datastore>/support-bundle/` before running vm-support.
+Upload this tar.gz file to the Broadcom case. It contains all ESXi logs, configuration, and hardware info.
+
+### 3. Capture PSOD information (if host has crashed)
+
+If the host showed a Purple Screen of Death (PSOD) and is now running again after an automatic reboot:
+
+```bash
+# Find the memory dump file — this is the most valuable data for a PSOD crash
+ls -lh /vmfs/volumes/*/vmkdump/
+# Look for a .dumpfile or .zdumpfile with the timestamp of the crash
+
+# Also check the vmkernel log for the panic line
+grep -i "PSOD\|BUG\|panic\|backtrace" /var/log/vmkernel.log | tail -50
+
+# Get the vmkernel log from the time of the crash (system log is persistent)
+grep "$(date -d 'yesterday' '+%Y-%m-%d')" /var/log/vmkernel.log | grep -i "error\|fail\|panic" | head -50
+```
+
+
+```text title="Expected output"
+total 2.8G
+-rw-------  1 root root 2.8G Nov 14 10:23 vmkdump-2024-11-14-10-15-42.zdumpfile
+-rw-------  1 root root 1.2M Nov 14 10:23 vmkdump-2024-11-14-10-15-42.metadata
+
+2024-11-14T10:15:42.847Z cpu2:65536)PANIC: Unrecoverable exception 14.
+2024-11-14T10:15:42.891Z cpu2:65536)BACKTRACE for world 65536:
+2024-11-14T10:15:42.923Z cpu2:65536) 0x418f2e40:[0x418f2e40]log_panic@vmkernel#0+0x1 stack 0x418f2e00
+2024-11-14T10:15:43.012Z cpu2:65536) 0x418f2e60:[0x418f2e60]Panic_Panic@vmkernel#0+0x45 stack 0x418f2e20
+2024-11-14T10:15:43.156Z cpu2:65536)BUG: CPU2 halted.
+2024-11-14T10:15:43.201Z cpu2:65536)PSOD: Dumping core to partition 6 (vmkdump)...
+
+2024-11-13T14:32:15.445Z cpu0:2097472)WARNING: Failed to allocate memory for vMotion buffer
+2024-11-13T14:32:16.123Z cpu1:2097473)ERROR: NIC vmnic2 link down detected
+2024-11-13T14:32:17.891Z cpu3:2097474)PANIC: Out of memory condition detected
+2024-11-13T14:32:18.234Z cpu0:2097475)ERROR: Storage adapter timeout on device naa.6006048b1e10c3a00a8e3f4e5c6d7e8f
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/vmkernel.log: No such file or directory`** — SSH into the ESXi host directly (not vCenter); the vmkernel log is local to each host at that path.
+    **`date: invalid date 'yesterday'`** — Use `date -d '1 day ago' '+%Y-%m-%d'` or replace with a specific date like `2024-11-13` for better compatibility.
+Include the dump file path in your SR description. Broadcom will provide SFTP transfer instructions to upload it.
+
+### 4. Capture esxtop performance data (for performance or APD issues)
+
+```bash
+# Batch esxtop — captures 5 snapshots at 2-second intervals
+# Run during or immediately after the issue
+esxtop -b -n 5 > /tmp/esxtop-$(date +%Y%m%d-%H%M).txt
+
+# For storage-specific issues, add storage stats
+esxtop -b -n 5 -s > /tmp/esxtop-storage-$(date +%Y%m%d-%H%M).txt
+
+# Copy the file off the host (via scp from a jump box):
+# scp root@<esxi-host>:/tmp/esxtop-*.txt ./
+```
+
+
+```text title="Expected output"
+CPU MEMORY DISK NETWORK POWER
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Verify esxtop is available in PATH or use the full path `/usr/lib/vmware/esxtop/esxtop`; it may require the ESXi host shell to be enabled.
+    **`Permission denied`** — Run the command as root or with appropriate sudo privileges; esxtop requires elevated permissions to access performance metrics.
+    **`No space left on device`** — Check available disk space on /tmp with `df -h` and either clean up old logs or redirect output to a partition with more free space.
+### 5. Collect storage path state (for APD or PDL issues)
+
+```bash
+# All storage paths and their state
+esxcli storage nmp path list
+
+# Devices in APD or PDL
+esxcli storage nmp path list | grep -i "state\|dead\|error"
+
+# HBA port status
+esxcli storage san fc list        # Fibre Channel
+esxcli storage san iscsi list     # iSCSI
+
+# Datastore accessibility
+esxcli storage filesystem list | grep -v "^[[:space:]]*$"
+```
+
+
+```text title="Expected output"
+Name: vmhba0:C0:T0:L0
+State: active
+PathState: active
+PluginName: NMP
+TransportState: active
+
+Name: vmhba1:C0:T1:L0
+State: active
+PathState: active
+PluginName: NMP
+TransportState: active
+
+Name: vmhba2:C0:T2:L0
+State: dead
+PathState: PDL
+PluginName: NMP
+TransportState: error
+
+Adapter: vmhba1
+Wwn: 50:00:14:40:5a:2b:c3:e1
+Status: link up
+Speed: 8Gbps
+Driver: lpfc
+
+Adapter: vmhba2
+Wwn: 50:00:14:40:5a:2b:c3:e2
+Status: link down
+Speed: unknown
+Driver: lpfc
+
+VolumeID: 4f5a6b7c-8d9e-0f1a-2b3c-4d5e6f7a8b9c
+MountPoint: /vmfs/volumes/datastore1
+Mounted: true
+Capacity: 2199023255552
+Free: 549755813888
+```
+
+!!! warning "Common errors"
+    **`State: dead`** — Run `esxcli storage nmp path set --state=active --path=vmhba2:C0:T2:L0` to reactivate the path, or verify SAN connectivity and zoning.
+    **`error: Unknown command or namespace`** — Ensure you are running these commands directly on the ESXi host via SSH or local console, not through vCenter.
+    **`TransportState: error`** — Check HBA driver logs with `esxcli system syslog config get` and verify Fibre Channel switch port status and SFP transceiver health.
+### 6. Write the timeline
+
+Create a plain text file with this structure and paste it into the SR description:
+
+```text
+ESXi version: 8.0.2 build 23305546
+Host: esxi-prod-01.corp.local
+Issue first observed: 2026-06-14 14:30 UTC
+Last known good state: 2026-06-14 10:00 UTC
+Changes in the 24h before the issue:
+  - 09:30: VUM patch applied (ESXi 8.0 U2c)
+  - 14:25: Host showed storage APD for datastore vsanDatastore
+Steps already taken:
+  - Checked storage path count: currently 0 paths to vsanDatastore
+  - Did NOT enter maintenance mode or reboot the host
+  - Confirmed other hosts in cluster still show paths
+Blast radius: VMs on this host have read/write I/O stalled
+```
+
+---
+
+## How to Open the SR on Broadcom Support Portal
+
+1. Go to **support.broadcom.com** and sign in with your Broadcom account. If you do not have an account, click **Register** and use your company email — entitlement is linked to your support contract.
+
+2. Click **Open a New Case** in the top navigation.
+
+3. Under **Select Product Family**, choose **VMware vSphere**.
+
+4. Under **Product**, select **VMware ESXi** and choose your exact version from the drop-down.
+
+5. Under **Request Type**, select **Technical**.
+
+6. Under **Severity**, select:
+   - **S1 — Critical**: Host is down (PSOD, unreachable), VMs are inaccessible, data is at risk, no workaround
+   - **S2 — Major**: Host degraded (APD, high latency, HA not recovering), VMs running but at risk
+   - **S3 — Minor**: Non-critical feature broken, single-host issue, cluster remains healthy
+   - **S4 — General**: How-to question, pre-check, or non-urgent configuration question
+
+7. In the **Summary** field, write one sentence: host + symptom + scope. Example: `ESXi 8.0.2 host esxi-prod-01 in APD state since 14:25 UTC — all VMs on this host have I/O stalled`.
+
+8. In the **Description** field, paste:
+   - The ESXi version and build number from Step 1
+   - The timeline you wrote in Step 6
+   - The storage path output if relevant
+   - The PSOD dump file path if applicable
+   - What you have already tried and what happened
+
+9. Under **Attachments**, upload:
+   - The vm-support tar.gz bundle from Step 2
+   - The esxtop file from Step 4 (if collected)
+   - The PSOD dump file (if applicable) — provide the file path in the description; Broadcom will send SFTP details for large files
+
+10. Click **Submit**. You will receive a case number by email immediately.
+
+11. **S1 only:** the case confirmation page shows a regional phone number. Call it immediately:
+    - North America: shown on the confirmation page (typically +1-877-486-9273)
+    - EMEA: shown on the confirmation page
+    - State "Severity 1 — production host down" at the start of the call.
+
+---
+
+## Escalation Path
+
+If progress stalls after initial assignment:
+
+```text
+Step 1 — Open case at support.broadcom.com with vm-support bundle attached (see above)
+         ↓
+Step 2 — T1 support acknowledges and confirms bundle received (typically 30 min–4 hr)
+         ↓
+Step 3 — If no meaningful progress in 4 hours for S1 or 1 business day for S2:
+         → Reply in the case: "Requesting T2 ESXi Senior Engineer assignment"
+         → State impact: "[X] VMs inaccessible / host offline / storage degraded"
+         ↓
+Step 4 — T2 Senior Engineer is assigned; they will schedule a live Zoom/Webex session
+         → Have SSH access to ESXi host and vSphere Client ready for the call
+         ↓
+Step 5 — If T2 cannot resolve and issue requires kernel/driver-level investigation:
+         → T2 escalates to T3 (engineering) — you do not need to initiate this
+         ↓
+Step 6 — For data loss risk, PSOD in production, or 24h+ with no resolution:
+         → Request a Critical Situation (CritSit) engagement
+         → Add to case: "Requesting CritSit — [reason: PSOD in prod / data at risk / 24h outage]"
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Reboot a host with a fresh PSOD | Overwrites the memory dump that Broadcom needs | Leave the host and collect the dump first; then discuss reboot with GSS |
+| Enter maintenance mode on a degraded vSAN host | Evacuating objects may push below quorum | Wait for GSS to advise on safe maintenance window |
+| Apply patches mid-incident | Adds variables; may reset the issue state | Freeze all changes until Broadcom gives the go-ahead |
+| Replace hardware components without GSS guidance | May not fix root cause; voids diagnostic trail | Wait for GSS to confirm the failing component |
+| Run `esxcli storage core claiming unclaim` | Unclaims all storage paths; can cause APD | Only run this if explicitly instructed by GSS |
+| Open a case without the vm-support bundle | First GSS response will just ask for it — delays by hours | Always attach bundle at case creation |
+
+---
+
+## Useful Commands for Case Updates
+
+Paste these into case replies to show Broadcom the current state.
+
+```bash
+# ESXi service status
+/etc/init.d/hostd status
+/etc/init.d/vpxa status
+
+# Current host events
+tail -100 /var/log/hostd.log
+tail -100 /var/log/vmkernel.log
+
+# Storage path count (paste full output)
+esxcli storage nmp path list | grep -E "Runtime Name|State"
+
+# vSAN health (if applicable)
+esxcli vsan health cluster list
+
+# HA agent status
+/etc/init.d/fdm status
+
+# Running VMs on this host
+esxcli vm process list
+```
+
+
+```text title="Expected output"
+hostd is running.
+vpxa is running.
+2024-01-15T09:23:45.123Z [hostd] [info] [Main] hostd started
+2024-01-15T09:23:52.456Z [hostd] [info] [Vimsvc.Licensing] License check passed
+2024-01-15T09:24:10.789Z [hostd] [warning] [Hostsvc.StorageSystem] Storage rescan initiated
+2024-01-15T09:25:33.012Z [hostd] [info] [Hostsvc.VmFolder] VM inventory loaded: 12 VMs
+2024-01-15T10:45:22.345Z [vmkernel] [info] NIC vmnic0 link up at 10000Mbps
+2024-01-15T10:46:01.678Z [vmkernel] [warning] Memory pressure: 87% consumed
+2024-01-15T10:47:15.901Z [vmkernel] [info] vMotion migration completed for vm-prod-db-01
+Runtime Name: vmhba0:C0:T0:L0
+State: active
+Runtime Name: vmhba0:C0:T1:L0
+State: active
+Runtime Name: vmhba1:C0:T0:L0
+State: active
+Runtime Name: vmhba1:C0:T0:L1
+State: standby
+Cluster UUID: 52d4f2c1-a8b3-4e7f-9c2a-1b5d8e9f3a4c
+Cluster Health Status: Healthy
+Node UUID: esx-prod-01.lab.local
+Node Health Status: Healthy
+fdm is running.
+World ID    Name                                   File                                 CPU Mem   
+  2048      vm-prod-web-01                         /vmfs/volumes/datastore1/vm-prod-web-01/vm-prod-web-01.vmx 2   4096
+  4096      vm-prod-db-01                          /vmfs/volumes/datastore1/vm-prod-db-01/vm-prod-db-01.vmx 4   8192
+  6144      vm-dev-test-02                         /vmfs/volumes/datastore2/vm-dev-test-02/vm-dev-test-02.vmx 2   2048
+```
+
+!!! warning "Common errors"
+    **`hostd is stopped.`** — Run `services.sh restart` or reboot the ESXi host to restart the hostd service.
+    **`Error: Unknown command or namespace vsan`** — The vSAN module is not installed or enabled; skip this check if vSAN is not deployed on this cluster.
+    **`tail: cannot open '/var/log/hostd.log' for reading: No such file or directory`** — Restart hostd service with `/etc/init.d/hostd restart` to regenerate the log file.
+---
+
+## Support Portal and SLA Reference
+
+| Severity | Definition | Initial Response SLA |
+|---|---|---|
+| S1 — Critical | Production host down; data loss; no workaround | 30 minutes (24×7) |
+| S2 — Major | Host degraded; key feature broken; workaround exists | 4 hours |
+| S3 — Minor | Non-critical issue; cluster still healthy | 1 business day |
+| S4 — General | How-to, pre-check, feature request | 2 business days |
+
+---
+
+## See also
+
+- [ESXi — Diagnostics](../diagnostics/)
+- [ESXi — Common Issues](../common-issues/)
+
+---
+
+## Verify resolution
+
+- Confirm the host shows "Connected" in vSphere Client and is no longer in warning or error state
+- Run `esxcli storage nmp path list` and confirm all expected paths are active
+- Run `vm-support` one more time after resolution and note in the case that issue is resolved
+- Power on a test VM on the affected host and confirm I/O is healthy
+- Monitor ESXi host for 15 minutes in vSphere Client and confirm no new alarms

@@ -134,5 +134,5 @@ curl -sk $HDR "$BASE/data-sources/nsxv-managers" | python3 -m json.tool    # NSX
     **`curl: (7) Failed to connect to vrni port 443: Connection refused`** — Verify the vRNI appliance is running and accessible at the BASE URL, and check network connectivity with `ping vrni` or `nc -zv vrni 443`.
 ## See also
 
-- [Aria Networks Procedures](../../../virtualization/vmware/aria-operations-for-networks/operations/procedures/)
-- [Aria Networks Troubleshooting](../../../virtualization/vmware/aria-operations-for-networks/troubleshooting/common-issues/)
+- [Aria Networks Procedures](../../../virtualization/vmware/products/aria-operations-for-networks/operations/procedures/)
+- [Aria Networks Troubleshooting](../../../virtualization/vmware/products/aria-operations-for-networks/troubleshooting/common-issues/)

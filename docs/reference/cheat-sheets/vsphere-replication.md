@@ -118,5 +118,5 @@ curl -sk $AUTH $BASE/health | python3 -m json.tool                         # VRM
     **`jq: parse error: Invalid JSON at line 1`** — Ensure the API endpoint is correct and VRMS is responding with valid JSON; check credentials with `curl -sk $AUTH $BASE/health` first.
 ## See also
 
-- [vSphere Replication Operations](../../../virtualization/vmware/vsphere-replication/operations/procedures/)
-- [vSphere Replication Troubleshooting](../../../virtualization/vmware/vsphere-replication/troubleshooting/common-issues/)
+- [vSphere Replication Operations](../../../virtualization/vmware/products/vsphere-replication/operations/procedures/)
+- [vSphere Replication Troubleshooting](../../../virtualization/vmware/products/vsphere-replication/troubleshooting/common-issues/)

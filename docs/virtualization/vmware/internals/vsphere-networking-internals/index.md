@@ -181,4 +181,4 @@ From NSX 3.2, VDS version 7.0 can serve as the N-VDS — no separate N-VDS requi
 
 - [NSX Data Plane — Internals](../nsx-data-plane/)
 - [vSphere Networking — Internals](../vsphere-networking/)
-- [NSX — Architecture](../../nsx/architecture/)
+- [NSX — Architecture](../../products/nsx/architecture/)

@@ -158,5 +158,5 @@ Rotation completed at 2024-01-15T14:32:18Z
     **`Error: Authentication failed. Insufficient permissions to rotate password`** — Ensure your user account has the VCENTER_ADMIN role or equivalent credentials configured in the VCF environment.
 ## See also
 
-- [VCF Operations](../../../virtualization/vmware/vmware-cloud-foundation/operations/procedures/)
-- [VCF Troubleshooting](../../../virtualization/vmware/vmware-cloud-foundation/troubleshooting/common-issues/)
+- [VCF Operations](../../../virtualization/vmware/products/vmware-cloud-foundation/operations/procedures/)
+- [VCF Troubleshooting](../../../virtualization/vmware/products/vmware-cloud-foundation/troubleshooting/common-issues/)

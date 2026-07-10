@@ -144,6 +144,6 @@ Per-rule packet/byte counters confirm whether traffic is matching. Zero counters
 ## See Also
 
 - [NSX Cheat Sheet](../../cheat-sheets/nsx/) — top CLI and API commands
-- [NSX-T Architecture Overview](../../../virtualization/vmware/nsx/architecture/)
-- [NSX-T Health Check Runbook](../../../virtualization/vmware/nsx/operations/health-checks/)
+- [NSX-T Architecture Overview](../../../virtualization/vmware/products/nsx/architecture/)
+- [NSX-T Health Check Runbook](../../../virtualization/vmware/products/nsx/operations/health-checks/)
 - [vSphere Day 1](../vsphere-day1/) — start here if vSphere is also new

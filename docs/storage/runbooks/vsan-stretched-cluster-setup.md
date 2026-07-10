@@ -742,9 +742,9 @@ Status: In Progress
 
 ## See Also
 
-- [VMware vSAN Overview](../../../virtualization/vmware/vsan/)
-- [vSAN Troubleshooting](../../../virtualization/vmware/vsan/troubleshooting/)
+- [VMware vSAN Overview](../../../virtualization/vmware/products/vsan/)
+- [vSAN Troubleshooting](../../../virtualization/vmware/products/vsan/troubleshooting/)
 - [DR Failover: SRM + SnapMirror](../dr-failover-vmware-srm-snapmirror/)
 - [NSX-T Microsegmentation with AD Integration](../nsxt-microsegmentation-ad-integration/)
 - [vSAN to ONTAP NFS Migration](../vmware-vsan-to-ontap-migration/)
-- [VMware SRM](../../../virtualization/vmware/srm/)
+- [VMware SRM](../../../virtualization/vmware/products/srm/)

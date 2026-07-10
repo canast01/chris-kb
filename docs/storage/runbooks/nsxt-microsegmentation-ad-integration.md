@@ -790,8 +790,8 @@ curl -sk -u admin:<password> \
 
 ## See Also
 
-- [NSX-T Overview](../../../virtualization/vmware/nsx/)
-- [NSX-T Troubleshooting](../../../virtualization/vmware/nsx/troubleshooting/)
-- [VMware vCenter](../../../virtualization/vmware/vcenter/)
+- [NSX-T Overview](../../../virtualization/vmware/products/nsx/)
+- [NSX-T Troubleshooting](../../../virtualization/vmware/products/nsx/troubleshooting/)
+- [VMware vCenter](../../../virtualization/vmware/products/vcenter/)
 - [DR Failover: SRM + SnapMirror](../dr-failover-vmware-srm-snapmirror/)
 - [vSAN Stretched Cluster Setup](../vsan-stretched-cluster-setup/)

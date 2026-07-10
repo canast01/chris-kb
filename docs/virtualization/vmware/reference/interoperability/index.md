@@ -107,4 +107,4 @@ VCF 5.x bundles specific validated versions — mixing outside the BOM is unsupp
 
 - [VMware Product Lifecycle and EOL](../lifecycle/)
 - [VMware Upgrade Readiness](../upgrade-readiness/)
-- [VCF — Architecture](../../vmware-cloud-foundation/architecture/how-it-works/)
+- [VCF — Architecture](../../products/vmware-cloud-foundation/architecture/how-it-works/)

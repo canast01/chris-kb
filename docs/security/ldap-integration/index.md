@@ -183,8 +183,8 @@ Each product documents its exact configuration path and any non-standard field n
 - [Jira — Authentication](../../itsm/jira/security/authentication/index.md)
 - [Confluence — Authentication](../../itsm/confluence/security/authentication/index.md)
 - [ServiceNow — Authentication](../../itsm/servicenow/security/authentication/index.md)
-- [vCenter — Authentication](../../virtualization/vmware/vcenter/security/authentication//)
-- [NSX — Authentication](../../virtualization/vmware/nsx/security/authentication//)
+- [vCenter — Authentication](../../virtualization/vmware/products/vcenter/security/authentication//)
+- [NSX — Authentication](../../virtualization/vmware/products/nsx/security/authentication//)
 - [ONTAP — Authentication](../../storage/products/netapp/ontap/security/authentication//)
 - [Veeam — Authentication](../../backup/products/veeam/security/authentication/index.md)
 

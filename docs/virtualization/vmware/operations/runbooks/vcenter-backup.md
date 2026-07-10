@@ -208,6 +208,6 @@ Full restore requires a complete re-deploy — do not attempt during normal oper
 
 ## See also
 
-- [vCenter — Operations](../../../vcenter/operations/)
+- [vCenter — Operations](../../../products/vcenter/operations/)
 - [Scenarios — vCenter Down](../../../topics/scenarios/vcenter-down/)
 - [VMware Morning Health Check](../../morning-health-check/)

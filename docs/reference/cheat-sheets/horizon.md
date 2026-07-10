@@ -88,5 +88,5 @@ Add-HVMachine -PoolName mypool -MachineCount 5 # add machines to pool
 
 ## See also
 
-- [Horizon Operations](../../../virtualization/vmware/horizon/operations/procedures/)
-- [Horizon Troubleshooting](../../../virtualization/vmware/horizon/troubleshooting/common-issues/)
+- [Horizon Operations](../../../virtualization/vmware/products/horizon/operations/procedures/)
+- [Horizon Troubleshooting](../../../virtualization/vmware/products/horizon/troubleshooting/common-issues/)

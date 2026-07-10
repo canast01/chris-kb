@@ -141,6 +141,6 @@ SnapMirror -> AWS
 ## See also
 
 - [Cheat Sheets](../cheat-sheets/) — top-10 CLI commands per product
-- [VCF Architecture](../../virtualization/vmware/vmware-cloud-foundation/architecture/)
-- [NSX Architecture](../../virtualization/vmware/nsx/architecture/)
-- [vSAN Architecture](../../virtualization/vmware/vsan/architecture/)
+- [VCF Architecture](../../virtualization/vmware/products/vmware-cloud-foundation/architecture/)
+- [NSX Architecture](../../virtualization/vmware/products/nsx/architecture/)
+- [vSAN Architecture](../../virtualization/vmware/products/vsan/architecture/)

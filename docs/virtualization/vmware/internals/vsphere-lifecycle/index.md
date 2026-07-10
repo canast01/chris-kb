@@ -431,5 +431,5 @@ VM templates in Content Library support versioning. When you update a template (
 - [vSphere Networking Concepts](../vsphere-networking/)
 - [Cluster Services — DRS, HA, and FT](../cluster-services/)
 - [vSphere Security Concepts](../vsphere-security/)
-- [ESXi Host Operations](../../esxi/)
-- [vCenter Architecture](../../vcenter/architecture/)
+- [ESXi Host Operations](../../products/esxi/)
+- [vCenter Architecture](../../products/vcenter/architecture/)

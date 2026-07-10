@@ -161,5 +161,5 @@ The `vcha.failover` operation is idempotent if passive is already active; return
 ## See also
 
 - [Scenarios — vCenter HA Failover](../../topics/scenarios/vcenter-ha-failover/)
-- [vCenter — Operations](../../vcenter/operations/)
+- [vCenter — Operations](../../products/vcenter/operations/)
 - [HA Deep Dive — Internals](../ha-deep-dive/)

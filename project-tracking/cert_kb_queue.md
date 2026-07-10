@@ -160,23 +160,23 @@ community standard). Research via WebSearch, verify, don't assume from memory.
 
 ### Virtualization
 - [ ] virtualization/openshift
-- [ ] virtualization/vmware/aria-automation
-- [ ] virtualization/vmware/aria-operations
-- [ ] virtualization/vmware/aria-operations-for-logs
-- [ ] virtualization/vmware/aria-operations-for-networks
-- [ ] virtualization/vmware/aria-suite-lifecycle
-- [ ] virtualization/vmware/esxi
-- [ ] virtualization/vmware/horizon
-- [ ] virtualization/vmware/nsx
-- [ ] virtualization/vmware/powercli
-- [ ] virtualization/vmware/srm
-- [ ] virtualization/vmware/tanzu
+- [ ] virtualization/vmware/products/aria-automation
+- [ ] virtualization/vmware/products/aria-operations
+- [ ] virtualization/vmware/products/aria-operations-for-logs
+- [ ] virtualization/vmware/products/aria-operations-for-networks
+- [ ] virtualization/vmware/products/aria-suite-lifecycle
+- [ ] virtualization/vmware/products/esxi
+- [ ] virtualization/vmware/products/horizon
+- [ ] virtualization/vmware/products/nsx
+- [ ] virtualization/vmware/products/powercli
+- [ ] virtualization/vmware/products/srm
+- [ ] virtualization/vmware/products/tanzu
 - [ ] virtualization/vmware/topics
-- [ ] virtualization/vmware/vcenter
-- [ ] virtualization/vmware/vmware-cloud-foundation
-- [ ] virtualization/vmware/vsan
-- [ ] virtualization/vmware/vsphere-replication
-- [ ] virtualization/vmware/vxrail
+- [ ] virtualization/vmware/products/vcenter
+- [ ] virtualization/vmware/products/vmware-cloud-foundation
+- [ ] virtualization/vmware/products/vsan
+- [ ] virtualization/vmware/products/vsphere-replication
+- [ ] virtualization/vmware/products/vxrail
 
 ## Phase B+ (not queued yet)
 

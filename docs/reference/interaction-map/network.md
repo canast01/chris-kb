@@ -42,5 +42,5 @@ BFD (Bidirectional Forwarding Detection) runs between Edge uplinks and ToR for s
 ## See also
 
 - [NSX Cheat Sheet](../../cheat-sheets/nsx/)
-- [NSX Architecture](../../../virtualization/vmware/nsx/architecture/)
+- [NSX Architecture](../../../virtualization/vmware/products/nsx/architecture/)
 - [Back to Interaction Map](index.md)

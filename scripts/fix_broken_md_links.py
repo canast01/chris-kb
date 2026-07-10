@@ -14,10 +14,10 @@ _MD_LINK = re.compile(r'(\[([^\]]+)\]\(([^)#?]+\.md)\))')
 
 # Known path corrections: (wrong_pattern, correct_replacement) — applied as string replacement
 PATH_FIXES = {
-    '../../vmware/vsan/index.md': '../../virtualization/vmware/vsan/index.md',
-    '../../vmware/vcenter/index.md': '../../virtualization/vmware/vcenter/index.md',
+    '../../vmware/vsan/index.md': '../../virtualization/vmware/products/vsan/index.md',
+    '../../vmware/vcenter/index.md': '../../virtualization/vmware/products/vcenter/index.md',
     '../../storage/ontap/index.md': '../../storage/products/netapp/ontap/index.md',
-    '../../../compute/vmware/nsx/security/index.md': '../../virtualization/vmware/nsx/security/index.md',
+    '../../../compute/vmware/nsx/security/index.md': '../../virtualization/vmware/products/nsx/security/index.md',
 }
 
 

@@ -59,9 +59,9 @@ vmware_layer -> resolution
 ## VMware Layer
 
 For VMware-specific issues within EVS, refer to:
-- [VMware vCenter — Known Issues](../../../../../virtualization/vmware/vcenter/troubleshooting/known-issues/)
-- [VMware vSAN — Known Issues](../../../../../virtualization/vmware/vsan/troubleshooting/known-issues/)
-- [VMware NSX — Known Issues](../../../../../virtualization/vmware/nsx/troubleshooting/known-issues/)
+- [VMware vCenter — Known Issues](../../../../../virtualization/vmware/products/vcenter/troubleshooting/known-issues/)
+- [VMware vSAN — Known Issues](../../../../../virtualization/vmware/products/vsan/troubleshooting/known-issues/)
+- [VMware NSX — Known Issues](../../../../../virtualization/vmware/products/nsx/troubleshooting/known-issues/)
 
 ## See also
 

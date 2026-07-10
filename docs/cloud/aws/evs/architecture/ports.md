@@ -133,6 +133,6 @@ Connection to 10.42.18.15 port 2233 [tcp/*] succeeded!
 
 - [AWS EVS — Architecture](../how-it-works/)
 - [AWS — Ports](../architecture/ports.md)
-- [VMware vSphere — Ports](../../../../virtualization/vmware/vcenter/architecture/ports.md)
-- [VMware vSAN — Ports](../../../../virtualization/vmware/vsan/architecture/ports.md)
-- [VMware NSX — Ports](../../../../virtualization/vmware/nsx/architecture/ports.md)
+- [VMware vSphere — Ports](../../../../virtualization/vmware/products/vcenter/architecture/ports.md)
+- [VMware vSAN — Ports](../../../../virtualization/vmware/products/vsan/architecture/ports.md)
+- [VMware NSX — Ports](../../../../virtualization/vmware/products/nsx/architecture/ports.md)

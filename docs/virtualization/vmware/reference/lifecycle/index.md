@@ -124,4 +124,4 @@ aria_suite -> validate
 
 - [VMware Interoperability Matrix](../interoperability/)
 - [VMware Upgrade Readiness](../upgrade-readiness/)
-- [VMware Design Standards](../../vcenter/architecture/design-standards/)
+- [VMware Design Standards](../../products/vcenter/architecture/design-standards/)

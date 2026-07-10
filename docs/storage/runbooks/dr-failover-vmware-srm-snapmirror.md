@@ -566,7 +566,7 @@ svm_prod:vol_prod_db01 svm_dr:vol_dr_db01 snapmirrored 00:12:15
 # Navigate: Site Recovery > Recovery Plans > <PlanName> > Cancel
 
 # Check SRM logs for failure reason
-# Primary SRM appliance: /var/log/vmware/srm/
+# Primary SRM appliance: /var/log/vmware/products/srm/
 # Or via: vCenter > Site Recovery > Logs
 ```
 
@@ -667,12 +667,12 @@ CHANGE TICKET:   __________________
 
 ## See Also
 
-- [VMware SRM Operations](/virtualization/vmware/srm/operations/)
-- [VMware SRM Architecture](/virtualization/vmware/srm/architecture/)
-- [VMware SRM Deploy](/virtualization/vmware/srm/deploy/)
+- [VMware SRM Operations](/virtualization/vmware/products/srm/operations/)
+- [VMware SRM Architecture](/virtualization/vmware/products/srm/architecture/)
+- [VMware SRM Deploy](/virtualization/vmware/products/srm/deploy/)
 - [SnapMirror Operations](/storage/products/netapp/snapmirror/operations/)
 - [SnapMirror Architecture](/storage/products/netapp/snapmirror/architecture/)
 - [SnapMirror Deploy](/storage/products/netapp/snapmirror/deploy/)
 - [ONTAP Operations](/storage/products/netapp/ontap/operations/)
-- [vSAN Architecture](/virtualization/vmware/vsan/architecture/)
+- [vSAN Architecture](/virtualization/vmware/products/vsan/architecture/)
 - [Storage Runbooks Index](/storage/runbooks/)

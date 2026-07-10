@@ -118,5 +118,5 @@ staging-cluster-03        Ready    2/2     Normal     15d
     **`error: the server doesn't have a resource type "tkc"`** — Ensure you are logged into the Supervisor cluster context (not a guest cluster), as TanzuKubernetesCluster objects only exist on the Supervisor.
 ## See also
 
-- [Tanzu Operations](../../../virtualization/vmware/tanzu/operations/procedures/)
-- [Tanzu Troubleshooting](../../../virtualization/vmware/tanzu/troubleshooting/common-issues/)
+- [Tanzu Operations](../../../virtualization/vmware/products/tanzu/operations/procedures/)
+- [Tanzu Troubleshooting](../../../virtualization/vmware/products/tanzu/troubleshooting/common-issues/)

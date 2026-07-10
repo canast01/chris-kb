@@ -234,7 +234,7 @@ esxcli system maintenanceMode set --enable true
 
 ## See Also
 
-- [VMware ESXi Operations](../../../virtualization/vmware/esxi/operations//)
-- [vCenter Operations](../../../virtualization/vmware/vcenter/operations//)
+- [VMware ESXi Operations](../../../virtualization/vmware/products/esxi/operations//)
+- [vCenter Operations](../../../virtualization/vmware/products/vcenter/operations//)
 - [INC-001: vCenter Server Unreachable](vcenter-unreachable.md)
 - [VMware Morning Health Check](../../../virtualization/vmware/operations/morning-health-check//)

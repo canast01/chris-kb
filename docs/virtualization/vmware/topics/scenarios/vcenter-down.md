@@ -172,7 +172,7 @@ Removing logs older than 30 days
 Cleaned up 2.3 GB from /var/log/vmware/vpxd/
 Cleaned up 1.1 GB from /var/log/vmware/sso/
 Cleaned up 856 MB from /var/log/vmware/vpostgres/
-Cleaned up 512 MB from /var/log/vmware/vsan/
+Cleaned up 512 MB from /var/log/vmware/products/vsan/
 Total disk space reclaimed: 4.8 GB
 Cleanup completed successfully at 2024-01-15 03:45:22 UTC
 ```

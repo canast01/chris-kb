@@ -62,7 +62,7 @@ B --> A: OK
    # SSH to any ESXi host in the cluster
    esxcli vsan storage list
    esxcli vsan cluster get
-   python3 /usr/lib/vmware/vsan/bin/vsan-health-status.py -c
+   python3 /usr/lib/vmware/products/vsan/bin/vsan-health-status.py -c
    ```
 
 3. **Check disk group health** — confirm no disks are in a degraded state:

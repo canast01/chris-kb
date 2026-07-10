@@ -317,7 +317,7 @@ Overall status : ☐ All clear  ☐ Monitoring  ☐ Incident open (ticket: _____
 
 ## See also
 
-- [vCenter — Operations](../../vcenter/operations/) — detailed vCenter CLI and service reference
+- [vCenter — Operations](../../products/vcenter/operations/) — detailed vCenter CLI and service reference
 - [vSAN Cluster Health Internals](../../internals/vsan-cluster-health/) — object state machine and resync mechanics
 - [NSX Data Plane Internals](../../internals/nsx-data-plane/) — TEP, BFD, DFW fast path
 - [Runbooks](../runbooks/) — step-by-step procedures for specific operational tasks

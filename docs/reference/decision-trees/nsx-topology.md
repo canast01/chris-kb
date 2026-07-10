@@ -69,6 +69,6 @@ N -> P
 ## See also
 
 - [NSX Cheat Sheet](../../cheat-sheets/nsx/)
-- [NSX Architecture](../../../virtualization/vmware/nsx/architecture/)
+- [NSX Architecture](../../../virtualization/vmware/products/nsx/architecture/)
 - [NSX Network Interaction Map](../../interaction-map/network/)
 - [Back to Decision Trees](index.md)

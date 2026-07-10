@@ -10,87 +10,95 @@ search:
 VMware platform knowledge base covering the full VMware stack — vCenter, ESXi, vSAN, NSX, VCF, VxRail, Horizon, SRM, vSphere Replication, and the Aria Suite. Includes architecture references, operational procedures, CLI commands, health checks, lifecycle management, and troubleshooting guides.
 </div>
 
+## Products
+
 <div class="kb-grid kb-grid-3">
 
-<a class="kb-card" href="vcenter/">
+<a class="kb-card" href="products/vcenter/">
   <strong>vCenter</strong>
   <span>Management control plane, inventory, RBAC, alarms, vLCM, and SSO.</span>
 </a>
 
-<a class="kb-card" href="esxi/">
+<a class="kb-card" href="products/esxi/">
   <strong>ESXi</strong>
   <span>Type-1 hypervisor, host configuration, networking, and storage.</span>
 </a>
 
-<a class="kb-card" href="vsan/">
+<a class="kb-card" href="products/vsan/">
   <strong>vSAN</strong>
   <span>Software-defined storage, disk groups, storage policies, and health.</span>
 </a>
 
-<a class="kb-card" href="nsx/">
+<a class="kb-card" href="products/nsx/">
   <strong>NSX</strong>
   <span>Software-defined networking, segments, gateways, and distributed firewall.</span>
 </a>
 
-<a class="kb-card" href="vmware-cloud-foundation/">
+<a class="kb-card" href="products/vmware-cloud-foundation/">
   <strong>VMware Cloud Foundation</strong>
   <span>Full SDDC stack delivery, SDDC Manager lifecycle, and workload domains.</span>
 </a>
 
-<a class="kb-card" href="vxrail/">
+<a class="kb-card" href="products/vxrail/">
   <strong>VxRail</strong>
   <span>Dell HCI appliance, VxRail Manager, node expansion, and lifecycle.</span>
 </a>
 
-<a class="kb-card" href="aria-operations/">
+<a class="kb-card" href="products/aria-operations/">
   <strong>Aria Operations</strong>
   <span>Monitoring, alerting, capacity analytics, and vSAN dashboards.</span>
 </a>
 
-<a class="kb-card" href="aria-operations-for-logs/">
+<a class="kb-card" href="products/aria-operations-for-logs/">
   <strong>Aria Operations for Logs</strong>
   <span>Log aggregation, analysis, and alerting across the VMware platform.</span>
 </a>
 
-<a class="kb-card" href="aria-operations-for-networks/">
+<a class="kb-card" href="products/aria-operations-for-networks/">
   <strong>Aria Operations for Networks</strong>
   <span>Network visibility, flow analysis, and security posture across NSX and physical.</span>
 </a>
 
-<a class="kb-card" href="aria-automation/">
+<a class="kb-card" href="products/aria-automation/">
   <strong>Aria Automation</strong>
   <span>IaC blueprints, self-service catalogue, and cloud template deployment.</span>
 </a>
 
-<a class="kb-card" href="aria-suite-lifecycle/">
+<a class="kb-card" href="products/aria-suite-lifecycle/">
   <strong>Aria Suite Lifecycle</strong>
   <span>Lifecycle orchestrator for deploying, patching, and upgrading the Aria Suite.</span>
 </a>
 
-<a class="kb-card" href="horizon/">
+<a class="kb-card" href="products/horizon/">
   <strong>Horizon</strong>
   <span>Virtual desktop infrastructure, application publishing, and Connection Server.</span>
 </a>
 
-<a class="kb-card" href="srm/">
+<a class="kb-card" href="products/srm/">
   <strong>Site Recovery Manager</strong>
   <span>DR orchestration, recovery plans, failover, and failback.</span>
 </a>
 
-<a class="kb-card" href="vsphere-replication/">
+<a class="kb-card" href="products/vsphere-replication/">
   <strong>vSphere Replication</strong>
   <span>VM replication to secondary sites, RPO configuration, and recovery.</span>
 </a>
 
-<a class="kb-card" href="tanzu/">
+<a class="kb-card" href="products/tanzu/">
   <strong>Tanzu</strong>
   <span>Kubernetes workload domains, cluster provisioning, and container platform.</span>
 </a>
 
-<a class="kb-card" href="powercli/">
+<a class="kb-card" href="products/powercli/">
   <strong>PowerCLI</strong>
   <span>VMware PowerShell automation: module reference, scripts, health checks, RBAC, and vSphere API access.</span>
 </a>
+
+</div>
+
+## Cross-Cutting Topics
+
+<div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="topics/">
   <strong>Topics</strong>

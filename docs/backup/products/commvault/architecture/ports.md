@@ -169,4 +169,4 @@ Connection to 192.168.1.50 port 8400 (tcp) succeeded!
 - [Commvault — Deploy](../../deploy/)
 - [Commvault — Operations](../../operations/)
 - [Veeam — Ports](../../veeam/architecture/ports.md)
-- [vCenter — Ports](../../../../virtualization/vmware/vcenter/architecture/ports.md)
+- [vCenter — Ports](../../../../virtualization/vmware/products/vcenter/architecture/ports.md)

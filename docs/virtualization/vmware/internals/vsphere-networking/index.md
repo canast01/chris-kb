@@ -415,4 +415,4 @@ DSwitch-Prod-02      vmnic5  Up      10Gbps  Full
 - [Cluster Services — DRS, HA, and vSAN](../cluster-services/)
 - [vSphere Storage Concepts](../vsphere-storage/)
 - [vSphere Lifecycle Management](../vsphere-lifecycle/)
-- [ESXi Host Operations](../../esxi/)
+- [ESXi Host Operations](../../products/esxi/)

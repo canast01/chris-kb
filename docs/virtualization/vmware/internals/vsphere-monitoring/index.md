@@ -750,5 +750,5 @@ Timestamp            Value
 - [vSphere Networking Concepts](../vsphere-networking/)
 - [Cluster Services — DRS, HA, and vSAN](../cluster-services/)
 - [vSphere Lifecycle Management](../vsphere-lifecycle/)
-- [ESXi Troubleshooting](../../esxi/)
-- [Aria Operations](../../aria-operations/)
+- [ESXi Troubleshooting](../../products/esxi/)
+- [Aria Operations](../../products/aria-operations/)

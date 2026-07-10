@@ -169,6 +169,6 @@ curl: (7) Failed to connect to nsx-mgr port 443: Name or service not known
     **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag already ignores SSL warnings; if curl still fails, ensure NSX Manager is reachable and not blocked by firewall rules.
 ## See also
 
-- [NSX Operations](../../../virtualization/vmware/nsx/operations/procedures/)
-- [NSX Troubleshooting](../../../virtualization/vmware/nsx/troubleshooting/common-issues/)
-- [NSX Health Checks](../../../virtualization/vmware/nsx/operations/health-checks/)
+- [NSX Operations](../../../virtualization/vmware/products/nsx/operations/procedures/)
+- [NSX Troubleshooting](../../../virtualization/vmware/products/nsx/troubleshooting/common-issues/)
+- [NSX Health Checks](../../../virtualization/vmware/products/nsx/operations/health-checks/)

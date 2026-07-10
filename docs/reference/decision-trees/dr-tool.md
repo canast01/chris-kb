@@ -70,5 +70,5 @@ M -> N
 
 - [SRM Cheat Sheet](../../cheat-sheets/srm/)
 - [vSphere Replication Cheat Sheet](../../cheat-sheets/vsphere-replication/)
-- [SRM Architecture](../../../virtualization/vmware/srm/architecture/)
+- [SRM Architecture](../../../virtualization/vmware/products/srm/architecture/)
 - [Back to Decision Trees](index.md)

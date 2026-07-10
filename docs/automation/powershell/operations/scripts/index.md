@@ -13,7 +13,7 @@ General-purpose PowerShell automation patterns — ITSM scripts for daily checks
 
 See also:
 - [Windows Server Scripts](../../../../compute/windows-server/operations/scripts/) — remote health checks, cert expiry monitoring, service health, script runners
-- [PowerCLI Scripts](../../../../virtualization/vmware/powercli/operations/scripts/) — VMware vSphere inventory, snapshot audit, host reports
+- [PowerCLI Scripts](../../../../virtualization/vmware/products/powercli/operations/scripts/) — VMware vSphere inventory, snapshot audit, host reports
 
 ---
 

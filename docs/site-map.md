@@ -21,7 +21,7 @@ security_compliance -> automation_tooling: uses
 
 | Section | Sub-sections |
 |---|---|
-| [Virtualization](virtualization/index.md) | [VMware](virtualization/vmware/index.md) · [OpenShift](virtualization/openshift/index.md) · [VxRail](virtualization/vmware/vxrail/index.md) · [Operations](virtualization/vmware/operations/index.md) · [Reference](virtualization/vmware/reference/index.md) |
+| [Virtualization](virtualization/index.md) | [VMware](virtualization/vmware/index.md) · [OpenShift](virtualization/openshift/index.md) · [VxRail](virtualization/vmware/products/vxrail/index.md) · [Operations](virtualization/vmware/operations/index.md) · [Reference](virtualization/vmware/reference/index.md) |
 | [Storage](storage/index.md) | [Dell](storage/products/dell/index.md) · [Pure Storage](storage/products/pure/index.md) · [NetApp](storage/products/netapp/index.md) · [Ceph](storage/products/ceph/index.md) · [Storage Design](storage/storage-design/index.md) · [Runbooks](storage/runbooks/index.md) |
 | [SAN](san/index.md) | [Cisco MDS](san/cisco/index.md) · [Brocade](san/brocade/index.md) |
 | [Compute](compute/index.md) | [Windows Server](compute/windows-server/index.md) · [Linux](compute/linux/index.md) · [Local AI & GPU](compute/local-ai/index.md) · [High CPU](compute/linux/troubleshooting/high-cpu/index.md) |
@@ -33,22 +33,22 @@ security_compliance -> automation_tooling: uses
 
 | Product | Sub-sections |
 |---|---|
-| [vCenter](virtualization/vmware/vcenter/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [ESXi](virtualization/vmware/esxi/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [vSAN](virtualization/vmware/vsan/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [NSX](virtualization/vmware/nsx/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [VMware Cloud Foundation](virtualization/vmware/vmware-cloud-foundation/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [VxRail (VMware)](virtualization/vmware/vxrail/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Aria Operations](virtualization/vmware/aria-operations/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Aria Operations for Logs](virtualization/vmware/aria-operations-for-logs/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Aria Operations for Networks](virtualization/vmware/aria-operations-for-networks/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Aria Automation](virtualization/vmware/aria-automation/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Aria Suite Lifecycle](virtualization/vmware/aria-suite-lifecycle/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Horizon](virtualization/vmware/horizon/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [SRM](virtualization/vmware/srm/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [vSphere Replication](virtualization/vmware/vsphere-replication/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Tanzu](virtualization/vmware/tanzu/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [PowerCLI](virtualization/vmware/powercli/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [vCenter](virtualization/vmware/products/vcenter/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [ESXi](virtualization/vmware/products/esxi/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [vSAN](virtualization/vmware/products/vsan/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [NSX](virtualization/vmware/products/nsx/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [VMware Cloud Foundation](virtualization/vmware/products/vmware-cloud-foundation/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [VxRail (VMware)](virtualization/vmware/products/vxrail/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Aria Operations](virtualization/vmware/products/aria-operations/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Aria Operations for Logs](virtualization/vmware/products/aria-operations-for-logs/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Aria Operations for Networks](virtualization/vmware/products/aria-operations-for-networks/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Aria Automation](virtualization/vmware/products/aria-automation/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Aria Suite Lifecycle](virtualization/vmware/products/aria-suite-lifecycle/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Horizon](virtualization/vmware/products/horizon/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [SRM](virtualization/vmware/products/srm/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [vSphere Replication](virtualization/vmware/products/vsphere-replication/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Tanzu](virtualization/vmware/products/tanzu/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [PowerCLI](virtualization/vmware/products/powercli/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
 | [VMware Certifications](virtualization/vmware/certifications/index.md) | VCP-DCV · Products · Practice Notes · Exam Tracking · Weak Areas · Review Plan |
 | [VMware Topics](virtualization/vmware/topics/index.md) | Learning Path · Scenarios |
 | [VMware Internals](virtualization/vmware/internals/index.md) | Cluster Services · Networking · Permissions · Resource Management · Security · Storage |

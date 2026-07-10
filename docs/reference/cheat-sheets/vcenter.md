@@ -158,6 +158,6 @@ Tag: maintenance (ID: urn:vmomi:InventoryServiceTag:8b2f4e9c-1a7d-3f5e-9b6c-4d8a
     **`Error: Authentication failed for dcli command.`** — Run `dcli +server localhost +username administrator@vsphere.local` first to authenticate, or ensure your VCSA credentials are correct.
 ## See also
 
-- [vCenter Operations](../../../virtualization/vmware/vcenter/operations/procedures/)
-- [vCenter Troubleshooting](../../../virtualization/vmware/vcenter/troubleshooting/common-issues/)
+- [vCenter Operations](../../../virtualization/vmware/products/vcenter/operations/procedures/)
+- [vCenter Troubleshooting](../../../virtualization/vmware/products/vcenter/troubleshooting/common-issues/)
 - [PowerCLI Cheat Sheet](../powercli/)

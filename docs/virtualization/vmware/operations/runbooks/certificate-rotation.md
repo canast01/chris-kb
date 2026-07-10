@@ -243,7 +243,7 @@ Certificate:
 
 - [Certificate Chain — Internals](../../../internals/certificate-chain/)
 - [Scenarios — Certificate Expiry and Rotation](../../../topics/scenarios/certificate-expiry-rotation/)
-- [vCenter — Security](../../../vcenter/security/)
+- [vCenter — Security](../../../products/vcenter/security/)
 
 ---
 

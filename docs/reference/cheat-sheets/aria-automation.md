@@ -169,5 +169,5 @@ curl -sk $HDR $BASE/iaas/api/zones | python3 -m json.tool                  # clo
     **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command
 ## See also
 
-- [Aria Automation Procedures](../../../virtualization/vmware/aria-automation/operations/procedures/)
-- [Aria Automation Troubleshooting](../../../virtualization/vmware/aria-automation/troubleshooting/common-issues/)
+- [Aria Automation Procedures](../../../virtualization/vmware/products/aria-automation/operations/procedures/)
+- [Aria Automation Troubleshooting](../../../virtualization/vmware/products/aria-automation/troubleshooting/common-issues/)

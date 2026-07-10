@@ -160,5 +160,5 @@ curl -sk $HDR "$BASE/alerts" | python3 -m json.tool                      # confi
     **`curl: (401) Unauthorized`** — Confirm the SESSION variable contains a valid token by running `echo $SESSION` and verify the token hasn't expired; re-authenticate if necessary.
 ## See also
 
-- [Aria Logs Procedures](../../../virtualization/vmware/aria-operations-for-logs/operations/procedures/)
-- [Aria Logs Troubleshooting](../../../virtualization/vmware/aria-operations-for-logs/troubleshooting/common-issues/)
+- [Aria Logs Procedures](../../../virtualization/vmware/products/aria-operations-for-logs/operations/procedures/)
+- [Aria Logs Troubleshooting](../../../virtualization/vmware/products/aria-operations-for-logs/troubleshooting/common-issues/)

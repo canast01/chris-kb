@@ -58,8 +58,8 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [ESXi Architecture and Operations](../../../vmware/esxi/) | Host stack, VMkernel, storage adapters, networking adapters |
-| [vCenter Architecture](../../../vmware/vcenter/) | vCenter Server Appliance topology, PSC integration, SSO |
+| [ESXi Architecture and Operations](../../../vmware/products/esxi/) | Host stack, VMkernel, storage adapters, networking adapters |
+| [vCenter Architecture](../../../vmware/products/vcenter/) | vCenter Server Appliance topology, PSC integration, SSO |
 
 ---
 
@@ -69,7 +69,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vCenter Architecture](../../../vmware/vcenter/architecture/) | VCSA deployment, PSC, SSO, VCHA active/passive/witness |
+| [vCenter Architecture](../../../vmware/products/vcenter/architecture/) | VCSA deployment, PSC, SSO, VCHA active/passive/witness |
 
 ---
 
@@ -80,7 +80,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 | KB Reference | Content |
 |---|---|
 | [vSphere Storage Concepts](../../internals/vsphere-storage/) | All storage protocols, SPBM, vVOLs, RDMs, SIOC, datastore clusters |
-| [vSAN Architecture](../../../vmware/vsan/architecture/) | vSAN cluster architecture, fault domains, policies |
+| [vSAN Architecture](../../../vmware/products/vsan/architecture/) | vSAN cluster architecture, fault domains, policies |
 
 > **VCP-DCV Exam Note:** **VAAI** offloads storage operations (full copy, block zero, locking) to the array. **VASA** allows arrays to report their capabilities to vCenter for SPBM policy matching. **SPBM** is the policy layer that maps VM storage requirements to datastore capabilities — it is the link between VASA (what the array can do) and VM storage profiles (what the VM needs).
 
@@ -122,7 +122,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSAN Architecture](../../../vmware/vsan/architecture/) | Disk groups, fault domains, FTT, vSAN policies |
+| [vSAN Architecture](../../../vmware/products/vsan/architecture/) | Disk groups, fault domains, FTT, vSAN policies |
 
 ---
 
@@ -172,7 +172,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vCenter Operations](../../../vmware/vcenter/operations/) | VMware Tools management, updating, open-vm-tools |
+| [vCenter Operations](../../../vmware/products/vcenter/operations/) | VMware Tools management, updating, open-vm-tools |
 
 ---
 
@@ -182,7 +182,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [Tanzu on vSphere](../../../vmware/tanzu/) | Supervisor cluster, Namespaces, vSphere Pods, TKG |
+| [Tanzu on vSphere](../../../vmware/products/tanzu/) | Supervisor cluster, Namespaces, vSphere Pods, TKG |
 
 ---
 
@@ -194,7 +194,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [VMware Cloud Foundation](../../../vmware/vmware-cloud-foundation/) | VCF architecture, BOM, SDDC Manager, bring-up process |
+| [VMware Cloud Foundation](../../../vmware/products/vmware-cloud-foundation/) | VCF architecture, BOM, SDDC Manager, bring-up process |
 
 ---
 
@@ -204,8 +204,8 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [Site Recovery Manager (SRM)](../../../vmware/srm/) | SRM architecture, protection groups, recovery plans |
-| [vSphere Replication](../../../vmware/vsphere-replication/) | Replication targets, RPO configuration, failover |
+| [Site Recovery Manager (SRM)](../../../vmware/products/srm/) | SRM architecture, protection groups, recovery plans |
+| [vSphere Replication](../../../vmware/products/vsphere-replication/) | Replication targets, RPO configuration, failover |
 
 > **VCP-DCV Exam Note:** **RTO** (Recovery Time Objective) is how long recovery takes. **RPO** (Recovery Point Objective) is how much data loss is acceptable. vSphere Replication minimum RPO is **5 minutes**. SRM orchestrates the failover — it does not replicate data itself. SRM can use vSphere Replication or array-based replication as the underlying data transport.
 
@@ -219,7 +219,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vCenter Security and SSO](../../../vmware/vcenter/architecture/) | SSO domains, identity sources, STS token configuration |
+| [vCenter Security and SSO](../../../vmware/products/vcenter/architecture/) | SSO domains, identity sources, STS token configuration |
 
 ---
 
@@ -239,7 +239,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vCenter Deployment](../../../vmware/vcenter/deploy/) | VCSA installer, deployment sizing, initial configuration |
+| [vCenter Deployment](../../../vmware/products/vcenter/deploy/) | VCSA installer, deployment sizing, initial configuration |
 
 ---
 
@@ -259,7 +259,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vCenter Architecture — How It Works](../../../vmware/vcenter/architecture/how-it-works/) | VCHA topology, failover triggers, RPO (near-zero) |
+| [vCenter Architecture — How It Works](../../../vmware/products/vcenter/architecture/how-it-works/) | VCHA topology, failover triggers, RPO (near-zero) |
 
 ---
 
@@ -290,7 +290,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 | KB Reference | Content |
 |---|---|
 | [PKI and Certificate Management](../../../../security/certificates/) | VMCA, certificate replacement, VECS, certificate stores |
-| [vCenter Security](../../../vmware/vcenter/) | Certificate management from vCenter UI and certmgr |
+| [vCenter Security](../../../vmware/products/vcenter/) | Certificate management from vCenter UI and certmgr |
 
 ---
 
@@ -330,7 +330,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [ESXi Security](../../../vmware/esxi/) | Lockdown modes, firewall, SSH/Shell management, syslog |
+| [ESXi Security](../../../vmware/products/esxi/) | Lockdown modes, firewall, SSH/Shell management, syslog |
 
 ---
 
@@ -340,7 +340,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [Tanzu Deployment](../../../vmware/tanzu/deploy/) | Supervisor cluster enablement, Namespace configuration |
+| [Tanzu Deployment](../../../vmware/products/tanzu/deploy/) | Supervisor cluster enablement, Namespace configuration |
 
 ---
 
@@ -373,7 +373,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vCenter Operations — Snapshots](../../../vmware/vcenter/operations/) | Snapshot chains, delta disk types, consolidation, impact |
+| [vCenter Operations — Snapshots](../../../vmware/products/vcenter/operations/) | Snapshot chains, delta disk types, consolidation, impact |
 
 ---
 
@@ -438,7 +438,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vCenter Operations — Snapshots](../../../vmware/vcenter/operations/) | Snapshot workflow, consolidation, disk growth, best practices |
+| [vCenter Operations — Snapshots](../../../vmware/products/vcenter/operations/) | Snapshot workflow, consolidation, disk growth, best practices |
 
 ---
 
@@ -448,7 +448,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vCenter Operations](../../../vmware/vcenter/operations/) | vMotion, Storage vMotion, VM hardware configuration |
+| [vCenter Operations](../../../vmware/products/vcenter/operations/) | vMotion, Storage vMotion, VM hardware configuration |
 
 ---
 

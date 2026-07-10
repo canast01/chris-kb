@@ -269,5 +269,5 @@ Also confirm:
 
 - [ONTAP SnapMirror Operations](../../../storage/products/netapp/ontap/operations//)
 - [DR Failover Runbook](../../storage/runbooks/dr-failover-vmware-srm-snapmirror.md)
-- [VMware SRM Operations](../../../virtualization/vmware/srm/operations//)
+- [VMware SRM Operations](../../../virtualization/vmware/products/srm/operations//)
 - [Monitoring Thresholds Reference](../monitoring-thresholds/index.md)

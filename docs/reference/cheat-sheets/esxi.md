@@ -138,6 +138,6 @@ MEMORY STATS (MB): 262144 TOTAL, 198456 VMKERNL, 45678 OTHER, 18010 FREE
     **`/tmp/esxtop.csv: Permission denied`** — Run the command with elevated privileges or redirect output to a writable directory like /var/tmp instead.
 ## See also
 
-- [ESXi Operations](../../../virtualization/vmware/esxi/operations/procedures/)
-- [ESXi Troubleshooting](../../../virtualization/vmware/esxi/troubleshooting/common-issues/)
+- [ESXi Operations](../../../virtualization/vmware/products/esxi/operations/procedures/)
+- [ESXi Troubleshooting](../../../virtualization/vmware/products/esxi/troubleshooting/common-issues/)
 - [PowerCLI Cheat Sheet](../powercli/)
