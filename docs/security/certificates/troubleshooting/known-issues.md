@@ -80,5 +80,5 @@ general_tls -> resolution
 ## See also
 
 - [Certificates — Common Issues](../common-issues/)
-- [Venafi — Known Issues](../../venafi/troubleshooting/known-issues.md)
+- [Venafi — Known Issues](../../products/venafi/troubleshooting/known-issues.md)
 - [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues.md)

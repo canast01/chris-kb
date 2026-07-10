@@ -119,8 +119,8 @@ community standard). Research via WebSearch, verify, don't assume from memory.
 
 ### Security
 - [ ] security/certificates
-- [ ] security/cyberark
-- [ ] security/venafi
+- [ ] security/products/cyberark
+- [ ] security/products/venafi
 
 ### Storage — Ceph
 - [ ] storage/products/ceph

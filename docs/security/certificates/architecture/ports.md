@@ -123,5 +123,5 @@ http://ocsp.digicert.com
 ## See also
 
 - [Certificates — Architecture](../how-it-works/)
-- [Venafi — Ports](../../venafi/architecture/ports.md)
+- [Venafi — Ports](../../products/venafi/architecture/ports.md)
 - [Active Directory — Ports](../../../compute/windows-server/active-directory/architecture/ports.md)

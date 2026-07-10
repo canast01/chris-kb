@@ -12,24 +12,19 @@ Security reference: Standard LDAP Integration, Standard SAML Configuration, Acti
 
 ![Security — Diagram](../assets/security-diagram.svg)
 
-## Shared Reference
+## Products
 
 <div class="kb-grid kb-grid-3">
+<a class="kb-card" href="products/cyberark/"><strong>CyberArk</strong><span>PAM platform — vault, safes, CPM rotation, PSM session recording, architecture, and operations.</span></a>
+<a class="kb-card" href="products/venafi/"><strong>Venafi</strong><span>Machine identity management — certificate lifecycle, policy, automation, and CA integration.</span></a>
+</div>
+
+## Cross-Cutting Topics
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="certificates/"><strong>Certificates</strong><span>PKI architecture, certificate standards, lifecycle, renewal, chain management, and troubleshooting.</span></a>
 <a class="kb-card" href="ldap-integration/"><strong>Standard LDAP Integration</strong><span>Canonical LDAP/AD field reference, service account standards, TLS requirements, connectivity testing, and common issues.</span></a>
 <a class="kb-card" href="saml-configuration/"><strong>Standard SAML Configuration</strong><span>SAML 2.0 SSO reference: SP/IdP setup, Azure AD and Okta steps, attribute mapping, security requirements, and troubleshooting.</span></a>
-</div>
-
-## Platforms
-
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="cyberark/"><strong>CyberArk</strong><span>PAM platform — vault, safes, CPM rotation, PSM session recording, architecture, and operations.</span></a>
-<a class="kb-card" href="venafi/"><strong>Venafi</strong><span>Machine identity management — certificate lifecycle, policy, automation, and CA integration.</span></a>
-<a class="kb-card" href="certificates/"><strong>Certificates</strong><span>PKI architecture, certificate standards, lifecycle, renewal, chain management, and troubleshooting.</span></a>
-</div>
-
-## Operations
-
-<div class="kb-grid kb-grid-3">
 <a class="kb-card" href="access-review/"><strong>Access Review</strong><span>Periodic review of user and service account access rights to enforce least privilege.</span></a>
 <a class="kb-card" href="compliance-standards/"><strong>Compliance Standards</strong><span>CIS, NIST, ISO 27001, PCI, and internal compliance frameworks with audit mapping.</span></a>
 <a class="kb-card" href="incident-handling/"><strong>Incident Handling</strong><span>Security incident response: detection, containment, eradication, recovery, and lessons learned.</span></a>
