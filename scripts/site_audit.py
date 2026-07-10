@@ -43,6 +43,7 @@ def all_md():
 # Directories that are intentionally card-free (asset, PWA, navigation-only)
 CARDLESS_DIRS = {
     'learning-path',        # navigation page — appears via auto-nav, no card needed
+    'products',             # organizational wrapper — children get individual cards
     'offline',              # MkDocs offline plugin output dir
     'stats',                # MkDocs stats plugin output dir
     'images',               # personal/blog images — not KB content

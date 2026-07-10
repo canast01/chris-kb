@@ -64,5 +64,5 @@ storage -> resolution
 
 ## See also
 
-- [Veeam — Known Issues](../../veeam/troubleshooting/known-issues.md)
+- [Veeam — Known Issues](../../products/veeam/troubleshooting/known-issues.md)
 - [VMware SRM — Known Issues](../../../virtualization/vmware/srm/troubleshooting/known-issues.md)

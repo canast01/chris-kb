@@ -12,17 +12,17 @@ Enterprise backup and disaster recovery — Veeam, Commvault, and NetBackup back
 
 <div class="kb-grid kb-grid-3">
 
-<a class="kb-card" href="veeam/">
+<a class="kb-card" href="products/veeam/">
   <strong>Veeam</strong>
   <span>VM and physical backup, replication, instant recovery, and Veeam ONE monitoring.</span>
 </a>
 
-<a class="kb-card" href="commvault/">
+<a class="kb-card" href="products/commvault/">
   <strong>Commvault</strong>
   <span>Enterprise data platform — backup, archive, compliance, and cloud integration.</span>
 </a>
 
-<a class="kb-card" href="netbackup/">
+<a class="kb-card" href="products/netbackup/">
   <strong>NetBackup</strong>
   <span>Enterprise backup for VMs, physical servers, databases, and tape infrastructure.</span>
 </a>

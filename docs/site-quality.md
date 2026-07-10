@@ -6,15 +6,15 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 
 ![Site Quality Dashboard — Diagram](assets/site-quality-diagram.svg)
 
-Generated: 2026-07-09
+Generated: 2026-07-10
 
 ## Current state
 
 | Item | Count |
 |---|---:|
-| Total markdown pages | 2,847 |
+| Total markdown pages | 2,848 |
 | Sections | 11 |
-| Pages with kb-summary | 2,567 |
+| Pages with kb-summary | 2,568 |
 | Pages with full-width ASCII diagram | 155 |
 | Pages with SVG diagrams | 1,450 |
 | Pages with Mermaid diagrams | 44 |

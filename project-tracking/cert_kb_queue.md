@@ -87,9 +87,9 @@ community standard). Research via WebSearch, verify, don't assume from memory.
 - [ ] automation/terraform
 
 ### Backup
-- [ ] backup/commvault
-- [ ] backup/netbackup
-- [ ] backup/veeam
+- [ ] backup/products/commvault
+- [ ] backup/products/netbackup
+- [ ] backup/products/veeam
 
 ### Cloud
 - [ ] cloud/aws

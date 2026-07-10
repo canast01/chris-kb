@@ -161,6 +161,6 @@ Home → Last 24 Hours → select SureBackup session → Statistics
 ## See Also
 
 - [Veeam Cheat Sheet](../../cheat-sheets/veeam-powershell/) — top CLI and PowerShell commands
-- [Veeam Architecture Overview](../../../backup/veeam/architecture/)
-- [Veeam Health Check Runbook](../../../backup/veeam/operations/health-checks/)
+- [Veeam Architecture Overview](../../../backup/products/veeam/architecture/)
+- [Veeam Health Check Runbook](../../../backup/products/veeam/operations/health-checks/)
 - [vSphere Day 1](../vsphere-day1/) — start here if vSphere is also new

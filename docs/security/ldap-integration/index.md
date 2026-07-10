@@ -186,7 +186,7 @@ Each product documents its exact configuration path and any non-standard field n
 - [vCenter — Authentication](../../virtualization/vmware/vcenter/security/authentication//)
 - [NSX — Authentication](../../virtualization/vmware/nsx/security/authentication//)
 - [ONTAP — Authentication](../../storage/netapp/ontap/security/authentication//)
-- [Veeam — Authentication](../../backup/veeam/security/authentication/index.md)
+- [Veeam — Authentication](../../backup/products/veeam/security/authentication/index.md)
 
 ---
 

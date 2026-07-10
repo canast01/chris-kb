@@ -542,4 +542,4 @@ Protection group 'pg_prod' enabled successfully.
 - [Veeam + ONTAP SnapVault Integration](../veeam-ontap-snapvault-integration/)
 - [DR Failover: SRM + SnapMirror](../dr-failover-vmware-srm-snapmirror/)
 - [Pure Storage FlashArray](../../pure/flasharray/)
-- [Veeam Backup and Replication](../../../backup/veeam/)
+- [Veeam Backup and Replication](../../../backup/products/veeam/)
