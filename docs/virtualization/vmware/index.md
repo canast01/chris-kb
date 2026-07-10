@@ -110,7 +110,7 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
   <span>How vSphere works internally — cluster services, DRS scoring, HA math, VCHA, NSX data plane, vSAN health, certificate chain, vLCM, networking, and storage architecture.</span>
 </a>
 
-<a class="kb-card" href="certifications/">
+<a class="kb-card" href="../../certifications/vmware/">
   <strong>Certifications</strong>
   <span>VMware certification study notes — VCP-DCV, VCAP, exam tracking, practice notes, and review plans.</span>
 </a>

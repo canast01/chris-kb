@@ -20,7 +20,7 @@ Cloud-hosted AI and LLM API services — AWS Bedrock, Azure OpenAI, and the Open
   <span>OpenAI API usage, model selection, prompt patterns, rate limits, and security considerations.</span>
 </a>
 
-<a class="kb-card" href="certifications/">
+<a class="kb-card" href="../../certifications/ai/">
   <strong>Certifications</strong>
   <span>AI and ML certification study notes — exam tracking, practice notes, and review plans.</span>
 </a>

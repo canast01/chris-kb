@@ -29,6 +29,6 @@ Amazon Web Services knowledge base covering compute, storage, networking, identi
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>AWS CLI command reference by service with syntax, examples, and common patterns.</span></a>
 <a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Common issues, diagnostics, and escalation.</span></a>
 <a class="kb-card" href="evs/"><strong>Amazon EVS</strong><span>Elastic VMware Service — VCF on bare-metal EC2, NSX-T overlay, HCX migration, and Direct Connect integration.</span></a>
-<a class="kb-card" href="certifications/"><strong>Certifications</strong><span>AWS certification study notes — exam tracking, practice notes, weak areas, and review plans.</span></a>
+<a class="kb-card" href="../../certifications/aws/"><strong>Certifications</strong><span>AWS certification study notes — exam tracking, practice notes, weak areas, and review plans.</span></a>
 
 </div>

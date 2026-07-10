@@ -25,7 +25,7 @@ security_compliance -> automation_tooling: uses
 | [Storage](storage/index.md) | [Dell](storage/products/dell/index.md) · [Pure Storage](storage/products/pure/index.md) · [NetApp](storage/products/netapp/index.md) · [Ceph](storage/products/ceph/index.md) · [Storage Design](storage/storage-design/index.md) · [Runbooks](storage/runbooks/index.md) |
 | [SAN](san/index.md) | [Cisco MDS](san/cisco/index.md) · [Brocade](san/brocade/index.md) |
 | [Compute](compute/index.md) | [Windows Server](compute/windows-server/index.md) · [Linux](compute/linux/index.md) · [Local AI & GPU](compute/local-ai/index.md) · [High CPU](compute/linux/troubleshooting/high-cpu/index.md) |
-| [Certifications](certifications/index.md) | [SAN](certifications/san/index.md) · [Storage](certifications/storage/index.md) |
+| [Certifications](certifications/index.md) | [SAN](certifications/san/index.md) · [Storage](certifications/storage/index.md) · [VMware](certifications/vmware/index.md) · [AWS](certifications/aws/index.md) · [Azure](certifications/azure/index.md) · [Cloud AI](certifications/ai/index.md) |
 | [Cloud](cloud/index.md) | [AWS](cloud/aws/index.md) · [Azure](cloud/azure/index.md) · [Cloud AI](cloud/ai/index.md) |
 | [Networking](networking/index.md) | [Switching & Routing](networking/switching-routing/index.md) · [Network Services](networking/services/index.md) · [Network Security](networking/security/index.md) · [External Connectivity](networking/external-connectivity/index.md) · [Network Design](networking/network-design/index.md) · [Troubleshooting](networking/troubleshooting/index.md) · [Protocols](networking/protocols/index.md) |
 
@@ -49,7 +49,6 @@ security_compliance -> automation_tooling: uses
 | [vSphere Replication](virtualization/vmware/products/vsphere-replication/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
 | [Tanzu](virtualization/vmware/products/tanzu/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
 | [PowerCLI](virtualization/vmware/products/powercli/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [VMware Certifications](virtualization/vmware/certifications/index.md) | VCP-DCV · Products · Practice Notes · Exam Tracking · Weak Areas · Review Plan |
 | [VMware Topics](virtualization/vmware/topics/index.md) | Learning Path · Scenarios |
 | [VMware Internals](virtualization/vmware/internals/index.md) | Cluster Services · Networking · Permissions · Resource Management · Security · Storage |
 
@@ -103,9 +102,9 @@ security_compliance -> automation_tooling: uses
 
 | Section | Sub-sections |
 |---|---|
-| [AWS](cloud/aws/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting · Identity · Networking · Compute · Storage · Monitoring · Backup · Cost · Governance · CLI Reference · [Amazon EVS](cloud/aws/evs/index.md) · [Certifications](cloud/aws/certifications/index.md) |
-| [Azure](cloud/azure/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting · Identity · Networking · Compute · Storage · Monitoring · Backup/DR · Cost · Governance · CLI Reference · [Certifications](cloud/azure/certifications/index.md) |
-| [Cloud AI](cloud/ai/index.md) | [AWS Bedrock](cloud/ai/aws-bedrock/index.md) · [Azure OpenAI](cloud/ai/azure-openai/index.md) · [OpenAI API](cloud/ai/openai/index.md) · [Certifications](cloud/ai/certifications/index.md) |
+| [AWS](cloud/aws/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting · Identity · Networking · Compute · Storage · Monitoring · Backup · Cost · Governance · CLI Reference · [Amazon EVS](cloud/aws/evs/index.md) |
+| [Azure](cloud/azure/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting · Identity · Networking · Compute · Storage · Monitoring · Backup/DR · Cost · Governance · CLI Reference |
+| [Cloud AI](cloud/ai/index.md) | [AWS Bedrock](cloud/ai/aws-bedrock/index.md) · [Azure OpenAI](cloud/ai/azure-openai/index.md) · [OpenAI API](cloud/ai/openai/index.md) |
 
 ## Resilience & Recovery
 

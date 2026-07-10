@@ -26,6 +26,6 @@ Microsoft Azure knowledge base covering compute, storage, networking, identity, 
 <a class="kb-card" href="operations/"><strong>Operations</strong><span>Health checks, procedures, lifecycle, and operational runbooks.</span></a>
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>az CLI and Azure PowerShell command reference with syntax and common patterns.</span></a>
 <a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Common issues, diagnostics, and escalation.</span></a>
-<a class="kb-card" href="certifications/"><strong>Certifications</strong><span>Azure certification study notes — exam tracking, practice notes, weak areas, and review plans.</span></a>
+<a class="kb-card" href="../../certifications/azure/"><strong>Certifications</strong><span>Azure certification study notes — exam tracking, practice notes, weak areas, and review plans.</span></a>
 
 </div>
