@@ -92,6 +92,6 @@ Essential ONTAP CLI commands for cluster, SVM, volume, aggregate, network, SnapM
 
 ## See Also
 
-- [NetApp ONTAP Operations](../../../storage/netapp/ontap/operations/procedures/)
-- [NetApp ONTAP Health Checks](../../../storage/netapp/ontap/operations/health-checks/)
-- [NetApp ONTAP Troubleshooting](../../../storage/netapp/ontap/troubleshooting/common-issues/)
+- [NetApp ONTAP Operations](../../../storage/products/netapp/ontap/operations/procedures/)
+- [NetApp ONTAP Health Checks](../../../storage/products/netapp/ontap/operations/health-checks/)
+- [NetApp ONTAP Troubleshooting](../../../storage/products/netapp/ontap/troubleshooting/common-issues/)

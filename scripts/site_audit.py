@@ -555,7 +555,7 @@ if _missing_byb:
 issues = check(27, 'New platform section structure (OpenShift, Ceph, EVS)')
 _NEW_SECTIONS = {
     'virtualization/openshift': ['architecture', 'deploy', 'operations', 'security', 'troubleshooting'],
-    'storage/ceph':             ['architecture', 'deploy', 'operations', 'security', 'troubleshooting'],
+    'storage/products/ceph':             ['architecture', 'deploy', 'operations', 'security', 'troubleshooting'],
     'cloud/aws/evs':            ['architecture', 'deploy', 'operations', 'security', 'troubleshooting'],
 }
 for _section, _required in _NEW_SECTIONS.items():

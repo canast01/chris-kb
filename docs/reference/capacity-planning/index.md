@@ -316,5 +316,5 @@ Use this table as a starting point for capacity reviews. Complete a new copy at 
 ## See Also
 
 - [vSAN](../../virtualization/vmware/vsan/index.md) — Detailed vSAN capacity, policy, and health-check procedures
-- [ONTAP](../../storage/netapp/ontap/index.md) — NetApp ONTAP storage capacity management and efficiency features
+- [ONTAP](../../storage/products/netapp/ontap/index.md) — NetApp ONTAP storage capacity management and efficiency features
 - [vCenter](../../virtualization/vmware/vcenter/index.md) — Cluster monitoring, DRS configuration, and performance baselines

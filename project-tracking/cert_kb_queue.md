@@ -123,40 +123,40 @@ community standard). Research via WebSearch, verify, don't assume from memory.
 - [ ] security/venafi
 
 ### Storage — Ceph
-- [ ] storage/ceph
+- [ ] storage/products/ceph
 
 ### Storage — Dell
-- [ ] storage/dell/apex-storage-as-a-service
-- [ ] storage/dell/cloudiq
-- [ ] storage/dell/cod
-- [ ] storage/dell/data-domain
-- [ ] storage/dell/dell-aiops
-- [ ] storage/dell/ecs
-- [ ] storage/dell/fod
-- [ ] storage/dell/powermax
-- [ ] storage/dell/powerpath
-- [ ] storage/dell/powerscale
-- [ ] storage/dell/powerstore
-- [ ] storage/dell/recoverpoint
-- [ ] storage/dell/srdf-a
-- [ ] storage/dell/srdf-s
-- [ ] storage/dell/unity
-- [ ] storage/dell/vplex
+- [ ] storage/products/dell/apex-storage-as-a-service
+- [ ] storage/products/dell/cloudiq
+- [ ] storage/products/dell/cod
+- [ ] storage/products/dell/data-domain
+- [ ] storage/products/dell/dell-aiops
+- [ ] storage/products/dell/ecs
+- [ ] storage/products/dell/fod
+- [ ] storage/products/dell/powermax
+- [ ] storage/products/dell/powerpath
+- [ ] storage/products/dell/powerscale
+- [ ] storage/products/dell/powerstore
+- [ ] storage/products/dell/recoverpoint
+- [ ] storage/products/dell/srdf-a
+- [ ] storage/products/dell/srdf-s
+- [ ] storage/products/dell/unity
+- [ ] storage/products/dell/vplex
 
 ### Storage — NetApp
-- [ ] storage/netapp/insightiq
-- [ ] storage/netapp/keystone
-- [ ] storage/netapp/ontap
-- [ ] storage/netapp/snapcenter
-- [ ] storage/netapp/snapmirror
-- [ ] storage/netapp/superna-eyeglass
+- [ ] storage/products/netapp/insightiq
+- [ ] storage/products/netapp/keystone
+- [ ] storage/products/netapp/ontap
+- [ ] storage/products/netapp/snapcenter
+- [ ] storage/products/netapp/snapmirror
+- [ ] storage/products/netapp/superna-eyeglass
 
 ### Storage — Pure
-- [ ] storage/pure/evergreen
-- [ ] storage/pure/evergreen-one
-- [ ] storage/pure/flasharray
-- [ ] storage/pure/flashblade
-- [ ] storage/pure/pure1
+- [ ] storage/products/pure/evergreen
+- [ ] storage/products/pure/evergreen-one
+- [ ] storage/products/pure/flasharray
+- [ ] storage/products/pure/flashblade
+- [ ] storage/products/pure/pure1
 
 ### Virtualization
 - [ ] virtualization/openshift

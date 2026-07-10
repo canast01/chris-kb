@@ -564,9 +564,9 @@ Volume restore from snapshot "hourly.2024-01-15_0600" has been initiated on volu
 
 ## See Also
 
-- [ONTAP Operations](/storage/netapp/ontap/operations/)
-- [ONTAP Architecture](/storage/netapp/ontap/architecture/)
+- [ONTAP Operations](/storage/products/netapp/ontap/operations/)
+- [ONTAP Architecture](/storage/products/netapp/ontap/architecture/)
 - [vSAN Operations](/virtualization/vmware/vsan/operations/)
 - [vSAN Architecture](/virtualization/vmware/vsan/architecture/)
-- [SnapMirror Operations](/storage/netapp/snapmirror/operations/)
+- [SnapMirror Operations](/storage/products/netapp/snapmirror/operations/)
 - [Storage Runbooks Index](/storage/runbooks/)

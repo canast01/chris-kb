@@ -185,7 +185,7 @@ Each product documents its exact configuration path and any non-standard field n
 - [ServiceNow — Authentication](../../itsm/servicenow/security/authentication/index.md)
 - [vCenter — Authentication](../../virtualization/vmware/vcenter/security/authentication//)
 - [NSX — Authentication](../../virtualization/vmware/nsx/security/authentication//)
-- [ONTAP — Authentication](../../storage/netapp/ontap/security/authentication//)
+- [ONTAP — Authentication](../../storage/products/netapp/ontap/security/authentication//)
 - [Veeam — Authentication](../../backup/products/veeam/security/authentication/index.md)
 
 ---

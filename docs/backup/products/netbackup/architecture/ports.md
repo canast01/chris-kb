@@ -177,4 +177,4 @@ backup-client-07            backup-client-07       ACTIVE
 - [NetBackup — Deploy](../../deploy/)
 - [NetBackup — Operations](../../operations/)
 - [Veeam — Ports](../../veeam/architecture/ports.md)
-- [Dell Data Domain — Ports](../../../../storage/dell/data-domain/architecture/ports.md)
+- [Dell Data Domain — Ports](../../../../storage/products/dell/data-domain/architecture/ports.md)

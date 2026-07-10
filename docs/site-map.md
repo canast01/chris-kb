@@ -22,7 +22,7 @@ security_compliance -> automation_tooling: uses
 | Section | Sub-sections |
 |---|---|
 | [Virtualization](virtualization/index.md) | [VMware](virtualization/vmware/index.md) · [OpenShift](virtualization/openshift/index.md) · [VxRail](virtualization/vmware/vxrail/index.md) · [Operations](virtualization/vmware/operations/index.md) · [Reference](virtualization/vmware/reference/index.md) |
-| [Storage](storage/index.md) | [Dell](storage/dell/index.md) · [Pure Storage](storage/pure/index.md) · [NetApp](storage/netapp/index.md) · [Ceph](storage/ceph/index.md) · [Storage Design](storage/storage-design/index.md) · [Runbooks](storage/runbooks/index.md) |
+| [Storage](storage/index.md) | [Dell](storage/products/dell/index.md) · [Pure Storage](storage/products/pure/index.md) · [NetApp](storage/products/netapp/index.md) · [Ceph](storage/products/ceph/index.md) · [Storage Design](storage/storage-design/index.md) · [Runbooks](storage/runbooks/index.md) |
 | [SAN](san/index.md) | [Cisco MDS](san/cisco/index.md) · [Brocade](san/brocade/index.md) |
 | [Compute](compute/index.md) | [Windows Server](compute/windows-server/index.md) · [Linux](compute/linux/index.md) · [Local AI & GPU](compute/local-ai/index.md) · [High CPU](compute/linux/troubleshooting/high-cpu/index.md) |
 | [Certifications](certifications/index.md) | [SAN](certifications/san/index.md) · [Storage](certifications/storage/index.md) |
@@ -57,39 +57,39 @@ security_compliance -> automation_tooling: uses
 
 | Product | Sub-sections |
 |---|---|
-| [PowerMax](storage/dell/powermax/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [PowerScale](storage/dell/powerscale/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [PowerStore](storage/dell/powerstore/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Unity XT](storage/dell/unity/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [VPLEX](storage/dell/vplex/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Data Domain](storage/dell/data-domain/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [ECS](storage/dell/ecs/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [PowerPath](storage/dell/powerpath/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [RecoverPoint](storage/dell/recoverpoint/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [SRDF/A](storage/dell/srdf-a/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [SRDF/S](storage/dell/srdf-s/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Dell AIOps](storage/dell/dell-aiops/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Apex STaaS](storage/dell/apex-storage-as-a-service/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [CloudIQ](storage/dell/cloudiq/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [CoD](storage/dell/cod/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [FoD](storage/dell/fod/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Secure Connect Gateway](storage/dell/secure-connect-gateway/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [PowerMax](storage/products/dell/powermax/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [PowerScale](storage/products/dell/powerscale/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [PowerStore](storage/products/dell/powerstore/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Unity XT](storage/products/dell/unity/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [VPLEX](storage/products/dell/vplex/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Data Domain](storage/products/dell/data-domain/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [ECS](storage/products/dell/ecs/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [PowerPath](storage/products/dell/powerpath/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [RecoverPoint](storage/products/dell/recoverpoint/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [SRDF/A](storage/products/dell/srdf-a/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [SRDF/S](storage/products/dell/srdf-s/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Dell AIOps](storage/products/dell/dell-aiops/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Apex STaaS](storage/products/dell/apex-storage-as-a-service/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [CloudIQ](storage/products/dell/cloudiq/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [CoD](storage/products/dell/cod/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [FoD](storage/products/dell/fod/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Secure Connect Gateway](storage/products/dell/secure-connect-gateway/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
 
 ### NetApp & Pure Storage Products
 
 | Product | Sub-sections |
 |---|---|
-| [ONTAP](storage/netapp/ontap/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [SnapMirror](storage/netapp/snapmirror/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [SnapCenter](storage/netapp/snapcenter/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Keystone](storage/netapp/keystone/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [InsightIQ](storage/netapp/insightiq/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Superna Eyeglass](storage/netapp/superna-eyeglass/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [FlashArray](storage/pure/flasharray/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [FlashBlade](storage/pure/flashblade/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Evergreen](storage/pure/evergreen/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Evergreen One](storage/pure/evergreen-one/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
-| [Pure1](storage/pure/pure1/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [ONTAP](storage/products/netapp/ontap/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [SnapMirror](storage/products/netapp/snapmirror/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [SnapCenter](storage/products/netapp/snapcenter/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Keystone](storage/products/netapp/keystone/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [InsightIQ](storage/products/netapp/insightiq/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Superna Eyeglass](storage/products/netapp/superna-eyeglass/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [FlashArray](storage/products/pure/flasharray/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [FlashBlade](storage/products/pure/flashblade/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Evergreen](storage/products/pure/evergreen/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Evergreen One](storage/products/pure/evergreen-one/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
+| [Pure1](storage/products/pure/pure1/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
 
 ### Compute Sub-sections
 

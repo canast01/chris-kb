@@ -440,9 +440,9 @@ Set-VBRJobOptions -Job $job -Options $opts
 
 ## See Also
 
-- [ONTAP Operations](/storage/netapp/ontap/operations/)
-- [SnapMirror Operations](/storage/netapp/snapmirror/operations/)
-- [SnapMirror Architecture](/storage/netapp/snapmirror/architecture/)
+- [ONTAP Operations](/storage/products/netapp/ontap/operations/)
+- [SnapMirror Operations](/storage/products/netapp/snapmirror/operations/)
+- [SnapMirror Architecture](/storage/products/netapp/snapmirror/architecture/)
 - [Veeam Operations](/backup/products/veeam/operations/)
 - [Veeam Architecture](/backup/products/veeam/architecture/)
 - [Veeam Deploy](/backup/products/veeam/deploy/)

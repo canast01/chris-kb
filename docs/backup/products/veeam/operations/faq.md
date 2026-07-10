@@ -58,4 +58,4 @@ A: Yes — use Instant File-Level Recovery (FLR). In VBR Console, right-click th
 ## See Also
 
 - [Veeam Backup & Replication Operations](index.md)
-- [Veeam Backup & Replication Troubleshooting](../../troubleshooting//)
+- [Veeam Backup & Replication Troubleshooting](../../troubleshooting/)

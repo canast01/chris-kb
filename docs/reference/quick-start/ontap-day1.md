@@ -388,6 +388,6 @@ Policy "backup-policy" created successfully with 3 schedules.
 ## See Also
 
 - [ONTAP Cheat Sheet](../../cheat-sheets/ontap-cli/) — top CLI commands
-- [NetApp ONTAP Architecture](../../../storage/netapp/ontap/architecture/)
-- [ONTAP Health Check Runbook](../../../storage/netapp/ontap/operations/health-checks/)
+- [NetApp ONTAP Architecture](../../../storage/products/netapp/ontap/architecture/)
+- [ONTAP Health Check Runbook](../../../storage/products/netapp/ontap/operations/health-checks/)
 - [Pure FlashArray Day 1](../pure-flasharray-day1/) — if Pure is also in the environment

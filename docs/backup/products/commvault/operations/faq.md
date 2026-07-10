@@ -58,4 +58,4 @@ A: Yes — use the Browse and Restore wizard in CommCell Console or the Web Cons
 ## See Also
 
 - [Commvault Operations](index.md)
-- [Commvault Troubleshooting](../../troubleshooting//)
+- [Commvault Troubleshooting](../../troubleshooting/)
