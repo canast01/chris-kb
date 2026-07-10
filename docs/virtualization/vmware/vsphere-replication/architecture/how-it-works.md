@@ -19,21 +19,24 @@ skinparam sequenceArrowThickness 1.5
 skinparam roundcorner 5
 
 participant "Source VM\n(protected site)" as SRC
-participant "vSphere Replication\nAgent (VRA)" as VRA_S
+participant "ESXi hbr kernel module\n+ hbrsvc\n(source host)" as HBR
 participant "Network\n(TCP 31031)" as NET
-participant "vSphere Replication\nServer (VRS)" as VRS_R
+participant "Target vSphere Replication\nAppliance — HMS\n(recovery site)" as TVRA
 participant "Target Datastore\n(recovery site)" as TGT
 
-SRC -> VRA_S: Changed blocks (write intercept)
-VRA_S -> NET: Compressed + encrypted delta
-NET -> VRS_R: Delta transfer
-VRS_R -> TGT: Apply to replica VMDK
-TGT --> VRS_R: Write confirmed
-VRS_R --> VRA_S: RPO checkpoint saved
+SRC -> HBR: Write I/O (kernel module tracks\nchanged blocks in bitmap)
+HBR -> HBR: RPO cycle expires
+HBR -> NET: Compressed + encrypted delta
+NET -> TVRA: Delta transfer (bypasses source-site VRA entirely)
+TVRA -> TGT: Apply to replica VMDK
+TGT --> TVRA: Write confirmed
+TVRA --> HBR: RPO checkpoint saved
 
-note over VRA_S,VRS_R
+note over HBR,TVRA
   RPO: 5 min – 24 h
   Quiesce: VMware Tools snapshot
+  Data never routes through the source-site VRA --
+  see "Data Flow" section below for the full path
 end note
 @enduml
 ```
@@ -157,6 +160,7 @@ The source VRA (VRMS) handles management and scheduling only. Replication data d
 | 8043 | HTTPS | vCenter → VRA | vCenter plugin calling VR management API |
 | 5480 | HTTPS | Admin → VRA | VAMI appliance management UI |
 | 22 | SSH | Admin → VRA | Appliance CLI access |
+| 9086 | TCP (TLS) | SRM Server ↔ SRM Server | SRM-to-SRM pairing and orchestration API — only relevant when SRM sits on top of VR (see Integrations); not a VR-specific port |
 
 ---
 
