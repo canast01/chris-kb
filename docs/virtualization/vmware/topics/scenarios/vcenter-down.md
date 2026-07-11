@@ -382,6 +382,7 @@ Look for: all hosts showing "Connected" in vCenter within 10 minutes of restore 
 |---|---|
 | VCSA | vCenter Server Appliance — the Linux-based virtual appliance that runs vCenter; all services (vpxd, SSO, vpostgres) run inside this VM |
 | VAMI | vCenter Appliance Management Interface — the lightweight web UI on port 5480 for appliance health, disk, services, and NTP; often available even when the main UI is down |
+| SSH | Secure Shell — the encrypted remote command-line protocol used to access the VCSA console directly when the web UI and VAMI are both unreachable |
 | PSC | Platform Services Controller — the component that hosts SSO, VMCA, and identity services; in modern VCSA deployments it is embedded inside the same appliance rather than deployed separately |
 | SSO | Single Sign-On — VMware's identity federation service; all vCenter and NSX logins are authenticated through SSO; if SSO is down, no users can log in regardless of network connectivity |
 | vpostgres | VMware-embedded PostgreSQL database that stores all vCenter inventory, tasks, events, and configuration; vpxd cannot start if vpostgres is down or full |

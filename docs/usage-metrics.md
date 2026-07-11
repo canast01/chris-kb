@@ -4,7 +4,7 @@
 Knowledge base statistics: page counts, section distribution, and content type coverage.
 </div>
 
-Generated: 2026-07-10
+Generated: 2026-07-11
 
 ```d2
 direction: down

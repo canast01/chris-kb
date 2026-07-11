@@ -402,6 +402,7 @@ Then re-run the health check from vCenter.
 |---|---|
 | NTP | Network Time Protocol — the standard protocol used to synchronise clocks across hosts, appliances, and network devices to a common time source |
 | chronyc | Command-line client for the chrony NTP daemon used on the VCSA; `chronyc tracking` shows current offset and `chronyc makestep` forces an immediate clock correction |
+| VCSA | vCenter Server Appliance — the Linux-based virtual appliance that runs vCenter; hosts the SSO domain and issues certificates whose validity depends on accurate appliance time |
 | timedatectl | Linux systemd utility on the VCSA for displaying and configuring the system clock, NTP status, and timezone |
 | SSO | Single Sign-On — VMware's authentication service that issues SAML tokens for all vSphere and NSX logins; token validity is clock-bound, so any time skew invalidates active sessions |
 | STS | Security Token Service — the component within SSO (vmware-stsd) that generates and validates SAML tokens; must be restarted after large time corrections to clear stale in-memory token state |

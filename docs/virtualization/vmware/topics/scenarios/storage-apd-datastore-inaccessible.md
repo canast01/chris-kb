@@ -423,6 +423,7 @@ Look for: any VM with `RestartPriority = Disabled` will not be automatically res
 |---|---|
 | APD | All Paths Down — transient storage path loss; ESXi still knows the device identity and queues I/O internally while waiting for paths to recover |
 | PDL | Permanent Device Loss — storage device signals via SCSI sense code that it is permanently gone; ESXi stops queuing I/O immediately |
+| NFS | Network File System — a file-level storage protocol; NFS datastores can experience APD/PDL events the same way block-storage (FC/iSCSI) datastores do, though the failure signaling differs slightly |
 | VMCP | VM Component Protection — vSphere HA extension that responds to APD timeout and PDL events by powering off affected VMs to enable HA restart on hosts with storage access |
 | APD timeout | The configurable period (default 140 seconds) ESXi waits in APD state before allowing VMCP to take action; during this time VMs are frozen but data is safe |
 | vmkernel.log | Primary ESXi system log containing storage path events, SCSI sense codes, and network events; first diagnostic stop for any storage or network path issue |

@@ -333,6 +333,7 @@ Key points illustrated:
 | Global Cache | A large DRAM pool shared by all directors; all reads and writes pass through it; RAID-1 protected across director pairs |
 | SRDF/S | SRDF Synchronous — writes are mirrored to the remote R2 array before host ACK; RPO=0; suitable for metro distances |
 | SRDF/A | SRDF Asynchronous — writes are batched into delta sets and sent to R2 periodically; configurable RPO (~30 seconds); suitable for any distance |
+| SRDF/STAR | SRDF Star — a three-site topology combining SRDF/S (to a nearby site) and SRDF/A (to a remote site); if the primary site fails, the two surviving sites can resume SRDF/A replication between themselves with no data loss, since both were already receiving consistent data from the primary |
 | TDEV | Thin Device — the thin-provisioned logical block volume presented to a host; physical capacity allocated from an SRP on write |
 | SRP | Storage Resource Pool — the aggregate of physical NVMe drives from which TDEVs draw capacity |
 | FAST | Fully Automated Storage Tiering — automatically migrates data between NVMe tiers (e.g., SCM for hot, eTLC for warm) based on access frequency |

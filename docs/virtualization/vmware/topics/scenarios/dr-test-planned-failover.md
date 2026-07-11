@@ -200,6 +200,7 @@ failback. A failback to a site still under maintenance causes an immediate secon
 | Term | Definition |
 |---|---|
 | SRM | Site Recovery Manager — the VMware product that orchestrates DR tests, planned failovers, and failbacks by executing recovery plans that define VM startup order, network mappings, and IP customisation |
+| DR | Disaster Recovery — the practice of restoring IT service at a secondary site after the primary site becomes unavailable, using replicated data and a tested recovery plan |
 | vSR | vSphere Replication — the VMware-native replication engine that continuously replicates VM changed blocks from the primary site to the DR site at a configured RPO interval |
 | RPO | Recovery Point Objective — the maximum acceptable age of data at the DR site after a failure; a 15-minute RPO means replication must transfer changed blocks at least every 15 minutes |
 | RTO | Recovery Time Objective — the maximum acceptable time from a failure event to workloads being accessible at the DR site; RTO is reduced by pre-staging VMs and having tested recovery plans |

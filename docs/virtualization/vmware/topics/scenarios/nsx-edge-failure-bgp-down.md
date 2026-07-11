@@ -334,6 +334,8 @@ Eth1/10       NSX-Edge-Uplink    connected  trunk   full  10G Ethernet
 | Edge node | An NSX-T VM that provides gateway services — routing, NAT, load balancing, and VPN — at the boundary between the NSX overlay and the physical network |
 | Edge cluster | A logical group of one or more edge nodes; T0 gateways are bound to an edge cluster and use active-standby failover between its members |
 | T0 (Tier-0 Gateway) | The NSX gateway that connects the overlay network to the physical network; runs eBGP with upstream routers and handles all north-south traffic |
+| NSX | VMware's software-defined networking platform — provides overlay networking, distributed firewall, and gateway services independent of the physical network hardware |
+| SSH | Secure Shell — the encrypted remote command-line protocol used to access edge node and host consoles for direct troubleshooting |
 | BGP (Border Gateway Protocol) | The routing protocol used between the NSX T0 gateway and the upstream physical router to exchange reachable prefixes; session state must be Established for traffic to flow |
 | TEP (Tunnel Endpoint) | VMkernel IP address on each ESXi host and edge node used to originate and terminate GENEVE overlay tunnels; TEP reachability is required for overlay traffic |
 | GENEVE | Generic Network Virtualization Encapsulation — the overlay protocol used by NSX to carry VM traffic over the physical underlay between TEPs (replaces VXLAN) |
