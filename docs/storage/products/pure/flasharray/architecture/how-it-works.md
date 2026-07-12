@@ -228,6 +228,17 @@ Key points illustrated:
 | Mediator | A third-party arbitration service (hosted in Pure1 or a third site) used by ActiveCluster to prevent split-brain on network partition |
 | Pure1 | Pure Storage's cloud analytics and management portal; provides fleet-wide visibility, AI-driven support, and capacity forecasting |
 | FlashArray | Pure Storage's block storage platform; available in FA//X (NVMe), FA//C (QLC), and FA//E (high-density) product lines |
+| CT0 / CT1 | The two identical controllers in a FlashArray; both are active at all times (no primary/secondary), each holding a full NVRAM mirror of the other's pending writes |
+| ACK | Acknowledgment — the confirmation a controller sends back to the host that a write has been durably recorded; on FlashArray this is sent only after both CT0 and CT1 have the write in NVRAM |
+| ALUA | Asymmetric Logical Unit Access — a SCSI standard that lets an array tell the host which paths to a volume are "preferred" vs. "non-preferred," so multipathing software sends I/O down the optimal controller path |
+| DRAM | Dynamic RAM — the memory technology used to build NVRAM; fast but volatile, which is why the capacitor-backed design exists to flush it to flash on power loss |
+| FC | Fibre Channel — a dedicated high-speed network protocol built specifically for storage traffic, an alternative to using standard Ethernet (iSCSI/NVMe-TCP) for host connectivity |
+| HBA | Host Bus Adapter — the physical card in a host server that provides Fibre Channel (or other storage protocol) ports, similar in role to a network card but for storage traffic |
+| LZ4 | A fast, low-CPU-overhead compression algorithm; FlashArray uses it (alongside zstd) to compress data inline on the write path without adding significant latency |
+| NAND | The type of flash memory chip used inside DirectFlash Modules and standard SSDs to store data persistently without power |
+| NIC | Network Interface Card — the physical adapter a host uses to connect to an Ethernet network; relevant here for NVMe/RoCE and NVMe/TCP connectivity, which run over standard network hardware instead of dedicated FC |
+| PDU | Protocol Data Unit — the unit of data transfer for the iSCSI protocol, equivalent in role to an FC "frame" or an NVMe "capsule" (each storage protocol has its own name for its basic transfer unit) |
+| TCP | Transmission Control Protocol — the reliable, connection-based protocol that standard Ethernet networking runs on; NVMe/TCP uses it to carry NVMe commands over ordinary IP networks instead of specialized storage fabrics |
 
 ---
 

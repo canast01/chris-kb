@@ -34,7 +34,18 @@ PLANTUML_BLOCK_RE = re.compile(r'```plantuml\n(.*?)\n```', re.DOTALL)
 COMMON_KNOWLEDGE = {
     'CPU', 'RAM', 'IP', 'URL', 'HTTP', 'HTTPS', 'USB', 'ID', 'OS', 'UI',
     'API', 'CLI', 'GUI', 'PDF', 'FAQ', 'DNS', 'SSD', 'HDD', 'GB', 'MB', 'TB',
-    'WIFI', 'LAN', 'WAN', 'VM', 'CI', 'CD',
+    'WIFI', 'LAN', 'WAN', 'VM', 'CI', 'CD', 'SQL',
+}
+
+# Plain English words used in ALL CAPS for emphasis inside diagram labels
+# (e.g. "AFTER both NVRAMs confirm") -- not acronyms at all, but short enough
+# (<7 chars) to fall below MIN_JARGON_LEN_FOR_DICT_CHECK's dictionary filter,
+# so they slip through as false-positive jargon flags. Curated set rather
+# than lowering the length threshold globally, since real short acronyms
+# (SAN, RAID) are also dictionary words and must stay flagged.
+EMPHASIS_WORDS = {
+    'AFTER', 'BEFORE', 'DURING', 'WHEN', 'THEN', 'ALWAYS', 'NEVER',
+    'ONLY', 'EVERY', 'EACH', 'BOTH', 'EITHER', 'FIRST', 'FINAL',
 }
 ACRONYM_RE = re.compile(r'\b[A-Z]{2,8}[A-Z0-9]*\b')
 
@@ -103,7 +114,7 @@ def jargon_hits(labels_text, page_prose):
     for label in labels_text:
         for m in ACRONYM_RE.finditer(label):
             acronym = m.group(0)
-            if acronym in COMMON_KNOWLEDGE:
+            if acronym in COMMON_KNOWLEDGE or acronym in EMPHASIS_WORDS:
                 continue
             if is_plain_english_header(acronym):
                 continue

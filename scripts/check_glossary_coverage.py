@@ -21,7 +21,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from diagram_readability_score import (
     DOCS, find_diagrams_in_page, extract_svg_labels, ACRONYM_RE,
-    COMMON_KNOWLEDGE, is_plain_english_header,
+    COMMON_KNOWLEDGE, EMPHASIS_WORDS, is_plain_english_header,
 )
 
 KEY_TERMS_HEADING_RE = re.compile(r'^##\s+Key Terms.*$', re.MULTILINE)
@@ -63,7 +63,7 @@ def find_jargon_in_diagram(d) -> set:
     for label in labels:
         for m in ACRONYM_RE.finditer(label):
             acronym = m.group(0)
-            if acronym in COMMON_KNOWLEDGE or is_plain_english_header(acronym):
+            if acronym in COMMON_KNOWLEDGE or acronym in EMPHASIS_WORDS or is_plain_english_header(acronym):
                 continue
             found.add(acronym)
     return found
