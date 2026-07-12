@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from diagram_readability_score import (
     DOCS, find_diagrams_in_page, extract_svg_labels, ACRONYM_RE,
     COMMON_KNOWLEDGE, EMPHASIS_WORDS, is_plain_english_header,
+    strip_hex_addresses,
 )
 
 KEY_TERMS_HEADING_RE = re.compile(r'^##\s+Key Terms.*$', re.MULTILINE)
@@ -61,7 +62,7 @@ def find_jargon_in_diagram(d) -> set:
 
     found = set()
     for label in labels:
-        for m in ACRONYM_RE.finditer(label):
+        for m in ACRONYM_RE.finditer(strip_hex_addresses(label)):
             acronym = m.group(0)
             if acronym in COMMON_KNOWLEDGE or acronym in EMPHASIS_WORDS or is_plain_english_header(acronym):
                 continue

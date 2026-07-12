@@ -49,6 +49,17 @@ EMPHASIS_WORDS = {
 }
 ACRONYM_RE = re.compile(r'\b[A-Z]{2,8}[A-Z0-9]*\b')
 
+# Colon-separated hex-like example values (WWPN, MAC address, etc.) --
+# e.g. "AA:BB:CC:DD:EE:FF" -- whose individual octets (AA, BB, CC...) match
+# ACRONYM_RE but are placeholder example bytes, not real acronyms. The real
+# jargon term (WWPN, MAC) sits outside the colon-run and is scanned normally;
+# only the octets themselves are stripped before jargon scanning.
+HEX_ADDRESS_RE = re.compile(r'\b[0-9A-F]{2}(:[0-9A-F]{2}){2,}\b')
+
+
+def strip_hex_addresses(label: str) -> str:
+    return HEX_ADDRESS_RE.sub('', label)
+
 GENERIC_ALT_RE = re.compile(r'^[\w\s—-]+ (Diagram|Overview)$', re.IGNORECASE)
 
 # Filter out plain English words used as ALL-CAPS section headers/style
@@ -112,7 +123,7 @@ def jargon_hits(labels_text, page_prose):
     self-sufficiency bar per the user's chosen option)."""
     found = set()
     for label in labels_text:
-        for m in ACRONYM_RE.finditer(label):
+        for m in ACRONYM_RE.finditer(strip_hex_addresses(label)):
             acronym = m.group(0)
             if acronym in COMMON_KNOWLEDGE or acronym in EMPHASIS_WORDS:
                 continue

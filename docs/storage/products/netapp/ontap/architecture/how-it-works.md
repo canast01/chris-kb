@@ -258,6 +258,23 @@ Key points illustrated:
 | MetroCluster | ONTAP stretch-cluster technology; synchronously mirrors all data across two sites; provides RPO=0 and transparent site failover |
 | ONTAP Mediator | Third-site Linux service; provides quorum arbitration for MetroCluster and SnapMirror active sync to prevent split-brain |
 | SnapCenter | NetApp's backup orchestration tool; coordinates application quiesce, ONTAP snapshot creation, and SnapMirror/SnapVault replication |
+| AGG1 / AGG2 | Example aggregate names used in this page's diagrams — AGG1 is owned by Node 1, AGG2 by Node 2, illustrating that aggregate ownership is per-node |
+| AD | Active Directory — Microsoft's directory service; ONTAP SVMs can authenticate CIFS/SMB clients directly against AD, shown in diagrams as "AD-integrated auth" |
+| CIFS | Common Internet File System — the original name for the Windows file-sharing protocol, now implemented as SMB; ONTAP documentation and UI still use "CIFS" interchangeably with "SMB" |
+| DP | Data Protection (mirror) — the ONTAP volume type used as a SnapMirror destination; a DP volume is read-only until the mirror relationship is broken and the volume is promoted to read-write |
+| FC | Fibre Channel — a dedicated high-speed network protocol built specifically for storage traffic, used here for FC and FC-VI (MetroCluster inter-site) connectivity |
+| LIF | Logical Interface — a virtual IP or WWPN address owned by an SVM (not the physical node), which can migrate between physical ports or nodes without changing the address the client connects to |
+| LUN | Logical Unit Number — a block device presented to a host over iSCSI or FC, the SAN equivalent of a file share |
+| NAS | Network-Attached Storage — file-level storage access (NFS, SMB) as opposed to block-level access (iSCSI, FC) |
+| NFS | Network File System — the standard Unix/Linux file-sharing protocol; ONTAP supports NFSv3 and NFSv4.1/pNFS |
+| RAID | Redundant Array of Independent Disks — the technique of combining multiple physical drives with parity so the array survives one or more drive failures without data loss |
+| SAN | Storage Area Network — block-level storage access (iSCSI, FC, NVMe) as opposed to file-level access (NAS) |
+| SAS | Serial Attached SCSI — the physical drive/shelf interconnect protocol ONTAP nodes use to reach disk shelves, alongside NVMe on newer platforms |
+| SATA | Serial ATA — a lower-cost, higher-capacity drive interface than SAS/NVMe, typically used in large capacity-optimized aggregates protected by RAID-TEC |
+| SMB | Server Message Block — the modern name for the Windows file-sharing protocol (see CIFS); SMB 3.0+ adds encryption and multichannel |
+| TCP | Transmission Control Protocol — the reliable, connection-based protocol that NFS, SMB, iSCSI, and NVMe/TCP all run over |
+| RAID-TEC | Triple Erasure Coding — ONTAP's triple-parity RAID level, tolerating 3 simultaneous drive failures per RAID group; used for large SATA aggregates where rebuild time is long enough that a third failure becomes statistically plausible |
+| WWPN | World Wide Port Name — the unique hardware address of an FC port, the FC-fabric equivalent of a MAC address, used to identify SVM data LIFs on a SAN fabric |
 
 ---
 
