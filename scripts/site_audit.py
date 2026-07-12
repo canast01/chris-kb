@@ -8,7 +8,8 @@ Usage:
     python3 scripts/site_audit.py --check-links # also validate external URLs (slow)
 """
 
-import os, re, sys, xml.etree.ElementTree as ET
+import os, re, sys
+import defusedxml.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

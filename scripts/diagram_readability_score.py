@@ -78,7 +78,7 @@ def find_diagrams_in_page(md_path):
 
 def extract_svg_labels(svg_path):
     try:
-        import xml.etree.ElementTree as ET
+        import defusedxml.ElementTree as ET
         tree = ET.parse(svg_path)
     except Exception:
         return None

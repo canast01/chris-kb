@@ -9,7 +9,7 @@ flag cases where the estimated text extent exceeds that rect's bounds.
 This is a heuristic (no real font metrics), so results are "likely overflow"
 candidates for visual triage, not a pixel-exact guarantee.
 """
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from pathlib import Path
 import re
 import sys

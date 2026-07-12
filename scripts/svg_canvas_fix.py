@@ -17,7 +17,7 @@ from pathlib import Path
 from svg_overflow_check import (
     NS, walk_absolute, get_font_size, is_bold, text_width_px, local_text,
 )
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 
 SVG_TAG_RE = re.compile(
     r'(<svg\b[^>]*\bwidth=")(\d+(?:\.\d+)?)("[^>]*\bheight=")(\d+(?:\.\d+)?)("[^>]*\bviewBox="0 0 )'
