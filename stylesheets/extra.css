@@ -174,8 +174,10 @@ body,
   transition: color 0.15s ease;
 }
 
+/* Light mode: #0ea5e9 on the near-white card background measured ~2.72:1
+   (needs 4.5:1). #0369a1 clears it at ~5.8:1. */
 .kb-card:hover strong {
-  color: #0ea5e9;
+  color: #0369a1;
 }
 
 [data-md-color-scheme="slate"] .kb-card:hover strong {
@@ -480,7 +482,9 @@ body,
   text-decoration: none !important;
   font-size: 0.83rem;
   font-weight: 600;
-  color: #38bdf8 !important;
+  /* Light mode: #38bdf8 on the ~8%-tint background measured ~2.02:1
+     (needs 4.5:1). #0369a1 clears it at ~5.6:1. */
+  color: #0369a1 !important;
   background: rgba(56, 189, 248, 0.08);
   flex-shrink: 0;
   transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
@@ -646,8 +650,12 @@ body,
   transition: border-left-color 0.15s ease;
 }
 
+/* Light mode: #0ea5e9 on the white table background measured ~2.77:1
+   (needs 4.5:1 — 14px bold text doesn't meet WCAG's large-text bold
+   threshold of 18.66px). #0369a1 clears it at ~5.9:1, same fix applied
+   to the nav-link active color earlier (2026-07-12 Lighthouse pass). */
 .md-typeset table td:first-child a {
-  color: #0ea5e9 !important;
+  color: #0369a1 !important;
   background-image: none !important;
 }
 
@@ -993,26 +1001,31 @@ body,
   transition: color 0.2s ease, background 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
 }
 
+/* Light mode text colors darkened below (#38bdf8 on white measured 2.14:1,
+   same defect as the primary-nav fix from the 2026-07-12 Lighthouse pass);
+   dark mode keeps the original bright accent where it already passes. */
 .md-nav--secondary .md-nav__link:hover {
   opacity: 1;
-  color: #38bdf8;
+  color: #0369a1;
   background: rgba(56, 189, 248, 0.06);
   border-left-color: rgba(56, 189, 248, 0.35);
 }
 
 .md-nav--secondary .md-nav__link--active {
   border-left: 2px solid #38bdf8;
-  color: #38bdf8 !important;
+  color: #0369a1 !important;
   font-weight: 600;
   opacity: 1;
   background: rgba(56, 189, 248, 0.09);
 }
 
 [data-md-color-scheme="slate"] .md-nav--secondary .md-nav__link:hover {
+  color: #38bdf8;
   background: rgba(56, 189, 248, 0.08);
 }
 
 [data-md-color-scheme="slate"] .md-nav--secondary .md-nav__link--active {
+  color: #38bdf8 !important;
   background: rgba(56, 189, 248, 0.12);
 }
 
@@ -1155,10 +1168,12 @@ body,
   border-radius: 14px !important;
 }
 
+/* Light mode: #0ea5e9 on the 32%-tint highlight background measured
+   ~2.16:1 (needs 4.5:1). #0369a1 clears it at ~4.6:1. */
 .md-search-result__terms mark,
 .md-search-result mark {
   background: rgba(56, 189, 248, 0.32);
-  color: #0ea5e9;
+  color: #0369a1;
   border-radius: 4px;
   padding: 0.05em 0.3em;
   font-weight: 600;
@@ -1413,10 +1428,14 @@ body,
 
 /* ── Heading permalink anchors ── */
 
+/* Light mode: only visible on hover, but real text once visible needs to
+   pass contrast too. #38bdf8/#0ea5e9 on white measured 2.14:1/2.77:1
+   (needs 4.5:1). #0369a1 clears both at ~5.9:1/~5.9:1. Dark mode restored
+   to the original bright accents below, where they already pass. */
 .md-typeset .headerlink {
   opacity: 0;
   margin-left: 0.45rem;
-  color: #38bdf8 !important;
+  color: #0369a1 !important;
   font-size: 0.78em;
   text-decoration: none !important;
   transition: opacity 0.2s ease, color 0.2s ease;
@@ -1429,6 +1448,14 @@ body,
 
 .md-typeset .headerlink:hover {
   opacity: 1;
+  color: #0369a1 !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .headerlink {
+  color: #38bdf8 !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .headerlink:hover {
   color: #0ea5e9 !important;
 }
 
@@ -1896,6 +1923,14 @@ code, pre, .highlight pre, .md-typeset code, .md-typeset pre {
 .kb-author__info { display: flex; flex-direction: column; }
 .kb-author__name { font-size: 0.9rem; color: var(--md-default-fg-color); }
 .kb-author__role { font-size: 0.78rem; color: var(--md-default-fg-color--light); }
-.kb-author__link { color: #38bdf8; text-decoration: none; }
+/* .kb-author's translucent dark-navy box (rgba(30,41,59,.4)) blends to a
+   medium gray in light mode, not white -- #38bdf8 measured only 1.1:1
+   there (needs 4.5:1), and even the #0369a1 fix used elsewhere in this
+   file only reaches 2.52:1 against this specific background. #082f49
+   (much darker) clears it at ~5.9:1. Dark mode's own blend is genuinely
+   dark, where the original bright accent already passes at ~8.6:1. */
+.kb-author__link { color: #082f49; text-decoration: none; }
 .kb-author__link:hover { text-decoration: underline; }
+
+[data-md-color-scheme="slate"] .kb-author__link { color: #38bdf8; }
 
