@@ -1297,7 +1297,11 @@ for _path in all_md():
             _eff_dir = os.path.dirname(_path)
         else:
             _eff_dir = os.path.join(os.path.dirname(_path), _p.stem)
-    _ASSET_EXT56 = ('.svg', '.png', '.jpg', '.jpeg', '.gif', '.css', '.js', '.pdf', '.yml', '.yaml', '.zip', '.json')
+    # .xml covers the RSS plugin's build-time-generated feed files
+    # (feed_rss_created.xml, feed_rss_updated.xml) -- real at build time,
+    # invisible to this docs/-source-only check, same class as the already-
+    # exempted .json (the plugin's JSON Feed counterpart).
+    _ASSET_EXT56 = ('.svg', '.png', '.jpg', '.jpeg', '.gif', '.css', '.js', '.pdf', '.yml', '.yaml', '.zip', '.json', '.xml')
     for _lm in re.finditer(r'\[[^\]]*\]\(([^)"]+)\)', _content):
         if _lm.start() > 0 and _content[_lm.start() - 1] == '!':
             continue  # image embed — different resolution rule, Check 5's job

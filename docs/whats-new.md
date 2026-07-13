@@ -12,7 +12,7 @@ description: "Recent additions and updates to the knowledge base. Major changes 
 <div class="kb-summary">
 Recent additions and updates to the knowledge base. Major changes by date — newest first.
 
-*Auto-updated from commit history.*
+*Auto-updated from commit history.* Subscribe via [RSS](feed_rss_updated.xml) to get updates outside the browser.
 </div>
 
 ![What's New](assets/whats-new.svg)
