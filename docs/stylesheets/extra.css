@@ -1275,7 +1275,10 @@ body,
 
 .kb-footer-clock {
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.45);
+  /* 0.45 measured at 4.45:1 against the footer's #0f172a background --
+     just under WCAG AA's 4.5:1 for normal text (Lighthouse color-contrast).
+     0.48 clears it (~4.9:1) with a negligible visual change. */
+  color: rgba(255, 255, 255, 0.48);
   font-family: var(--kb-mono, monospace);
   letter-spacing: 0.06em;
   margin-top: 0.3rem;
@@ -1504,11 +1507,20 @@ g.edgeLabel rect {
 
 /* ── Left nav active indicator ── */
 
+/* Light mode: #38bdf8 text on the white sidebar measured 2.14:1 (Lighthouse
+   color-contrast, needs 4.5:1) -- #0369a1 clears it at ~5.9:1. Border-left
+   stays the brighter accent since a 2px line isn't text and has no contrast
+   requirement. Dark mode is restored to the bright accent below, where it
+   already passes against the dark sidebar background. */
 .md-nav--primary .md-nav__link--active {
   border-left: 2px solid #38bdf8;
   padding-left: calc(0.6rem + 2px);
-  color: #38bdf8 !important;
+  color: #0369a1 !important;
   font-weight: 600;
+}
+
+[data-md-color-scheme="slate"] .md-nav--primary .md-nav__link--active {
+  color: #38bdf8 !important;
 }
 
 /* ── Sidebar section dividers ── */
