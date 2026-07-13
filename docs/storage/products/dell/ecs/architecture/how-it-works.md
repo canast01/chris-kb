@@ -25,6 +25,7 @@ participant "Disk\n(local storage)" as DISK
 participant "Remote ECS Site\n(geo-replication)" as REMOTE
 participant "ECS Portal\n(management)" as MGR
 
+== 1. Client object write ==
 CLT -> DN: PUT object (S3 / Swift)
 DN -> CM: Chunk + erasure-code (12+4)
 CM -> DISK: Write coded chunks across nodes
@@ -32,9 +33,11 @@ DISK --> CM: Confirmed
 CM --> DN: Object stored
 DN --> CLT: 200 OK + ETag
 
+== 2. Async geo-replication (background) ==
 DN -> REMOTE: Async geo-replication
 REMOTE --> DN: Replicated
 
+== 3. Admin policy management (independent) ==
 MGR -> DN: Policy + quota management
 @enduml
 ```

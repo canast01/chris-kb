@@ -24,12 +24,14 @@ participant "Analytics\nEngine" as ANA
 participant "Alert\nService" as ALT
 actor "SAN Admin" as ADM
 
+== 1. Continuous monitoring & alerting ==
 SW -> SNV: SNMP traps + REST telemetry
 SNV -> ANA: Ingest metrics (IOPS / latency / errors)
 ANA -> ANA: Baseline + anomaly detection
 ANA -> ALT: Threshold breach
 ALT -> ADM: Email / SNMP alert
 
+== 2. Admin-initiated config change ==
 ADM -> SNV: View topology map
 SNV -> SW: REST config push (zoning / QoS)
 SW --> SNV: Config applied

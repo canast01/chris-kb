@@ -23,12 +23,14 @@ participant "SnapMirror Engine" as SM
 participant "Intercluster LIF\n(TCP 11104 / 11105)" as NET
 participant "Destination Volume\n(DP — read-only)" as DST
 
+== 1. Initial baseline transfer (one-time, full copy) ==
 SRC -> SM: Initialize relationship
 SM -> SRC: Baseline Snapshot
 SM -> NET: Transfer baseline (full copy)
 NET -> DST: Write baseline
 DST --> SM: Baseline complete
 
+== 2. Ongoing scheduled incremental updates ==
 loop Scheduled update
   SM -> SRC: New Snapshot
   SM -> SM: Delta vs last transfer Snapshot
@@ -38,6 +40,7 @@ loop Scheduled update
   SM -> SRC: Delete previous transfer Snapshot
 end
 
+== 3. DR failover (manual, admin-triggered) ==
 note over SM,DST: Break + promote DST\nto R/W for DR activation
 @enduml
 ```

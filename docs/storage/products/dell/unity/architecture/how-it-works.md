@@ -25,6 +25,7 @@ participant "Cache\n(DRAM + SSD)" as CACHE
 participant "Drive Enclosures\n(SAS / NL-SAS / NVMe)" as DISK
 participant "Unisphere\n(management)" as UI
 
+== 1. Host I/O path ==
 HOST -> SPA: Block or file I/O
 SPA -> CACHE: Check read cache / stage write
 CACHE -> DISK: Destage or read from disk
@@ -32,6 +33,7 @@ DISK --> CACHE: Data
 CACHE --> SPA: Serve data
 SPA --> HOST: Response
 
+== 2. HA sync + admin operations (independent of host I/O) ==
 SPA -> SPB: Mirror cache + sync state
 UI -> SPA: Provision LUN / NAS server
 UI -> SPB: Monitor standby health

@@ -25,6 +25,7 @@ participant "VPLEX\n(Site 2)" as VP2
 participant "Host B\n(Site 2)" as HB
 participant "Backend Storage\n(Site 1 + 2)" as STG
 
+== 1. Site 1 write, synchronously mirrored to Site 2 ==
 HA -> VP1: Write to distributed volume
 VP1 -> STG: Write to local backend
 VP1 -> WAN: Mirror write to site 2
@@ -33,6 +34,7 @@ VP2 -> STG: Write to remote backend
 VP2 --> VP1: ACK
 VP1 --> HA: Write complete
 
+== 2. Site 2 read (sees the same volume) ==
 HB -> VP2: Read from same volume
 VP2 -> STG: Serve from local copy
 @enduml

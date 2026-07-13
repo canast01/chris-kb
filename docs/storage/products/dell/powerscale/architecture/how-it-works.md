@@ -25,6 +25,7 @@ participant "OneFS Distributed\nFile System" as DFS
 participant "Backend Disks\n(SSD / HDD)" as DISK
 participant "SyncIQ\n(replication)" as SYNC
 
+== 1. Client file read (live, per-request) ==
 CLT -> SC: DNS lookup for cluster FQDN
 SC --> CLT: IP of least-loaded node
 CLT -> NODE: NFS mount / SMB connect
@@ -34,6 +35,7 @@ DISK --> DFS: Data
 DFS --> NODE: Serve
 NODE --> CLT: File data
 
+== 2. SyncIQ replication (scheduled independently, not triggered by the read above) ==
 NODE -> SYNC: Policy-based replication job
 SYNC -> NODE: Delta to target cluster
 @enduml

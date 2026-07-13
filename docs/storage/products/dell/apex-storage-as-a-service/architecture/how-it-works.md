@@ -24,6 +24,7 @@ participant "CloudIQ\n(telemetry)" as CIQ
 participant "On-Prem Storage\n(PowerStore / PowerFlex)" as STG
 participant "Dell Service\nDelivery" as SVC
 
+== 1. Initial subscription + provisioning ==
 ADM -> APEX: Subscribe + configure service
 APEX -> SVC: Provision hardware on-prem
 SVC -> STG: Deploy + validate
@@ -31,6 +32,7 @@ STG -> CIQ: Stream telemetry
 CIQ -> APEX: Usage + capacity data
 APEX --> ADM: Dashboard + invoice
 
+== 2. Later: on-demand capacity expansion ==
 ADM -> APEX: Expand capacity request
 APEX -> SVC: Dispatch field engineer
 SVC -> STG: Add shelf / node

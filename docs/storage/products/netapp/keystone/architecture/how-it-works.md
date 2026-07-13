@@ -24,6 +24,7 @@ participant "OpsRamp\n(monitoring agent)" as OPS
 participant "ONTAP / StorageGRID\n(on-prem hardware)" as STG
 participant "NetApp SRE\nTeam" as SRE
 
+== 1. Initial subscription + provisioning ==
 CUS -> KS: Subscribe to service tier
 KS -> SRE: Provision on-prem hardware
 SRE -> STG: Deploy + validate
@@ -31,6 +32,7 @@ STG -> OPS: Telemetry stream
 OPS -> KS: Capacity + health data
 KS --> CUS: Dashboard + usage invoice
 
+== 2. Later: on-demand burst capacity ==
 CUS -> KS: Burst capacity request
 KS -> SRE: Approve + expand
 SRE -> STG: Add capacity

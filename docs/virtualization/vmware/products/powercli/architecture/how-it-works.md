@@ -27,11 +27,13 @@ participant "VMware REST API\n/ SOAP API" as API
 participant "vCenter Server" as VC
 participant "ESXi Host" as ESX
 
+== 1. Connect (once per session) ==
 ADM -> CLI: Connect-VIServer -Server vc01
 CLI -> API: HTTPS REST / SOAP session
 API -> VC: Authenticate + return session token
 VC --> CLI: Session established
 
+== 2. Run a cmdlet (reuses the existing session, no re-auth) ==
 ADM -> CLI: Get-VM | Start-VM
 CLI -> API: POST /vcenter/vm/{id}/power/start
 API -> VC: Dispatch power-on task

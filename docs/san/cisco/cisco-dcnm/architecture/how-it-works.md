@@ -24,6 +24,7 @@ participant "MDS Switch\n(NX-OS)" as MDS
 participant "Nexus Switch\n(Ethernet fabric)" as NEX
 participant "Endpoint\n(host / storage)" as EP
 
+== 1. Admin pushes zoning/LAN config ==
 ADM -> DCNM: Define zoning policy / VSAN
 DCNM -> MDS: Push NX-OS config (SSH / SNMP)
 MDS --> DCNM: Config applied
@@ -31,6 +32,7 @@ ADM -> DCNM: Deploy LAN template
 DCNM -> NEX: Push VLANs / vPC config
 NEX --> DCNM: Applied
 
+== 2. Endpoint login (independent, triggered by the endpoint itself) ==
 EP -> MDS: FC login (FLOGI)
 MDS -> DCNM: SNMP notification
 DCNM -> ADM: Zone membership update

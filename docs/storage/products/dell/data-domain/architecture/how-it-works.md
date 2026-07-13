@@ -25,6 +25,7 @@ participant "SISL Dedup Engine" as SISL
 participant "Local Disks\n(RAID-6)" as DISK
 participant "Remote DD\n(replication target)" as REMO
 
+== 1. Backup ingest + inline dedup ==
 CLT -> DDB: Backup stream
 DDB -> DD: Segmented + fingerprinted chunks
 DD -> SISL: Deduplicate against index
@@ -32,6 +33,7 @@ SISL --> DD: Unique chunks only
 DD -> DISK: Write unique segments
 DD --> CLT: Backup complete (dedup ratio reported)
 
+== 2. DD Replication (independent, post-ingest) ==
 DD -> REMO: DD Replication (unique chunks delta)
 REMO --> DD: Replication confirmed
 @enduml

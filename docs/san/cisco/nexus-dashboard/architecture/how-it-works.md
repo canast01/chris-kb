@@ -24,11 +24,13 @@ participant "Fabric Controller\n(DCNM service)" as FC
 participant "Insights\n(telemetry service)" as INS
 participant "Nexus Switch\n(NX-OS)" as SW
 
+== 1. Admin pushes fabric config ==
 ADM -> ND: Login + select service
 ND -> FC: Template-based config deploy
 FC -> SW: NX-OS configuration push
 SW --> FC: Apply confirmed
 
+== 2. Continuous telemetry & alerting (runs independently) ==
 SW -> INS: Streaming telemetry (gRPC)
 INS -> INS: Anomaly + flow analysis
 INS -> ADM: Dashboard alert

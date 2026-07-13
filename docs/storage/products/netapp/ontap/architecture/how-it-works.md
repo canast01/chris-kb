@@ -140,12 +140,14 @@ participant "SnapMirror Engine" as SM
 participant "Destination SVM\n(Secondary)" as DST
 participant "Destination Volume\n(DP — read-only)" as DVOL
 
+== 1. Initial baseline transfer (one-time, full copy) ==
 SRC -> SM: Initialize relationship
 SM -> SVOL: Create baseline Snapshot
 SM -> DST: Transfer baseline (full copy)
 DST -> DVOL: Write baseline
 DVOL --> SM: Baseline complete
 
+== 2. Ongoing scheduled incremental updates ==
 loop Scheduled update (hourly / daily)
   SM -> SVOL: Create new Snapshot
   SM -> SM: Compute incremental delta from last transfer Snapshot
@@ -155,6 +157,7 @@ loop Scheduled update (hourly / daily)
   SM -> SVOL: Delete previous transfer Snapshot
 end
 
+== 3. DR failover (manual, admin-triggered) ==
 note over SM,DST: On DR activation — break relationship, promote DVOL to R/W
 @enduml
 ```
