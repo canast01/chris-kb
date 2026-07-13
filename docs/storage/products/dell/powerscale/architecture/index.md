@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the OneFS distributed operating system. All nodes are peers sharing a single global..."
 ---
 # PowerScale — Architecture
 

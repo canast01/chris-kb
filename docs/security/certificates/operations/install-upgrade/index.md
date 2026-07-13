@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "The certificate lifecycle spans six stages: enrolment, issuance, installation, monitoring, renewal, and revocation. Auto-renewal must be configured..."
 ---
 # Certificates — Install & Upgrade
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Common Issues reference covering Certificate Issue Triage Flow, Common checks, Incident notes, Change notes, Known issues and 2 more sections."
 ---
 # Certificates — Common Issues
 

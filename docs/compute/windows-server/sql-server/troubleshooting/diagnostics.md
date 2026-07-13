@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "SQL Server diagnostic commands: read sp_readerrorlog, query sys.dm_exec_requests for blocking, check Availability Group health with sys.dm_hadr_*..."
 ---
 # SQL Server — Diagnostics
 

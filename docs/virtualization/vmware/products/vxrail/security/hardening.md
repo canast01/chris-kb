@@ -3,6 +3,7 @@ tags:
   - security
   - vmware
   - vxrail
+description: "Hardening checklist and procedures for VxRail in the VMware product context. Covers VxRail Manager, iDRAC per-node, vSphere/ESXi, network hardening, and..."
 ---
 # VxRail — Hardening
 

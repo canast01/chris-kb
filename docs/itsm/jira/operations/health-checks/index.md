@@ -2,6 +2,7 @@
 tags:
   - jira
   - operations
+description: "Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk Space, 4. Database Connectivity, 5. Search Index Status and 3 more sections."
 ---
 # Jira — Health Checks
 

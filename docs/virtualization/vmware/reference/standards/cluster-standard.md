@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Cluster Standard reference covering Overview, Minimum Host Count, vSphere HA, DRS, EVC (Enhanced vMotion Compatibility) and 3 more sections."
 ---
 # Cluster Standard
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "NetBackup diagnostic commands: query failed jobs with bpdbjobs, check storage unit capacity with bpstulist and nbdevquery, verify policy and client..."
 ---
 # NetBackup — Diagnostics
 

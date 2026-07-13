@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "PostgreSQL backup: pg_dump, pg_basebackup, WAL archiving with archive_command, point-in-time recovery using recovery.conf, and pgBackRest integration."
 ---
 # PostgreSQL — Backup Restore
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "VPLEX diagnostic commands: run health-check --full and ll /clusters//health-indications/ for a fast system-wide health view, inspect distributed device..."
 ---
 # Dell VPLEX — Diagnostics
 

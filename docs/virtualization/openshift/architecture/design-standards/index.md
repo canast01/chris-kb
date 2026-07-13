@@ -1,6 +1,7 @@
 ---
 tags:
   - architecture
+description: "Node sizing guidelines, MachineSet design, storage class standards, network CIDR planning, and infrastructure node placement for production OpenShift..."
 ---
 # OpenShift — Design Standards
 

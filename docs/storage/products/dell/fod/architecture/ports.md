@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Dell FOD (Feature on Demand). FOD enables software features on Dell arrays via license keys downloaded from Dell or activated..."
 ---
 # Dell FOD — Ports and Network Requirements
 

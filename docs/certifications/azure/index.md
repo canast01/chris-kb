@@ -2,6 +2,7 @@
 tags:
   - azure
   - certifications
+description: "Azure Certification reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes."
 ---
 # Azure Certification
 

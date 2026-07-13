@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "A Private Endpoint is a network interface that uses a private IP from your VNet to connect to an Azure PaaS service (e.g., Storage Account, Key Vault, SQL..."
 ---
 # Private Endpoints
 

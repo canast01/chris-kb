@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Hardening, Host Connectivity Hardening, SupportAssist and Remote Access..."
 ---
 # PowerMax — Hardening
 

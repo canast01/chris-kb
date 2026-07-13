@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Host Inventory reference covering Overview, Host Inventory Table, Fields Reference, Host Lifecycle Events, Adding a Host."
 ---
 # Host Inventory
 

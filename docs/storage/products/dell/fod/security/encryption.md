@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Encryption reference covering Encryption Controls, Key Points."
 ---
 # FOD — Encryption
 

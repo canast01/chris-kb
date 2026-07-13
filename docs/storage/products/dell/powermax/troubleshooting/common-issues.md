@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 2
+description: "Common Issues reference covering Common Issues, Incident Triage."
 ---
 # PowerMax — Common Issues
 

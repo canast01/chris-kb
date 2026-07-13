@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "SQL Server integration points — application drivers (JDBC, ODBC, ADO.NET, pyodbc), linked servers, SSRS/SSIS/SSAS, monitoring via DMVs and third-party..."
 ---
 # SQL Server — Integrations
 

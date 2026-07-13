@@ -2,6 +2,7 @@
 tags:
   - azure
   - certifications
+description: "Azure Weak Areas reference covering NSG vs ASG, VNet Peering vs VPN Gateway, RBAC vs Azure Policy, Storage Account Redundancy Options, Managed Disk Types..."
 ---
 # Azure Weak Areas
 

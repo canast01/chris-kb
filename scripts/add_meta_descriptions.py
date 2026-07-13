@@ -20,6 +20,7 @@ FRONTMATTER_RE = re.compile(r'^---\n(.*?)\n---\n', re.DOTALL)
 KB_SUMMARY_RE = re.compile(r'<div class="kb-summary">\s*\n(.*?)\n</div>', re.DOTALL)
 APPLIES_TO_RE = re.compile(r'^\*Applies to:.*?\*\s*$', re.MULTILINE)
 MD_STRIP_RE = re.compile(r'`([^`]*)`|\*\*([^*]*)\*\*|\*([^*]*)\*')
+HTML_TAG_RE = re.compile(r'<[^>]+>')
 MAX_LEN = 155
 
 
@@ -30,6 +31,11 @@ def derive_description(text: str) -> str | None:
     body = APPLIES_TO_RE.sub('', m.group(1)).strip()
     # collapse markdown emphasis/code markers to plain text
     body = MD_STRIP_RE.sub(lambda mo: next(g for g in mo.groups() if g is not None), body)
+    # kb-summary blocks are raw HTML <div>s and can contain literal inline
+    # tags (e.g. "<a href='...'>Operations</a>", "<code>esxcli</code>") --
+    # these must not leak into a meta description attribute, so strip tags
+    # but keep their inner text.
+    body = HTML_TAG_RE.sub('', body)
     body = re.sub(r'\s+', ' ', body).strip()
     if not body:
         return None

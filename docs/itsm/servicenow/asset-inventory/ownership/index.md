@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Asset Ownership and Accountability reference covering Overview, Ownership Model, Ownership Assignment Process, Ownership Handover, Cost Allocation and 1..."
 ---
 # Asset Ownership and Accountability
 

@@ -3,6 +3,7 @@ tags:
   - operations
   - vcf
   - vmware
+description: "Procedures reference covering SDDC Manager Backup, Password Management, Useful Log Locations."
 ---
 # VCF — Procedures
 

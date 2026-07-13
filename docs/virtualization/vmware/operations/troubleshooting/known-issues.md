@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Structured troubleshooting entries for common VMware/vSAN operational issues. Each entry includes specific diagnostic commands, relevant error messages or..."
 ---
 # Known Issues and Fix Patterns
 

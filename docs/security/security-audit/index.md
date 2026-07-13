@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Security Audit Procedure reference covering Audit Types, Scope Definition, Configuration Audit Checks, Patch Compliance Check, Vulnerability Scan Review..."
 ---
 # Security Audit Procedure
 

@@ -2,6 +2,7 @@
 tags:
   - ansible
   - security
+description: "Ansible encryption: ansible-vault encrypt, encrypt_string, vault ID configuration, KMS-backed vault password files, and in-transit SSH encryption settings."
 ---
 # Ansible — Encryption
 

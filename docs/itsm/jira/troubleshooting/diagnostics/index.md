@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Jira diagnostic commands: check instance health via the /status endpoint and REST serverInfo API, inspect JVM heap with jmap and jcmd to identify memory..."
 ---
 # Jira — Diagnostics
 

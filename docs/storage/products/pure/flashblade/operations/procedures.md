@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Snapshots."
 ---
 # FlashBlade — Procedures
 

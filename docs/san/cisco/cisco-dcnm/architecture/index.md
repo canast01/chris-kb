@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "Cisco DCNM 11.x is the last standalone SAN management appliance for Cisco MDS environments. Starting with version 12.0 (2022), it was renamed Nexus..."
 ---
 # Cisco DCNM — Architecture
 

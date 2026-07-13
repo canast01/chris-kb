@@ -3,6 +3,7 @@ tags:
   - vsphere-replication
   - faq
   - operations
+description: "Common questions about VMware vSphere Replication operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # VMware vSphere Replication — Frequently Asked Questions
 

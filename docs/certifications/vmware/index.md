@@ -2,6 +2,7 @@
 tags:
   - certifications
   - vmware
+description: "VMware Certification reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes."
 ---
 # VMware Certification
 

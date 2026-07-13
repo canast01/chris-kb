@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Security day-to-day operations — certificate lifecycle, PAM account management, and hardening reviews."
 ---
 # Security — Operations
 

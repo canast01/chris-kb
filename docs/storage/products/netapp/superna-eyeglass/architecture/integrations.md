@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "Integrations reference covering NetApp PowerScale (SyncIQ), Syslog / SIEM, Email Notifications."
 ---
 # Superna Eyeglass — Integrations
 

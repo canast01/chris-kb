@@ -5,6 +5,7 @@ tags:
   - firewall
   - ports
   - storage
+description: "Firewall port reference for Ceph. Covers monitor (MON) messaging, OSD data and heartbeat traffic, MDS (CephFS), RADOS Gateway (RGW/S3), Dashboard..."
 ---
 # Ceph — Ports and Network Requirements
 

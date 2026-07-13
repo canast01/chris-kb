@@ -2,6 +2,7 @@
 tags:
   - azure
   - learning-path
+description: "Recommended reading order for Microsoft Azure. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Azure — Learning Path
 

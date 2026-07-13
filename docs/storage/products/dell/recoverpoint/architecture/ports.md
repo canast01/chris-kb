@@ -7,6 +7,7 @@ tags:
   - ports
   - replication
   - dr
+description: "Firewall port reference for Dell RecoverPoint (RP). Covers Unisphere for RecoverPoint management, RPA (RecoverPoint Appliance) cluster communication, and..."
 ---
 # Dell RecoverPoint — Ports and Network Requirements
 

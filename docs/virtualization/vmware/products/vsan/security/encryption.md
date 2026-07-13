@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE) and data-in-transit encryption. Both are optional and independently..."
 ---
 # vSAN — Encryption
 

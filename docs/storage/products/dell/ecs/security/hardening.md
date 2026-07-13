@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Hardening reference covering Hardening Checklist, Network Segmentation, Operating System Hardening (Node-Level), Object Lock (WORM) Hardening, Secrets..."
 ---
 # Dell ECS — Hardening
 

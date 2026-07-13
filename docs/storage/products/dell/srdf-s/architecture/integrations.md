@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "SRDF/S integrations: SRDF/Star three-site topology, Microsoft Cluster Services with SRDF/S, Oracle RAC extended cluster, and VMware Metro Storage Cluster."
 ---
 # SRDF/S — Integrations
 

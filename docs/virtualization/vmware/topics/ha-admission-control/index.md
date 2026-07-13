@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "HA Admission Control reference covering Purpose, Admission Control Policies, Checking Admission Control Status, Configure Admission Control, Admission..."
 ---
 # HA Admission Control
 

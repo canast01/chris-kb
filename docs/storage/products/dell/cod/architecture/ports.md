@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Dell COD (Capacity on Demand). COD is a capacity licensing model for PowerMax, not a separate software product. The relevant..."
 ---
 # Dell COD — Ports and Network Requirements
 

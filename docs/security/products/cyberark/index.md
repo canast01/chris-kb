@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "CyberArk Privileged Access Manager knowledge base covering Digital Vault architecture, CPM rotation, PSM session proxying, PVWA administration, DR..."
 ---
 # CyberArk
 

@@ -4,6 +4,7 @@ tags:
   - pure
 search:
   boost: 1.5
+description: "Step-by-step guide to enabling Phone Home on Pure Storage FlashArray and FlashBlade, verifying array registration in the Pure1 cloud portal, and..."
 ---
 # Pure1 — Initial Setup
 

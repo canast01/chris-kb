@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Operational procedures for certificate renewal, automation, and reporting."
 ---
 # Venafi — Procedures
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Storage Evergreen//One Lifecycle reference covering Overview, Service Agreement Lifecycle, Monthly Capacity True-Up, Hardware and Software Upgrade..."
 ---
 # Pure Storage Evergreen//One Lifecycle
 

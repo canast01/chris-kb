@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure disks CLI: az disk create/resize, az snapshot create, az disk grant-access, az disk revoke-access, and managed disk SKU conversion commands."
 ---
 # Disks & Snapshots
 

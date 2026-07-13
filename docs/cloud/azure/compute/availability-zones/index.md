@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Availability Zones are physically separate datacenters within an Azure region, each with independent power, cooling, and networking. Deploying VMs across..."
 ---
 # Availability Zones
 

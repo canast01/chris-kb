@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "vSAN capacity reaches a warning or critical threshold — typically 75% or 80% full — triggering a Skyline Health alarm and blocking snapshot creation for..."
 ---
 # vSAN Capacity Alarm
 

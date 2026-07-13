@@ -4,6 +4,7 @@ tags:
   - powerscale
   - dell
   - known-issues
+description: "Catalog of known PowerScale / OneFS bugs, error codes, and workarounds covering NFS, SMB, SyncIQ, and cluster health."
 ---
 # Dell PowerScale (Isilon) — Known Issues and Error Codes
 

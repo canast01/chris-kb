@@ -2,6 +2,7 @@
 tags:
   - commvault
   - security
+description: "Commvault hardening — RBAC, encryption keys, audit logging, CommServe access control, and network security configuration."
 ---
 # Commvault — Security
 

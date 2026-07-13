@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and Identity Sources, Audit Logging — Access Events, PowerCLI — Permission..."
 ---
 # vCenter Security — Access Control
 

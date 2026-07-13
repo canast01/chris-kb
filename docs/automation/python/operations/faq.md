@@ -3,6 +3,7 @@ tags:
   - python
   - faq
   - operations
+description: "Common questions about Python operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Python — Frequently Asked Questions
 

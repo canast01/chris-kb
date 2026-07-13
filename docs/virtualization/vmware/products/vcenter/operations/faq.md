@@ -3,6 +3,7 @@ tags:
   - vcenter
   - faq
   - operations
+description: "Common questions about VMware vCenter operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # VMware vCenter — Frequently Asked Questions
 

@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - storage-as-a-service
+description: "Pure Storage Evergreen//One is a Storage as a Service (STaaS) consumption model — Pure-owned hardware is deployed on customer premises and managed by Pure..."
 ---
 # Pure Storage Evergreen//One — Ports and Network Requirements
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "SRDF/S day-to-day operations — synchronous link monitoring, R1/R2 device management, and failover/failback procedures."
 ---
 # SRDF/S — Operations
 

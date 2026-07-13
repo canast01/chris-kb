@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "Lambda reference covering Environment Variables, Event Source Mappings (SQS / Kinesis triggers), Layers, Versions and Aliases, Concurrency and 2 more..."
 ---
 # Lambda
 

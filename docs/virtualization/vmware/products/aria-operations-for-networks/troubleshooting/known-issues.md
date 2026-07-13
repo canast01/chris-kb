@@ -4,6 +4,7 @@ tags:
   - aria-operations-for-networks
   - vmware
   - known-issues
+description: "Catalog of known Aria Operations for Networks (vRNI) bugs, error codes, and workarounds covering collector connectivity, data source configuration, and..."
 ---
 # VMware Aria Operations for Networks — Known Issues and Error Codes
 

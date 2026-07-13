@@ -2,6 +2,7 @@
 tags:
   - ansible
   - operations
+description: "Ansible CLI reference: ansible, ansible-playbook, ansible-vault, ansible-galaxy, ansible-inventory, and ansible-doc command syntax with common flags."
 ---
 # Ansible — CLI Reference
 

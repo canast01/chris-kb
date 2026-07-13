@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "ONTAP — Troubleshooting navigation for Common Issues, Diagnostics, Escalation."
 ---
 # ONTAP — Troubleshooting
 

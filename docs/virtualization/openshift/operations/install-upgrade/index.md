@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upgrade prerequisites, pause-worker pattern, multi-hop upgrades, and rollback..."
 ---
 # OpenShift — Install & Upgrade
 

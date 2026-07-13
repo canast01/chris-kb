@@ -3,6 +3,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Technical and operational reference for VMware vCenter Server (VCSA). Covers architecture, cluster management, lifecycle, security, and troubleshooting..."
 ---
 # vCenter
 

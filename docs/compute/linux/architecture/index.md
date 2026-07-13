@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "Linux server infrastructure running RHEL and Ubuntu — systemd service management, LVM2 storage with dm-multipath, LACP bonded networking, SELinux/AppArmor..."
 ---
 # Linux — Architecture
 

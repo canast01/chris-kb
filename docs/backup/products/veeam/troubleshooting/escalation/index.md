@@ -4,6 +4,7 @@ tags:
   - veeam
 search:
   boost: 1.5
+description: "How to escalate Veeam backup issues to Veeam support: what data to collect, how to export the log bundle, step-by-step case creation on the Veeam portal..."
 ---
 # Veeam — Escalation
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Dell Unity XT is a mid-range unified storage platform delivering block (FC, iSCSI) and file (NFS, SMB) from a dual storage processor (SP A / SP B)..."
 ---
 # Unity — Architecture
 

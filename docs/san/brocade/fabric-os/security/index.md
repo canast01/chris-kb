@@ -2,6 +2,7 @@
 tags:
   - san
   - security
+description: "FabricOS hardening — RBAC, RADIUS/TACACS+, SSH configuration, SCC/DCC policies, and secure fabric practices."
 ---
 # FabricOS — Security
 

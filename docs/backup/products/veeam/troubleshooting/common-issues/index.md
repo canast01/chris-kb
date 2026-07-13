@@ -4,6 +4,7 @@ tags:
   - veeam
 search:
   boost: 2
+description: "Most Veeam job failures fall into a small set of categories: VMware snapshot issues, repository space problems, proxy connectivity timeouts, and Veeam..."
 ---
 # Veeam — Common Issues
 

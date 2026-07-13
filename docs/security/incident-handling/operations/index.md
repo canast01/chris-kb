@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Incident handling operational procedures: incident classification, triage workflows, evidence collection, escalation, and post-incident review."
 ---
 # Incident Handling — Operations
 

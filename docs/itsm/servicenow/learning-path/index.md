@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - servicenow
+description: "Recommended reading order for ServiceNow ITSM. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # ServiceNow — Learning Path
 

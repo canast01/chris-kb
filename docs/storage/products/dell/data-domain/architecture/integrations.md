@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Integrations reference covering DD Boost Backup Flow, NetBackup (OST with DD Boost), CommVault (SISL + DD Boost), Avamar (RAIN Dedup with DD), NFS —..."
 ---
 # Data Domain — Integrations
 

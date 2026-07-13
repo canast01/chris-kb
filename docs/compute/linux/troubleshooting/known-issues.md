@@ -3,6 +3,7 @@ tags:
   - troubleshooting
   - linux
   - known-issues
+description: "Catalog of known Linux OS bugs, error codes, and workarounds covering boot issues, storage, networking, and systemd service management."
 ---
 # Linux — Known Issues and Error Codes
 

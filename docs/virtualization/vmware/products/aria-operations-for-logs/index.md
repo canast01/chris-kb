@@ -2,6 +2,7 @@
 tags:
   - aria-logs
   - vmware
+description: "Technical and operational reference for VMware Aria Operations for Logs. Covers log ingestion, querying, alerting, dashboards, and integration for VMware..."
 ---
 # Aria Operations for Logs
 

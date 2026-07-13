@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "Network Packet Loss Validation reference covering Symptoms, NIC Statistics, vmkping — Reachability and MTU Testing, PowerCLI Network Checks, Common Causes..."
 ---
 # Network Packet Loss Validation
 

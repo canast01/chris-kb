@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "Hardening reference covering AD Hardening Controls Flow, DCSync Attack Detection, Defender for Identity Deployment, Hardening Checklist."
 ---
 # Active Directory — Hardening
 

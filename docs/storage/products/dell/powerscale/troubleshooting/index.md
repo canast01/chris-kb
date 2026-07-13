@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing PowerScale replication failures, protocol errors, quota violations, node faults, and cluster health issues."
 ---
 # PowerScale — Troubleshooting
 

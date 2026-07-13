@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "Multiple hosts fail simultaneously or in rapid succession, exhausting vSphere HA's reserved failover capacity. VMs cannot be restarted because no..."
 ---
 # HA Admission Control Breach / Failover Storm
 

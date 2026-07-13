@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Operational scripts: daily health snapshot, CSR auto-approval, node drain wrapper, etcd backup automation, pod restart loop detection, and namespace..."
 ---
 # OpenShift — Scripts
 

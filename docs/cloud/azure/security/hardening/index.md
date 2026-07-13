@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Azure hardening applies the principle of least privilege, reduces the attack surface, and enforces security configuration standards across subscriptions..."
 ---
 # Azure — Hardening
 

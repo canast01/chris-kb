@@ -4,6 +4,7 @@ tags:
   - iscsi
   - networking
   - known-issues
+description: "Catalog of known iSCSI issues covering initiator discovery, session stability, multipath, and CHAP authentication."
 ---
 # iSCSI — Known Issues and Error Codes
 

@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - containers
+description: "Firewall port reference for Red Hat OpenShift Container Platform (OCP). Covers the API server, web console, worker node communications, overlay network..."
 ---
 # OpenShift — Ports and Network Requirements
 

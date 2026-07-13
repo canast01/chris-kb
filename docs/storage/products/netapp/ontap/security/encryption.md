@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE), and encryption in transit via TLS for..."
 ---
 # ONTAP — Encryption
 

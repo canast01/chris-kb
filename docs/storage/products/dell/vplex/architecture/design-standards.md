@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Design standards, sizing guidelines, naming conventions, and configuration baselines for VPLEX deployments."
 ---
 # Dell VPLEX — Standards
 

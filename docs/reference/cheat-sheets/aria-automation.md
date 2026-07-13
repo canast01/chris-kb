@@ -2,6 +2,7 @@
 tags:
   - aria-automation
   - automation
+description: "Top-10 Aria Automation (vRA) commands for deployment lifecycle, ABX actions, and catalog management via REST API and vra-cli."
 ---
 # Aria Automation Cheat Sheet
 

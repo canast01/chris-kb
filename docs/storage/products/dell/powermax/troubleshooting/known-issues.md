@@ -4,6 +4,7 @@ tags:
   - powermax
   - dell
   - known-issues
+description: "Catalog of known PowerMax bugs, error codes, and workarounds covering Unisphere, SRDF, host connectivity, and Solutions Enabler."
 ---
 # Dell PowerMax — Known Issues and Error Codes
 

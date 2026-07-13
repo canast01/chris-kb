@@ -3,6 +3,7 @@ tags:
   - srm
   - faq
   - operations
+description: "Common questions about VMware Site Recovery Manager operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations..."
 ---
 # VMware Site Recovery Manager — Frequently Asked Questions
 

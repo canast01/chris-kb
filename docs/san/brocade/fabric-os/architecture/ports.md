@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Brocade Fabric OS (FOS) SAN switches. Covers management access (SSH, HTTPS, Telnet), SNMP monitoring, RADIUS/LDAP..."
 ---
 # Brocade Fabric OS — Ports and Network Requirements
 

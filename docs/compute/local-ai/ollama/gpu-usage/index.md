@@ -3,6 +3,7 @@ tags:
   - ollama
   - ai
   - local-ai
+description: "Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This page covers confirming GPU usage, configuring which GPU(s) to use, VRAM..."
 ---
 # Ollama GPU Acceleration
 

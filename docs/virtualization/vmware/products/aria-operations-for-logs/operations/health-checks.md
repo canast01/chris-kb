@@ -3,6 +3,7 @@ tags:
   - aria-logs
   - operations
   - vmware
+description: "Health checks for Aria Operations for Logs — cluster node status, disk and ingestion rate, alert configuration, archive jobs, syslog source connectivity..."
 ---
 # Aria Operations for Logs — Health Checks
 

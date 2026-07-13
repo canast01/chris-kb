@@ -2,6 +2,7 @@
 tags:
   - git
   - operations
+description: "Day-to-day Git operations — branching strategy, merging, rebase, stash, hooks, and repository maintenance procedures."
 ---
 # Git — Operations
 

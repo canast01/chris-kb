@@ -1,6 +1,7 @@
 ---
 tags:
   - terraform
+description: "Terraform infrastructure-as-code knowledge base covering provider plugin architecture, state backend configuration, workspace model, module design, CI/CD..."
 ---
 # Terraform
 

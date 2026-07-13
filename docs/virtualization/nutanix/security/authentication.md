@@ -5,6 +5,7 @@ tags:
   - authentication
   - ldap
   - active-directory
+description: "Active Directory and LDAP integration for Prism Element and Prism Central, local account management, multi-factor authentication (MFA) via SAML/SSO, and..."
 ---
 # Nutanix — Authentication
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Lifecycle reference covering Entitlement Lifecycle, COD Entitlement Review Cadence, Frame Decommission — COD Implications, COD vs. Standard Capacity..."
 ---
 # COD — Lifecycle
 

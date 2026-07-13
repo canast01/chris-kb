@@ -4,6 +4,7 @@ tags:
   - keystone
   - netapp
   - known-issues
+description: "Catalog of known Keystone STaaS bugs, error codes, and workarounds. Most Keystone issues relate to the Keystone Collector appliance or portal connectivity..."
 ---
 # NetApp Keystone — Known Issues and Error Codes
 

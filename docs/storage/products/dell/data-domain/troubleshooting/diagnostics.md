@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Data Domain diagnostic commands: check filesystem state with filesys status and space usage with filesys show space, inspect active alerts with alerts..."
 ---
 # Data Domain — Diagnostics
 

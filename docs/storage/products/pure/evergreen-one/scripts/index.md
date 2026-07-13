@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Evergreen//One automation scripts: Python examples for subscription consumption reporting, Pure REST API capacity queries, and auto-alert for tier..."
 ---
 # Evergreen//One — Scripts
 

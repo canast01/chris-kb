@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Incident Communications reference covering Overview, Communication Principles, Update Cadence, Communication Templates, Stakeholder Distribution and 1..."
 ---
 # Incident Communications
 

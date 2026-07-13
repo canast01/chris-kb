@@ -2,6 +2,7 @@
 tags:
   - architecture
   - jira
+description: "How It Works reference covering Deployment Models, Data Center Reference Architecture, Clustering, Port Reference, Cloud Architecture (Reference)."
 ---
 # Jira — How It Works
 

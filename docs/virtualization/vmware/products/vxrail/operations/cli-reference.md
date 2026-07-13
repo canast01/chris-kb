@@ -3,6 +3,7 @@ tags:
   - operations
   - vmware
   - vxrail
+description: "Complete command reference for VxRail operations: VxRail Manager REST API, esxcli vSAN and network commands, iDRAC RACADM, and PowerCLI vSAN cmdlets. Use..."
 ---
 # VxRail — CLI Reference
 

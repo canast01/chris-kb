@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Data governance is the framework of policies, roles, processes, and controls that ensure data is consistently managed, protected, and compliant with..."
 ---
 # Data Governance
 

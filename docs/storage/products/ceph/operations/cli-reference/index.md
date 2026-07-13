@@ -2,6 +2,7 @@
 tags:
   - ceph
   - operations
+description: "Essential Ceph CLI commands: ceph status and health, OSD management, pool operations, PG management, RADOS object-level ops, RBD image management..."
 ---
 # Ceph — CLI Reference
 

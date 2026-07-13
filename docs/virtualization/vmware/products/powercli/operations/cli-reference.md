@@ -3,6 +3,7 @@ tags:
   - operations
   - powercli
   - vmware
+description: "Core PowerCLI cmdlets for VM management, host operations, cluster management, datastore/storage, vSAN, networking, snapshots, and tagging. All examples..."
 ---
 # PowerCLI — CLI Reference
 

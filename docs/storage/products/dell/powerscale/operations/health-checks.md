@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Health Checks reference covering Daily Checks, Health Check, Cluster Health Commands, Health Check Summary."
 ---
 # PowerScale — Health Checks
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - nutanix
+description: "Nutanix HCI platform — AOS, AHV, Prism Central, Files, Objects, Flow, and Calm. Covers cluster architecture, deployment, day-2 operations, security..."
 ---
 # Nutanix
 

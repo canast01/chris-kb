@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "A VMware Cloud Foundation (VCF) upgrade workflow in SDDC Manager has stalled, failed, or is reporting errors partway through a bundle apply operation..."
 ---
 # VCF SDDC Manager Upgrade Stalled
 

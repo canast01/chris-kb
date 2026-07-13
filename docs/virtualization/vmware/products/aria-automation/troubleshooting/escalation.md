@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "How to escalate VMware Aria Automation issues to Broadcom support: what data to collect, how to run vracli support-bundle, step-by-step case creation on..."
 ---
 # Aria Automation — Escalation
 

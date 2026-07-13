@@ -2,6 +2,7 @@
 title: Azure Backup and DR
 tags:
   - azure
+description: "Backup and recovery notes for Azure Backup, Site Recovery, vaults, jobs, and restore validation."
 ---
 
 # Azure Backup and DR

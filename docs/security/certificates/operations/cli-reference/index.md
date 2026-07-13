@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Windows certificate operations use certutil for verification, revocation, and store management. Linux operations rely on openssl for inspection..."
 ---
 # Certificates CLI Reference
 

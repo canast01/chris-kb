@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "Windows Server design standards: domain join requirements, WSUS patch cadence, storage layout (C:/D: split), NTP chain config, and Group Policy baseline."
 ---
 # Windows Server — Standards
 

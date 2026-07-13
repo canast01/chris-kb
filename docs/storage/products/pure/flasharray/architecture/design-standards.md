@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "FlashArray design standards — host group naming conventions, volume layout, protection group design, and replication architecture."
 ---
 # FlashArray — Design Standards
 

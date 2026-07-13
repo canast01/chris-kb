@@ -2,6 +2,7 @@
 title: MFA
 tags:
   - security
+description: "Multi-Factor Authentication (MFA) reference covering Overview, MFA Authentication Flow, TOTP vs Push Comparison, Daily Checks, Health Commands and 1 more..."
 ---
 
 # Multi-Factor Authentication (MFA)

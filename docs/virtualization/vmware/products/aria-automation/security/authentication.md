@@ -3,6 +3,7 @@ tags:
   - aria-automation
   - security
   - vmware
+description: "Authentication reference covering Authentication Architecture, Active Directory Integration via VIDM, API Authentication, API Service Account, Session and..."
 ---
 # Aria Automation — Authentication
 

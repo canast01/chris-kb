@@ -2,6 +2,7 @@
 tags:
   - storage
   - architecture
+description: "![Storage Design Overview](../../assets/storage-design-overview.svg)"
 ---
 # Storage Design
 

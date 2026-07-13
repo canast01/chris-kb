@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Automation scripts for Venafi cover certificate expiry reporting, automated renewal via VCert, discovery scan triggering, policy compliance reporting, and..."
 ---
 # Venafi — Scripts
 

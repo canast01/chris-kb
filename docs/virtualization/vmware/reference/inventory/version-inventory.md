@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VMware version inventory: current installed versions of vCenter, ESXi, NSX, vSAN, and VCF across all clusters, with update status and EOS dates."
 ---
 # Version Inventory
 

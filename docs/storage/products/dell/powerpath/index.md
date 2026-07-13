@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Host-based multipath I/O software — automatic path failover, dynamic load balancing, and LUN path management for Dell/EMC arrays across Linux, Windows..."
 ---
 # Dell PowerPath
 

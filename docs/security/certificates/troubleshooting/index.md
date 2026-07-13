@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing expired certificates, chain validation errors, revocation failures, and TLS handshake issues."
 ---
 # Certificates — Troubleshooting
 

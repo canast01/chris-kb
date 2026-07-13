@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "Authentication reference covering Privileged Access and Kerberos Security Flow, Privileged Access Workstations (PAWs), Protected Users Group, Kerberos..."
 ---
 # Active Directory — Authentication
 

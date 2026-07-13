@@ -4,6 +4,7 @@ tags:
   - operations
   - vmware
   - vsphere-8
+description: "Daily and weekly health runbook for ESXi hosts: hardware sensors, service status, storage paths, network uplinks, NTP sync, VIB compliance, and capacity..."
 ---
 # ESXi — Health Checks
 

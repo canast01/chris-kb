@@ -2,6 +2,7 @@
 tags:
   - aria-lcm
   - vmware
+description: "Technical and operational reference for VMware Aria Suite Lifecycle Manager. Covers deployment, patching, certificate management, upgrade orchestration..."
 ---
 # Aria Suite Lifecycle
 

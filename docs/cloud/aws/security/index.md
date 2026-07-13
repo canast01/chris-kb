@@ -2,6 +2,7 @@
 tags:
   - aws
   - security
+description: "AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (KMS, Secrets Manager, ACM), and threat detection (GuardDuty, Security Hub..."
 ---
 # AWS — Security
 

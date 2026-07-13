@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Daily operations focus on confirming that the Vault service is running, CPM is successfully rotating passwords, PSM is brokering sessions without errors..."
 ---
 # CyberArk — Health Checks
 

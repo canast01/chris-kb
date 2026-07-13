@@ -3,6 +3,7 @@ tags:
   - powercli
   - faq
   - operations
+description: "Common questions about VMware PowerCLI operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # VMware PowerCLI — Frequently Asked Questions
 

@@ -4,6 +4,7 @@ tags:
   - deployment
 search:
   boost: 1.5
+description: "Step-by-step guide to connecting Dell storage systems to CloudIQ via the Secure Connect Gateway, verifying telemetry, and configuring alerts and..."
 ---
 # CloudIQ — Initial Setup
 

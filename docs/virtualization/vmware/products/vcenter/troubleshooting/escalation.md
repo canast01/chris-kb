@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 1.5
+description: "How to escalate vCenter Server issues to Broadcom support: what data to collect, how to generate the VCSA support bundle, step-by-step SR submission on..."
 ---
 # vCenter — Escalation
 

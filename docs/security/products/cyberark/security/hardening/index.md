@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "The Digital Vault server must follow the CyberArk-supplied Windows Server hardening baseline and the Vault-specific firewall policy, which permits only..."
 ---
 # CyberArk — Hardening
 

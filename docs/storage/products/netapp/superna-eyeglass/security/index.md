@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "Superna Eyeglass hardening — RBAC, TLS enforcement, audit logging, and management interface access controls."
 ---
 # Superna Eyeglass — Security
 

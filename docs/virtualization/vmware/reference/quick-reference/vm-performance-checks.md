@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VM performance quick checks: CPU ready %, memory balloon/swap, storage latency via esxtop, network packet drops, and vSAN resync — run in this order for..."
 ---
 # VM Performance Quick Checks
 

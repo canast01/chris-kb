@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Step-by-step DR runbooks for failover, failback, and full DR activation. Each runbook includes activation criteria, backup schedule verification..."
 ---
 # DR Runbooks
 

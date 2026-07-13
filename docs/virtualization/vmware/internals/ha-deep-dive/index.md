@@ -2,6 +2,7 @@
 tags:
   - internals
   - vmware
+description: "vSphere HA uses slot-based or percentage-based admission control to guarantee capacity for VM restarts after host failure. Restart priority, network..."
 ---
 # HA Deep Dive
 

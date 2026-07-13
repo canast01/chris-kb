@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "ServiceNow escalation: how to collect stats.do output and sys_log entries, open a case on the HI support portal, set severity, and follow the escalation..."
 ---
 # ServiceNow — Escalation
 

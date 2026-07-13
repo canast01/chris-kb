@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "Subnets segment a Virtual Network address space into smaller ranges."
 ---
 # Subnets
 

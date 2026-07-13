@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "A vMotion or Storage vMotion operation fails before completing. This scenario maps the most common failure modes — MTU mismatch, CPU incompatibility..."
 ---
 # vMotion Failing
 

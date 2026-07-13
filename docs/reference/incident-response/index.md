@@ -3,6 +3,7 @@ tags:
   - incident-response
   - operations
   - troubleshooting
+description: "Structured response playbooks for the most common infrastructure incidents. Each playbook follows the same Triage → Isolate → Diagnose → Fix → Verify →..."
 ---
 # Incident Response Playbooks
 

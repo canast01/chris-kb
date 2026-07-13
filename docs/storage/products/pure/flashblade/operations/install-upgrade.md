@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Install & Upgrade reference covering Purity Version Matrix, Upgrade Paths, Refresh Planning, EOL Tracking."
 ---
 # FlashBlade — Install & Upgrade
 

@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - vmware
+description: "Firewall port reference for VMware Aria Suite Lifecycle Manager (formerly vRealize Suite Lifecycle Manager). Covers inbound admin access, outbound..."
 ---
 # Aria Suite Lifecycle — Ports and Network Requirements
 

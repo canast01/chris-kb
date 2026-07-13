@@ -5,6 +5,7 @@ tags:
   - encryption
   - data-at-rest
   - sed
+description: "Nutanix data-at-rest encryption (software and SED-based), key management (native key manager and external KMS), in-transit encryption, and encryption..."
 ---
 # Nutanix — Encryption
 

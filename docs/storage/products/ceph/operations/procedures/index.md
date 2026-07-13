@@ -2,6 +2,7 @@
 tags:
   - ceph
   - operations
+description: "Ceph operational procedures: add/replace/decommission OSDs, reweight for capacity balance, scrub management, PG repair, and controlled cluster maintenance..."
 ---
 # Ceph — Procedures
 

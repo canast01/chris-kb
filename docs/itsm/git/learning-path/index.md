@@ -2,6 +2,7 @@
 tags:
   - git
   - learning-path
+description: "Recommended reading order for Git version control. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Git — Learning Path
 

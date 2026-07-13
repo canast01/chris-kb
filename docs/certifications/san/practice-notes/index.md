@@ -2,6 +2,7 @@
 tags:
   - certifications
   - san
+description: "SAN Practice Notes reference covering Zoning Exam Questions, Fabric Login Sequence — Common Error Scenarios, Common Wrong Answers to Avoid, Key Numbers to..."
 ---
 # SAN Practice Notes
 

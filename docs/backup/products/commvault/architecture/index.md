@@ -2,6 +2,7 @@
 tags:
   - architecture
   - commvault
+description: "Commvault architecture reference — CommServe topology, MediaAgent deduplication, storage library types, multi-site design, and port requirements."
 ---
 # Commvault — Architecture
 

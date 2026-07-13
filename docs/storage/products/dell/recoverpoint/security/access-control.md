@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Access Control reference covering Role-Based Access Control."
 ---
 # RecoverPoint — Access Control
 

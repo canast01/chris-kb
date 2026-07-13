@@ -2,6 +2,7 @@
 tags:
   - operations
   - powershell
+description: "Health Checks reference covering Module Health, Scheduled Tasks, Remoting Connectivity."
 ---
 # PowerShell — Health Checks
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Monitor Alerts proactively notify you when conditions in your monitored resources are met. Alert rules evaluate signals — metrics, log queries, or..."
 ---
 # Alerts
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "SnapMirror design standards: async vs. sync policy selection, RPO and retention policy per relationship type, inter-cluster LIF requirements, and fan-out..."
 ---
 # SnapMirror — Standards
 

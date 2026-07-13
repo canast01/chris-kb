@@ -3,6 +3,7 @@ tags:
   - security
   - srm
   - vmware
+description: "SRM hardening — RBAC configuration, certificate management, vSphere Replication security, and audit logging."
 ---
 # Site Recovery Manager — Security
 

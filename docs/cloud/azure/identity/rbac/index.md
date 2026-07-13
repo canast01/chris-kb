@@ -2,6 +2,7 @@
 title: RBAC
 tags:
   - azure
+description: "Azure Role-Based Access Control (RBAC) is the authorisation system for Azure resources. Every access decision evaluates: who (principal) has what (role)..."
 ---
 
 # Azure — RBAC

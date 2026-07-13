@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapCenter health checks: Get-SmJob -State Failed, plugin service status, repository database connectivity, SnapMirror lag, and storage capacity via..."
 ---
 # SnapCenter — Health Checks
 

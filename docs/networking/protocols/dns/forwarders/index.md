@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "DNS Forwarders reference covering Overview, Configuring Global Forwarders, Conditional Forwarders, Root Hints vs Forwarders, Split-Brain DNS and 2 more..."
 ---
 # DNS Forwarders
 

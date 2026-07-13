@@ -3,6 +3,7 @@ tags:
   - operations
   - srm
   - vmware
+description: "Site Recovery Manager procedures — planned migration, emergency failover, reprotect, failback, quarterly DR drills, protection groups, recovery plans..."
 ---
 # SRM — Procedures
 

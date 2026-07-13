@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-logs
   - vmware
+description: "Integrations reference covering Integration with Aria Operations (vROps), NSX-T Syslog Integration, Linux Log Forwarding Agent, Windows Log Forwarding..."
 ---
 # Aria Ops for Logs — Integrations
 

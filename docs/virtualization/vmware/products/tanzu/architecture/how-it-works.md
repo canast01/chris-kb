@@ -3,6 +3,7 @@ tags:
   - architecture
   - tanzu
   - vmware
+description: "How It Works reference covering vSphere with Tanzu Architecture, TKG Standalone — Workload Cluster Lifecycle, Networking Models, Harbor Registry..."
 ---
 # Tanzu — How It Works
 

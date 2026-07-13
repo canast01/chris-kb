@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Design Standards reference covering Committed Reserve Sizing, Network Requirements, Protocol Selection, SLA Compliance Requirements, Naming Standards and..."
 ---
 # Evergreen//One — Design Standards
 

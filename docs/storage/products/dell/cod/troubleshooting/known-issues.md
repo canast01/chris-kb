@@ -4,6 +4,7 @@ tags:
   - cod
   - dell
   - known-issues
+description: "Dell COD (Capacity on Demand) is a PowerMax capacity licensing model, not a separate software product. Known issues relate to license activation via ESRS..."
 ---
 # Dell COD — Known Issues and Error Codes
 

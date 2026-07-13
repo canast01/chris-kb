@@ -2,6 +2,7 @@
 tags:
   - pure
   - security
+description: "Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Hardening Verification."
 ---
 # FlashArray — Hardening
 

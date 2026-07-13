@@ -2,6 +2,7 @@
 tags:
   - python
   - security
+description: "Secure Python scripting — credential handling, dependency scanning, virtual environment isolation, and secrets management."
 ---
 # Python Automation — Security
 

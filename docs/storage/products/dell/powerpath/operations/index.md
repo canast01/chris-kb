@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "PowerPath — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more."
 ---
 # PowerPath — Operations
 

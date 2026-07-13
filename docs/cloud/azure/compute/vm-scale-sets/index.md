@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Virtual Machine Scale Sets (VMSS) allow you to deploy and manage a group of identical, load-balanced VMs that can automatically scale in or out..."
 ---
 # VM Scale Sets
 

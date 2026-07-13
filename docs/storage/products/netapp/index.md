@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "NetApp storage knowledge base covering ONTAP, SnapMirror, SnapCenter, and Keystone. Includes architecture references, operational procedures, CLI..."
 ---
 # NetApp Storage
 

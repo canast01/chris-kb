@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Procedures reference covering COD Activation Procedure, Incident Triage."
 ---
 # COD — Procedures
 

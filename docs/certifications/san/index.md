@@ -3,6 +3,7 @@ title: SAN — Certifications
 tags:
   - certifications
   - san
+description: "SAN certifications tracker: Brocade BCSM, Cisco CCNP Storage, and related SAN-track certifications with exam objectives, study resources, and progress..."
 ---
 
 # SAN — Certifications

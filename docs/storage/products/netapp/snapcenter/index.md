@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "NetApp SnapCenter knowledge base — architecture, operations, security, and troubleshooting for application-consistent backup and recovery on ONTAP."
 ---
 # NetApp SnapCenter
 

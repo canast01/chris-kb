@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Microsoft Defender for Cloud (formerly Security Center / Azure Defender) is a cloud security posture management (CSPM) and cloud workload protection..."
 ---
 # Defender for Cloud
 

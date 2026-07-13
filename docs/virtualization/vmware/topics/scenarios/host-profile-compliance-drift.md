@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "One or more ESXi hosts show as non-compliant against the cluster's host profile after a patch cycle, manual configuration change, or hardware replacement..."
 ---
 # Host Profile Compliance Drift
 

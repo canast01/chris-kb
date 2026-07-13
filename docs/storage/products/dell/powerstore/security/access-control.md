@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Access Control reference covering Role-Based Access Control, User Account Management, Host Access Control, NFS Export Access Control, SMB Share Access..."
 ---
 # PowerStore — Access Control
 

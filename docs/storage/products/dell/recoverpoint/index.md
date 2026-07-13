@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell EMC RecoverPoint journal-based continuous data protection — RPA clusters intercept writes via splitters and maintain a rolling journal enabling..."
 ---
 # RecoverPoint
 

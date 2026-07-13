@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Step-by-step procedures for generating patch compliance reports, deploying patches, handling exceptions, and responding to zero-day vulnerabilities..."
 ---
 # Patch Compliance — Procedures
 

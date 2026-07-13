@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - replication
+description: "Firewall port reference for NetApp SnapMirror. SnapMirror is a replication feature built into ONTAP — it is not a separate product. All traffic flows..."
 ---
 # NetApp SnapMirror — Ports and Network Requirements
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Event Correlation reference covering Correlation Workflow, Building a Correlation Timeline, Common Correlation Patterns, SIEM Correlation Rules..."
 ---
 # Event Correlation
 

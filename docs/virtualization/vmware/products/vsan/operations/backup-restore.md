@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "Backup & Restore reference covering Supported Backup Methods, vSAN Configuration Backup, Restore Procedures, Backup Validation and Testing, Recovery Point..."
 ---
 # vSAN — Backup & Restore
 

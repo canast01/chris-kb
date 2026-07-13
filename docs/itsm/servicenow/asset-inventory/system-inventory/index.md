@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "System Inventory Management reference covering Overview, Required Fields, Daily Checks, Workflow."
 ---
 # System Inventory Management
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Storage knowledge base covering FlashArray and FlashBlade — including ActiveDR, ActiveCluster, Evergreen, and Pure1. Includes architecture..."
 ---
 # Pure Storage
 

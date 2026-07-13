@@ -7,6 +7,7 @@ tags:
   - ports
   - backup
   - deduplication
+description: "Firewall port reference for Dell Data Domain (EMC Data Domain / PowerProtect DD). Covers management UI, DD Boost protocol (primary integration path for..."
 ---
 # Dell Data Domain — Ports and Network Requirements
 

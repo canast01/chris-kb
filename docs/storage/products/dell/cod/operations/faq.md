@@ -3,6 +3,7 @@ tags:
   - dell-cod
   - faq
   - operations
+description: "Common questions about Dell Capacity on Demand operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell Capacity on Demand — Frequently Asked Questions
 

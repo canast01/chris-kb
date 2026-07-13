@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Capacity on Demand integration with VMware, Unisphere, and storage management platforms."
 ---
 # COD — Integrations
 

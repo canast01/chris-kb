@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "SQL Server architecture — database engine, buffer pool, transaction log, WAL-based crash recovery, Always On AG replication, and query processing pipeline."
 ---
 # SQL Server — How It Works
 

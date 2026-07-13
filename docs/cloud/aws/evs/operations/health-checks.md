@@ -2,6 +2,7 @@
 tags:
   - aws
   - operations
+description: "EVS health check routine: cluster and host status via AWS CLI, vSAN and vCenter via PowerCLI, NSX-T component health, HCX service mesh status, and..."
 ---
 # Amazon EVS — Health Checks
 

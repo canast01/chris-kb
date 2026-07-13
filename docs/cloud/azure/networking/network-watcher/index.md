@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "Azure Network Watcher provides tools for monitoring, diagnosing, and gaining insights into network traffic in Azure. It is region-scoped and must be..."
 ---
 # Network Watcher
 

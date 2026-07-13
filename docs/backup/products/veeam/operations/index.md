@@ -2,6 +2,7 @@
 tags:
   - operations
   - veeam
+description: "Veeam day-to-day operations — backup job management, restore procedures, scale-out repository, and immutability settings."
 ---
 # Veeam — Operations
 

@@ -2,6 +2,7 @@
 tags:
   - aws
   - networking
+description: "AWS networking is built around VPCs with public and private subnets across availability zones, with Transit Gateway providing hub-and-spoke connectivity..."
 ---
 # AWS Networking
 

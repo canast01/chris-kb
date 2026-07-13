@@ -2,6 +2,7 @@
 tags:
   - ansible
   - security
+description: "Ansible access control: SSH key management, service account scoping, sudo privilege restriction, and RBAC controls for AWX/Automation Controller job..."
 ---
 # Ansible — Access Control
 

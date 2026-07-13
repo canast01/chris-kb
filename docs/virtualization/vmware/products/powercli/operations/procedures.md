@@ -3,6 +3,7 @@ tags:
   - operations
   - powercli
   - vmware
+description: "Common operational procedures using PowerCLI: VM lifecycle, bulk operations, storage migration, network management, vSAN, reporting, permissions, cluster..."
 ---
 # PowerCLI — Procedures
 

@@ -3,6 +3,7 @@ tags:
   - esxi
   - vsphere
   - compute
+description: "Deploy two nested ESXi VMs and a vCenter appliance on a single physical host. This is the foundation for Labs 2, 3, and 4. Estimated time: 2–3 hours."
 ---
 # Lab 1 — Nested ESXi Homelab
 

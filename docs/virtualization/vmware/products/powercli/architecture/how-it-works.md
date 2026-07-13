@@ -3,6 +3,7 @@ tags:
   - architecture
   - powercli
   - vmware
+description: "PowerCLI wraps the vSphere Web Services API (SOAP/REST) in PowerShell cmdlets. Each Connect-VIServer call creates a persistent session object; all..."
 ---
 # PowerCLI — How It Works
 

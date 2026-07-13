@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Protecting Active Directory requires regular System State backups of every Domain Controller, a tested restore procedure, and familiarity with AD-specific..."
 ---
 # Active Directory — Backup & Restore
 

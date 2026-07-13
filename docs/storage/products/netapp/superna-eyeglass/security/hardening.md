@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "Hardening reference covering Audit Log Forwarding, Appliance Patching."
 ---
 # Superna Eyeglass — Hardening
 

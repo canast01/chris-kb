@@ -6,6 +6,7 @@ tags:
   - vmware
   - netapp
   - dell
+description: "How VMware's 15 core products connect — compute, storage, network, management, and automation layers with key integration protocols."
 ---
 # VMware Product Interaction Map
 

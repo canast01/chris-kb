@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-operations
   - vmware
+description: "Analytics cluster for vSphere performance, capacity, and compliance monitoring. Adapters collect metrics from vCenter, NSX, and storage; remote collectors..."
 ---
 # Aria Operations — Architecture
 

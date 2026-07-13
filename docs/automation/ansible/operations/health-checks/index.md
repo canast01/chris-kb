@@ -2,6 +2,7 @@
 tags:
   - ansible
   - operations
+description: "Health Checks reference covering Inventory Health, Connectivity, Vault and Secrets, AWX / Automation Platform."
 ---
 # Ansible — Health Checks
 

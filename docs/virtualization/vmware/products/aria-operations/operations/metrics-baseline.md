@@ -3,6 +3,7 @@ tags:
   - aria-operations
   - operations
   - vmware
+description: "Performance Metrics Baseline reference covering Documenting the Baseline, Setting Thresholds from Baseline, Baseline Review Cadence."
 ---
 # Performance Metrics Baseline
 

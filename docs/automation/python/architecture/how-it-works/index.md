@@ -2,6 +2,7 @@
 tags:
   - architecture
   - python
+description: "Python is the dominant language for infrastructure automation, data pipelines, and API integration in modern enterprise environments. This page covers..."
 ---
 # Python Automation — How It Works
 

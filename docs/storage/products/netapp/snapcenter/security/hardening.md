@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "SnapCenter hardening: TLS 1.2 enforcement, disabling unused plug-in ports, Windows Firewall rules, CIS benchmark alignment, and audit log retention."
 ---
 # SnapCenter — Hardening
 

@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Aria Automation diagnostic commands: query failed deployments and requests via REST API, inspect Kubernetes pod logs with kubectl, check PostgreSQL..."
 ---
 # Aria Automation — Diagnostics
 

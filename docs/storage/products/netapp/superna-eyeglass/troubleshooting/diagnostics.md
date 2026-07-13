@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Superna Eyeglass diagnostic commands: check service health with igls adm status, trace SyncIQ and DFS sync errors, read Eyeglass log files, and verify DR..."
 ---
 # Superna Eyeglass — Diagnostics
 

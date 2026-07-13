@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "SnapMirror architecture reference — replication types (Async, Sync, SMBC, XDP), components, connectivity requirements, and DR failover procedures."
 ---
 # SnapMirror — Architecture
 

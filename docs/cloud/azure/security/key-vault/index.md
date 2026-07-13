@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Azure Key Vault is a managed service for storing and controlling access to secrets, encryption keys, and certificates. It provides hardware security..."
 ---
 # Azure — Key Vault
 

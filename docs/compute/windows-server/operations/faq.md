@@ -3,6 +3,7 @@ tags:
   - windows-server
   - faq
   - operations
+description: "Common questions about Windows Server operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Windows Server — Frequently Asked Questions
 

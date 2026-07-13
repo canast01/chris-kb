@@ -4,6 +4,7 @@ tags:
   - unity
   - dell
   - known-issues
+description: "Catalog of known Unity XT bugs, error codes, and workarounds covering Unisphere for Unity, NAS, SAN, and replication."
 ---
 # Dell Unity — Known Issues and Error Codes
 

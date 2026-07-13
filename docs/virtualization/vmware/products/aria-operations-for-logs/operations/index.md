@@ -3,6 +3,7 @@ tags:
   - aria-logs
   - operations
   - vmware
+description: "Aria Ops for Logs daily operations — agent management, log forwarder configuration, content pack updates, and alert tuning."
 ---
 # Aria Ops for Logs — Operations
 

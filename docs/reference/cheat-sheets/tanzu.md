@@ -2,6 +2,7 @@
 tags:
   - tanzu
   - kubernetes
+description: "Top-10 Tanzu commands for cluster lifecycle, package management, and Kubernetes operations in TKG environments."
 ---
 # Tanzu Cheat Sheet
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "NetApp Keystone automation scripts: REST API queries for subscription consumption data, capacity trend reporting, and SLA threshold alert integration."
 ---
 # NetApp Keystone — Scripts
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - git
+description: "Git is a distributed version control system where every working copy is a full repository with complete history."
 ---
 # Git — How It Works
 

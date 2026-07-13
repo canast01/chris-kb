@@ -3,6 +3,7 @@ tags:
   - learning-path
   - vmware
   - vsphere-replication
+description: "Recommended reading order for VMware vSphere Replication. Follow these stages in order to build a complete mental model before working with it in..."
 ---
 # vSphere Replication — Learning Path
 

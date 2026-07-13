@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Monitor Workbooks are interactive, parameterised reports that combine text, queries, metrics, and visualisations in a single pane."
 ---
 # Workbooks
 

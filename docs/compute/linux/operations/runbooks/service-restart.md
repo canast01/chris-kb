@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "| Field | Value | |---|---| | Risk | Low–Medium | | Approval | Notify service owner; standard change for planned restarts | | Estimated time | 5–20..."
 ---
 # Service Restart Runbook
 

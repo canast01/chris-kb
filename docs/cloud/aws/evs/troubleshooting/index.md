@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "EVS troubleshooting: host failures, vSAN degraded health, HCX connectivity issues, NSX-T networking failures, and AWS support escalation process."
 ---
 # Amazon EVS — Troubleshooting
 

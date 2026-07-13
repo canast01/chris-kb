@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, Step 1: Identify Affected VMs and Datastores, Step 2: Check Storage Paths..."
 ---
 # Storage Latency Troubleshooting (VMware)
 

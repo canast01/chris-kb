@@ -4,6 +4,7 @@ tags:
   - github-actions
   - automation
   - known-issues
+description: "Catalog of known GitHub Actions bugs, error codes, and workarounds covering self-hosted runners, workflow failures, and secrets."
 ---
 # GitHub Actions — Known Issues and Error Codes
 

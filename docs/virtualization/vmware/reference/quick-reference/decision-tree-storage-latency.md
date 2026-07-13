@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Use this when VMs are slow, I/O latency is elevated in monitoring, or vSAN latency alarms trigger."
 ---
 # Decision Tree: Storage Latency
 

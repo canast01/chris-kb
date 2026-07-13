@@ -3,6 +3,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Common Ollama issues include model load failures, slow inference, GPU not being detected, port conflicts, and service startup problems."
 ---
 # Ollama Troubleshooting
 

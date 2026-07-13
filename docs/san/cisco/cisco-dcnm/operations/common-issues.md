@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "Cisco DCNM known issues: inventory sync failures, zone push errors, fabric discovery timeouts, database corruption recovery, and version upgrade caveats."
 ---
 # Cisco DCNM — Known Issues
 

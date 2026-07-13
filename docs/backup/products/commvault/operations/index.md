@@ -2,6 +2,7 @@
 tags:
   - commvault
   - operations
+description: "Commvault day-to-day operations — job management, subclient configuration, data aging policies, SLA monitoring, and library health."
 ---
 # Commvault — Operations
 

@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "SQL Server hardening — surface area reduction, disabling xp_cmdshell, SQL Browser, CLR, linked server restrictions, auditing, and CIS benchmark key..."
 ---
 # SQL Server — Hardening
 

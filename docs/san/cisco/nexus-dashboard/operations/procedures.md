@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "Nexus Dashboard and NDFC procedures — site registration, SAN fabric discovery, VSAN management, host zoning, MDS firmware upgrade via NDFC, fabric health..."
 ---
 # Nexus Dashboard — Procedures
 

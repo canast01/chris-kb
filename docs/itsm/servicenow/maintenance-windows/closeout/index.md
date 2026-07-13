@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Maintenance Window Closeout reference covering Overview, Closeout Sequence, Closeout Checklist, Deferred Task Handling, Debrief and Lessons Learned and 1..."
 ---
 # Maintenance Window Closeout
 

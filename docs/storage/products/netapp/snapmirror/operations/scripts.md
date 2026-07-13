@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapMirror automation scripts: ONTAP REST API and ontap-python library examples for relationship health reporting and auto-resync on lag threshold breach."
 ---
 # SnapMirror — Scripts
 

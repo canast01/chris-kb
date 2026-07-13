@@ -4,6 +4,7 @@ tags:
   - srm
   - vmware
   - known-issues
+description: "Catalog of known SRM bugs, error codes, and workarounds covering protection groups, recovery plans, and vSphere Replication integration."
 ---
 # VMware Site Recovery Manager — Known Issues and Error Codes
 

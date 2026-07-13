@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS IAM governs every API call in the platform. The principle of least privilege is enforced through roles (not users), customer-managed policies with..."
 ---
 # AWS Identity
 

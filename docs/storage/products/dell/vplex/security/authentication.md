@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Authentication for VPLEX management is split across two interfaces: SSH-based vplexcli access (local VMS accounts only) and the Unisphere for VPLEX web..."
 ---
 # Dell VPLEX — Authentication
 

@@ -4,6 +4,7 @@ tags:
   - nsx
   - nsx-4
   - vmware
+description: "Design Standards reference covering Segments (Logical Switches), Design Rules, Configuration Baselines, Version Compatibility Matrix, Change Control..."
 ---
 # NSX — Design Standards
 

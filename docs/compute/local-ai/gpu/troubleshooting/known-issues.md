@@ -4,6 +4,7 @@ tags:
   - gpu
   - local-ai
   - known-issues
+description: "Catalog of known GPU and local AI inference bugs, error codes, and workarounds covering CUDA, driver issues, and out-of-memory errors."
 ---
 # GPU / Local AI Inference — Known Issues and Error Codes
 

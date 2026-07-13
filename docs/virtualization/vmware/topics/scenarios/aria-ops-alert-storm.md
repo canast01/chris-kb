@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "An alert storm is when Aria Operations fires dozens or hundreds of alerts in a short window, typically triggered by a single root cause that cascades..."
 ---
 # Aria Ops Alert Storm
 

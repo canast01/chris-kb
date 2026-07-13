@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Data protection reference covering classification tiers, encryption standards, key management, governance frameworks, and data retention policy for..."
 ---
 # Security — Data Protection
 

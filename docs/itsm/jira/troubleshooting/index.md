@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing Jira performance issues, workflow errors, index corruption, mail handler failures, and integration problems."
 ---
 # Jira — Troubleshooting
 

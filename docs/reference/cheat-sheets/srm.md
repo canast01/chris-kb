@@ -2,6 +2,7 @@
 tags:
   - srm
   - backup-dr
+description: "Top-10 SRM commands for protection groups, recovery plans, test failover, and failover operations via PowerCLI and REST API."
 ---
 # SRM Cheat Sheet
 

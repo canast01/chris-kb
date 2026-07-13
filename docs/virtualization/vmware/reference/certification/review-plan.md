@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VMware certification study plan — weekly review schedule, topic weighting by exam blueprint, and milestone checkpoints before exam date."
 ---
 # Virtualization — Review Plan
 

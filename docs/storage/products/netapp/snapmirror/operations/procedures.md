@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapMirror procedures: creating protection relationships, scheduling updates, quiescing for maintenance, breaking for failover, resyncing after outage..."
 ---
 # SnapMirror — Procedures
 

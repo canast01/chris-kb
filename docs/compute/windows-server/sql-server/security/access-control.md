@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "SQL Server access control — logins vs users, server/database roles, GRANT/DENY/REVOKE, schema ownership, and auditing current permissions."
 ---
 # SQL Server — Access Control
 

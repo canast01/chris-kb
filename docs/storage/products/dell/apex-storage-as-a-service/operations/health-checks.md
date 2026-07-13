@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "APEX STaaS health checks: CloudIQ health score review, capacity threshold alerts, latency trending, and dcicli command verification from SCG."
 ---
 # APEX Storage as a Service — Health Checks
 

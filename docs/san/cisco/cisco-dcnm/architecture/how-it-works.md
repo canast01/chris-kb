@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "How It Works reference covering Overview, Deployment Models, Management Flow, Network Requirements, VM Sizing (Standalone, 11.x) and 1 more sections."
 ---
 # Cisco DCNM — How It Works
 

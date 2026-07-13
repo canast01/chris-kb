@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Certification weak areas log — topics that scored below threshold in practice exams, with targeted study notes and reference links."
 ---
 # Virtualization — Weak Areas
 

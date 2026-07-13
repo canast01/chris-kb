@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "The vCenter HA passive node is promoted to active after the active node becomes unreachable. Operators observe a vSphere Client session drop lasting..."
 ---
 # vCenter HA — Passive Node Failover
 

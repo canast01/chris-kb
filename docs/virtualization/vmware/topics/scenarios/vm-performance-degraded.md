@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "A VM is slow or unresponsive. This scenario walks through a layered investigation across Aria Operations, ESXi host metrics, vSAN storage performance, and..."
 ---
 # VM Performance Degraded
 

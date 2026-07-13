@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Weekly operations include reviewing the certificate expiry dashboard for certificates expiring within 30, 60, and 90 days, checking CRL and OCSP responder..."
 ---
 # Certificates — Health Checks
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "PowerShell diagnostic techniques: inspect the $Error automatic variable for exception type and stack trace, enable Set-PSDebug -Trace 2 or Trace-Command..."
 ---
 # PowerShell — Diagnostics
 

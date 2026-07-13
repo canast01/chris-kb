@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "APEX STaaS automation scripts: Python REST client for capacity reporting, CloudIQ API polling, and automated alert-to-ticket integration examples."
 ---
 # Dell Apex STaaS — Scripts
 

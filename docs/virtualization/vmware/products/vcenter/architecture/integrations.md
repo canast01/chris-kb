@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Integrations reference covering Veeam Backup & Replication, Identity and Authentication Integration, Monitoring Integration, NSX Integration."
 ---
 # vCenter — Integrations
 

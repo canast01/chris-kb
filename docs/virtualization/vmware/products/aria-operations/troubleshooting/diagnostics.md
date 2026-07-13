@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Aria Operations (vROps) diagnostic commands: check cluster service health with cluster-mgmt-cli, query the REST API health endpoint, inspect analytics.log..."
 ---
 # Aria Operations — Diagnostics
 

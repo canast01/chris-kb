@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Monitoring ASR replication health is critical for validating that DR protection is active and within acceptable RPO thresholds. Health states reflect the..."
 ---
 # Replication Health
 

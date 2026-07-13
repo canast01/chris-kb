@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Standard procedures covering the full incident lifecycle: declaration through post-incident review and runbook update. Follow these steps in sequence for..."
 ---
 # Incident Handling — Standard Procedures
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - san
+description: "Cisco Data Center Network Manager knowledge base covering SAN fabric management, discovery, inventory, alerts, and monitoring for Cisco Fibre Channel..."
 ---
 # Cisco DCNM
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Storage Private Endpoints reference covering Overview, Creating a Private Endpoint for Storage, DNS Configuration, Verifying Connectivity, Network..."
 ---
 # Azure Storage Private Endpoints
 

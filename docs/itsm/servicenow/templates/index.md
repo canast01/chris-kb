@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "ServiceNow templates — change request, incident, and CMDB entry templates for consistent record quality."
 ---
 # ServiceNow — Templates
 

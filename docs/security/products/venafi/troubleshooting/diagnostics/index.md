@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Venafi TLS Protect diagnostic commands: check Windows service status, test SQL Server connectivity, inspect TPP and VdcLogFile logs, diagnose CA connector..."
 ---
 # Venafi — Diagnostics
 

@@ -5,6 +5,7 @@ tags:
   - vxrail
 search:
   boost: 1.5
+description: "End-to-end deployment guide for a new VxRail cluster. Covers pre-deployment readiness, the First Run Wizard, vCenter integration, vSAN validation, OMIVV..."
 ---
 # VxRail — Deploy
 

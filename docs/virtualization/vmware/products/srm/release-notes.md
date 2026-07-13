@@ -2,6 +2,7 @@
 tags:
   - srm
   - vmware
+description: "Version history and release notes for VMware SRM."
 ---
 # VMware SRM — Release Notes
 

@@ -5,6 +5,7 @@ tags:
   - powerstore
 search:
   boost: 1.5
+description: "Dell PowerStore diagnostic commands: query cluster and hardware health via the REST API, list critical events, check volume and host connectivity, inspect..."
 ---
 # PowerStore — Diagnostics
 

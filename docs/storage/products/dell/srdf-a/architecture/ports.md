@@ -8,6 +8,7 @@ tags:
   - firewall
   - ports
   - replication
+description: "Firewall port reference for Dell SRDF/A (Symmetrix Remote Data Facility / Asynchronous). SRDF replicates data between PowerMax/VMAX arrays. FC-based SRDF..."
 ---
 # Dell SRDF/A — Ports and Network Requirements
 

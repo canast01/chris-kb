@@ -3,6 +3,7 @@ tags:
   - operations
   - srm
   - vmware
+description: "Site Recovery Manager daily operations — protection group management, replication monitoring, test failover, and DR plan maintenance."
 ---
 # Site Recovery Manager — Operations
 

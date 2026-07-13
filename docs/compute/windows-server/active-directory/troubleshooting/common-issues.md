@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 2
+description: "AD failures typically trace back to replication, DNS, time sync, or Kerberos. This page covers the most common failure categories with diagnostic commands."
 ---
 # Active Directory — Common Issues
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "FabricOS backup and restore: configupload to FTP/SCP, firmwaredownload staging, disaster recovery from a saved config, and switch replacement procedure."
 ---
 # FabricOS — Backup & Restore
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Backup & Restore reference covering Overview, DDBoost Restore (Backup Application), NFS Direct Restore, CIFS/SMB Direct Restore, VTL Restore and 5 more..."
 ---
 # Data Domain — Backup & Restore
 

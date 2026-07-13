@@ -2,6 +2,7 @@
 tags:
   - vsphere
   - operations
+description: "Quick-reference material for VMware infrastructure: cheat sheets, interaction maps, decision trees, glossaries, and version matrices."
 ---
 # Quick Reference
 

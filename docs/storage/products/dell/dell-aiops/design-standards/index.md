@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell AIOps Standards reference covering System Tagging Requirements, Recommendation Priority and Response SLA, Alert Routing, Change Management..."
 ---
 # Dell AIOps Standards
 

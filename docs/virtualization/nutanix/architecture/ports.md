@@ -6,6 +6,7 @@ tags:
   - ports
   - ahv
   - prism
+description: "Firewall port reference for Nutanix AHV clusters. Covers Prism management, CVM-to-CVM cluster fabric, AHV live migration, storage protocols, remote..."
 ---
 # Nutanix — Ports and Network Requirements
 

@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - san
+description: "Recommended reading order for Cisco MDS 9000. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Cisco MDS 9000 — Learning Path
 

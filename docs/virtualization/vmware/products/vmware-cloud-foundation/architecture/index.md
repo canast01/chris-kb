@@ -3,6 +3,7 @@ tags:
   - architecture
   - vcf
   - vmware
+description: "VMware Cloud Foundation (VCF) is a full-stack SDDC platform. SDDC Manager orchestrates vSphere, vSAN, and NSX as a validated, lifecycle-managed unit..."
 ---
 # VCF — Architecture
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "CloudIQ hardening: audit log retention policy, MFA enforcement for admin accounts, IP allowlist configuration, and SIEM integration via syslog or REST API."
 ---
 # CloudIQ — Hardening
 

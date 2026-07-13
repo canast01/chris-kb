@@ -1,6 +1,7 @@
 ---
 tags:
   - jira
+description: "Version history and release notes for Jira."
 ---
 # Jira — Release Notes
 

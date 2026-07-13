@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing SRDF/A cycle failures, delta set overflow, link errors, and async RPO violations."
 ---
 # SRDF/A — Troubleshooting
 

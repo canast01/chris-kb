@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - storage
+description: "Firewall port reference for Dell Unity XT storage arrays. Covers Unisphere management, NFS, SMB, iSCSI, and Unity native replication."
 ---
 # Dell Unity — Ports and Network Requirements
 

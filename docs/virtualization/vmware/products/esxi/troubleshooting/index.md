@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 1.5
+description: "Troubleshooting reference for VMware ESXi. Covers common host failure patterns, diagnostic commands, log collection, and escalation procedures for..."
 ---
 # ESXi — Troubleshooting
 

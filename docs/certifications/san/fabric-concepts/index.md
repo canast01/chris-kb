@@ -2,6 +2,7 @@
 tags:
   - certifications
   - san
+description: "SAN Fabric Concepts reference covering Fibre Channel Layer Model, Port Types, WWPN vs WWNN, Fabric IDs and Domain IDs, Fabric Login Sequence and 2 more..."
 ---
 # SAN Fabric Concepts
 

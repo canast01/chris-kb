@@ -3,6 +3,7 @@ tags:
   - ollama
   - ai
   - local-ai
+description: "Ollama is a tool for running large language models locally. You download models to your machine and talk to them through the ollama command or its..."
 ---
 # Ollama CLI Reference
 

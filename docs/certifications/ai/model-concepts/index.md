@@ -1,6 +1,7 @@
 ---
 tags:
   - certifications
+description: "AI Model Concepts reference covering Transformers and Attention Mechanisms, Embeddings, Tokens and Tokenization, Fine-Tuning vs. RAG vs. Prompting..."
 ---
 # AI Model Concepts
 

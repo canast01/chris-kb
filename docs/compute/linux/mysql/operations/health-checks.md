@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "MySQL/MariaDB health checks: SHOW SLAVE STATUS, SHOW PROCESSLIST, SHOW ENGINE INNODB STATUS, mysqlcheck, and replication lag monitoring queries."
 ---
 # MySQL / MariaDB — Health Checks
 

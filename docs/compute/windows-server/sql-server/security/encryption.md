@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "SQL Server encryption — Transparent Data Encryption (TDE), Always Encrypted, column-level encryption, TLS for connections, and backup encryption."
 ---
 # SQL Server — Encryption
 

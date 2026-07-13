@@ -2,6 +2,7 @@
 tags:
   - aws
   - security
+description: "AWS IAM permissions for EVS cluster management, vSphere RBAC roles for VMs and infrastructure, SDDC Manager roles, and least-privilege design principles."
 ---
 # Amazon EVS — Access Control
 

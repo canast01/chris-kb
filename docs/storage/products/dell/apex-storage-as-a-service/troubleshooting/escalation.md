@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Dell APEX Storage-as-a-Service escalation: how to collect multipath, SCG, and CloudIQ diagnostics, open a support case via the APEX Console or Dell..."
 ---
 # APEX Storage as a Service — Escalation
 

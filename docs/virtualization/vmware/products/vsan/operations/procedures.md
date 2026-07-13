@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "Operational how-to guides for day-to-day vSAN management. Each section covers a specific task area with concrete steps, commands, and validation."
 ---
 # vSAN — Procedures
 

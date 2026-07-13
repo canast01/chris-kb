@@ -5,6 +5,7 @@ tags:
   - san
   - networking
   - known-issues
+description: "Catalog of known Fibre Channel issues covering HBA, fabric login, zoning, and link instability."
 ---
 # Fibre Channel — Known Issues and Error Codes
 

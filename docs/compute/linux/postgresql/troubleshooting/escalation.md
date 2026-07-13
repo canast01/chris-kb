@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Data): what data to collect, how to capture pg_stat_activity and WAL state..."
 ---
 # PostgreSQL — Escalation
 

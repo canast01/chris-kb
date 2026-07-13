@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "SNMP is the primary protocol for collecting metrics from network devices, storage arrays, and infrastructure components that do not expose native..."
 ---
 # SNMP in Monitoring
 

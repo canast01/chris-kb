@@ -2,6 +2,7 @@
 tags:
   - aws
   - security
+description: "vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, MFA for AWS console access, SSH key rotation for EVS bare-metal hosts, and..."
 ---
 # Amazon EVS — Authentication
 

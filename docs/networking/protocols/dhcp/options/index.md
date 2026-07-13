@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "DHCP Options reference covering Overview, Common Option Codes, Setting Scope-Level Options, Setting Server-Level Options, Vendor-Specific Options (043)..."
 ---
 # DHCP Options
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Commvault backup issues to Commvault support: what data to collect, how to generate the CV_DIAG bundle, step-by-step case creation on the..."
 ---
 # Commvault — Escalation
 

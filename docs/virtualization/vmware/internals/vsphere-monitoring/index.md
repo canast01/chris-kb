@@ -3,6 +3,7 @@ title: vSphere Monitoring
 tags:
   - internals
   - vmware
+description: "Reference for vSphere observability. Covers performance chart metrics (CPU Ready, memory balloon, disk latency), log file locations on ESXi and vCenter..."
 ---
 
 # vSphere Monitoring — Performance, Logs, and Skyline

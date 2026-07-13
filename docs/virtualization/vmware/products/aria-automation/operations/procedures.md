@@ -3,6 +3,7 @@ tags:
   - aria-automation
   - operations
   - vmware
+description: "Day-2 operational procedures for Aria Automation — managing cloud accounts, projects, catalog items, extensibility actions, and deployment lifecycle..."
 ---
 # Aria Automation — Operational Procedures
 

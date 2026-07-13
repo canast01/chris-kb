@@ -3,6 +3,7 @@ tags:
   - tanzu
   - faq
   - operations
+description: "Common questions about VMware Tanzu operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # VMware Tanzu — Frequently Asked Questions
 

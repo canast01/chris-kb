@@ -2,6 +2,7 @@
 tags:
   - operations
   - powershell
+description: "General-purpose PowerShell automation patterns — ITSM scripts for daily checks, incident triage, change management, and health validation..."
 ---
 # PowerShell — Scripts
 

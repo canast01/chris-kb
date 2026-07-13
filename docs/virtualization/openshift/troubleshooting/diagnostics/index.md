@@ -3,6 +3,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnostic tools and techniques: must-gather collection, oc adm inspect, Prometheus-based diagnostics, OVN network tracing, log aggregation, and etcd..."
 ---
 # OpenShift — Diagnostics
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Change Approval Process reference covering Change Types and Approval Requirements, CAB Approval Workflow, Risk Classification Matrix, ITSM Approval..."
 ---
 # Change Approval Process
 

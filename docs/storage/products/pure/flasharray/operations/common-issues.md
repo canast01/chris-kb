@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Known Issues reference covering Quick Reference, Incident Triage, Performance Issues, Latency Targets."
 ---
 # FlashArray — Known Issues
 

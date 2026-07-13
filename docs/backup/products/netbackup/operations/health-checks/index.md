@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - operations
+description: "Health Checks reference covering Daily Check Flow, Daily Checklist, Job Monitoring, Validation."
 ---
 # NetBackup — Health Checks
 

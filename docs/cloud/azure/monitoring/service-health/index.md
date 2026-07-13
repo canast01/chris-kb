@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Service Health provides personalised alerts and guidance for Azure service issues, planned maintenance, and health advisories that affect the..."
 ---
 # Service Health
 

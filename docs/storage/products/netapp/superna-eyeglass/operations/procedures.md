@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Procedures reference covering Failover, Failback, Day-to-Day Operations."
 ---
 # Superna Eyeglass — Procedures
 

@@ -7,6 +7,7 @@ tags:
   - firewall
   - ports
   - vsphere
+description: "Firewall port reference for VMware PowerCLI. PowerCLI is a scripting client with no listening ports. The relevant firewall rules are the outbound API..."
 ---
 # PowerCLI — Ports and Network Requirements
 

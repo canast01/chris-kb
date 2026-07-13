@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Encryption reference covering CA Key Protection Hierarchy, CA Key Protection, CRL Availability."
 ---
 # Certificates — Encryption
 

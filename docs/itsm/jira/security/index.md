@@ -2,6 +2,7 @@
 tags:
   - jira
   - security
+description: "Jira hardening — permission schemes, project roles, application access, and Jira Software security configuration."
 ---
 # Jira — Security
 

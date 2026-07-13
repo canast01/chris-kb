@@ -2,6 +2,7 @@
 title: VxRail
 tags:
   - vxrail
+description: "Operational reference for Dell VxRail HCI. Covers architecture, lifecycle management, operations, CLI reference, troubleshooting, integration, and vendor..."
 ---
 
 # VxRail

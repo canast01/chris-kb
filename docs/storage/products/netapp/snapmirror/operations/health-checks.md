@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapMirror health checks: snapmirror show -fields lag-time,health, relationship state review, last-transfer-size trend, and broken-off relationship count."
 ---
 # SnapMirror — Health Checks
 

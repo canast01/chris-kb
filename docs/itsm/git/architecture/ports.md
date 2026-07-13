@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for self-hosted Git platforms (GitLab, Bitbucket Data Center). Covers web/API, SSH Git operations, CI/CD runner connections, and..."
 ---
 # Git (Self-Hosted) — Ports and Network Requirements
 

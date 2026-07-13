@@ -1,6 +1,7 @@
 ---
 tags:
   - linux
+description: "Linux server infrastructure running RHEL and Ubuntu — systemd service management, LVM2 storage, LACP bonded networking, SELinux/AppArmor security, and..."
 ---
 # Linux Server
 

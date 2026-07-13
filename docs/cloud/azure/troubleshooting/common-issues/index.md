@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Azure common issues — VM connectivity failures, NSG rule analysis, effective route troubleshooting, Azure Firewall and NVA blocks, DNS resolution errors..."
 ---
 # Azure — Common Issues
 

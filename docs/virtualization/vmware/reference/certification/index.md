@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VMware certification study notes — exam tracking, weak areas, and review plans."
 ---
 # Virtualization — Certifications
 

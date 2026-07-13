@@ -2,6 +2,7 @@
 title: AI — Certifications
 tags:
   - certifications
+description: "Cloud AI certifications tracker: AWS ML Specialty, Azure AI Engineer, and OpenAI certifications with exam objectives, study resources, and progress notes."
 ---
 
 # AI — Certifications

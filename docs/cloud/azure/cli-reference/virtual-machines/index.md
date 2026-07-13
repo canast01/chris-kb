@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure CLI commands for VM management — create, resize, deallocate, managed disks, extensions, and snapshot operations."
 ---
 # Azure CLI — Virtual Machines
 

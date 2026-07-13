@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Cost articles, operational checks, troubleshooting notes, and references."
 ---
 # Azure Cost
 

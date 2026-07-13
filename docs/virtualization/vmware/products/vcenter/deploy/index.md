@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 2
+description: "End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers pre-deployment DNS/NTP checks, Stage 1 OVA deployment, Stage 2 SSO and..."
 ---
 # vCenter — Deploy
 

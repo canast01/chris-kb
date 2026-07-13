@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Change request templates — standard, normal, and emergency change record templates ensuring consistent field completion and risk assessment."
 ---
 # ServiceNow — Change Templates
 

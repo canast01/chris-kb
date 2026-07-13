@@ -2,6 +2,7 @@
 tags:
   - operations
   - veeam
+description: "PowerShell scripts for Veeam job management, capacity reporting, SLA health checks, and backup copy automation."
 ---
 # Veeam — Scripts
 

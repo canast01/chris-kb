@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Aria Suite Lifecycle (vRSLCM) diagnostic commands: check service health, inspect vlcm.log for errors, verify certificate expiry for all managed products..."
 ---
 # Aria Suite Lifecycle — Diagnostics
 

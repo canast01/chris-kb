@@ -4,6 +4,7 @@ tags:
   - linux
 search:
   boost: 1.5
+description: "Linux Server initial deployment: OS install, NTP, syslog forwarding, hardening baseline, optional domain join, and post-install validation."
 ---
 # Linux Server — Initial Deployment
 

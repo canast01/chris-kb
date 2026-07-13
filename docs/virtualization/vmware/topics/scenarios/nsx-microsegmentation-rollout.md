@@ -4,6 +4,7 @@ tags:
   - nsx-4
   - scenarios
   - vmware
+description: "Microsegmentation applies DFW firewall rules to east-west VM traffic at the hypervisor level — without requiring network re-architecture or physical..."
 ---
 # NSX Microsegmentation Rollout
 

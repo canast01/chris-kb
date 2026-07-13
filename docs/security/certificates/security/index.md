@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Certificate security controls — CA trust chain management, key storage, mTLS enforcement, and TLS policy hardening."
 ---
 # Certificates — Security
 

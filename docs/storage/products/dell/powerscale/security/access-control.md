@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Roles, permissions, and least privilege access for Dell PowerScale."
 ---
 # PowerScale — Access Control
 

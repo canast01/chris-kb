@@ -3,6 +3,7 @@ tags:
   - aria-operations
   - operations
   - vmware
+description: "Capacity forecasting predicts when a resource will be exhausted based on historical trend data, enabling proactive expansion before impact occurs."
 ---
 # Capacity Forecasting
 

@@ -2,6 +2,7 @@
 tags:
   - security
   - terraform
+description: "Hardening reference covering Security Scanning Pipeline, Dependency and Provider Security, Hardening Checklist."
 ---
 # Terraform — Hardening
 

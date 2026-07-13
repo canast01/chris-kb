@@ -3,6 +3,7 @@ tags:
   - pure1
   - faq
   - operations
+description: "Common questions about Pure1 operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Pure1 — Frequently Asked Questions
 

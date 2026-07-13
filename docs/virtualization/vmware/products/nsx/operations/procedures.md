@@ -4,6 +4,7 @@ tags:
   - nsx-4
   - operations
   - vmware
+description: "Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies, NAT, load balancers, IPsec VPN, certificate rotation, backup/restore, and..."
 ---
 # NSX — Standard Procedures
 

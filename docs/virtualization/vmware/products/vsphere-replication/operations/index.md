@@ -3,6 +3,7 @@ tags:
   - operations
   - vmware
   - vsphere-replication
+description: "vSphere Replication daily operations — RPO monitoring, replication group management, and test recovery procedures."
 ---
 # vSphere Replication — Operations
 

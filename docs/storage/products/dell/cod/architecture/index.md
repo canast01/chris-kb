@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Software-defined capacity licensing for Dell PowerMax and VMAX arrays. Physical drives are pre-installed at the factory but logically locked until a COD..."
 ---
 # Capacity on Demand — Architecture
 

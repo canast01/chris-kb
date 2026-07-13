@@ -2,6 +2,7 @@
 tags:
   - architecture
   - aws
+description: "AWS architecture design standards: multi-account landing zone layout, VPC CIDR allocation, transit gateway design, IAM boundary policies, and tagging..."
 ---
 # AWS — Standards
 

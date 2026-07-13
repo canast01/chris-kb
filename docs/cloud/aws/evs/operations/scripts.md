@@ -2,6 +2,7 @@
 tags:
   - aws
   - operations
+description: "Operational scripts for EVS: daily health check, host add/remove workflow, vSAN capacity report, HCX migration status tracker, safe host removal, VCF..."
 ---
 # Amazon EVS — Scripts
 

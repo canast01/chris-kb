@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Run this check weekly to confirm all management endpoints are reachable and access controls are healthy."
 ---
 # Management Access Check
 

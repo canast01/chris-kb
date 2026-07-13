@@ -3,6 +3,7 @@ tags:
   - dell-powerpath
   - faq
   - operations
+description: "Common questions about Dell PowerPath operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell PowerPath — Frequently Asked Questions
 

@@ -3,6 +3,7 @@ tags:
   - security
   - vmware
   - vxrail
+description: "RBAC and access scoping for VxRail in the VMware product context. Covers VxRail Manager roles, vSphere RBAC, lockdown mode, exception users, OMIVV..."
 ---
 # VxRail — Access Control
 

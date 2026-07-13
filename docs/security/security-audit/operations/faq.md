@@ -3,6 +3,7 @@ tags:
   - security-audit
   - faq
   - operations
+description: "Common questions about Security Audit operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Security Audit — Frequently Asked Questions
 

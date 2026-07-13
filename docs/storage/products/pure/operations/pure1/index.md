@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Pure1 Cloud Management reference covering Accessing Pure1, Key Navigation Areas, Capacity Planning, Pure1 AI (Copilot), Phone-Home Connectivity and 2 more..."
 ---
 # Pure1 Cloud Management
 

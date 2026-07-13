@@ -2,6 +2,7 @@
 tags:
   - jira
   - operations
+description: "Jira operational procedures — story and epic creation, sprint management, backlog grooming, workflow configuration, user and permission management, board..."
 ---
 # Jira — Procedures
 

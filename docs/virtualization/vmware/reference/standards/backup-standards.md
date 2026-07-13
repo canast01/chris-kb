@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VMware Backup Standards reference covering Critical VM Backup Policy, Standard VM Backup Policy, vCenter Backup, Snapshot Handling, Backup Monitoring and..."
 ---
 # VMware Backup Standards
 

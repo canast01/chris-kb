@@ -4,6 +4,7 @@ tags:
   - vplex
   - dell
   - known-issues
+description: "Catalog of known VPLEX bugs, error codes, and workarounds covering Metro clustering, WAN COM, and host connectivity."
 ---
 # Dell VPLEX — Known Issues and Error Codes
 

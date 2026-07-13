@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "VxRail automation scripts: PowerShell and Python wrappers for VxRail Manager REST API, cluster health polling, LCM status checks, and upgrade pre-flight..."
 ---
 # VxRail — Scripts
 

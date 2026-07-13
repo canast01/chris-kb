@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - monitoring
+description: "Firewall port reference for Dell CloudIQ. CloudIQ is Dell's SaaS analytics and health monitoring platform. All Dell storage arrays that participate in..."
 ---
 # Dell CloudIQ — Ports and Network Requirements
 

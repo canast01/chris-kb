@@ -3,6 +3,7 @@ tags:
   - aria-networks
   - operations
   - vmware
+description: "Day-2 procedures for VMware Aria Operations for Networks — data source management, application discovery, micro-segmentation planning, flow investigation..."
 ---
 # AON Operational Procedures
 

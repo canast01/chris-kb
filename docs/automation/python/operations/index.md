@@ -2,6 +2,7 @@
 tags:
   - operations
   - python
+description: "Running, scheduling, and maintaining Python automation scripts — virtual environments, dependency management, and job monitoring."
 ---
 # Python Automation — Operations
 

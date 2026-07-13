@@ -2,6 +2,7 @@
 tags:
   - architecture
   - aws
+description: "Amazon EVS runs VMware Cloud Foundation on dedicated bare-metal EC2 instances inside your VPC. The cluster nodes are physical hosts you don't share with..."
 ---
 # Amazon EVS — How It Works
 

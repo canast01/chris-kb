@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "A full datastore stops VMs from writing to disk — they pause or crash within seconds of the datastore becoming completely full. On vSAN, the write-stop..."
 ---
 # Datastore Full / Capacity Alarm
 

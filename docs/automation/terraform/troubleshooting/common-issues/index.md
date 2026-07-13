@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Common Issues reference covering Terraform Troubleshooting Decision Flow, Refresh and Reconciliation Issues, Workspace Issues, Common Error Reference."
 ---
 # Terraform — Common Issues
 

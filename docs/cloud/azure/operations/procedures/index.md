@@ -2,6 +2,7 @@
 tags:
   - azure
   - operations
+description: "Day-to-day operational tasks across compute, storage, and networking."
 ---
 # Azure — Procedures
 

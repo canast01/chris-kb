@@ -1,6 +1,7 @@
 ---
 tags:
   - linux
+description: "Version history and release notes for MySQL."
 ---
 # MySQL — Release Notes
 

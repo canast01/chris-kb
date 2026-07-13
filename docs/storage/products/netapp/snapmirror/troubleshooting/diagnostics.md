@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SnapMirror diagnostic commands: check relationship health and lag with snapmirror show, diagnose intercluster LIF connectivity, trace transfer errors in..."
 ---
 # SnapMirror — Diagnostics
 

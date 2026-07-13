@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing RecoverPoint replication failures, consistency group errors, splitter connectivity, and RPO violations."
 ---
 # RecoverPoint — Troubleshooting
 

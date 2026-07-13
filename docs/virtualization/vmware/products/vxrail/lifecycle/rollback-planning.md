@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "VxRail Node Replacement Checklist reference covering Confirm the Issue, Capture Current Node Details, Validate Cluster Health Before Replacement..."
 ---
 # VxRail Node Replacement Checklist
 

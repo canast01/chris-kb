@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell FoD CLI reference: emccollect usage, SCG telemetry commands, capacity entitlement queries, and symcli for Flex on Demand pool management."
 ---
 # Flex on Demand (FOD) — CLI Reference
 

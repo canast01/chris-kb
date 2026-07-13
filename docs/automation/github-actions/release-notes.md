@@ -1,6 +1,7 @@
 ---
 tags:
   - github-actions
+description: "Version history and release notes for GitHub Actions."
 ---
 # GitHub Actions — Release Notes
 

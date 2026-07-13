@@ -3,6 +3,7 @@ tags:
   - operations
   - vmware
   - vsphere-replication
+description: "Operational procedures for vSphere Replication — configuring VM replication, managing RPO, handling stuck replications, non-disruptive test recovery..."
 ---
 # vSphere Replication — Procedures
 

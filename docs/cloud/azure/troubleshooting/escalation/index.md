@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "What to collect before opening a support case and how to engage Microsoft support."
 ---
 # Azure — Escalation
 

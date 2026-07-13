@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Architecture reference for Pure Storage Evergreen. Covers the non-disruptive controller refresh model, active-active HA, DirectFlash Modules, host..."
 ---
 # Evergreen — Architecture
 

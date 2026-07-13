@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Windows Server install and upgrade: WDS/MDT deployment, Windows Update via WSUS or SCCM, in-place upgrade procedure, and decommission checklist."
 ---
 # Windows Server — Install & Upgrade
 

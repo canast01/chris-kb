@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Storage Accounts reference covering Overview, Storage Account Service Hierarchy, Account Types, Replication Options, Creating Storage Accounts and 3..."
 ---
 # Azure Storage Accounts
 

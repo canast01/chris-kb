@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "RecoverPoint day-to-day operations — consistency group management, RPO monitoring, journal sizing, and test failover procedures."
 ---
 # RecoverPoint — Operations
 

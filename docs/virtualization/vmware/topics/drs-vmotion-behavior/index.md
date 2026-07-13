@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "DRS and vMotion Behavior reference covering DRS Modes, vMotion Requirements, EVC (Enhanced vMotion Compatibility), vMotion Validation, Common vMotion..."
 ---
 # DRS and vMotion Behavior
 

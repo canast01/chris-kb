@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Standards reference covering Sizing Guidelines, Naming Conventions, Build Baseline, Configuration Checklist."
 ---
 # PowerScale — Standards
 

@@ -4,6 +4,7 @@ tags:
   - security
   - vmware
   - vsphere-8
+description: "ESXi Encryption reference covering Encrypt a VM, vSAN Encryption, ESXi Host Encryption — Secure Boot and TPM, ESXi SSL/TLS Certificate Management..."
 ---
 # ESXi Encryption
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Restore testing validates that backup data is usable and that recovery procedures work as documented."
 ---
 # Restore Testing
 

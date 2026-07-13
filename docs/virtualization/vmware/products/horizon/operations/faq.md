@@ -3,6 +3,7 @@ tags:
   - horizon
   - faq
   - operations
+description: "Common questions about VMware Horizon operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # VMware Horizon — Frequently Asked Questions
 

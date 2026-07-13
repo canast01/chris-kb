@@ -4,6 +4,7 @@ tags:
   - vsphere-replication
   - vmware
   - known-issues
+description: "Catalog of known vSphere Replication bugs, error codes, and workarounds covering replication configuration, RPO violations, and appliance issues."
 ---
 # VMware vSphere Replication — Known Issues and Error Codes
 

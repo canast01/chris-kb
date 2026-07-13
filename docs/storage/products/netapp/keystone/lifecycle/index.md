@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "NetApp Keystone Lifecycle reference covering Subscription Terms and Renewal, True-Up Process, Hardware Refresh, Collector Lifecycle, Subscription Exit and..."
 ---
 # NetApp Keystone Lifecycle
 

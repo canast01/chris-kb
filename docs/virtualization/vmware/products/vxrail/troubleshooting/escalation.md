@@ -5,6 +5,7 @@ tags:
   - vxrail
 search:
   boost: 1.5
+description: "How to escalate Dell VxRail issues to Dell Technologies support: what data to collect, how to generate the VxRail support bundle, step-by-step case..."
 ---
 # VxRail — Escalation
 

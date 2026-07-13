@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Integrations reference covering Connectivity and Integration Points, Secure Connect Gateway, Email Notifications, Webhook Notifications, REST API..."
 ---
 # CloudIQ — Integrations
 

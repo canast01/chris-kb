@@ -3,6 +3,7 @@ tags:
   - saml-configuration
   - faq
   - operations
+description: "Common questions about SAML Configuration operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # SAML Configuration — Frequently Asked Questions
 

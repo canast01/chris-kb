@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "Windows Server Active Directory forest with multi-site domain controllers, Kerberos authentication, LDAP directory services, and FSMO role delegation..."
 ---
 # Active Directory — Architecture
 

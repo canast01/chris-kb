@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Virtualization Glossary reference covering HA, DRS, vMotion, Storage vMotion, Snapshot and 5 more sections."
 ---
 # Virtualization Glossary
 

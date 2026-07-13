@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "Storage vMotion (svMotion) migrates a VM's VMDKs from one datastore to another while the VM stays powered on and serving workloads. It is the correct tool..."
 ---
 # Storage vMotion / Datastore Migration
 

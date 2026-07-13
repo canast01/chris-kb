@@ -2,6 +2,7 @@
 tags:
   - certifications
   - vmware
+description: "Products reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections."
 ---
 # Products
 

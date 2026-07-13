@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Install & Upgrade reference covering vCenter Upgrade Procedure (VCSA), vSphere Lifecycle Manager (vLCM), Interoperability Matrix, Patch Cadence, EOL..."
 ---
 # vCenter — Install & Upgrade
 

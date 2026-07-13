@@ -4,6 +4,7 @@ tags:
   - deployment
 search:
   boost: 1.5
+description: "Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defender for Cloud, Log Analytics, Sentinel, Entra ID baseline, Hub VNet, and..."
 ---
 # Azure — Subscription and Landing Zone Setup
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - linux
+description: "PostgreSQL open-source object-relational database — MVCC, streaming replication, autovacuum."
 ---
 # PostgreSQL
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "Cisco MDS day-to-day operations — VSAN management, zoning, port administration, and fabric health monitoring."
 ---
 # MDS — Operations
 

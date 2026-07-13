@@ -5,6 +5,7 @@ tags:
   - aws
   - vmware
   - known-issues
+description: "Catalog of known AWS EVS bugs and workarounds. EVS runs VMware vSphere, vSAN, and NSX on AWS bare-metal — issues may be at the AWS control plane layer or..."
 ---
 # AWS Elastic VMware Service (EVS) — Known Issues and Error Codes
 

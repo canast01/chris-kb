@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Use Cases, How It Works, Underlying Platforms, Best Practices."
 ---
 # APEX Storage as a Service — How It Works
 

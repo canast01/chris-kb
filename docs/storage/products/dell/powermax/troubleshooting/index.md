@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing PowerMax SRDF failures, provisioning errors, host connectivity issues, and performance degradation."
 ---
 # PowerMax — Troubleshooting
 

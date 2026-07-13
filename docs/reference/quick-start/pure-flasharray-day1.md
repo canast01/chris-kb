@@ -3,6 +3,7 @@ tags:
   - pure-storage
   - flasharray
   - quick-start
+description: "What to do in your first hour with a new Pure Storage FlashArray. Covers array orientation, drive and hardware health, protection group schedules..."
 ---
 # Pure FlashArray Day 1 — New Environment Checklist
 

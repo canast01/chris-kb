@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "| Field | Value | |---|---| | Risk | Medium | | Approval | Change ticket required; maintenance window recommended for production | | Estimated time |..."
 ---
 # Server Reboot Runbook
 

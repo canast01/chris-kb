@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "ServiceNow knowledge base covering multi-instance SaaS architecture, ITSM/CMDB processes, MID Server integration, security, and troubleshooting."
 ---
 # ServiceNow
 

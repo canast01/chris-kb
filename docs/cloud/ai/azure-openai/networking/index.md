@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "By default, Azure OpenAI resources accept traffic from all public IP addresses. For production deployments, restrict access using private endpoints, VNet..."
 ---
 # Azure OpenAI Networking
 

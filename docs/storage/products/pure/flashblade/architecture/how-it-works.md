@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "How It Works reference covering Overview, Scale-Out Architecture, HA Topology, Connectivity, File Services and 3 more sections."
 ---
 # FlashBlade — How It Works
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "SRDF/A security controls — management access restrictions, SRDF encryption, and Unisphere for PowerMax hardening."
 ---
 # SRDF/A — Security
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "How It Works reference covering Overview, Kernel Subsystem Architecture, LVM Stack, Storage Stack, Network Stack and 1 more sections."
 ---
 # Linux — How It Works
 

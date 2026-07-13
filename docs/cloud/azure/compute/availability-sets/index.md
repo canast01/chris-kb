@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Availability Sets provide high availability for Azure VMs by distributing them across fault domains (separate physical hardware) and update domains..."
 ---
 # Availability Sets
 

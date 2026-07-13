@@ -2,6 +2,7 @@
 tags:
   - architecture
   - commvault
+description: "How It Works reference covering Overview, Component Topology, MediaAgent and Deduplication, Storage Library Types, Port Requirements and 1 more sections."
 ---
 # Commvault — How It Works
 

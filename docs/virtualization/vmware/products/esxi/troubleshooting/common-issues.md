@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 2
+description: "Common Issues reference covering Resolution Steps, All Paths Down (APD) — Storage, High CPU Ready Time, High Memory Ballooning or Swapping, PSOD (Purple..."
 ---
 # ESXi — Common Issues
 

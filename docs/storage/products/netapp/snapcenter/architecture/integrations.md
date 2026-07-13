@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "SnapCenter integrations: vSphere plugin for VM-consistent snapshots, ONTAP SnapMirror chain for DR copies, SnapVault for long-term retention, and Active..."
 ---
 # SnapCenter — Integrations
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "MySQL diagnostic commands: read the error log, inspect active sessions with SHOW FULL PROCESSLIST, find lock contention with innodb_lock_waits, analyse..."
 ---
 # MySQL / MariaDB — Diagnostics
 

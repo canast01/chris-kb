@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Commvault diagnostic commands: identify job failures with qlist, test component connectivity with cvping, verify DDB health, read CommServe and MediaAgent..."
 ---
 # Commvault — Diagnostics
 

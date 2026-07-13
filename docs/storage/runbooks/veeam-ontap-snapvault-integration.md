@@ -7,6 +7,7 @@ tags:
   - backup
   - data-protection
   - runbook
+description: "Cross-product runbook for integrating Veeam Backup &amp; Replication with NetApp ONTAP SnapVault. Covers ONTAP SnapVault source/destination configuration..."
 ---
 
 # Veeam Backup with ONTAP SnapVault Integration

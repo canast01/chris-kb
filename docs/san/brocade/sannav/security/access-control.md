@@ -2,6 +2,7 @@
 tags:
   - san
   - security
+description: "Access Control reference covering Overview, Built-In Roles, Resource Group Scoping, Service Accounts, Least Privilege Guidance and 2 more sections."
 ---
 # SANnav — Access Control
 

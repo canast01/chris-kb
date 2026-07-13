@@ -4,6 +4,7 @@ tags:
   - servicenow
   - itsm
   - known-issues
+description: "Catalog of known ServiceNow bugs, error codes, and workarounds covering MID Server, integrations, and instance performance."
 ---
 # ServiceNow — Known Issues and Error Codes
 

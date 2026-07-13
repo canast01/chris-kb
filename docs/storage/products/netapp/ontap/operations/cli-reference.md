@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FAS, ONTAP Select). The CLI uses a dot-separated namespace — storage..."
 ---
 # ONTAP — CLI Reference
 

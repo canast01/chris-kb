@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Backup configuration, restore procedures, and validation for Dell PowerScale."
 ---
 # PowerScale — Backup & Restore
 

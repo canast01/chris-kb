@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "vCenter Server is the management plane for VMware vSphere, deployed as the VCSA appliance. It supports standard single-node, vCenter HA (3-node..."
 ---
 # vCenter — Architecture
 

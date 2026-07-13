@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Mid-range unified storage — block (FC/iSCSI), file (NFS/SMB), and VMware integration with dual storage processor active-active architecture, FAST Cache..."
 ---
 # Dell Unity XT
 

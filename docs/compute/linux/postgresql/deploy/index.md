@@ -4,6 +4,7 @@ tags:
   - linux
 search:
   boost: 1.5
+description: "PostgreSQL initial deployment — installation on RHEL/Ubuntu, postgresql.conf baseline tuning, pg_hba.conf access control, firewall, and first-connection..."
 ---
 # PostgreSQL — Initial Deployment
 

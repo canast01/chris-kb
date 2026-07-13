@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Business Impact Assessment reference covering Overview, Impact Dimensions, User Impact Categories, SLA Breach Assessment, Affected Services Inventory and..."
 ---
 # Business Impact Assessment
 

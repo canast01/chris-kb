@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "Resource Contention Modeling reference covering CPU Contention, Memory Contention, Storage Latency, Network Contention, Contention Response Actions and 1..."
 ---
 # Resource Contention Modeling
 

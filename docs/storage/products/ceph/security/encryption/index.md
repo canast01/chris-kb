@@ -2,6 +2,7 @@
 tags:
   - ceph
   - security
+description: "Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-image, RGW server-side encryption with KMS, and in-transit encryption via..."
 ---
 # Ceph — Encryption
 

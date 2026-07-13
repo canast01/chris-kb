@@ -3,6 +3,7 @@ tags:
   - dell-cloudiq
   - faq
   - operations
+description: "Common questions about Dell CloudIQ operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell CloudIQ — Frequently Asked Questions
 

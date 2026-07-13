@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Scale-out software-defined object storage — S3, Swift, and CAS APIs, geo-distributed Virtual Data Centers, multi-tenant namespaces, and compliance..."
 ---
 # Dell ECS
 

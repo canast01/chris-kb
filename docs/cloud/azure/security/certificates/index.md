@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Azure Key Vault manages X.509 certificates, providing lifecycle management including creation, import, auto-renewal, and expiry alerting. Key Vault..."
 ---
 # Azure — Certificates
 

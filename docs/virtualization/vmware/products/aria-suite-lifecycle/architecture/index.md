@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-lcm
   - vmware
+description: "Central management appliance for deploying and upgrading the full VMware Aria Suite. Orchestrates pre-check → snapshot → stage → upgrade → post-check as a..."
 ---
 # Aria Suite Lifecycle — Architecture
 

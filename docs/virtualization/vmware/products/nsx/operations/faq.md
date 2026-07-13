@@ -3,6 +3,7 @@ tags:
   - nsx
   - faq
   - operations
+description: "Common questions about VMware NSX operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # VMware NSX — Frequently Asked Questions
 

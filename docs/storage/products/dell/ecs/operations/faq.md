@@ -3,6 +3,7 @@ tags:
   - dell-ecs
   - faq
   - operations
+description: "Common questions about Dell ECS (Elastic Cloud Storage) operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations..."
 ---
 # Dell ECS (Elastic Cloud Storage) — Frequently Asked Questions
 

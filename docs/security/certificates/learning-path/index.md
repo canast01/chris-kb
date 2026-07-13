@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - security
+description: "Recommended reading order for PKI and certificate management. Follow these stages in order to build a complete mental model before working with it in..."
 ---
 # PKI & Certificates — Learning Path
 

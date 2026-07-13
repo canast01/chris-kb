@@ -2,6 +2,7 @@
 tags:
   - aws
   - certifications
+description: "AWS Practice Notes reference covering Service Comparison Tables, Common Gotchas, Architecture Patterns, IAM Quick Reference, Study Checklist."
 ---
 # AWS Practice Notes
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Dell VPLEX — Troubleshooting navigation for Common Issues, Diagnostics, Escalation."
 ---
 # Dell VPLEX — Troubleshooting
 

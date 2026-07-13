@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "PostgreSQL automation scripts — base backup, WAL archiving, replication lag monitor, bloat report, long-running transaction alert, and connection trend..."
 ---
 # PostgreSQL — Scripts
 

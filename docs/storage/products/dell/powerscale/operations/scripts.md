@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Automation scripts and reusable code for Dell PowerScale operations."
 ---
 # PowerScale — Scripts
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Network Connectivity Troubleshooting reference covering Overview, Failure Classification by OSI Layer, Diagnostic Flowchart, VLAN and Trunk Verification..."
 ---
 # Network Connectivity Troubleshooting
 

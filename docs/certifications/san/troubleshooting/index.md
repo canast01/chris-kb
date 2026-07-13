@@ -5,6 +5,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SAN Troubleshooting reference covering Diagnostic Scenario Reference, FLOGI Failure — Troubleshooting Sequence, Zone Not Active — Troubleshooting..."
 ---
 # SAN Troubleshooting
 

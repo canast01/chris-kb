@@ -3,6 +3,7 @@ tags:
   - security-monitoring
   - faq
   - operations
+description: "Common questions about Security Monitoring operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Security Monitoring — Frequently Asked Questions
 

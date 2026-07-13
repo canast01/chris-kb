@@ -2,6 +2,7 @@
 tags:
   - architecture
   - git
+description: "Git is a distributed version control system where every clone is a complete repository. Enterprise deployments use GitHub Enterprise Server or GitLab..."
 ---
 # Git — Architecture
 

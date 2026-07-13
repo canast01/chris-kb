@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Security baselines and compliance configuration for Dell PowerScale."
 ---
 # PowerScale — Hardening
 

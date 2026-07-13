@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "![Disaster Recovery Design Overview](../../../assets/disaster-recovery-design-overview.svg)"
 ---
 # Disaster Recovery Design
 

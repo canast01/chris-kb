@@ -5,6 +5,7 @@ tags:
   - foundation
 search:
   boost: 1.5
+description: "End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-flight, cluster creation via ncli, network configuration, Prism Element initial..."
 ---
 # Nutanix — Deploy
 

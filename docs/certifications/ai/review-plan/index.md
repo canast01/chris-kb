@@ -1,6 +1,7 @@
 ---
 tags:
   - certifications
+description: "AI Certification Review Plan reference covering Target Exams and Timeline, 6-Week Study Schedule Template, Key Study Resources, Practice Exam Links, Weak..."
 ---
 # AI Certification Review Plan
 

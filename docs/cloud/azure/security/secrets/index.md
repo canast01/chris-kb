@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Key Vault secrets store arbitrary string values — passwords, connection strings, API keys, tokens — with versioning, expiry, access control, and audit..."
 ---
 # Azure — Key Vault Secrets
 

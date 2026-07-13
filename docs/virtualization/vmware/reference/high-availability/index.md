@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "![High Availability Design Overview](../../../../assets/high-availability-design-overview.svg)"
 ---
 # High Availability Design
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - san
+description: "Cisco MDS 9000 series switches knowledge base covering fabric architecture, zoning, VSANs, ISLs, CLI references, health checks, scripts, and..."
 ---
 # Cisco MDS
 

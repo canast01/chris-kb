@@ -3,6 +3,7 @@ tags:
   - dell-recoverpoint
   - faq
   - operations
+description: "Common questions about Dell RecoverPoint operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell RecoverPoint — Frequently Asked Questions
 

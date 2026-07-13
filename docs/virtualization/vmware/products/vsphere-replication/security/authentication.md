@@ -3,6 +3,7 @@ tags:
   - security
   - vmware
   - vsphere-replication
+description: "Authentication reference covering VRA Registered with vCenter SSO, Site Pairing Authentication (Certificate-Based), VRA Admin Account, REST API..."
 ---
 # vSphere Replication — Authentication
 

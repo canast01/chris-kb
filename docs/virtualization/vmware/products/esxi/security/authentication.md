@@ -4,6 +4,7 @@ tags:
   - security
   - vmware
   - vsphere-8
+description: "Authentication reference covering Create a Break-Glass Local Account, Password Policy, Active Directory Integration, Authentication Hardening, Login..."
 ---
 # ESXi — Authentication
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "Brocade SANnav is a SAN management platform in two variants: Management Portal (per-fabric operations) and Global View (multi-portal aggregation)..."
 ---
 # SANnav — Architecture
 

@@ -3,6 +3,7 @@ tags:
   - aria-networks
   - security
   - vmware
+description: "Aria Ops for Networks hardening — collector security, RBAC configuration, and certificate management."
 ---
 # Aria Ops for Networks — Security
 

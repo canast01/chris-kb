@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Dell PowerMax SRDF/S synchronous replication — every host write is committed to both R1 and R2 before acknowledgement, guaranteeing RPO = 0; requires..."
 ---
 # SRDF/S — Architecture
 

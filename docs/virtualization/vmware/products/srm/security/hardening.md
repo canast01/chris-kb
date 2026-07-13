@@ -3,6 +3,7 @@ tags:
   - security
   - srm
   - vmware
+description: "Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Credentials, Test Recovery Plans Regularly, Restrict Who Can Execute..."
 ---
 # SRM — Hardening
 

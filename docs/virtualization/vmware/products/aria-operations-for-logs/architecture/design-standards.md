@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-logs
   - vmware
+description: "Standards reference covering Naming Convention, Content Pack Standards, Alert Severity Standards, Cluster Sizing Rules."
 ---
 # Aria Ops for Logs — Standards
 

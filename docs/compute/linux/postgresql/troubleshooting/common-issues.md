@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "PostgreSQL troubleshooting: replication lag, deadlock detected, autovacuum bloat, connection pool exhaustion, checkpoint overload, and corrupt index..."
 ---
 # PostgreSQL — Common Issues
 

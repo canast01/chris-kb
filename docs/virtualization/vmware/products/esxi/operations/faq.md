@@ -3,6 +3,7 @@ tags:
   - esxi
   - faq
   - operations
+description: "Common questions about VMware ESXi operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # VMware ESXi — Frequently Asked Questions
 

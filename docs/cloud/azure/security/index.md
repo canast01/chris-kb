@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Azure security posture — Defender for Cloud, Key Vault, Entra ID hardening, NSG policies, Privileged Identity Management, and secure score."
 ---
 # Azure — Security
 

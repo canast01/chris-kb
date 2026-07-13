@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "This page defines the escalation process for Confluence incidents: who handles what, when to escalate, what to collect before raising a ticket, SLA..."
 ---
 # Confluence — Escalation
 

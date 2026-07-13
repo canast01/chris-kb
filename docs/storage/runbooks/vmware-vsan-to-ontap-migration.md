@@ -7,6 +7,7 @@ tags:
   - nfs
   - storage-migration
   - runbook
+description: "Cross-product runbook for migrating virtual machine workloads from VMware vSAN to a NetApp ONTAP NFS datastore using Storage vMotion. Covers SVM..."
 ---
 
 # Migrate VM Workloads from vSAN to ONTAP NFS

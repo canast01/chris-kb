@@ -3,6 +3,7 @@ tags:
   - powercli
   - security
   - vmware
+description: "PowerCLI authentication methods: credential objects, encrypted credential files, certificate-based auth, SSO token reuse, and multi-session management for..."
 ---
 # PowerCLI — Authentication
 

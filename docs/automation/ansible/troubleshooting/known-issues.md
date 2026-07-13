@@ -4,6 +4,7 @@ tags:
   - ansible
   - automation
   - known-issues
+description: "Catalog of known Ansible Automation Platform bugs, error codes, and workarounds covering inventory, playbook execution, and Receptor mesh."
 ---
 # Ansible / AAP — Known Issues and Error Codes
 

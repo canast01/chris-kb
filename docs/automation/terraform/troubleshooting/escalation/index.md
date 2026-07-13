@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Terraform escalation: when to open a HashiCorp support case, how to file a provider bug on GitHub, how to collect state and log diagnostics, and the..."
 ---
 # Terraform — Escalation
 

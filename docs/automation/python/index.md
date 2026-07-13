@@ -1,6 +1,7 @@
 ---
 tags:
   - python
+description: "Python infrastructure automation knowledge base covering virtual environment management, dependency tooling, asyncio concurrency patterns, Docker..."
 ---
 # Python Automation
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Step-by-step procedures for configuring SAML SSO with Azure Entra ID and Okta, managing attribute mappings, rotating signing certificates, and..."
 ---
 # SAML Configuration — Procedures
 

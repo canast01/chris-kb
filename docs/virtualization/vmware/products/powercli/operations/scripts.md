@@ -3,6 +3,7 @@ tags:
   - operations
   - powercli
   - vmware
+description: "Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, snapshot audit, host capacity report, vSAN status, bulk tag assignment..."
 ---
 # PowerCLI — Scripts
 

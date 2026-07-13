@@ -3,6 +3,7 @@ tags:
   - pure-flasharray
   - faq
   - operations
+description: "Common questions about Pure Storage FlashArray operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Pure Storage FlashArray — Frequently Asked Questions
 

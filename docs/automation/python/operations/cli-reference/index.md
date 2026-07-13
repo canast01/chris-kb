@@ -2,6 +2,7 @@
 tags:
   - operations
   - python
+description: "CLI Reference reference covering Python Script Execution Pipeline, Package Management (pip), Common Infrastructure Packages, Environment Variables..."
 ---
 # Python Automation — CLI Reference
 

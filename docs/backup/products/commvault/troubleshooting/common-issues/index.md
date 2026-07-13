@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Common Commvault issues — backup job failures, media agent errors, deduplication problems, and client connectivity failures."
 ---
 # Commvault — Common Issues
 

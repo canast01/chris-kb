@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "PowerShell automation using the psPAS module and the PVWA REST API. All automation uses a dedicated PVWA service account with the minimum required..."
 ---
 # CyberArk — Scripts
 

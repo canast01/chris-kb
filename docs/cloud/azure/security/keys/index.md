@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Key Vault keys are cryptographic keys used for encryption, signing, and wrapping operations. Unlike secrets, keys are never exported as plaintext — all..."
 ---
 # Azure — Key Vault Keys
 

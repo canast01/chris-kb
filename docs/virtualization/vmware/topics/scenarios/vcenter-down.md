@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "vCenter is unreachable via browser or API. This scenario covers confirming the outage scope, using VAMI and SSH to diagnose VCSA service failures..."
 ---
 # vCenter Down / Unreachable
 

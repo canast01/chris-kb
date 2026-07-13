@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "Use these commands to verify TLS configuration on servers, check certificate validity, diagnose handshake failures, and confirm correct chain presentation."
 ---
 # TLS Validation
 

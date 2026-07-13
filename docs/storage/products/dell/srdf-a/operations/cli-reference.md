@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "SRDF/A CLI reference: symrdf list, symrdf query, symrdf establish, symrdf resume, symrdf suspend, and cycle time monitoring commands."
 ---
 # SRDF/A — CLI Reference
 

@@ -2,6 +2,7 @@
 tags:
   - powercli
   - vmware
+description: "PowerCLI is VMware's official PowerShell module suite for automating and managing vSphere, NSX, vSAN, vCD, and other VMware products. It provides 900+..."
 ---
 # VMware PowerCLI
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VM Standard reference covering Overview, Templates, VMware Tools, Hardware Version, CPU and 5 more sections."
 ---
 # VM Standard
 

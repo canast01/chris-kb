@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Dell PowerScale (Isilon) issues to Dell Technologies support: what data to collect, how to run isi_gather_info, step-by-step case creation..."
 ---
 # PowerScale — Escalation
 

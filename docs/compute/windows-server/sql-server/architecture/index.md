@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "SQL Server architecture: Always On AG topology, FCI failover clustering, TempDB placement, memory configuration, and storage I/O path design."
 ---
 # SQL Server — Architecture
 

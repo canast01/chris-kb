@@ -2,6 +2,7 @@
 tags:
   - linux
   - security
+description: "MySQL/MariaDB security: CREATE USER, GRANT, FLUSH PRIVILEGES, TLS connection enforcement, password policies, and audit log plugin configuration."
 ---
 # MySQL / MariaDB — Security
 

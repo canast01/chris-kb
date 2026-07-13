@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "FlashArray diagnostic commands: run the first-response sequence (purealert list, purearray list --controller, puredrive list) to identify the failure..."
 ---
 # FlashArray — Diagnostics
 

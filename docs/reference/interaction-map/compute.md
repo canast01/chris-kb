@@ -4,6 +4,7 @@ tags:
   - vcenter
   - compute
   - architecture
+description: "How ESXi, vCenter, and PowerCLI interact — vSphere API protocols, hostd, govmomi, and integration with NSX, vSAN, VCF, and Tanzu."
 ---
 # Compute Domain — Interaction Map
 

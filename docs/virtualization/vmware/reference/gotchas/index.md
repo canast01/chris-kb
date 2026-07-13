@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Known VMware platform pitfalls, unexpected behaviours, and operational traps. Each entry documents the symptom, root cause, and corrective or preventive..."
 ---
 # VMware Platform Gotchas
 

@@ -4,6 +4,7 @@ tags:
   - vsan
   - nsx
   - vcf
+description: "Hands-on walkthroughs for building a VMware nested homelab from bare metal through vSAN, NSX-T, and VCF. Each lab builds on the previous one — start with..."
 ---
 # Lab Guides
 

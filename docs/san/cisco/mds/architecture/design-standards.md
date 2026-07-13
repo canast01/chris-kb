@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "Cisco MDS design standards: VSANs for fabric segmentation, port-channel ISL configuration, N-port virtualisation (NPV) mode, and buffer credit sizing."
 ---
 # MDS — Standards
 

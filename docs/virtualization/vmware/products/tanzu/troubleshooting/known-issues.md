@@ -4,6 +4,7 @@ tags:
   - tanzu
   - vmware
   - known-issues
+description: "Catalog of known Tanzu Kubernetes Grid (TKG) and Supervisor cluster bugs, error codes, and workarounds."
 ---
 # VMware Tanzu — Known Issues and Error Codes
 

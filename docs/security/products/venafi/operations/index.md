@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Venafi day-to-day operations — certificate discovery, policy enforcement, issuance workflows, and renewal automation."
 ---
 # Venafi — Operations
 

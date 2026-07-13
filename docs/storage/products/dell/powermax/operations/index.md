@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "PowerMax day-to-day operations — SRDF management, storage group provisioning, performance monitoring, and host connectivity."
 ---
 # PowerMax — Operations
 

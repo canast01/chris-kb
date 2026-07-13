@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapMirror known issues: lagging relationships, abort after transfer, source volume offline, missing common snapshot causing initialize failure, and ONTAP..."
 ---
 # SnapMirror — Known Issues
 

@@ -2,6 +2,7 @@
 tags:
   - security
   - veeam
+description: "Access Control reference covering Role-Based Access Control, Audit Log."
 ---
 # Veeam — Access Control
 

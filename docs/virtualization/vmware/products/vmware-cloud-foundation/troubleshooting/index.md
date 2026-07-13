@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Troubleshooting reference for VMware Cloud Foundation. Covers common SDDC Manager and LCM failure patterns, workload domain issues, diagnostic commands..."
 ---
 # VCF — Troubleshooting
 

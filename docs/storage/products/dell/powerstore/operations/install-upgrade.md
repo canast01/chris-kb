@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Install & Upgrade reference covering Initial Setup, Software Upgrade, Appliance Lifecycle."
 ---
 # PowerStore — Install & Upgrade
 

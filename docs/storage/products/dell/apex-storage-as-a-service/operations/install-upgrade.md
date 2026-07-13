@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "APEX STaaS install and upgrade: SCG registration for telemetry, software stack upgrade workflow via CloudIQ portal, and post-upgrade health validation."
 ---
 # APEX Storage as a Service — Install & Upgrade
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Evergreen — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more."
 ---
 # Evergreen — Operations
 

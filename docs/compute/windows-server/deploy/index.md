@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "Windows Server initial deployment: OS install, network configuration, NTP, Windows Update, domain join, firewall baseline, WinRM, and security baseline..."
 ---
 # Windows Server — Initial Deployment
 

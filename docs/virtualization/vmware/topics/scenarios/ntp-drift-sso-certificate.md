@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "Time synchronisation failures across VMware products cause a cascade of symptoms: SSO login failures, SSL handshake errors, vCenter showing hosts as 'Not..."
 ---
 # NTP Drift Causing SSO or Certificate Errors
 

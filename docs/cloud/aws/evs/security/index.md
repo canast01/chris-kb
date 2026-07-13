@@ -2,6 +2,7 @@
 tags:
   - aws
   - security
+description: "EVS security controls: AWS IAM for cluster management, vSphere RBAC, NSX-T micro-segmentation, encryption at rest and in transit, and CIS hardening for..."
 ---
 # Amazon EVS — Security
 

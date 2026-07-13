@@ -3,6 +3,7 @@ tags:
   - aria-lcm
   - security
   - vmware
+description: "Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configuration, Firewall Rules for LCM, Hardening Checklist."
 ---
 # Aria Suite Lifecycle — Hardening
 

@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "SnapMirror hardening: restricting intercluster LIF firewall policy to replication only, peer passphrase rotation cadence, and audit log for relationship..."
 ---
 # SnapMirror — Hardening
 

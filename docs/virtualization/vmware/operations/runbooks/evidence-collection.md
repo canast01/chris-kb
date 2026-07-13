@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Virtualization Evidence Collection reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections."
 ---
 # Virtualization Evidence Collection
 

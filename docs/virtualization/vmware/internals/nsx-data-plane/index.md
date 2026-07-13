@@ -4,6 +4,7 @@ tags:
   - nsx
   - nsx-4
   - vmware
+description: "NSX-T data plane consists of per-host kernel modules — N-VDS, Distributed Router, and Distributed Firewall — connected via Geneve-encapsulated tunnels..."
 ---
 # NSX Data Plane
 

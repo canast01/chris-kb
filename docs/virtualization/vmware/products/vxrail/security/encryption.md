@@ -3,6 +3,7 @@ tags:
   - security
   - vmware
   - vxrail
+description: "Encryption reference for VxRail in the VMware product context. Covers vSAN data-at-rest and in-transit encryption, iDRAC HTTPS enforcement, Secure Boot on..."
 ---
 # VxRail — Encryption
 

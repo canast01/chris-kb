@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "PowerScale hardening — SmartLock compliance mode, NFS export access control, SMB share permissions, and audit logging."
 ---
 # PowerScale — Security
 

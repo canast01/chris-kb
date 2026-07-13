@@ -2,6 +2,7 @@
 tags:
   - commvault
   - security
+description: "Encryption reference covering Backup Encryption, Linux Hardened Repository (Immutable Backups)."
 ---
 # Commvault — Encryption
 

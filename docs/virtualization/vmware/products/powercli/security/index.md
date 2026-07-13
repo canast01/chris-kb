@@ -3,6 +3,7 @@ tags:
   - powercli
   - security
   - vmware
+description: "PowerCLI security: RBAC and role management, credential and certificate handling, service account hardening, and audit logging for vSphere automation."
 ---
 # PowerCLI — Security
 

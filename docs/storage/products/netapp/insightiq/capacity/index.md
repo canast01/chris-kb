@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring reference covering Protocol-Level Capacity Breakdown, Quota Monitoring, Common..."
 ---
 # InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring
 

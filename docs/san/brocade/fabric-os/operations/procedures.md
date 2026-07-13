@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "FabricOS procedures: switchshow, fabricshow, zone configuration with cfgadd/cfgsave/cfgenable, ISL management, and port enable/disable."
 ---
 # FabricOS — Procedures
 

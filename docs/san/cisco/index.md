@@ -1,6 +1,7 @@
 ---
 tags:
   - san
+description: "Cisco SAN knowledge base covering MDS switches, DCNM, and Nexus Dashboard. Includes fabric architecture, zoning, CLI references, health checks, and..."
 ---
 # Cisco SAN
 

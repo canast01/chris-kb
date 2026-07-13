@@ -7,6 +7,7 @@ tags:
   - firewall
   - ports
   - security
+description: "Firewall port reference for PKI and certificate infrastructure. Covers certificate enrollment (SCEP, EST, ACME), revocation checking (OCSP, CRL)..."
 ---
 # Certificates / PKI — Ports and Network Requirements
 

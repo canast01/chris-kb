@@ -4,6 +4,7 @@ tags:
   - architecture
   - aos
   - ahv
+description: "AOS distributed storage fabric, CVM role on every node, AHV hypervisor internals, Prism management planes, and the I/O path from VM to NVMe. Covers the..."
 ---
 # Nutanix — How It Works
 

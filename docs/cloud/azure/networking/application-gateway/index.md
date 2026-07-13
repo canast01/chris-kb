@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "Azure Application Gateway is a Layer 7 load balancer that provides SSL termination, URL-based routing, Web Application Firewall (WAF), and autoscaling. It..."
 ---
 # Application Gateway
 

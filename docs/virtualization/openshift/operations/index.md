@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Day-2 operations: oc CLI, health checks, node management, upgrade procedures, etcd backup, and runnable health-check routines."
 ---
 # OpenShift — Operations
 

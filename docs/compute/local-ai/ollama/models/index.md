@@ -3,6 +3,7 @@ tags:
   - ollama
   - ai
   - local-ai
+description: "Ollama's model library includes a wide range of open models. Models are identified by name:tag where the tag specifies size and quantisation. Custom..."
 ---
 # Ollama Models
 

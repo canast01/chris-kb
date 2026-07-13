@@ -5,6 +5,7 @@ tags:
   - active-directory
 search:
   boost: 1.5
+description: "Active Directory diagnostic commands: run dcdiag tests on domain controllers, check replication health with repadmin, find FSMO role holders, test secure..."
 ---
 # Active Directory — Diagnostics
 

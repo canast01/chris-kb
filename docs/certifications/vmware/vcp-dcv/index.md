@@ -3,6 +3,7 @@ title: VCP-DCV 8 Exam Reference
 tags:
   - certifications
   - vmware
+description: "Maps VCP-DCV 8 exam objectives (exam code 2V0-21.23) to KB content pages. Use this page to navigate from each exam section to the relevant technical..."
 ---
 
 # VCP-DCV 8 — Exam Reference (2V0-21.23)

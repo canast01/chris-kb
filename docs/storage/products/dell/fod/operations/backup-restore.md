@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell FoD (Flex on Demand) backup and restore: entitlement file backup, SCG configuration export, and procedure to restore capacity licences after..."
 ---
 # FOD — Backup & Restore
 

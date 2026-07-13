@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Cisco DCNM (Data Center Network Manager). DCNM manages MDS SAN switches and NX-OS data center fabrics. Note: DCNM is being..."
 ---
 # Cisco DCNM — Ports and Network Requirements
 

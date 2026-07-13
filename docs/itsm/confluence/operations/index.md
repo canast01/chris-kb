@@ -2,6 +2,7 @@
 tags:
   - confluence
   - operations
+description: "Confluence day-to-day operations — space administration, permissions, content maintenance, and user management."
 ---
 # Confluence — Operations
 

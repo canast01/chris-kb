@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "MySQL/MariaDB procedures: schema changes with pt-online-schema-change, user and privilege management, failover promotion, and maintenance window tasks."
 ---
 # MySQL / MariaDB — Procedures
 

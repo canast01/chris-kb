@@ -2,6 +2,7 @@
 tags:
   - quick-start
   - operations
+description: "First-day orientation guides for the most common infrastructure platforms. Each guide takes 30–60 minutes and gets you to a working baseline."
 ---
 # Quick-Start Guides
 

@@ -3,6 +3,7 @@ tags:
   - security
   - tanzu
   - vmware
+description: "Encryption reference covering Kubernetes Secrets Encryption at Rest, TLS for All Kubernetes API Communication, vSAN Encryption for Persistent Volumes..."
 ---
 # Tanzu — Encryption
 

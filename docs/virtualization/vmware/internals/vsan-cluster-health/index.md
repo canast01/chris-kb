@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "vSAN health is tracked at the component level through a state machine: ACTIVE → ABSENT → DEGRADED → REBUILDING → ACTIVE. CLOM manages rebuild scheduling..."
 ---
 # vSAN Cluster Health
 

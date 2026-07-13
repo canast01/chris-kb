@@ -3,6 +3,7 @@ tags:
   - operations
   - vcf
   - vmware
+description: "VCF health checks: SDDC Manager health API, lcm health check, workload domain cluster status, NSX edge health, and vSAN stretched cluster rebalance status."
 ---
 # VCF — Health Checks
 

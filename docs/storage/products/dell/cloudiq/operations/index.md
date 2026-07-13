@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "CloudIQ — Operations reference: CLI Reference, Health Checks, Procedures, Install & Upgrade, and 2 more."
 ---
 # CloudIQ — Operations
 

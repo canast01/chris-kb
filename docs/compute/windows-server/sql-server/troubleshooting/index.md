@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "SQL Server troubleshooting hub: AG health, job failures, deadlocks, tempdb contention, and escalation path to Microsoft Premier Support."
 ---
 # SQL Server — Troubleshooting
 

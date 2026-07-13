@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "PowerPath diagnostic commands: check path state and count with powermt display dev=all to identify dead or alive paths, verify license with powermt..."
 ---
 # PowerPath — Diagnostics
 

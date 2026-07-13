@@ -4,6 +4,7 @@ tags:
   - netbackup
   - backup
   - known-issues
+description: "Catalog of known NetBackup bugs, error codes, and workarounds covering backup policies, media servers, and VMware integration."
 ---
 # Veritas NetBackup — Known Issues and Error Codes
 

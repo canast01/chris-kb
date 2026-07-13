@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "SQL Server procedures: index rebuild and statistics update, user and role management, linked server configuration, and maintenance plan creation."
 ---
 # SQL Server — Procedures
 

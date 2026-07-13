@@ -2,6 +2,7 @@
 tags:
   - architecture
   - python
+description: "Cross-platform automation language with virtual environment isolation, poetry/venv dependency management, asyncio for concurrent API calls, and Docker..."
 ---
 # Python Automation — Architecture
 

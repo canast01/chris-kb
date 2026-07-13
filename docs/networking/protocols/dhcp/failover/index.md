@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "DHCP Failover reference covering Overview, Configuring Failover, Checking Failover State, Failover States Reference, Split Scope (Pre-2012 Fallback) and 2..."
 ---
 # DHCP Failover
 

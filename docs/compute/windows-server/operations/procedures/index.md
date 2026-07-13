@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Windows Server operational procedures: disk management, role and feature install, IIS/MSMQ configuration, performance counter review, and patching runbook."
 ---
 # Windows Server — Procedures
 

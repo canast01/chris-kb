@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-networks
   - vmware
+description: "How It Works reference covering Deployment Model, Application Discovery Mechanism, Flow Data Retention Defaults, Internal Service Architecture."
 ---
 # Aria Operations for Networks — How It Works
 

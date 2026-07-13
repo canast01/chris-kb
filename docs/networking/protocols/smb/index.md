@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "Server Message Block (SMB) is a network file sharing protocol running over TCP port 445, used for file shares, printer sharing, and inter-process..."
 ---
 # SMB
 

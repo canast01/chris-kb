@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "PIM provides just-in-time (JIT) privileged access to Azure resources and Entra ID roles, with time-bound activation, approval workflows, and audit..."
 ---
 # Azure — Privileged Identity Management (PIM)
 

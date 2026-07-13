@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "PostgreSQL architecture: primary-standby streaming replication, logical replication for migrations, shared_buffers and wal_level sizing, and storage..."
 ---
 # PostgreSQL — Architecture
 

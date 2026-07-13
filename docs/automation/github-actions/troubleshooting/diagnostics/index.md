@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "GitHub Actions diagnostic commands: enable step-level debug logging, inspect run logs with gh CLI, diagnose self-hosted runner failures, debug OIDC and..."
 ---
 # GitHub Actions — Diagnostics
 

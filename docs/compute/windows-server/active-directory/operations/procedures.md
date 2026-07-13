@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Controllers."
 ---
 # Active Directory — Procedures
 

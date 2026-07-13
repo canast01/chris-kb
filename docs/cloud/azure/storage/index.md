@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Storage articles, operational checks, troubleshooting notes, and references."
 ---
 # Azure Storage
 

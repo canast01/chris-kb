@@ -3,6 +3,7 @@ tags:
   - operations
   - vmware
   - vsphere-replication
+description: "CLI Reference reference covering VRA Appliance SSH Access, VRA REST API Authentication, Get Replication Status via REST API, PowerCLI — Replication..."
 ---
 # vSphere Replication — CLI Reference
 

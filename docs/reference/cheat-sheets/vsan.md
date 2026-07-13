@@ -2,6 +2,7 @@
 tags:
   - vsan
   - storage
+description: "Top-10 vSAN commands for cluster health, disk groups, object status, and policy via esxcli vsan and PowerCLI."
 ---
 # vSAN Cheat Sheet
 

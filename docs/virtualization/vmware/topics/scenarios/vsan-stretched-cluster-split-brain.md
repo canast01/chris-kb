@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "A vSAN stretched cluster spans two sites with a witness appliance at a third location. Split-brain occurs when inter-site connectivity is lost and both..."
 ---
 # vSAN Stretched Cluster Split-Brain
 

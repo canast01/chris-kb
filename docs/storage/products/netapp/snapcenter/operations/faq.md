@@ -3,6 +3,7 @@ tags:
   - netapp-snapcenter
   - faq
   - operations
+description: "Common questions about NetApp SnapCenter operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # NetApp SnapCenter — Frequently Asked Questions
 

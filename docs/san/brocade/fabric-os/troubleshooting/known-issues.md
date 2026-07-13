@@ -5,6 +5,7 @@ tags:
   - fabric-os
   - san
   - known-issues
+description: "Catalog of known Fabric OS bugs, error codes, and workarounds covering switch health, zoning, and ISL issues."
 ---
 # Brocade Fabric OS — Known Issues and Error Codes
 

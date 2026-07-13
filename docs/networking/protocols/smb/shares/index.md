@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "SMB Shares reference covering Overview, Creating Shares with PowerShell, Creating Shares with net share, DFS Namespace Configuration, Share Enumeration..."
 ---
 # SMB Shares
 

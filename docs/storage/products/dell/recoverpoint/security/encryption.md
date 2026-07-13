@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Encryption reference covering Journal Encryption, Network Segmentation, Certificate Management."
 ---
 # RecoverPoint — Encryption
 

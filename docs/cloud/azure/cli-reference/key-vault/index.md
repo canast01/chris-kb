@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Key Vault CLI reference — manage vaults, secrets, keys, and certificates via az keyvault commands."
 ---
 # Key Vault
 

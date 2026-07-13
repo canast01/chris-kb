@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "Superna Eyeglass role-based access — user management, RBAC configuration, and access policy enforcement."
 ---
 # Superna Eyeglass — Access Control
 

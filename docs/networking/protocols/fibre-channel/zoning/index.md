@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "Zoning restricts which initiators (HBAs) can communicate with which targets (storage ports) in a Fibre Channel fabric."
 ---
 # FC Zoning
 

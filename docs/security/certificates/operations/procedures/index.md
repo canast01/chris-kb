@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Procedures reference covering Certificate Renewal and Revocation Workflow, Renewal, Inventory, TLS Validation."
 ---
 # Certificates — Procedures
 

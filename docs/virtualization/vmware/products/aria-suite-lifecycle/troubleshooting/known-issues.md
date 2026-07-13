@@ -4,6 +4,7 @@ tags:
   - aria-suite-lifecycle
   - vmware
   - known-issues
+description: "Catalog of known Aria Suite Lifecycle (LCM) bugs, error codes, and workarounds covering product deployment, certificate management, and upgrade operations."
 ---
 # VMware Aria Suite Lifecycle — Known Issues and Error Codes
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Common operational procedures: node drain and maintenance mode, scaling MachineSets, adding node roles, rotating certificates, etcd member recovery..."
 ---
 # OpenShift — Procedures
 

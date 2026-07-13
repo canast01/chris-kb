@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Common Issues reference covering Incident Triage, Common Symptoms and Resolutions."
 ---
 # Dell ECS — Common Issues
 

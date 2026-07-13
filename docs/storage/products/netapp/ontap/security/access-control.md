@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "Access Control reference covering RBAC Scope Model, RBAC, Custom Roles, User Login Management, Audit Logging."
 ---
 # ONTAP — Access Control
 

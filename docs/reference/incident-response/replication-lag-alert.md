@@ -6,6 +6,7 @@ tags:
   - incident-response
 search:
   boost: 1
+description: "Response procedure for SnapMirror lag exceeding RPO targets, SRM replication alerts, or RecoverPoint RPO breach. Severity escalates to P1 the moment lag..."
 ---
 # INC-004: Replication Lag / DR Gap Alert
 

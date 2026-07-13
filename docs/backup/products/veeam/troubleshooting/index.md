@@ -4,6 +4,7 @@ tags:
   - veeam
 search:
   boost: 1.5
+description: "Diagnosing Veeam job failures, transport mode errors, repository issues, restore failures, and agent connectivity problems."
 ---
 # Veeam — Troubleshooting
 

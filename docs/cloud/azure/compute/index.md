@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Compute articles, operational checks, troubleshooting notes, and references."
 ---
 # Azure Compute
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "How It Works reference covering STaaS Delivery Model, Components, HA Topology, Connectivity, Sizing and Capacity Model."
 ---
 # Evergreen//One — How It Works
 

@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Design Standards reference covering Naming Conventions, Cluster Configuration Baseline, vSAN Cluster Baseline (where applicable), vCenter Configuration..."
 ---
 # vCenter — Design Standards
 

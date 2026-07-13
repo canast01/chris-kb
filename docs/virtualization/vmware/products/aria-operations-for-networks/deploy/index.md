@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "End-to-end deployment guide for Aria Operations for Networks (AON). Covers pre-flight checks, platform node OVA deployment, proxy/collector node..."
 ---
 # Aria Operations for Networks — Deploy
 

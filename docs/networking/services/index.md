@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "Network services reference for load balancer VIP management, pool health monitoring, and IPAM. For DNS and DHCP protocol coverage, see Protocols → DNS and..."
 ---
 # Networking — Load Balancer & Services
 

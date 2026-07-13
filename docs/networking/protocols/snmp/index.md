@@ -2,6 +2,7 @@
 title: SNMP
 tags:
   - networking
+description: "Simple Network Management Protocol (SNMP) polls device metrics and receives asynchronous fault notifications (traps) over UDP — port 161 for polling, 162..."
 ---
 
 # SNMP

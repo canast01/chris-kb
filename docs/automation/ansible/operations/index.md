@@ -2,6 +2,7 @@
 tags:
   - ansible
   - operations
+description: "Ansible — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more."
 ---
 # Ansible — Operations
 

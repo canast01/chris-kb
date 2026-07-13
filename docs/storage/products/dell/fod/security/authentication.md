@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Dell FoD authentication: SCG service account management, CloudIQ SSO configuration, API token rotation, and audit trail review for capacity entitlement..."
 ---
 # FOD — Authentication
 

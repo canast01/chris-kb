@@ -3,6 +3,7 @@ tags:
   - vsan
   - storage
   - vsphere
+description: "Add vSAN shared storage to the Lab 1 cluster. Configures a 2-node vSAN cluster with a witness VM — the minimum production-supportable vSAN topology..."
 ---
 # Lab 2 — vSAN 2-node + Witness
 

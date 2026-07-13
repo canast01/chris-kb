@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "APEX STaaS backup and restore: snapshot schedule configuration via CloudIQ portal, cross-region copy policies, and restore-from-snapshot procedure."
 ---
 # APEX Storage as a Service — Backup & Restore
 

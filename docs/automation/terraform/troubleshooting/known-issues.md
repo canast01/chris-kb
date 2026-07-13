@@ -4,6 +4,7 @@ tags:
   - terraform
   - automation
   - known-issues
+description: "Catalog of known Terraform and Terraform Enterprise bugs, error codes, and workarounds covering state management, provider errors, and locking."
 ---
 # Terraform / OpenTofu — Known Issues and Error Codes
 

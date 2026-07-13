@@ -3,6 +3,7 @@ tags:
   - nsx
   - networking
   - architecture
+description: "Design your NSX topology: overlay vs VLAN transport, T0/T1 gateway placement, Edge cluster sizing, HA model, and north-south routing type."
 ---
 # NSX Topology Decision Tree
 

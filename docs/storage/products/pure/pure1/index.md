@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Storage Pure1 cloud-based management and analytics — SaaS architecture, AI-driven health scoring, capacity forecasting, and fleet management via REST..."
 ---
 # Pure1
 

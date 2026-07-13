@@ -3,6 +3,7 @@ tags:
   - horizon
   - security
   - vmware
+description: "Hardening reference covering Windows Hardening of Connection Server, UAG Hardening, USB Redirection Policy, Clipboard Direction Restriction, Drive Mapping..."
 ---
 # Horizon — Hardening
 

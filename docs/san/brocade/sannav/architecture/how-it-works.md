@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "How It Works reference covering Overview, Deployment Topology, Supported Hardware, Network Requirements, VM Sizing and 2 more sections."
 ---
 # SANnav — How It Works
 

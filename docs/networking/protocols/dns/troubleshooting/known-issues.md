@@ -4,6 +4,7 @@ tags:
   - dns
   - networking
   - known-issues
+description: "Catalog of known DNS bugs, error codes, and workarounds covering resolution failures, DNSSEC, split-horizon, and AD-integrated DNS."
 ---
 # DNS — Known Issues and Error Codes
 

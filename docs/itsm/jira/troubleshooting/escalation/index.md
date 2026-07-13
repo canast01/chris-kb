@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Escalation reference covering Escalation Matrix, Emergency Contacts, Escalation Communication Template, Post-Incident Review (PIR) Checklist."
 ---
 # Jira — Escalation
 

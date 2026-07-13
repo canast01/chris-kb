@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Validates that infrastructure is in a safe state before any upgrade or patching activity begins. Complete all checks and obtain explicit go/no-go sign-off..."
 ---
 # Upgrade Readiness Checklist
 

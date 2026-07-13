@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Diagnosing Aria Automation deployment failures, vRO workflow errors, integration issues, and catalog problems."
 ---
 # Aria Automation — Troubleshooting
 

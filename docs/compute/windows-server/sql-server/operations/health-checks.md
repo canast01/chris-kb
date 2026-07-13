@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "SQL Server health checks: sys.dm_exec_query_stats, AG replica sync state, job history review, tempdb contention, and disk latency monitoring with DMVs."
 ---
 # SQL Server — Health Checks
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - powershell
+description: "PowerShell is a cross-platform task automation shell built on .NET. This page covers the execution engine, pipeline model, remoting, module system, and..."
 ---
 # PowerShell — How It Works
 

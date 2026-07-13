@@ -3,6 +3,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Version history and release notes for VMware vCenter."
 ---
 # VMware vCenter — Release Notes
 

@@ -3,6 +3,7 @@ tags:
   - vsan
   - storage
   - vsphere
+description: "Complete procedure: add virtual disks to nested ESXi VMs, mark disks as SSD, deploy the witness appliance, enable vSAN, create a storage policy, and..."
 ---
 # Lab 2 Guide — vSAN 2-node Step-by-Step
 

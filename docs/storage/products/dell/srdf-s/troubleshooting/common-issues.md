@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, host I/O impact during link faults, symrdf failover under failure, and..."
 ---
 # SRDF/S — Common Issues
 

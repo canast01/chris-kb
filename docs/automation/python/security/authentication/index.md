@@ -2,6 +2,7 @@
 tags:
   - python
   - security
+description: "Authentication reference covering Credential Flow — API Authentication, .env Files with python-dotenv, OAuth 2.0 (Client Credentials), Credential..."
 ---
 # Python Automation — Authentication
 

@@ -3,6 +3,7 @@ tags:
   - scenarios
   - vmware
   - vxrail
+description: "VxRail LCM upgrades are an all-or-nothing validated bundle: ESXi, vSAN, vCenter, drivers, and firmware must all upgrade together. A failure at any phase..."
 ---
 # VxRail LCM Upgrade Failure
 

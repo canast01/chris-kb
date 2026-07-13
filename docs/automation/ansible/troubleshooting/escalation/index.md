@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Ansible escalation: when to open a Red Hat support case for AAP, how to file a community bug, how to collect AWX logs and execution environment info, and..."
 ---
 # Ansible — Escalation
 

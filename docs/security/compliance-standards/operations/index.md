@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Step-by-step procedures for assessing controls against CIS, ISO 27001, NIST, and PCI-DSS frameworks, collecting audit evidence, and managing control gaps..."
 ---
 # Compliance Standards — Procedures
 

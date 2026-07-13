@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Site Recovery (ASR) orchestrates replication, failover, and failback for Azure VMs and on-premises workloads. It enables business continuity with..."
 ---
 # Azure Site Recovery
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Backup & Restore reference covering Evergreen//Forever — No Traditional Backup Required, Export Array Configuration, Pre-Upgrade Configuration Snapshot..."
 ---
 # Evergreen — Backup & Restore
 

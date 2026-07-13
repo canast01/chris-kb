@@ -3,6 +3,7 @@ tags:
   - servicenow
   - faq
   - operations
+description: "Common questions about ServiceNow operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # ServiceNow — Frequently Asked Questions
 

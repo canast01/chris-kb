@@ -2,6 +2,7 @@
 tags:
   - dell
   - learning-path
+description: "Recommended reading order for Dell AIOps. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Dell AIOps (APEX AIOps) — Learning Path
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Ceph support escalation: Red Hat Ceph Storage support case process, community resources, severity levels, required diagnostic data, must-gather for..."
 ---
 # Ceph — Escalation
 

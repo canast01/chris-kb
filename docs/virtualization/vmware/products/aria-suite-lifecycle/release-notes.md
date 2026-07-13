@@ -2,6 +2,7 @@
 tags:
   - aria-lcm
   - vmware
+description: "Version history and release notes for VMware Aria Suite Lifecycle."
 ---
 # VMware Aria Suite Lifecycle — Release Notes
 

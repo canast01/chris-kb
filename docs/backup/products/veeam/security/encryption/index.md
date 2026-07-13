@@ -2,6 +2,7 @@
 tags:
   - security
   - veeam
+description: "Veeam encryption: backup job-level encryption, encryption key management in the Veeam console, tape encryption, and password rotation procedures."
 ---
 # Veeam — Encryption
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - aws
+description: "EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS native services (S3, Route 53, IAM), and cross-account VPC connectivity..."
 ---
 # Amazon EVS — Integrations
 

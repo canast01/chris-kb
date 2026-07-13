@@ -1,6 +1,7 @@
 ---
 tags:
   - linux
+description: "MySQL and MariaDB relational database for Linux — InnoDB, replication, backup, HA."
 ---
 # MySQL / MariaDB
 

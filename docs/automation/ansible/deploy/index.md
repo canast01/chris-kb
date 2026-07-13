@@ -4,6 +4,7 @@ tags:
   - deployment
 search:
   boost: 1.5
+description: "Step-by-step guide to installing Ansible, configuring inventory and SSH authentication, testing connectivity, and running your first playbook."
 ---
 # Ansible — Environment Setup
 

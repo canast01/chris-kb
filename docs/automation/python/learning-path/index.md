@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - python
+description: "Recommended reading order for Python infrastructure automation. Follow these stages in order to build a complete mental model before working with it in..."
 ---
 # Python — Learning Path
 

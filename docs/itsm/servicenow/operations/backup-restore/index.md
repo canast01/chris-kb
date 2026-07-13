@@ -2,6 +2,7 @@
 tags:
   - operations
   - servicenow
+description: "ServiceNow cloud instances do not expose direct database backup access. The primary mechanisms for instance protection and data recovery are Instance..."
 ---
 # ServiceNow — Backup & Restore
 

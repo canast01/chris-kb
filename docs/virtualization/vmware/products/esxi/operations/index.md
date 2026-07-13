@@ -4,6 +4,7 @@ tags:
   - operations
   - vmware
   - vsphere-8
+description: "Day-to-day operational reference for VMware ESXi. Covers CLI commands, health checks, routine procedures, lifecycle management, backup strategy, and..."
 ---
 # ESXi — Operations
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Health checks, procedures, CLI, backup/restore, upgrades, and scripts."
 ---
 # SQL Server — Operations
 

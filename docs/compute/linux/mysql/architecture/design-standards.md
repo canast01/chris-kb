@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "MySQL design standards — HA topology choices, replication sizing, InnoDB tuning baselines, naming conventions, and backup strategy requirements."
 ---
 # MySQL / MariaDB — Design Standards
 

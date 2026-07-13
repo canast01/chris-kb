@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Dell AIOps is a fully SaaS-delivered AI operations platform. Telemetry flows from arrays through the on-premises Secure Connect Gateway to Dell's cloud AI..."
 ---
 # Dell AIOps — Architecture
 

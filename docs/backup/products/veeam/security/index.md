@@ -2,6 +2,7 @@
 tags:
   - security
   - veeam
+description: "Veeam hardening — RBAC, immutable repositories, backup encryption, Linux hardened repository, and access controls."
 ---
 # Veeam — Security
 

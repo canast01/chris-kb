@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "Automation scripts and reusable code. Scripts stored in the team's Git repository. All are idempotent and safe to run on production systems. Output logged..."
 ---
 # Linux — Scripts
 

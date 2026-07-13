@@ -3,6 +3,7 @@ tags:
   - architecture
   - powercli
   - vmware
+description: "PowerCLI integrates with the full VMware product stack. Each product family has its own module. Most require a separate Connect- call in addition to..."
 ---
 # PowerCLI — Integrations
 

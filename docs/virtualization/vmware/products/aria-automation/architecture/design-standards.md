@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-automation
   - vmware
+description: "Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Blueprint / Template Standards, Project Standards and 1 more..."
 ---
 # Aria Automation — Standards
 

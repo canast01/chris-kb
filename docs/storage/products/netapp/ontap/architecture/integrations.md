@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "Integrations reference covering VMware, SnapCenter Plugin, Active Directory / CIFS Authentication, Veeam Storage Integration (VeeamON / Direct Storage..."
 ---
 # ONTAP — Integrations
 

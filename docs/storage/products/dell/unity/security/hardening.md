@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Hardening reference covering Hardening Overview, Hardening Checklist, Credentials, Transport Security, Protocol Restrictions and 5 more sections."
 ---
 # Unity — Hardening
 

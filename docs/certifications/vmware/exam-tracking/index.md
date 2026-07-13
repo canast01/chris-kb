@@ -2,6 +2,7 @@
 tags:
   - certifications
   - vmware
+description: "Exam Tracking reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections."
 ---
 # Exam Tracking
 

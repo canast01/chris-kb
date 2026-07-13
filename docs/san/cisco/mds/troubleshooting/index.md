@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing MDS VSAN errors, port faults, FCNS registration failures, zone database issues, and FLOGI storms."
 ---
 # MDS — Troubleshooting
 

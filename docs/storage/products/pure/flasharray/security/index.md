@@ -2,6 +2,7 @@
 tags:
   - pure
   - security
+description: "FlashArray — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # FlashArray — Security
 

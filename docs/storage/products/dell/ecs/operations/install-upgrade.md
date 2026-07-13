@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Install & Upgrade reference covering Version and Release Matrix, Pre-Upgrade Checks, Upgrade and Update Paths, Adding a New Node to an Existing VDC, Disk..."
 ---
 # Dell ECS — Install & Upgrade
 

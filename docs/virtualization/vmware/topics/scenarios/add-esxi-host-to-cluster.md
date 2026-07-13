@@ -4,6 +4,7 @@ tags:
   - scenarios
   - vmware
   - vsphere-8
+description: "Adding a new ESXi host to an existing production cluster spans every major VMware product: hardware firmware, ESXi installation, vCenter onboarding, vSAN..."
 ---
 # Add ESXi Host to Cluster
 

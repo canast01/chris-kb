@@ -3,6 +3,7 @@ tags:
   - learning-path
   - tanzu
   - vmware
+description: "Recommended reading order for VMware Tanzu (Kubernetes on vSphere). Follow these stages in order to build a complete mental model before working with it..."
 ---
 # Tanzu — Learning Path
 

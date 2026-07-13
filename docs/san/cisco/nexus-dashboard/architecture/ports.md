@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Cisco Nexus Dashboard (ND). Nexus Dashboard is the modern replacement for DCNM, providing multi-fabric management for NX-OS..."
 ---
 # Cisco Nexus Dashboard — Ports and Network Requirements
 

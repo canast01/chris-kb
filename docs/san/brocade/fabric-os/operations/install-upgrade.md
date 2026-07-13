@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "FabricOS install and upgrade: firmwaredownload from SCP/FTP, firmware commit procedure, HA failover test, and downgrade rollback steps."
 ---
 # FabricOS — Install & Upgrade
 

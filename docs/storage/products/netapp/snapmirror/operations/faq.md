@@ -3,6 +3,7 @@ tags:
   - netapp-snapmirror
   - faq
   - operations
+description: "Common questions about NetApp SnapMirror operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # NetApp SnapMirror — Frequently Asked Questions
 

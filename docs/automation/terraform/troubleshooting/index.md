@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing state drift, provider errors, plan failures, lock conflicts, and common Terraform workflow issues."
 ---
 # Terraform — Troubleshooting
 

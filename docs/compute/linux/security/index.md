@@ -2,6 +2,7 @@
 tags:
   - linux
   - security
+description: "Linux hardening — PAM configuration, sudoers, SSH controls, SELinux/AppArmor, auditd logging, and CIS benchmark compliance."
 ---
 # Linux — Security
 

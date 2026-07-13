@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Site Recovery supports three types of failover: test failover (non-disruptive validation), planned failover (zero data loss), and unplanned failover..."
 ---
 # Failover
 

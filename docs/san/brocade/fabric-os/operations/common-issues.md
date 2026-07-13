@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "Known Issues reference covering Incident Triage, Port Issues, Zoning Issues, Switch / Fabric Issues, MAPS and Alerting and 1 more sections."
 ---
 # FabricOS — Known Issues
 

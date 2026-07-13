@@ -2,6 +2,7 @@
 tags:
   - architecture
   - terraform
+description: "Terraform is a declarative infrastructure-as-code tool that manages resources across hundreds of providers via a consistent workflow. All execution is..."
 ---
 # Terraform — How It Works
 

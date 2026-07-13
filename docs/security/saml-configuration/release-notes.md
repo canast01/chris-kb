@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Version history and release notes for SAML Configuration."
 ---
 # SAML Configuration — Release Notes
 

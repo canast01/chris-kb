@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell FoD automation scripts: PowerShell and Python examples for capacity consumption reporting, entitlement threshold alerting, and SCG health polling."
 ---
 # Dell FoD — Scripts
 

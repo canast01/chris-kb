@@ -5,6 +5,7 @@ tags:
   - firewall
   - ports
   - backup
+description: "Firewall port reference for Commvault Complete Backup & Recovery. Covers CommServe, Media Agents, IntelliSnap, VSA proxy for VMware, and client data..."
 ---
 # Commvault — Ports and Network Requirements
 

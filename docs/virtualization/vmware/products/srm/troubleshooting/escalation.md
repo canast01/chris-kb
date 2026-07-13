@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "How to escalate VMware Site Recovery Manager issues to Broadcom support: what data to collect, how to generate SRM support bundles from both sites..."
 ---
 # SRM — Escalation
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Access Control reference covering RBAC, Sudoers Configuration, Audit Logging."
 ---
 # PowerPath — Access Control
 

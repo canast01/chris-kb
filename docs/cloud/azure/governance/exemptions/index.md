@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Policy exemptions allow specific resources, resource groups, or subscriptions to be excluded from policy evaluation. Exemptions are preferred over..."
 ---
 # Policy Exemptions
 

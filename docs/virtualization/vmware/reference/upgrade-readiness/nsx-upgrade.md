@@ -3,6 +3,7 @@ tags:
   - nsx
   - nsx-4
   - reference
+description: "NSX Upgrade Readiness Checklist reference covering Current State, Target Version, Pre-Upgrade Checks, Upgrade Process Overview, Post-Upgrade Validation."
 ---
 # NSX Upgrade Readiness Checklist
 

@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "SQL Server initial deployment — installation checklist, post-install configuration (max memory, tempdb, SQL Agent), firewall, and validation queries."
 ---
 # SQL Server — Initial Deployment
 

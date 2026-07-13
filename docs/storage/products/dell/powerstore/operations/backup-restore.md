@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Backup & Restore reference covering Protection Architecture Overview, Native Snapshots, Backup Integration, Backup Restore Procedures, Recovery Objectives."
 ---
 # PowerStore — Backup & Restore
 

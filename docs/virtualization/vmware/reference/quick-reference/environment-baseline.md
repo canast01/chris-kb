@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Environment Baseline reference covering Core Platform, Networking, Storage, Backup, Monitoring."
 ---
 # Environment Baseline
 

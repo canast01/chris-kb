@@ -3,6 +3,7 @@ tags:
   - learning-path
   - srm
   - vmware
+description: "Recommended reading order for VMware Site Recovery Manager (SRM). Follow these stages in order to build a complete mental model before working with it in..."
 ---
 # Site Recovery Manager — Learning Path
 

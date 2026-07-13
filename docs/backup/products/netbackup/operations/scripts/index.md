@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - operations
+description: "NetBackup automation scripts — job summary reporting, failed job alerts, STU capacity monitoring, and catalog validation."
 ---
 # NetBackup — Scripts
 

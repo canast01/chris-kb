@@ -2,6 +2,7 @@
 tags:
   - aria-logs
   - vmware
+description: "Version history and release notes for VMware Aria Operations for Logs."
 ---
 # VMware Aria Operations for Logs — Release Notes
 

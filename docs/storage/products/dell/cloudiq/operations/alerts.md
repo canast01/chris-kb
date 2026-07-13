@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "CloudIQ: Alert Types, Severity, and Notification Configuration reference covering Notification Configuration, Dismissing and Acknowledging Alerts, Common..."
 ---
 # CloudIQ: Alert Types, Severity, and Notification Configuration
 

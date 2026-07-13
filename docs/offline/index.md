@@ -1,5 +1,6 @@
 ---
 title: You're Offline
+description: "Offline fallback page: displayed automatically when the KB site is accessed without a network connection via the service worker cache."
 ---
 
 # You're offline

@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "Dell EMC InsightIQ performance analytics for PowerScale clusters — architecture, data collection, capacity trending, and operational runbooks."
 ---
 # InsightIQ
 

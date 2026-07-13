@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Storage Evergreen Lifecycle reference covering Evergreen Program Tiers, Software Upgrade (Purity), Drive Replacement, Controller Refresh..."
 ---
 # Pure Storage Evergreen Lifecycle
 

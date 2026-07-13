@@ -2,6 +2,7 @@
 tags:
   - aws
   - networking
+description: "An AWS Virtual Private Cloud (VPC) is your own isolated private network inside AWS. You control the IP ranges, subnets, routing, and security. Everything..."
 ---
 # AWS VPC
 

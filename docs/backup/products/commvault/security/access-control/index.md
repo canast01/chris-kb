@@ -2,6 +2,7 @@
 tags:
   - commvault
   - security
+description: "Commvault access control: RBAC role assignment, user group scoping, audit trail configuration, and MFA enforcement for CommCell Console and Web Console."
 ---
 # Commvault — Access Control
 

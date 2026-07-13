@@ -4,6 +4,7 @@ tags:
   - snapmirror
   - netapp
   - known-issues
+description: "Catalog of known SnapMirror bugs, error codes, and workarounds. SnapMirror is an ONTAP feature — most issues are cluster peering or intercluster LIF..."
 ---
 # NetApp SnapMirror — Known Issues and Error Codes
 

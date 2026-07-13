@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - security
+description: "Access Control reference covering NetBackup Access Control (NBAC)."
 ---
 # NetBackup — Access Control
 

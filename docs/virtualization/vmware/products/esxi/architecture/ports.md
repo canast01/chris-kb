@@ -7,6 +7,7 @@ tags:
   - vsphere
   - vsphere-7
   - vsphere-8
+description: "Firewall port reference for VMware ESXi hosts. Covers management, VM console, vMotion, Fault Tolerance, storage, and NSX overlay traffic. Use this when..."
 ---
 # ESXi — Ports and Network Requirements
 

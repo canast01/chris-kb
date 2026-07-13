@@ -3,6 +3,7 @@ tags:
   - aria-logs
   - security
   - vmware
+description: "Hardening reference covering Default Account Hardening, LDAPS-Only Authentication, SSH Hardening, Firewall Rules, Syslog Output for Audit and 1 more..."
 ---
 # Aria Ops for Logs — Hardening
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "MySQL architecture — InnoDB storage engine, buffer pool, query execution pipeline, redo/undo logs, replication binlog, and connection threading model."
 ---
 # MySQL / MariaDB — How It Works
 

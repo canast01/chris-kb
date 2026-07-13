@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot operations, quota management, SmartConnect zone configuration, replication..."
 ---
 # PowerScale — Procedures
 

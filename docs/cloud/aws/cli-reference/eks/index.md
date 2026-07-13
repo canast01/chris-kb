@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "EKS reference covering Node Groups, Fargate Profiles, IAM OIDC Provider, Access Entries and Auth Mode, Add-ons and 1 more sections."
 ---
 # EKS
 

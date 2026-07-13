@@ -1,6 +1,7 @@
 ---
 tags:
   - powershell
+description: "PowerShell automation knowledge base covering execution engine internals, pipeline model, WinRM and SSH remoting, module development, runspace pools, and..."
 ---
 # PowerShell
 

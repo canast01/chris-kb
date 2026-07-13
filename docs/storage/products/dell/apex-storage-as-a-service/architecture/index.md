@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Consumption-based STaaS model — Dell owns and manages on-premises PowerStore, PowerScale, or PowerFlex hardware; capacity is metered monthly via the APEX..."
 ---
 # APEX Storage as a Service — Architecture
 

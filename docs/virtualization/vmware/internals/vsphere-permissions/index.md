@@ -2,6 +2,7 @@
 tags:
   - internals
   - vmware
+description: "vSphere access control is built on a layered permission model: SSO handles authentication, roles define what actions are allowed, and permissions bind a..."
 ---
 # vSphere Permissions Model — SSO, Roles, Inheritance, and Least Privilege
 

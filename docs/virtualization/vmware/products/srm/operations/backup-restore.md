@@ -3,6 +3,7 @@ tags:
   - operations
   - srm
   - vmware
+description: "Backup and Restore reference covering Backup Schedule Recommendation, SRM Configuration Export (Migration / Documentation), vSphere Replication Appliance..."
 ---
 # SRM — Backup and Restore
 

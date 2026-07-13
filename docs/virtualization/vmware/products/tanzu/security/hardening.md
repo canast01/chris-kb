@@ -3,6 +3,7 @@ tags:
   - security
   - tanzu
   - vmware
+description: "Hardening reference covering Pod Security Admission, Default Deny Network Policy, Disallow Privileged Containers (OPA Gatekeeper), Require Resource..."
 ---
 # Tanzu — Hardening
 

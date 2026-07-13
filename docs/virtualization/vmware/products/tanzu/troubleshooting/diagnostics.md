@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "VMware Tanzu diagnostic commands: collect the tanzu diagnostics bundle, access Supervisor control plane VMs via SSH, inspect TKG cluster events and pod..."
 ---
 # Tanzu — Diagnostics
 

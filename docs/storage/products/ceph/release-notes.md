@@ -1,6 +1,7 @@
 ---
 tags:
   - ceph
+description: "Version history and release notes for Ceph."
 ---
 # Ceph — Release Notes
 

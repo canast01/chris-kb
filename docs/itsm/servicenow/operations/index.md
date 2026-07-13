@@ -2,6 +2,7 @@
 tags:
   - operations
   - servicenow
+description: "ServiceNow day-to-day operations — incident routing, CMDB hygiene, report scheduling, upgrade health checks, and platform monitoring."
 ---
 # ServiceNow — Operations
 

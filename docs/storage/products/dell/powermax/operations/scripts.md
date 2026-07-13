@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Scripts reference covering SRDF State Monitor, Array Health Check, SRDF Planned Failover, Ansible PowerMax Health Playbook, Windows: SRDF Health Check via..."
 ---
 # PowerMax — Scripts
 

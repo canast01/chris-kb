@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "A host fails or loses connectivity and VMs become inaccessible. This scenario covers how to determine whether vSphere HA has already restarted the VMs..."
 ---
 # VM Inaccessible / HA Failover
 

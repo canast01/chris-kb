@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Active Directory management uses native tools (repadmin, dcdiag, nltest, netdom, dsquery) and the ActiveDirectory PowerShell module. All commands assume..."
 ---
 # Active Directory CLI Reference
 

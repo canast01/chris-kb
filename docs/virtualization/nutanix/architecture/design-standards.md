@@ -3,6 +3,7 @@ tags:
   - nutanix
   - architecture
   - design
+description: "Cluster sizing rules, node type selection, replication factor decisions, network design, storage container configuration, and block/rack awareness for..."
 ---
 # Nutanix — Design Standards
 

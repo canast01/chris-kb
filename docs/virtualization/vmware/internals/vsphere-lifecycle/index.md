@@ -3,6 +3,7 @@ title: vSphere Lifecycle Management
 tags:
   - internals
   - vmware
+description: "Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Manager (vLCM) image-based and baseline-based management, cluster images..."
 ---
 
 # vSphere Lifecycle Management — vLCM, Host Profiles, and Upgrades

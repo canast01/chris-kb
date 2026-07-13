@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Evergreen//One CLI reference: purearray list, purevolume list, purejob list, subscription capacity reporting via puresubscription, and evergreen..."
 ---
 # Pure Evergreen//One CLI Reference
 

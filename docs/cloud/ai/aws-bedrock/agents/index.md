@@ -2,6 +2,7 @@
 tags:
   - aws
   - ai
+description: "AWS Bedrock Agents enable multi-step reasoning and action execution using foundation models. Agents can call APIs, query knowledge bases, and orchestrate..."
 ---
 # Bedrock Agents
 

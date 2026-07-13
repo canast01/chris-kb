@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (idmapd), Kerberos Security Modes, ACL Interaction and 1 more sections."
 ---
 # NFS Permissions
 

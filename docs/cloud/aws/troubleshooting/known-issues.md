@@ -4,6 +4,7 @@ tags:
   - aws
   - cloud
   - known-issues
+description: "Catalog of known AWS bugs, error codes, and workarounds covering IAM, EC2, networking, and service limits."
 ---
 # AWS — Known Issues and Error Codes
 

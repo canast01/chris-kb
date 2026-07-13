@@ -6,6 +6,7 @@ tags:
   - github
   - itsm
   - known-issues
+description: "Catalog of known Git server bugs, error codes, and workarounds covering GitLab self-managed, Gitaly, and common Git operation failures."
 ---
 # Git / GitLab / GitHub — Known Issues and Error Codes
 

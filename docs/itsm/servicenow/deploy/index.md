@@ -4,6 +4,7 @@ tags:
   - servicenow
 search:
   boost: 1.5
+description: "Step-by-step guide to requesting a ServiceNow developer instance, configuring admin settings, connecting LDAP, importing users, configuring email and MID..."
 ---
 # ServiceNow — Initial Instance Setup
 

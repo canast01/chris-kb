@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapMirror CLI reference: snapmirror show, snapmirror create, snapmirror modify, snapmirror quiesce, snapmirror break, snapmirror resync, and snapmirror..."
 ---
 # SnapMirror — CLI Reference
 

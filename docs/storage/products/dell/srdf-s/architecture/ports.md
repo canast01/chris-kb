@@ -8,6 +8,7 @@ tags:
   - firewall
   - ports
   - replication
+description: "Firewall port reference for Dell SRDF/S (Symmetrix Remote Data Facility / Synchronous). SRDF/S provides zero-RPO synchronous replication between PowerMax..."
 ---
 # Dell SRDF/S — Ports and Network Requirements
 

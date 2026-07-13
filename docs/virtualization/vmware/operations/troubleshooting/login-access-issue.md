@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Troubleshooting vCenter and ESXi login failures — SSO token errors, locked AD accounts, LDAP connectivity, NTP drift breaking Kerberos, and certificate..."
 ---
 # Login and Access Issues
 

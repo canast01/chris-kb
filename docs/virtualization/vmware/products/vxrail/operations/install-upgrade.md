@@ -3,6 +3,7 @@ tags:
   - operations
   - vmware
   - vxrail
+description: "VxRail LCM upgrade workflow from bundle download through post-upgrade validation. Covers obtaining and uploading the bundle, running pre-upgrade checks..."
 ---
 # VxRail — Install & Upgrade
 

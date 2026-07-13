@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "Linux operational runbooks — routine maintenance, service recovery, backup validation, and performance checks."
 ---
 # Linux — Operational Runbooks
 

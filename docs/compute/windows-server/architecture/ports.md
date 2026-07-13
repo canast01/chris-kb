@@ -5,6 +5,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Windows Server in a managed enterprise environment. Covers remote management (RDP, WinRM, DCOM), monitoring, Windows Update..."
 ---
 # Windows Server — Ports and Network Requirements
 

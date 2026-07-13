@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "SQL Server backup: BACKUP DATABASE TO DISK, full/diff/log chain, Ola Hallengren scripts, RESTORE WITH NORECOVERY, and point-in-time recovery procedure."
 ---
 # SQL Server — Backup Restore
 

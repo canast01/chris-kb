@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure1 vendor support: opening cases via the Pure1 portal, diagnostic bundle collection with purediag, phone escalation numbers, and remote session..."
 ---
 # Pure1 Vendor Support
 

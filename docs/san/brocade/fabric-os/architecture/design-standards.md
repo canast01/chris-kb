@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "FabricOS design standards: ISL oversubscription limits, trunking requirements, fabric-wide consistency settings, and zoning naming conventions."
 ---
 # FabricOS — Standards
 

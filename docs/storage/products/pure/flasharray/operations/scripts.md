@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Scripts reference covering Array Health Check (Python), ActiveCluster Pod Status Monitor (Python), Volume and Snapshot Report (Bash), Drive Failure Alert..."
 ---
 # FlashArray — Scripts
 

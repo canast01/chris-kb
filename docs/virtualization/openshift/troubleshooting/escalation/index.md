@@ -3,6 +3,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Red Hat support escalation process: severity levels, required data for support cases, SOS report generation, KCS knowledge base, escalation path, and what..."
 ---
 # OpenShift — Escalation
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Version history and release notes for Dell AIOps."
 ---
 # Dell AIOps — Release Notes
 

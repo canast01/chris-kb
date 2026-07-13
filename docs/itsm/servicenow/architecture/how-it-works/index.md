@@ -2,6 +2,7 @@
 tags:
   - architecture
   - servicenow
+description: "ServiceNow is delivered as a multi-instance SaaS platform running on dedicated infrastructure per customer. Each customer receives isolated database..."
 ---
 # ServiceNow — How It Works
 

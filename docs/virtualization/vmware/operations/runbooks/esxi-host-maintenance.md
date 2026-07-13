@@ -4,6 +4,7 @@ tags:
   - operations
   - vmware
   - vsphere-8
+description: "| Field | Value | |---|---| | Risk | Medium — VMs migrated off host; cluster capacity temporarily reduced | | Approval | Change ticket required for..."
 ---
 # ESXi Host Maintenance Mode Runbook
 

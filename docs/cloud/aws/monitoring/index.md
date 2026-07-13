@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS observability is built on CloudWatch (metrics, logs, alarms), CloudTrail (API audit trail), and EventBridge (event-driven automation). Coverage..."
 ---
 # AWS Monitoring
 

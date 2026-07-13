@@ -3,6 +3,7 @@ tags:
   - dell-data-domain
   - faq
   - operations
+description: "Common questions about Dell Data Domain operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell Data Domain — Frequently Asked Questions
 

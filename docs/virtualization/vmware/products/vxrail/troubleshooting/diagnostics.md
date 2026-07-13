@@ -5,6 +5,7 @@ tags:
   - vxrail
 search:
   boost: 1.5
+description: "VxRail diagnostic commands: tail VxRail Manager mystic.log and lcm.log, grep ESXi vmkernel.log for vSAN LSOM/DOM errors, collect iDRAC SEL hardware event..."
 ---
 # VxRail — Diagnostics
 

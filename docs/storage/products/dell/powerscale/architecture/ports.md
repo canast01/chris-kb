@@ -7,6 +7,7 @@ tags:
   - firewall
   - ports
   - nas
+description: "Firewall port reference for Dell PowerScale (formerly Isilon). Covers OneFS management, NFS, SMB, S3 object, FTP, HDFS, and SyncIQ cross-cluster..."
 ---
 # Dell PowerScale (Isilon) — Ports and Network Requirements
 

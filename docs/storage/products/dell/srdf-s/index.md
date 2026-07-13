@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell PowerMax SRDF/S synchronous replication — every host write committed to both R1 and R2 before acknowledgement; guarantees RPO = 0 with ≤10ms..."
 ---
 # SRDF/S
 

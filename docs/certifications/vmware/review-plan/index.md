@@ -2,6 +2,7 @@
 tags:
   - certifications
   - vmware
+description: "Review Plan reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections."
 ---
 # Review Plan
 

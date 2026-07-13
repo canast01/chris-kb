@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell CoD (Capacity on Demand) backup and restore: licence file backup, configuration export via SYMCLI, and procedure to restore capacity entitlements..."
 ---
 # COD — Backup & Restore
 

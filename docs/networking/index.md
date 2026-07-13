@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "Networking knowledge base covering switching, routing, security, and network services. Includes design references, configuration procedures, connectivity..."
 ---
 # Networking
 

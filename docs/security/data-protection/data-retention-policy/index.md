@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "This policy defines mandatory retention periods, storage tier assignments, and deletion procedures for all data types across the enterprise. Retention..."
 ---
 # Data Retention Policy
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Dell PowerScale (Isilon) diagnostic commands: check cluster node and drive health with isi status, list critical events, inspect SyncIQ replication policy..."
 ---
 # PowerScale — Diagnostics
 

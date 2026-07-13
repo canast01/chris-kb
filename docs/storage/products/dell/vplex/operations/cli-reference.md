@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "vplexcli is the primary management interface for Dell VPLEX. Connect to the VPLEX Management Server (VMS) via SSH, then launch the shell with vplexcli..."
 ---
 # Dell VPLEX — CLI Reference (vplexcli)
 

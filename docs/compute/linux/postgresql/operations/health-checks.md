@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "PostgreSQL health checks: pg_stat_replication, pg_stat_activity, pg_stat_bgwriter, replication lag queries, and bloat monitoring with pg_bloat_check."
 ---
 # PostgreSQL — Health Checks
 

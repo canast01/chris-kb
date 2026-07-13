@@ -2,6 +2,7 @@
 tags:
   - aria-operations
   - monitoring
+description: "Top-10 Aria Operations (vROps) commands for alerts, metrics, policy management, and adapter status via REST API."
 ---
 # Aria Operations Cheat Sheet
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Diagnostic settings control which resource logs and metrics are exported from an Azure resource and where they are sent. Each resource supports its own..."
 ---
 # Diagnostic Settings
 

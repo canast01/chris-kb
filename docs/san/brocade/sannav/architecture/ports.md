@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Brocade SANnav Management Portal. SANnav is the SAN management and analytics platform for Brocade FC switches. It collects..."
 ---
 # Brocade SANnav — Ports and Network Requirements
 

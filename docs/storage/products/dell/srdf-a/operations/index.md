@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "SRDF/A day-to-day operations — cycle monitoring, delta set management, STAR mode, and async replication health checks."
 ---
 # SRDF/A — Operations
 

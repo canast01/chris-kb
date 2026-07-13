@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SnapCenter diagnostic commands: query failed jobs with Get-SmJob, inspect job detail with Get-SmJobSummaryReport, check host plugin status, verify ONTAP..."
 ---
 # SnapCenter — Diagnostics
 

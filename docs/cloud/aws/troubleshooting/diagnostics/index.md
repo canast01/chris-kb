@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "AWS diagnostic commands: confirm account and role identity with aws sts, query CloudTrail for recent API changes, use VPC Reachability Analyzer and Flow..."
 ---
 # AWS — Diagnostics
 

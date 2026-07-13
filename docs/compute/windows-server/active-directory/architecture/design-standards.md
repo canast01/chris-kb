@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "Organisational standards for OU structure, naming conventions, group policy design, and privileged access. Consistent standards reduce delegation..."
 ---
 # Active Directory Standards
 

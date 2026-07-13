@@ -1,6 +1,7 @@
 ---
 tags:
   - powershell
+description: "Version history and release notes for PowerShell."
 ---
 # PowerShell — Release Notes
 

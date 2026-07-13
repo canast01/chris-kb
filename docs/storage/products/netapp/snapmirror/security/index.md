@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "NetApp SnapMirror — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # NetApp SnapMirror — Security
 

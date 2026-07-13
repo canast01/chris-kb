@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Pure Evergreen procedures: requesting capacity upgrades, scheduling controller refreshes, coordinating with Pure account team, and validating entitlements..."
 ---
 # Evergreen — Procedures
 

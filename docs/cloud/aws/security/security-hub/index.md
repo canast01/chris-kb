@@ -2,6 +2,7 @@
 tags:
   - aws
   - security
+description: "AWS Security Hub reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections."
 ---
 # AWS Security Hub
 

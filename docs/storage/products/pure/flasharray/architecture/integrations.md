@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Integrations reference covering VMware Integration, Backup Integration, Pure1 Monitoring, Authentication, REST API."
 ---
 # FlashArray — Integrations
 

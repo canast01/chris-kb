@@ -7,6 +7,7 @@ tags:
   - gss
 search:
   boost: 1.5
+description: "How to escalate Nutanix cluster issues to Nutanix Global Support Services (GSS): what data to collect, how to generate the NCC health report and support..."
 ---
 # Nutanix — Escalation
 

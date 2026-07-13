@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 2
+description: "Day-to-day operational reference for VMware vCenter Server. Covers CLI commands, health checks, routine procedures, lifecycle management, backup strategy..."
 ---
 # vCenter — Operations
 

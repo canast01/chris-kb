@@ -2,6 +2,7 @@
 tags:
   - architecture
   - confluence
+description: "Confluence is Atlassian's enterprise wiki and collaboration platform, available in three deployment models: Server (EOL), Data Center (self-managed..."
 ---
 # Confluence — How It Works
 

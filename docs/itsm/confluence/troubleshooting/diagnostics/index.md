@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Confluence diagnostic commands: check instance health via the /status endpoint, inspect JVM heap with jstat and jmap to identify memory leaks, capture..."
 ---
 # Confluence — Diagnostics
 

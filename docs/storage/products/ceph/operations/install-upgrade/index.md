@@ -2,6 +2,7 @@
 tags:
   - ceph
   - operations
+description: "Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON → MGR → OSD → MDS → RGW), monitoring upgrade progress, and rollback..."
 ---
 # Ceph — Lifecycle & Upgrades
 

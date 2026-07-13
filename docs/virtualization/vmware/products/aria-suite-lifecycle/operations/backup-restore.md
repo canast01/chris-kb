@@ -3,6 +3,7 @@ tags:
   - aria-lcm
   - operations
   - vmware
+description: "Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferred for Production), Backing Up the NFS Binary Repository, Exporting LCM..."
 ---
 # Aria Suite Lifecycle — Backup & Restore
 

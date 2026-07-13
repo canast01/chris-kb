@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "Fabric OS runs on Brocade/Broadcom FC switches in dual-fabric core-edge topology. Principal switch election, distributed name server, WWN-based zoning..."
 ---
 # Brocade Fabric OS — Architecture
 

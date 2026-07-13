@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - dr
+description: "Firewall port reference for VMware Site Recovery Manager (SRM) and vSphere Replication (VR). The most critical firewall boundary is the inter-site link —..."
 ---
 # SRM — Ports and Network Requirements
 

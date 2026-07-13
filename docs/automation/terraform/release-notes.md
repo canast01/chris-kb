@@ -1,6 +1,7 @@
 ---
 tags:
   - terraform
+description: "Version history and release notes for Terraform."
 ---
 # Terraform — Release Notes
 

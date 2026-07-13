@@ -5,6 +5,7 @@ tags:
   - pki
   - tls
   - known-issues
+description: "Catalog of known PKI and certificate bugs, error codes, and workarounds covering ADCS, OCSP, CRL, and ACME / Let's Encrypt."
 ---
 # Certificates / PKI — Known Issues and Error Codes
 

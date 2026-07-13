@@ -2,6 +2,7 @@
 tags:
   - github-actions
   - security
+description: "GitHub Actions hardening: pinning actions to commit SHAs, restricting workflow triggers, disabling token permissions, branch protection rules, and audit..."
 ---
 # GitHub Actions — Hardening
 

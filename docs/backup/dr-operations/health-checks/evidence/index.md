@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Evidence Capture and Audit Trail reference covering Overview, What Counts as Evidence, Naming Convention, Evidence Storage, Evidence Capture Checklist and..."
 ---
 # Evidence Capture and Audit Trail
 

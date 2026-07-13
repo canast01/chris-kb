@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Update Manager (the successor to Azure Automation Update Management) provides centralised OS patch management for Azure VMs, Arc-connected servers..."
 ---
 # Patching
 

@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Diagnosing Tanzu cluster failures, pod scheduling issues, ingress errors, and control plane health problems."
 ---
 # Tanzu — Troubleshooting
 

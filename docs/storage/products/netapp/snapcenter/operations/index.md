@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "NetApp SnapCenter — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more."
 ---
 # NetApp SnapCenter — Operations
 

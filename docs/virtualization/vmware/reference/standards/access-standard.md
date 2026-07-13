@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Access Standard reference covering Overview, Core Principles, vCenter Role Definitions, AD Group Mapping, Service Accounts and 5 more sections."
 ---
 # Access Standard
 

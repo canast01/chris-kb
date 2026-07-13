@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Python automation escalation: when to file a CPython bug, how to report a library issue, how to respond to CVEs, and the internal escalation path for..."
 ---
 # Python Automation — Escalation
 

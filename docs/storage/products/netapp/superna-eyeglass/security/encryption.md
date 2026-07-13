@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "Superna Eyeglass encryption — TLS configuration and data-in-transit security for Eyeglass management communications."
 ---
 # Superna Eyeglass — Encryption
 

@@ -3,6 +3,7 @@ tags:
   - operations
   - srm
   - vmware
+description: "SRM health checks: Get-SrmRecoveryPlan, site pair connectivity test, VM protection group status, replication lag review, and RPO compliance validation."
 ---
 # SRM — Health Checks
 

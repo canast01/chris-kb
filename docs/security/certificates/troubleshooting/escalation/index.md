@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Procedures for raising support cases with Microsoft ADCS, commercial CAs (DigiCert, Entrust), and Let's Encrypt. Pre-collect diagnostics before opening..."
 ---
 # Certificates — Escalation
 

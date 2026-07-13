@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS cost management combines visibility tools (Cost Explorer, Anomaly Detection) with spend optimisation (Reserved Instances, Savings Plans) and..."
 ---
 # AWS Cost
 

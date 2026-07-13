@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "SRDF/S encryption: in-flight encryption over FCIP using GEM or Brocade encryption, IPsec tunnel configuration, and encryption key lifecycle management."
 ---
 # SRDF/S — Encryption
 

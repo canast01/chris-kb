@@ -4,6 +4,7 @@ tags:
   - powershell
   - automation
   - known-issues
+description: "Catalog of known PowerShell and WinRM bugs, error codes, and workarounds covering remoting, execution policy, and module loading."
 ---
 # PowerShell / PowerShell Remoting — Known Issues and Error Codes
 

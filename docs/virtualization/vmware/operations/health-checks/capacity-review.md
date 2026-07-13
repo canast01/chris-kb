@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Run this check weekly or after any significant workload addition."
 ---
 # Capacity Review
 

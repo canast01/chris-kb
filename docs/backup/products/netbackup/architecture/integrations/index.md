@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netbackup
+description: "NetBackup Integration reference covering Integration Architecture, SIEM Integration, CyberArk Integration, OpsCenter / IT Analytics."
 ---
 # NetBackup Integration
 

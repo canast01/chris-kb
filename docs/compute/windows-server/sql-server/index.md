@@ -1,6 +1,7 @@
 ---
 tags:
   - windows
+description: "Microsoft SQL Server for Windows Server — Always On AG, failover clustering, backup/restore."
 ---
 # SQL Server
 

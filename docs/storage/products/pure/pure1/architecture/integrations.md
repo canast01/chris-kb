@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Pure1 integrates natively with FlashArray and FlashBlade via Purity OS telemetry, and outbound to ITSM systems, notification channels, and the Pure1 REST..."
 ---
 # Pure1 — Integrations
 

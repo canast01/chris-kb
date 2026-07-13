@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Installing PowerCLI, first connection to vCenter, service account setup, certificate configuration, and proxy settings for environments without direct..."
 ---
 # PowerCLI — Deploy
 

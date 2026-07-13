@@ -5,6 +5,7 @@ tags:
   - vmware
   - known-issues
   - vsphere-8
+description: "Catalog of known ESXi bugs, error codes, and workarounds. Each entry includes the affected version range, cause, and resolution status."
 ---
 # VMware ESXi — Known Issues and Error Codes
 

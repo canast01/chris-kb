@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Certificate lifecycle operations — renewal, re-issuance, CSR generation, chain validation, and certificate rotation procedures."
 ---
 # Certificates — Operations
 

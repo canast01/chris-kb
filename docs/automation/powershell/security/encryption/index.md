@@ -2,6 +2,7 @@
 tags:
   - powershell
   - security
+description: "PowerShell encryption: ConvertTo-SecureString, New-SelfSignedCertificate, encrypting credential exports, and SecretManagement module for vault integration."
 ---
 # PowerShell — Encryption
 

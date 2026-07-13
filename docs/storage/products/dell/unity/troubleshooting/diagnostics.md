@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Unity XT diagnostic commands: check system-wide health with uemcli /env/health show -filter 'health.value ne OK' and active alerts with /prac/alert show..."
 ---
 # Unity — Diagnostics
 

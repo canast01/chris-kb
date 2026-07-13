@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - vmware
+description: "Recommended reading order for VMware. Start here to build a complete mental model — from the management plane down to hypervisor, storage, networking, and..."
 ---
 # VMware Learning Path
 

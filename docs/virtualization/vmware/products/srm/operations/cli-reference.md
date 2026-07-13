@@ -3,6 +3,7 @@ tags:
   - operations
   - srm
   - vmware
+description: "CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for SRM, Get Protected VM List, Get Recovery Plan History, Disconnect SRM Session."
 ---
 # SRM — CLI Reference
 

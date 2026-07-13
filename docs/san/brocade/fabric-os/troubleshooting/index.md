@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing FabricOS fabric errors, port faults, FLOGI failures, zone conflicts, and principal switch elections."
 ---
 # FabricOS — Troubleshooting
 

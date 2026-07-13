@@ -3,6 +3,7 @@ tags:
   - netapp-insightiq
   - faq
   - operations
+description: "Common questions about NetApp InsightIQ operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # NetApp InsightIQ — Frequently Asked Questions
 

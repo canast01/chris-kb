@@ -3,6 +3,7 @@ tags:
   - aria-lcm
   - operations
   - vmware
+description: "CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & Time, Logs."
 ---
 # Aria Suite Lifecycle — CLI Reference
 

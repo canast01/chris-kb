@@ -3,6 +3,7 @@ tags:
   - azure
   - faq
   - operations
+description: "Common questions about Microsoft Azure operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Microsoft Azure — Frequently Asked Questions
 

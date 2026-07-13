@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "Install & Upgrade reference covering ESA Migration, Driver and Firmware."
 ---
 # vSAN — Install & Upgrade
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Ansible diagnostic commands: progressively increase verbosity with -v to -vvvv, inspect variables with ansible.builtin.debug, test SSH connectivity, run..."
 ---
 # Ansible — Diagnostics
 

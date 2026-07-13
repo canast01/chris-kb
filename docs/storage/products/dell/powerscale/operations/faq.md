@@ -3,6 +3,7 @@ tags:
   - dell-powerscale
   - faq
   - operations
+description: "Common questions about Dell PowerScale (Isilon) operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell PowerScale (Isilon) — Frequently Asked Questions
 

@@ -4,6 +4,7 @@ tags:
   - vmware
   - interoperability
   - compatibility
+description: "Interoperability reference for VMware product combinations. Use this page before planning upgrades or deploying new products to confirm component..."
 ---
 # VMware Interoperability and Compatibility Matrix
 

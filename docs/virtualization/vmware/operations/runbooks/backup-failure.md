@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "VMware Backup Failure Runbook reference covering Identify Failed VMs, Review the Error Message, Check VM Snapshot State, Check Datastore Free Space, Check..."
 ---
 # VMware Backup Failure Runbook
 

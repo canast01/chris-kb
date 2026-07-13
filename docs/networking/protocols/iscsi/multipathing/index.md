@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "iSCSI multipathing uses multiple network paths between initiator and target for redundancy and load distribution."
 ---
 # iSCSI Multipathing
 

@@ -4,6 +4,7 @@ tags:
   - evergreen-one
   - pure-storage
   - known-issues
+description: "Evergreen//One is Pure Storage's STaaS offering — on-premises Pure hardware managed by Pure. Operational issues are handled by Pure support directly. This..."
 ---
 # Pure Storage Evergreen//One — Known Issues and Error Codes
 

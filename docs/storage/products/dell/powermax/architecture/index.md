@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Dell PowerMax is an enterprise all-flash NVMe-oF array with an active-active director-pair architecture and global memory mirroring. It supports SRDF..."
 ---
 # PowerMax — Architecture
 

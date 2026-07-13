@@ -3,6 +3,7 @@ tags:
   - security
   - vcf
   - vmware
+description: "Hardening reference covering Hardening Checklist, Network Access Controls."
 ---
 # VCF — Hardening
 

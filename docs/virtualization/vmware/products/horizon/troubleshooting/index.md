@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Horizon troubleshooting — Connection Server failures, desktop provisioning errors and stuck instant clones, Blast and PCoIP session disconnects and..."
 ---
 # Horizon (VDI) — Troubleshooting
 

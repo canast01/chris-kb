@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing VM performance degradation across the VMware stack — CPU ready, memory balloon, storage latency, and network saturation. Covers esxtop..."
 ---
 # VM Performance Issues
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Commonly used Azure CLI (az) commands for managing compute, storage, networking, identity, and monitoring. The Azure CLI is a cross-platform tool that..."
 ---
 # Azure CLI Reference
 

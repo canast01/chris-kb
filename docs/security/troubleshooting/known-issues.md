@@ -3,6 +3,7 @@ tags:
   - troubleshooting
   - security
   - known-issues
+description: "Index of security product known issues and error codes. This top-level page links to per-product known-issues catalogs."
 ---
 # Security — Known Issues Reference
 

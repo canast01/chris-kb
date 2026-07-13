@@ -2,6 +2,7 @@
 tags:
   - architecture
   - security
+description: "CyberArk integrates with AD, MFA, ticketing, VMware, Linux, and automation tooling to enforce privileged access controls across all platforms. AD group..."
 ---
 # CyberArk — Integrations
 

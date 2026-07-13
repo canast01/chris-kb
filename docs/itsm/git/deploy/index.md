@@ -4,6 +4,7 @@ tags:
   - git
 search:
   boost: 1.5
+description: "Step-by-step guide to installing Git, configuring global settings, setting up SSH key authentication, and establishing a working local development..."
 ---
 # Git — Environment Setup
 

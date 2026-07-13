@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Dell Cloud on Demand (COD) escalation: how to collect array license state, key file details, and Unisphere events, when to escalate to Dell Licensing..."
 ---
 # COD — Escalation
 

@@ -3,6 +3,7 @@ tags:
   - horizon
   - operations
   - vmware
+description: "Backup and Restore reference covering Verify the Backup, App Volumes Manager Database Backup, DEM Config Share Backup, AppStack VMDK Backup, Golden Image..."
 ---
 # Horizon — Backup and Restore
 

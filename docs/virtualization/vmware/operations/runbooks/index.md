@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Practical runbooks for incidents, maintenance, lifecycle work, validation, evidence collection, and RCA follow-up."
 ---
 # Virtualization Runbooks
 

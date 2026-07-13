@@ -3,6 +3,7 @@ tags:
   - security
   - srm
   - vmware
+description: "Encryption reference covering Encryption at Recovery Site, Certificate Management for SRM Server, SRA Credential Storage Encryption, FIPS Mode."
 ---
 # SRM — Encryption
 

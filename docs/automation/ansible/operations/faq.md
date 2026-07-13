@@ -3,6 +3,7 @@ tags:
   - ansible
   - faq
   - operations
+description: "Common questions about Ansible operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Ansible — Frequently Asked Questions
 

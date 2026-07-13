@@ -2,6 +2,7 @@
 tags:
   - architecture
   - jira
+description: "Architecture Standards reference covering Project Naming Conventions, Workflow State Standards, Field Configuration Standards, Permission Scheme..."
 ---
 # Jira — Architecture Standards
 

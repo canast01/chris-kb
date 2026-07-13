@@ -1,6 +1,7 @@
 ---
 tags:
   - jira
+description: "Jira knowledge base covering Data Center cluster architecture, issue management, workflow configuration, security, and troubleshooting."
 ---
 # Jira
 

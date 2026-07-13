@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Diagnosing SRM replication failures, protection group errors, inventory mapping issues, and failover/failback problems."
 ---
 # Site Recovery Manager — Troubleshooting
 

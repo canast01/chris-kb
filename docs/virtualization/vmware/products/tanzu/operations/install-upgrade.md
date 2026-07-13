@@ -3,6 +3,7 @@ tags:
   - operations
   - tanzu
   - vmware
+description: "Install and Upgrade reference covering Prerequisites for vSphere with Tanzu (Supervisor), Enable Workload Management on vSphere, Deploy TKG Management..."
 ---
 # Tanzu — Install and Upgrade
 

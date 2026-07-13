@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Storage Encryption reference covering Overview, Storage Encryption Key Model, Encryption Key Options, Checking Encryption Status, Enabling..."
 ---
 # Azure Storage Encryption
 

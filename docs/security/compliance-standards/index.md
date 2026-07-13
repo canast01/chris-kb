@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Compliance Standards reference covering Framework Overview, ISO 27001 — Key Control Areas, PCI-DSS — Infra Control Checklist, CIS Controls — Priority..."
 ---
 # Compliance Standards
 

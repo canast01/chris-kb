@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Version history and release notes for Azure."
 ---
 # Azure — Release Notes
 

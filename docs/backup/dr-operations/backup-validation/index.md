@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Backup validation is the systematic process of confirming that backup data is intact, recoverable, and meets defined recovery objectives. A backup that..."
 ---
 # Backup Validation
 

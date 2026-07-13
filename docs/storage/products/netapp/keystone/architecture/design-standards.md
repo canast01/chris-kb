@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "Standards reference covering Service Level Selection, Naming Conventions, Capacity Management."
 ---
 # Keystone — Standards
 

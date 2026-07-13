@@ -3,6 +3,7 @@ tags:
   - terraform
   - faq
   - operations
+description: "Common questions about Terraform operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Terraform — Frequently Asked Questions
 

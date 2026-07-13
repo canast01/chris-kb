@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for MySQL and MySQL InnoDB Cluster. Covers client connections, X Protocol, Group Replication, and MySQL Shell admin."
 ---
 # MySQL — Ports and Network Requirements
 

@@ -4,6 +4,7 @@ tags:
   - ontap
   - cli-reference
   - storage
+description: "Essential ONTAP CLI commands for cluster, SVM, volume, aggregate, network, SnapMirror, protocol, and health operations — one-line references for..."
 ---
 # ONTAP CLI Cheat Sheet
 

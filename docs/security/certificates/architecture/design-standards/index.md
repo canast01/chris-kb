@@ -2,6 +2,7 @@
 tags:
   - architecture
   - security
+description: "Validity period standards: internal server certificates 2 years, external/public-facing certificates 1 year maximum (aligned with CA/Browser Forum..."
 ---
 # Certificates — Standards
 

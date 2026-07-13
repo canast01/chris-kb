@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Host-Side MPIO Stack, Path States, Load-Balancing Policies, Failover and Recovery and 2 more sections."
 ---
 # PowerPath — How It Works
 

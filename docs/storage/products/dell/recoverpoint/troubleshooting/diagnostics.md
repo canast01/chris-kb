@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "RecoverPoint diagnostic commands: RPA health, consistency group state, journal utilization, splitter status, and support bundle collection via SSH CLI and..."
 ---
 # RecoverPoint — Diagnostics
 

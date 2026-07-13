@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - storage
+description: "Firewall port reference for Dell PowerStore. Covers management API and UI, data protocols (NFS, SMB, iSCSI, NVMe-oF/TCP), synchronous/asynchronous..."
 ---
 # Dell PowerStore — Ports and Network Requirements
 

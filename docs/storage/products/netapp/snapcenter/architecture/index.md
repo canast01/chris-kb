@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "SnapCenter architecture reference — topology, HA options, components, connectivity ports, plugin model, and sizing guidelines."
 ---
 # SnapCenter — Architecture
 

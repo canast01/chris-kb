@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Step-by-step procedures for enrolling users in MFA, resetting credentials, configuring MFA across vCenter and Azure AD, and reviewing MFA adoption..."
 ---
 # Multi-Factor Authentication — Procedures
 

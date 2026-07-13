@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Compute Savings Plans provide discounts (up to 65%) in exchange for a consistent hourly compute spend commitment over 1 or 3 years. Unlike Reserved..."
 ---
 # Savings Plans
 

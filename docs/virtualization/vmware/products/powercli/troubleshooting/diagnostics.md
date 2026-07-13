@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "PowerCLI diagnostic techniques: enable verbose and debug output, trace API calls via ExtensionData, profile large-inventory queries with Get-View, inspect..."
 ---
 # PowerCLI — Diagnostics
 

@@ -5,6 +5,7 @@ tags:
   - networking
   - certificates
   - known-issues
+description: "Catalog of known TLS issues covering handshake failures, certificate validation errors, and version/cipher compatibility."
 ---
 # TLS / SSL — Known Issues and Error Codes
 

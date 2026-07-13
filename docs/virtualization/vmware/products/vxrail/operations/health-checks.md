@@ -3,6 +3,7 @@ tags:
   - operations
   - vmware
   - vxrail
+description: "Daily and weekly health check routine for VxRail clusters. Covers VxRail Plugin node status, vSAN object health and resync, iDRAC hardware alarms..."
 ---
 # VxRail — Health Checks
 

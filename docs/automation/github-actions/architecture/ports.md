@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - cicd
+description: "Firewall port reference for GitHub Actions with self-hosted runners. GitHub-hosted runners run in GitHub's cloud — no on-premise firewall rules needed for..."
 ---
 # GitHub Actions — Ports and Network Requirements
 

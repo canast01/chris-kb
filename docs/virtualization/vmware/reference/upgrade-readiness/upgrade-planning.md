@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Upgrade planning should start before the maintenance window."
 ---
 # Upgrade Planning
 

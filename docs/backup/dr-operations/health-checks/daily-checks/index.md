@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Daily Infrastructure Health Checks reference covering Overview, Morning Check Routine, What to Look For, Escalation Decision Tree, Documentation and..."
 ---
 # Daily Infrastructure Health Checks
 

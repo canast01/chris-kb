@@ -3,6 +3,7 @@ tags:
   - troubleshooting
   - nutanix
   - known-issues
+description: "Catalog of known Nutanix AOS / AHV bugs, error codes, and workarounds covering CVM, storage, AHV networking, and Prism issues."
 ---
 # Nutanix — Known Issues and Error Codes
 

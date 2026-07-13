@@ -1,6 +1,7 @@
 ---
 tags:
   - ceph
+description: "Ceph is an open-source distributed storage system providing block (RBD), file (CephFS), and object (RGW/S3) storage from a single cluster. Deployed on..."
 ---
 # Ceph Distributed Storage
 

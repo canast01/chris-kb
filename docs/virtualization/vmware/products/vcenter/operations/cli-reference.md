@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "CLI Reference (PowerCLI & DCLI) reference covering Hosts, Clusters, Virtual Machines, Snapshots, Datastores and 3 more sections."
 ---
 # vCenter — CLI Reference (PowerCLI & DCLI)
 

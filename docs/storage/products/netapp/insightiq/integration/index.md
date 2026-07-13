@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "InsightIQ Integration reference covering Overview, OneFS Data Connector (Inbound), SMTP Email Alerts, SNMP Forwarding to Monitoring Platform, Syslog to..."
 ---
 # InsightIQ Integration
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Maintenance Window Runbook reference covering Before Maintenance, During Maintenance, After Maintenance."
 ---
 # Maintenance Window Runbook
 

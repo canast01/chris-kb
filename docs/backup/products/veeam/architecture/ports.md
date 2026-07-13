@@ -5,6 +5,7 @@ tags:
   - firewall
   - ports
   - backup
+description: "Firewall port reference for Veeam Backup & Replication. Covers VBR server, backup proxies, repositories, VMware infrastructure access, guest processing..."
 ---
 # Veeam — Ports and Network Requirements
 

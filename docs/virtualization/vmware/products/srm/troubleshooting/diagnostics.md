@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "SRM diagnostic commands: collect the SRM support bundle, parse vmware-dr-*.log for plan execution errors, check vSphere Replication appliance logs, verify..."
 ---
 # SRM — Diagnostics
 

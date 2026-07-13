@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS CLI commands for EC2 — describe-instances, start/stop, resize, AMI creation, metadata queries, and user data operations."
 ---
 # EC2 — Instances
 

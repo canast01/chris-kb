@@ -2,6 +2,7 @@
 tags:
   - linux
   - security
+description: "PostgreSQL security: pg_hba.conf authentication rules, role-based access, SSL certificate enforcement, row_security policies, and pgaudit configuration."
 ---
 # PostgreSQL — Security
 

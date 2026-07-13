@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - security-groups
+description: "Firewall and security-group port reference for AWS infrastructure. Covers management access to EC2 instances, VPC-level security group design, AWS API..."
 ---
 # AWS — Ports and Network Requirements
 

@@ -2,6 +2,7 @@
 tags:
   - reference
   - vmware
+description: "VMware licensing changed significantly in 2024 following the Broadcom acquisition. Perpetual licences were discontinued and replaced with..."
 ---
 # VMware Editions
 

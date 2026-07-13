@@ -2,6 +2,7 @@
 tags:
   - ansible
   - operations
+description: "Ansible operational procedures: deploying playbooks, managing inventory sources, rotating vault passwords, and promoting changes from dev to production..."
 ---
 # Ansible — Procedures
 

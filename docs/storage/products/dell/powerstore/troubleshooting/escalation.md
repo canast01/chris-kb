@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Dell PowerStore issues to Dell support: what data to collect, how to generate the support bundle, step-by-step case creation on the Dell..."
 ---
 # PowerStore — Escalation
 

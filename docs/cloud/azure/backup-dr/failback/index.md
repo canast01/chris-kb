@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Failback is the process of returning protected workloads from the DR (recovery) region back to the primary region after a failover event."
 ---
 # Failback
 

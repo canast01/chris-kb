@@ -4,6 +4,7 @@ tags:
   - nsx
   - nsx-4
   - vmware
+description: "Integrations reference covering Host Transport Node Profiles, VMware Cloud Foundation (VCF) Integration, Physical Underlay Requirements, BGP Integration..."
 ---
 # NSX — Integrations
 

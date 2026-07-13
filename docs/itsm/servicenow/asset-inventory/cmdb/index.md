@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "CMDB Data Quality and Management reference covering Overview, Core Data Quality Dimensions, CI Relationships, Import Sources and Integration, ServiceNow..."
 ---
 # CMDB Data Quality and Management
 

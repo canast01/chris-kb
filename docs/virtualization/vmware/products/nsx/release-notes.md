@@ -3,6 +3,7 @@ tags:
   - nsx
   - nsx-4
   - vmware
+description: "Version history and release notes for VMware NSX."
 ---
 # VMware NSX — Release Notes
 

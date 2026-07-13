@@ -3,6 +3,7 @@ tags:
   - operations
   - srm
   - vmware
+description: "SRM automation scripts: PowerCLI Get-SrmRecoveryPlan, Start-SrmRecoveryPlan -PlanMode Test, REST API for replication lag reporting, and failover..."
 ---
 # SRM — Scripts
 

@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Cisco MDS 9000 Series SAN switches. Covers management access (SSH, HTTPS, Telnet), SNMP, NTP, AAA (TACACS+ and RADIUS), and..."
 ---
 # Cisco MDS — Ports and Network Requirements
 

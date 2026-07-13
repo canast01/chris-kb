@@ -3,6 +3,7 @@ tags:
   - dell-srdf-s
   - faq
   - operations
+description: "Common questions about Dell SRDF/S (Synchronous Replication) operations, configuration, and troubleshooting. For step-by-step procedures, see the..."
 ---
 # Dell SRDF/S (Synchronous Replication) — Frequently Asked Questions
 

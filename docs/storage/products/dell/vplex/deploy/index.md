@@ -4,6 +4,7 @@ tags:
   - deployment
 search:
   boost: 1.5
+description: "Dell VPLEX initial deployment: physical installation, backend array connection, virtual volume creation, and validated host access — Local and Metro..."
 ---
 # Dell VPLEX — Initial Deployment
 

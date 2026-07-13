@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "How It Works reference covering Forest and Domain Hierarchy, Core Components, FSMO Role Placement, Key Services and Ports, Replication Topology and 4 more..."
 ---
 # Active Directory — How It Works
 

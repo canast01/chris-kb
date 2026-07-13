@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Access Control reference covering Emergency Revocation Sequence, Audit Logging, Certificate Pinning, Revocation Emergency Procedure."
 ---
 # Certificates — Access Control
 

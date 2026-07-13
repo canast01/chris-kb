@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing Commvault job failures, media agent connectivity, subclient errors, schedule issues, and restore failures."
 ---
 # Commvault — Troubleshooting
 

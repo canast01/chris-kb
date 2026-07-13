@@ -3,6 +3,7 @@ tags:
   - architecture
   - vmware
   - vsphere-replication
+description: "Integrations reference covering vCenter Integration, SRM Integration, Network Requirements, Cross-vCenter Replication, Multi-Target Replication (Fan-Out)..."
 ---
 # vSphere Replication — Integrations
 

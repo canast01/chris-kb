@@ -2,6 +2,7 @@
 tags:
   - confluence
   - operations
+description: "This page covers all backup and restore methods for Confluence Data Center: built-in XML export, database-level backups, and filesystem snapshots. Use a..."
 ---
 # Confluence — Backup & Restore
 

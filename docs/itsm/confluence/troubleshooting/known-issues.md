@@ -4,6 +4,7 @@ tags:
   - confluence
   - itsm
   - known-issues
+description: "Catalog of known Confluence Data Center bugs, error codes, and workarounds covering Synchrony (collaborative editing), clustering, and database issues."
 ---
 # Confluence — Known Issues and Error Codes
 

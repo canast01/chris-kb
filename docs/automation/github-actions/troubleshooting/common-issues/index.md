@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "GitHub Actions troubleshooting: failed steps, permission errors, runner connectivity issues, secret resolution failures, and cache invalidation problems."
 ---
 # GitHub Actions — Common Issues
 

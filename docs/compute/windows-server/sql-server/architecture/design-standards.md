@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "SQL Server design standards — HA topology (Always On AG, FCI), edition selection, disk layout, memory sizing, tempdb configuration, and naming conventions."
 ---
 # SQL Server — Design Standards
 

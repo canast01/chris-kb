@@ -7,6 +7,7 @@ tags:
   - firewall
   - ports
   - logging
+description: "Firewall port reference for VMware Aria Operations for Logs (formerly vRealize Log Insight). Covers the cluster Integrated Load Balancer (ILB) for UI and..."
 ---
 # Aria Operations for Logs — Ports and Network Requirements
 

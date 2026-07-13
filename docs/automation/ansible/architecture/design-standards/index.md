@@ -2,6 +2,7 @@
 tags:
   - ansible
   - architecture
+description: "Ansible design standards: directory layout, role naming, variable precedence rules, vault encryption policy, and idempotency requirements for production..."
 ---
 # Ansible — Standards
 

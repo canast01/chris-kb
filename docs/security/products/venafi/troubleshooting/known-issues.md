@@ -4,6 +4,7 @@ tags:
   - venafi
   - certificates
   - known-issues
+description: "Catalog of known Venafi TPP bugs, error codes, and workarounds covering certificate discovery, ADCS integration, and policy engine issues."
 ---
 # Venafi Trust Protection Platform — Known Issues and Error Codes
 

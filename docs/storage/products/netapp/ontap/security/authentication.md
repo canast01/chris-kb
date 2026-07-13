@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "Authentication in ONTAP controls how administrators and service accounts gain access to cluster and SVM management interfaces. ONTAP supports local..."
 ---
 # ONTAP — Authentication
 

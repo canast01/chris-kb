@@ -4,6 +4,7 @@ tags:
   - ecs
   - dell
   - known-issues
+description: "Catalog of known ECS (Elastic Cloud Storage) bugs, error codes, and workarounds covering S3 API, geo-replication, and cluster health."
 ---
 # Dell ECS — Known Issues and Error Codes
 

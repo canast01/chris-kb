@@ -2,6 +2,7 @@
 tags:
   - vcf
   - vmware
+description: "Technical and operational reference for VMware Cloud Foundation (VCF). Covers SDDC Manager, workload domains, lifecycle management, vSphere, vSAN, and NSX..."
 ---
 # VMware Cloud Foundation
 

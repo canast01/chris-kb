@@ -3,6 +3,7 @@ tags:
   - mysql
   - faq
   - operations
+description: "Common questions about MySQL operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # MySQL — Frequently Asked Questions
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Standards reference covering COD License Naming, COD Inventory Tracking, Threshold Alerting, Change Management Process for COD Activation, Post-Activation..."
 ---
 # COD — Standards
 

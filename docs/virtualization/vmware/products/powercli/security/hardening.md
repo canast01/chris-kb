@@ -3,6 +3,7 @@ tags:
   - powercli
   - security
   - vmware
+description: "Hardening PowerCLI deployments: enforcing certificate validation, script execution policies, session timeout controls, audit log review, and secure..."
 ---
 # PowerCLI — Hardening
 

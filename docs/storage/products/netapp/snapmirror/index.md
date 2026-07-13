@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "NetApp SnapMirror knowledge base — replication architecture, operations, security, and troubleshooting for async, synchronous, SMBC, and XDP relationships."
 ---
 # NetApp SnapMirror
 

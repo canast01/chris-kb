@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Dell AIOps Security reference covering Access Control (RBAC), SSO Integration, Audit Logging, Data Sovereignty, Network Security and 1 more sections."
 ---
 # Dell AIOps Security
 

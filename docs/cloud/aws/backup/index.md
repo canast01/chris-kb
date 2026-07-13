@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS Backup provides centralised backup management across EC2, EBS, RDS, DynamoDB, EFS, FSx, and S3, with Backup Plans defining schedules and Vault Lock..."
 ---
 # AWS Backup
 

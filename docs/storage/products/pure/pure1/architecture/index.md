@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Pure1 is a SaaS monitoring and analytics platform. FlashArray and FlashBlade systems connect directly to Pure1 via outbound HTTPS — no on-premises..."
 ---
 # Pure1 — Architecture
 

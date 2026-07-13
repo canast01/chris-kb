@@ -3,6 +3,7 @@ tags:
   - operations
   - vcf
   - vmware
+description: "VMware Cloud Foundation backup protects the management plane components: SDDC Manager, NSX Manager, and vCenter Server. Each component has its own backup..."
 ---
 # VCF Operations — Backup & Restore
 

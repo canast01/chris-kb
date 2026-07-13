@@ -2,6 +2,7 @@
 tags:
   - powershell
   - security
+description: "PowerShell hardening — execution policy, JEA, script signing, constrained language mode, and script block logging."
 ---
 # PowerShell — Security
 

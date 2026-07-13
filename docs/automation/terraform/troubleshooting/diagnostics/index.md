@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output as JSON, audit state with terraform state commands, debug provider..."
 ---
 # Terraform — Diagnostics
 

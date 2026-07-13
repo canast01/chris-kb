@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Access Control reference covering Solutions Enabler RBAC, Preventing Accidental Resync."
 ---
 # SRDF/A — Access Control
 

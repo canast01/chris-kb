@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Authentication reference covering Root CA Lifecycle — Offline Operation Flow, Root CA Offline Procedure, Certificate Transparency (CT)."
 ---
 # Certificates — Authentication
 

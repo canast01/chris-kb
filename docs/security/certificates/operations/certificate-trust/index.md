@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Adding CA certificates to OS and application trust stores so that TLS connections to internal services succeed. Covers Linux (RHEL, Ubuntu/Debian)..."
 ---
 # Certificate Trust Store Management
 

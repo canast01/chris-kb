@@ -2,6 +2,7 @@
 tags:
   - aws
   - operations
+description: "EVS operational procedures: adding and removing hosts, host replacement, vSAN rebalance, NSX-T segment and edge cluster management, VCF password rotation..."
 ---
 # Amazon EVS — Procedures
 

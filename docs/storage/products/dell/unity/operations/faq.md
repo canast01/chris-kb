@@ -3,6 +3,7 @@ tags:
   - dell-unity
   - faq
   - operations
+description: "Common questions about Dell Unity operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell Unity — Frequently Asked Questions
 

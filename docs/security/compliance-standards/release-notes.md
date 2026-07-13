@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Version history and release notes for Compliance Standards."
 ---
 # Compliance Standards — Release Notes
 

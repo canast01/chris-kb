@@ -4,6 +4,7 @@ tags:
   - cloudiq
   - dell
   - known-issues
+description: "Catalog of known CloudIQ bugs, error codes, and workarounds. CloudIQ is a SaaS platform — most issues are phone-home connectivity from on-premises arrays..."
 ---
 # Dell CloudIQ — Known Issues and Error Codes
 

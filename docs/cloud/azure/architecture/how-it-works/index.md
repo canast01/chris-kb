@@ -2,6 +2,7 @@
 tags:
   - architecture
   - azure
+description: "How It Works reference covering Overview, Management Group Hierarchy, Identity Architecture."
 ---
 # Azure — How It Works
 

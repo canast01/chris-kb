@@ -7,6 +7,7 @@ tags:
   - ports
   - storage
   - federation
+description: "Firewall port reference for Dell VPLEX (storage federation / virtualization). Covers management, WAN COM link between VPLEX clusters (for VPLEX Metro)..."
 ---
 # Dell VPLEX — Ports and Network Requirements
 

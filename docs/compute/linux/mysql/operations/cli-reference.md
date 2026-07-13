@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "MySQL CLI reference — mysql client, mysqladmin, mysqldump, mysqlcheck, mysqlbinlog, and Percona pt-* tool quick reference."
 ---
 # MySQL / MariaDB — CLI Reference
 

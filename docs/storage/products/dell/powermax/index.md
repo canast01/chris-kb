@@ -3,6 +3,7 @@ tags:
   - dell
 search:
   boost: 2
+description: "High-end all-flash enterprise array — SRDF synchronous and asynchronous replication, NVMe-oF, SnapVX snapshots, FAST VP tiering, and Solutions Enabler..."
 ---
 # Dell PowerMax
 

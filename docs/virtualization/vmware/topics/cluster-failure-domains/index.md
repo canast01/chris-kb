@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "A failure domain is the blast radius of a single fault: the set of hosts, storage, or network paths that share a common point of failure. Correctly..."
 ---
 # Cluster Failure Domains
 

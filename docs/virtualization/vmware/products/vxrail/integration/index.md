@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "VxRail integrations: vCenter plug-in installation, VxRail Manager API registration, Dell EMC CloudIQ telemetry, and SupportAssist automatic log collection."
 ---
 # VxRail Integration
 

@@ -4,6 +4,7 @@ tags:
   - esxi
   - vmware
   - vsphere-8
+description: "Design Standards reference covering BIOS / UEFI Baseline, VMkernel Adapter Layout, NTP Configuration, VIB Acceptance Levels, Storage Path Configuration..."
 ---
 # ESXi — Design Standards
 

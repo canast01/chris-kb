@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Transit, Encryption Compliance Summary."
 ---
 # PowerStore — Encryption
 

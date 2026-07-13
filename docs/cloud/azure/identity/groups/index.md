@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Entra ID (Azure AD) groups are the primary mechanism for managing access at scale."
 ---
 # Azure — Groups
 

@@ -5,6 +5,7 @@ tags:
   - data-protection
 search:
   boost: 2
+description: "P0 incident response for ransomware or crypto-locker activity detected on infrastructure. Priority: isolate, preserve evidence, recover from immutable..."
 ---
 # INC-003: Ransomware / Crypto Attack Detected
 

@@ -4,6 +4,7 @@ tags:
   - flashblade
   - pure-storage
   - known-issues
+description: "Catalog of known FlashBlade bugs, error codes, and workarounds covering NFS, SMB, S3, and array health."
 ---
 # Pure Storage FlashBlade — Known Issues and Error Codes
 

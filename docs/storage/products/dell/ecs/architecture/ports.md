@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Dell ECS (Elastic Cloud Storage). Covers S3-compatible object API, management UI, and inter-node cluster communication."
 ---
 # Dell ECS — Ports and Network Requirements
 

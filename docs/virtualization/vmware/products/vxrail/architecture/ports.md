@@ -6,6 +6,7 @@ tags:
   - ports
   - dell
   - vsphere
+description: "Firewall port reference for Dell VxRail. VxRail runs the full vSphere stack, so all vCenter, ESXi, vSAN, and NSX port requirements also apply. This page..."
 ---
 # VxRail — Ports and Network Requirements
 

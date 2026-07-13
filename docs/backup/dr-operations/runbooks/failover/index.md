@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "DR failover procedure: verify backup schedule currency and RPO compliance before cutover, confirm replication sync state with symrdf query or snapmirror..."
 ---
 # DR Failover Procedure
 

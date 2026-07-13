@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Unity hardening — management access control, audit logging, replication channel security, and NAS share permissions."
 ---
 # Unity — Security
 

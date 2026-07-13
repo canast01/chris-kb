@@ -2,6 +2,7 @@
 tags:
   - ceph
   - security
+description: "CephX shared-secret authentication protocol, how clients authenticate to MONs and OSDs, key distribution, session tickets, key rotation procedures..."
 ---
 # Ceph — Authentication
 

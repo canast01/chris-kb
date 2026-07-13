@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Backup and restore in ONTAP is built around native snapshot technology. Snapshots are the on-array recovery primitive; SnapMirror and SnapVault extend..."
 ---
 # ONTAP — Backup & Restore
 

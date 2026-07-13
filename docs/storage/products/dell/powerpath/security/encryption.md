@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Encryption reference covering Overview, Encryption Responsibility Matrix."
 ---
 # PowerPath — Encryption
 

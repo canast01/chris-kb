@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - vmware
+description: "Firewall port reference for VMware Aria Automation (formerly vRealize Automation). Covers the Aria Automation appliance cluster, inbound API and UI..."
 ---
 # Aria Automation — Ports and Network Requirements
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Cost Management supports multiple alert types to notify teams of unexpected or excessive spending. Alerts complement budgets and provide..."
 ---
 # Cost Alerts
 

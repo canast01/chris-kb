@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell AIOps vendor support: support case opening via SupportAssist, log bundle collection, escalation to Dell Engineering, and firmware advisory tracking."
 ---
 # Dell AIOps Vendor Support
 

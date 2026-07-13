@@ -4,6 +4,7 @@ tags:
   - nsx-4
   - scenarios
   - vmware
+description: "During NSX host preparation, the transport node transitions to Failed state and the host does not join the NSX fabric. This scenario covers reading the..."
 ---
 # NSX Transport Node Preparation Failed
 

@@ -6,6 +6,7 @@ tags:
   - vracli
   - kubectl
   - vmware
+description: "Complete CLI reference for Aria Automation: vracli appliance management, kubectl microservice diagnostics, REST API authentication and resource..."
 ---
 # Aria Automation — CLI Reference
 

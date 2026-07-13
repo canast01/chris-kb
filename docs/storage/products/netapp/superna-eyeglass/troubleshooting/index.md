@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing Superna Eyeglass replication failures, configuration sync errors, DR orchestration issues, and Eyeglass connectivity."
 ---
 # Superna Eyeglass — Troubleshooting
 

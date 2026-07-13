@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "PostgreSQL diagnostic commands: read the error log, query pg_stat_activity for blocking sessions, identify slow queries with pg_stat_statements, check WAL..."
 ---
 # PostgreSQL — Diagnostics
 

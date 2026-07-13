@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Health Checks reference covering Quick Health Check (5 minutes), Full Health Check (20 minutes), Health Check Checklist Template, Evergreen Subscription..."
 ---
 # Evergreen — Health Checks
 

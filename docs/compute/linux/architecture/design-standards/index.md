@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "Linux architecture standards: kernel version and patch cadence requirements, NTP configuration, disk layout (LVM), network bonding, and SELinux/AppArmor..."
 ---
 # Linux — Standards
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - san
+description: "Cisco Nexus Dashboard knowledge base covering fabric health, flow telemetry, policy compliance, integrations, and multi-site management for Cisco data..."
 ---
 # Nexus Dashboard
 

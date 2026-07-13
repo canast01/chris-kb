@@ -2,6 +2,7 @@
 tags:
   - ceph
   - operations
+description: "Ceph day-2 operations: cluster health monitoring, OSD management, pool tuning, CRUSH map updates, RBD/CephFS/RGW administration, and routine maintenance..."
 ---
 # Ceph — Operations
 

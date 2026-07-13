@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "RDS reference covering Snapshots, Parameter Groups, Subnet Groups, Events and Event Subscriptions, Read Replicas and 2 more sections."
 ---
 # RDS
 

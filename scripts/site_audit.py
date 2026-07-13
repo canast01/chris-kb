@@ -1501,6 +1501,26 @@ if os.path.isdir(ASSETS):
                 warn(issues, f'assets/{fname}: empty <text> element (likely a truncated label)')
 
 
+# ── Check 63: Raw HTML tags leaked into frontmatter description: ─────────────
+# Found 2026-07-12: add_meta_descriptions.py derives descriptions from
+# kb-summary <div> blocks, which can contain literal inline HTML (e.g.
+# "<a href='index.md'>Operations</a>", "<code>esxcli</code>") -- the
+# script's markdown-emphasis stripper didn't touch real HTML tags, so 108
+# pages ended up with a <meta name="description" content="..."> attribute
+# containing literal "<a href=...>"/"<code>" text instead of plain words.
+# Fixed at the generator (HTML_TAG_RE strip) and all 108 regenerated; this
+# check guards against the same class of bug recurring from any future
+# description-generation path.
+issues = check(63, 'Raw HTML tags leaked into frontmatter description:')
+_DESC_HTML_RE = re.compile(r'^description:.*<[a-zA-Z][^>]*>', re.MULTILINE)
+for _path in all_md():
+    _fm_m = re.match(r'^---\n(.*?)\n---\n', open(_path, errors='replace').read(), re.DOTALL)
+    if not _fm_m:
+        continue
+    if _DESC_HTML_RE.search(_fm_m.group(1)):
+        warn(issues, f'{os.path.relpath(_path, DOCS)}: description: contains a raw HTML tag')
+
+
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)
 print('KB SITE AUDIT REPORT')

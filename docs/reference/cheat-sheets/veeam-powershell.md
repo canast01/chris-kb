@@ -4,6 +4,7 @@ tags:
   - powershell
   - backup
   - cli-reference
+description: "Essential Veeam Backup &amp; Replication PowerShell cmdlets for server connection, job management, repository operations, restores, backup copy, tape, and..."
 ---
 # Veeam PowerShell Cheat Sheet
 

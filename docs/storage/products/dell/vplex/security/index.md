@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Dell VPLEX — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # Dell VPLEX — Security
 

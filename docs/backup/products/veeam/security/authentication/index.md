@@ -2,6 +2,7 @@
 tags:
   - security
   - veeam
+description: "Authentication reference covering Multi-Factor Authentication, CyberArk Integration, VBR Windows Authentication Modes, Service Account Requirements, REST..."
 ---
 # Veeam — Authentication
 

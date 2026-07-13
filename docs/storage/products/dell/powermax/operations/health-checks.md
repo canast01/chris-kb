@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Health Checks reference covering Monitoring Hierarchy, Daily Checks, Health Check, Array Connectivity and Status, Director and Port Status and 7 more..."
 ---
 # PowerMax — Health Checks
 

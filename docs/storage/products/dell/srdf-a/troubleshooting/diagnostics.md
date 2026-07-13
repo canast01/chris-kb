@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SRDF/A diagnostic commands: check pair state with symrdf query, identify lag and cycle time with showperf, diagnose RF link health, and collect Solutions..."
 ---
 # SRDF/A — Diagnostics
 

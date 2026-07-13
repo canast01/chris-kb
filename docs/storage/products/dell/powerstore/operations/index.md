@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "PowerStore day-to-day operations — volume/file provisioning, native replication, snapshots, and host connectivity."
 ---
 # PowerStore — Operations
 

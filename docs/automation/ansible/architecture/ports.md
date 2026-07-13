@@ -5,6 +5,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Ansible and Ansible Automation Platform (AAP). Ansible is agentless — it connects outbound from the control node or execution..."
 ---
 # Ansible — Ports and Network Requirements
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "APEX STaaS API reference: CloudIQ REST API for capacity reporting, GET /v1/storage-objects, snapshot management endpoints, and OAuth2 authentication."
 ---
 # APEX Storage as a Service — API Reference
 

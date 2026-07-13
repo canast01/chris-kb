@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Authentication reference covering Overview, Active Directory Integration, Disable Local Admin When LDAP/AD Is Operational, Local User Management, Password..."
 ---
 # Data Domain — Authentication
 

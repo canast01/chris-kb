@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Reference for creating, managing, sizing, and operating Azure Virtual Machines using the az vm CLI commands."
 ---
 # Virtual Machines
 

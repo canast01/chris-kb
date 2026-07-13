@@ -4,6 +4,7 @@ tags:
   - security
   - vmware
   - vsphere-8
+description: "ESXi Access Control reference covering Exception Users, Local Account Management, vCenter Role-Based Access Control, ESXi Shell and SSH Access Controls..."
 ---
 # ESXi Access Control
 

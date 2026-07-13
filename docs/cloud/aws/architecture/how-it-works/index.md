@@ -2,6 +2,7 @@
 tags:
   - architecture
   - aws
+description: "How It Works reference covering Overview, Account Structure, IAM Structure, High Availability, Disaster Recovery."
 ---
 # AWS — How It Works
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "SRDF/S design standards: maximum distance and latency requirements for synchronous SRDF, RDF group sizing, and SRDF/S coexistence with Concurrent SRDF/A."
 ---
 # SRDF/S — Standards
 

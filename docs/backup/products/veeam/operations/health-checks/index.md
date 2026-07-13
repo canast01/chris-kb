@@ -2,6 +2,7 @@
 tags:
   - operations
   - veeam
+description: "The primary review surface is the Home view in the VBR console, which shows job counts grouped by status (Running, Success, Warning, Failed). Work through..."
 ---
 # Veeam — Health Checks
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Incident Escalation reference covering Overview, Priority Definitions, Escalation Matrix, P1/P2 Escalation Checklist, Vendor Escalation and 1 more..."
 ---
 # Incident Escalation
 

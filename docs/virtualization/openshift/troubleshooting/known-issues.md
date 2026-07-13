@@ -4,6 +4,7 @@ tags:
   - openshift
   - kubernetes
   - known-issues
+description: "Catalog of known OpenShift bugs, error codes, and workarounds covering cluster operators, OVN-Kubernetes networking, image registry, and upgrade issues."
 ---
 # Red Hat OpenShift — Known Issues and Error Codes
 

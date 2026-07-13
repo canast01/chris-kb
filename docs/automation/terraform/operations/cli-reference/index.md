@@ -2,6 +2,7 @@
 tags:
   - operations
   - terraform
+description: "Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired infrastructure in .tf files, and Terraform figures out what to create..."
 ---
 # Terraform CLI Reference
 

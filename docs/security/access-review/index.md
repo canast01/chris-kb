@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Periodic access reviews ensure that users and service accounts hold only the permissions required for their current role. Reviews reduce the blast radius..."
 ---
 # Access Review Procedure
 

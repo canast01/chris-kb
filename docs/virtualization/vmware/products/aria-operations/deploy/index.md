@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "End-to-end deployment guide for VMware Aria Operations (vROps). Covers prerequisites, master node OVA deployment, cluster expansion, vCenter adapter..."
 ---
 # Aria Operations — Deploy
 

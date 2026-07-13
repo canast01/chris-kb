@@ -3,6 +3,7 @@ tags:
   - architecture
   - srm
   - vmware
+description: "Integrations reference covering Storage Replication Adapter (SRA) Integration, vSphere Replication Integration, NSX-T Integration for Network Mapping..."
 ---
 # SRM — Integrations
 

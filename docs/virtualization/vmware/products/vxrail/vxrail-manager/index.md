@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "VxRail Manager notes for service health, lifecycle jobs, support bundles, connectivity, certificates, and logs."
 ---
 # VxRail Manager
 

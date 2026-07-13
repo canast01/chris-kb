@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1 Disabled Issues, Kerberos vs NTLM Authentication, Signing Mismatch and 1..."
 ---
 # SMB Troubleshooting
 

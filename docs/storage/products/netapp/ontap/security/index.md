@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "ONTAP — Security reference: Access Control, Encryption, Authentication, Hardening."
 ---
 # ONTAP — Security
 

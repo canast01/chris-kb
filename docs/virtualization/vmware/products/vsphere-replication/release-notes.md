@@ -2,6 +2,7 @@
 tags:
   - vmware
   - vsphere-replication
+description: "Version history and release notes for VMware vSphere Replication."
 ---
 # VMware vSphere Replication — Release Notes
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Architecture, Component Roles, AIOps Capabilities, Telemetry Sources, Data Flow."
 ---
 # Dell AIOps — How It Works
 

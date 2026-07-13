@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS compute spans EC2 virtual machines, Auto Scaling groups, Lambda serverless functions, and ECS/EKS containers. Fleet management runs through Systems..."
 ---
 # AWS Compute
 

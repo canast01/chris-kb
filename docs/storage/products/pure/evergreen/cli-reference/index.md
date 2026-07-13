@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Evergreen CLI Reference reference covering Overview, Pure1 REST API, FlashArray CLI (per-array), Alerts."
 ---
 # Pure Evergreen CLI Reference
 

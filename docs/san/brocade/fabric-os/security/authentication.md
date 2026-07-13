@@ -2,6 +2,7 @@
 tags:
   - san
   - security
+description: "FabricOS authentication: RADIUS and LDAP server configuration with aaaconfig, local account fallback policy, and SSH key-based admin access."
 ---
 # FabricOS — Authentication
 

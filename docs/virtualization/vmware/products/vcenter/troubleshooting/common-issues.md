@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 2
+description: "Common Issues reference covering Issue Summary, vCenter Services Not Starting, Certificate Errors, ESXi Host Disconnected or Not Responding, SSO /..."
 ---
 # vCenter Troubleshooting — Common Issues
 

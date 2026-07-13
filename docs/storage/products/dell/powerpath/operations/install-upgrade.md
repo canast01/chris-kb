@@ -3,6 +3,7 @@ title: PowerPath — Install & Upgrade
 tags:
   - dell
   - operations
+description: "Install & Upgrade reference covering Version and Release Matrix, Upgrade and Update Paths, EOL and Renewal Tracking, Replacement and Decommission Planning."
 ---
 
 # PowerPath — Install & Upgrade

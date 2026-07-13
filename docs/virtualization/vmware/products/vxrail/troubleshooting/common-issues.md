@@ -5,6 +5,7 @@ tags:
   - vxrail
 search:
   boost: 1.5
+description: "Concrete troubleshooting steps for the most frequent VxRail operational problems: plugin unavailability, LCM upgrade failures, vSAN health degradation..."
 ---
 # VxRail — Common Issues
 

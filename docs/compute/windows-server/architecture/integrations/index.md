@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "Windows Server integration: Active Directory domain join, SCOM agent, SCCM/ConfigMgr management, NFS client configuration, and SNMP/WMI monitoring hooks."
 ---
 # Windows Server — Integrations
 

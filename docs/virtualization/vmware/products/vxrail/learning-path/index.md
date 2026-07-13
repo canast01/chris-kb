@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - vxrail
+description: "Recommended reading order for VxRail. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # VxRail — Learning Path (Standalone Section)
 

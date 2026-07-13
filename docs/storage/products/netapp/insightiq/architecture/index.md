@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "InsightIQ is an on-premises virtual appliance that collects performance telemetry from PowerScale clusters via the OneFS REST API and stores it in a local..."
 ---
 # InsightIQ — Architecture
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing script failures, module conflicts, remoting errors, execution policy issues, and common PowerShell problems."
 ---
 # PowerShell — Troubleshooting
 

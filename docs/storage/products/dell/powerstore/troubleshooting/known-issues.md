@@ -4,6 +4,7 @@ tags:
   - powerstore
   - dell
   - known-issues
+description: "Catalog of known PowerStore bugs, error codes, and workarounds covering NAS, SAN, replication, and PowerStore Manager UI."
 ---
 # Dell PowerStore — Known Issues and Error Codes
 

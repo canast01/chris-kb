@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Install & Upgrade reference covering Software Version Matrix, Upgrade Paths, Refresh Planning, EOL Tracking."
 ---
 # PowerScale — Install & Upgrade
 

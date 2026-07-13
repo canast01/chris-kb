@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Standards reference covering Naming Conventions, Capacity Sizing Guidelines, Protection Policy Standards, Host Configuration Standards, Software Version..."
 ---
 # PowerStore — Standards
 

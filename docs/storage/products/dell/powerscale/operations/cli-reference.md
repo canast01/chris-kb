@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Commonly used isi commands for managing Dell PowerScale (formerly Isilon) scale-out NAS clusters. All commands run from the cluster CLI — log in via SSH..."
 ---
 # PowerScale — CLI Reference
 

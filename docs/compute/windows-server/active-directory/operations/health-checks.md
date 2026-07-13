@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Daily operations centre on replication health and authentication event monitoring across all Domain Controllers."
 ---
 # Active Directory — Health Checks
 

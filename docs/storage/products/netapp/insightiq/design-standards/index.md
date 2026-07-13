@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "InsightIQ Standards reference covering Appliance Sizing Standards, Data Retention Policy, Cluster Connection Standards, Alert Thresholds, Dashboard..."
 ---
 # InsightIQ Standards
 

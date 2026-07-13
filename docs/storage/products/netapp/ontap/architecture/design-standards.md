@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "Standards reference covering Naming Conventions, Build Baseline, Sizing Guidelines, Configuration Checklist."
 ---
 # ONTAP — Standards
 

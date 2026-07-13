@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SnapCenter troubleshooting: Invoke-SmDiagnostics, plugin connectivity failures, repository corruption, backup job timeout analysis, and NetApp support..."
 ---
 # SnapCenter — Common Issues
 

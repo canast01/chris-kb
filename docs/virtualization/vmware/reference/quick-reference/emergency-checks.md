@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Emergency checks: vCenter service status, ESXi PSOD scan, vSAN health degradation, storage path loss, and cluster event log review — run first in any..."
 ---
 # Emergency Checks
 

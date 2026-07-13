@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Evergreen//One operations: subscription usage monitoring, controller upgrade scheduling, capacity tier activation, and health status via Pure1 portal..."
 ---
 # Evergreen//One — Operations
 

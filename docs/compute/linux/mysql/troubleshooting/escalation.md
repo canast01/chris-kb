@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate MySQL and MariaDB issues to Oracle MySQL support or Percona support: what data to collect, how to capture InnoDB status and replication..."
 ---
 # MySQL / MariaDB — Escalation
 

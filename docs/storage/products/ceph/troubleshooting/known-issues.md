@@ -3,6 +3,7 @@ tags:
   - troubleshooting
   - ceph
   - known-issues
+description: "Catalog of known Ceph bugs, error codes, and workarounds covering OSD failures, MON quorum, RGW, and performance issues."
 ---
 # Ceph — Known Issues and Error Codes
 

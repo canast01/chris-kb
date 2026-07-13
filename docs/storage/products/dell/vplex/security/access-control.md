@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "VPLEX access control operates at two layers: management plane access (who can change configuration) and data plane access (which hosts can access which..."
 ---
 # Dell VPLEX — Access Control
 

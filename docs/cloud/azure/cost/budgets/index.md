@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Cost Management budgets let you set spending thresholds and trigger alerts or automated actions when spending approaches or exceeds those..."
 ---
 # Budgets
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Scale-out software-defined object storage on commodity x86 nodes. Exposes S3, Swift, Atmos, and CAS APIs; protects data within a site using erasure..."
 ---
 # Dell ECS — Architecture
 

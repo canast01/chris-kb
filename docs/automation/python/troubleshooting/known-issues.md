@@ -4,6 +4,7 @@ tags:
   - python
   - automation
   - known-issues
+description: "Catalog of known Python scripting bugs, error codes, and workarounds covering virtual environments, dependency management, SSL, and REST API integrations."
 ---
 # Python (Automation Scripts) — Known Issues and Error Codes
 

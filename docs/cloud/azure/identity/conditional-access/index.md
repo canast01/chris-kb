@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Conditional Access (CA) policies are the enforcement engine of Zero Trust in Microsoft Entra ID. They evaluate signals (user, location, device, app, risk)..."
 ---
 # Conditional Access
 

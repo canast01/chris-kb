@@ -4,6 +4,7 @@ tags:
   - recoverpoint
   - dell
   - known-issues
+description: "Catalog of known RecoverPoint bugs, error codes, and workarounds covering RPA clustering, replication groups, and failover."
 ---
 # Dell RecoverPoint — Known Issues and Error Codes
 

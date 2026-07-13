@@ -4,6 +4,7 @@ tags:
   - aria-automation
   - vmware
   - known-issues
+description: "Catalog of known Aria Automation (vRA) bugs, error codes, and workarounds covering catalog deployments, integration endpoints, and cluster issues."
 ---
 # VMware Aria Automation — Known Issues and Error Codes
 

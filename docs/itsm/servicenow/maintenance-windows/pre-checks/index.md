@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Pre-Maintenance Checks reference covering Overview, Pre-Check Timeline, Environment Health Checklist, Backup Verification, Rollback Readiness and 2 more..."
 ---
 # Pre-Maintenance Checks
 

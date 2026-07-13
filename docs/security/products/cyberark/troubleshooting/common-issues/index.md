@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Known issues and resolution steps for frequent CyberArk problems, covering the Vault, PVWA, PSM, and CPM components."
 ---
 # CyberArk — Common Issues
 

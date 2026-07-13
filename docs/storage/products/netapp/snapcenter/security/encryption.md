@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "SnapCenter encryption: backup data encrypted at-rest on ONTAP volumes, in-transit SSL/TLS configuration, certificate management, and SMB3 encryption..."
 ---
 # SnapCenter — Encryption
 

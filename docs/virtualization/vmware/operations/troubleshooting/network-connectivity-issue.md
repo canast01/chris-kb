@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Troubleshooting VM network connectivity failures — vSwitch/vDS configuration, portgroup VLAN mismatches, VMkernel routing, NSX segment issues, and..."
 ---
 # Network Connectivity Issues
 

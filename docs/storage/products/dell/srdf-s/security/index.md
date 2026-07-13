@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "SRDF/S security controls — link encryption options, Unisphere access management, and audit logging for synchronous replication."
 ---
 # SRDF/S — Security
 

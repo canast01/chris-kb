@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "VxRail vendor support: Dell SupportAssist case creation, mystic diagnostic bundle collection, Secure Remote Services (SRS) connectivity, and engineering..."
 ---
 # VxRail Vendor Support
 

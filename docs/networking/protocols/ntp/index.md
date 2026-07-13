@@ -2,6 +2,7 @@
 title: NTP
 tags:
   - networking
+description: "Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a hierarchical stratum model. Clock skew breaks Kerberos auth, TLS..."
 ---
 
 # NTP

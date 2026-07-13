@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "In a 2-node vSAN cluster, the witness host provides the tiebreaker vote for quorum. When the witness loses connectivity, the cluster degrades silently —..."
 ---
 # vSAN 2-Node — Witness Host Unreachable
 

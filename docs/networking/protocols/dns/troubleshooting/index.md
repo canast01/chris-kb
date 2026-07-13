@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "DNS Troubleshooting reference covering Overview, Resolution Failure Triage, dcdiag /test:dns, Cache Poisoning Checks, Replication Issues and 2 more..."
 ---
 # DNS Troubleshooting
 

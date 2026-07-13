@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Step-by-step procedures for reviewing SIEM alerts, investigating security events, tuning detection rules, and generating monitoring reports. FAQFrequently..."
 ---
 # Security Monitoring — Procedures
 

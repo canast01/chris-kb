@@ -2,6 +2,7 @@
 tags:
   - openai
   - ai
+description: "Effective prompting is the difference between reliable production outputs and inconsistent results. This page covers system prompts, few-shot examples..."
 ---
 # OpenAI Prompt Patterns
 

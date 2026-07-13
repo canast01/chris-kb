@@ -4,6 +4,7 @@ tags:
   - nsx-4
   - security
   - vmware
+description: "Security reference for VMware NSX. Covers NSX Manager authentication, role-based access control, data-in-transit encryption, certificate management, and..."
 ---
 # NSX — Security
 

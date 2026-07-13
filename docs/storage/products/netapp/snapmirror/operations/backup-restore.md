@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapMirror backup and restore: snapmirror initialize, snapmirror update, snapmirror break, snapmirror restore, and failover resync procedure."
 ---
 # SnapMirror — Backup & Restore
 

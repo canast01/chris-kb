@@ -2,6 +2,7 @@
 tags:
   - aws
   - security
+description: "EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, TLS for all VCF management APIs, AWS KMS integration, and in-transit..."
 ---
 # Amazon EVS — Encryption
 

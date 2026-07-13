@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "FabricOS integrations: DCNM and Brocade Network Advisor connectivity, SANnav management platform pairing, vCenter plugin registration, and syslog targets."
 ---
 # FabricOS — Integrations
 

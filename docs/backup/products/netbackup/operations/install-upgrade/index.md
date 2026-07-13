@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - operations
+description: "Install & Upgrade reference covering Release Cadence, Upgrade Order, Migration: Physical Master to Appliance, License Lifecycle."
 ---
 # NetBackup — Install & Upgrade
 

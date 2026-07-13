@@ -2,6 +2,7 @@
 tags:
   - horizon
   - vmware
+description: "Horizon knowledge base — architecture, operations, deploy, CLI references, security, and troubleshooting."
 ---
 # Horizon (VDI)
 

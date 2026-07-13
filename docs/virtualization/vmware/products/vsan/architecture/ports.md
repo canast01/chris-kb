@@ -7,6 +7,7 @@ tags:
   - vsphere
   - vsphere-7
   - vsphere-8
+description: "Firewall port reference for VMware vSAN. Covers intra-cluster data plane, health service, iSCSI target, stretched cluster witness, and HCI Mesh..."
 ---
 # vSAN — Ports and Network Requirements
 

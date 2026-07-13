@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Hardening reference covering OCSP Stapling Flow, OCSP Stapling, Security Checklist."
 ---
 # Certificates — Hardening
 

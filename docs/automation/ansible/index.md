@@ -1,6 +1,7 @@
 ---
 tags:
   - ansible
+description: "Ansible automation knowledge base covering agentless architecture, inventory and playbook design, role and collection management, AWX/AAP deployment, and..."
 ---
 # Ansible
 

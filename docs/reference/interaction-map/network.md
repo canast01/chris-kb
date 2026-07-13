@@ -3,6 +3,7 @@ tags:
   - nsx
   - networking
   - architecture
+description: "How NSX and vSphere networking (vDS) interact — GENEVE overlay, BGP uplinks to physical switches, DFW, and integration with ESXi and vCenter."
 ---
 # Network Domain — Interaction Map
 

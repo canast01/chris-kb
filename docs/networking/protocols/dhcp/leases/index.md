@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "DHCP Leases reference covering Overview, Viewing Leases, Finding IP from MAC, Lease States Reference, Clearing Stale Leases and 2 more sections."
 ---
 # DHCP Leases
 

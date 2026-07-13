@@ -2,6 +2,7 @@
 tags:
   - operations
   - veeam
+description: "Operational procedures covering backup job creation, copy job setup, SOBR management, and restore testing."
 ---
 # Veeam — Procedures
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Venafi is managed via the vcert CLI (Trust Protection Platform and Venafi as a Service), the TPP REST API, and PowerShell cmdlets. The vcert CLI is the..."
 ---
 # Venafi CLI Reference
 

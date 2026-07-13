@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "Azure CLI commands for networking — VNet, subnets, NSGs, route tables, VNet peering, Private Endpoints, and DNS zones."
 ---
 # Azure CLI — Networking
 

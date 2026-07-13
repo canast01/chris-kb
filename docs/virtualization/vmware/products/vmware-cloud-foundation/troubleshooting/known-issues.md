@@ -5,6 +5,7 @@ tags:
   - vmware
   - known-issues
   - vcf-5
+description: "Catalog of known VCF bugs, error codes, and workarounds covering SDDC Manager, bring-up, and lifecycle management."
 ---
 # VMware Cloud Foundation — Known Issues and Error Codes
 

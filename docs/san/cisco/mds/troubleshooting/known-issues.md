@@ -4,6 +4,7 @@ tags:
   - cisco-mds
   - san
   - known-issues
+description: "Catalog of known Cisco MDS SAN switch bugs, error codes, and workarounds covering FC ports, VSAN, zoning, and IVR."
 ---
 # Cisco MDS — Known Issues and Error Codes
 

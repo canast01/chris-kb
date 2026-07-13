@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "DHCP Reservations reference covering Overview, Creating a Reservation, Bulk Reservations from CSV, Reservation Conflicts, Reservation Management Reference..."
 ---
 # DHCP Reservations
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "DR failback procedure: confirm production site healthy, reverse-resync storage replication, redirect hosts back to production, restore daily and weekly..."
 ---
 # DR Failback Procedure
 

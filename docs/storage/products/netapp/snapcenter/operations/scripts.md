@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapCenter automation scripts: PowerShell Open-SmConnection wrappers, pre-/post-backup hook scripts, and REST API integration for job status reporting."
 ---
 # SnapCenter — Scripts
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Daily operations centre on the Venafi Policy Server dashboard: review certificates expiring within 30, 60, and 90-day buckets, check for failed renewal..."
 ---
 # Venafi — Health Checks
 

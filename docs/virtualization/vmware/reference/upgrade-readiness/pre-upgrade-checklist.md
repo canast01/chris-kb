@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Complete all items before starting any vSphere upgrade (vCenter, ESXi, vSAN, NSX)."
 ---
 # Pre-Upgrade Checklist
 

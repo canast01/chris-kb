@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Git diagnostic techniques: enable GIT_TRACE environment variables for protocol-level debug output, verify remote URLs and connectivity with git ls-remote..."
 ---
 # Git — Diagnostics
 

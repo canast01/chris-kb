@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Hardening reference covering TLS Configuration, SSO Password and Lockout Policy, ESXi Host Lockdown Mode, Firewall Hardening, Audit Logging Configuration..."
 ---
 # vCenter Security — Hardening
 

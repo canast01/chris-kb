@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "VxRail design standards: node count and cluster size limits, vSAN-backed storage requirements, witness node placement, dual-switch topology rules, and L2..."
 ---
 # VxRail Standards
 

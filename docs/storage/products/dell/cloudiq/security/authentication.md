@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Authentication reference covering API Authentication, Related Reference."
 ---
 # CloudIQ — Authentication
 

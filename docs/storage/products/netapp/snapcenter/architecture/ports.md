@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - backup
+description: "Firewall port reference for NetApp SnapCenter. SnapCenter provides application-aware backup and recovery using NetApp Snapshot copies. Covers the..."
 ---
 # NetApp SnapCenter — Ports and Network Requirements
 

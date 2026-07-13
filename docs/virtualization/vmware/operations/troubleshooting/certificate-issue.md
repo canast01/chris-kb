@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing and resolving certificate errors across the VMware platform — VCSA certificate expiry, ESXi thumbprint mismatches, NSX certificate chains, and..."
 ---
 # Certificate Issues
 

@@ -3,6 +3,7 @@ tags:
   - troubleshooting
   - windows-server
   - known-issues
+description: "Catalog of known Windows Server bugs, error codes, and workarounds covering WinRM, RDP, patching, and storage."
 ---
 # Windows Server — Known Issues and Error Codes
 

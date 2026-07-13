@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "RecoverPoint integrations: vSphere plugin registration, VMAX and XtremIO production array pairing, SRDF coexistence, and management via Unisphere for..."
 ---
 # RecoverPoint — Integrations
 

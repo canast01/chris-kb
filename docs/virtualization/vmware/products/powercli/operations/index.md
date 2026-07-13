@@ -3,6 +3,7 @@ tags:
   - operations
   - powercli
   - vmware
+description: "PowerCLI operational reference: cmdlet library, automation scripts, health check routines, operational procedures, and lifecycle management."
 ---
 # PowerCLI — Operations
 

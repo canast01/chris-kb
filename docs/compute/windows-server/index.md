@@ -1,6 +1,7 @@
 ---
 tags:
   - windows
+description: "Windows Server 2019/2022/2025 infrastructure — Active Directory DS, DNS, SMB file services, Hyper-V, WSUS patch management, and PowerShell remoting for..."
 ---
 # Windows Server
 

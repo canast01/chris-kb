@@ -3,6 +3,7 @@ tags:
   - vxrail
   - faq
   - operations
+description: "Common questions about Dell VxRail operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell VxRail — Frequently Asked Questions
 

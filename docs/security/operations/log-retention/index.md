@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Log Retention Policy reference covering journald Retention, Centralised Log Retention (SIEM / Graylog / Splunk), Archive to Object Storage, Validation..."
 ---
 # Log Retention Policy
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Masking Views, Provisioning."
 ---
 # PowerMax — Procedures
 

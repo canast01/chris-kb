@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "ServiceNow change request lifecycle — raising, categorising, routing for CAB approval, implementing, and closing change records."
 ---
 # ServiceNow — Change Management Procedures
 

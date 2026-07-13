@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Isolated Recovery Environment (IRE) — air-gapped clean-room for ransomware and destructive-attack recovery. Select a backup from within the verified..."
 ---
 # Isolated Recovery Environment Ire
 

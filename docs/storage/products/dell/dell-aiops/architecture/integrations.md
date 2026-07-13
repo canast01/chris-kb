@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Dell AIOps is embedded in CloudIQ — integrations are shared. Supported Dell array types, notification channels, and the APEX Console API are the key..."
 ---
 # Dell AIOps — Integrations
 

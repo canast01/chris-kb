@@ -3,6 +3,7 @@ tags:
   - operations
   - vmware
   - vxrail
+description: "Operational procedures for VxRail cluster administration. Covers node maintenance, node expansion, node removal, disk replacement, certificate renewal on..."
 ---
 # VxRail — Procedures
 

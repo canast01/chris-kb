@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Dell Flex on Demand (FoD) escalation: how to collect array serial number, license files, and event log data, when to escalate to Dell Licensing versus..."
 ---
 # FOD — Escalation
 

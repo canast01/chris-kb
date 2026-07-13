@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Debugging workflow failures, runner connectivity, permission errors, caching issues, and common GitHub Actions pipeline problems."
 ---
 # GitHub Actions — Troubleshooting
 

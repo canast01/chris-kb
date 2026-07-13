@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Azure encrypts all data at rest by default using platform-managed keys (PMK). Customer-managed keys (CMK) in Azure Key Vault give you control over the..."
 ---
 # Azure — Encryption
 

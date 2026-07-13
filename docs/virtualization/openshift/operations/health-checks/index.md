@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Daily cluster health routine: cluster operators, node status, etcd health, monitoring stack, networking, storage, certificate expiry, and resource..."
 ---
 # OpenShift — Health Checks
 

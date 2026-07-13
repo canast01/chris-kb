@@ -3,6 +3,7 @@ tags:
   - operations
   - powercli
   - vmware
+description: "Exporting vSphere configurations using PowerCLI — VM inventory exports, storage policy snapshots, permissions and role exports, tag taxonomy backups, and..."
 ---
 # PowerCLI — Backup & Restore
 

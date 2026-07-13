@@ -2,6 +2,7 @@
 tags:
   - architecture
   - security
+description: "Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle management system. It enforces certificate policy, integrates with multiple..."
 ---
 # Venafi — How It Works
 

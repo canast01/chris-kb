@@ -2,6 +2,7 @@
 tags:
   - aria-operations
   - vmware
+description: "Technical and operational reference for VMware Aria Operations. Covers performance monitoring, capacity management, compliance, alerting, dashboards, and..."
 ---
 # Aria Operations
 

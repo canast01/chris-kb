@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "PowerStore management uses the PowerStore Manager web UI, REST API, and the pstcli command-line interface. pstcli connects to the PowerStore management IP..."
 ---
 # Dell PowerStore CLI Reference
 

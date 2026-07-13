@@ -3,6 +3,7 @@ tags:
   - architecture
   - tanzu
   - vmware
+description: "Design Standards reference covering Supervisor Cluster Sizing, TKG Workload Cluster Sizing, Namespace Design, Network CIDR Planning, Storage Policy..."
 ---
 # Tanzu — Design Standards
 

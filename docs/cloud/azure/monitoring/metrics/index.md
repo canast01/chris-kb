@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Monitor Metrics is a time-series database that stores numeric data from Azure resources at near-real-time frequency. Platform metrics are collected..."
 ---
 # Metrics
 

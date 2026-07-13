@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Unified fast file and object storage running Purity//FB — NFS, SMB, S3, and HDFS from a single scale-out platform. Architecture, operations, security, and..."
 ---
 # Pure FlashBlade
 

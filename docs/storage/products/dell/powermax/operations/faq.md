@@ -3,6 +3,7 @@ tags:
   - dell-powermax
   - faq
   - operations
+description: "Common questions about Dell PowerMax operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell PowerMax — Frequently Asked Questions
 

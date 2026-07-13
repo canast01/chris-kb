@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "SRDF/A encryption: in-flight data encryption over FCIP using GigE Encryption Module (GEM), certificate management, and encryption status verification..."
 ---
 # SRDF/A — Encryption
 

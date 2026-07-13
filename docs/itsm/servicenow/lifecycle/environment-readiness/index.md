@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Validates that infrastructure is prepared to receive a new workload, application deployment, or system migration. Complete before any provisioning begins."
 ---
 # Environment Readiness Checklist
 

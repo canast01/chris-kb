@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "Enabling vSAN data-at-rest encryption triggers a full rebuild of the entire vSAN datastore. Every object on every disk is re-encrypted end-to-end. On a..."
 ---
 # Enable vSAN Encryption
 

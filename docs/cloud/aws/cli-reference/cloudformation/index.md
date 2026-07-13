@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS CloudFormation CLI reference — stack lifecycle, change set preview, drift detection, and StackSet operations."
 ---
 # CloudFormation
 

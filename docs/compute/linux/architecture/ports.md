@@ -5,6 +5,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Linux servers in a managed enterprise environment. Covers management access, monitoring, and the outbound ports required to..."
 ---
 # Linux — Ports and Network Requirements
 

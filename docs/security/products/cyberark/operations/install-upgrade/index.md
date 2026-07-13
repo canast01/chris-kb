@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "CyberArk follows a structured upgrade sequence to preserve Vault integrity: the Digital Vault is upgraded first, followed by CPM, then PSM, then PVWA..."
 ---
 # CyberArk Lifecycle
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "Keystone STaaS architecture reference — delivery model, service tiers, components, capacity model, and consumption reporting."
 ---
 # Keystone — Architecture
 

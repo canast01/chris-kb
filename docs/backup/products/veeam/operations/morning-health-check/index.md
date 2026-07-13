@@ -6,6 +6,7 @@ tags:
   - operations
 search:
   boost: 2
+description: "Daily Veeam Backup &amp; Replication health-check sequence — takes ~5 minutes. Run this every morning before starting any operational work."
 ---
 # Veeam Morning Health-Check Runbook
 

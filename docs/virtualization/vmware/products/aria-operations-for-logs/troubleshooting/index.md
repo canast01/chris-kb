@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Diagnosing Aria Ops for Logs ingestion failures, agent connectivity issues, and high-cardinality alert storms."
 ---
 # Aria Ops for Logs — Troubleshooting
 

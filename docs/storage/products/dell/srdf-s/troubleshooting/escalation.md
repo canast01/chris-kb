@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Dell SRDF/S (Symmetrix Remote Data Facility Synchronous) replication issues to Dell Technologies support: what data to collect, how to..."
 ---
 # SRDF/S — Escalation
 

@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "NetApp SnapCenter — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # NetApp SnapCenter — Security
 

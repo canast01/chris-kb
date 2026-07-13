@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every Fibre Channel device."
 ---
 # WWNs — World Wide Names
 

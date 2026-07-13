@@ -2,6 +2,7 @@
 tags:
   - architecture
   - azure
+description: "Azure Integration reference covering Azure VM Deployment Flow, Azure AD Connect (Hybrid Identity), Azure Monitor → SIEM, GitHub Actions + OIDC Federation..."
 ---
 # Azure Integration
 

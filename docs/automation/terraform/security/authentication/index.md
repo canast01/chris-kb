@@ -2,6 +2,7 @@
 tags:
   - security
   - terraform
+description: "Authentication reference covering Provider Credential Flow — CI/CD, CI/CD Credential Injection, Credential Management Reference."
 ---
 # Terraform — Authentication
 

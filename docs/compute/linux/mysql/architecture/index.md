@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "MySQL/MariaDB architecture: primary-replica replication topology, Galera cluster design, InnoDB buffer pool sizing, binary log retention, and storage..."
 ---
 # MySQL / MariaDB — Architecture
 

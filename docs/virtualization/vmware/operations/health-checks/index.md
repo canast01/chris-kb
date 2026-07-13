@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Virtualization health checks: ESXi host connectivity, cluster HA/DRS status, datastore space, vSAN health, and vCenter service status — reusable across..."
 ---
 # Virtualization Health Checks
 

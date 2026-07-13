@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service health with appmgr status, query the REST health API, inspect PostgreSQL..."
 ---
 # Cisco DCNM — Diagnostics
 

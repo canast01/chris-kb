@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Certificate diagnostic commands: check expiry and SANs with openssl s_client, verify the full chain with openssl verify, test OCSP stapling and CRL..."
 ---
 # Certificates — Diagnostics
 

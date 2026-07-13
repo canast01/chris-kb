@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "APEX Storage as a Service — Troubleshooting navigation for Common Issues, Diagnostics, Escalation."
 ---
 # APEX Storage as a Service — Troubleshooting
 

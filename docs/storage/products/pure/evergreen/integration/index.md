@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Storage Evergreen Integration reference covering Pure1 Integration, True Forward Capacity Upgrades, VMware Integration, Backup Integration, REST API."
 ---
 # Pure Storage Evergreen Integration
 

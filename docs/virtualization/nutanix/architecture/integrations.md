@@ -3,6 +3,7 @@ tags:
   - nutanix
   - architecture
   - integrations
+description: "Prism Central multi-cluster registration, Active Directory/LDAP integration, backup product compatibility, monitoring with Prometheus and SNMP, Nutanix..."
 ---
 # Nutanix — Integrations
 

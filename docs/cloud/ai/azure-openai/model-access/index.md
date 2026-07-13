@@ -2,6 +2,7 @@
 tags:
   - azure
   - ai
+description: "Azure OpenAI model availability varies by region and subscription tier. Some models require explicit access approval. This page covers checking..."
 ---
 # Azure OpenAI Model Access
 

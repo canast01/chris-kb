@@ -3,6 +3,7 @@ tags:
   - horizon
   - security
   - vmware
+description: "Horizon security controls — AD authentication, RSA SecurID and SAML MFA, Connection Server and UAG certificate management, RBAC entitlements, Blast..."
 ---
 # Horizon (VDI) — Security
 

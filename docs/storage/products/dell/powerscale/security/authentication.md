@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "SSO, LDAP, local accounts, and identity sources for Dell PowerScale."
 ---
 # PowerScale — Authentication
 

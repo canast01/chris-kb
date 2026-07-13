@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "SnapCenter authentication: AD/LDAP integration via Windows Authentication, service account configuration, MFA enforcement, and API token management."
 ---
 # SnapCenter — Authentication
 

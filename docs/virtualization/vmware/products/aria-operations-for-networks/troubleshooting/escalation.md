@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "How to escalate VMware Aria Operations for Networks (vRNI) issues to Broadcom support: what data to collect, how to generate the support bundle..."
 ---
 # Aria Operations for Networks — Escalation
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Data Domain — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # Data Domain — Security
 

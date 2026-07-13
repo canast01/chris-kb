@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "How to escalate VMware Aria Suite Lifecycle (LCM) issues to Broadcom support: what data to collect, how to run the logscraper bundle, step-by-step case..."
 ---
 # Aria Suite Lifecycle — Escalation
 

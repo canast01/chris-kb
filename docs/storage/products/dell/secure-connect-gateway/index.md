@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell Secure Connect Gateway navigation for Operations, CLI Reference, Scripts."
 ---
 # Dell Secure Connect Gateway
 

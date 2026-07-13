@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Standards reference covering Sizing Considerations, MTree Naming Convention, DD Boost Storage Unit Naming, Replication Context Naming, MTree Quota..."
 ---
 # Data Domain — Standards
 

@@ -4,6 +4,7 @@ tags:
   - nsx-4
   - scenarios
   - vmware
+description: "NSX edge nodes carry all north-south traffic in and out of the datacenter. When an edge node fails or its BGP session to the upstream router drops, every..."
 ---
 # NSX Edge Failure / BGP Down
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "CLI Reference reference covering Overview, Pure1 REST API, FlashArray CLI (per-array), Alerts."
 ---
 # Evergreen — CLI Reference
 

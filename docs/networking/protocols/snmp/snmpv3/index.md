@@ -2,6 +2,7 @@
 title: SNMPv3
 tags:
   - networking
+description: "SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext community strings of v1/v2c."
 ---
 
 # SNMPv3

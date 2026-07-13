@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "SLOs define quantitative targets for service reliability and performance. They form the basis for alerting thresholds, capacity decisions, and on-call..."
 ---
 # Service Level Objectives (SLO)
 

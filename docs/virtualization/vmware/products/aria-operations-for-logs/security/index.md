@@ -3,6 +3,7 @@ tags:
   - aria-logs
   - security
   - vmware
+description: "Aria Ops for Logs hardening — RBAC, TLS configuration, syslog source authentication, and audit logging."
 ---
 # Aria Ops for Logs — Security
 

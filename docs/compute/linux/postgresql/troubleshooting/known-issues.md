@@ -4,6 +4,7 @@ tags:
   - postgresql
   - linux
   - known-issues
+description: "Catalog of known PostgreSQL bugs, error codes, and workarounds covering connectivity, replication, vacuum, and Patroni HA."
 ---
 # PostgreSQL — Known Issues and Error Codes
 

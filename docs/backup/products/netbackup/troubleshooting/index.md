@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing NetBackup job failures, status codes, media server errors, client connectivity, and catalog issues."
 ---
 # NetBackup — Troubleshooting
 

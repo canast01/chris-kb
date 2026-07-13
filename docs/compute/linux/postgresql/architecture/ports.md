@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for PostgreSQL. Covers client connections, replication (streaming and logical), pgBouncer connection pooler, and Patroni HA..."
 ---
 # PostgreSQL — Ports and Network Requirements
 

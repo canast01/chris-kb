@@ -4,6 +4,7 @@ tags:
   - security
   - vmware
   - vsphere-8
+description: "Security reference for VMware ESXi. Covers vCenter SSO authentication, lockdown mode, role-based access control, VM and vSAN encryption, and host..."
 ---
 # ESXi — Security
 

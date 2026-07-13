@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "Brocade FabricOS day-to-day operations — zoning, port management, fabric health monitoring, and switch administration."
 ---
 # FabricOS — Operations
 

@@ -3,6 +3,7 @@ title: SRM (VMware Platform)
 tags:
   - srm
   - vmware
+description: "Site Recovery Manager knowledge base — architecture, operations, deploy, CLI references, security, and troubleshooting."
 ---
 
 # SRM (VMware Platform)

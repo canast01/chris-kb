@@ -6,6 +6,7 @@ tags:
   - ports
   - dr
   - vsphere
+description: "Firewall port reference for VMware vSphere Replication (VR). Covers the VR Appliance management interface, inter-site appliance pairing, and the actual VM..."
 ---
 # vSphere Replication — Ports and Network Requirements
 

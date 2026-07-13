@@ -3,6 +3,7 @@ tags:
   - dell-apex-saas
   - faq
   - operations
+description: "Common questions about Dell APEX Storage as a Service operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations..."
 ---
 # Dell APEX Storage as a Service — Frequently Asked Questions
 

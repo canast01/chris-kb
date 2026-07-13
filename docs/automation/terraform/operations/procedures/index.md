@@ -2,6 +2,7 @@
 tags:
   - operations
   - terraform
+description: "Terraform operational procedures — standard apply workflow, plan and apply strategies, change readiness, workspace management, state operations, incident..."
 ---
 # Terraform — Procedures
 

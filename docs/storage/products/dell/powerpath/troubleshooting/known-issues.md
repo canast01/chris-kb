@@ -4,6 +4,7 @@ tags:
   - powerpath
   - dell
   - known-issues
+description: "Catalog of known PowerPath bugs, error codes, and workarounds covering path management, installation, and PPMA."
 ---
 # Dell PowerPath — Known Issues and Error Codes
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "Cisco MDS procedures: show flogi database, zone member management with zone name, port activation, copy running-config startup-config, and SUP switchover."
 ---
 # MDS — Procedures
 

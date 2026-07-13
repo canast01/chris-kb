@@ -3,6 +3,7 @@ tags:
   - architecture
   - vmware
   - vsphere-replication
+description: "How It Works reference covering Replication Engine — ESXi Kernel Module, Data Flow, RPO Mechanics, VRA Role — vSphere Replication Appliance, VRS — vSphere..."
 ---
 # vSphere Replication — How It Works
 

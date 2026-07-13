@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Commands, syntax, and quick reference. All commands are PowerShell unless noted as cmd."
 ---
 # Windows Server — CLI Reference
 

@@ -2,6 +2,7 @@
 tags:
   - linux
   - security
+description: "PostgreSQL access control — roles, GRANT/REVOKE, row-level security, schema permissions, pg_hba.conf host rules, and auditing current privileges."
 ---
 # PostgreSQL — Access Control
 

@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - pure
+description: "Recommended reading order for Pure1 (SaaS management and AI-driven operations). Follow these stages in order to build a complete mental model before using..."
 ---
 # Pure1 — Learning Path
 

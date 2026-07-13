@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path."
 ---
 # Dell ECS — Escalation
 

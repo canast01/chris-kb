@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell Flex on Demand — consumption-based capacity metering on PowerMax, PowerStore, and PowerScale. Covers architecture, operations, security, and..."
 ---
 # Dell Flex on Demand
 

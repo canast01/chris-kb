@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Dell VPLEX is a storage federation and virtualisation platform that decouples physical storage from the host view, presenting virtual volumes regardless..."
 ---
 # VPLEX — Architecture
 

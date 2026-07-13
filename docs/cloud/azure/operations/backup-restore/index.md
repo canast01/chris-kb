@@ -2,6 +2,7 @@
 tags:
   - azure
   - operations
+description: "Azure Backup and Restore — Recovery Services vault management, VM backup policies, snapshot schedules (hourly/daily/weekly), volume-level and file-level..."
 ---
 # Azure — Backup & Restore
 

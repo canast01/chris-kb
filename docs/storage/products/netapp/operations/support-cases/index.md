@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Support Cases reference covering Opening a Support Case, Case Severity Levels, Generating a Support Bundle, Information to Include in a Case..."
 ---
 # NetApp Operations — Support Cases
 

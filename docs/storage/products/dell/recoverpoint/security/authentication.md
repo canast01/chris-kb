@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "RecoverPoint authentication: local account management via Unisphere, API token generation and rotation, LDAP integration via set_ldap_config, and session..."
 ---
 # RecoverPoint — Authentication
 

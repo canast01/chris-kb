@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 1.5
+description: "ESXi diagnostic commands: read vmkernel.log and hostd.log for errors, use esxcli for live storage and network state, run esxtop in batch mode to capture..."
 ---
 # ESXi — Diagnostics
 

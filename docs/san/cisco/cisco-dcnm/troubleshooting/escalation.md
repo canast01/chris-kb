@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: what data to collect, how to generate the DCNM support bundle and MDS show..."
 ---
 # Cisco DCNM — Escalation
 

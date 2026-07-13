@@ -2,6 +2,7 @@
 tags:
   - azure
   - ai
+description: "Azure OpenAI requires you to deploy a model before use — the model version, deployment name, and capacity all affect availability and cost. This page..."
 ---
 # Azure OpenAI Deployments
 

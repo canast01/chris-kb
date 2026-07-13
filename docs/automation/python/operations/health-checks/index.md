@@ -2,6 +2,7 @@
 tags:
   - operations
   - python
+description: "Health Checks reference covering Environment Health, Package Management, Scheduled Scripts."
 ---
 # Python Automation — Health Checks
 

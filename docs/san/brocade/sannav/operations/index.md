@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "SANnav day-to-day operations — dashboard monitoring, fabric discovery, alert management, firmware upgrades, and reporting."
 ---
 # SANnav — Operations
 

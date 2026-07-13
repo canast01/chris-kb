@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Recovery testing validates that systems, data, and services can be restored to a defined state within acceptable timeframes. Testing is the only mechanism..."
 ---
 # Recovery Testing
 

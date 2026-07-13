@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "oc command reference: resource management, log collection, exec, adm commands, debugging, and context management. oc extends kubectl with..."
 ---
 # OpenShift — CLI Reference
 

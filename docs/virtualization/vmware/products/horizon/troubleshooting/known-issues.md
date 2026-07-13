@@ -4,6 +4,7 @@ tags:
   - horizon
   - vmware
   - known-issues
+description: "Catalog of known Horizon bugs, error codes, and workarounds covering Blast Extreme, PCoIP, Connection Server, and desktop pool issues."
 ---
 # VMware Horizon — Known Issues and Error Codes
 

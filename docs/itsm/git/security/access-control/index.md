@@ -2,6 +2,7 @@
 tags:
   - git
   - security
+description: "Access control in Git hosting platforms governs who can read, write, and administer repositories. Poor access control is the primary vector for insider..."
 ---
 # Git — Access Control
 

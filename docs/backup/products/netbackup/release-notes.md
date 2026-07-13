@@ -1,6 +1,7 @@
 ---
 tags:
   - netbackup
+description: "Version history and release notes for Veritas NetBackup."
 ---
 # Veritas NetBackup — Release Notes
 

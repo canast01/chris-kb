@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Health Checks reference covering Daily Health Check Workflow, AutoSupport Validation, Pre-Change Checklist, Health Summary Table."
 ---
 # NetApp Operations — Health Checks
 

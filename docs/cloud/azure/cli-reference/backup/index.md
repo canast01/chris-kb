@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure backup CLI: az backup vault create, az backup policy set, az backup job list, az backup restore restore-disks, and Recovery Services vault..."
 ---
 # Backup & Recovery
 

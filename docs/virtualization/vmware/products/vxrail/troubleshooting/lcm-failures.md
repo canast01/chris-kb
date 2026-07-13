@@ -4,6 +4,7 @@ tags:
   - vxrail
 search:
   boost: 1.5
+description: "VxRail LCM Failures reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections."
 ---
 # VxRail LCM Failures
 

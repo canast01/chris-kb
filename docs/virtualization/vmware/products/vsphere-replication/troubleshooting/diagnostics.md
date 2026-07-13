@@ -5,6 +5,7 @@ tags:
   - vsphere-replication
 search:
   boost: 1.5
+description: "vSphere Replication (VR) diagnostic commands: check VRA service status with systemctl, inspect HMS and VRMS logs, test replication port 31031 from the..."
 ---
 # vSphere Replication — Diagnostics
 

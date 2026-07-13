@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Version history and release notes for Dell Apex Storage-as-a-Service."
 ---
 # Dell Apex Storage-as-a-Service — Release Notes
 

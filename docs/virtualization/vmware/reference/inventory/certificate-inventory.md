@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "| Product | FQDN | Certificate Type | Issuer | Expiration | Owner | Last Renewed | Next Review | |---|---|---|---|---|---|---|---| | vCenter |..."
 ---
 # VMware Certificate Inventory
 

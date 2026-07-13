@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "VPC & networking CLI: aws ec2 describe-vpcs, create-subnet, describe-route-tables, authorize-security-group-ingress, and peering/NAT gateway management."
 ---
 # VPC & Networking
 

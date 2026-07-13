@@ -4,6 +4,7 @@ tags:
   - operations
   - cli
   - vmware
+description: "CLI and API reference for Aria Operations for Networks (vRNI): SSH appliance service management, collector operations, IPFIX diagnostics, REST API..."
 ---
 # Aria Operations for Networks — CLI Reference
 

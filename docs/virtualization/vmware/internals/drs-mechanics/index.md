@@ -2,6 +2,7 @@
 tags:
   - internals
   - vmware
+description: "DRS evaluates cluster imbalance every 5 minutes using a per-host demand score against fair-share entitlement. Migrations are proposed or executed based on..."
 ---
 # DRS Mechanics
 

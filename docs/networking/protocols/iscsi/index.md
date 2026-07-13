@@ -2,6 +2,7 @@
 title: iSCSI
 tags:
   - networking
+description: "iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands over TCP/IP, delivering block storage across standard Ethernet on port 3260..."
 ---
 
 # iSCSI

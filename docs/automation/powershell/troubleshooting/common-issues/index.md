@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "PowerShell troubleshooting: execution policy blocks, module import failures, remoting authentication errors, pipeline object type mismatches, and cmdlet..."
 ---
 # PowerShell — Common Issues
 

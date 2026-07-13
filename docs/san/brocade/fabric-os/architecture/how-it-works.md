@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "How It Works reference covering Overview, SAN Fabric Topology, Principal Switch and Domain ID, Name Server and Fabric Services, Zoning and 4 more sections."
 ---
 # Brocade Fabric OS — How It Works
 

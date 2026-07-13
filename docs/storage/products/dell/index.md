@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell enterprise storage portfolio — block, file, object, and data protection platforms. Coverage includes architecture, provisioning, multipathing..."
 ---
 # Dell Storage
 

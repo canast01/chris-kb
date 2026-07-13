@@ -3,6 +3,7 @@ tags:
   - operations
   - tanzu
   - vmware
+description: "TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Harbor project configuration, Helm deployments, Ingress setup, node scaling..."
 ---
 # Tanzu — Procedures
 

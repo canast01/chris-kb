@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Security baseline for VPLEX deployments. Apply all items before production go-live and validate against this checklist after any significant configuration..."
 ---
 # Dell VPLEX — Hardening
 

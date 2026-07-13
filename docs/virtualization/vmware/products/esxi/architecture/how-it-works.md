@@ -4,6 +4,7 @@ tags:
   - esxi
   - vmware
   - vsphere-8
+description: "How It Works reference covering Networking Architecture, VMkernel Adapters (vmk), Storage Architecture, CPU and Memory Scheduling, HA and DRS and 3 more..."
 ---
 # ESXi — How It Works
 

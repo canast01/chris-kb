@@ -6,6 +6,7 @@ tags:
   - vcf
   - tanzu
   - operations
+description: "Minimum product versions for 65+ features across vSphere Compute/HA, Storage/vSAN, NSX/Networking, VCF, Aria Suite, and Tanzu. Use this page to check..."
 ---
 # Version Compatibility Matrix
 

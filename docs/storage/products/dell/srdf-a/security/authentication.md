@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Authentication reference covering Credential Rotation, Service Account Policy."
 ---
 # SRDF/A — Authentication
 

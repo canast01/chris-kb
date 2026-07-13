@@ -3,6 +3,7 @@ tags:
   - operations
   - srm
   - vmware
+description: "Install and Upgrade reference covering vSphere Replication Appliance Deployment, SRA Installation, Site Pairing, Upgrade Order, Post-Install Verification."
 ---
 # SRM — Install and Upgrade
 

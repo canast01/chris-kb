@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "Upgrade Sequence Reference reference covering Correct Upgrade Order, Why Order Matters, VCF (VMware Cloud Foundation) Sequence, Compatibility Matrix..."
 ---
 # Upgrade Sequence Reference
 

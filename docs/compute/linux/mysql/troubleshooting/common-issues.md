@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "MySQL/MariaDB troubleshooting: replication broken, lock waits, Too many connections, table corruption, InnoDB crash recovery, and slow query log analysis."
 ---
 # MySQL / MariaDB — Common Issues
 

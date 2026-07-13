@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "Azure ExpressRoute provides dedicated private connectivity between on-premises networks and Azure, bypassing the public internet. It offers predictable..."
 ---
 # ExpressRoute
 

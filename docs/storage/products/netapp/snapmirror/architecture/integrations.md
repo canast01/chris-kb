@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "SnapMirror integrations: SnapCenter backup chain extension, SnapVault for long-term retention, SVM-DR for disaster recovery, and S3 SnapMirror for object..."
 ---
 # SnapMirror — Integrations
 

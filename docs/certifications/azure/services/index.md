@@ -2,6 +2,7 @@
 tags:
   - azure
   - certifications
+description: "Azure Services Reference reference covering Compute Services, Networking Services, Identity Services, Storage Services, Monitoring Services and 1 more..."
 ---
 # Azure Services Reference
 

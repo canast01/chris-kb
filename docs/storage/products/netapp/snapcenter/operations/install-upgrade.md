@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapCenter install and upgrade: Windows Server prerequisites, plug-in deployment to hosts, server version upgrade, and post-upgrade plugin re-validation."
 ---
 # SnapCenter — Install & Upgrade
 

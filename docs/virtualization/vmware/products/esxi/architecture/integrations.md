@@ -4,6 +4,7 @@ tags:
   - esxi
   - vmware
   - vsphere-8
+description: "Integrations reference covering Network Integration, Backup Integration, Monitoring Integration."
 ---
 # ESXi — Integrations
 

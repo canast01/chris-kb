@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 2
+description: "Quick reference for common problems and resolutions. Structured approach to diagnosing common Linux server issues."
 ---
 # Linux — Common Issues
 

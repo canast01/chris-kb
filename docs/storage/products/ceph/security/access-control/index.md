@@ -2,6 +2,7 @@
 tags:
   - ceph
   - security
+description: "CephX user accounts, capability syntax for granular permissions, per-pool access control, admin key management, and least-privilege design for application..."
 ---
 # Ceph — Access Control
 

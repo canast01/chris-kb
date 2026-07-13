@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "PostgreSQL integration points — application connectors (JDBC, psycopg2, asyncpg), PgBouncer, monitoring exporters, logical replication targets, and backup..."
 ---
 # PostgreSQL — Integrations
 

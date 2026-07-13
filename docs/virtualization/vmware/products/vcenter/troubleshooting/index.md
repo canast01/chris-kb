@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 1.5
+description: "Troubleshooting reference for VMware vCenter Server. Covers common VCSA failure patterns, SSO and certificate issues, diagnostic commands, log collection..."
 ---
 # vCenter — Troubleshooting
 

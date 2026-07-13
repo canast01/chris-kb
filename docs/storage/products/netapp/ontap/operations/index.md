@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "ONTAP — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more."
 ---
 # ONTAP — Operations
 

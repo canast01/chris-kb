@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "SCG prerequisites, configuration baselines, alert acknowledgement workflow, and operational standards for Dell AIOps."
 ---
 # Dell AIOps — Design Standards
 

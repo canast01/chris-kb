@@ -1,6 +1,7 @@
 ---
 tags:
   - veeam
+description: "Version history and release notes for Veeam Backup & Replication."
 ---
 # Veeam Backup & Replication — Release Notes
 

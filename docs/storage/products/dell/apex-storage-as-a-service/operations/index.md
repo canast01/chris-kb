@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "APEX Storage as a Service — Operations reference: CLI Reference, Health Checks, Procedures, Install & Upgrade, and 2 more."
 ---
 # APEX Storage as a Service — Operations
 

@@ -2,6 +2,7 @@
 tags:
   - dr
   - security
+description: "IRE security controls: enforce two-person integrity for all vault access, use IRE-exclusive credentials that expire after each recovery event, enable full..."
 ---
 # IRE Security
 

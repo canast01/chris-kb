@@ -2,6 +2,7 @@
 tags:
   - architecture
   - terraform
+description: "Declarative IaC tool with Go provider plugins for 1000+ APIs; single CLI binary drives init/plan/apply/destroy workflow; remote state backend with locking..."
 ---
 # Terraform — Architecture
 

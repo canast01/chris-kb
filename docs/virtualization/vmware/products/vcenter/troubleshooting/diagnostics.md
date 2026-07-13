@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 1.5
+description: "vCenter Server diagnostic commands: check disk partitions and service health with vmon-cli, tail vpxd.log and SSO logs, validate DNS and NTP, check..."
 ---
 # vCenter — Diagnostics
 

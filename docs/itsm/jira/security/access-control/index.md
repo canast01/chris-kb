@@ -3,6 +3,7 @@ title: Jira — Access Control
 tags:
   - jira
   - security
+description: "Jira's access control model is layered: global permissions govern what users can do across the entire instance, project permission schemes govern..."
 ---
 
 # Jira — Access Control

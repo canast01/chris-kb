@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "PKI and certificate management knowledge base covering three-tier CA hierarchy, ADCS configuration, certificate lifecycle, CDP/AIA, OCSP/CRL revocation..."
 ---
 # Certificates
 

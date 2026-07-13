@@ -2,6 +2,7 @@
 tags:
   - aria-suite-lifecycle
   - operations
+description: "Top-10 Aria Suite Lifecycle (LCM) REST API calls for product installation, upgrades, locker management, and certificate operations."
 ---
 # Aria Suite Lifecycle Cheat Sheet
 

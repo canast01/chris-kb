@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Version history and release notes for Pure FlashArray."
 ---
 # Pure FlashArray — Release Notes
 

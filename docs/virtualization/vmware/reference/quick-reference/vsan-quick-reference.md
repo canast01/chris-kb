@@ -3,6 +3,7 @@ tags:
   - reference
   - vsan
   - vsphere-8
+description: "vSAN Quick Reference reference covering Fast Health Checks, Common Commands, Ping vSAN VMkernel Between Hosts, Common Issues."
 ---
 # vSAN Quick Reference
 

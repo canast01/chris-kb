@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Venafi TPP manages the full certificate lifecycle — discovery, policy enforcement, issuance, renewal automation, and expiry alerting. This page covers..."
 ---
 # Venafi Lifecycle
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "Cisco MDS 9000 series FC switches running NX-OS. Core isolation mechanism is the VSAN — multiple logical fabrics share physical hardware with separate..."
 ---
 # Cisco MDS — Architecture
 

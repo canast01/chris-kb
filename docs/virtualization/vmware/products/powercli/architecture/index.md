@@ -3,6 +3,7 @@ tags:
   - architecture
   - powercli
   - vmware
+description: "PowerCLI module architecture, vSphere API connectivity model, credential management, and integration with vCenter, ESXi, NSX, and vSAN."
 ---
 # PowerCLI — Architecture
 

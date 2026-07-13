@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "| Field | Value | |---|---| | Risk | Low–Medium | | Approval | Standard change; confirm with app owner before deleting unfamiliar files | | Estimated time..."
 ---
 # Disk Space Cleanup Runbook
 

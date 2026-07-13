@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "VMs on a host or cluster experience degraded performance. ESXtop shows balloon memory inflated and swap activity. This scenario covers identifying which..."
 ---
 # VM CPU and Memory Contention — Balloon and Swap
 

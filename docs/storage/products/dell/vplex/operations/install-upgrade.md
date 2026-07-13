@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Install & Upgrade reference covering GeoSynchrony Version Matrix, Upgrade Paths, Hardware Lifecycle, EOL Tracking."
 ---
 # Dell VPLEX — Install & Upgrade
 

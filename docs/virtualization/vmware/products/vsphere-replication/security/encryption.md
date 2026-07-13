@@ -3,6 +3,7 @@ tags:
   - security
   - vmware
   - vsphere-replication
+description: "Encryption reference covering Data in Transit, Replication Data Encryption (Per-VM), Encryption at Rest on Target Datastore, KMS Consideration for..."
 ---
 # vSphere Replication — Encryption
 

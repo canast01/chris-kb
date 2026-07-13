@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Mid-range all-flash platform with active-active dual-node appliance architecture — inline dedup/compression, Metro Volume zero-RPO sync replication..."
 ---
 # PowerStore
 

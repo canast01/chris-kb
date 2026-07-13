@@ -3,6 +3,7 @@ tags:
   - architecture
   - horizon
   - vmware
+description: "How It Works reference covering Component Overview, Connection Flow, Blast Extreme vs PCoIP, Session Broker Role, Security Server Deprecation and 1 more..."
 ---
 # Horizon — How It Works
 

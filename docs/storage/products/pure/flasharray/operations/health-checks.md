@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Health Checks reference covering Daily Checks, Health Check, Controller Health, Drive Health, Volume Health and 5 more sections."
 ---
 # FlashArray — Health Checks
 

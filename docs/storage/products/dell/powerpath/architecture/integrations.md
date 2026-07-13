@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Integrations reference covering Windows HBA Integration, Linux DM-Multipath Comparison, VMware VAAI Integration (PowerPath/VE), AIX MPIO Coexistence..."
 ---
 # PowerPath — Integrations
 

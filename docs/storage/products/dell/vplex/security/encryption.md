@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "VPLEX itself is a virtualisation and federation layer and does not natively encrypt data in transit between hosts and the directors (Fibre Channel does..."
 ---
 # Dell VPLEX — Encryption
 

@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - storage
+description: "Firewall port reference for NetApp ONTAP clusters. Covers cluster management, data protocol LIFs (NFS, SMB, iSCSI, NVMe-oF), SnapMirror/SnapVault..."
 ---
 # NetApp ONTAP — Ports and Network Requirements
 

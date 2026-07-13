@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "Operations Common Issues reference covering Overview, Switch Not Appearing After Discovery, Zone Change Does Not Take Effect, Firmware Upgrade Reported as..."
 ---
 # SANnav — Operations Common Issues
 

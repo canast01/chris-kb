@@ -3,6 +3,7 @@ tags:
   - ceph
   - faq
   - operations
+description: "Common questions about Ceph operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Ceph — Frequently Asked Questions
 

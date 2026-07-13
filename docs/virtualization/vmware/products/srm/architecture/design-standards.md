@@ -3,6 +3,7 @@ tags:
   - architecture
   - srm
   - vmware
+description: "Design Standards reference covering Test Network Design, IP Customization Strategy, Recovery Plan Structure Best Practices, RPO Targets and SRA..."
 ---
 # SRM — Design Standards
 

@@ -3,6 +3,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "Version history and release notes for VMware vSAN."
 ---
 # VMware vSAN — Release Notes
 

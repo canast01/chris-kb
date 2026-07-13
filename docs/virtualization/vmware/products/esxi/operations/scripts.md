@@ -4,6 +4,7 @@ tags:
   - operations
   - vmware
   - vsphere-8
+description: "ESXi Scripts reference covering Storage Path Health Check (Bash / esxcli), ESXi Syslog and Event Collector (Python), NTP Configuration Audit (Bash)..."
 ---
 # ESXi — Scripts
 

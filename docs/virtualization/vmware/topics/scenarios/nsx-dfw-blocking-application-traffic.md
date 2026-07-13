@@ -4,6 +4,7 @@ tags:
   - nsx-4
   - scenarios
   - vmware
+description: "An application suddenly cannot reach its database or a dependent service after an NSX DFW rule change or a new workload is deployed. This scenario covers..."
 ---
 # NSX DFW Blocking Application Traffic
 

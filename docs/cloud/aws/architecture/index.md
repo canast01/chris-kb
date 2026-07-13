@@ -2,6 +2,7 @@
 tags:
   - architecture
   - aws
+description: "Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Identity Center SSO, and Transit Gateway hub-and-spoke networking. All..."
 ---
 # AWS — Architecture
 

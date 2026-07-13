@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Common COD issues — capacity activation failures, allocation errors, and licensing troubleshooting."
 ---
 # COD — Common Issues
 

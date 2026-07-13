@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "A path is a complete end-to-end connection from an HBA port through the fabric to a storage target port."
 ---
 # FC Paths
 

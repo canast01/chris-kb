@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "PowerStore operational procedures — block volume and NAS file system provisioning, snapshot management, host management, replication configuration, Metro..."
 ---
 # PowerStore — Procedures
 

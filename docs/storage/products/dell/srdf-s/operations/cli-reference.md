@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "SRDF/S CLI reference: symrdf establish, symrdf query -synchronous, symrdf suspend, symrdf resume, symrdf failover -establish, and link status commands."
 ---
 # SRDF/S — CLI Reference
 

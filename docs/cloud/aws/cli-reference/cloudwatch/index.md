@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS CloudWatch CLI reference — metrics queries, alarm management, log group operations, and Insights queries."
 ---
 # CloudWatch
 

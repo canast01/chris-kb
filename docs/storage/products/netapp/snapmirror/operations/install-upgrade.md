@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapMirror install and upgrade: ONTAP cluster peering prerequisites, intercluster LIF creation, and SnapMirror policy migration between ONTAP major..."
 ---
 # SnapMirror — Install & Upgrade
 

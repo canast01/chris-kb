@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Document post-upgrade findings to improve future upgrade runbooks. Complete this within 48 hours of change record closure while details are fresh."
 ---
 # Upgrade Lessons Learned
 

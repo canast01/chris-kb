@@ -3,6 +3,7 @@ tags:
   - architecture
   - vmware
   - vsphere-replication
+description: "Design Standards reference covering VRA Sizing, VRS Sizing, Bandwidth Estimation, RPO Selection, Target Datastore Sizing and 3 more sections."
 ---
 # vSphere Replication — Design Standards
 

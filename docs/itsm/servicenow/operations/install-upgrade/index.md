@@ -2,6 +2,7 @@
 tags:
   - operations
   - servicenow
+description: "ServiceNow upgrade management: upgrade scheduling via Now Support, pre-upgrade instance clone and testing, plugin compatibility checks, and post-upgrade..."
 ---
 # ServiceNow — Install & Upgrade
 

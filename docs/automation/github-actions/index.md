@@ -1,6 +1,7 @@
 ---
 tags:
   - github-actions
+description: "GitHub Actions knowledge base covering event-driven workflow architecture, runner management, secrets and OIDC authentication, self-hosted runners..."
 ---
 # GitHub Actions
 

@@ -5,6 +5,7 @@ tags:
   - vmware
   - known-issues
   - vsphere-8
+description: "Catalog of known vSAN bugs, error codes, and workarounds including degraded component handling, resync issues, and health check false positives."
 ---
 # VMware vSAN — Known Issues and Error Codes
 

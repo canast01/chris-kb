@@ -2,6 +2,7 @@
 tags:
   - architecture
   - security
+description: "CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an encrypted hardened credential store that is the sole authoritative source..."
 ---
 # CyberArk — How It Works
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "InsightIQ integrates exclusively with PowerScale (Isilon) clusters via the OneFS REST API. External integrations are limited to email alerting, syslog..."
 ---
 # InsightIQ — Integrations
 

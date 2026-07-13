@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Certificate automation scripts cover expiry scanning across all servers and services, TLS endpoint checking across all registered hostnames, CRL freshness..."
 ---
 # Certificates — Scripts
 

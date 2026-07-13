@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "SQL Server automation scripts — PowerShell backup rotation, index maintenance, AG health check, blocking chain alert, and database size report."
 ---
 # SQL Server — Scripts
 

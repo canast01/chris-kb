@@ -2,6 +2,7 @@
 title: TLS (LDAP)
 tags:
   - networking
+description: "TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Configuring LDAPS on Active Directory, Channel Binding and LDAP Signing..."
 ---
 
 # TLS (LDAP)

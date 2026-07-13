@@ -2,6 +2,7 @@
 tags:
   - architecture
   - servicenow
+description: "ServiceNow is designed as an integration hub as much as an ITSM platform. Integration patterns range from simple REST API calls to complex bidirectional..."
 ---
 # ServiceNow — Integration Patterns
 

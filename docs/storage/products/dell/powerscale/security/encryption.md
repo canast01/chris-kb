@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "TLS certificate management and data encryption for Dell PowerScale."
 ---
 # PowerScale — Encryption
 

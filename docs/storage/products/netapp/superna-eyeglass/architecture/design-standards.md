@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "Standards reference covering SyncIQ Policy Naming, DR Readiness Score, Failover Test Frequency, Operational Standards, Policy Configuration."
 ---
 # Superna Eyeglass — Standards
 

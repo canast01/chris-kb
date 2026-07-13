@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "FOD — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # FOD — Security
 

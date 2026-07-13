@@ -5,6 +5,7 @@ tags:
   - firewall
   - ports
   - backup
+description: "Firewall port reference for Veritas NetBackup. Covers the Primary Server (formerly Master), Media Servers, client VNETD communication, REST API..."
 ---
 # NetBackup — Ports and Network Requirements
 

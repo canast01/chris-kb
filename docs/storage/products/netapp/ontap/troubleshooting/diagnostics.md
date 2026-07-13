@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "ONTAP diagnostic commands: check cluster and HA health with cluster show and storage failover show, inspect aggregate and disk state with storage..."
 ---
 # ONTAP — Diagnostics
 

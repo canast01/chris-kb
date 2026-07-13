@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Hardening reference covering Network Port Requirements, Audit Logging."
 ---
 # SRDF/A — Hardening
 

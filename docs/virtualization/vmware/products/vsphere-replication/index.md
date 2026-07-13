@@ -2,6 +2,7 @@
 tags:
   - vmware
   - vsphere-replication
+description: "vSphere Replication knowledge base — deploy, architecture, operations, CLI references, security, and troubleshooting for VM-level asynchronous replication..."
 ---
 # vSphere Replication
 

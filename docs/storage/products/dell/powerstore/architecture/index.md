@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Dell PowerStore is a mid-range all-flash platform with an active-active dual-node appliance architecture built on an NVMe internal fabric. It runs..."
 ---
 # PowerStore — Architecture
 

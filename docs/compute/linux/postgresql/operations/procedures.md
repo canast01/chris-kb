@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "PostgreSQL procedures: VACUUM and ANALYZE scheduling, extension management with CREATE EXTENSION, role and schema management, and failover with pg_ctl..."
 ---
 # PostgreSQL — Procedures
 

@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "Integrations reference covering NSX Integration, Stretched Cluster Witness, File Services, Aria Operations."
 ---
 # vSAN — Integrations
 

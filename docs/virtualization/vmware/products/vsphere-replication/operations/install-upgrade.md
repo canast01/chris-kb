@@ -3,6 +3,7 @@ tags:
   - operations
   - vmware
   - vsphere-replication
+description: "Install and Upgrade reference covering Prerequisites, VRA OVA Deployment, Register VRA with vCenter, Deploy VRS (Scale-Out Server), Pair Sites and 3 more..."
 ---
 # vSphere Replication — Install and Upgrade
 

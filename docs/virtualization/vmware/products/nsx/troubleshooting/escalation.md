@@ -6,6 +6,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "How to escalate NSX networking issues to Broadcom support: what data to collect, how to generate the NSX support bundle, step-by-step SR submission on the..."
 ---
 # NSX — Escalation
 

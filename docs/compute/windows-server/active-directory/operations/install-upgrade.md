@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Active Directory domain and forest functional levels determine which features are available and which DC OS versions are supported. Raising functional..."
 ---
 # Active Directory — Install & Upgrade
 

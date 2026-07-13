@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA deployment, VAMI first-boot configuration, Locker setup, depot..."
 ---
 # Aria Suite Lifecycle — Deploy
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "RecoverPoint design standards: RPA cluster sizing, consistency group limits, journal volume sizing, supported FC/iSCSI connectivity, and RPO target..."
 ---
 # RecoverPoint — Standards
 

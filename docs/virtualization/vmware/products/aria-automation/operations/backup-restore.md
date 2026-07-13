@@ -3,6 +3,7 @@ tags:
   - aria-automation
   - operations
   - vmware
+description: "Aria Automation backup uses a built-in tool that exports the platform configuration and deployment state to an external NFS or SFTP target. The backup..."
 ---
 # Aria Automation — Backup & Restore
 

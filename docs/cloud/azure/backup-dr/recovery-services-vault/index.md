@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "The Recovery Services Vault is the top-level management container for both Azure Backup and Azure Site Recovery. It stores backup data, holds replication..."
 ---
 # Recovery Services Vault
 

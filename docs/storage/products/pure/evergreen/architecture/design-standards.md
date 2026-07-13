@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Design Standards reference covering Naming Conventions, Build Baseline, Subscription Checklist, Controller Refresh Pre-checks."
 ---
 # Evergreen — Design Standards
 

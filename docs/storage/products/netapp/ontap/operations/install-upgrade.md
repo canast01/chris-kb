@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tracking, Refresh Planning."
 ---
 # ONTAP — Install & Upgrade
 

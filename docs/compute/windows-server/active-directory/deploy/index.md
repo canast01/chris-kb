@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, NTP, replica DCs, OU structure, and security baseline GPO."
 ---
 # Active Directory — Initial Deployment
 

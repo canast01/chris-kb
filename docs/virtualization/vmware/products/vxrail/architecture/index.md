@@ -2,6 +2,7 @@
 tags:
   - architecture
   - vxrail
+description: "VxRail architecture overview — node hardware, HCI cluster topology, vSAN disk groups, and management stack integration."
 ---
 # VxRail — Architecture
 

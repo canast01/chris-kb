@@ -3,6 +3,7 @@ tags:
   - vsan
   - storage
   - architecture
+description: "How vSAN, vSphere Replication, and VxRail integrate — kernel modules, SPBM policies, replication protocols, and VCF-managed HCI lifecycle."
 ---
 # Storage Domain — Interaction Map
 

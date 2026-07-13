@@ -3,6 +3,7 @@ tags:
   - operations
   - tanzu
   - vmware
+description: "CLI Reference reference covering tanzu CLI, Tanzu Cluster Operations, kubectl for Supervisor (vSphere with Tanzu), kubectl Workload Cluster Operations..."
 ---
 # Tanzu — CLI Reference
 

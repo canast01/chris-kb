@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Scripts reference covering Array Health Check (Python), Filesystem Capacity Report (Bash), ActiveDR Replication Monitor (Python), Daily Check Script (Bash..."
 ---
 # FlashBlade — Scripts
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - netbackup
+description: "Veritas NetBackup enterprise backup — three-tier architecture with Primary Server catalog, Media Servers for data movement, and MSDP deduplication with..."
 ---
 # NetBackup
 

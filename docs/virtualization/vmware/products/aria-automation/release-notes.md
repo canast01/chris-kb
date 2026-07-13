@@ -2,6 +2,7 @@
 tags:
   - aria-automation
   - vmware
+description: "Version history and release notes for VMware Aria Automation."
 ---
 # VMware Aria Automation — Release Notes
 

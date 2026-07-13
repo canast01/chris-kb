@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "Linux install and upgrade: kickstart/preseed PXE setup, OS patching with yum update or apt upgrade, kernel module management, and decommission steps."
 ---
 # Linux — Install & Upgrade
 

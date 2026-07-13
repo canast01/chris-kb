@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Internal architecture and data-path reference: Director architecture, Global Cache, SRDF replication, storage resource management, host connectivity, and..."
 ---
 # Dell PowerMax — How It Works
 

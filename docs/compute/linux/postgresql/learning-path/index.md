@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - linux
+description: "Recommended reading order for PostgreSQL on Linux. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # PostgreSQL — Learning Path
 

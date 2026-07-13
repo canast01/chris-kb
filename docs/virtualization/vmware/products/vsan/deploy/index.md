@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 2
+description: "End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 1–3 cover the physical and hypervisor foundation; Phases 4–7 cover..."
 ---
 # vSAN — Deploy
 

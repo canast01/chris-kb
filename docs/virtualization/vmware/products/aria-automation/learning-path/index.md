@@ -3,6 +3,7 @@ tags:
   - aria-automation
   - learning-path
   - vmware
+description: "Recommended reading order for Aria Automation (vRA). Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Aria Automation — Learning Path
 

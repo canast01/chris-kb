@@ -3,6 +3,7 @@ tags:
   - vmware
   - vcenter
   - incident-response
+description: "P1 incident — vCenter Server is not responding to client connections. Follow the Triage → Isolate → Diagnose → Fix → Verify sequence. Do not reboot before..."
 ---
 # INC-001: vCenter Server Unreachable
 

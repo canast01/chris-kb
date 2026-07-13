@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "Windows Server hardening — security baselines, local admin controls, Windows Firewall, audit policy, and BitLocker configuration."
 ---
 # Windows Server — Security
 

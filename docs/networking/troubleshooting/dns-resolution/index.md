@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "DNS Resolution Failures reference covering Overview, Failure Classification, Diagnostic Flowchart, DNS Server Health Checks, Zone Transfer Verification..."
 ---
 # DNS Resolution Failures
 

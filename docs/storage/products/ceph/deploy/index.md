@@ -4,6 +4,7 @@ tags:
   - deployment
 search:
   boost: 1.5
+description: "Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create initial pools, configure network, and validate cluster health before..."
 ---
 # Ceph — Deploy
 

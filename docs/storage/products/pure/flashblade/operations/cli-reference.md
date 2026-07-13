@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "CLI Reference reference covering Array Hardware, File Systems (NFS / SMB), Network, Object Store (S3), Replication (ActiveDR) and 3 more sections."
 ---
 # FlashBlade — CLI Reference
 

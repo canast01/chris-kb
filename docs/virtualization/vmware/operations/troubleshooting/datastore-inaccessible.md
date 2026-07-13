@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing inaccessible datastores across VMFS, NFS, and vSAN — APD/PDL states, HBA path failures, NFS mount errors, and vSAN component health."
 ---
 # Datastore Issues
 

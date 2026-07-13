@@ -3,6 +3,7 @@ tags:
   - cyberark
   - faq
   - operations
+description: "Common questions about CyberArk PAM operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # CyberArk PAM — Frequently Asked Questions
 

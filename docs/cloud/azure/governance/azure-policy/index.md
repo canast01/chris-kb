@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Policy evaluates resources against defined rules and enforces organisational standards across your Azure environment. Policies can audit, deny, or..."
 ---
 # Azure Policy
 

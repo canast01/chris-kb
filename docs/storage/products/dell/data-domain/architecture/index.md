@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance with inline global deduplication via the SISL engine. DDBoost integration with..."
 ---
 # Data Domain — Architecture
 

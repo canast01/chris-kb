@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "![Network Design Overview](../../assets/network-design-overview.svg)"
 ---
 # Network Design
 

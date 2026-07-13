@@ -3,6 +3,7 @@ tags:
   - netapp-superna-eyeglass
   - faq
   - operations
+description: "Common questions about Superna Eyeglass for NetApp operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Superna Eyeglass for NetApp — Frequently Asked Questions
 

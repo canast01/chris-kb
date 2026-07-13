@@ -2,6 +2,7 @@
 tags:
   - san
   - security
+description: "Cisco MDS hardening — AAA, SSH, port security, fabric binding, RBAC, and VSAN access control."
 ---
 # MDS — Security
 

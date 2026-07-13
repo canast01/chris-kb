@@ -2,6 +2,7 @@
 title: SAN
 tags:
   - san
+description: "SAN knowledge base covering Cisco MDS switches, DCNM, Nexus Dashboard, Brocade Fabric OS, and SANnav. Includes fabric architecture, zoning standards, ISL..."
 ---
 
 # SAN

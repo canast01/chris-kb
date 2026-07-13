@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Maintenance Window Planning reference covering Overview, Planning Checklist, Window Scheduling Guidance, Dependency Mapping, Risk Review and 1 more..."
 ---
 # Maintenance Window Planning
 

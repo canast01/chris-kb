@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "CyberArk PAM diagnostic commands: check Vault, PVWA, CPM, and PSM Windows service status, test Vault port 1858 connectivity, inspect component log files..."
 ---
 # CyberArk — Diagnostics
 

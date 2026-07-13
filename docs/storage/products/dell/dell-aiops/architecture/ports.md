@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - monitoring
+description: "Firewall port reference for Dell AIOps (AI-driven operations platform for Dell infrastructure). Dell AIOps aggregates telemetry from storage, compute, and..."
 ---
 # Dell AIOps — Ports and Network Requirements
 

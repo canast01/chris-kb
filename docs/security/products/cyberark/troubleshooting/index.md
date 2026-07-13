@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing CyberArk vault connectivity, PSM session failures, CPM rotation errors, and credential reconciliation issues."
 ---
 # CyberArk — Troubleshooting
 

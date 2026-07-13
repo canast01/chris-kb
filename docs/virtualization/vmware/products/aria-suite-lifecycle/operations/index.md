@@ -3,6 +3,7 @@ tags:
   - aria-lcm
   - operations
   - vmware
+description: "Aria Suite Lifecycle daily operations — product upgrades, patch management, locker management, and environment health checks."
 ---
 # Aria Suite Lifecycle — Operations
 

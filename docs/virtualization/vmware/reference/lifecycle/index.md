@@ -5,6 +5,7 @@ tags:
   - lifecycle
   - eol
   - versioning
+description: "Version lifecycle and End of General Support (EOGS) / End of Technical Guidance (EOTG) reference for VMware / Broadcom products. Use this page to plan..."
 ---
 # VMware Product Lifecycle and End of Life Reference
 

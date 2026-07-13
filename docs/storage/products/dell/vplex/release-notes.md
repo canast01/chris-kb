@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Version history and release notes for Dell VPLEX."
 ---
 # Dell VPLEX — Release Notes
 

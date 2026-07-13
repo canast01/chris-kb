@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Connectivity, VMware VASA Provider (vVols), Veeam Backup & Replication..."
 ---
 # Evergreen//One — Integrations
 

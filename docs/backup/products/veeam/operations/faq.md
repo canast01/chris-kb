@@ -3,6 +3,7 @@ tags:
   - veeam
   - faq
   - operations
+description: "Common questions about Veeam Backup & Replication operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Veeam Backup & Replication — Frequently Asked Questions
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing issues, VLAN misconfigurations, and connectivity tools."
 ---
 # Networking — Troubleshooting
 

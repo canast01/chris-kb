@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "vSphere HA host isolation response determines what happens to VMs on a host that loses all management network connectivity but may still be running."
 ---
 
 # Host Isolation Response

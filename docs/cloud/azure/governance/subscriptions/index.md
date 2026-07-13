@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "An Azure subscription is a logical unit of Azure services that links to an Azure account. Subscriptions are the primary billing and access control..."
 ---
 # Subscriptions
 

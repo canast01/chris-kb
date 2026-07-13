@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure identity CLI: az ad user/group/sp, az role assignment create, az policy definition create, az keyvault set-policy, and managed identity assignment."
 ---
 # Identity & RBAC
 

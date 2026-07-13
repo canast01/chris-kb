@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Version history and release notes for ServiceNow."
 ---
 # ServiceNow — Release Notes
 

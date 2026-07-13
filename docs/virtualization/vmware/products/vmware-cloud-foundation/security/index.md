@@ -3,6 +3,7 @@ tags:
   - security
   - vcf
   - vmware
+description: "Security reference for VMware Cloud Foundation. Covers SDDC Manager authentication, role-based access control, certificate and key management, and..."
 ---
 # VCF — Security
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing Venafi discovery failures, CA connector errors, policy violations, and certificate renewal workflow issues."
 ---
 # Venafi — Troubleshooting
 

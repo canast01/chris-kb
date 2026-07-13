@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SANnav diagnostic commands: check service health with sannav-admin and journalctl, test the REST API health endpoint, check PostgreSQL and InfluxDB..."
 ---
 # Brocade SANnav — Diagnostics
 

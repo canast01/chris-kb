@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "All storage paths to a VMFS or NFS datastore are lost. VMs freeze or become inaccessible, vCenter shows the datastore as unavailable, and ESXi enters the..."
 ---
 # Storage APD — Datastore Inaccessible
 

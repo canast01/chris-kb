@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "EC2 images, volumes & snapshots CLI: aws ec2 describe-images, create-snapshot, create-volume, register-image, modify-volume, and copy/deregister..."
 ---
 # EC2 — Images, Volumes & Snapshots
 

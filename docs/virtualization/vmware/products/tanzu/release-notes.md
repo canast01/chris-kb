@@ -2,6 +2,7 @@
 tags:
   - tanzu
   - vmware
+description: "Version history and release notes for VMware Tanzu."
 ---
 # VMware Tanzu — Release Notes
 

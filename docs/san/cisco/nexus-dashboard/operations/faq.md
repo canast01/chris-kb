@@ -3,6 +3,7 @@ tags:
   - nexus-dashboard
   - faq
   - operations
+description: "Common questions about Cisco Nexus Dashboard operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Cisco Nexus Dashboard — Frequently Asked Questions
 

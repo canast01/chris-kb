@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "Validate cluster health before any maintenance window. All checks must pass before placing a host into maintenance mode or performing upgrades. Use the..."
 ---
 # Maintenance Risk Validation
 

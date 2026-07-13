@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "Network Security Groups (NSGs) are stateful packet filters that control inbound and outbound traffic to Azure resources. They can be associated with..."
 ---
 # Network Security Groups
 

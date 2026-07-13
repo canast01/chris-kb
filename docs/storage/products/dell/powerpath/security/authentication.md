@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Authentication reference covering Overview, Linux Authentication, Windows Authentication, AIX Authentication, Automation and Service Accounts and 4 more..."
 ---
 # PowerPath — Authentication
 

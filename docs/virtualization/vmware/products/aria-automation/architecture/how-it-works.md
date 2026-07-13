@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-automation
   - vmware
+description: "How It Works reference covering Overview, Deployment Models, Cluster Topology, Cloud Account Types, Appliance Sizing and 2 more sections."
 ---
 # Aria Automation — How It Works
 

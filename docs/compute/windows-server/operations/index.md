@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Windows Server — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more."
 ---
 # Windows Server — Operations
 

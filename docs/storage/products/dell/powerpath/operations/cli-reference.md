@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Commonly used powermt commands for managing Dell PowerPath multipathing on Linux and Windows hosts. PowerPath is a multipathing driver — it sits between..."
 ---
 # PowerPath — CLI Reference
 

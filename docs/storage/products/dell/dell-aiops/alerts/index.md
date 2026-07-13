@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation reference covering Alert Correlation, Predicted Failure Alerts, Acknowledging and..."
 ---
 # Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation
 

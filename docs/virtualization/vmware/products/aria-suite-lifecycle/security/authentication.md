@@ -3,6 +3,7 @@ tags:
   - aria-lcm
   - security
   - vmware
+description: "Authentication reference covering Workspace ONE Access Integration, Active Directory Group Sync via VIDM, API Authentication, Local Accounts, Certificate..."
 ---
 # Aria Suite Lifecycle — Authentication
 

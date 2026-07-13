@@ -4,6 +4,7 @@ tags:
   - netapp
 search:
   boost: 2
+description: "This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from physical rack-and-stack through cluster initialisation, network..."
 ---
 # ONTAP — Deploy
 

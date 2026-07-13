@@ -5,6 +5,7 @@ tags:
   - vmware
   - known-issues
   - vsphere-8
+description: "Catalog of known vCenter / VCSA bugs, error codes, and workarounds. Each entry includes the affected version range, cause, and resolution or workaround..."
 ---
 # vCenter — Known Issues and Error Codes
 

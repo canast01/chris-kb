@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "Superna Eyeglass DR orchestration for NetApp PowerScale — automates SyncIQ failover, SMB/NFS share reconfiguration, quota migration, and DNS cutover in..."
 ---
 # Superna Eyeglass — Architecture
 

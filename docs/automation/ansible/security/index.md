@@ -2,6 +2,7 @@
 tags:
   - ansible
   - security
+description: "Ansible — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # Ansible — Security
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Storage Evergreen hardware subscription model — non-disruptive controller refreshes, Purity upgrades, and Ever Modern lifecycle for FlashArray and..."
 ---
 # Pure Storage Evergreen
 

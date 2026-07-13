@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "How It Works reference covering Architecture, High Availability."
 ---
 # Pure1 — How It Works
 

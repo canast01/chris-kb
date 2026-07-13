@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - security
+description: "Hardening reference covering NetBackup Security Architecture, Firewall Ports."
 ---
 # NetBackup — Hardening
 

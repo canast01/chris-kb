@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "SQL Server CLI reference — sqlcmd, PowerShell SqlServer module, BCP, SQLCMD scripting, and key DMV queries for operations."
 ---
 # SQL Server — CLI Reference
 

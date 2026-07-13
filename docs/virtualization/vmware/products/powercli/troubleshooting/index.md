@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Diagnosing and resolving PowerCLI issues: connection failures, module conflicts, API errors, certificate problems, and performance issues with large..."
 ---
 # PowerCLI — Troubleshooting
 

@@ -4,6 +4,7 @@ tags:
   - ldap
   - networking
   - known-issues
+description: "Catalog of known LDAP and LDAPS issues covering bind failures, certificate errors, and search result issues."
 ---
 # LDAP / LDAPS — Known Issues and Error Codes
 

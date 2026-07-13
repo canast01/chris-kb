@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "Capacity planning is deciding when to add compute or storage resources before performance degrades or space runs out — not after. Aria Operations is the..."
 ---
 # Capacity Planning
 

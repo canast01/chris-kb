@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Files reference covering Overview, Azure Files Architecture, Creating File Shares, Mounting on Linux, Mounting on Windows and 3 more sections."
 ---
 # Azure Files
 

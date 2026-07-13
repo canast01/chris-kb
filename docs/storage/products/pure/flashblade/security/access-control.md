@@ -2,6 +2,7 @@
 tags:
   - pure
   - security
+description: "FlashBlade access control: pureadmin, role-based management (array_admin, ops_admin, readonly), AD/LDAP group mapping, and API token scoping."
 ---
 # FlashBlade — Access Control
 

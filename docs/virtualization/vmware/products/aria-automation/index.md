@@ -2,6 +2,7 @@
 tags:
   - aria-automation
   - vmware
+description: "Technical and operational reference for VMware Aria Automation. Covers infrastructure automation, service catalogue, blueprint design, deployment..."
 ---
 # Aria Automation
 

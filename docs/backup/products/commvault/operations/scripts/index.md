@@ -2,6 +2,7 @@
 tags:
   - commvault
   - operations
+description: "PowerShell and qscript automation for Commvault job management, SLA reporting, client health checks, and storage utilisation."
 ---
 # Commvault — Scripts
 

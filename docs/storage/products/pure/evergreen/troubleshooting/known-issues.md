@@ -4,6 +4,7 @@ tags:
   - evergreen
   - pure-storage
   - known-issues
+description: "Evergreen is a commercial subscription program — it has no dedicated software or appliance. All operational known issues are tracked in the underlying..."
 ---
 # Pure Storage Evergreen — Known Issues and Error Codes
 

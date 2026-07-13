@@ -1,6 +1,7 @@
 ---
 tags:
   - windows
+description: "Windows Server Active Directory knowledge base covering forest and domain architecture, FSMO roles, Kerberos authentication, replication topology, GPO..."
 ---
 # Active Directory
 

@@ -4,6 +4,7 @@ tags:
   - esxi
   - vmware
   - vsphere-8
+description: "ESXi is VMware's Type-1 hypervisor. It is deployed in standalone, standard cluster, vSAN cluster, or stretched cluster configurations depending on..."
 ---
 # ESXi — Architecture
 

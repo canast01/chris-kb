@@ -3,6 +3,7 @@ tags:
   - aria-operations
   - operations
   - vmware
+description: "Day-2 operational procedures for Aria Operations — adding adapters, configuring alert policies, managing custom groups, remote collectors, dashboards..."
 ---
 # Aria Operations Procedures
 

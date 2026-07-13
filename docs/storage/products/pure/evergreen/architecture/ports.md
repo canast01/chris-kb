@@ -5,6 +5,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Pure Storage Evergreen is a commercial subscription program — it is not a separate software product and does not introduce additional network ports. All..."
 ---
 # Pure Storage Evergreen — Ports and Network Requirements
 

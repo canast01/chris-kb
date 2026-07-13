@@ -3,6 +3,7 @@ tags:
   - operations
   - powercli
   - vmware
+description: "PowerCLI module lifecycle: upgrading to new versions, managing individual sub-modules, handling multi-vCenter version compatibility, and offline bundle..."
 ---
 # PowerCLI — Lifecycle
 

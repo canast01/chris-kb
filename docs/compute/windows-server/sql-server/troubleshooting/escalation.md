@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "How to escalate SQL Server issues to Microsoft support: what data to collect before calling, step-by-step case creation on support.microsoft.com, AG..."
 ---
 # SQL Server — Escalation
 

@@ -3,6 +3,7 @@ tags:
   - ollama
   - ai
   - local-ai
+description: "Ollama supports Linux, macOS, and Windows. On Linux, the recommended setup is the official install script or a manually configured systemd service. Docker..."
 ---
 # Ollama Installation Notes
 

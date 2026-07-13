@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Sizing Guidelines."
 ---
 # PowerMax — Standards
 

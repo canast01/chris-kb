@@ -4,6 +4,7 @@ tags:
   - cisco-dcnm
   - san
   - known-issues
+description: "Catalog of known Cisco DCNM (Data Center Network Manager) bugs, error codes, and workarounds covering switch discovery, deployment, and licensing."
 ---
 # Cisco DCNM — Known Issues and Error Codes
 

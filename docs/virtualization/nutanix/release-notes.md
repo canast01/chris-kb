@@ -1,6 +1,7 @@
 ---
 tags:
   - nutanix
+description: "Version history and release notes for Nutanix."
 ---
 # Nutanix — Release Notes
 

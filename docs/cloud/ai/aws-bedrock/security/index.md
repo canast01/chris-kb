@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Security for Bedrock spans IAM access control, network isolation with VPC endpoints, encryption at rest and in transit, and content guardrails. Apply all..."
 ---
 # Bedrock Security
 

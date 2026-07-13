@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "All-flash block storage running Purity//FA — ActiveDR, ActiveCluster, NVMe/FC, NVMe/RoCE, snapshots, protection groups, and Pure1 cloud management for..."
 ---
 # Pure FlashArray
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Rollback options differ significantly by component. Establish the rollback path before the maintenance window — not during an incident."
 ---
 # Rollback Planning
 

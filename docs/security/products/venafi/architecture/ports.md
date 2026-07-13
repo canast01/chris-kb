@@ -7,6 +7,7 @@ tags:
   - firewall
   - ports
   - security
+description: "Firewall port reference for Venafi Trust Protection Platform (TPP). Covers the TPP server, satellite (remote engine), outbound CA integrations, and..."
 ---
 # Venafi — Ports and Network Requirements
 

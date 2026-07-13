@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connections, and partner API connectivity."
 ---
 # External Connectivity
 

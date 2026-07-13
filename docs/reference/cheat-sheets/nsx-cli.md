@@ -4,6 +4,7 @@ tags:
   - nsx-t
   - networking
   - cli-reference
+description: "Essential NSX-T CLI commands for NSX Manager, transport nodes, logical networking, Distributed Firewall, and Edge node operations — plus curl REST API..."
 ---
 # NSX-T CLI Cheat Sheet
 

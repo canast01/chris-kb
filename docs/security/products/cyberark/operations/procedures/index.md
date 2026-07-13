@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Operational procedures for account management, password rotation, session management, and audit tasks."
 ---
 # CyberArk — Procedures
 

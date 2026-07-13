@@ -3,6 +3,7 @@ tags:
   - operations
   - tanzu
   - vmware
+description: "Backup and Restore reference covering What to Back Up, Back Up vCenter VCSA (Supervisor), Install and Configure Velero, Schedule Cluster Backups with..."
 ---
 # Tanzu — Backup and Restore
 

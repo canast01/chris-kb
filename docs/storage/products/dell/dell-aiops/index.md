@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell AIOps monitoring platform — architecture, anomaly detection, recommendations, alerting, and operational runbooks."
 ---
 # Dell AIOps
 

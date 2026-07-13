@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - pure
+description: "Recommended reading order for Pure Storage FlashArray. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Pure Storage FlashArray — Learning Path
 

@@ -2,6 +2,7 @@
 tags:
   - ceph
   - operations
+description: "Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, RGW bucket replication for objects, cluster configuration backup, and MON..."
 ---
 # Ceph — Backup & Restore
 

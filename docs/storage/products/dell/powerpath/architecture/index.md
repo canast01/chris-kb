@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Host-side multipath I/O driver for Dell/EMC arrays. Intercepts block I/O and distributes it across all available HBA paths with ALUA-aware load balancing..."
 ---
 # PowerPath — Architecture
 

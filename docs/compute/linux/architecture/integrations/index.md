@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, NFS/CIFS mount management, Ansible automation hooks, and syslog forwarding..."
 ---
 # Linux — Integrations
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnostics reference covering Diagnostic Commands, Log Locations, Performance Analysis, Before Calling Support."
 ---
 # PowerMax — Diagnostics
 

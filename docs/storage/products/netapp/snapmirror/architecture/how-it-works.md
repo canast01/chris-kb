@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "How It Works reference covering Overview, Replication Types, Components, Connectivity, Key Commands and 2 more sections."
 ---
 # SnapMirror — How It Works
 

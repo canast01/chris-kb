@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "How It Works reference covering Overview, STaaS Consumption Model, Capacity Management Thresholds."
 ---
 # Keystone — How It Works
 

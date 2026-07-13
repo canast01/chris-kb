@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "Azure Networking articles, operational checks, troubleshooting notes, and references."
 ---
 # Azure Networking
 

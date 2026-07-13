@@ -4,6 +4,7 @@ tags:
   - jira
   - itsm
   - known-issues
+description: "Catalog of known Jira Data Center bugs, error codes, and workarounds covering cluster health, database connectivity, and indexing."
 ---
 # Jira — Known Issues and Error Codes
 

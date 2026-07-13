@@ -3,6 +3,7 @@ tags:
   - horizon
   - operations
   - vmware
+description: "Health checks for Horizon — Connection Server status, desktop pool availability, UAG gateway health, session counts vs licensed capacity, certificate..."
 ---
 # VMware Horizon — Health Checks
 

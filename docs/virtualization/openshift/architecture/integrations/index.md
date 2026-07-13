@@ -1,6 +1,7 @@
 ---
 tags:
   - architecture
+description: "vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay image registry, Advanced Cluster Management (ACM), and ODF storage..."
 ---
 # OpenShift — Integrations
 

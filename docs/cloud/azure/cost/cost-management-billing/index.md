@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Cost Management + Billing is the central hub for understanding, analysing, and optimising Azure spend. It covers cost analysis, invoices, billing..."
 ---
 # Cost Management and Billing
 

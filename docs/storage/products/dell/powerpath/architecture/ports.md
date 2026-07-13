@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Dell PowerPath (multipath I/O software). PowerPath runs on hosts as a kernel driver and transparent to the network layer — no..."
 ---
 # Dell PowerPath — Ports and Network Requirements
 

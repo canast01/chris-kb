@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell FoD health checks: SCG connectivity status, entitlement consumption review in CloudIQ, capacity threshold alerts, and monthly usage validation."
 ---
 # FOD — Health Checks
 

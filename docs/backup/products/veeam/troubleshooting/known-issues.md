@@ -4,6 +4,7 @@ tags:
   - veeam
   - backup
   - known-issues
+description: "Catalog of known Veeam bugs, error codes, and workarounds covering backup jobs, restore operations, and VMware integration."
 ---
 # Veeam Backup & Replication — Known Issues and Error Codes
 

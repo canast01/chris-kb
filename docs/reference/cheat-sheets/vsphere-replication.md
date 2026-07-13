@@ -2,6 +2,7 @@
 tags:
   - vsphere-replication
   - backup-dr
+description: "Top-10 vSphere Replication commands for replication configuration, status monitoring, and recovery via PowerCLI and VRMS REST API."
 ---
 # vSphere Replication Cheat Sheet
 

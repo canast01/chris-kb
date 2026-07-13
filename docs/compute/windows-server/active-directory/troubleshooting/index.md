@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "Diagnosing AD replication failures, Kerberos errors, trust issues, SYSVOL sync problems, and LDAP query failures."
 ---
 # Active Directory — Troubleshooting
 

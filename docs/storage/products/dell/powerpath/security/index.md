@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "PowerPath — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # PowerPath — Security
 

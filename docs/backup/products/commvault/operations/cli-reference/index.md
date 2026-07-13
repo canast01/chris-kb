@@ -2,6 +2,7 @@
 tags:
   - commvault
   - operations
+description: "CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restore Operations, Clients & Policies, CommServe Maintenance and 1 more..."
 ---
 # Commvault — CLI Reference
 

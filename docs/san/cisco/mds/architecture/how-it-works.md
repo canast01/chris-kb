@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "How It Works reference covering Overview, SAN Fabric Topology."
 ---
 # Cisco MDS — How It Works
 

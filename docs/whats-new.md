@@ -3,6 +3,7 @@ tags:
   - meta
 search:
   boost: 2
+description: "Recent additions and updates to the knowledge base. Major changes by date — newest first. Auto-updated from commit history."
 ---
 # What's New
 

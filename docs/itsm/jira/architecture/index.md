@@ -2,6 +2,7 @@
 tags:
   - architecture
   - jira
+description: "Jira Data Center runs as an active-active Java cluster backed by a shared PostgreSQL database, shared NFS home, and distributed Hazelcast cache. Load..."
 ---
 # Jira — Architecture
 

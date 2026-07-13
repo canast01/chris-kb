@@ -1,6 +1,7 @@
 ---
 tags:
   - architecture
+description: "OpenShift control plane, node types, networking model, and storage integration. Covers how etcd, API server, scheduler, and operators interact to manage..."
 ---
 # OpenShift — Architecture
 

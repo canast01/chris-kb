@@ -7,6 +7,7 @@ tags:
   - ports
   - blast
   - pcoip
+description: "Firewall port reference for VMware Horizon. Covers client-to-Connection Server, display protocol traffic (Blast Extreme and PCoIP), USB/CDR redirection..."
 ---
 # Horizon — Ports and Network Requirements
 

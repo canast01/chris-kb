@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "MySQL/MariaDB backup: mysqldump --single-transaction, mysqlpump, xtrabackup full and incremental, binary log point-in-time restore, and retention..."
 ---
 # MySQL / MariaDB — Backup Restore
 

@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "SQL Server authentication — Windows vs Mixed Mode, service account configuration, AD group logins, Managed Service Accounts, and password policy..."
 ---
 # SQL Server — Authentication
 

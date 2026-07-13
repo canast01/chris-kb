@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Service accounts used for VMware platform integrations. All accounts must be vault-managed and reviewed quarterly."
 ---
 # VMware Service Account Inventory
 

@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Superna Eyeglass day-to-day operations — DR orchestration, configuration sync monitoring, and SyncIQ policy management."
 ---
 # Superna Eyeglass — Operations
 

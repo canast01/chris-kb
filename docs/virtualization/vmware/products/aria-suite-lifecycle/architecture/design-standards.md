@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-lcm
   - vmware
+description: "Standards reference covering Pre-Deployment Checklist, Deployment Size Reference, Certificate Standards, Upgrade Sequence Rules, Version Matrix Compliance."
 ---
 # Aria Suite Lifecycle — Standards
 

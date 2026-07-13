@@ -2,6 +2,7 @@
 tags:
   - operations
   - veeam
+description: "CLI Reference reference covering Backup Infrastructure Topology, Sessions & History, Restore Points, VM Restore, Infrastructure and 1 more sections."
 ---
 # Veeam — CLI Reference
 

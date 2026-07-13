@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "PowerScale day-to-day operations — SMB/NFS share management, SyncIQ replication, snapshots, and quota administration."
 ---
 # PowerScale — Operations
 

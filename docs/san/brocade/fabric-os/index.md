@@ -1,6 +1,7 @@
 ---
 tags:
   - san
+description: "Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, ports, firmware, CLI references, health checks, scripts, and troubleshooting..."
 ---
 # Brocade Fabric OS
 

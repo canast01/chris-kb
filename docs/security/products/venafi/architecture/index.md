@@ -2,6 +2,7 @@
 tags:
   - architecture
   - security
+description: "Enterprise certificate lifecycle management — TPP enforces policy, integrates with ADCS and commercial CAs, automates renewal via CA connectors, and..."
 ---
 # Venafi — Architecture
 

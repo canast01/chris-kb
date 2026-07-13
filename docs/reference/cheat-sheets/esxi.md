@@ -2,6 +2,7 @@
 tags:
   - esxi
   - operations
+description: "Top-10 ESXi shell commands for host management, networking, storage, and VM control via esxcli."
 ---
 # ESXi Cheat Sheet
 

@@ -3,6 +3,7 @@ tags:
   - scenarios
   - vmware
   - vxrail
+description: "Adding a node to a VxRail cluster is done exclusively through VxRail Manager — never manually through vCenter. VxRail Manager validates firmware, enforces..."
 ---
 # Expand VxRail Cluster (Add Node)
 

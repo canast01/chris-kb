@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Integrations reference covering Notes on APEX Management Boundaries."
 ---
 # APEX Storage as a Service — Integrations
 

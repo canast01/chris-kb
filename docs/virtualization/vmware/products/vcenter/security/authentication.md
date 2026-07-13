@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Authentication reference covering SSO Security, TLS Configuration, Certificates to Track, Certificate Replacement Process, Validation After Replacement..."
 ---
 # vCenter Security — Authentication
 

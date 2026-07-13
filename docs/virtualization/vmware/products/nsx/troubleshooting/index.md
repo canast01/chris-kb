@@ -6,6 +6,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Troubleshooting reference for VMware NSX. Covers common overlay, gateway, and DFW failure patterns, diagnostic commands, log collection, and escalation..."
 ---
 # NSX — Troubleshooting
 

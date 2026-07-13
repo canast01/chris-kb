@@ -3,6 +3,7 @@ tags:
   - mfa
   - faq
   - operations
+description: "Common questions about Multi-Factor Authentication operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Multi-Factor Authentication — Frequently Asked Questions
 

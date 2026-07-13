@@ -9,6 +9,7 @@ tags:
   - ransomware-protection
   - snapshots
   - runbook
+description: "Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Replication, and Pure Protection with SafeMode immutable snapshots. Covers..."
 ---
 
 # Pure Storage FlashArray with Veeam and Pure Protection

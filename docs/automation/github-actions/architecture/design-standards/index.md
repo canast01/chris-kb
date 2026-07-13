@@ -2,6 +2,7 @@
 tags:
   - architecture
   - github-actions
+description: "GitHub Actions design standards: workflow file structure, reusable workflow patterns, environment gates, secret scoping, and self-hosted runner sizing..."
 ---
 # GitHub Actions — Standards
 

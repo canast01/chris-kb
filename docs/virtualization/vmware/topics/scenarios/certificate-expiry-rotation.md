@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "Certificate expiry causes cascading failures across VMware products — SSO authentication breaks, product-to-product API calls fail, and browsers show..."
 ---
 # Certificate Expiry and Rotation
 

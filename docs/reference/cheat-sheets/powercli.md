@@ -2,6 +2,7 @@
 tags:
   - vcenter
   - automation
+description: "Top-10 PowerCLI one-liners for VM, host, storage, network, and cluster operations across vSphere environments."
 ---
 # PowerCLI Cheat Sheet
 

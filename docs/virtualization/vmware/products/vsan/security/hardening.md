@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "vSAN hardening covers the security baseline configuration applied to the ESXi hosts that form the vSAN cluster, the vCenter managing the cluster, and the..."
 ---
 # vSAN — Hardening
 

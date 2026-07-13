@@ -2,6 +2,7 @@
 tags:
   - github-actions
   - operations
+description: "GitHub Actions procedures: creating workflows, configuring environments, managing self-hosted runners, rotating secrets, and monitoring job execution in..."
 ---
 # GitHub Actions — Procedures
 

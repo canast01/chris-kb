@@ -2,6 +2,7 @@
 tags:
   - tanzu
   - vmware
+description: "Tanzu knowledge base — deploy, architecture, operations, CLI references, security, and troubleshooting for VMware Tanzu Kubernetes Grid on vSphere."
 ---
 # Tanzu
 

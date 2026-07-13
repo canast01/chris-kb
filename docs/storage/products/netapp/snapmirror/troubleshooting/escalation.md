@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate NetApp SnapMirror replication issues to NetApp support: what data to collect, how to invoke AutoSupport on both clusters, step-by-step..."
 ---
 # SnapMirror — Escalation
 

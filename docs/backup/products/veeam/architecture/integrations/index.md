@@ -2,6 +2,7 @@
 tags:
   - architecture
   - veeam
+description: "Veeam integration with VMware vSphere, Nutanix, Azure, object storage repositories, and monitoring platforms."
 ---
 # Veeam — Integrations
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - ceph
+description: "Ceph integrations: Kubernetes CSI (Rook-Ceph), OpenShift ODF, OpenStack Cinder/Glance/Swift, Prometheus MGR module, and NFS/Ganesha CephFS export."
 ---
 # Ceph — Integrations
 

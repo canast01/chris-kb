@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "ESXi Host Failure Runbook reference covering Confirm Impact, Check Power State, Check Management Network, Check Hardware Management Interface, Review..."
 ---
 # ESXi Host Failure Runbook
 

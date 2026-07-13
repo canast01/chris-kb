@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Topology, Journal Sizing, Journal Monitoring Thresholds, High Availability."
 ---
 # RecoverPoint — How It Works
 

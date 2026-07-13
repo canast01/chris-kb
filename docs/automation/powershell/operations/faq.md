@@ -3,6 +3,7 @@ tags:
   - powershell
   - faq
   - operations
+description: "Common questions about PowerShell operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # PowerShell — Frequently Asked Questions
 

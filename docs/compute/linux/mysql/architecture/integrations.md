@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "MySQL integration points — application connectors (JDBC, ODBC, Python, PHP), ProxySQL, Percona Monitoring, replication to replica sets, and backup tool..."
 ---
 # MySQL / MariaDB — Integrations
 

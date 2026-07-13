@@ -4,6 +4,7 @@ tags:
   - security
   - vmware
   - vsphere-8
+description: "Hardening reference covering Firewall Hardening, Advanced Security Settings, Secure Boot, Audit Logging, Host Profile Enforcement and 2 more sections."
 ---
 # ESXi — Hardening
 

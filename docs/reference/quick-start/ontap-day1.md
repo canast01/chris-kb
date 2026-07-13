@@ -3,6 +3,7 @@ tags:
   - netapp
   - ontap
   - quick-start
+description: "What to do in your first hour with a new ONTAP cluster. Covers cluster orientation, health validation, key metrics to capture, and the first operational..."
 ---
 # ONTAP Day 1 — New Cluster Checklist
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Health Check Follow-Up and Open Item Tracking reference covering Overview, Finding Classification, Creating Follow-Up Tickets, Owner Assignment, Tracking..."
 ---
 # Health Check Follow-Up and Open Item Tracking
 

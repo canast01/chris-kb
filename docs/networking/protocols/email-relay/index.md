@@ -3,6 +3,7 @@ tags:
   - networking
 search:
   boost: 1
+description: "Email relay integration using SMTP — how infrastructure components route mail through a relay host for alerting, reporting, and system notifications."
 ---
 # Integration — Email Relay (SMTP)
 

@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Microsoft Defender for Cloud Secure Score is a quantified measure of an Azure environment's security posture. It aggregates security recommendations..."
 ---
 # Azure — Secure Score
 

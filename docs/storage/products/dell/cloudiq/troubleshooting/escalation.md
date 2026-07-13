@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "CloudIQ support escalation: how to collect the SCG log bundle and API traces, open a Dell support case, set severity, and follow the escalation path for..."
 ---
 # CloudIQ — Escalation
 

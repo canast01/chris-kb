@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Maintenance Window Execution reference covering Overview, Go / No-Go at Window Open, Execution Checklist, Step-by-Step Discipline, Time Management During..."
 ---
 # Maintenance Window Execution
 

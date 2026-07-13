@@ -2,6 +2,7 @@
 tags:
   - pure
   - security
+description: "Authentication reference covering Authentication Mechanisms Summary, Local Account Management, Active Directory Integration, LDAP Integration (Non-AD)..."
 ---
 # FlashBlade — Authentication
 

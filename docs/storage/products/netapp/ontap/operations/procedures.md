@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and LUN provisioning, SVM management, snapshot and SnapMirror operations..."
 ---
 # ONTAP — Procedures
 

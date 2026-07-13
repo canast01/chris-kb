@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signing."
 ---
 # Windows Server — Encryption
 

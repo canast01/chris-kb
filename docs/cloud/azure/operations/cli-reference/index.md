@@ -2,6 +2,7 @@
 tags:
   - azure
   - operations
+description: "A practical reference for day-to-day Azure CLI usage: authentication, subscription management, resource group operations, output formatting, and..."
 ---
 # Azure Operations CLI Reference
 

@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Aria Operations for Networks (vRNI) diagnostic commands: check platform API health, test data source connectivity from the collector, verify NetFlow..."
 ---
 # Aria Operations for Networks — Diagnostics
 

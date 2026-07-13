@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Confluence (Data Center, self-hosted). Covers web UI, Synchrony (collaborative editing), cluster, database, and SMTP."
 ---
 # Confluence — Ports and Network Requirements
 

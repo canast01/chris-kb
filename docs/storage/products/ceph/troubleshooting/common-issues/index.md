@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and stuck, slow requests, nearfull/full cluster, clock skew, MON quorum loss..."
 ---
 # Ceph — Common Issues
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "PVWA is accessible over HTTPS only (TLS 1.2 minimum, TLS 1.3 preferred). All privileged user logons require MFA via RADIUS. LDAP/AD group membership..."
 ---
 # CyberArk — Authentication
 

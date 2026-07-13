@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "Health checks, procedures, CLI, backup/restore, upgrades, and scripts."
 ---
 # MySQL / MariaDB — Operations
 

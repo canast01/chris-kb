@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - nsg
+description: "Firewall and NSG port reference for Microsoft Azure infrastructure. Covers management access to Azure VMs, Azure API access from on-premises, Azure..."
 ---
 # Microsoft Azure — Ports and Network Requirements
 

@@ -3,6 +3,7 @@ tags:
   - architecture
   - srm
   - vmware
+description: "VMware Site Recovery Manager automates DR failover and failback by orchestrating protection groups, recovery plans, and vSphere Replication or SAN-based..."
 ---
 # Site Recovery Manager — Architecture
 

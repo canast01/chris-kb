@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - monitoring
+description: "Firewall port reference for VMware Aria Operations (formerly vRealize Operations). Covers the analytics cluster UI/API, remote collectors, adapter..."
 ---
 # Aria Operations — Ports and Network Requirements
 

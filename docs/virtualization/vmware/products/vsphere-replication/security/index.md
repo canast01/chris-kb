@@ -3,6 +3,7 @@ tags:
   - security
   - vmware
   - vsphere-replication
+description: "vSphere Replication hardening — certificate management, RBAC, and secure communication between VR appliances."
 ---
 # vSphere Replication — Security
 

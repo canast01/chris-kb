@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Design Standards reference covering Naming Conventions, Sizing Guidelines, Build Baseline, Configuration Checklist."
 ---
 # FlashBlade — Design Standards
 

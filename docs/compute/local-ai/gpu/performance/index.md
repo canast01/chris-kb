@@ -3,6 +3,7 @@ tags:
   - gpu
   - ai
   - local-ai
+description: "Getting the most out of GPU hardware requires profiling to identify bottlenecks, then applying targeted optimisations such as mixed precision, larger..."
 ---
 # GPU Performance Tuning
 

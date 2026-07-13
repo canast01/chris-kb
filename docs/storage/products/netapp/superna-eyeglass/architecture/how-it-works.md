@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "How It Works reference covering Overview, Component Topology, Connectivity, Key CLI Commands, Sizing and 1 more sections."
 ---
 # Superna Eyeglass — How It Works
 

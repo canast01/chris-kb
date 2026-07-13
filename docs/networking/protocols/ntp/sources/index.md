@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "NTP Sources reference covering Stratum Hierarchy, Viewing Sources — chrony (Linux), Source Statistics, Configuring Sources (chrony), Windows — w32tm..."
 ---
 # NTP Sources
 

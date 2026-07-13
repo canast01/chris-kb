@@ -3,6 +3,7 @@ tags:
   - pure-flashblade
   - faq
   - operations
+description: "Common questions about Pure Storage FlashBlade operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Pure Storage FlashBlade — Frequently Asked Questions
 

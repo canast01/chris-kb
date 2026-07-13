@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Policy compliance reviews evaluate the current state of resources against assigned policies and surface non-compliant resources. Regular compliance..."
 ---
 # Compliance Review
 

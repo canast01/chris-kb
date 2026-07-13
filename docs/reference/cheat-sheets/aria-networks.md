@@ -2,6 +2,7 @@
 tags:
   - aria-networks
   - networking
+description: "Top-10 Aria Networks (vRNI) REST API calls for network entity queries, path analysis, flow data, and event management."
 ---
 # Aria Networks Cheat Sheet
 

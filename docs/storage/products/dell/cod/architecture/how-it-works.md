@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Capacity Model, Object Storage Data Model, Data Protection Architecture, Multi-Site and Geo Replication, Access..."
 ---
 # Capacity on Demand — How It Works
 

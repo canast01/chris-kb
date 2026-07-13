@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "Version history and release notes for AWS."
 ---
 # AWS — Release Notes
 

@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - operations
+description: "NetBackup CLI Reference reference covering Master → Media → Client Topology, Restore Operations, Catalog & Media, Client & Policy Management, Error & Log..."
 ---
 # NetBackup CLI Reference
 

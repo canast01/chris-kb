@@ -3,6 +3,7 @@ tags:
   - security
   - tanzu
   - vmware
+description: "Tanzu hardening — RBAC, network policies, pod security admission, OPA Gatekeeper, and container image scanning."
 ---
 # Tanzu — Security
 

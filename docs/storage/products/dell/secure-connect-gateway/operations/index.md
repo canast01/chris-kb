@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "SCG operations: device registration, connectivity health checks, firmware advisory review, SupportAssist case creation, and daily telemetry verification..."
 ---
 # Secure Connect Gateway — Operations
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Change Risk Assessment reference covering Overview, Risk Assessment Matrix, Risk Identification Checklist, Risk Mitigation Examples, Residual Risk and..."
 ---
 # Change Risk Assessment
 

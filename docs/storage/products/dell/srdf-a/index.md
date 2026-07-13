@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell PowerMax SRDF/A asynchronous replication — delta set cycle model buffers host writes and transmits to the R2 target on ~30-second cycles; RPO equals..."
 ---
 # SRDF/A
 

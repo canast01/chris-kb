@@ -4,6 +4,7 @@ tags:
   - fod
   - dell
   - known-issues
+description: "Dell FOD (Feature on Demand) is a software feature licensing mechanism for Dell arrays. Known issues relate to license key download, ESRS activation, and..."
 ---
 # Dell FOD — Known Issues and Error Codes
 

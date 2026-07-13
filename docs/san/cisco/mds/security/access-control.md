@@ -2,6 +2,7 @@
 tags:
   - san
   - security
+description: "Cisco MDS access control: RBAC role assignment with role name, network-admin vs. vsan-admin scoping, TACACS+ server configuration, and AAA fallback."
 ---
 # MDS — Access Control
 

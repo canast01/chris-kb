@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Pure Storage FlashArray issues to Pure support: what data to collect, how to generate the diagnostic bundle, step-by-step case creation on..."
 ---
 # FlashArray — Escalation
 

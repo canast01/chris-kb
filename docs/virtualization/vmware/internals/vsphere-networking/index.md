@@ -3,6 +3,7 @@ title: vSphere Networking
 tags:
   - internals
   - vmware
+description: "Comprehensive reference for vSphere networking. Covers the architecture differences between Standard Switches and Distributed Switches, VMkernel adapter..."
 ---
 
 # vSphere Networking — VSS, VDS, VMkernel, and NIOC

@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "AD hardening — tiered admin model, Protected Users group, privileged access workstations, Kerberos settings, and audit policies."
 ---
 # Active Directory — Security
 

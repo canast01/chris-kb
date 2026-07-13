@@ -1,6 +1,7 @@
 ---
 tags:
   - certifications
+description: "Storage Products Reference reference covering Dell Technologies Storage Portfolio, NetApp Storage Portfolio, Pure Storage Portfolio, Product Comparison by..."
 ---
 # Storage Products Reference
 

@@ -3,6 +3,7 @@ tags:
   - horizon
   - security
   - vmware
+description: "Authentication reference covering Two-Factor Authentication (RADIUS / RSA SecurID), SAML Authentication (Workspace ONE / vIDM), Smart Card / Certificate..."
 ---
 # Horizon — Authentication
 

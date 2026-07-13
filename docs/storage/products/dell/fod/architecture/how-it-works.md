@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Metering Model, Supported Platforms, Use Cases, Best Practices."
 ---
 # Flex on Demand — How It Works
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Venafi access control: least-privilege role assignment in Trust Protection Platform, API token scoping, certificate team RBAC configuration, and audit log..."
 ---
 # Venafi — Access Control
 

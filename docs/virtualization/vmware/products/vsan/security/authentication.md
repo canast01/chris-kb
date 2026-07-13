@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "vSAN does not have its own authentication system. All access to vSAN management functions is authenticated through vCenter Server, which in turn delegates..."
 ---
 # vSAN — Authentication
 

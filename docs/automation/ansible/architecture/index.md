@@ -2,6 +2,7 @@
 tags:
   - ansible
   - architecture
+description: "Agentless IT automation over SSH/WinRM; the control node pushes modules to managed nodes, executes tasks, and removes them; organised via inventory..."
 ---
 # Ansible — Architecture
 

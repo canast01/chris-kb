@@ -2,6 +2,7 @@
 tags:
   - architecture
   - commvault
+description: "Commvault integration with VMware vSphere, storage arrays, LDAP, SMTP, and third-party monitoring platforms."
 ---
 # Commvault — Integrations
 

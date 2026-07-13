@@ -3,6 +3,7 @@ tags:
   - cisco-mds
   - faq
   - operations
+description: "Common questions about Cisco MDS operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Cisco MDS — Frequently Asked Questions
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - certifications
+description: "AI Practice Notes reference covering Question Pattern Recognition, Common Wrong Answers to Avoid, Exam Domain Breakdown — AWS Certified AI Practitioner..."
 ---
 # AI Practice Notes
 

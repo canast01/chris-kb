@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Capacity reference covering Capacity via Pure1 API, Capacity Alerts, Capacity Planning, Snapshot Space Management, Common Capacity Issues."
 ---
 # Pure1 — Capacity
 

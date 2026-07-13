@@ -3,6 +3,7 @@ tags:
   - aria-networks
   - security
   - vmware
+description: "Authentication reference covering Authentication Methods, Local Authentication, SAML / VMware Identity Manager, API Token Authentication, Session..."
 ---
 # Aria Operations for Networks — Authentication
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "Quick checks to confirm a vSphere cluster is healthy before and after changes."
 ---
 # Cluster State Validation
 

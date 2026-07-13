@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Network Inventory reference covering Overview, Distributed Switches, Port Groups, VMkernel Adapters, Fields Reference and 1 more sections."
 ---
 # Network Inventory
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Dell ECS — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # Dell ECS — Security
 

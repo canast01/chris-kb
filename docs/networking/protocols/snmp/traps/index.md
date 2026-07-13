@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "SNMP traps are unsolicited notifications sent from a device to a trap receiver (NMS) when an event occurs"
 ---
 # SNMP Traps
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Azure diagnostic commands: check account and subscription context with az cli, diagnose VM boot and network issues with Network Watcher, query Activity..."
 ---
 # Azure — Diagnostics
 

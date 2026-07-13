@@ -4,6 +4,7 @@ tags:
   - security
 search:
   boost: 1.5
+description: "Two-tier PKI hierarchy deployment: offline standalone Root CA and domain-joined Enterprise Issuing CA — the recommended Microsoft PKI pattern for..."
 ---
 # PKI — CA Hierarchy Initial Deployment
 

@@ -3,6 +3,7 @@ tags:
   - access-review
   - faq
   - operations
+description: "Common questions about Access Review operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Access Review — Frequently Asked Questions
 

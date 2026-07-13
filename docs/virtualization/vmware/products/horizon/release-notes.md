@@ -2,6 +2,7 @@
 tags:
   - horizon
   - vmware
+description: "Version history and release notes for VMware Horizon."
 ---
 # VMware Horizon — Release Notes
 

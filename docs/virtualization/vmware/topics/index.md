@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "Deep-dive reference articles on specific VMware behaviors, edge cases, and troubleshooting scenarios — plus a structured learning path, cross-product..."
 ---
 # Topics
 

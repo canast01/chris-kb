@@ -2,6 +2,7 @@
 tags:
   - pure
   - security
+description: "FlashArray uses a role-based access control (RBAC) model with four built-in roles. Custom roles are not supported."
 ---
 # FlashArray — Access Control
 

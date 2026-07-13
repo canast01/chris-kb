@@ -3,6 +3,7 @@ tags:
   - nsx
   - networking
   - vsphere
+description: "Deploy NSX Manager into the Lab 1 nested environment, prepare ESXi transport nodes, create overlay segments, and configure a basic Distributed Firewall..."
 ---
 # Lab 3 — NSX-T in Nested ESXi
 

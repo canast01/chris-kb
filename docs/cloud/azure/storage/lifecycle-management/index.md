@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Storage Lifecycle Management reference covering Overview, Lifecycle Policy Evaluation, Policy Structure, Tier Transitions, Filter Sets and 3 more..."
 ---
 # Azure Storage Lifecycle Management
 

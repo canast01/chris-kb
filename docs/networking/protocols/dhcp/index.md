@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using a four-step DORA handshake (Discover, Offer, Request, Ack) over UDP —..."
 ---
 # DHCP
 

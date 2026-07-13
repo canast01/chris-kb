@@ -2,6 +2,7 @@
 tags:
   - san
   - security
+description: "FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS management, SAN zoning strict mode, and security audit policy baseline."
 ---
 # FabricOS — Hardening
 

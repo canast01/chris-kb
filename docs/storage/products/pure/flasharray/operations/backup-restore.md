@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Backup & Restore reference covering Protection Group Snapshot Configuration, Restore Procedures, Backup Validation, Snapshot Capacity Management, Backup..."
 ---
 # FlashArray — Backup & Restore
 

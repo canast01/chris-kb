@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "ECS administration is split across three interfaces: the ECS Management Shell (ecscli), the ECS Management REST API (port 4443), and the S3-compatible..."
 ---
 # Dell ECS — CLI Reference
 

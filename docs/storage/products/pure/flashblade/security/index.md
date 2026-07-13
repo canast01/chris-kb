@@ -2,6 +2,7 @@
 tags:
   - pure
   - security
+description: "FlashBlade — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # FlashBlade — Security
 

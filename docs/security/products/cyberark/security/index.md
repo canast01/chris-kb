@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "CyberArk hardening — vault access controls, DR configuration, MFA enforcement, PSM hardening, and audit logging."
 ---
 # CyberArk — Security
 

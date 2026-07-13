@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VMware Certificate Quick Reference reference covering Check Expiration Quickly, Identify Certificate Type, Review Trusted Root Chain, Check STS..."
 ---
 # VMware Certificate Quick Reference
 

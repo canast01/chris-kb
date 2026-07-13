@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Virtualization troubleshooting: VM power-on failures, network port-group misconfiguration, storage access loss, HA admission control issues, and..."
 ---
 # Virtualization Troubleshooting
 

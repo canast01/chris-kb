@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - windows
+description: "Recommended reading order for Active Directory. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Active Directory — Learning Path
 

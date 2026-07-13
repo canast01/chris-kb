@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "Provisioning a new production VM correctly means more than clicking 'New Virtual Machine' and accepting defaults. Default settings give the VM no storage..."
 ---
 # Provision a New Workload
 

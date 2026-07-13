@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common Issues, Performance Tuning, Export Configuration Reference and 2 more..."
 ---
 # NFS Troubleshooting
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Storage federation and virtualization platform — active-active LUN access (VPLEX Local), synchronous metro mirroring (VPLEX Metro), and data mobility..."
 ---
 # Dell VPLEX
 

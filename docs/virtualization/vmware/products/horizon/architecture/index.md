@@ -3,6 +3,7 @@ tags:
   - architecture
   - horizon
   - vmware
+description: "VMware Horizon delivers virtual desktops and published applications through Connection Servers, Unified Access Gateways, and desktop pools backed by..."
 ---
 # Horizon (VDI) — Architecture
 

@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - operations
+description: "NetBackup day-to-day operations — policy management, job monitoring, tape/disk pool administration, and catalog maintenance."
 ---
 # NetBackup — Operations
 

@@ -2,6 +2,7 @@
 tags:
   - ansible
   - learning-path
+description: "Recommended reading order for Ansible. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Ansible — Learning Path
 

@@ -2,6 +2,7 @@
 tags:
   - ceph
   - security
+description: "Ceph security hardening: network isolation, msgr2 encryption, cephx least-privilege, OSD encryption, RGW HTTPS, dashboard TLS, audit logging, and..."
 ---
 # Ceph — Hardening
 

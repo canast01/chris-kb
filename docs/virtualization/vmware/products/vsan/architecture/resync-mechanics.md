@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives resync throughput and duration, and the capacity headroom requirement..."
 ---
 # vSAN — Resync Mechanics
 

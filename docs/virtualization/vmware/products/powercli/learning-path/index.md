@@ -3,6 +3,7 @@ tags:
   - learning-path
   - powercli
   - vmware
+description: "Recommended reading order for VMware PowerCLI. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # VMware PowerCLI — Learning Path
 

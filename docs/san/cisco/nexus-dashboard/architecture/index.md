@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "Cisco Nexus Dashboard is an app-hosting platform for Cisco data centre management. A 3-node or 5-node cluster provides shared identity, multi-site..."
 ---
 # Nexus Dashboard — Architecture
 

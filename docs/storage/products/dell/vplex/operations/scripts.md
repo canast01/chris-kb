@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell VPLEX automation scripts: vplexcli and Python REST API examples for distributed device status, cluster health polling, and migration task management."
 ---
 # Dell VPLEX — Scripts
 

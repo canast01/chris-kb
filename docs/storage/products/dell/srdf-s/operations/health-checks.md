@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "SRDF/S health checks: symrdf query -synchronous link status, invalid track count review, SRDF pair consistency validation, and RDF group hop count check."
 ---
 # SRDF/S — Health Checks
 

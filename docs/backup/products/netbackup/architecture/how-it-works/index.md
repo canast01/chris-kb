@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netbackup
+description: "How It Works reference covering Overview, Three-Tier Topology, Domain Sizing Guidelines."
 ---
 # NetBackup — How It Works
 

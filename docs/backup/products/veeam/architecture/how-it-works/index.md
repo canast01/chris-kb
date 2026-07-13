@@ -2,6 +2,7 @@
 tags:
   - architecture
   - veeam
+description: "How It Works reference covering Overview, Architecture, Supported Platforms, Retention Schedule, Sizing Guidelines and 1 more sections."
 ---
 # Veeam — How It Works
 

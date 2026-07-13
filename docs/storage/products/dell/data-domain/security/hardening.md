@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, Certificate Management, Encryption Hardening and 4 more sections."
 ---
 # Data Domain — Hardening
 

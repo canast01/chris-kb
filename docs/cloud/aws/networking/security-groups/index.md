@@ -2,6 +2,7 @@
 tags:
   - aws
   - networking
+description: "AWS Security Groups reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections."
 ---
 # AWS Security Groups
 

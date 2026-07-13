@@ -3,6 +3,7 @@ tags:
   - veeam
   - backup
   - quick-start
+description: "What to do in your first hour with a new Veeam Backup & Replication environment. Covers server orientation, job health, repository capacity, and the first..."
 ---
 # Veeam Day 1 — New Environment Checklist
 

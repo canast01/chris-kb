@@ -2,6 +2,7 @@
 tags:
   - aws
   - operations
+description: "EVS backup strategy: SDDC Manager configuration backup, vCenter VAMI backup, NSX-T config backup, VM workload backup options (Veeam, VADP, cloud-native)..."
 ---
 # Amazon EVS — Backup & Restore
 

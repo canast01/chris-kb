@@ -4,6 +4,7 @@ tags:
   - commvault
   - backup
   - known-issues
+description: "Catalog of known Commvault bugs, error codes, and workarounds covering backup jobs, media agents, and VSA (VMware) integration."
 ---
 # Commvault — Known Issues and Error Codes
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "SQL Server upgrade procedures — in-place upgrade, side-by-side upgrade, compatibility level, upgrade advisor, and post-upgrade validation."
 ---
 # SQL Server — Install & Upgrade
 

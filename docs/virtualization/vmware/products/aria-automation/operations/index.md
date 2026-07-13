@@ -3,6 +3,7 @@ tags:
   - aria-automation
   - operations
   - vmware
+description: "Aria Automation day-to-day operations — blueprint publishing, request management, approval workflows, and catalog maintenance."
 ---
 # Aria Automation — Operations
 

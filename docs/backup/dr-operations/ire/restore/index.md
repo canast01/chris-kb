@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Restoration in the IRE follows a staged process: identify the latest clean backup within the retention window that predates the compromise event, retrieve..."
 ---
 # IRE — Restore
 

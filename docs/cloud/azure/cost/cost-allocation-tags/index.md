@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Tags are the primary mechanism for attributing Azure costs to teams, projects, environments, and cost centres."
 ---
 # Cost Allocation Tags
 

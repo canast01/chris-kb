@@ -2,6 +2,7 @@
 tags:
   - internals
   - vmware
+description: "vSphere Lifecycle Manager (vLCM) introduces image-based management as the replacement for VUM baselines. A cluster image defines the complete ESXi..."
 ---
 # vLCM Mechanics
 

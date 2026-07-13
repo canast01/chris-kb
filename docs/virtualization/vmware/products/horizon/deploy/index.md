@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "End-to-end deployment guide for VMware Horizon VDI and published applications. Phases 1–2 establish the prerequisites and Connection Server pod; Phases..."
 ---
 # Horizon — Deploy
 

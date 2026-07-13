@@ -2,6 +2,7 @@
 tags:
   - openai
   - ai
+description: "Practical notes on authenticating to the OpenAI API, working with rate limits, counting tokens, handling errors, and choosing the right API endpoint."
 ---
 # OpenAI API Notes
 

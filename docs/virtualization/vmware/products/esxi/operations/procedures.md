@@ -4,6 +4,7 @@ tags:
   - operations
   - vmware
   - vsphere-8
+description: "Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Incident Triage, Networking, Storage, Security and Hardening..."
 ---
 # ESXi — Procedures
 

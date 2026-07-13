@@ -4,6 +4,7 @@ tags:
   - vsphere
   - vcenter
   - quick-start
+description: "What to do in your first hour with a new vSphere environment. Complete these steps in order to reach a safe, understood baseline before making any changes."
 ---
 # vSphere Day 1 — New Environment Checklist
 

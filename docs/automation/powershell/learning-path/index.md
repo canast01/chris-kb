@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - powershell
+description: "Recommended reading order for PowerShell infrastructure automation. Follow these stages in order to build a complete mental model before working with it..."
 ---
 # PowerShell — Learning Path
 

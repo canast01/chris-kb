@@ -2,6 +2,7 @@
 tags:
   - vcenter
   - operations
+description: "Top-10 vCenter commands for appliance management, inventory queries, and service control via govc and dcli."
 ---
 # vCenter Cheat Sheet
 

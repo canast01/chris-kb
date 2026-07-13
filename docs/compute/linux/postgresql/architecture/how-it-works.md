@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "PostgreSQL architecture — process model, shared buffer cache, WAL, MVCC, autovacuum, streaming replication, and query planner internals."
 ---
 # PostgreSQL — How It Works
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Routine checks, service validation, and status verification."
 ---
 # Windows Server — Health Checks
 

@@ -4,6 +4,7 @@ tags:
   - netapp
 search:
   boost: 1.5
+description: "Step-by-step guide to deploying Dell EMC InsightIQ, connecting PowerScale clusters, configuring data collection schedules, and validating reporting."
 ---
 # InsightIQ — Initial Deployment
 

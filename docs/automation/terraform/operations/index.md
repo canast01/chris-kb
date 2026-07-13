@@ -2,6 +2,7 @@
 tags:
   - operations
   - terraform
+description: "Terraform day-to-day operations — plan/apply workflows, state management, workspace operations, and provider configuration."
 ---
 # Terraform — Operations
 

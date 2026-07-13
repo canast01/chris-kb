@@ -4,6 +4,7 @@ tags:
   - deployment
 search:
   boost: 1.5
+description: "Step-by-step guide to setting up Dell APEX AIOps, connecting storage arrays, enabling AI-driven recommendations, and configuring dashboards and capacity..."
 ---
 # Dell APEX AIOps — Initial Setup
 

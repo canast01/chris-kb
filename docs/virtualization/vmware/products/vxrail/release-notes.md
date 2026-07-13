@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "Version history and release notes for Dell VxRail."
 ---
 # Dell VxRail — Release Notes
 

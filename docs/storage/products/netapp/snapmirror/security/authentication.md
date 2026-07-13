@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "SnapMirror authentication: intercluster cluster peer passphrase management, cluster peer modify -auth-status ok, and certificate-based peer authentication."
 ---
 # SnapMirror — Authentication
 

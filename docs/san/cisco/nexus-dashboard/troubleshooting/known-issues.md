@@ -4,6 +4,7 @@ tags:
   - nexus-dashboard
   - cisco
   - known-issues
+description: "Catalog of known Nexus Dashboard bugs, error codes, and workarounds covering cluster health, service deployment, and upgrade issues."
 ---
 # Cisco Nexus Dashboard — Known Issues and Error Codes
 

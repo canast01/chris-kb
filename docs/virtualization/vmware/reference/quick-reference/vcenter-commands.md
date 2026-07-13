@@ -3,6 +3,7 @@ tags:
   - reference
   - vcenter
   - vsphere-8
+description: "vCenter SSH command reference: service-control --status/--start/--stop, vmon-cli, appliance health checks, DB vacuum, and certificate status — run from..."
 ---
 # vCenter Service Commands
 

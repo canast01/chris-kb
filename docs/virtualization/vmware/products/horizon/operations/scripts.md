@@ -3,6 +3,7 @@ tags:
   - horizon
   - operations
   - vmware
+description: "Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected Sessions Older Than N Hours, Get All Desktops in Error State, Rebalance..."
 ---
 # Horizon — Scripts
 

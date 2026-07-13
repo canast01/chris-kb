@@ -4,6 +4,7 @@ tags:
   - mysql
   - linux
   - known-issues
+description: "Catalog of known MySQL bugs, error codes, and workarounds covering replication, InnoDB, and Group Replication."
 ---
 # MySQL — Known Issues and Error Codes
 

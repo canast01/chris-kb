@@ -4,6 +4,7 @@ tags:
   - data-domain
   - dell
   - known-issues
+description: "Catalog of known Data Domain bugs, error codes, and workarounds covering DD Boost, replication, NFS/CIFS, and filesystem health."
 ---
 # Dell Data Domain — Known Issues and Error Codes
 

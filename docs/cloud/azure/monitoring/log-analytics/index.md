@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Log Analytics is the primary platform for collecting, querying, and alerting on log data in Azure Monitor. Data is stored in a Log Analytics..."
 ---
 # Log Analytics
 

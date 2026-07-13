@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Troubleshooting guides for DR failures — backup job errors, replication lag, failover issues, IRE connectivity problems, and backup validation failures."
 ---
 # DR Troubleshooting
 

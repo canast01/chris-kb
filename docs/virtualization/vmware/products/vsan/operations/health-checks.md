@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "Health Checks reference covering Weekly Checks, Performance Baseline, Network Health, Stretched Cluster Checks, Change Readiness."
 ---
 # vSAN — Health Checks
 

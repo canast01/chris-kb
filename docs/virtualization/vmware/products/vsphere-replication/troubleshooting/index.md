@@ -5,6 +5,7 @@ tags:
   - vsphere-replication
 search:
   boost: 1.5
+description: "Diagnosing vSphere Replication RPO violations, VR server connectivity, delta disk errors, and replication task failures."
 ---
 # vSphere Replication — Troubleshooting
 

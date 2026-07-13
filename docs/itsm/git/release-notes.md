@@ -1,6 +1,7 @@
 ---
 tags:
   - git
+description: "Version history and release notes for Git."
 ---
 # Git — Release Notes
 

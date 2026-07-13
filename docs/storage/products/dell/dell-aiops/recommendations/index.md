@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell AIOps: Actionable Recommendations and Implementation Tracking reference covering Implementing Recommendations, Implementation Tracking Dashboard..."
 ---
 # Dell AIOps: Actionable Recommendations and Implementation Tracking
 

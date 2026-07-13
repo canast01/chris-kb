@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Brocade SAN switch issues to Broadcom TAC: what data to collect, how to run supportsave, step-by-step case creation on the Broadcom..."
 ---
 # Brocade Fabric OS — Escalation
 

@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "Design Standards reference covering Cluster Configuration, Stretched Cluster Architecture, Storage Policy Baseline, Naming Conventions, Capacity..."
 ---
 # vSAN — Design Standards
 

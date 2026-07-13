@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "PostgreSQL upgrade procedures — minor version (in-place), major version (pg_upgrade), upgrade path, pre-upgrade checks, and post-upgrade validation."
 ---
 # PostgreSQL — Install & Upgrade
 

@@ -3,6 +3,7 @@ tags:
   - architecture
   - vmware
   - vxrail
+description: "Node count requirements, cluster naming, vSAN policy standards, network design rules, and configuration baselines for VxRail HCI deployments."
 ---
 # VxRail — Design Standards
 

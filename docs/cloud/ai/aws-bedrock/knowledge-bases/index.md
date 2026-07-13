@@ -2,6 +2,7 @@
 tags:
   - aws
   - ai
+description: "Bedrock Knowledge Bases provide retrieval-augmented generation (RAG) by connecting foundation models to your data stored in S3. Documents are chunked..."
 ---
 # Bedrock Knowledge Bases
 

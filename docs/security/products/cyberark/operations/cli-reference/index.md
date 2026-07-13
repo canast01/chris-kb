@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "CyberArk's primary programmatic interface is the PVWA REST API v2. The psPAS PowerShell module wraps the REST API with native cmdlets. The legacy PACLI..."
 ---
 # CyberArk CLI Reference
 

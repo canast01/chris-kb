@@ -2,6 +2,7 @@
 tags:
   - security
   - terraform
+description: "Terraform security — state file encryption, secrets handling, provider authentication, and Terraform Cloud access controls."
 ---
 # Terraform — Security
 

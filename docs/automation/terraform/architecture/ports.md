@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - iac
+description: "Firewall port reference for Terraform and Terraform Enterprise (TFE). Terraform CLI is a client tool with no listening ports. The relevant rules are..."
 ---
 # Terraform — Ports and Network Requirements
 

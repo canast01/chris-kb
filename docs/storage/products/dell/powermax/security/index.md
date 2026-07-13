@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "PowerMax hardening — user access control, audit logging, encryption at rest, and Unisphere management interface security."
 ---
 # PowerMax — Security
 

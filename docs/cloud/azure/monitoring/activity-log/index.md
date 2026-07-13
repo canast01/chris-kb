@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "The Azure Activity Log is a platform log that records subscription-level events — resource creation, modification, deletion, and administrative..."
 ---
 # Activity Log
 

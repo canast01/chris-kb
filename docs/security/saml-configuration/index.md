@@ -2,6 +2,7 @@
 title: Standard SAML Configuration
 tags:
   - security
+description: "Canonical SAML 2.0 SSO reference for all KB-covered products. Covers SP/IdP concepts, attribute mapping, Azure AD (Entra ID) and Okta setup, security..."
 ---
 
 # Standard SAML Configuration

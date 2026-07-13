@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Ansible troubleshooting: unreachable hosts, privilege escalation failures, variable precedence conflicts, vault decryption errors, and module..."
 ---
 # Ansible — Common Issues
 

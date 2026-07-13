@@ -2,6 +2,7 @@
 tags:
   - operations
   - vmware
+description: "| Field | Value | |---|---| | Risk | High — certificate replacement causes brief service interruption; all agents must re-register | | Approval | Change..."
 ---
 # vCenter Certificate Rotation Runbook
 

@@ -3,6 +3,7 @@ tags:
   - aria-automation
   - security
   - vmware
+description: "Hardening reference covering Default Account Hardening, Certificate Replacement, Service Account Principle of Least Privilege, SSH and Console Access..."
 ---
 # Aria Automation — Hardening
 

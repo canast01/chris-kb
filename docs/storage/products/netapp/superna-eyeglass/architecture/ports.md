@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - DR
+description: "Firewall port reference for Superna Eyeglass (PowerScale / Isilon DR orchestration and file auditing). Eyeglass runs as a virtual appliance and connects..."
 ---
 # Superna Eyeglass — Ports and Network Requirements
 

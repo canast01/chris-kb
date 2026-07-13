@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "Azure Load Balancer is a Layer 4 (TCP/UDP) load balancer for distributing inbound traffic to backend VMs or scale sets."
 ---
 # Load Balancer
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - learning-path
+description: "Recommended reading order for OpenShift Container Platform. Follow these stages in order to build a complete mental model before working with it in..."
 ---
 # Red Hat OpenShift Container Platform — Learning Path
 

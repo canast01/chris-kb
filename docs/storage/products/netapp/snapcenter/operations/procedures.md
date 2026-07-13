@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapCenter procedures: adding storage systems, configuring policies and resource groups, scheduling backups, cloning for test/dev, and decommissioning..."
 ---
 # SnapCenter — Procedures
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "DNS and NTP Validation reference covering Why This Matters, NTP Validation — ESXi Host, NTP Validation — vCenter Appliance, DNS Validation — ESXi Host..."
 ---
 # DNS and NTP Validation
 

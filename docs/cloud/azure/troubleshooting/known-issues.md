@@ -4,6 +4,7 @@ tags:
   - azure
   - cloud
   - known-issues
+description: "Catalog of known Azure bugs, error codes, and workarounds covering ARM, VM provisioning, networking, and Entra ID."
 ---
 # Microsoft Azure — Known Issues and Error Codes
 

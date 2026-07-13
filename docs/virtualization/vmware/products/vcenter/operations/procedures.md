@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and storage migrations, snapshot management, tag management, HA reconfiguration..."
 ---
 # vCenter — Procedures
 

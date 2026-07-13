@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Version history and release notes for Dell Unity."
 ---
 # Dell Unity — Release Notes
 

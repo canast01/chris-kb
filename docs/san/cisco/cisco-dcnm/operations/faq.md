@@ -3,6 +3,7 @@ tags:
   - cisco-dcnm
   - faq
   - operations
+description: "Common questions about Cisco DCNM operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Cisco DCNM — Frequently Asked Questions
 

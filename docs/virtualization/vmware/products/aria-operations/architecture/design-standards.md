@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-operations
   - vmware
+description: "Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Alert Policy Standards, Related Sections."
 ---
 # Aria Operations — Standards
 

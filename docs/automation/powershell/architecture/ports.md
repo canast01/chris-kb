@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - windows
+description: "Firewall port reference for PowerShell remoting. PowerShell itself has no listening ports. The relevant ports are WinRM (Windows) and SSH (cross-platform)..."
 ---
 # PowerShell — Ports and Network Requirements
 

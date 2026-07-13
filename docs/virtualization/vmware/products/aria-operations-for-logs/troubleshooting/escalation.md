@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "How to escalate VMware Aria Operations for Logs issues to Broadcom support: what data to collect, how to generate the support bundle from VAMI..."
 ---
 # Aria Ops for Logs — Escalation
 

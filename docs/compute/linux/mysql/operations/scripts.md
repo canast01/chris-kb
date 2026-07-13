@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "MySQL automation scripts — nightly backup, slow query report, replication lag alert, connection count monitoring, and table size report."
 ---
 # MySQL / MariaDB — Scripts
 

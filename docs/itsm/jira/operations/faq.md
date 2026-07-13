@@ -3,6 +3,7 @@ tags:
   - jira
   - faq
   - operations
+description: "Common questions about Jira operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Jira — Frequently Asked Questions
 

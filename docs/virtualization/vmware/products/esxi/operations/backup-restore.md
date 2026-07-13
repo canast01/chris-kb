@@ -4,6 +4,7 @@ tags:
   - operations
   - vmware
   - vsphere-8
+description: "ESXi backup and restore: VM-level backup via vStorage APIs for Data Protection, ESXi host config backup with vim-cmd hostsvc/firmware/backup_config, and..."
 ---
 # ESXi Backup & Restore
 

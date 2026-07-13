@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-logs
   - vmware
+description: "How It Works reference covering Overview, Log Pipeline Architecture, ESXi Syslog Configuration."
 ---
 # Aria Operations for Logs — How It Works
 

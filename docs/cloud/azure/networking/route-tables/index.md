@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "Azure Route Tables (User Defined Routes / UDRs) override Azure's default system routes"
 ---
 # Route Tables
 

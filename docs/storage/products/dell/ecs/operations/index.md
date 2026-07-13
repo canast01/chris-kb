@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell ECS — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more."
 ---
 # Dell ECS — Operations
 

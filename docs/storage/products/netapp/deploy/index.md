@@ -4,6 +4,7 @@ tags:
   - netapp
 search:
   boost: 1.5
+description: "NetApp ONTAP cluster initial setup: first boot through validated host connectivity and replication — covers AFF A-series, C-series, and FAS platforms."
 ---
 # NetApp ONTAP — Getting Started
 

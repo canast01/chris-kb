@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Scripts reference covering Path Health Check, Path Count Validator, Policy Audit, Windows: PowerPath Device Status via Plink (CMD), Windows: PowerPath..."
 ---
 # PowerPath — Scripts
 

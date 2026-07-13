@@ -3,6 +3,7 @@ tags:
   - venafi
   - faq
   - operations
+description: "Common questions about Venafi Trust Protection Platform operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations..."
 ---
 # Venafi Trust Protection Platform — Frequently Asked Questions
 

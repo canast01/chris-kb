@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "All production safes enforce dual-control to prevent unilateral credential access. Safe access is managed via AD group membership mapped to Vault roles."
 ---
 # CyberArk — Access Control
 

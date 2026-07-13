@@ -2,6 +2,7 @@
 tags:
   - operations
   - python
+description: "Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Python Logging Pipeline, Reports."
 ---
 # Python Automation — Procedures
 

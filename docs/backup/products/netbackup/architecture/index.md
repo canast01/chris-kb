@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netbackup
+description: "Veritas NetBackup three-tier architecture — Primary Server catalog and scheduling, Media Servers for data movement, and Clients with backup agents."
 ---
 # NetBackup — Architecture
 

@@ -3,6 +3,7 @@ tags:
   - aria-lcm
   - operations
   - vmware
+description: "Install & Upgrade reference covering LCM Recovery, Product Decommission via LCM, Full Suite Upgrade Procedure."
 ---
 # Aria Suite Lifecycle — Install & Upgrade
 

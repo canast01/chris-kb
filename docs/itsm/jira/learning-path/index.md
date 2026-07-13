@@ -2,6 +2,7 @@
 tags:
   - jira
   - learning-path
+description: "Recommended reading order for Atlassian Jira. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Jira — Learning Path
 

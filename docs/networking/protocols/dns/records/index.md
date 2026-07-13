@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "DNS Records reference covering Overview, Common Record Types, Managing Records with PowerShell, Scavenging and Aging, Dynamic DNS and 1 more sections."
 ---
 # DNS Records
 

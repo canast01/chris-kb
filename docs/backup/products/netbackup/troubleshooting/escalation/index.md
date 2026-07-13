@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas support case, set severity, and follow the escalation path for unresolved..."
 ---
 # NetBackup — Escalation
 

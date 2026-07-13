@@ -2,6 +2,7 @@
 tags:
   - architecture
   - servicenow
+description: "ServiceNow is a multi-instance SaaS platform with fully isolated per-customer stacks. On-premises integration is handled via MID Servers — outbound-only..."
 ---
 # ServiceNow — Architecture
 

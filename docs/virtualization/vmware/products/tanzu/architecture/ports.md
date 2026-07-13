@@ -7,6 +7,7 @@ tags:
   - firewall
   - ports
   - vsphere
+description: "Firewall port reference for VMware Tanzu (vSphere with Tanzu / TKG). Covers the Supervisor Cluster API, Tanzu Kubernetes Grid workload clusters, Tanzu..."
 ---
 # Tanzu — Ports and Network Requirements
 

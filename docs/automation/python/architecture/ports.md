@@ -5,6 +5,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Python automation scripts and services. Python scripts have no fixed listening ports — this page covers the outbound API ports..."
 ---
 # Python — Ports and Network Requirements
 

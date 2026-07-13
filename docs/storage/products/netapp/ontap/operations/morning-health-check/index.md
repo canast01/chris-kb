@@ -6,6 +6,7 @@ tags:
   - operations
 search:
   boost: 2
+description: "Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every morning before starting any operational work."
 ---
 # ONTAP Morning Health-Check Runbook
 

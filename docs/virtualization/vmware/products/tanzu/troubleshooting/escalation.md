@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "How to escalate VMware Tanzu / TKG issues to Broadcom support: what data to collect, how to run the Tanzu diagnostics bundle, step-by-step case creation..."
 ---
 # Tanzu — Escalation
 

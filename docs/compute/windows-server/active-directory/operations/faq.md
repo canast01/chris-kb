@@ -3,6 +3,7 @@ tags:
   - active-directory
   - faq
   - operations
+description: "Common questions about Active Directory operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Active Directory — Frequently Asked Questions
 

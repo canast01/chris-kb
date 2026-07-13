@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapCenter known issues: backup job timeout on large databases, plugin service failures, VSS quiesce errors, clone mount failures, and repository sync..."
 ---
 # SnapCenter — Known Issues
 

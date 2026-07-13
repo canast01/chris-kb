@@ -1,6 +1,7 @@
 ---
 tags:
   - certifications
+description: "Study notes, practice exam materials, review plans, and weak-area trackers for every certification track in this KB — SAN, storage, VMware, AWS, Azure..."
 ---
 # Certifications
 

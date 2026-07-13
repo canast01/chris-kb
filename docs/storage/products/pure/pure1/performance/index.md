@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Performance reference covering Performance via Pure1 API, Latency Investigation, Performance Benchmarking (fio), Common Performance Issues."
 ---
 # Pure1 — Performance
 

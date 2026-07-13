@@ -4,6 +4,7 @@ tags:
   - srdf
   - dell
   - known-issues
+description: "Catalog of known SRDF/A (Asynchronous) bugs, error codes, and workarounds covering journal overflow, WAN performance, and failover."
 ---
 # Dell SRDF/A — Known Issues and Error Codes
 

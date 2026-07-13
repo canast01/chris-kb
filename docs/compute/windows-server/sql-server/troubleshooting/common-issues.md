@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "SQL Server troubleshooting: AG synchronization failures, blocking queries, msdb database corruption, failed jobs, and disk I/O pressure diagnosis."
 ---
 # SQL Server — Common Issues
 

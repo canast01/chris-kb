@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Identity articles, operational checks, troubleshooting notes, and references."
 ---
 # Azure Identity
 

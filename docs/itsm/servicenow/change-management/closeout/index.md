@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Change Closeout reference covering Overview, Closeout Checklist, Change Outcome Classification, PIR (Post-Implementation Review), Lessons Learned and 1..."
 ---
 # Change Closeout
 

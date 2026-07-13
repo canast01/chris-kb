@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Install & Upgrade reference covering DDOS Version Matrix, Backup Software Compatibility, Hardware Model Lifecycle, Upgrade Procedure — Single Node..."
 ---
 # Data Domain — Install & Upgrade
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Dell ECS — Troubleshooting navigation for Common Issues, Diagnostics, Escalation."
 ---
 # Dell ECS — Troubleshooting
 

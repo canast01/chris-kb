@@ -2,6 +2,7 @@
 tags:
   - architecture
   - linux
+description: "PostgreSQL design standards — HA patterns (streaming + Patroni), connection pooling, sizing guidelines, schema conventions, and backup requirements."
 ---
 # PostgreSQL — Design Standards
 

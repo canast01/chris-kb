@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Monitoring articles, operational checks, troubleshooting notes, and references."
 ---
 # Azure Monitoring
 

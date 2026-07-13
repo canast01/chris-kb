@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers prerequisites, master node OVA deployment, worker cluster setup, syslog and..."
 ---
 # Aria Operations for Logs — Deploy
 

@@ -4,6 +4,7 @@ tags:
   - flasharray
   - cli-reference
   - storage
+description: "Essential Pure Storage FlashArray CLI commands for array status, volume management, snapshots, host connections, protection groups, performance..."
 ---
 # Pure Storage FlashArray CLI Cheat Sheet
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - python
+description: "Version history and release notes for Python."
 ---
 # Python — Release Notes
 

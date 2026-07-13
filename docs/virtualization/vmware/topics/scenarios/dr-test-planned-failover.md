@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "A DR test proves recovery works without impacting production — replicated VMs boot in an isolated bubble network at the DR site while production continues..."
 ---
 # DR Test and Planned Failover
 

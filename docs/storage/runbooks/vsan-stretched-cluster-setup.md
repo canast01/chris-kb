@@ -9,6 +9,7 @@ tags:
   - srm
   - high-availability
   - runbook
+description: "Cross-product runbook for deploying and validating a VMware vSAN stretched cluster across two sites with a third-site witness host. Covers witness..."
 ---
 
 # vSAN Stretched Cluster Setup and Validation

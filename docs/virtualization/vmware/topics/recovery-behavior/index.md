@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "Understanding what normal recovery looks like prevents unnecessary intervention during incidents."
 ---
 # Recovery Behavior Expectations
 

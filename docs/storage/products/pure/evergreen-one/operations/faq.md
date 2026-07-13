@@ -3,6 +3,7 @@ tags:
   - pure-evergreen-one
   - faq
   - operations
+description: "Common questions about Pure Storage Evergreen//One operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Pure Storage Evergreen//One — Frequently Asked Questions
 

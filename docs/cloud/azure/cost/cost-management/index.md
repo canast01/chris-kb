@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Cost Management reference covering Overview, Daily Checks, Operational Tasks, Common Issues, Maintenance Notes."
 ---
 # Azure Cost Management
 

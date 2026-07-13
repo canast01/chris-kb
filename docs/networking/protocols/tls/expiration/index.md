@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "Expired certificates cause immediate outages — services reject connections without warning."
 ---
 # TLS Certificate Expiration
 

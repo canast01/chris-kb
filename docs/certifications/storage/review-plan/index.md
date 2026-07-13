@@ -1,6 +1,7 @@
 ---
 tags:
   - certifications
+description: "Storage Certification Review Plan reference covering Certification Tracks Overview, 8-Week Study Plan (NCDA / ONTAP Track), Vendor Certification..."
 ---
 # Storage Certification Review Plan
 

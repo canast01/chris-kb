@@ -3,6 +3,7 @@ tags:
   - gpu
   - ai
   - local-ai
+description: "Installing and maintaining NVIDIA drivers correctly is critical for GPU workloads. A driver mismatch between the kernel, CUDA toolkit, and frameworks is..."
 ---
 # NVIDIA GPU Drivers
 

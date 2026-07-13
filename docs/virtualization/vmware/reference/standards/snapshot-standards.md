@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VMware Snapshot Standards reference covering Snapshots Are Temporary, Approved Use Cases, Maximum Snapshot Age, Snapshot Size Monitoring, Cleanup..."
 ---
 # VMware Snapshot Standards
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Asset Audit Process reference covering Overview, Audit Scope and Frequency, Discovery Tools, CMDB Reconciliation Steps, Discrepancy Tracking and 1 more..."
 ---
 # Asset Audit Process
 

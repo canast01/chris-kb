@@ -2,6 +2,7 @@
 tags:
   - operations
   - veeam
+description: "Install & Upgrade reference covering Release Cadence, Decommission Procedure."
 ---
 # Veeam — Install & Upgrade
 

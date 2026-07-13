@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "Superna Eyeglass authentication — LDAP/AD integration, SSO configuration, and MFA enforcement."
 ---
 # Superna Eyeglass — Authentication
 

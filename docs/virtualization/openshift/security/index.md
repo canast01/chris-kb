@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "OpenShift security: RBAC, OAuth identity providers, etcd encryption, pod security admission, SCC, and CIS hardening. Enterprise security controls built..."
 ---
 # OpenShift — Security
 

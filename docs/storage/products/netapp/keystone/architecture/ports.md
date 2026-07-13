@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - storage-as-a-service
+description: "Firewall port reference for NetApp Keystone (Storage as a Service). Keystone deploys NetApp hardware on-premises managed by NetApp. The Keystone Collector..."
 ---
 # NetApp Keystone — Ports and Network Requirements
 

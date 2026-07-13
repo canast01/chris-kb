@@ -7,6 +7,7 @@ tags:
   - overlay
   - nsx-3
   - nsx-4
+description: "Firewall port reference for VMware NSX-T / NSX. Covers NSX Manager API, management plane to transport nodes, Geneve overlay (TEP), BGP/BFD, IPsec, and NSX..."
 ---
 # NSX — Ports and Network Requirements
 

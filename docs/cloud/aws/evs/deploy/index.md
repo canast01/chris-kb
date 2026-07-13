@@ -4,6 +4,7 @@ tags:
   - deployment
 search:
   boost: 1.5
+description: "EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS console or CLI, initial VCF configuration, HCX deployment, network extension..."
 ---
 # Amazon EVS — Deploy
 

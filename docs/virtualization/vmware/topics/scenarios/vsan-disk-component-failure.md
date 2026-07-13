@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "A vSAN disk fails or a component becomes absent, leaving one or more VMs with reduced fault tolerance. This scenario covers how to identify the failed..."
 ---
 # vSAN Disk or Component Failure
 

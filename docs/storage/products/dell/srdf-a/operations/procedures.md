@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "SRDF/A procedures: establishing SRDF/A groups, cycle time tuning, DSE (Delta Set Extension) management, failover and failback, and link fault recovery."
 ---
 # SRDF/A — Procedures
 

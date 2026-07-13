@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - security
+description: "NetBackup encryption: KMS server configuration, backup data encryption policy settings, client-side encryption, and encryption key lifecycle management."
 ---
 # NetBackup — Encryption
 

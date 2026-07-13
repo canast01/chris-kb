@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "NetApp Keystone health checks: subscription capacity consumption review via Keystone portal, latency SLA compliance, and Active IQ Unified Manager alerts."
 ---
 # Keystone — Health Checks
 

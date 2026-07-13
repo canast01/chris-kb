@@ -2,6 +2,7 @@
 tags:
   - python
   - security
+description: "Encryption reference covering Secrets and Encryption Architecture, Encrypting Local Files with cryptography, Encryption Reference."
 ---
 # Python Automation — Encryption
 

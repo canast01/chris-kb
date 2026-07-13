@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Encryption reference covering Encryption Layers, TLS Configuration, Data at Rest Encryption, Certificate Expiry Monitoring."
 ---
 # Dell ECS — Encryption
 

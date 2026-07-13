@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - netbackup
+description: "Recommended reading order for Veritas NetBackup. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Veritas NetBackup — Learning Path
 

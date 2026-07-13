@@ -2,6 +2,7 @@
 tags:
   - github-actions
   - security
+description: "GitHub Actions encryption: encrypted secrets storage, environment-level secret scoping, OIDC token federation for AWS and Azure, and artifact encryption..."
 ---
 # GitHub Actions — Encryption
 

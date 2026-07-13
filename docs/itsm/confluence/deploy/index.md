@@ -4,6 +4,7 @@ tags:
   - deployment
 search:
   boost: 1.5
+description: "Step-by-step guide to installing Confluence Data Center, configuring the database, setting up LDAP authentication, and validating the deployment."
 ---
 # Confluence — Initial Deployment
 

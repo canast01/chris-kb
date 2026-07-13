@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "End-to-end deployment guide for VMware Tanzu Kubernetes Grid on vSphere. Covers Workload Management enablement, Supervisor cluster initialisation, vSphere..."
 ---
 # Tanzu — Deploy
 

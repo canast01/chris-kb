@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "DR health-check hub: daily, pre-change, post-change, and evidence-collection routines covering RPO compliance, backup job status, and replication lag..."
 ---
 # Health Checks
 

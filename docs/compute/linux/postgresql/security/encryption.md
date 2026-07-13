@@ -2,6 +2,7 @@
 tags:
   - linux
   - security
+description: "PostgreSQL encryption — SSL/TLS for connections, pgcrypto for column-level encryption, transparent data encryption options, and WAL/backup encryption."
 ---
 # PostgreSQL — Encryption
 

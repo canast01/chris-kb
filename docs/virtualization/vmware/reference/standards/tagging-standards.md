@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Consistent tagging supports ownership, billing, backup policy, patch scheduling, and compliance."
 ---
 # VMware Tagging Standards
 

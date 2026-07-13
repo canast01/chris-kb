@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "CLI Reference reference covering Admin Accounts, Alerts & Audit, Array & System Management, Configuration & Directory Services, CSV Exports and 5 more..."
 ---
 # FlashArray — CLI Reference
 

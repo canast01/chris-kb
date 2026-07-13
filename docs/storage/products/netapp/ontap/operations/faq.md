@@ -3,6 +3,7 @@ tags:
   - netapp-ontap
   - faq
   - operations
+description: "Common questions about NetApp ONTAP operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # NetApp ONTAP — Frequently Asked Questions
 

@@ -2,6 +2,7 @@
 tags:
   - aws
   - operations
+description: "VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade sequence, pre-upgrade checklist, rollback considerations, and EVS host AMI..."
 ---
 # Amazon EVS — Lifecycle & Upgrades
 

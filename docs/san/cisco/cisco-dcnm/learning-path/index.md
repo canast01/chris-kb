@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - san
+description: "Recommended reading order for Cisco DCNM (Nexus Dashboard Fabric Controller). Follow these stages in order to build a complete mental model before working..."
 ---
 # Cisco DCNM — Learning Path
 

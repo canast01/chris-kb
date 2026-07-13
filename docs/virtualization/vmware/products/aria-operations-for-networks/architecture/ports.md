@@ -7,6 +7,7 @@ tags:
   - firewall
   - ports
   - network-visibility
+description: "Firewall port reference for VMware Aria Operations for Networks (formerly vRealize Network Insight). Covers the Platform appliance, Collector appliance..."
 ---
 # Aria Operations for Networks — Ports and Network Requirements
 

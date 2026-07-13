@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Virtualization Storage Path Validation reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections."
 ---
 # Virtualization Storage Path Validation
 

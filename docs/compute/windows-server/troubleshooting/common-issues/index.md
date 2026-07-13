@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "Quick reference for common problems and resolutions. Structured approach to diagnosing common Windows Server issues."
 ---
 # Windows Server — Common Issues
 

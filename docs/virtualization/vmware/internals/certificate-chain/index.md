@@ -2,6 +2,7 @@
 tags:
   - internals
   - vmware
+description: "VMware Certificate Authority (VMCA) issues all vCenter machine SSL and solution user certificates. STS signing certificates are separate and have their..."
 ---
 # Certificate Chain
 

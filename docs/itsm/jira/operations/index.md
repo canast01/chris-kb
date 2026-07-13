@@ -2,6 +2,7 @@
 tags:
   - jira
   - operations
+description: "Jira day-to-day operations — project administration, workflow configuration, board management, and user provisioning."
 ---
 # Jira — Operations
 

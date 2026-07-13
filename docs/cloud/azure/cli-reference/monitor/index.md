@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Monitor CLI: az monitor metrics list, az monitor alert create, az monitor log-analytics query, az monitor diagnostic-settings create, and workspace..."
 ---
 # Monitor & Alerts
 

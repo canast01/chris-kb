@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "End-to-end deployment guide for VMware Aria Automation (on-premises). Covers prerequisites, LCM-based deployment, cloud account configuration, project and..."
 ---
 # Aria Automation — Deploy
 

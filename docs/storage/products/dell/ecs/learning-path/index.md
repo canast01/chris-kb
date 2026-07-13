@@ -2,6 +2,7 @@
 tags:
   - dell
   - learning-path
+description: "Recommended reading order for Dell ECS. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Dell ECS (Elastic Cloud Storage) — Learning Path
 

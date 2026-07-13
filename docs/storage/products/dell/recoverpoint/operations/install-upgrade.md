@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "RecoverPoint install and upgrade: rcpcli upgrade workflow, quiesce consistency groups before upgrade, cluster rolling upgrade, and post-upgrade health..."
 ---
 # RecoverPoint — Install & Upgrade
 

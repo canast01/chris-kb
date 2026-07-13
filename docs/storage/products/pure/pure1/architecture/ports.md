@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - monitoring
+description: "Firewall port reference for Pure1 (Pure Storage cloud management and analytics SaaS). Pure1 requires only outbound HTTPS from each managed array to..."
 ---
 # Pure1 — Ports and Network Requirements
 

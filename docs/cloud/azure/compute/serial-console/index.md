@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Serial Console provides out-of-band terminal access to a VM's serial port."
 ---
 # Serial Console
 

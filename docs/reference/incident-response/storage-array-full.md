@@ -3,6 +3,7 @@ tags:
   - storage
   - vmware
   - incident-response
+description: "P1/P2 incident — a datastore or storage array volume has hit capacity. VMs may be paused or failing writes. Stop space growth immediately, then diagnose..."
 ---
 # INC-002: Storage Array / Datastore Full
 

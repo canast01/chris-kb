@@ -2,6 +2,7 @@
 tags:
   - aws
   - operations
+description: "Backup & Restore reference covering EBS Snapshot — Manual, Restore EC2 from EBS Snapshot, RDS Restore, S3 — Restore a Deleted Object (Versioning), AWS..."
 ---
 # AWS — Backup & Restore
 

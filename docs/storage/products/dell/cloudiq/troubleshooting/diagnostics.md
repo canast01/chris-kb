@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "CloudIQ diagnostic commands: check SCG service health, test outbound connectivity, verify per-device polling, collect log bundles, and diagnose..."
 ---
 # CloudIQ — Diagnostics
 

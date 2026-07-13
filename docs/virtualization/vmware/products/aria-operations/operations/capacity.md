@@ -3,6 +3,7 @@ tags:
   - aria-operations
   - operations
   - vmware
+description: "Aria Operations: Capacity Analytics and Rightsizing reference covering Rightsizing Recommendations, Reclaim Workflow, Capacity Planning Reports, Common..."
 ---
 # Aria Operations: Capacity Analytics and Rightsizing
 

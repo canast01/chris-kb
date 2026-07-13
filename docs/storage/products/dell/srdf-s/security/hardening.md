@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Hardening reference covering Management API Security, Operational Hardening Checklist."
 ---
 # SRDF/S — Hardening
 

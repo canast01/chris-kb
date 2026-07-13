@@ -1,6 +1,7 @@
 ---
 tags:
   - git
+description: "Git knowledge base covering the distributed object model, GitHub Enterprise and GitLab self-managed architecture, branching workflows, authentication, and..."
 ---
 # Git
 

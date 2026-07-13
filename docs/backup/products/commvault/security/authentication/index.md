@@ -2,6 +2,7 @@
 tags:
   - commvault
   - security
+description: "Authentication reference covering Two-Factor Authentication, CyberArk Integration, Related Reference."
 ---
 # Commvault — Authentication
 

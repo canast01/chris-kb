@@ -4,6 +4,7 @@ tags:
   - sql-server
   - windows-server
   - known-issues
+description: "Catalog of known SQL Server bugs, error codes, and workarounds covering connectivity, AG failover, blocking, and backup."
 ---
 # Microsoft SQL Server — Known Issues and Error Codes
 

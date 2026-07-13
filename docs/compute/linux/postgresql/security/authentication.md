@@ -2,6 +2,7 @@
 tags:
   - linux
   - security
+description: "PostgreSQL authentication — pg_hba.conf methods (scram-sha-256, md5, peer, ldap, cert), password management, and SSL client certificate auth."
 ---
 # PostgreSQL — Authentication
 

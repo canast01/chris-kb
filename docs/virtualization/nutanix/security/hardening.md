@@ -4,6 +4,7 @@ tags:
   - security
   - hardening
   - cis
+description: "CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security configuration, port lockdown, SSL/TLS settings, and Nutanix Security..."
 ---
 # Nutanix — Hardening
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - certifications
+description: "Vendor Tracks reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections."
 ---
 # Vendor Tracks
 

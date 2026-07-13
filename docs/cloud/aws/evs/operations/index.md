@@ -2,6 +2,7 @@
 tags:
   - aws
   - operations
+description: "EVS day-2 operations: cluster health, host management, vSAN capacity, lifecycle upgrades, backup procedures, and runbook scripts for routine..."
 ---
 # Amazon EVS — Operations
 

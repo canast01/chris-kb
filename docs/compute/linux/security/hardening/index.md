@@ -2,6 +2,7 @@
 tags:
   - linux
   - security
+description: "CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login.defs, and PAM password policy."
 ---
 # Linux — Hardening
 

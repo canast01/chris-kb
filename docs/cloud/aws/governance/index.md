@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS governance is structured around AWS Organizations with SCPs enforcing preventive guardrails at the OU level and AWS Config handling detective..."
 ---
 # AWS Governance
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VMware Snapshot Quick Reference reference covering Find All Snapshots, Check Snapshot Age and Size, Identify Snapshot Owner, Remove a Snapshot Safely..."
 ---
 # VMware Snapshot Quick Reference
 

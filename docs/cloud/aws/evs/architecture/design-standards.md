@@ -2,6 +2,7 @@
 tags:
   - architecture
   - aws
+description: "EVS cluster sizing, AZ placement, CIDR planning, Direct Connect bandwidth requirements, and VPC design rules for production EVS deployments."
 ---
 # Amazon EVS — Design Standards
 

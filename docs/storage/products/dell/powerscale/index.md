@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Scale-out NAS platform running OneFS — multi-protocol access (NFS, SMB, S3, HDFS), SmartQuotas, SyncIQ replication, SmartPools tiering, and cluster-wide..."
 ---
 # Dell PowerScale
 

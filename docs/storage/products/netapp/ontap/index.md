@@ -3,6 +3,7 @@ tags:
   - netapp
 search:
   boost: 2
+description: "NetApp ONTAP knowledge base — architecture, operations, security, and troubleshooting for AFF, FAS, and ONTAP Select platforms."
 ---
 # NetApp ONTAP
 

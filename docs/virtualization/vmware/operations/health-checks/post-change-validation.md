@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "Run these checks after any infrastructure change — maintenance, upgrade, patch, or configuration modification. Document evidence in the change record..."
 ---
 # Post-Change Validation (Virtualization)
 

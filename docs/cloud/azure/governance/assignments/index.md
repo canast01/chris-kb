@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "A policy assignment connects a policy definition or initiative (policy set) to a specific scope in the Azure hierarchy. The assignment is the mechanism..."
 ---
 # Policy and Initiative Assignments
 

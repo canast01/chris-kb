@@ -4,6 +4,7 @@ tags:
   - vsphere
   - vsan
   - nsx
+description: "Deploy a VMware Cloud Foundation management domain using Cloud Builder on nested ESXi. The most resource-intensive lab — requires 256 GB+ RAM on the..."
 ---
 # Lab 4 — VCF on Nested ESXi
 

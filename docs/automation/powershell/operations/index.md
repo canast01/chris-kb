@@ -2,6 +2,7 @@
 tags:
   - operations
   - powershell
+description: "Day-to-day PowerShell administration — script execution, module management, remoting, scheduled jobs, and runbook maintenance."
 ---
 # PowerShell — Operations
 

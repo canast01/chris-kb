@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure storage CLI: az storage account create, az storage blob upload/download, az storage container create, az storage copy, and lifecycle management."
 ---
 # Storage Accounts & Blobs
 

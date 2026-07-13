@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "| Field | Value | |---|---| | Risk | Low — read-only capacity audit; no changes made during the review step | | Approval | No change required for the..."
 ---
 # vSAN Capacity Review Runbook
 

@@ -2,6 +2,7 @@
 tags:
   - aws
   - certifications
+description: "AWS Weak Areas reference covering VPC Peering vs PrivateLink vs Transit Gateway, S3 Storage Classes, IAM Policy Evaluation, RDS Multi-AZ vs Read Replicas..."
 ---
 # AWS Weak Areas
 

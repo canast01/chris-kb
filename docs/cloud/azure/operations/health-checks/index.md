@@ -2,6 +2,7 @@
 tags:
   - azure
   - operations
+description: "Azure daily health checks — runnable CLI routine covering service health incidents, VM power states and provisioning failures, load balancer backend pool..."
 ---
 # Azure — Health Checks
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Architecture reference for Pure Storage FlashBlade. Covers the scale-out blade model, Purity//FB data services, NFS/SMB/S3/HDFS protocol support, HA..."
 ---
 # FlashBlade — Architecture
 

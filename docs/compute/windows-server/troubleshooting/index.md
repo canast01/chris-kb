@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "Diagnosing Windows Server failures — services, event logs, WMI errors, performance degradation, and common boot issues."
 ---
 # Windows Server — Troubleshooting
 

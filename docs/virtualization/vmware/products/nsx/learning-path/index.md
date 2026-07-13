@@ -4,6 +4,7 @@ tags:
   - nsx
   - nsx-4
   - vmware
+description: "Recommended reading order for NSX (NSX-T / NSX 4.x). Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # NSX — Learning Path
 

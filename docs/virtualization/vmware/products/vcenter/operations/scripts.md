@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Scripts reference covering VM Health and Inventory Report (PowerShell / PowerCLI), Cluster Capacity Report (PowerShell / PowerCLI), Daily Check Script..."
 ---
 # vCenter — Scripts
 

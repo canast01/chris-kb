@@ -3,6 +3,7 @@ tags:
   - architecture
   - tanzu
   - vmware
+description: "VMware Tanzu provides Kubernetes-based application platform capabilities on top of vSphere, including Supervisor clusters, workload clusters, and..."
 ---
 # Tanzu — Architecture
 

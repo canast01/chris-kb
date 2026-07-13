@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Integrations reference covering VMware Integration, Backup Integration, CloudIQ Monitoring, Active Directory / LDAP, REST API."
 ---
 # PowerScale — Integrations
 

@@ -2,6 +2,7 @@
 tags:
   - certifications
   - san
+description: "SAN Certification Review Plan reference covering Target Certifications, Study Resources, 8-Week SAN Study Plan, Hands-On Lab Options, Study Checklist."
 ---
 # SAN Certification Review Plan
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - commvault
+description: "Commvault enterprise backup and recovery — CommServe command and control, MediaAgent data movement with deduplication, and multi-site storage library..."
 ---
 # Commvault
 

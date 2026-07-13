@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SRDF/A troubleshooting: DSE overflow, cycle time violations, SRDF/A suspended due to link fault, SYMAPI errors, and escalation to Dell SRDF Engineering."
 ---
 # SRDF/A — Common Issues
 

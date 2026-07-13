@@ -5,6 +5,7 @@ tags:
   - vsphere-replication
 search:
   boost: 1.5
+description: "How to escalate VMware vSphere Replication issues to Broadcom support: what data to collect from both sites, step-by-step case creation on..."
 ---
 # vSphere Replication — Escalation
 

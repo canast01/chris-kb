@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Disaster Recovery Runbook reference covering Overview, Activation Criteria, Communication Tree, Phased Recovery Procedure, Validation Checklist and 1 more..."
 ---
 # Disaster Recovery Runbook
 

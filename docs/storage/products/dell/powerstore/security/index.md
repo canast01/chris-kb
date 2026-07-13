@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "PowerStore hardening — RBAC, local user management, encryption key management, and management interface security."
 ---
 # PowerStore — Security
 

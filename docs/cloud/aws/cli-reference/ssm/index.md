@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenance Windows, Patch Management, Inventory and 2 more sections."
 ---
 # Systems Manager (SSM)
 

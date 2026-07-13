@@ -4,6 +4,7 @@ tags:
   - flasharray
   - pure-storage
   - known-issues
+description: "Catalog of known FlashArray bugs, error codes, and workarounds covering host connectivity, replication, and array health."
 ---
 # Pure Storage FlashArray — Known Issues and Error Codes
 

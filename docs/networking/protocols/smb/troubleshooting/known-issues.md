@@ -4,6 +4,7 @@ tags:
   - smb
   - networking
   - known-issues
+description: "Catalog of known SMB issues covering access denied, share enumeration, signing, and SMB version compatibility."
 ---
 # SMB / CIFS — Known Issues and Error Codes
 

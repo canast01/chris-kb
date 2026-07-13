@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Scripts reference covering Available Scripts, Script Pattern — State Check."
 ---
 # SRDF/S — Scripts
 

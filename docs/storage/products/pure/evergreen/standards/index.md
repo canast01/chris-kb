@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Storage Evergreen Standards reference covering Naming Conventions, Build Baseline, Subscription Checklist."
 ---
 # Pure Storage Evergreen Standards
 

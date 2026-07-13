@@ -4,6 +4,7 @@ tags:
   - nsx-4
   - scenarios
   - vmware
+description: "A VM or workload loses network connectivity on an NSX-T overlay network. This scenario establishes a scoping method to determine whether the problem is a..."
 ---
 # NSX Connectivity Broken
 

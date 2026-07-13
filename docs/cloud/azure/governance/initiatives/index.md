@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "An initiative (formerly called a policy set definition) groups multiple related policy definitions into a single assignable unit. This simplifies..."
 ---
 # Initiatives (Policy Sets)
 

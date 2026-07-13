@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "SRDF/S authentication: Solutions Enabler RBAC role assignment, symauth command, Unisphere for VMAX admin account management, and session audit logging."
 ---
 # SRDF/S — Authentication
 

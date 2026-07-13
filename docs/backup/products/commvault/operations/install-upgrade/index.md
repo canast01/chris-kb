@@ -2,6 +2,7 @@
 tags:
   - commvault
   - operations
+description: "Install & Upgrade reference covering Release Cadence, Upgrade Order, CommVault to Metallic SaaS Migration, EOL Tracking."
 ---
 # Commvault — Install & Upgrade
 

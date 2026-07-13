@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "An SNMP community string is a plaintext password used in SNMPv1 and SNMPv2c to authenticate read or write access to a device's management information base..."
 ---
 # SNMP Communities
 

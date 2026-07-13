@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "SCG CLI reference: dcicli command usage for connectivity verification, supportassist log collection, device inventory queries, and remote support tunnel..."
 ---
 # Secure Connect Gateway (SCG) — CLI Reference
 

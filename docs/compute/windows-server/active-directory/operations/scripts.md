@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "PowerShell automation tools for routine Active Directory health checks, auditing, and reporting. Run from a host with the ActiveDirectory PowerShell..."
 ---
 # Active Directory — Scripts
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - confluence
+description: "Confluence knowledge base covering Data Center cluster architecture, space and page management, authentication, and troubleshooting."
 ---
 # Confluence
 

@@ -7,6 +7,7 @@ tags:
   - firewall
   - ports
   - database
+description: "Firewall port reference for Microsoft SQL Server. Covers the default instance, named instances, Always On Availability Groups, mirroring, SSMS remote..."
 ---
 # SQL Server — Ports and Network Requirements
 

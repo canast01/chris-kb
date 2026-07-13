@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Standards reference covering Pool Design Decision Tree, Sizing Guidelines, Naming Conventions, Build Baseline, Configuration Checklist."
 ---
 # Unity — Standards
 

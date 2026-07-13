@@ -2,6 +2,7 @@
 tags:
   - aria-networks
   - vmware
+description: "Technical and operational reference for VMware Aria Operations for Networks. Covers network visibility, flow analytics, topology mapping, path analysis..."
 ---
 # Aria Operations for Networks
 

@@ -9,6 +9,7 @@ tags:
   - networking
   - storage
   - security
+description: "155+ terms covering VMware products, virtualization, networking, storage, security, Kubernetes, and observability. Use browser search (Ctrl+F) or site..."
 ---
 # VMware Infrastructure Glossary
 

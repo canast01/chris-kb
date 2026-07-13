@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Dell Flex on Demand diagnostic commands: inspect the FoD license key file, verify array serial number binding, check currently active licenses with..."
 ---
 # FOD — Diagnostics
 

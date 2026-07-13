@@ -5,6 +5,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for ServiceNow. ServiceNow is a SaaS platform — the primary firewall concern is the MID Server (on-premise agent) which bridges..."
 ---
 # ServiceNow — Ports and Network Requirements
 

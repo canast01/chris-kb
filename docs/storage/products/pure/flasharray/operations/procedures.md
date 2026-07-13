@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "FlashArray operational procedures — host and volume provisioning, snapshot and replication management, pod and ActiveCluster operations, capacity..."
 ---
 # FlashArray — Procedures
 

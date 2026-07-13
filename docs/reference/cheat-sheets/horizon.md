@@ -2,6 +2,7 @@
 tags:
   - horizon
   - operations
+description: "Top-10 Horizon commands for desktop pool management, agent control, and session operations via vdmadmin and PowerShell."
 ---
 # Horizon Cheat Sheet
 

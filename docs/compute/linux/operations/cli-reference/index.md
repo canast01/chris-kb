@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "Commands, syntax, and quick reference. Commonly used Linux administration commands, grouped by category. Applies to RHEL 8/9 and Ubuntu 22.04 unless noted."
 ---
 # Linux — CLI Reference
 

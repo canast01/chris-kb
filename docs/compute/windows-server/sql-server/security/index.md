@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "SQL Server security: Windows Authentication vs. mixed-mode policy, sp_addlogin, TDE encryption, Always Encrypted, and CIS Benchmark hardening."
 ---
 # SQL Server — Security
 

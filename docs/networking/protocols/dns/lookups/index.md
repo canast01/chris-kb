@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "DNS Lookups reference covering Overview, nslookup, dig, Resolve-DnsName (PowerShell), TTL Debugging and 1 more sections."
 ---
 # DNS Lookups
 

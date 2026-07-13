@@ -2,6 +2,7 @@
 tags:
   - architecture
   - terraform
+description: "Consistent Terraform standards prevent state corruption, make code reviewable, and enable teams to manage infrastructure at scale without heroics."
 ---
 # Terraform — Standards
 

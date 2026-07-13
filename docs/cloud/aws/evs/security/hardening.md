@@ -2,6 +2,7 @@
 tags:
   - aws
   - security
+description: "EVS hardening: NSX-T micro-segmentation default deny, VPC security groups, AWS VPC flow logs, disabling unnecessary services on ESXi, and CIS hardening..."
 ---
 # Amazon EVS — Hardening
 

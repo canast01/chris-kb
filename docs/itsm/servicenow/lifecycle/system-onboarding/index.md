@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Brings a new physical server, VM, or cloud instance into full production management — covering identity, networking, security, monitoring, backup, and..."
 ---
 # System Onboarding Procedure
 

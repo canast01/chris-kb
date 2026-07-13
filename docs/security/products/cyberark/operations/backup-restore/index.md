@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "The CyberArk Vault stores credentials that protect the entire organization. Loss of the Vault with no tested backup means total recovery failure."
 ---
 # CyberArk — Backup & Restore
 

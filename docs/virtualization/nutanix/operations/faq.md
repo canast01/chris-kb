@@ -3,6 +3,7 @@ tags:
   - nutanix
   - faq
   - operations
+description: "Common questions about Nutanix AOS operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Nutanix AOS — Frequently Asked Questions
 

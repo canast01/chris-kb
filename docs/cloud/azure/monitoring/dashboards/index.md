@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Dashboards provide a shared, customisable view of Azure resource telemetry. A minimal dashboard JSON skeleton:"
 ---
 # Dashboards
 

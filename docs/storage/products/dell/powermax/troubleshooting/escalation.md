@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Dell PowerMax issues to Dell Technologies support: what data to collect, how to run symcfg diagnostics and collect the Solutions Enabler..."
 ---
 # PowerMax — Escalation
 

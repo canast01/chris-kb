@@ -4,6 +4,7 @@ tags:
   - vsphere
   - vsan
   - nsx
+description: "Complete procedure: prepare nested ESXi hosts, fill in the VCF configuration workbook, deploy Cloud Builder, run pre-deployment validation, and deploy the..."
 ---
 # Lab 4 Guide — VCF on Nested ESXi Step-by-Step
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - confluence
+description: "Confluence Data Center runs as an active-active Java cluster sharing a single PostgreSQL database, a distributed NFS/EFS home, and Hazelcast for cache..."
 ---
 # Confluence — Architecture
 

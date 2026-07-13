@@ -4,6 +4,7 @@ tags:
   - superna-eyeglass
   - netapp
   - known-issues
+description: "Catalog of known Superna Eyeglass bugs, error codes, and workarounds covering SyncIQ DR orchestration, share replication, and AD integration."
 ---
 # Superna Eyeglass — Known Issues and Error Codes
 

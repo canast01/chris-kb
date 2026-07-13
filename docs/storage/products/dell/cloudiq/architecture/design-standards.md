@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Standards reference covering Sizing and Capacity Model, Naming Conventions, Build and Deployment Baseline, Configuration Checklist."
 ---
 # CloudIQ — Standards
 

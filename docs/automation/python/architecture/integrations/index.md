@@ -2,6 +2,7 @@
 tags:
   - architecture
   - python
+description: "Python automation integrations: REST API call patterns, retry-with-backoff wrappers, requests session management, Ansible Python API, and Terraform..."
 ---
 # Python Automation — Integrations
 

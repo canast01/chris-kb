@@ -2,6 +2,7 @@
 tags:
   - dell
   - learning-path
+description: "Recommended reading order for Dell APEX Storage as a Service. Follow these stages in order to build a complete mental model before working with it in..."
 ---
 # Dell APEX Storage as a Service — Learning Path
 

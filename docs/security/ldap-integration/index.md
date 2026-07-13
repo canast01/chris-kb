@@ -2,6 +2,7 @@
 title: Standard LDAP Integration
 tags:
   - security
+description: "Canonical LDAP/Active Directory integration reference for all KB-covered products. Use this page for field definitions, security standards, and..."
 ---
 
 # Standard LDAP Integration

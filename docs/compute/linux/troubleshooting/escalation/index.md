@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Linux OS issues to Red Hat or Canonical support: what data to collect, how to run sosreport, step-by-step case creation on the vendor..."
 ---
 # Linux — Escalation
 

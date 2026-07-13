@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "Quick reference for common problems and resolutions. Structured approach to diagnosing common Linux server issues."
 ---
 # Linux — Known Issues
 

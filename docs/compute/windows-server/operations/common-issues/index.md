@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Quick reference for common problems and resolutions. Structured approach to diagnosing common Windows Server issues."
 ---
 # Windows Server — Known Issues
 

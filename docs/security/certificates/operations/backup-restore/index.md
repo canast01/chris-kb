@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Losing a Certificate Authority's private key is an unrecoverable event — every certificate it issued becomes untrusted."
 ---
 # Certificates — Backup & Restore
 

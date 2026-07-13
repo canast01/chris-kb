@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Naming Standard reference covering Overview, Virtual Machines, Clusters, ESXi Hosts, Datastores and 7 more sections."
 ---
 # Naming Standard
 

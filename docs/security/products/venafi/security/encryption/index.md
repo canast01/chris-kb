@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "HSM integration protects the CA private keys and Venafi service credentials. Keys for high-value services (CA certificates, wildcard certificates, code..."
 ---
 # Venafi — Encryption
 

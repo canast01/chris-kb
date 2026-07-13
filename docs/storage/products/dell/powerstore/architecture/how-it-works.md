@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Architecture, Appliance Architecture, Hardware Models, Components and 4 more sections."
 ---
 # PowerStore — How It Works
 

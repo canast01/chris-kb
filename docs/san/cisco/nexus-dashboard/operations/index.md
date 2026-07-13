@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "Nexus Dashboard daily operations — fabric health monitoring, flow visibility, alert management, and operational runbooks."
 ---
 # Nexus Dashboard — Operations
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - san
+description: "Brocade SAN knowledge base covering Fabric OS switches and SANnav management. Includes fabric architecture, zoning, CLI references, health checks, and..."
 ---
 # Brocade SAN
 

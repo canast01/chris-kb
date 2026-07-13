@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - pure
+description: "Recommended reading order for Pure Storage Evergreen//One (Storage as a Service). Follow these stages in order to build a complete mental model before..."
 ---
 # Pure Storage Evergreen//One — Learning Path
 

@@ -4,6 +4,7 @@ tags:
   - ollama
   - local-ai
   - known-issues
+description: "Catalog of known Ollama bugs, error codes, and workarounds covering model loading, GPU offload, and API server issues."
 ---
 # Ollama — Known Issues and Error Codes
 

@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - operations
+description: "Backup & Restore reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands and 2 more sections."
 ---
 # NetBackup — Backup & Restore
 

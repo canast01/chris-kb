@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "VxRail Power and Cooling reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections."
 ---
 # VxRail Power and Cooling
 

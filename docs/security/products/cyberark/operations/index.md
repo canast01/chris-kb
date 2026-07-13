@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "CyberArk day-to-day operations — safe management, account onboarding, session recording, CPM rotation, and vault health."
 ---
 # CyberArk — Operations
 

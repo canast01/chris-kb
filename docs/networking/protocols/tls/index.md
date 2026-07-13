@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "TLS reference — certificate chain validation, cipher suites, SNI, mTLS, OCSP/CRL revocation, and common TLS failure diagnosis."
 ---
 # TLS
 

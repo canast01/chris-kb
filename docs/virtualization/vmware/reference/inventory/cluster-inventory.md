@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Cluster Inventory reference covering Overview, Cluster Inventory Table, Fields Reference, Cluster Configuration Checklist."
 ---
 # Cluster Inventory
 

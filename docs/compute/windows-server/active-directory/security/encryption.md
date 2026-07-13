@@ -2,6 +2,7 @@
 tags:
   - security
   - windows
+description: "Encryption reference covering AD Protocol Encryption Overview, Enforcing LDAP Signing and Channel Binding, Kerberos Encryption Policy."
 ---
 # Active Directory — Encryption
 

@@ -2,6 +2,7 @@
 tags:
   - powershell
   - security
+description: "PowerShell hardening: Set-ExecutionPolicy AllSigned, ScriptBlock logging, module logging, AMSI integration, and PowerShell 7 constrained language mode..."
 ---
 # PowerShell — Hardening
 

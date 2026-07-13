@@ -2,6 +2,7 @@
 tags:
   - operations
   - veeam
+description: "Veeam Backup & Replication provides comprehensive recovery options ranging from full VM restore to granular application-item recovery. Choosing the right..."
 ---
 # Veeam — Backup & Restore
 

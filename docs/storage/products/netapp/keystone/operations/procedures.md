@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "NetApp Keystone procedures: burst capacity activation, storage tier changes, scheduled report export, and capacity rebalancing requests via NetApp support."
 ---
 # Keystone — Procedures
 

@@ -3,6 +3,7 @@ tags:
   - deployment
 search:
   boost: 1.5
+description: "IPI vs UPI vs agent-based installation methods, install-config.yaml structure for vSphere IPI, RHCOS bootstrap sequence, air-gap mirror setup with..."
 ---
 # OpenShift — Deploy
 

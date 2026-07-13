@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Access Control reference covering Preventing Accidental Failover, Audit Logging."
 ---
 # SRDF/S — Access Control
 

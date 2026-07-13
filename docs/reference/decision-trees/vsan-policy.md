@@ -3,6 +3,7 @@ tags:
   - vsan
   - storage
   - architecture
+description: "Choose the right vSAN storage policy: FTT level, RAID type (mirror vs erasure coding), encryption, and dedup/compression based on cluster size and..."
 ---
 # vSAN Storage Policy Decision Tree
 

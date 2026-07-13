@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "RecoverPoint hardening — management access control, user roles, TLS configuration, and audit logging."
 ---
 # RecoverPoint — Security
 

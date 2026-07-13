@@ -9,6 +9,7 @@ tags:
   - vsphere-8
 search:
   boost: 2
+description: "Start-of-shift health check sequence for a VMware SDDC environment. Run these checks in order — vCenter → ESXi cluster → vSAN → NSX → Aria Operations..."
 ---
 # VMware — Morning Health Check
 

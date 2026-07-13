@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "How It Works reference covering Overview, Topology, HA Options, Components, Connectivity and 2 more sections."
 ---
 # SnapCenter — How It Works
 

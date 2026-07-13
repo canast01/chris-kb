@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VMware certification practice exam notes — question patterns, topic areas, and worked examples from VCP-DCV and VCAP study sessions."
 ---
 # Virtualization — Practice Notes
 

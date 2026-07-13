@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Dell APEX Storage as a Service (STaaS). APEX Storage deploys Dell hardware on-premises managed through Dell's cloud portal..."
 ---
 # Dell APEX Storage as a Service — Ports and Network Requirements
 

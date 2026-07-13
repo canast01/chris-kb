@@ -3,6 +3,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Troubleshooting reference covering Error Code Reference, Rate Limit Troubleshooting, Token Limit Issues, Authentication Issues, Timeout and Latency and 3..."
 ---
 # OpenAI API — Troubleshooting
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Patch Compliance Monitoring reference covering Patch Classification, Windows Patch Compliance, Linux Patch Compliance, SCCM / Endpoint Manager (Windows..."
 ---
 # Patch Compliance Monitoring
 

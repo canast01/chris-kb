@@ -3,6 +3,7 @@ tags:
   - troubleshooting
   - storage
   - known-issues
+description: "Index of storage product known issues and error codes. This top-level page links to per-product known-issues catalogs covering NetApp, Pure Storage, Dell..."
 ---
 # Storage — Known Issues Reference
 

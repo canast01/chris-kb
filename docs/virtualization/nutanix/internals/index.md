@@ -6,6 +6,7 @@ tags:
   - cassandra
   - curator
   - zeus
+description: "Deep dive into AOS distributed architecture — the five core services (Stargate, Curator, Cassandra, Zeus/Zookeeper, Medusa), how they interact, and the..."
 ---
 # Nutanix — Internals
 

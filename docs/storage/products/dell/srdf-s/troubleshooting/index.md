@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing SRDF/S link failures, synchronisation errors, SUSPENDED state recovery, and RDF group health issues."
 ---
 # SRDF/S — Troubleshooting
 

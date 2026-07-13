@@ -2,6 +2,7 @@
 tags:
   - aws
   - certifications
+description: "AWS Certification Review Plan reference covering Target Exam and Study Timeline, AWS Skill Builder, Key Whitepapers, Practice Exam Resources, AWS Labs and..."
 ---
 # AWS Certification Review Plan
 

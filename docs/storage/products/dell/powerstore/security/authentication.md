@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Authentication reference covering Authentication Methods, Local Account Management, LDAP / Active Directory Integration, REST API Token Authentication..."
 ---
 # PowerStore — Authentication
 

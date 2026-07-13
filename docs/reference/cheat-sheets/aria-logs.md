@@ -2,6 +2,7 @@
 tags:
   - aria-logs
   - monitoring
+description: "Top-10 Aria Logs (Log Insight) commands for agent control, syslog configuration, and log queries via CLI and REST API."
 ---
 # Aria Logs Cheat Sheet
 

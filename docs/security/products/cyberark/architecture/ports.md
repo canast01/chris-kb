@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - security
+description: "Firewall port reference for CyberArk Privileged Access Manager (PAM). Covers the Digital Vault, PVWA, Central Policy Manager (CPM), Privileged Session..."
 ---
 # CyberArk — Ports and Network Requirements
 

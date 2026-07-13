@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry reference covering Interpreting Health Score Changes, Endpoint..."
 ---
 # Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry
 

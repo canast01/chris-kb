@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "VMware Cloud Foundation diagnostic commands: check SDDC Manager services and health API, grep LCM upgrade logs for failures, diagnose NSX Manager cluster..."
 ---
 # VCF — Diagnostics
 

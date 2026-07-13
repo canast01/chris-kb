@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Governance articles, operational checks, troubleshooting notes, and references."
 ---
 # Azure Governance
 

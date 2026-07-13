@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "Active Directory serves as the central identity provider for the enterprise. Integrations span VMware infrastructure, Linux systems, network devices..."
 ---
 # Active Directory Integration
 

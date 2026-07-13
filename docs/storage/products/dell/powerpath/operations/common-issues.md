@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths Not Recovering After SAN Maintenance, Device Not Visible After LUN..."
 ---
 # PowerPath — Known Issues
 

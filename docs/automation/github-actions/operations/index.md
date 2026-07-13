@@ -2,6 +2,7 @@
 tags:
   - github-actions
   - operations
+description: "GitHub Actions — Operations reference: CLI Reference, Health Checks, Procedures, Install & Upgrade, and 2 more."
 ---
 # GitHub Actions — Operations
 

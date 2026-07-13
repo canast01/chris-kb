@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "Snapshots are a write-redirect mechanism — they do not freeze data, they redirect writes to a delta disk. This has measurable performance and operational..."
 ---
 # Snapshot Performance Impact
 

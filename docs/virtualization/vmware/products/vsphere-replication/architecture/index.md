@@ -3,6 +3,7 @@ tags:
   - architecture
   - vmware
   - vsphere-replication
+description: "vSphere Replication is a hypervisor-based asynchronous replication solution managed by the VRMS appliance, providing VM-level RPO control without..."
 ---
 # vSphere Replication — Architecture
 

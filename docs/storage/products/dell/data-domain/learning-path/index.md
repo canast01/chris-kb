@@ -2,6 +2,7 @@
 tags:
   - dell
   - learning-path
+description: "Recommended reading order for Dell Data Domain. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Dell Data Domain (PowerProtect DD) — Learning Path
 

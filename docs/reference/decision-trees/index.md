@@ -4,6 +4,7 @@ tags:
   - architecture
   - operations
   - comparison
+description: "Flowcharts for common VMware infrastructure design decisions — storage policy, NSX topology, DR tool selection, and Aria product selection."
 ---
 # Decision Trees
 

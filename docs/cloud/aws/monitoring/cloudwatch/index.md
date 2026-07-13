@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS CloudWatch reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections."
 ---
 # AWS CloudWatch
 

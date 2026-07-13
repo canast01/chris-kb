@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VM slow decision tree: branching logic covering CPU ready, memory balloon, storage latency, and network saturation — walk through in order for systematic..."
 ---
 # VM Slow Decision Tree
 

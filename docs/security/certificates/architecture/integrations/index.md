@@ -2,6 +2,7 @@
 tags:
   - architecture
   - security
+description: "Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation layer across all certificate sources. ADCS serves as the enterprise CA..."
 ---
 # Certificates — Integrations
 

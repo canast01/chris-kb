@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Safely removes a server, VM, or cloud instance from production — preventing orphaned monitoring alerts, failed backup jobs, billing waste, and security..."
 ---
 # System Decommission Procedure
 

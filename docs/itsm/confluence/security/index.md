@@ -2,6 +2,7 @@
 tags:
   - confluence
   - security
+description: "Confluence hardening — access control, SSL termination, application links security, and user session management."
 ---
 # Confluence — Security
 

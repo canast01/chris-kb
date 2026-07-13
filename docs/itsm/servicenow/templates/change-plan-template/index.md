@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Change Plan Template reference covering Overview, Change Summary, Pre-Change Checklist, Implementation Steps, Validation Steps and 1 more sections."
 ---
 # Change Plan Template
 

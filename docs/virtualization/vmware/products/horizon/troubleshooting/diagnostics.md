@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Horizon diagnostic commands: read Connection Server debug-.log and vlsi-.log logs, collect the support bundle from Horizon Admin UI, inspect Horizon Agent..."
 ---
 # Horizon — Diagnostics
 

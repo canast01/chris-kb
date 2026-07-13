@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "How to escalate Active Directory issues to Microsoft support: what data to collect, how to run dcdiag and repadmin, step-by-step case creation on..."
 ---
 # Active Directory — Escalation
 

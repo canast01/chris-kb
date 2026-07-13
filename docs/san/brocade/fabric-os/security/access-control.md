@@ -2,6 +2,7 @@
 tags:
   - san
   - security
+description: "FabricOS access control: RBAC role assignment, userconfig CLI, default account password policy, and chassis-level admin vs. operator permissions."
 ---
 # FabricOS — Access Control
 

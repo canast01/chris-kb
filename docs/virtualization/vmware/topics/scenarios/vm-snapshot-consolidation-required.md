@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "One or more VMs display a 'Virtual machine disks consolidation is needed' warning in vCenter. This happens when snapshot delta files exist on disk but are..."
 ---
 # VM Snapshot Consolidation Required
 

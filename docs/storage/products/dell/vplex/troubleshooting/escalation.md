@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Vendor escalation procedures, support contacts, and information requirements for Dell VPLEX support cases."
 ---
 # Dell VPLEX — Escalation
 

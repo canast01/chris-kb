@@ -3,6 +3,7 @@ tags:
   - vsan
   - faq
   - operations
+description: "Common questions about VMware vSAN operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # VMware vSAN — Frequently Asked Questions
 

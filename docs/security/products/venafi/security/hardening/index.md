@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "All certificate lifecycle events are captured in the Venafi audit log and should be forwarded to a SIEM via the Log Server. Admin and service accounts..."
 ---
 # Venafi — Hardening
 

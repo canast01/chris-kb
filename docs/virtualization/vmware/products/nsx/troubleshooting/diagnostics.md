@@ -6,6 +6,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "NSX diagnostic commands: check cluster and transport node health with nsxcli, inspect manager and audit logs, diagnose Edge BGP routing, inspect DFW..."
 ---
 # NSX — Diagnostics
 

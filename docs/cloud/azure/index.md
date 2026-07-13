@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Microsoft Azure knowledge base covering compute, storage, networking, identity, monitoring, backup, security, governance, and cost management. Includes..."
 ---
 # Azure
 

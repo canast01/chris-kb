@@ -2,6 +2,7 @@
 tags:
   - ceph
   - security
+description: "Ceph security: CephX authentication for all daemon and client communication, RBAC capabilities per user, encryption at rest with dmcrypt, and TLS for RGW..."
 ---
 # Ceph — Security
 

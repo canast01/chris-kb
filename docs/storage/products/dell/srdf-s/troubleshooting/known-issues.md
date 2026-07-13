@@ -4,6 +4,7 @@ tags:
   - srdf
   - dell
   - known-issues
+description: "Catalog of known SRDF/S (Synchronous) bugs, error codes, and workarounds. SRDF/S is zero-RPO synchronous replication — issues typically manifest as..."
 ---
 # Dell SRDF/S — Known Issues and Error Codes
 

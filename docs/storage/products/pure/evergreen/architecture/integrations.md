@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Integrations reference covering Pure1 Integration, True Forward Capacity Upgrades, VMware Integration, Backup Integration, REST API."
 ---
 # Evergreen — Integrations
 

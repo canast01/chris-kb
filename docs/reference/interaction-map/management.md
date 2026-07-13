@@ -5,6 +5,7 @@ tags:
   - aria-suite-lifecycle
   - operations
   - architecture
+description: "How VCF, Aria Suite Lifecycle, and vCenter SSO interact — lifecycle APIs, credential management, authentication federation, and workload domain..."
 ---
 # Management Domain — Interaction Map
 

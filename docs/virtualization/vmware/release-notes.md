@@ -1,6 +1,7 @@
 ---
 tags:
   - vmware
+description: "Version history and release notes for VMware."
 ---
 # VMware — Release Notes
 

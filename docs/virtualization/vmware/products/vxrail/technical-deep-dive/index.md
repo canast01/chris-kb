@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "VxRail Technical Deep Dive reference covering Overview, Platform Role, Core Components, Main Dependencies, Ports and Protocols and 7 more sections."
 ---
 # VxRail Technical Deep Dive
 

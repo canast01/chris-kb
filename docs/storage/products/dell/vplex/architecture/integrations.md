@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Integration with back-end storage arrays, hypervisors, replication systems, and monitoring platforms."
 ---
 # Dell VPLEX — Integrations
 

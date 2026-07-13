@@ -3,6 +3,7 @@ tags:
   - aria-lcm
   - security
   - vmware
+description: "Aria Suite Lifecycle hardening — certificate management, RBAC, locker credential security, and audit logging."
 ---
 # Aria Suite Lifecycle — Security
 

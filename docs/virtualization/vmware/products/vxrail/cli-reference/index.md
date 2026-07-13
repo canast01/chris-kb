@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "VxRail CLI reference: vxrail-upgrade, vxrail-health-check, vxrail-lcm-status, mystic health API queries, and vc-maint-mode commands."
 ---
 # VxRail CLI Reference
 

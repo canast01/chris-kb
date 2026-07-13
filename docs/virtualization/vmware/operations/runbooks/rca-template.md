@@ -2,6 +2,7 @@
 title: RCA Template
 tags:
   - operations
+description: "RCA Template reference covering Summary, Impact, Timeline, Root Cause, Resolution and 2 more sections."
 ---
 
 # RCA Template

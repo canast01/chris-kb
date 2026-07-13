@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Array Health reference covering FlashBlade Health, Health via Pure1 REST API, Connectivity Health — Phone Home, Health Monitoring Integration, Common..."
 ---
 # Pure1 — Array Health
 

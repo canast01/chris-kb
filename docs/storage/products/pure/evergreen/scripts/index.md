@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Evergreen automation scripts: REST API calls for entitlement status, Python client for capacity trending, and automated alert integration."
 ---
 # Evergreen — Scripts
 

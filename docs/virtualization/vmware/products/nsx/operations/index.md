@@ -4,6 +4,7 @@ tags:
   - nsx-4
   - operations
   - vmware
+description: "Day-to-day operational reference for VMware NSX. Covers CLI commands, health checks, routine procedures, lifecycle management, backup strategy, and..."
 ---
 # NSX — Operations
 

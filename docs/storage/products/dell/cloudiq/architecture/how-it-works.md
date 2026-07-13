@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Data Pipeline Topology, How It Works, Supported Platforms, Key Capabilities."
 ---
 # CloudIQ — How It Works
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "VxRail Pre-Change Health Validation reference covering VxRail Manager, vCenter Health, vSAN Health, Hardware Health, Infrastructure and 1 more sections."
 ---
 # VxRail Pre-Change Health Validation
 

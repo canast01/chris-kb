@@ -2,6 +2,7 @@
 tags:
   - pure
   - security
+description: "Pure Storage Evergreen Security reference covering Hardening Checklist, RBAC, Encryption, Audit Logging, Subscription Security."
 ---
 # Pure Storage Evergreen Security
 

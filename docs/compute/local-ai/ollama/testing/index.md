@@ -3,6 +3,7 @@ tags:
   - ollama
   - ai
   - local-ai
+description: "This page covers testing Ollama with the CLI and REST API, benchmarking inference speed, comparing models, and validating API compatibility."
 ---
 # Ollama Testing and Benchmarking
 

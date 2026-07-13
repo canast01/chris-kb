@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Jira (Data Center, self-hosted). Covers web UI, clustering, database, and SMTP."
 ---
 # Jira — Ports and Network Requirements
 

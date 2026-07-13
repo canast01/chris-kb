@@ -4,6 +4,7 @@ tags:
   - vsphere-replication
   - backup-dr
   - architecture
+description: "Choose the right DR tool for your environment: SRM, vSphere Replication, or backup-based DR — based on RPO, RTO, application requirements, and licensing."
 ---
 # DR Tool Selection Decision Tree
 

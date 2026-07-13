@@ -3,6 +3,7 @@ tags:
   - horizon
   - operations
   - vmware
+description: "Install and Upgrade reference covering Horizon Agent Installation in Golden Image, UAG Deployment, App Volumes Manager Installation, Upgrade Order..."
 ---
 # Horizon — Install and Upgrade
 

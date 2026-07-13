@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "Version history and release notes for NetApp SnapCenter."
 ---
 # NetApp SnapCenter — Release Notes
 

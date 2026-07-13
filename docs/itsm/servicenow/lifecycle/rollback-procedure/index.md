@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Restores a system to its last known-good state when a change produces failures, instability, or unacceptable risk. Rollback must be faster and safer than..."
 ---
 # Rollback Procedure
 

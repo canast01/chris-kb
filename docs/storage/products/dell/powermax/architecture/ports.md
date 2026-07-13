@@ -7,6 +7,7 @@ tags:
   - firewall
   - ports
   - storage
+description: "Firewall port reference for Dell PowerMax (formerly VMAX). Covers Unisphere for PowerMax management, iSCSI data paths, and SRDF replication. FC fabric..."
 ---
 # Dell PowerMax — Ports and Network Requirements
 

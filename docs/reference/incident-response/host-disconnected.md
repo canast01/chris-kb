@@ -5,6 +5,7 @@ tags:
   - incident-response
 search:
   boost: 1
+description: "Response procedure for an ESXi host showing 'Not Responding' or 'Disconnected' in vCenter. Severity depends on whether VMs are running and inaccessible on..."
 ---
 # INC-005: ESXi Host Disconnected from vCenter
 

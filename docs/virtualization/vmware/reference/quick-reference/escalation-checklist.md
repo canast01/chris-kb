@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Before escalation, collect: - Host name - VM name - Cluster name - Datastore name - Timestamp - Timezone - Screenshot of alerts - Recent changes - Error..."
 ---
 # Virtualization Escalation Checklist
 

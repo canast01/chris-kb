@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Hardening reference covering Overview, Management Plane Hardening, Host Connectivity Hardening, SupportAssist Hardening, Audit Logging and 2 more sections."
 ---
 # PowerStore — Hardening
 

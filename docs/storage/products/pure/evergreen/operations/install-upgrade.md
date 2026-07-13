@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Install & Upgrade reference covering Evergreen Program Tiers, Software Upgrade (Purity), Drive Replacement, Controller Refresh (Evergreen//Forever)..."
 ---
 # Evergreen — Install & Upgrade
 

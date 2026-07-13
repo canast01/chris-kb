@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Pure Storage operations — Pure1 cloud portal management, hardware and capacity alerts, and support case workflows."
 ---
 # Pure Operations
 

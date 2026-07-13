@@ -3,6 +3,7 @@ tags:
   - git
   - faq
   - operations
+description: "Common questions about Git operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Git — Frequently Asked Questions
 

@@ -2,6 +2,7 @@
 tags:
   - internals
   - vmware
+description: "vSphere resource management controls how CPU and memory are allocated to VMs competing for physical capacity. This page covers the full scheduling model..."
 ---
 # vSphere Resource Management — Scheduling, Reservations, Pools, and NUMA
 

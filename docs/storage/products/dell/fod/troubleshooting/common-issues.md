@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Common FOD activation errors, feature entitlement failures, and troubleshooting unlicensed features."
 ---
 # FOD — Common Issues
 

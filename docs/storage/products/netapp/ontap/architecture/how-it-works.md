@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "Internal architecture and data-path reference: HA pair design, WAFL filesystem, Aggregate-SVM-Volume hierarchy, data protocols, SnapMirror, MetroCluster..."
 ---
 # NetApp ONTAP — How It Works
 

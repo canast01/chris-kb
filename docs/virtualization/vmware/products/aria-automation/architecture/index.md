@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-automation
   - vmware
+description: "Kubernetes-based microservices platform for infrastructure self-service automation. Cloud templates (YAML IaC) define resources declaratively; Aria..."
 ---
 # Aria Automation — Architecture
 

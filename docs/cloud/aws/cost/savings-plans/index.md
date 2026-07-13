@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS Savings Plans reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections."
 ---
 # AWS Savings Plans
 

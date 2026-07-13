@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "CloudIQ role-based access control — user management, RBAC configuration, and access policy enforcement."
 ---
 # CloudIQ — Access Control
 

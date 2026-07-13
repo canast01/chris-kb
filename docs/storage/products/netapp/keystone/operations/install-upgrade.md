@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Install & Upgrade reference covering Keystone Collector Deployment, Upgrade Keystone Collector, Add a New ONTAP Array to Keystone, Remove an Array from..."
 ---
 # NetApp Keystone — Install & Upgrade
 

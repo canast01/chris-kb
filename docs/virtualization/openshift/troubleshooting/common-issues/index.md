@@ -3,6 +3,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePullBackOff, node NotReady, Pending pods, OOMKilled, etcd high latency, DNS..."
 ---
 # OpenShift — Common Issues
 

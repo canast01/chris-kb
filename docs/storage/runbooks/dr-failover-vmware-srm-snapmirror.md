@@ -8,6 +8,7 @@ tags:
   - failover
   - failback
   - runbook
+description: "Cross-product runbook for executing a DR failover and failback using VMware Site Recovery Manager (SRM) with NetApp SnapMirror replication. Covers..."
 ---
 
 # DR Failover: VMware SRM with NetApp SnapMirror

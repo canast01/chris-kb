@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure resource tags are key-value pairs applied to resources and resource groups for organisation, cost attribution, automation, and governance. A..."
 ---
 # Tagging Standards
 

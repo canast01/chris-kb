@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "AWS support case creation, severity level selection, data collection with AWS CLI, TAM escalation path, and required diagnostics before opening a case for..."
 ---
 # AWS — Escalation
 

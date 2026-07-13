@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Incident Triage reference covering Overview, Triage Process Flow, Initial Diagnosis Checklist, Priority Assignment Guide, Ticket Creation at Triage and 1..."
 ---
 # Incident Triage
 

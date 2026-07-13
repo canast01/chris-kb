@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Backup & Restore reference covering Overview, Protection Method Selection, Native Snapshots, Snapshot Schedules, Veeam Backup & Replication Integration..."
 ---
 # Unity — Backup & Restore
 

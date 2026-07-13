@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "An Azure Virtual Network (VNet) is the fundamental building block for private networking in Azure. Resources in a VNet can communicate with each other..."
 ---
 # Virtual Network
 

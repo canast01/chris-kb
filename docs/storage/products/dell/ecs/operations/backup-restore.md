@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Backup & Restore reference covering Overview, Data Durability Model, Configuration Backup, Restoring Object Data, Veeam Backup Integration and 1 more..."
 ---
 # Dell ECS — Backup & Restore
 

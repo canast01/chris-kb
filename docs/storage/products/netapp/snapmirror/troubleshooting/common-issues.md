@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SnapMirror troubleshooting: snapmirror show -fields status,health for broken relationships, transfer failures, missing common snapshots, and NetApp..."
 ---
 # SnapMirror — Common Issues
 

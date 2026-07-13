@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapCenter CLI reference: Open-SmConnection, Add-SmResources, New-SmBackup, Get-SmBackupReport, Restore-SmBackup, and Get-SmJob cmdlets."
 ---
 # SnapCenter — CLI Reference
 

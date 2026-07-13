@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-networks
   - vmware
+description: "Design Standards reference covering Sizing, Collector Placement Guidelines, Network Requirements, High Availability, Certificate Requirements and 3 more..."
 ---
 # Aria Operations for Networks — Design Standards
 

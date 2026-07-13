@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards reference covering Protocol Performance Breakdown, Identifying Performance..."
 ---
 # InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards
 

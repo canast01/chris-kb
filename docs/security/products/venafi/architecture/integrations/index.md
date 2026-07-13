@@ -2,6 +2,7 @@
 tags:
   - architecture
   - security
+description: "Venafi TPP integrates with Microsoft ADCS as the primary internal CA backend, with DigiCert and Entrust for external and public certificate issuance."
 ---
 # Venafi — Integrations
 

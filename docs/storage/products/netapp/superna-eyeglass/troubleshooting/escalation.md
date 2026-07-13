@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Superna Eyeglass support escalation: how to collect the support bundle via igls and the Admin UI, open a case at support.superna.net, set severity, and..."
 ---
 # Superna Eyeglass — Escalation
 

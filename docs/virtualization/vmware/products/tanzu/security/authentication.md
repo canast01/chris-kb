@@ -3,6 +3,7 @@ tags:
   - security
   - tanzu
   - vmware
+description: "Authentication reference covering Supervisor Authentication (vSphere with Tanzu), TKG Workload Cluster Authentication (Pinniped + Dex), Harbor..."
 ---
 # Tanzu — Authentication
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Backout Plan reference covering Overview, Backout Criteria, Backout Steps Template, Backout Checklist, Validation After Backout and 1 more sections."
 ---
 # Backout Plan
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "Windows Server 2019/2022/2025 infrastructure — Active Directory DS, DNS, SMB file services, Hyper-V, WSUS, and PowerShell-based management. Available in..."
 ---
 # Windows Server — Architecture
 

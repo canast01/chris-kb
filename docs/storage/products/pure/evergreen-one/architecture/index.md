@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Evergreen//One is Pure's Storage-as-a-Service model. Pure owns and manages the hardware on-premises or in colocation. The customer pays for consumed..."
 ---
 # Evergreen//One — Architecture
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - security
+description: "Three-tier PKI hierarchy with offline Root CA, ADCS-backed Issuing CA, and commercial CA integrations; certificate lifecycle managed via auto-enrollment..."
 ---
 # Certificates — Architecture
 

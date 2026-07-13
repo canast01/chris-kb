@@ -3,6 +3,7 @@ tags:
   - operations
   - vmware
   - vxrail
+description: "PowerCLI and bash scripts for VxRail automation. Includes vSAN health summary, cluster capacity report, pre-upgrade validation, node firmware version..."
 ---
 # VxRail Appliance — Scripts
 

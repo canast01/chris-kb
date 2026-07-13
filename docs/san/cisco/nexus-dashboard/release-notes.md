@@ -1,6 +1,7 @@
 ---
 tags:
   - san
+description: "Version history and release notes for Cisco Nexus Dashboard."
 ---
 # Cisco Nexus Dashboard — Release Notes
 

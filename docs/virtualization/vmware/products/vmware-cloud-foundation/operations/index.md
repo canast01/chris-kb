@@ -3,6 +3,7 @@ tags:
   - operations
   - vcf
   - vmware
+description: "Day-to-day operational reference for VMware Cloud Foundation. Covers CLI commands, health checks, routine procedures, lifecycle management, backup..."
 ---
 # VCF — Operations
 

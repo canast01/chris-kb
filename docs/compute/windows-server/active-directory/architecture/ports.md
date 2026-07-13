@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - identity
+description: "Firewall port reference for Microsoft Active Directory Domain Services. Covers client-to-DC authentication, DC-to-DC replication, DNS, LDAP, and Kerberos..."
 ---
 # Active Directory — Ports and Network Requirements
 

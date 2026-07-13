@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Internal architecture and data-path reference: controller pair, NVRAM write path, Purity data reduction pipeline, read/write paths, Protection Groups..."
 ---
 # Pure FlashArray — How It Works
 

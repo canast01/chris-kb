@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Security platform troubleshooting — certificate validation failures, CyberArk vault connectivity, Venafi policy errors, MFA authentication issues, and..."
 ---
 # Security — Troubleshooting
 

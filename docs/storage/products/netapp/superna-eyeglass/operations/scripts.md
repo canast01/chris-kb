@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Automation scripts for Superna Eyeglass — DR test operations, configuration reporting, and SyncIQ health monitoring."
 ---
 # Superna Eyeglass — Scripts
 

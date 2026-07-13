@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "A cipher suite specifies the algorithms used for key exchange, authentication, encryption, and integrity in a TLS connection. Weak cipher suites allow..."
 ---
 # TLS Cipher Suites
 

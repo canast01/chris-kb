@@ -3,6 +3,7 @@ tags:
   - aria-operations
   - security
   - vmware
+description: "Aria Operations hardening — SSO configuration, RBAC, adapter credential management, and audit logging."
 ---
 # Aria Operations — Security
 

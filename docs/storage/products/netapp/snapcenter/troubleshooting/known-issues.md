@@ -4,6 +4,7 @@ tags:
   - snapcenter
   - netapp
   - known-issues
+description: "Catalog of known SnapCenter bugs, error codes, and workarounds covering plugin deployment, backup jobs, and restore operations."
 ---
 # NetApp SnapCenter — Known Issues and Error Codes
 

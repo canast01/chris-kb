@@ -4,6 +4,7 @@ tags:
   - apex
   - dell
   - known-issues
+description: "Dell APEX Storage is a Dell-managed STaaS offering. Hardware operational issues are handled by Dell directly. This page covers tenant-side issues such as..."
 ---
 # Dell APEX Storage as a Service — Known Issues and Error Codes
 

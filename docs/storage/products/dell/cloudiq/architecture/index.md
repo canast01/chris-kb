@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Cloud-native AIOps SaaS platform hosted by Dell. Receives telemetry from on-premises Dell arrays via the Secure Connect Gateway and produces health scores..."
 ---
 # CloudIQ — Architecture
 

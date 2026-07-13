@@ -2,6 +2,7 @@
 tags:
   - aws
   - operations
+description: "AWS CLI commands for EVS cluster and host management, PowerCLI for vSphere operations, NSX-T REST API for network queries, and HCX API for migration..."
 ---
 # Amazon EVS — CLI Reference
 

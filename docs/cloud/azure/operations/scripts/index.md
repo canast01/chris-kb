@@ -2,6 +2,7 @@
 tags:
   - azure
   - operations
+description: "Azure operational scripts: PowerShell and az cli automation for resource provisioning, VM scale operations, Key Vault secret rotation, and policy..."
 ---
 # Azure — Scripts
 

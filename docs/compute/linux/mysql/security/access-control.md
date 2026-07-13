@@ -2,6 +2,7 @@
 tags:
   - linux
   - security
+description: "MySQL access control — user creation, GRANT/REVOKE, privilege hierarchy, role-based access, and auditing who has access to what."
 ---
 # MySQL / MariaDB — Access Control
 

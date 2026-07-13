@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "RecoverPoint procedures: adding consistency groups, bookmarking for CDP recovery, image access (enable test copy), failover, and image disable procedure."
 ---
 # RecoverPoint — Procedures
 

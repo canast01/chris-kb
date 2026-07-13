@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Install & Upgrade reference covering Unity OE Version Matrix, Upgrade Paths, Hardware Refresh, EOL Tracking."
 ---
 # Unity — Install & Upgrade
 

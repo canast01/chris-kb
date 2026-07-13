@@ -2,6 +2,7 @@
 tags:
   - python
   - security
+description: "Hardening reference covering Secure Script Development Checklist Flow, Dependency Management, File and Permission Security, Hardening Checklist."
 ---
 # Python Automation — Hardening
 

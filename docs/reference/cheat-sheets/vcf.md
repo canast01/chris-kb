@@ -2,6 +2,7 @@
 tags:
   - vcf
   - operations
+description: "Top-10 VCF commands for SDDC Manager operations, workload domains, LCM upgrades, and password management via REST API and CLI."
 ---
 # VCF Cheat Sheet
 

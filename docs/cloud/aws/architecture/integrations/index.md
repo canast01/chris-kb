@@ -2,6 +2,7 @@
 tags:
   - architecture
   - aws
+description: "AWS integration patterns: Active Directory Connector, VPC peering and PrivateLink, API Gateway service mesh, EventBridge routing, and on-premises Direct..."
 ---
 # AWS — Integrations
 

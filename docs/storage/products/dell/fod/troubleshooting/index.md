@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "FOD — Troubleshooting navigation for Common Issues, Diagnostics, Escalation."
 ---
 # FOD — Troubleshooting
 

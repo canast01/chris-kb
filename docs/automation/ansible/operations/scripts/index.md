@@ -2,6 +2,7 @@
 tags:
   - ansible
   - operations
+description: "Ansible automation scripts: wrapper scripts for playbook execution, dynamic inventory queries, vault-encrypted credential injection, and CI/CD pipeline..."
 ---
 # Ansible — Scripts
 

@@ -3,6 +3,7 @@ tags:
   - netapp-keystone
   - faq
   - operations
+description: "Common questions about NetApp Keystone operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # NetApp Keystone — Frequently Asked Questions
 

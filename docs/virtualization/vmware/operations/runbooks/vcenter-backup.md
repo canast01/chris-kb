@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "| Field | Value | |---|---| | Risk | Low — read-only operation on the VCSA | | Approval | No formal change required for scheduled backups; ad-hoc backup..."
 ---
 # vCenter File-Based Backup Runbook
 

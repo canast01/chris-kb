@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "ServiceNow change management procedures — change request lifecycle, CAB process, standard changes, and post-implementation review."
 ---
 # ServiceNow — Change Management
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump review, network and latency diagnostics, PG deep dives, and gathering data..."
 ---
 # Ceph — Diagnostics
 

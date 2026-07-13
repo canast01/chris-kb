@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "NetApp Keystone Security reference covering Shared Responsibility, Keystone Collector Security, Storage Security, Access Control, Compliance."
 ---
 # NetApp Keystone Security
 

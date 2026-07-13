@@ -6,6 +6,7 @@ tags:
   - vmware
 search:
   boost: 2
+description: "End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 establish prerequisites and the NSX Manager cluster; Phases 3–4 prepare..."
 ---
 # NSX — Deploy
 

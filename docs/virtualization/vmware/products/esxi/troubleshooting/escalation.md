@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 1.5
+description: "How to escalate ESXi host issues to Broadcom support: what data to collect, how to run the support bundle, step-by-step SR submission on the Broadcom..."
 ---
 # ESXi — Escalation
 

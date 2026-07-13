@@ -2,6 +2,7 @@
 tags:
   - storage
   - operations
+description: "| Field | Value | |---|---| | Risk | Medium | | Approval | Change ticket required; confirm array pool capacity before expanding | | Estimated time | 20–40..."
 ---
 # Storage Volume Expansion Runbook
 

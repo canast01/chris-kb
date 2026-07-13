@@ -4,6 +4,7 @@ tags:
   - vxrail
 search:
   boost: 1.5
+description: "VxRail troubleshooting notes for lifecycle failures, manager issues, host alerts, vSAN alerts, bundles, and network alerts."
 ---
 # VxRail Troubleshooting
 

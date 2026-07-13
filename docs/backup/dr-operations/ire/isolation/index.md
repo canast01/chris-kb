@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "The Isolated Recovery Environment (IRE) is a network-isolated, air-gapped environment used for recovering from ransomware and other destructive attacks..."
 ---
 # IRE — Isolation
 

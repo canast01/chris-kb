@@ -3,6 +3,7 @@ tags:
   - openshift
   - faq
   - operations
+description: "Common questions about Red Hat OpenShift operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Red Hat OpenShift — Frequently Asked Questions
 

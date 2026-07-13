@@ -4,6 +4,7 @@ tags:
   - operations
   - vmware
   - vsphere-8
+description: "ESXi Install & Upgrade reference covering vSphere Update Manager (VUM) — Legacy, Host Upgrade Procedure, ESXi Patch Application (Manual / Standalone)..."
 ---
 # ESXi Install & Upgrade
 

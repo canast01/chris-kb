@@ -7,6 +7,7 @@ tags:
   - vsphere
   - vsphere-7
   - vsphere-8
+description: "Firewall port reference for vCenter Server Appliance (VCSA). Use this to build firewall change requests and validate network segmentation before..."
 ---
 # vCenter — Ports and Network Requirements
 

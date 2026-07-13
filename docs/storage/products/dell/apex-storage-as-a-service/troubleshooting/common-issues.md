@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Common APEX Storage as a Service issues — provisioning failures, connectivity errors, and service-level degradation."
 ---
 # APEX Storage as a Service — Common Issues
 

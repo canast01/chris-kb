@@ -3,6 +3,7 @@ tags:
   - linux
   - faq
   - operations
+description: "Common questions about Linux operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Linux — Frequently Asked Questions
 

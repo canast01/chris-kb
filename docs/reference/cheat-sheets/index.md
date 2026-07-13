@@ -2,6 +2,7 @@
 tags:
   - vsphere
   - operations
+description: "Top-10 CLI and PowerCLI commands for each VMware product — one screenful per product, printable."
 ---
 # Cheat Sheets
 

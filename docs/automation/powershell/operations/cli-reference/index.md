@@ -2,6 +2,7 @@
 tags:
   - operations
   - powershell
+description: "PowerShell is Microsoft's cross-platform command shell and scripting language. Unlike the old CMD prompt, PowerShell works with objects — every command..."
 ---
 # PowerShell — CLI Reference
 

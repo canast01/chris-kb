@@ -6,6 +6,7 @@ tags:
   - cvm
 search:
   boost: 1.5
+description: "Troubleshooting guide for the most frequent Nutanix problems: CVM down or unreachable, NCC failures, storage degraded/critical, network connectivity..."
 ---
 # Nutanix — Common Issues
 

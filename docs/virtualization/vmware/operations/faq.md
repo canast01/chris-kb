@@ -3,6 +3,7 @@ tags:
   - vmware
   - faq
   - operations
+description: "Common questions about VMware vSphere operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # VMware vSphere — Frequently Asked Questions
 

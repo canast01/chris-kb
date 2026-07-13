@@ -4,6 +4,7 @@ tags:
   - linux
 search:
   boost: 1.5
+description: "MySQL initial deployment — installation on RHEL/Ubuntu, post-install hardening, root password setup, firewall rules, and first-connection validation."
 ---
 # MySQL / MariaDB — Initial Deployment
 

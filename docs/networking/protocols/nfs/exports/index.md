@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options, Applying Export Changes, Verifying Exports from Client Side and 1 more..."
 ---
 # NFS Exports
 

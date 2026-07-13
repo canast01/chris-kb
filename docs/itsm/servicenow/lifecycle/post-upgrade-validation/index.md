@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Structured validation procedure to confirm system health and application functionality after any upgrade, patch, or configuration change. Complete within..."
 ---
 # Post-Upgrade Validation
 

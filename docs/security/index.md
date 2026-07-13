@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Security reference: Standard LDAP Integration, Standard SAML Configuration, Active Directory, CyberArk, and 4 more."
 ---
 # Security
 

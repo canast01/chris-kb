@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Install & Upgrade reference covering Platform Updates, API Token Management, Secure Connect Gateway Compatibility, Supported Systems, Renewal and..."
 ---
 # CloudIQ — Install & Upgrade
 

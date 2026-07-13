@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Asset Lifecycle Management reference covering Overview, Lifecycle Stages, Refresh Cycles, EOL Tracking, Budget Planning and 1 more sections."
 ---
 # Asset Lifecycle Management
 

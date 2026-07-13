@@ -3,6 +3,7 @@ tags:
   - aria-operations
   - security
   - vmware
+description: "Access Control reference covering RBAC Roles, Object-Level Access Permissions, Creating a Service Account for API Access, Reviewing Current Role..."
 ---
 # Aria Operations — Access Control
 

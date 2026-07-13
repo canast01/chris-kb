@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Hardening reference covering Hardening Checklist, Network Requirements Summary."
 ---
 # FOD — Hardening
 

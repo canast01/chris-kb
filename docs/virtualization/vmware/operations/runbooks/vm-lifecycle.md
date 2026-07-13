@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "VM Lifecycle Runbook reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections."
 ---
 # VM Lifecycle Runbook
 

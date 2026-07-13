@@ -1,6 +1,7 @@
 ---
 tags:
   - vxrail
+description: "RASR is the Dell VxRail node rebuild utility. It boots from a USB drive or ISO, wipes the local disks, re-images ESXi and VxRail Manager, and returns the..."
 ---
 # VxRail — Rapid Appliance Self Recovery (RASR)
 

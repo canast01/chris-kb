@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Emergency change process — expedited approval path for urgent production fixes; CAB override criteria, evidence requirements, and post-implementation..."
 ---
 # ServiceNow — Emergency Changes
 

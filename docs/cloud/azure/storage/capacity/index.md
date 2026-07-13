@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Capacity Monitoring reference covering Overview, Storage Account Metrics, Capacity Alerts, Container-Level Capacity, Forecasting and Trend Analysis and 1..."
 ---
 # Azure Storage — Capacity Monitoring
 

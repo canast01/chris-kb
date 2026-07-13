@@ -3,6 +3,7 @@ tags:
   - horizon
   - operations
   - vmware
+description: "Horizon day-2 operations — Connection Server health monitoring, active session management, desktop pool recompose and instant clone image push, App..."
 ---
 # Horizon (VDI) — Operations
 

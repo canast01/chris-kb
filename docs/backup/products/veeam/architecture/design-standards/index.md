@@ -2,6 +2,7 @@
 tags:
   - architecture
   - veeam
+description: "Standards reference covering Job Naming Convention, Retention Schedule, Backup Job Configuration Standards, Encryption Standard, Proxy Standards and 3..."
 ---
 # Veeam — Standards
 

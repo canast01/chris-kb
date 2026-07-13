@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Virtualization quick-reference hub: emergency checks, vCenter commands, VM performance checks, and a slow-VM decision tree — one-stop for rapid incident..."
 ---
 # Virtualization Quick Reference
 

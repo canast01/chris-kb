@@ -1,6 +1,7 @@
 ---
 tags:
   - certifications
+description: "Storage Practice Notes reference covering RAID Level Quick Reference, Thin vs Thick Provisioning, Deduplication vs Compression, Replication Types..."
 ---
 # Storage Practice Notes
 

@@ -3,6 +3,7 @@ tags:
   - dell-fod
   - faq
   - operations
+description: "Common questions about Dell Features on Demand operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell Features on Demand — Frequently Asked Questions
 

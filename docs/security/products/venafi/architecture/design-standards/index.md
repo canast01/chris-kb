@@ -2,6 +2,7 @@
 tags:
   - architecture
   - security
+description: "Certificate policy standards enforced through the Venafi policy tree. All certificates issued through Venafi must comply with these standards..."
 ---
 # Venafi — Standards
 

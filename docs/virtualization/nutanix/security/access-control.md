@@ -5,6 +5,7 @@ tags:
   - access-control
   - rbac
   - prism-central
+description: "Nutanix RBAC in Prism Central — custom roles, categories-based VM access, projects, and self-service permissions. Covers Prism Element built-in roles and..."
 ---
 # Nutanix — Access Control
 

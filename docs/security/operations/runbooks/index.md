@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Security operational runbooks — certificate renewal, PAM credential rotation, firewall rule review, access recertification, and hardening check schedule."
 ---
 # Security — Operational Runbooks
 

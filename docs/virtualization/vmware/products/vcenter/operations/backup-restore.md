@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Backup & Restore reference covering Alert on Backup Failure, Restore Procedure, Recovery Scenarios, Certificates to Track Before Any Restore, vCenter High..."
 ---
 # vCenter — Backup & Restore
 

@@ -3,6 +3,7 @@ tags:
   - horizon
   - operations
   - vmware
+description: "CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG CLI (hzedge), PowerShell — VMware.Hv.Helper, Horizon REST API."
 ---
 # Horizon — CLI Reference
 

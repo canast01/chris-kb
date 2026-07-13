@@ -1,6 +1,7 @@
 ---
 tags:
   - openshift
+description: "Version history and release notes for OpenShift."
 ---
 # OpenShift — Release Notes
 

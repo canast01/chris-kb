@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Azure OpenAI security covers authentication methods, role-based access control (RBAC), managed identity, customer-managed keys (CMK), and content..."
 ---
 # Azure OpenAI Security
 

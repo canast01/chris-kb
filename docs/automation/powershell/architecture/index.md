@@ -2,6 +2,7 @@
 tags:
   - architecture
   - powershell
+description: "Cross-platform automation shell on .NET; execution engine processes input through parser → AST → runspace → pipeline; remoting via WinRM (5985/5986) or..."
 ---
 # PowerShell — Architecture
 

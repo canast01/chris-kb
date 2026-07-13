@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "| Field | Value | |---|---| | Risk | Low | | Approval | Verify requester identity — no change ticket required for standard user accounts | | Estimated..."
 ---
 # Account Unlock Runbook
 

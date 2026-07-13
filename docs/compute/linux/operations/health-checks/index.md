@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "Routine checks, service validation, and status verification."
 ---
 # Linux — Health Checks
 

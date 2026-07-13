@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 1.5
+description: "How to escalate VMware vSAN issues to Broadcom support: what data to collect, how to run vm-support and cmmds-tool, step-by-step case creation on..."
 ---
 # vSAN — Escalation
 

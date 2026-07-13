@@ -5,6 +5,7 @@ tags:
   - brocade
   - san
   - known-issues
+description: "Catalog of known SANnav bugs, error codes, and workarounds covering switch discovery, performance data, and upgrade issues."
 ---
 # Brocade SANnav — Known Issues and Error Codes
 

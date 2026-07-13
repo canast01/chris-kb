@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Standards reference covering Upgrade Notes, Design Standards."
 ---
 # APEX Storage as a Service — Standards
 

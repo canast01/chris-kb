@@ -2,6 +2,7 @@
 tags:
   - linux
   - security
+description: "PostgreSQL hardening — disabling superuser remote login, SSL enforcement, restricting pg_hba.conf, file permissions, and CIS benchmark key controls."
 ---
 # PostgreSQL — Hardening
 

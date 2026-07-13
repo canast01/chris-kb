@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Asset tracking, CMDB, environment mapping, lifecycle, and license management procedures within ServiceNow."
 ---
 # ServiceNow — Asset Inventory
 

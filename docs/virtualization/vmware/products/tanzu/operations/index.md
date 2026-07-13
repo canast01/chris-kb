@@ -3,6 +3,7 @@ tags:
   - operations
   - tanzu
   - vmware
+description: "Tanzu day-to-day operations — cluster lifecycle management, namespace administration, workload deployment, and health monitoring."
 ---
 # Tanzu — Operations
 

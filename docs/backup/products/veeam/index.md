@@ -3,6 +3,7 @@ tags:
   - veeam
 search:
   boost: 2
+description: "Veeam Backup & Replication — Backup Server scheduling, Proxy data movement via VADP or agent, and Scale-Out Backup Repository with immutable object..."
 ---
 # Veeam
 

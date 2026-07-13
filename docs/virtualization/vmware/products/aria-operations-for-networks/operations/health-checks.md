@@ -3,6 +3,7 @@ tags:
   - aria-networks
   - operations
   - vmware
+description: "Health checks for Aria Operations for Networks (vRNI) — collector connectivity, data source status, flow freshness, platform disk and resource health, and..."
 ---
 # vRNI Health Checks
 

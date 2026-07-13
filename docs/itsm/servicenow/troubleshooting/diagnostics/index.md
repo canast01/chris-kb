@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "ServiceNow diagnostic tools: check instance health and thread state via stats.do, inspect live DB queries in the DB Activity Monitor, run the System..."
 ---
 # ServiceNow — Diagnostics
 

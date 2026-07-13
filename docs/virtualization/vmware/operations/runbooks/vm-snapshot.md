@@ -2,6 +2,7 @@
 tags:
   - operations
   - vmware
+description: "| Field | Value | |---|---| | Risk | Low (taking) / Medium (removing) | | Approval | No formal change required to take; revert requires change ticket | |..."
 ---
 # VM Snapshot Runbook
 

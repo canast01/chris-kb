@@ -2,6 +2,7 @@
 tags:
   - operations
   - python
+description: "Scripts reference covering Purpose, Windows Python Environment Setup Flow."
 ---
 # Python Automation — Scripts
 

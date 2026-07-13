@@ -4,6 +4,7 @@ tags:
   - security
 search:
   boost: 1.5
+description: "CyberArk PAM initial deployment: Digital Vault, CPM, PVWA, PSM, initial account onboarding, LDAP integration, and deployment validation."
 ---
 # CyberArk PAM — Initial Deployment
 

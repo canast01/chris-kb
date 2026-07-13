@@ -3,6 +3,7 @@ tags:
   - powercli
   - security
   - vmware
+description: "Managing vSphere encryption via PowerCLI — vSAN encryption enablement and key rotation, VM encryption (vSphere VMcrypt) configuration, KMS cluster..."
 ---
 # PowerCLI — Encryption
 

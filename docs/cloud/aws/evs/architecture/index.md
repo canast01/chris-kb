@@ -2,6 +2,7 @@
 tags:
   - architecture
   - aws
+description: "EVS architecture: bare-metal EC2 instances running VCF, VPC-native networking, vSAN HCI storage, NSX-T overlay, and on-premises connectivity via Direct..."
 ---
 # Amazon EVS — Architecture
 

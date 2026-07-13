@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure VM Extensions are small applications that perform post-deployment configuration and automation tasks on Azure VMs. They are managed by the Azure VM..."
 ---
 # VM Extensions
 

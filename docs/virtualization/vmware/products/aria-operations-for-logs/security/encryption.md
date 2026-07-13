@@ -3,6 +3,7 @@ tags:
   - aria-logs
   - security
   - vmware
+description: "Encryption reference covering TLS Certificate Replacement, Verifying Certificate Validity, Log Ingestion Transport Encryption, Data at Rest Encryption..."
 ---
 # Aria Ops for Logs — Encryption
 

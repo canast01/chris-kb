@@ -3,6 +3,7 @@ tags:
   - nutanix
   - learning-path
   - getting-started
+description: "Recommended reading order for engineers getting up to speed on Nutanix HCI — from first concepts through day-to-day operations to advanced topics and..."
 ---
 # Nutanix — Learning Path
 

@@ -2,6 +2,7 @@
 tags:
   - linux
   - security
+description: "MySQL hardening — removing defaults, binding to specific interfaces, disabling LOAD DATA LOCAL, audit plugin, and CIS benchmark key controls."
 ---
 # MySQL / MariaDB — Hardening
 

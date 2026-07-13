@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "FabricOS troubleshooting: porterrshow, portlogdump, errshow, ISL link bounce causes, zone merge conflicts, and escalation to Brocade TAC."
 ---
 # FabricOS — Common Issues
 

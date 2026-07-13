@@ -3,6 +3,7 @@ tags:
   - operations
   - vmware
   - vxrail
+description: "Backup and restore coverage for VxRail clusters. Covers VxRail Manager VM backup, pre-LCM snapshots, ESXi host configuration export, vCenter VAMI..."
 ---
 # VxRail — Backup & Restore
 

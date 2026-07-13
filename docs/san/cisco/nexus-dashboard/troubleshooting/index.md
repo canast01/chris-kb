@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing Nexus Dashboard site onboarding failures, fabric health alerts, flow collection gaps, and connectivity issues."
 ---
 # Cisco Nexus Dashboard — Troubleshooting
 

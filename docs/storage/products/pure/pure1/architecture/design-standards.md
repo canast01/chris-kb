@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Array naming standards, team access model, alert threshold configuration, and operational baselines for Pure1."
 ---
 # Pure1 — Design Standards
 

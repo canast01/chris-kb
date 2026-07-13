@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "Recommended reading order for vSAN. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # vSAN — Learning Path
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell Unity automation scripts: PowerShell Toolkit cmdlets for snapshot management, host registration, LUN provisioning, and health status polling."
 ---
 # Unity — Scripts
 

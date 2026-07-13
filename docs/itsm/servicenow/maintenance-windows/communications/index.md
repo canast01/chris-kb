@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Maintenance Window Communications reference covering Overview, Communication Timeline, Stakeholder List, Notification Templates, Bridge and War Room..."
 ---
 # Maintenance Window Communications
 

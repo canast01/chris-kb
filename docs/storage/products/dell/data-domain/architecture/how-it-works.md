@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Architecture, Data Path, Components, HA Options and 2 more sections."
 ---
 # Data Domain — How It Works
 

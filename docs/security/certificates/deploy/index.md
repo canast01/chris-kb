@@ -4,6 +4,7 @@ tags:
   - security
 search:
   boost: 1.5
+description: "Certificate infrastructure deployment — CA hierarchy build-out, ADCS configuration, and initial trust distribution."
 ---
 # Certificates — Deploy
 

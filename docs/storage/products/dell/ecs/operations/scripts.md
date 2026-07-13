@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell ECS automation scripts: curl REST API examples for bucket management, namespace health polling, replication status checks, and alert-to-ticket..."
 ---
 # Dell ECS — Scripts
 

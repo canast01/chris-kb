@@ -3,6 +3,7 @@ tags:
   - patch-compliance
   - faq
   - operations
+description: "Common questions about Patch Compliance operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Patch Compliance — Frequently Asked Questions
 

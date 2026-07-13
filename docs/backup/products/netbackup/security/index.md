@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - security
+description: "NetBackup hardening — access control, certificate management, encryption at rest and in transit, and audit logging."
 ---
 # NetBackup — Security
 

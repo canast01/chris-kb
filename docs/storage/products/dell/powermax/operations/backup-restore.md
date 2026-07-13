@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Backup & Restore reference covering Overview, SnapVX Architecture, Creating and Managing Snapshots, Linking Snapshots for Backup or Restore, Restore..."
 ---
 # PowerMax — Backup & Restore
 

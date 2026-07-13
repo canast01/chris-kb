@@ -3,6 +3,7 @@ tags:
   - aria-operations
   - operations
   - vmware
+description: "CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service Enable/Disable), Useful Paths, REST API Quick Reference, Related Sections."
 ---
 # Aria Operations — CLI Reference
 

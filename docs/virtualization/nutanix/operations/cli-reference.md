@@ -6,6 +6,7 @@ tags:
   - ncli
   - acli
   - ncc
+description: "Complete reference for Nutanix CLIs: ncli (cluster management), acli (AHV VM management), ncc (health checks), allssh (multi-CVM commands), and key..."
 ---
 # Nutanix — CLI Reference
 

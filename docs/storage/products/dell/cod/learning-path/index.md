@@ -2,6 +2,7 @@
 tags:
   - dell
   - learning-path
+description: "Recommended reading order for Dell Capacity on Demand. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Dell Capacity on Demand (COD) — Learning Path
 

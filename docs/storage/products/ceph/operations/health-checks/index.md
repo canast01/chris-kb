@@ -2,6 +2,7 @@
 tags:
   - ceph
   - operations
+description: "Ceph health check routine: cluster status, OSD up/in counts, PG state verification, MON quorum, capacity thresholds, and recovery progress monitoring."
 ---
 # Ceph — Health Checks
 

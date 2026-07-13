@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Eyeglass provides the igls CLI accessible from the appliance shell via SSH and a REST API for automation. OneFS SyncIQ CLI commands are used alongside..."
 ---
 # Superna Eyeglass — CLI Reference
 

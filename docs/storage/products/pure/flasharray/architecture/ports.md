@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - storage
+description: "Firewall port reference for Pure Storage FlashArray. Covers Purity management, iSCSI and NVMe-oF/TCP data paths, ActiveCluster synchronous replication..."
 ---
 # Pure FlashArray — Ports and Network Requirements
 

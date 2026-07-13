@@ -5,6 +5,7 @@ tags:
   - dell
   - vmware
   - known-issues
+description: "Catalog of known VxRail bugs, error codes, and workarounds covering LCM upgrades, iDRAC, VxRail Manager, and vSphere integration."
 ---
 # Dell VxRail — Known Issues and Error Codes
 

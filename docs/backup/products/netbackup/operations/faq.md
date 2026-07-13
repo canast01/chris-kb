@@ -3,6 +3,7 @@ tags:
   - netbackup
   - faq
   - operations
+description: "Common questions about Veritas NetBackup operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Veritas NetBackup — Frequently Asked Questions
 

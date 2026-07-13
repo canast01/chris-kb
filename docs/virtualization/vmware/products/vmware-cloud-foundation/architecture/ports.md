@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - sddc
+description: "Firewall port reference for VMware Cloud Foundation (VCF). VCF uses the same ports as its component products (vCenter, ESXi, vSAN, NSX). This page covers..."
 ---
 # VCF — Ports and Network Requirements
 

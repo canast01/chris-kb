@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission, RHCOS node hardening, Compliance Operator, audit logging, network..."
 ---
 # OpenShift — Hardening
 

@@ -4,6 +4,7 @@ tags:
   - nsx
   - nsx-4
   - vmware
+description: "How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulation, Transport Zones, Gateway Architecture — T0 and T1 and 7 more sections."
 ---
 # NSX — How It Works
 

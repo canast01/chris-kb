@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "End-to-end deployment guide for VMware Site Recovery Manager DR orchestration. Phases 1–2 establish prerequisites and deploy SRM at both the protected and..."
 ---
 # SRM — Deploy
 

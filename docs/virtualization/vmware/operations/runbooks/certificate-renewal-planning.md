@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "VMware Certificate Renewal Runbook reference covering Identify the Expiring Certificate, Confirm Affected Products, Capture Current Certificate Details..."
 ---
 # VMware Certificate Renewal Runbook
 

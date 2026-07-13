@@ -2,6 +2,7 @@
 tags:
   - github-actions
   - operations
+description: "Health Checks reference covering Runner Health, Workflow Failures, Secrets and Credentials, Runner Resources."
 ---
 # GitHub Actions — Health Checks
 

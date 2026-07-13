@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Storage Evergreen//One Integration reference covering Pure1 Integration, Capacity True-Up Integration with Finance, VMware Integration, Backup..."
 ---
 # Pure Storage Evergreen//One Integration
 

@@ -4,6 +4,7 @@ tags:
   - pure1
   - pure-storage
   - known-issues
+description: "Catalog of known Pure1 issues covering array connectivity, portal access, and data display problems. Pure1 is a SaaS platform — most issues are phone-home..."
 ---
 # Pure1 — Known Issues and Error Codes
 

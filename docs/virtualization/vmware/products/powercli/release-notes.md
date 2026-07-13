@@ -2,6 +2,7 @@
 tags:
   - powercli
   - vmware
+description: "Version history and release notes for VMware PowerCLI."
 ---
 # VMware PowerCLI — Release Notes
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Step-by-step procedures for conducting, documenting, and remediating periodic access reviews across AD, service accounts, and privileged groups..."
 ---
 # Access Review — Procedures
 

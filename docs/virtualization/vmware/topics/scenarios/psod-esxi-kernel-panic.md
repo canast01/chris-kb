@@ -4,6 +4,7 @@ tags:
   - scenarios
   - vmware
   - vsphere-8
+description: "A PSOD is ESXi's kernel panic — the host halts immediately and displays a purple screen with a backtrace. All VMs on the host are terminated instantly..."
 ---
 # PSOD — ESXi Kernel Panic (Purple Screen of Death)
 

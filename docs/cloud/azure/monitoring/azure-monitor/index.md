@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure Monitor is the unified observability platform for Azure. It collects metrics and logs from Azure resources, operating systems, applications, and..."
 ---
 # Azure Monitor
 

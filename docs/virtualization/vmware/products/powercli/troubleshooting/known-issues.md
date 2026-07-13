@@ -4,6 +4,7 @@ tags:
   - powercli
   - vmware
   - known-issues
+description: "Catalog of known PowerCLI bugs, error codes, and workarounds covering module loading, certificate handling, and API compatibility."
 ---
 # VMware PowerCLI — Known Issues and Error Codes
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "Fibre Channel reference — WWPN/WWNN addressing, zoning, fabric login (FLOGI), multipathing, and SAN fabric health."
 ---
 # Fibre Channel
 

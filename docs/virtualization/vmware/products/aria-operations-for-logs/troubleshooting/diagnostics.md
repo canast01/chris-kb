@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ingestion.log, check cluster node health via API, diagnose Cassandra..."
 ---
 # Aria Operations for Logs — Diagnostics
 

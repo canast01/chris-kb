@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Evergreen//One (Evergreen Sub-Service) reference covering How Evergreen//One Works, Subscription Components, Pure1 Monitoring (Customer View), SLA..."
 ---
 # Evergreen//One (Evergreen Sub-Service)
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - github-actions
+description: "GitHub Actions is an event-driven CI/CD and automation platform embedded directly into GitHub repositories. It executes workflows in response to..."
 ---
 # GitHub Actions — How It Works
 

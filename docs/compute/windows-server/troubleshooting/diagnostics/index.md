@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "Diagnostics reference covering Windows Event Log Pipeline, Key Security Event IDs, Searching by Event ID, Exporting Logs, Event Log Forwarding (WEF) and 3..."
 ---
 # Windows Server — Diagnostics
 

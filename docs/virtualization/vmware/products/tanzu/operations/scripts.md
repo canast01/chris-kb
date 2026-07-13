@@ -3,6 +3,7 @@ tags:
   - operations
   - tanzu
   - vmware
+description: "Scripts reference covering Get All TKG Clusters and Status, Get All PVCs Across All Namespaces (Identify Unbound), Check All Node Resource Usage, Export..."
 ---
 # Tanzu — Scripts
 

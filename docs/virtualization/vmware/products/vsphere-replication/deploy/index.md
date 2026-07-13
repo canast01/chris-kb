@@ -5,6 +5,7 @@ tags:
   - vsphere-replication
 search:
   boost: 1.5
+description: "End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment at source and target sites, vCenter registration, site pairing, per-VM..."
 ---
 # vSphere Replication — Deploy
 

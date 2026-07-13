@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Standards reference covering Naming Conventions, Sizing and Path Count Model, Build and Deployment Baseline, Configuration Checklist."
 ---
 # PowerPath — Standards
 

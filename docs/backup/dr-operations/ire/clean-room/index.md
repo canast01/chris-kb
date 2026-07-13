@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "The clean room is a verified, malware-free subset of the IRE used to analyse and validate recovered data before reintroducing it to production. Verify..."
 ---
 # IRE — Clean Room
 

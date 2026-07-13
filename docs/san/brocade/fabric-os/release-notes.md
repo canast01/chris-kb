@@ -1,6 +1,7 @@
 ---
 tags:
   - san
+description: "Version history and release notes for Brocade Fabric OS."
 ---
 # Brocade Fabric OS — Release Notes
 

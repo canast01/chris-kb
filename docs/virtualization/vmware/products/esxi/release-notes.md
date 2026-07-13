@@ -3,6 +3,7 @@ tags:
   - esxi
   - vmware
   - vsphere-8
+description: "Version history and release notes for VMware ESXi."
 ---
 # VMware ESXi — Release Notes
 

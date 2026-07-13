@@ -3,6 +3,7 @@ tags:
   - architecture
   - vmware
   - vxrail
+description: "Dell VxRail is a hyper-converged infrastructure (HCI) appliance that combines compute, storage, and networking in a pre-integrated, factory-configured..."
 ---
 # VxRail — How It Works (VMware Platform)
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing ESXi hosts showing disconnected or not responding in vCenter — management network failures, HA isolation, hostd/vpxa agent issues, and..."
 ---
 # Host Disconnected / Not Responding
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Asset Cleanup and Decommission reference covering Overview, Decommission Workflow, Data Wiping Standards, Dependency Verification Checklist, Physical..."
 ---
 # Asset Cleanup and Decommission
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Venafi Trust Protection Platform knowledge base covering certificate lifecycle management, CA connector integrations, policy tree design, auto-renewal, HA..."
 ---
 # Venafi
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing SANnav connectivity issues, fabric discovery failures, certificate errors, and alert configuration problems."
 ---
 # SANnav — Troubleshooting
 

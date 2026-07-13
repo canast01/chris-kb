@@ -3,6 +3,7 @@ tags:
   - security
   - vmware
   - vsphere-replication
+description: "Access Control reference covering vSphere Replication Uses vCenter RBAC, VR-Specific vCenter Privileges, Recommended Role Assignments, VRA Appliance Admin..."
 ---
 # vSphere Replication — Access Control
 

@@ -6,6 +6,7 @@ tags:
   - ncc
 search:
   boost: 1.5
+description: "Daily and weekly Nutanix cluster health check routine — NCC automated tests, cluster status verification, storage capacity review, CVM health, and alert..."
 ---
 # Nutanix — Health Checks
 

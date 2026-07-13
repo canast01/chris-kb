@@ -5,6 +5,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for Pure Storage FlashBlade. FlashBlade provides unified fast file and object storage. Covers management access, NFS, SMB, S3..."
 ---
 # Pure Storage FlashBlade — Ports and Network Requirements
 

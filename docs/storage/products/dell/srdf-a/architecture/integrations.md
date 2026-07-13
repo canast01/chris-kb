@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "SRDF/A integrations: coexistence with TimeFinder snapshots, RecoverPoint on VMAX, EMC SRDF/EDP (extended distance), and Symmetrix DMX compatibility."
 ---
 # SRDF/A — Integrations
 

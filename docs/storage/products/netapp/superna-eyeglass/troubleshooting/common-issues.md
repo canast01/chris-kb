@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Common Superna Eyeglass issues — sync failures, DR test errors, configuration drift, and SyncIQ job problems."
 ---
 # Superna Eyeglass — Common Issues
 

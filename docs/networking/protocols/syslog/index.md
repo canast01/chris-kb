@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "Syslog and Centralized Logging reference covering Syslog Service Health, Configure rsyslog to Forward to Central Collector, journald to Syslog Bridge..."
 ---
 # Syslog and Centralized Logging
 

@@ -2,6 +2,7 @@
 tags:
   - azure
   - certifications
+description: "Azure Exam Tracking reference covering Certification Path Overview, Exam Structure — AZ-900 (Fundamentals), Exam Structure — AZ-104 (Administrator), Exam..."
 ---
 # Azure Exam Tracking
 

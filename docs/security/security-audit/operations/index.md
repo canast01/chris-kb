@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "Step-by-step procedures for conducting infrastructure security audits, reviewing firewall rules, auditing privileged accounts, checking certificates, and..."
 ---
 # Security Audit — Procedures
 

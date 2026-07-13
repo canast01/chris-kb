@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "ESXi host build standard: NTP server list, syslog destination, vSwitch MTU, BIOS power profile, scratch datastore, and lockdown mode requirements."
 ---
 # Host Build Standard
 

@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Azure Private Link enables private connectivity to Azure PaaS services (Storage, Key Vault, SQL, etc.) over a private endpoint in your VNet — eliminating..."
 ---
 # Azure — Private Link
 

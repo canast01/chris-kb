@@ -4,6 +4,7 @@ tags:
   - operations
   - backup
   - restore
+description: "Nutanix native snapshot-based protection, Protection Domain replication to a remote cluster, Prism Central DR policies, and integration with Veeam and..."
 ---
 # Nutanix — Backup & Restore
 

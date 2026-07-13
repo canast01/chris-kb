@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "Host maintenance and patching is the most common planned task in VMware operations. Done correctly it produces zero VM downtime — DRS vMotions all VMs off..."
 ---
 # Host Maintenance and Patching
 

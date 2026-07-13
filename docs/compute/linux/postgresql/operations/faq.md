@@ -3,6 +3,7 @@ tags:
   - postgresql
   - faq
   - operations
+description: "Common questions about PostgreSQL operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # PostgreSQL — Frequently Asked Questions
 

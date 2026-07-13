@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell PowerMax (formerly VMAX) is Dell's enterprise all-flash storage platform. The CLI tool is SYMCLI (Solutions Enabler CLI) — commands follow a..."
 ---
 # PowerMax — CLI Reference (SYMCLI)
 

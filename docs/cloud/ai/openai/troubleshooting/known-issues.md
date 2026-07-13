@@ -5,6 +5,7 @@ tags:
   - cloud
   - ai
   - known-issues
+description: "Catalog of known OpenAI API bugs, error codes, and workarounds covering rate limits, API errors, and model availability."
 ---
 # OpenAI API — Known Issues and Error Codes
 

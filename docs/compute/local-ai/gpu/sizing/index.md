@@ -3,6 +3,7 @@ tags:
   - gpu
   - ai
   - local-ai
+description: "Selecting the right GPU — and the right number of them — depends on model size, task type (training vs inference), throughput requirements, and budget..."
 ---
 # GPU Sizing for AI Workloads
 

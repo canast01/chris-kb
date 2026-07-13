@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "NetApp Keystone offers tiered service levels based on performance characteristics. Each service level is defined by IOPS and latency targets per TB."
 ---
 # Keystone Service Levels
 

@@ -3,6 +3,7 @@ tags:
   - horizon
   - security
   - vmware
+description: "Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Entitlements, App Volumes Permission Model, UAG Access Control, Service..."
 ---
 # Horizon — Access Control
 

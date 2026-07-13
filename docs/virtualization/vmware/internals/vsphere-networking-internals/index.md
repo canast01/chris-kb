@@ -2,6 +2,7 @@
 tags:
   - internals
   - vmware
+description: "vSphere Distributed Switch separates control plane (vCenter) from data plane (ESXi kernel module). Port group types, NIOC traffic pools, teaming policies..."
 ---
 # vSphere Networking Internals
 

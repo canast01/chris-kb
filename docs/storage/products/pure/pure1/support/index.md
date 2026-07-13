@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Support reference covering Diagnostic Bundle Collection, Severity Definitions, Evergreen Support — What's Covered, Proactive Support Features, Escalation..."
 ---
 # Pure1 — Support
 

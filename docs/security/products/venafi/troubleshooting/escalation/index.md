@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Procedures for raising support cases with Venafi, collecting diagnostic data, and escalating critical incidents."
 ---
 # Venafi Vendor Support
 

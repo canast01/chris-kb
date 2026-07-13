@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "SnapCenter backup and restore: creating resource groups, on-demand Protect Now, restore to original location, clone from backup, and SnapVault restore..."
 ---
 # SnapCenter — Backup & Restore
 

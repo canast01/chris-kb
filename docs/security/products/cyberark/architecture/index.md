@@ -2,6 +2,7 @@
 tags:
   - architecture
   - security
+description: "PAM platform with Digital Vault as the encrypted credential store, CPM for automated rotation, PSM for session proxying and recording, and PVWA as the web..."
 ---
 # CyberArk — Architecture
 

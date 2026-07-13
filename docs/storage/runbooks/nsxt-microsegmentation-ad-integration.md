@@ -9,6 +9,7 @@ tags:
   - vcenter
   - security
   - runbook
+description: "Cross-product runbook for deploying NSX-T microsegmentation backed by Active Directory identity. Covers AD LDAP integration, security group creation from..."
 ---
 
 # NSX-T Microsegmentation with Active Directory Integration

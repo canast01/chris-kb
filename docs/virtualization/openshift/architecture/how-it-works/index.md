@@ -1,6 +1,7 @@
 ---
 tags:
   - architecture
+description: "Control plane components, etcd quorum, API server request flow, scheduler decisions, and how the operator pattern manages cluster resources."
 ---
 # OpenShift — How It Works
 

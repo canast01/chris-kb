@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - netapp
+description: "Recommended reading order for NetApp InsightIQ. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # NetApp InsightIQ — Learning Path
 

@@ -2,6 +2,7 @@
 tags:
   - architecture
   - ceph
+description: "Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network separation (public vs cluster), CRUSH hierarchy for fault domains, and..."
 ---
 # Ceph — Design Standards
 

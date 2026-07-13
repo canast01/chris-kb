@@ -1,6 +1,7 @@
 ---
 tags:
   - windows
+description: "Version history and release notes for SQL Server."
 ---
 # SQL Server — Release Notes
 

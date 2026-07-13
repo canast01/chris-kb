@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Storage Evergreen Vendor Support reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path."
 ---
 # Pure Storage Evergreen Vendor Support
 

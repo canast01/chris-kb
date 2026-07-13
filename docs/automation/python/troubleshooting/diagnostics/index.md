@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Python diagnostic commands: read the full traceback, trace imports with python3 -v, step through code with pdb, enable DEBUG logging, profile CPU with..."
 ---
 # Python Automation — Diagnostics
 

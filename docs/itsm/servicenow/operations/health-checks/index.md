@@ -2,6 +2,7 @@
 tags:
   - operations
   - servicenow
+description: "Routine health checks detect degradation before users are impacted. This page defines the daily, weekly, and on-demand checks for a ServiceNow production..."
 ---
 # ServiceNow — Health Checks
 

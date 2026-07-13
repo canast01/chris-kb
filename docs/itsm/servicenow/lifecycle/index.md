@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "System onboarding, upgrade readiness, migration, post-upgrade validation, rollback, and decommission procedures."
 ---
 # ServiceNow — Lifecycle Management
 

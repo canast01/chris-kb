@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "RecoverPoint CLI reference: get_all_rpas, get_rp_system_settings, fail_over_group, test_links, get_journal_full_percentage, and set_rp_volume commands."
 ---
 # RecoverPoint CLI Reference
 

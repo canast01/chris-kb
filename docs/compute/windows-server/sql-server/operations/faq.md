@@ -3,6 +3,7 @@ tags:
   - sql-server
   - faq
   - operations
+description: "Common questions about Microsoft SQL Server operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Microsoft SQL Server — Frequently Asked Questions
 

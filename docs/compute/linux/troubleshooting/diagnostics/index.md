@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Linux diagnostic commands: query journald for service errors, read dmesg for hardware and kernel events, search auditd for SELinux denials and auth..."
 ---
 # Linux — Diagnostics
 

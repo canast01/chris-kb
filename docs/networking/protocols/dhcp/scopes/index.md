@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "DHCP Scopes reference covering Overview, Creating a Scope, Exclusions, Scope Planning Reference, Superscopes and 2 more sections."
 ---
 # DHCP Scopes
 

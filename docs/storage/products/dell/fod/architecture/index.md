@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Consumption-based capacity model on PowerMax, PowerStore, and PowerScale. Additional capacity is pre-installed in the array and metered monthly — billing..."
 ---
 # Flex on Demand — Architecture
 

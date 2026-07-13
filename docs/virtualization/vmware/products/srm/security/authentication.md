@@ -3,6 +3,7 @@ tags:
   - security
   - srm
   - vmware
+description: "Authentication reference covering Site Pairing Authentication (Certificate-Based), SRA Authentication to Storage Array, REST API Authentication, vSphere..."
 ---
 # SRM — Authentication
 

@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, snapmirror modify -encryption-algorithm, and ONTAP NAE/NVE for at-rest encryption of..."
 ---
 # SnapMirror — Encryption
 

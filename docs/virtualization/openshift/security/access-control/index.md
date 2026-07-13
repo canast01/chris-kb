@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accounts, SCCs, namespace isolation, project request templates, and API audit..."
 ---
 # OpenShift — Access Control
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - certifications
+description: "AI Platforms reference covering AWS Bedrock, Azure OpenAI Service, Google Vertex AI, Hugging Face, Platform Comparison Table and 1 more sections."
 ---
 # AI Platforms
 

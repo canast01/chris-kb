@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing merge conflicts, broken remote connections, rebase failures, and common Git workflow errors."
 ---
 # Git — Troubleshooting
 

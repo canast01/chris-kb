@@ -2,6 +2,7 @@
 tags:
   - architecture
   - windows
+description: "How It Works reference covering Overview, Editions and Installation Types, Role Topology."
 ---
 # Windows Server — How It Works
 

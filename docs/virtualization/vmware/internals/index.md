@@ -2,6 +2,7 @@
 tags:
   - internals
   - vmware
+description: "Deep-dive articles on how core vSphere components work internally — cluster services, compute scheduling, networking, storage, security, lifecycle, and..."
 ---
 # VMware Internals
 

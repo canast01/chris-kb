@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Script Reference reference covering Subscription Capacity Report, Alert Configuration Audit, Evergreen//One SLA Consumption Tracker, Protection Group..."
 ---
 # Evergreen — Script Reference
 

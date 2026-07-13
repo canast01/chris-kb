@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Cross-product disaster recovery governance and operations — DR design, runbooks, recovery testing, Isolated Recovery Environment, backup validation..."
 ---
 # DR Operations
 

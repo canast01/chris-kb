@@ -2,6 +2,7 @@
 tags:
   - powershell
   - security
+description: "PowerShell authentication: credential objects, Get-Credential, service account management, certificate-based auth, and -UseDefaultCredentials with..."
 ---
 # PowerShell — Authentication
 

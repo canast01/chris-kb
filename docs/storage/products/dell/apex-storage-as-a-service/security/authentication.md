@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "APEX STaaS authentication: CloudIQ portal SSO with SAML 2.0, API OAuth2 token generation, MFA enforcement policy, and service account credential rotation."
 ---
 # APEX Storage as a Service — Authentication
 

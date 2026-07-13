@@ -3,6 +3,7 @@ tags:
   - gpu
   - ai
   - local-ai
+description: "Monitoring GPU workloads requires tracking utilisation, memory, temperature, power draw, and errors. nvidia-smi provides instant snapshots; DCGM provides..."
 ---
 # GPU Monitoring
 

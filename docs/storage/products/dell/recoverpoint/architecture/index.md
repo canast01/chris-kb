@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Dell EMC RecoverPoint journal-based replication — RPA clusters intercept writes via splitters and maintain a rolling journal enabling point-in-time..."
 ---
 # RecoverPoint — Architecture
 

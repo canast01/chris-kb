@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Dell Unity XT issues to Dell Technologies support: what data to collect, how to run uemcli diagnostics and generate the service..."
 ---
 # Unity XT — Escalation
 

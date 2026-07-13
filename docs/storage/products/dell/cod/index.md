@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "Dell Capacity on Demand — software-defined capacity licensing for PowerMax and VMAX. Pre-installed drives are activated via license key with no truck roll..."
 ---
 # Dell Capacity on Demand
 

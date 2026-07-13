@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "An app registration in Microsoft Entra ID creates an identity for an application that needs to authenticate with Azure AD or access Azure resources and..."
 ---
 # App Registrations
 

@@ -2,6 +2,7 @@
 tags:
   - san
   - security
+description: "DCNM hardening — AAA configuration, RBAC, TLS enforcement, and management interface access controls."
 ---
 # Cisco DCNM — Security
 

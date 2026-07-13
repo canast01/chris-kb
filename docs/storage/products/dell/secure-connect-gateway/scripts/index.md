@@ -1,6 +1,7 @@
 ---
 tags:
   - dell
+description: "SCG automation scripts: dcicli health polling, REST API examples for device inventory, and automated alert forwarding to ITSM platforms."
 ---
 # Secure Connect Gateway — Scripts
 

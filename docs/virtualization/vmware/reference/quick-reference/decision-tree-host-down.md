@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "Use this when a vSphere host shows Not Responding or Disconnected in vCenter."
 ---
 # Decision Tree: Host Down
 

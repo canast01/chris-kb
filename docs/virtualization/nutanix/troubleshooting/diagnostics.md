@@ -5,6 +5,7 @@ tags:
   - diagnostics
   - logs
   - support-bundle
+description: "Nutanix diagnostic commands: run NCC health checks across the cluster, inspect node and disk health with ncli, review alerts and events in Prism, use..."
 ---
 # Nutanix — Diagnostics
 

@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Pure Storage Support Cases reference covering Opening a Support Case, Case Severity Levels, Gathering Diagnostic Information, What to Include in a Case..."
 ---
 # Pure Storage Support Cases
 

@@ -2,6 +2,7 @@
 tags:
   - san
   - security
+description: "FabricOS encryption: in-flight data encryption via FC-SP-2, IPsec for FCIP tunnels, certificate management with seccertmgmt, and key lifecycle policy."
 ---
 # FabricOS — Encryption
 

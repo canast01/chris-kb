@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "SNMP polling is the process of an NMS periodically querying devices to collect metrics."
 ---
 # SNMP Polling
 

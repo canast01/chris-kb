@@ -4,6 +4,7 @@ tags:
   - operations
   - vmware
   - vsphere-8
+description: "ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Datastores & VMDK, SAN Connectivity (iSCSI / FC), VM Management (vim-cmd) and 6..."
 ---
 # ESXi CLI Reference
 

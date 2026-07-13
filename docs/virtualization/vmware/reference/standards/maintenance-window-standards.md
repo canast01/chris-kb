@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VMware Maintenance Window Standards reference covering Change Ticket Requirement, Stakeholder Notification, Window Definition, Pre-Change Evidence..."
 ---
 # VMware Maintenance Window Standards
 

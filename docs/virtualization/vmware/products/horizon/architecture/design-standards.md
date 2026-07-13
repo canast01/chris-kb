@@ -3,6 +3,7 @@ tags:
   - architecture
   - horizon
   - vmware
+description: "Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and Network Design, UAG Sizing, App Volumes Sizing and 3 more sections."
 ---
 # Horizon — Design Standards
 

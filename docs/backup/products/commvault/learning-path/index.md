@@ -2,6 +2,7 @@
 tags:
   - commvault
   - learning-path
+description: "Recommended reading order for Commvault data protection. Follow these stages in order to build a complete mental model before working with it in..."
 ---
 # Commvault — Learning Path
 

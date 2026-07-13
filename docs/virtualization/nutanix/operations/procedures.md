@@ -3,6 +3,7 @@ tags:
   - nutanix
   - operations
   - procedures
+description: "Common Nutanix operational procedures — adding and removing nodes, entering maintenance mode, expanding storage, upgrading AOS/AHV via LCM, cloning VMs..."
 ---
 # Nutanix — Procedures
 

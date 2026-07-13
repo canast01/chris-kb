@@ -2,6 +2,7 @@
 tags:
   - architecture
   - ceph
+description: "Ceph architecture: RADOS object store, daemon roles (OSD/MON/MGR/MDS), CRUSH map for data placement, replication vs erasure coding pools, and client..."
 ---
 # Ceph — Architecture
 

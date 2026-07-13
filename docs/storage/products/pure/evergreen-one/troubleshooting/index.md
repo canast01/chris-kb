@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Pure Storage Evergreen//One Troubleshooting reference covering Common Issues, Diagnostic Commands, Log Locations, Before Calling Support."
 ---
 # Pure Storage Evergreen//One Troubleshooting
 

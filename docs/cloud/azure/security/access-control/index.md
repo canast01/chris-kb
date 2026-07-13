@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "Azure access control is built on Azure Role-Based Access Control (RBAC)."
 ---
 # Azure — Access Control
 

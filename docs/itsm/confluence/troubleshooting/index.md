@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing Confluence performance issues, indexing failures, login problems, macro errors, and sync failures."
 ---
 # Confluence — Troubleshooting
 

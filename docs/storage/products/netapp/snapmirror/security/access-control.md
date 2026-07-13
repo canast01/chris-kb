@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "SnapMirror access control: ONTAP RBAC role with snapmirror-* privileges, SVM admin scoping, intercluster peer authentication, and audit trail review."
 ---
 # SnapMirror — Access Control
 

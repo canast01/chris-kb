@@ -6,6 +6,7 @@ tags:
   - firewall
   - ports
   - monitoring
+description: "Firewall port reference for NetApp InsightIQ. InsightIQ is a performance analytics tool that collects and displays performance data from PowerScale..."
 ---
 # NetApp InsightIQ — Ports and Network Requirements
 

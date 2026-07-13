@@ -2,6 +2,7 @@
 tags:
   - architecture
   - jira
+description: "Integrations reference covering Integration Landscape, GitHub Integration, Bitbucket Integration, CI/CD Pipeline Integration, REST API Overview and 4 more..."
 ---
 # Jira — Integrations
 

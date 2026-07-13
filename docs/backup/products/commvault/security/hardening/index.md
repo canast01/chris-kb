@@ -2,6 +2,7 @@
 tags:
   - commvault
   - security
+description: "Hardening reference covering Network Security, Security Hardening Checklist."
 ---
 # Commvault — Hardening
 

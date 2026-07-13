@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Venafi hardening — CA connector security, policy enforcement, RBAC, and certificate authority trust chain management."
 ---
 # Venafi — Security
 

@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing Unity replication failures, host connectivity issues, LUN/share provisioning errors, and drive faults."
 ---
 # Unity — Troubleshooting
 

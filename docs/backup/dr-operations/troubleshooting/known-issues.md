@@ -4,6 +4,7 @@ tags:
   - dr-operations
   - backup
   - known-issues
+description: "Catalog of known issues in DR runbook operations covering failover testing, network re-IP, DNS cutover, and application restart sequencing."
 ---
 # DR Operations — Known Issues and Error Codes
 

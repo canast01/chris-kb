@@ -2,6 +2,7 @@
 tags:
   - san
   - security
+description: "SANnav hardening — RBAC, TLS configuration, user management, and secure communication with managed switches."
 ---
 # SANnav — Security
 

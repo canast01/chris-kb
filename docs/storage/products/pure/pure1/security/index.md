@@ -2,6 +2,7 @@
 tags:
   - pure
   - security
+description: "Pure1 Security reference covering Access Control (RBAC), SSO Configuration (SAML 2.0), Authentication Flow (RSA Key), Audit Logging, Data Security and 1..."
 ---
 # Pure1 Security
 

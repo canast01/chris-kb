@@ -4,6 +4,7 @@ tags:
   - scenarios
   - vmware
   - vsphere-8
+description: "An ESXi host shows 'Disconnected' or 'Not Responding' in vCenter. This scenario walks through confirming whether VMs are still running, testing management..."
 ---
 # ESXi Host Disconnected from vCenter
 

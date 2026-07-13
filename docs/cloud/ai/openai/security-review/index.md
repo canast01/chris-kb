@@ -3,6 +3,7 @@ tags:
   - openai
   - ai
   - security
+description: "Security considerations when integrating the OpenAI API into production systems: data retention policies, prompt injection, PII handling, compliance..."
 ---
 # OpenAI Security Review
 

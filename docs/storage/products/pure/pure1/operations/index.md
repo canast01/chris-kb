@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Pure1 operations: fleet health dashboard review, predictive analytics alert configuration, capacity and performance trending, and support case creation..."
 ---
 # Pure1 Operations
 

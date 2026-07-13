@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Scale-Out Object Storage Topology, Erasure Coding, Virtual Data Centers (VDC), Replication Groups and..."
 ---
 # Dell ECS — How It Works
 

@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share/export configurations, access zone mappings, and SmartConnect zone..."
 ---
 # Superna Eyeglass — Backup & Restore
 

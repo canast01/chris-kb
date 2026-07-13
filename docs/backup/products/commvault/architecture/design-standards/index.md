@@ -2,6 +2,7 @@
 tags:
   - architecture
   - commvault
+description: "Standards reference covering Naming Conventions, Retention Schedule, VMware vSphere Standards, Encryption Standard."
 ---
 # Commvault — Standards
 

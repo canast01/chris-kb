@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "ECS diagnostic commands: authenticate to the Management REST API and check cluster node health with GET /vdc/nodes, inspect active alerts via /vdc/alerts..."
 ---
 # Dell ECS — Diagnostics
 

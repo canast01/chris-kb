@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "How to escalate VMware PowerCLI issues to Broadcom support: what diagnostic data to collect, how to generate a minimal reproduction, step-by-step case..."
 ---
 # PowerCLI — Escalation
 

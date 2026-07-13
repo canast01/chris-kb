@@ -4,6 +4,7 @@ tags:
   - nsx-4
   - operations
   - vmware
+description: "Health checks for NSX — Manager cluster status, transport node health, Edge BGP sessions, DFW policy state, certificate expiry, alarm review, backup age..."
 ---
 # NSX — Health Checks
 

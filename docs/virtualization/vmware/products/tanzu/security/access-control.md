@@ -3,6 +3,7 @@ tags:
   - security
   - tanzu
   - vmware
+description: "Access Control reference covering Supervisor / vSphere Namespace RBAC, Kubernetes RBAC (Workload Clusters), Harbor RBAC, Network Policy (Namespace..."
 ---
 # Tanzu — Access Control
 

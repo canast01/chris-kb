@@ -2,6 +2,7 @@
 tags:
   - azure
   - security
+description: "TLS validation in Azure covers certificate management for App Gateway, App Service custom domains, API Management, and Azure Front Door, plus monitoring..."
 ---
 # Azure — TLS Validation
 

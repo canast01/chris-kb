@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "NTP Validation reference covering Validation Checklist, Validation Commands, Post-Config Convergence, Validating NTP on Multiple Hosts, Common Validation..."
 ---
 # NTP Validation
 

@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell FoD install and upgrade: SCG registration for automatic telemetry, FoD licence activation procedure, and upgrade path for capacity tier changes."
 ---
 # FOD — Install & Upgrade
 

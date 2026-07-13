@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "SnapCenter design standards: plugin server placement, SQL/Oracle/VMware plugin sizing, repository database requirements, and SnapCenter to ONTAP version..."
 ---
 # SnapCenter — Standards
 

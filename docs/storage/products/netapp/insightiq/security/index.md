@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "InsightIQ Security reference covering Authentication, OneFS Service Account Security, Database Backup Encryption, Audit Logging, Security Hardening..."
 ---
 # InsightIQ Security
 

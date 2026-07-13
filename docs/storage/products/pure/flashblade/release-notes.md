@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Version history and release notes for Pure FlashBlade."
 ---
 # Pure FlashBlade — Release Notes
 

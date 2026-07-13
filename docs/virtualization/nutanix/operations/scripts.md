@@ -4,6 +4,7 @@ tags:
   - operations
   - scripts
   - automation
+description: "Reusable scripts for Nutanix operational tasks — cluster health snapshot, storage utilisation report, NCC automation, VM inventory export, and maintenance..."
 ---
 # Nutanix — Scripts
 

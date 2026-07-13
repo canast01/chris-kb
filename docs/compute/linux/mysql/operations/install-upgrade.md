@@ -2,6 +2,7 @@
 tags:
   - linux
   - operations
+description: "MySQL install and upgrade procedures — major version upgrade path, in-place upgrade steps, upgrade checker tool, and post-upgrade validation."
 ---
 # MySQL / MariaDB — Install & Upgrade
 

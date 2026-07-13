@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure1 Standards reference covering Array Tagging Policy, Capacity Threshold Standards, Alert Notification Routing, Health Score Standards, API Access..."
 ---
 # Pure1 Standards
 

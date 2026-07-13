@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "VMware Logs Quick Reference reference covering ESXi Log Locations, vCenter Appliance Log Locations, Collecting a vCenter Support Bundle, Collecting an..."
 ---
 # VMware Logs Quick Reference
 

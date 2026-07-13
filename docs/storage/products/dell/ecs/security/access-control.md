@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "Access Control reference covering RBAC, Namespace Isolation, Compliance, Access Review Procedure."
 ---
 # Dell ECS — Access Control
 

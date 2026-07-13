@@ -2,6 +2,7 @@
 tags:
   - azure
   - operations
+description: "VM image management, patching via Azure Update Manager, and service upgrades."
 ---
 # Azure — Install & Upgrade
 

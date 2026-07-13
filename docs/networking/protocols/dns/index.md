@@ -2,6 +2,7 @@
 title: DNS
 tags:
   - networking
+description: "Domain Name System (DNS) is the foundational naming protocol of IP networks, resolving hostnames to addresses (and vice versa) over UDP and TCP port 53..."
 ---
 
 # DNS

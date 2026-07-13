@@ -3,6 +3,7 @@ title: AWS — Certifications
 tags:
   - aws
   - certifications
+description: "Certifications reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes."
 ---
 
 # AWS — Certifications

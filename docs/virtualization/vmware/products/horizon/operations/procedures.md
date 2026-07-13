@@ -3,6 +3,7 @@ tags:
   - horizon
   - operations
   - vmware
+description: "Day-2 Horizon procedures — managing desktop and RDS pools, user entitlements, session operations, instant clone recompose, certificate renewal, UAG..."
 ---
 # Horizon — Procedures
 

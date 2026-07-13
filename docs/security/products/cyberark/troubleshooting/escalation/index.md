@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "CyberArk PAM support escalation: how to run the DiagnosticTool, collect component logs, open a case at support.cyberark.com, and follow the escalation..."
 ---
 # CyberArk — Escalation
 

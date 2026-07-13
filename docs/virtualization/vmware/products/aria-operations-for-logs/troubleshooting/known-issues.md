@@ -4,6 +4,7 @@ tags:
   - aria-operations-for-logs
   - vmware
   - known-issues
+description: "Catalog of known Aria Operations for Logs (vRLI) bugs, error codes, and workarounds covering syslog ingestion, agent issues, and cluster problems."
 ---
 # VMware Aria Operations for Logs — Known Issues and Error Codes
 

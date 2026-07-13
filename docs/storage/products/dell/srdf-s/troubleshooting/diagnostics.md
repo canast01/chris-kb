@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "SRDF/S diagnostic commands: check pair state and link health with symrdf, measure WAN round-trip time, collect RF port statistics, read SRDF event logs..."
 ---
 # SRDF/S — Diagnostics
 

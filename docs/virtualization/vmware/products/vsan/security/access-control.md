@@ -4,6 +4,7 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+description: "vSAN access control is implemented through vCenter's Role-Based Access Control (RBAC) system. There is no separate vSAN permission model — all vSAN..."
 ---
 # vSAN — Access Control
 

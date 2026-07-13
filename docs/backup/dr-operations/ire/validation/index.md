@@ -1,6 +1,7 @@
 ---
 tags:
   - dr
+description: "Validation is the final gate before restored systems return to production. It covers technical verification (application health, data integrity) and..."
 ---
 # IRE — Validation
 

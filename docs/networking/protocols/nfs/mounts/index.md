@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount Option Reference, Automount with autofs and 1 more sections."
 ---
 # NFS Mounts
 

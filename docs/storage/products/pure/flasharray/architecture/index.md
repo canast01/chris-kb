@@ -2,6 +2,7 @@
 tags:
   - architecture
   - pure
+description: "Architecture reference for Pure Storage FlashArray. Covers the dual-controller HA model, product lines (//X/C/E), host connectivity protocols (FC, iSCSI..."
 ---
 # FlashArray — Architecture
 

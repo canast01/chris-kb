@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "A vCenter upgrade using the VCSA installer or the in-place upgrade wizard fails partway through, leaving vCenter in a partially upgraded, non-functional..."
 ---
 # vCenter Upgrade Failure / Rollback
 

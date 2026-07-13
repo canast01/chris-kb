@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - terraform
+description: "Recommended reading order for HashiCorp Terraform. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # Terraform — Learning Path
 

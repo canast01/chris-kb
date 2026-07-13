@@ -3,6 +3,7 @@ tags:
   - aria-automation
   - security
   - vmware
+description: "Aria Automation hardening — RBAC configuration, endpoint credentials, certificate management, and audit logging."
 ---
 # Aria Automation — Security
 

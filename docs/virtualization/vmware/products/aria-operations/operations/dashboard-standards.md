@@ -3,6 +3,7 @@ tags:
   - aria-operations
   - operations
   - vmware
+description: "Monitoring Dashboard Standards reference covering Grafana — Dashboard as Code, Validation Checklist, Dashboard Review Cadence."
 ---
 # Monitoring Dashboard Standards
 

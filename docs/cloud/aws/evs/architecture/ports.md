@@ -6,6 +6,7 @@ tags:
   - networking
   - firewall
   - ports
+description: "Firewall port reference for AWS Elastic VMware Service (EVS). EVS runs VMware vSphere, vSAN, and NSX-T natively on AWS bare-metal infrastructure inside..."
 ---
 # AWS Elastic VMware Service (EVS) — Ports and Network Requirements
 

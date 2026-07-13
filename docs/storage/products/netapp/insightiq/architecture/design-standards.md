@@ -2,6 +2,7 @@
 tags:
   - architecture
   - netapp
+description: "VM sizing, data retention policy, network access requirements, naming conventions, and configuration baselines for InsightIQ deployments."
 ---
 # InsightIQ — Design Standards
 

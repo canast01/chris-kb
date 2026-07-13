@@ -2,6 +2,7 @@
 tags:
   - github-actions
   - security
+description: "Workflow secrets management, OIDC token auth, permission scoping, branch protection, and GitHub Actions runner hardening."
 ---
 # GitHub Actions — Security
 

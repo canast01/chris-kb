@@ -2,6 +2,7 @@
 tags:
   - netapp
   - operations
+description: "Install & Upgrade reference covering Version Compatibility Matrix, EOL Tracking, License Management."
 ---
 # Superna Eyeglass — Install & Upgrade
 

@@ -2,6 +2,7 @@
 tags:
   - security
   - servicenow
+description: "ServiceNow hardening — ACLs, role-based access, MID server security, SSO configuration, and audit logging."
 ---
 # ServiceNow — Security
 

@@ -3,6 +3,7 @@ tags:
   - dell-powerstore
   - faq
   - operations
+description: "Common questions about Dell PowerStore operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Dell PowerStore — Frequently Asked Questions
 

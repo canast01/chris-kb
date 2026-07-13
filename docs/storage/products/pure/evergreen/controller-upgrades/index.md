@@ -1,6 +1,7 @@
 ---
 tags:
   - pure
+description: "Pure Storage Controller Upgrades reference covering How Controller Upgrades Work, Customer Pre-Upgrade Responsibilities, During the Upgrade, Verifying..."
 ---
 # Pure Storage Controller Upgrades
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "vSAN Degraded Object Runbook reference covering Confirm vSAN Health State, Identify Affected Objects, Check Failed Disks, Check Host Availability, Check..."
 ---
 # vSAN Degraded Object Runbook
 

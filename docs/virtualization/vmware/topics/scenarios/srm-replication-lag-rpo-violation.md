@@ -3,6 +3,7 @@ tags:
   - scenarios
   - srm
   - vmware
+description: "An RPO violation means replicated VMs are falling behind their target recovery point — the DR copy is more than X minutes behind the production VM. If the..."
 ---
 # SRM Replication Lag / RPO Violation
 

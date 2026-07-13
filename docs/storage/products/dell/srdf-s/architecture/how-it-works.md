@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Write Commit Model, RTT Requirements, Recovery Time Standards."
 ---
 # SRDF/S — How It Works
 

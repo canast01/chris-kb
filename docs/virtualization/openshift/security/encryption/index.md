@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certificate management, Vault integration, image signature verification, and..."
 ---
 # OpenShift — Encryption
 

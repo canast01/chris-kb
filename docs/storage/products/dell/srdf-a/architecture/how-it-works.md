@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "How It Works reference covering Overview, Delta Set Mechanics, Lag Reference, Connectivity."
 ---
 # SRDF/A — How It Works
 

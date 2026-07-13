@@ -2,6 +2,7 @@
 tags:
   - operations
   - security
+description: "| Field | Value | |---|---| | Risk | Medium | | Approval | Standard change for planned renewals; emergency change if < 7 days to expiry | | Estimated time..."
 ---
 # Certificate Renewal Runbook
 

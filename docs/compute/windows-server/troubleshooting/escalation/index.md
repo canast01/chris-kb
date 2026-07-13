@@ -4,6 +4,7 @@ tags:
   - windows
 search:
   boost: 1.5
+description: "How to escalate Windows Server issues to Microsoft support: what data to collect, how to run the diagnostic package, step-by-step case creation on the..."
 ---
 # Windows Server — Escalation
 

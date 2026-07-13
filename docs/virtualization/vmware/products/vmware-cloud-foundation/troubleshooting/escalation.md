@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "How to open a Broadcom support case for VMware Cloud Foundation: what data to collect, how to set severity, step-by-step SR submission, and the escalation..."
 ---
 # VCF Troubleshooting — Escalation
 

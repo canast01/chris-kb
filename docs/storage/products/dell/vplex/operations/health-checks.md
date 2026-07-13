@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Health Checks reference covering Daily Checks, Health Check, Cluster Status, Director Health, Pre-Change Checklist and 1 more sections."
 ---
 # Dell VPLEX — Health Checks
 

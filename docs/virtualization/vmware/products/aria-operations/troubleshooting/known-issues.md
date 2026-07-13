@@ -4,6 +4,7 @@ tags:
   - aria-operations
   - vmware
   - known-issues
+description: "Catalog of known Aria Operations (vROps) bugs, error codes, and workarounds covering collector issues, adapter failures, and alerting."
 ---
 # VMware Aria Operations — Known Issues and Error Codes
 

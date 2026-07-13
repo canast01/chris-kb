@@ -2,6 +2,7 @@
 tags:
   - architecture
   - github-actions
+description: "Event-driven CI/CD platform embedded in GitHub repositories; workflows defined in YAML trigger on push, PR, schedule, or API call; jobs run in parallel on..."
 ---
 # GitHub Actions — Architecture
 

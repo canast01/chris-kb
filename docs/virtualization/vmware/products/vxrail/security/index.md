@@ -2,6 +2,7 @@
 tags:
   - security
   - vxrail
+description: "VxRail security: vCenter SSO integration, VxRail Manager account lockout policy, TLS 1.2 enforcement, SCG certificate management, and role separation for..."
 ---
 # VxRail Security
 

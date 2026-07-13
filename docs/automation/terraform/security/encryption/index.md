@@ -2,6 +2,7 @@
 tags:
   - security
   - terraform
+description: "Encryption reference covering Secrets and Encryption Architecture, Secrets Management with Terraform, Sensitive Variable Handling, Encryption Reference."
 ---
 # Terraform — Encryption
 

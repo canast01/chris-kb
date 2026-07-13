@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "CloudIQ: Proactive Recommendations and Implementation Tracking reference covering Implementing a Recommendation, Energy Savings Recommendations, Tracking..."
 ---
 # CloudIQ: Proactive Recommendations and Implementation Tracking
 

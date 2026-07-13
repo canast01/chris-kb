@@ -3,6 +3,7 @@ tags:
   - troubleshooting
   - networking
   - known-issues
+description: "Index of protocol-specific known issues and error codes for networking components. This top-level page links to per-protocol known-issues catalogs."
 ---
 # Networking — Known Issues Reference
 

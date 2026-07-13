@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "How to escalate VMware Horizon issues to Broadcom support: what data to collect, how to generate the Connection Server support bundle, step-by-step case..."
 ---
 # Horizon — Escalation
 

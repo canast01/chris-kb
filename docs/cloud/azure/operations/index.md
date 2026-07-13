@@ -2,6 +2,7 @@
 tags:
   - azure
   - operations
+description: "Operations reference covering Change Readiness, Incident Triage, Maintenance Window, Post-Change Validation."
 ---
 # Azure — Operations
 

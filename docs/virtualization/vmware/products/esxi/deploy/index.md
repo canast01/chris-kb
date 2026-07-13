@@ -6,6 +6,7 @@ tags:
   - vsphere-8
 search:
   boost: 2
+description: "Step-by-step guide to deploying a new ESXi host: hardware readiness, installation, network and storage configuration, vCenter join, and baseline hardening."
 ---
 # ESXi Host Deployment
 

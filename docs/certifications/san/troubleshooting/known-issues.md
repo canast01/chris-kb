@@ -4,6 +4,7 @@ tags:
   - san
   - certifications
   - known-issues
+description: "Catalog of known issues related to SAN certification exam preparation — covering common exam topic misunderstandings, lab environment issues, and practice..."
 ---
 # SAN Certifications — Known Issues and Error Codes
 

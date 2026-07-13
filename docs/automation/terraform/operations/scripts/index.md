@@ -2,6 +2,7 @@
 tags:
   - operations
   - terraform
+description: "Scripts reference covering Purpose, Multi-Workspace Deploy Pipeline, Windows: Terraform Plan and Apply (CMD Batch), Windows: Terraform State Audit..."
 ---
 # Terraform — Scripts
 

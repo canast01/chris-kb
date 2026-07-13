@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "NFS Versions reference covering Version Comparison, Recommended Version, Checking NFS Version in Use, Configuring NFS Version, NFSv4 ID Mapping and 1 more..."
 ---
 # NFS Versions
 

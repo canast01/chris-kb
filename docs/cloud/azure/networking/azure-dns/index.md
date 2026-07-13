@@ -2,6 +2,7 @@
 tags:
   - azure
   - networking
+description: "Azure DNS hosts DNS zones and provides name resolution using the Azure infrastructure. It supports both public DNS zones (internet-facing) and private DNS..."
 ---
 # Azure DNS
 

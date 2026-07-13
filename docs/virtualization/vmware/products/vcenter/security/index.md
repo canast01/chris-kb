@@ -4,6 +4,7 @@ tags:
   - vcenter
   - vmware
   - vsphere-8
+description: "Security reference for VMware vCenter Server. Covers SSO authentication, identity sources, role-based access control, certificate management, and..."
 ---
 # vCenter — Security
 

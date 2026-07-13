@@ -2,6 +2,7 @@
 tags:
   - vcf
   - vmware
+description: "Version history and release notes for VMware Cloud Foundation."
 ---
 # VMware Cloud Foundation — Release Notes
 

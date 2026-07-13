@@ -1,6 +1,7 @@
 ---
 tags:
   - confluence
+description: "Version history and release notes for Confluence."
 ---
 # Confluence — Release Notes
 

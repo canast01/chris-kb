@@ -1,6 +1,7 @@
 ---
 tags:
   - security
+description: "Session recordings are encrypted at rest using AES-256. Vault audit log integrity is protected by the Vault's internal signing mechanism. PVWA enforces..."
 ---
 # CyberArk — Encryption
 

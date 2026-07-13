@@ -2,6 +2,7 @@
 title: NFS
 tags:
   - networking
+description: "Network File System (NFS) allows hosts to mount remote directories over TCP. Coverage includes version selection (NFSv3/4/4.1), export configuration..."
 ---
 
 # NFS

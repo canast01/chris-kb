@@ -2,6 +2,7 @@
 tags:
   - aws
   - networking
+description: "AWS Route Tables reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections."
 ---
 # AWS Route Tables
 

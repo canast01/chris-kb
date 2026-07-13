@@ -4,6 +4,7 @@ tags:
   - cyberark
   - pam
   - known-issues
+description: "Catalog of known CyberArk PAM bugs, error codes, and workarounds covering Vault, PVWA, CPM, and PSM components."
 ---
 # CyberArk — Known Issues and Error Codes
 

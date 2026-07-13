@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Enterprise applications in Microsoft Entra ID represent the service principal for an application within your tenant. They are created automatically when..."
 ---
 # Enterprise Applications
 

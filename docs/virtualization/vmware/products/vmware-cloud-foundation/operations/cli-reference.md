@@ -3,6 +3,7 @@ tags:
   - operations
   - vcf
   - vmware
+description: "CLI Reference reference covering Support Bundles, SDDC Manager REST API, Password Management, Service Status & Logs."
 ---
 # VCF Operations — CLI Reference
 

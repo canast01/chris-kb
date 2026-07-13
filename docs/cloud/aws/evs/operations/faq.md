@@ -3,6 +3,7 @@ tags:
   - aws-evs
   - faq
   - operations
+description: "Common questions about AWS Elastic VMware Service (EVS) operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations..."
 ---
 # AWS Elastic VMware Service (EVS) — Frequently Asked Questions
 

@@ -2,6 +2,7 @@
 tags:
   - internals
   - vmware
+description: "vCenter High Availability (VCHA) deploys three vCenter instances — active, passive, and witness — with database replication over a private HA network..."
 ---
 # vCenter HA Internals
 

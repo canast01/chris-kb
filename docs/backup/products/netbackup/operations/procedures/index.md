@@ -2,6 +2,7 @@
 tags:
   - netbackup
   - operations
+description: "NetBackup operational procedures: creating and tuning backup policies, storage unit configuration, schedule management, and deduplication pool maintenance."
 ---
 # NetBackup — Procedures
 

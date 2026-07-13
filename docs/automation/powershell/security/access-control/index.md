@@ -2,6 +2,7 @@
 tags:
   - powershell
   - security
+description: "PowerShell access control: execution policy enforcement, JEA (Just Enough Administration) configuration, module signing requirements, and constrained..."
 ---
 # PowerShell — Access Control
 

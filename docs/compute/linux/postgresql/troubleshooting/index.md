@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "PostgreSQL troubleshooting hub: replication failures, bloat, lock contention, crash recovery, and escalation path to EnterpriseDB or community support."
 ---
 # PostgreSQL — Troubleshooting
 

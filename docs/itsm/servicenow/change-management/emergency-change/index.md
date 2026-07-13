@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Emergency changes bypass the standard CAB cycle to address active outages or critical security incidents. All approvals and documentation occur during or..."
 ---
 # Emergency Change Procedure
 

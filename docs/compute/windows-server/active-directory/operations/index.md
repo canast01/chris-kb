@@ -2,6 +2,7 @@
 tags:
   - operations
   - windows
+description: "Active Directory day-to-day operations — user and group management, GPO administration, replication health, and OU structure."
 ---
 # Active Directory — Operations
 

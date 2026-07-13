@@ -4,6 +4,7 @@ tags:
   - veeam
 search:
   boost: 1.5
+description: "Veeam diagnostic commands: check job status and session history with PowerShell, identify proxy and repository issues, collect the support bundle, and..."
 ---
 # Veeam — Diagnostics
 

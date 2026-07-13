@@ -3,6 +3,7 @@ tags:
   - architecture
   - srm
   - vmware
+description: "How It Works (VMware Platform) reference covering Site Topology, Test Failover Workflow, Planned Migration, Disaster Recovery Failover, Failback Process..."
 ---
 # SRM — How It Works (VMware Platform)
 

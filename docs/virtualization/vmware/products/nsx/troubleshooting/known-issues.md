@@ -5,6 +5,7 @@ tags:
   - vmware
   - known-issues
   - nsx-4
+description: "Catalog of known NSX-T / NSX 4.x bugs, error codes, and workarounds covering management plane, data plane, and overlay networking issues."
 ---
 # VMware NSX — Known Issues and Error Codes
 

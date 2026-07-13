@@ -4,6 +4,7 @@ tags:
   - netapp
   - ontap
   - known-issues
+description: "Catalog of known ONTAP bugs, error codes, and workarounds covering NFS, SMB, SnapMirror, iSCSI, and cluster health."
 ---
 # NetApp ONTAP — Known Issues and Error Codes
 

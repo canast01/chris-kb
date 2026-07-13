@@ -1,6 +1,7 @@
 ---
 tags:
   - networking
+description: "SMB Share Permissions reference covering Overview, Viewing and Setting Share Permissions, Creating Shares with net share, Combining NTFS and Share..."
 ---
 # SMB Share Permissions
 

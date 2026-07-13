@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Diagnosing DCNM fabric sync issues, template deployment failures, connectivity errors, and common DCNM problems."
 ---
 # Cisco DCNM — Troubleshooting
 

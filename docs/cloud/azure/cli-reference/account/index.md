@@ -1,6 +1,7 @@
 ---
 tags:
   - azure
+description: "Azure account CLI: az account set, az group create/list/delete, az subscription list, az policy assignment create, and resource lock management."
 ---
 # Account, Subscriptions & Resource Groups
 

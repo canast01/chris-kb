@@ -1,6 +1,7 @@
 ---
 tags:
   - reference
+description: "A repeatable morning workflow to confirm the environment is healthy before the business day begins."
 ---
 # Daily VMware Operations Workflow
 

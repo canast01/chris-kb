@@ -3,6 +3,7 @@ tags:
   - powercli
   - security
   - vmware
+description: "Managing vSphere RBAC via PowerCLI: auditing existing permissions, creating automation service roles with least-privilege, assigning roles to objects, and..."
 ---
 # PowerCLI — Access Control
 

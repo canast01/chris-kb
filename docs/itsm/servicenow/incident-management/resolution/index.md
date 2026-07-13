@@ -1,6 +1,7 @@
 ---
 tags:
   - servicenow
+description: "Incident Resolution reference covering Overview, Resolution vs Workaround, Resolution Steps Process, RCA Triggers, Post-Resolution Monitoring and 1 more..."
 ---
 # Incident Resolution
 

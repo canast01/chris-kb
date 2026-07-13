@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "PowerShell escalation: when to escalate to Microsoft support, how to file a PowerShell Core bug, how to collect WinRM and DSC diagnostics, and the..."
 ---
 # PowerShell — Escalation
 

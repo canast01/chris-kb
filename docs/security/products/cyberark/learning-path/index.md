@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - security
+description: "Recommended reading order for CyberArk Privileged Access Management. Follow these stages in order to build a complete mental model before working with it..."
 ---
 # CyberArk PAM — Learning Path
 

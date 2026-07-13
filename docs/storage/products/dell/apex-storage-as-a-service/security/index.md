@@ -2,6 +2,7 @@
 tags:
   - dell
   - security
+description: "APEX Storage as a Service — Security reference: Authentication, Access Control, Encryption, Hardening."
 ---
 # APEX Storage as a Service — Security
 

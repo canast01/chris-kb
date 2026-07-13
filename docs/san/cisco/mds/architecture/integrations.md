@@ -2,6 +2,7 @@
 tags:
   - architecture
   - san
+description: "Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS service profile SAN boot, and SNMP/syslog target configuration."
 ---
 # MDS — Integrations
 

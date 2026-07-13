@@ -4,6 +4,7 @@ tags:
   - insightiq
   - netapp
   - known-issues
+description: "Catalog of known InsightIQ bugs, error codes, and workarounds covering data collection, API connectivity, and reporting."
 ---
 # NetApp InsightIQ — Known Issues and Error Codes
 

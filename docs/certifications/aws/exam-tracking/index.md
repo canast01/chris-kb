@@ -2,6 +2,7 @@
 tags:
   - aws
   - certifications
+description: "AWS Exam Tracking reference covering Certification Path Overview, Exam Scheduling, Domain Score Breakdown — SAA-C03, Exam Attempt Log, Retake and..."
 ---
 # AWS Exam Tracking
 

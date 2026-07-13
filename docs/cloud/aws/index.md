@@ -2,6 +2,7 @@
 title: AWS
 tags:
   - aws
+description: "Amazon Web Services knowledge base covering compute, storage, networking, identity, monitoring, backup, security, governance, and cost management — plus..."
 ---
 
 # AWS

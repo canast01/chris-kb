@@ -2,6 +2,7 @@
 tags:
   - dell
   - operations
+description: "Dell ECS operational procedures — namespace and bucket provisioning, IAM user and policy management, S3 access configuration, replication, retention..."
 ---
 # Dell ECS — Procedures
 

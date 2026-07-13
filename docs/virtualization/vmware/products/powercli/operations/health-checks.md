@@ -3,6 +3,7 @@ tags:
   - operations
   - powercli
   - vmware
+description: "PowerCLI health check routines for vSphere platform health: host connection states, VM power states, snapshot inventory, datastore capacity, cluster HA..."
 ---
 # PowerCLI — Health Checks
 

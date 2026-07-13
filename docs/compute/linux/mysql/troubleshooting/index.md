@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "MySQL/MariaDB troubleshooting hub: replication failures, performance degradation, crash recovery, and escalation path to MySQL Enterprise Support."
 ---
 # MySQL / MariaDB — Troubleshooting
 

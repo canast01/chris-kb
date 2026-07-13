@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "How to escalate Dell EMC PowerPath multipath issues to Dell Technologies support: what data to collect, how to capture path state and system logs..."
 ---
 # PowerPath — Escalation
 

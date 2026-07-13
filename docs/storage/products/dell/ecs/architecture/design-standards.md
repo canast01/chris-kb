@@ -2,6 +2,7 @@
 tags:
   - architecture
   - dell
+description: "Standards reference covering Sizing and Capacity Model, Sizing by Workload, Network Sizing, Naming Conventions, Build and Deployment Baseline and 4 more..."
 ---
 # Dell ECS — Standards
 

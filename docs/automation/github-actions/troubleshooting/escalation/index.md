@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to collect runner diagnostics, how to open a support case, and internal..."
 ---
 # GitHub Actions — Escalation
 

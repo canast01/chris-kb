@@ -2,6 +2,7 @@
 tags:
   - learning-path
   - linux
+description: "Recommended reading order for MySQL on Linux. Follow these stages in order to build a complete mental model before working with it in production."
 ---
 # MySQL — Learning Path
 

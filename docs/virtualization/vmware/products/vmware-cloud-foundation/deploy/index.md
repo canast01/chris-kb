@@ -5,6 +5,7 @@ tags:
   - vmware
 search:
   boost: 1.5
+description: "End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers hardware validation, Cloud Builder OVA deployment, bringup JSON spec..."
 ---
 # VMware Cloud Foundation — Deploy
 

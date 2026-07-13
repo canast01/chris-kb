@@ -4,6 +4,7 @@ tags:
   - dell-aiops
   - dell
   - known-issues
+description: "Dell AIOps is a SaaS analytics layer on CloudIQ. All operational issues relate to CloudIQ connectivity or portal access — see Dell CloudIQ known issues..."
 ---
 # Dell AIOps — Known Issues and Error Codes
 

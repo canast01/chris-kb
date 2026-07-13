@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "Brocade FabricOS diagnostic commands: check hardware sensors and MAPS alerts with sensorshow and mapsdashboard, inspect per-port state and SFP optical..."
 ---
 # FabricOS — Diagnostics
 

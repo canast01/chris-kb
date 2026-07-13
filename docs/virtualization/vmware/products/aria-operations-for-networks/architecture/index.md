@@ -3,6 +3,7 @@ tags:
   - architecture
   - aria-networks
   - vmware
+description: "Aria Operations for Networks (formerly vRealize Network Insight) provides network visibility, flow analysis, and micro-segmentation planning across NSX-T..."
 ---
 # Aria Operations for Networks — Architecture
 

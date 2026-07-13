@@ -5,6 +5,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "EVS diagnostic commands: check AWS host and ENI state, inspect CloudTrail for API errors, query VPC Flow Logs for dropped traffic, verify VMware platform..."
 ---
 # Amazon EVS — Diagnostics
 

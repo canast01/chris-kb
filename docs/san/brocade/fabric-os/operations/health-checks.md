@@ -2,6 +2,7 @@
 tags:
   - operations
   - san
+description: "Health Checks reference covering Daily Checks, Health Check Checklist, Post-Change Validation."
 ---
 # FabricOS — Health Checks
 

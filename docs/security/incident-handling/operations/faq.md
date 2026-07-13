@@ -3,6 +3,7 @@ tags:
   - incident-handling
   - faq
   - operations
+description: "Common questions about Incident Handling operations, configuration, and troubleshooting. For step-by-step procedures, see the Operations section."
 ---
 # Incident Handling — Frequently Asked Questions
 

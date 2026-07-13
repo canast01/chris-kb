@@ -2,6 +2,7 @@
 tags:
   - architecture
   - ceph
+description: "Ceph's RADOS layer stores all data as objects. Clients calculate data placement directly via CRUSH without a central metadata server — enabling linear..."
 ---
 # Ceph — How It Works
 

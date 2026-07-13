@@ -3,6 +3,7 @@ tags:
   - security
   - vmware
   - vxrail
+description: "Authentication reference for VxRail components. Covers VxRail Manager local and LDAP accounts, iDRAC centralised authentication, vCenter SSO..."
 ---
 # VxRail — Authentication
 

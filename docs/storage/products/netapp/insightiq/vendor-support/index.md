@@ -1,6 +1,7 @@
 ---
 tags:
   - netapp
+description: "InsightIQ vendor support: opening NetApp support cases, collecting isi_gather_info and InsightIQ diagnostic bundles, and escalation contact procedure."
 ---
 # InsightIQ Vendor Support
 

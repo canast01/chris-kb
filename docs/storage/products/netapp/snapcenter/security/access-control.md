@@ -2,6 +2,7 @@
 tags:
   - netapp
   - security
+description: "SnapCenter access control: RBAC role assignment for App Backup Admin and Backup Viewer, Get-SmRole, resource group ownership scoping, and audit trail..."
 ---
 # SnapCenter — Access Control
 

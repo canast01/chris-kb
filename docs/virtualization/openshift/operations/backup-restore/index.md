@@ -1,6 +1,7 @@
 ---
 tags:
   - operations
+description: "etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for application workloads, PV snapshot backup, and recovery from common..."
 ---
 # OpenShift — Backup & Restore
 

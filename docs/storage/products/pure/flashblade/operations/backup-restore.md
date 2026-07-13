@@ -2,6 +2,7 @@
 tags:
   - operations
   - pure
+description: "Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Management, File Restore Procedures, Object Store Restore Procedures, Veeam..."
 ---
 # FlashBlade — Backup & Restore
 

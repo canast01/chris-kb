@@ -4,6 +4,7 @@ tags:
   - nfs
   - networking
   - known-issues
+description: "Catalog of known NFS issues covering mount failures, permission errors, NFSv4 behavior, and performance problems."
 ---
 # NFS — Known Issues and Error Codes
 

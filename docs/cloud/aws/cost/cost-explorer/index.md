@@ -1,6 +1,7 @@
 ---
 tags:
   - aws
+description: "AWS Cost Explorer reference covering Overview, Daily Checks, Operational Tasks, Common Issues, Maintenance Notes."
 ---
 # AWS Cost Explorer
 

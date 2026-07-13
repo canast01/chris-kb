@@ -2,6 +2,7 @@
 tags:
   - scenarios
   - vmware
+description: "Cross-product VMware scenarios: reactive troubleshooting and planned operational workflows. Each scenario traces an issue or task across multiple..."
 ---
 # Scenarios
 

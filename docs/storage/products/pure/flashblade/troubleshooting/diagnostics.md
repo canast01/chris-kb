@@ -4,6 +4,7 @@ tags:
   - troubleshooting
 search:
   boost: 1.5
+description: "FlashBlade diagnostic commands: check array health and active alerts with purefb, inspect blade and hardware component status, diagnose NFS and S3..."
 ---
 # FlashBlade — Diagnostics
 

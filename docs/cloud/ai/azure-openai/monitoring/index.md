@@ -2,6 +2,7 @@
 tags:
   - azure
   - ai
+description: "Azure OpenAI integrates with Azure Monitor for metrics, logs, and alerting. Monitoring covers request volume, latency, token usage, error rates, and..."
 ---
 # Azure OpenAI Monitoring
 

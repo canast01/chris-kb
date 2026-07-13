@@ -2,6 +2,7 @@
 tags:
   - git
   - security
+description: "Git security controls — SSH key management, GPG commit signing, repository access control, and secret scanning."
 ---
 # Git — Security
 

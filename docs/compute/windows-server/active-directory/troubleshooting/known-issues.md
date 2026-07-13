@@ -4,6 +4,7 @@ tags:
   - active-directory
   - windows-server
   - known-issues
+description: "Catalog of known Active Directory bugs, error codes, and workarounds covering replication, DNS, authentication, and FSMO role issues."
 ---
 # Active Directory — Known Issues and Error Codes
 

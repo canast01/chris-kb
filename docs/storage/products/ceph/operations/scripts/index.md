@@ -2,6 +2,7 @@
 tags:
   - ceph
   - operations
+description: "Operational scripts for Ceph: daily health check, OSD replacement workflow, capacity report, cluster health snapshot, OSD utilization report, and RBD..."
 ---
 # Ceph — Scripts
 
