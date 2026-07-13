@@ -33,6 +33,97 @@ PALETTE = [
     ("#fce4ec", "#c62828", "#1a2744"),  # red
 ]
 
+# Semantic (not positional) color assignment for readability criterion #10
+# (shared color/shape legend). A subgraph/unit's category is derived from its
+# title text, so "Storage" means the same color on every diagram in the KB,
+# not just within one diagram. Built from real title data across all 137
+# converted diagrams (see project_diagram_readability.md) -- keyword lists
+# are mined from actual corpus content, not guessed categories. Checked in
+# order top to bottom, first match wins; ~28% of real titles (CI/CD steps,
+# Azure cost/billing, flowchart decision nodes, generic terms like "Output"
+# or "Users") don't fit any infra-layer category and fall through to
+# 'neutral' by design -- forcing them into compute/storage/network/
+# management would be actively misleading, not just imprecise.
+CATEGORY_COLORS = {
+    'compute': PALETTE[0],     # blue
+    'network': PALETTE[1],     # indigo
+    'storage': PALETTE[2],     # green
+    'management': PALETTE[3],  # amber
+    'neutral': PALETTE[4],     # red/pink
+}
+
+CATEGORY_KEYWORDS = [
+    ('compute', [
+        r'\bvm\b', r'\bvms\b', r'esxi', r'vcenter', r'vsphere', r'supervisor',
+        r'hypervisor', r'\bcpu\b', r'\bmemory\b', r'workload domain', r'sddc',
+        r'\bwitness\b', r'dev instance', r'test / uat instance', r'production instance',
+        r'platform vm', r'collector vm', r'windows host', r'linux host',
+        r'developer [abc]', r'client / vm', r'\bcompute\b',
+    ]),
+    ('storage', [
+        r'storage', r'\bvolume', r'snapshot', r'\bdisk\b', r'\barray\b', r'\bnas\b',
+        r'\bs3\b', r'block plane', r'data domain', r'powermax', r'powerscale',
+        r'\bunity\b', r'onefs', r'\bbackup', r'\bshares?\b', r'\bpool\b',
+        r'aggregate layer', r'directflash', r'\braid', r'masking view', r'\blun\b',
+        r'object lock', r'object protocol', r'object-level', r'\breplica',
+        r'replication', r'media server', r'media network', r'\bcache\b',
+        r'sub-volume', r'wwpn', r'raw scsi', r'dr journal', r'dr replica',
+        r'\becs\b', r'nvram', r'destage', r'\brestor', r'data at rest',
+        r'data in (transit|flight)', r'in transit\b', r'^at rest$', r'^stored$',
+        r'\bhba', r'initiator', r'\bhost (hbas?|layer|side|tier)\b',
+        r'hosts redirect', r'\bsvm\b', r'\bsrdf', r'sannav', r'powerpath',
+        r'multipath', r'\bnetapp\b', r'netbackup', r'\bveeam\b',
+        r'physical (layer|media)', r'node-owned hardware', r'flasharray',
+        r'\buemcli\b', r'powermt', r'front-end', r'back-end',
+        r'\bnfs\b', r'\bsmb', r'\bontap\b', r'controller pair', r'dd boost',
+        r'\bcloudiq\b',
+    ]),
+    ('network', [
+        r'san fabric', r'\bfabric\b', r'\bswitch', r'\bvpc\b', r'\bsubnet',
+        r'load balancer', r'\bdns\b', r'\bvlan\b', r'geneve', r'\bnsx\b',
+        r'\brouter\b', r'\bwan\b', r'\bmpls\b', r'fcip', r'\bicl\b', r'network',
+        r'connectivity provider', r'port group', r'\bdcnm\b', r'\bndfc\b',
+        r'\bndi\b', r'\bndo\b', r'nexus dashboard', r'fc san', r'ip storage',
+        r'\bmetro\b', r'site [ab]\b', r'availability zone', r'\bzone \d',
+        r'physical dc', r'\bdr site\b', r'recovery site', r'primary site',
+        r'secondary site', r'protected site', r'production site', r'\bvdc\b',
+        r'control plane', r'data plane', r'resolved ip', r'internet\b',
+        r'on-premises', r'\bwan link',
+    ]),
+    ('management', [
+        r'\brbac\b', r'\baudit', r'compliance', r'authentication', r'\bidentity',
+        r'encrypt', r'\bsse\b', r'\baes\b', r'key management', r'key rotation',
+        r'key operations', r'\bkms\b', r'\bkmip\b', r'governance', r'\bpolicy',
+        r'initiative', r'\bsiem\b', r'\bcspm\b', r'\bcwpp\b', r'defender',
+        r'monitoring', r'\balert', r'activity log', r'diagnostic',
+        r'log analytics', r'\blogs\b', r'notification', r'remediation',
+        r'investigate', r'response action', r'\bvault\b', r'\btls\b',
+        r'certificate', r'credentials', r'\badmin', r'\brole', r'\blogin\b',
+        r'\baccess\b', r'management (plane|domain|access|group|users|vlan|traffic)',
+        r'mandatory access', r'hardening', r'\bssh\b', r'resource group',
+        r'\bsubscription\b', r'active directory', r'account security',
+        r'lockdown', r'^scope$', r'^filter$',
+    ]),
+]
+
+
+def categorize_title(title: str) -> str:
+    t = title.lower()
+    for category, patterns in CATEGORY_KEYWORDS:
+        for p in patterns:
+            if re.search(p, t):
+                return category
+    return 'neutral'
+
+
+LEGEND_LABELS = {
+    'compute': 'Compute',
+    'network': 'Network',
+    'storage': 'Storage',
+    'management': 'Management / Security',
+    'neutral': 'Other',
+}
+
 MERMAID_RE = re.compile(r'```mermaid\n(.*?)\n```', re.DOTALL)
 # Two ways Mermaid attaches a label to an edge: `-->|"label"|` (pipe-delimited,
 # label comes after the arrow) and `-- "label" -->` (double-dash, quoted label
@@ -409,8 +500,25 @@ def render_svg(title: str, g: Graph, rows, unit_edges, internal) -> str:
             unit_pos[u] = (x, ry, unit_w[u], rh)
             x += unit_w[u] + gap
 
+    category_by_unit = {}
+    color_by_unit = {}
+    for r_units in rows:
+        for u in r_units:
+            if u.startswith('sg:'):
+                unit_title = g.subgraphs[u[3:]]['title']
+            else:
+                unit_title = g.nodes[unit_members[u][0]]['label'].split('\n')[0]
+            cat = categorize_title(unit_title)
+            category_by_unit[u] = cat
+            color_by_unit[u] = CATEGORY_COLORS[cat]
+
+    # Legend only earns its space when 2+ distinct categories actually appear
+    # in this diagram -- a single-category diagram has nothing to disambiguate.
+    used_categories = [c for c in CATEGORY_COLORS if c in set(category_by_unit.values())]
+    LEGEND_H = 22 if len(used_categories) >= 2 else 0
+
     footer_y = content_bottom + 10
-    total_h = footer_y + 30
+    total_h = footer_y + 30 + LEGEND_H
 
     parts = []
     parts.append(
@@ -423,13 +531,6 @@ def render_svg(title: str, g: Graph, rows, unit_edges, internal) -> str:
     parts.append(f'<rect x="0" y="0" width="{canvas_w}" height="{HEADER_H}" fill="#1a2744" />')
     parts.append(f'<text x="10" y="20" font-family="Arial,Helvetica,sans-serif" '
                  f'font-size="14" font-weight="bold" fill="#ffffff">{xe(title)}</text>')
-
-    color_by_unit = {}
-    color_i = 0
-    for r_units in rows:
-        for u in r_units:
-            color_by_unit[u] = PALETTE[color_i % len(PALETTE)]
-            color_i += 1
 
     anchor = {}  # unit -> (top_cx, top_y, bot_cx, bot_y)
     node_anchor = {}  # node_id -> (cx, top_y, bot_y) absolute, for internal edges
@@ -525,8 +626,21 @@ def render_svg(title: str, g: Graph, rows, unit_edges, internal) -> str:
                          f'<line x1="{sx:.1f}" y1="{(sty+sby)/2:.1f}" x2="{dx:.1f}" y2="{(dty+dby)/2:.1f}" '
                          f'stroke="#78909c" stroke-width="1.2" stroke-dasharray="3,2" />')
 
-    parts.append(f'<rect x="0" y="{footer_y:.1f}" width="{canvas_w}" height="30" fill="#f5f7fa" />')
-    parts.append(f'<text x="10" y="{footer_y+20:.1f}" font-family="Arial,Helvetica,sans-serif" '
+    if len(used_categories) >= 2:
+        legend_items = [(LEGEND_LABELS[c], CATEGORY_COLORS[c]) for c in used_categories]
+        item_widths = [16 + 4 + text_width_px(label, 9.5, False) + 18 for label, _ in legend_items]
+        legend_w = sum(item_widths)
+        lx = max(MARGIN_X, (canvas_w - legend_w) / 2)
+        ly = footer_y
+        for (label, (light, dark, _)), iw in zip(legend_items, item_widths):
+            parts.append(f'<rect x="{lx:.1f}" y="{ly+4:.1f}" width="14" height="14" rx="3" '
+                         f'fill="{light}" stroke="{dark}" stroke-width="1" />')
+            parts.append(f'<text x="{lx+20:.1f}" y="{ly+15:.1f}" font-family="Arial,Helvetica,sans-serif" '
+                         f'font-size="9.5" fill="#37474f">{xe(label)}</text>')
+            lx += iw
+
+    parts.append(f'<rect x="0" y="{footer_y+LEGEND_H:.1f}" width="{canvas_w}" height="30" fill="#f5f7fa" />')
+    parts.append(f'<text x="10" y="{footer_y+LEGEND_H+20:.1f}" font-family="Arial,Helvetica,sans-serif" '
                  f'font-size="10" fill="#9e9e9e">Diagram Type: {xe(title)}</text>')
     parts.append('</svg>')
     return '\n'.join(parts)
