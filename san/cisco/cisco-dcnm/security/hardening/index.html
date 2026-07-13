@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Cisco DCNM — Security Hardening · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco DCNM — Security Hardening", "url": "https://chrisanastasiadis.com/san/cisco/cisco-dcnm/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco DCNM — Security Hardening", "url": "https://chrisanastasiadis.com/san/cisco/cisco-dcnm/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7535,9 +7535,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>passwd: Authentication token manipulation error</code></strong> — Ensure the root filesystem is not mounted read-only and SELinux is not blocking password changes; run <code>mount -o remount,rw /</code> if needed.
-<strong><code>usermod: user 'dcnm' does not exist</code></strong> — Verify the dcnm OS account exists on this DCNM appliance version with <code>id dcnm</code> before attempting to lock it.
-<strong><code>Permission denied (publickey,password)</code></strong> — Confirm SSH root login is enabled in <code>/etc/ssh/sshd_config</code> (PermitRootLogin yes) and restart sshd with <code>systemctl restart sshd</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>passwd: Authentication token manipulation error</code></td>
+<td>Ensure the root filesystem is not mounted read-only and SELinux is not blocking password changes; run <code>mount -o remount,rw /</code> if needed.</td>
+</tr>
+<tr>
+<td><code>usermod: user 'dcnm' does not exist</code></td>
+<td>Verify the dcnm OS account exists on this DCNM appliance version with <code>id dcnm</code> before attempting to lock it.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Confirm SSH root login is enabled in <code>/etc/ssh/sshd_config</code> (PermitRootLogin yes) and restart sshd with <code>systemctl restart sshd</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/issue.net<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="s">WARNING: This system is for authorized use only.</span>
@@ -7549,8 +7568,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bash: /etc/issue.net: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user.
-**<code>bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted</code>EOF')<code>** — Ensure the closing</code>EOF` is on its own line with no leading whitespace.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bash: /etc/issue.net: Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root user.</td>
+</tr>
+<tr>
+<td><code>bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted</code>EOF')<code>| Ensure the closing</code>EOF` is on its own line with no leading whitespace.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check available security updates</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security
@@ -7588,9 +7623,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Package: dcnm-server-11.4.1-2000.el7.x86_64 (cisco-dcnm) Requires: openssl &lt; 1.0.2k-27</code></strong> — Verify DCNM version compatibility with the target OS security patch level before applying updates, or use <code>yum update --security --skip-broken -y</code> to defer conflicting packages.
-<strong><code>Error: needs-restarting: command not found</code></strong> — Install the yum-utils package with <code>yum install -y yum-utils</code> to enable the needs-restarting utility.
-<strong><code>Error: /usr/local/cisco/dcm/dcnm/sbin/dcnm-server: No such file or directory</code></strong> — Verify DCNM installation path and ensure the service was properly installed; check actual path with <code>find / -name dcnm-server -type f 2&gt;/dev/null</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Package: dcnm-server-11.4.1-2000.el7.x86_64 (cisco-dcnm) Requires: openssl &lt; 1.0.2k-27</code></td>
+<td>Verify DCNM version compatibility with the target OS security patch level before applying updates, or use <code>yum update --security --skip-broken -y</code> to defer conflicting packages.</td>
+</tr>
+<tr>
+<td><code>Error: needs-restarting: command not found</code></td>
+<td>Install the yum-utils package with <code>yum install -y yum-utils</code> to enable the needs-restarting utility.</td>
+</tr>
+<tr>
+<td><code>Error: /usr/local/cisco/dcm/dcnm/sbin/dcnm-server: No such file or directory</code></td>
+<td>Verify DCNM installation path and ensure the service was properly installed; check actual path with <code>find / -name dcnm-server -type f 2&gt;/dev/null</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all active services</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span>--state<span class="o">=</span>active
@@ -7625,9 +7679,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Failed to disable unit, unit /etc/systemd/system/multi-user.target.wants/postfix.service does not exist.</code></strong> — Verify the service is installed with <code>systemctl list-unit-files | grep postfix</code> before attempting to disable it.
-<strong><code>Unit dcnm-server.service not found.</code></strong> — Ensure DCNM is properly installed and the systemd service file exists at <code>/etc/systemd/system/dcnm-server.service</code>.
-<strong><code>Permission denied</code></strong> — Run the entire script with <code>sudo</code> or as root user since systemctl disable/enable operations require elevated privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Failed to disable unit, unit /etc/systemd/system/multi-user.target.wants/postfix.service does not exist.</code></td>
+<td>Verify the service is installed with <code>systemctl list-unit-files | grep postfix</code> before attempting to disable it.</td>
+</tr>
+<tr>
+<td><code>Unit dcnm-server.service not found.</code></td>
+<td>Ensure DCNM is properly installed and the systemd service file exists at <code>/etc/systemd/system/dcnm-server.service</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the entire script with <code>sudo</code> or as root user since systemctl disable/enable operations require elevated privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On DCNM appliance, configure SNMPv3 for inbound NMS polling</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># (DCNM acts as an SNMP agent for its own health)</span>
@@ -7643,9 +7716,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 80: Connection refused</code></strong> — Verify the DCNM appliance is running and port 80 is accessible; check firewall rules and network connectivity to the host.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Remove the <code>-k</code> flag if you want to validate certificates, or ensure your CA bundle is current; the <code>-k</code> flag bypasses this check for self-signed certs.
-<strong><code>curl: (6) Could not resolve host name</code></strong> — Confirm DNS resolution is working and the hostname <code>dcnm-dc1.corp.example.com</code> is registered in your DNS or hosts file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 80: Connection refused</code></td>
+<td>Verify the DCNM appliance is running and port 80 is accessible; check firewall rules and network connectivity to the host.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Remove the <code>-k</code> flag if you want to validate certificates, or ensure your CA bundle is current; the <code>-k</code> flag bypasses this check for self-signed certs.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host name</code></td>
+<td>Confirm DNS resolution is working and the hostname <code>dcnm-dc1.corp.example.com</code> is registered in your DNS or hosts file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Verify NTP</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>timedatectl<span class="w"> </span>status
@@ -7682,8 +7774,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>chronyc: Could not talk to daemon</code></strong> — Ensure chronyd is running with <code>systemctl start chronyd</code> and check socket permissions.
-<strong><code>Failed to set NTP servers: Invalid argument</code></strong> — Verify NTP server IPs are reachable and properly formatted in <code>/etc/chrony.conf</code> without trailing comments on server lines.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chronyc: Could not talk to daemon</code></td>
+<td>Ensure chronyd is running with <code>systemctl start chronyd</code> and check socket permissions.</td>
+</tr>
+<tr>
+<td><code>Failed to set NTP servers: Invalid argument</code></td>
+<td>Verify NTP server IPs are reachable and properly formatted in <code>/etc/chrony.conf</code> without trailing comments on server lines.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Forward DCNM OS syslog to SIEM</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/dcnm-siem.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
@@ -7701,8 +7809,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Job for rsyslog.service failed because the control process exited with error code.</code></strong> — Verify the rsyslog configuration syntax with <code>rsyslog -N1</code> and check <code>/var/log/syslog</code> for parsing errors in the new conf file.
-<strong><code>logger: send to SIEM 10.10.3.50:514 failed: Connection refused</code></strong> — Confirm the SIEM syslog listener is running on port 514 and reachable from the DCNM host with <code>nc -zv 10.10.3.50 514</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Job for rsyslog.service failed because the control process exited with error code.</code></td>
+<td>Verify the rsyslog configuration syntax with <code>rsyslog -N1</code> and check <code>/var/log/syslog</code> for parsing errors in the new conf file.</td>
+</tr>
+<tr>
+<td><code>logger: send to SIEM 10.10.3.50:514 failed: Connection refused</code></td>
+<td>Confirm the SIEM syslog listener is running on port 514 and reachable from the DCNM host with <code>nc -zv 10.10.3.50 514</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7741,7 +7865,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

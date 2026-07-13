@@ -9414,9 +9414,28 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if still failing, verify NSX Manager hostname matches certificate CN).
-<strong><code>jq: command not found</code></strong> — Install <code>python3-json-tool</code> or use <code>python3 -m json.tool</code> instead (as shown in the example).
-<strong><code>"results": []</code></strong> — Verify the VM display name matches exactly (case-sensitive) and the VM has been registered with NSX Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; if still failing, verify NSX Manager hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>python3-json-tool</code> or use <code>python3 -m json.tool</code> instead (as shown in the example).</td>
+</tr>
+<tr>
+<td><code>"results": []</code></td>
+<td>Verify the VM display name matches exactly (case-sensitive) and the VM has been registered with NSX Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: a recently changed IP address on the source or destination VM will invalidate an IP-set-based group membership. Dynamic tag criteria are the most fragile — confirm the tag is still present and spelled correctly.</p>
 <hr />
@@ -9460,9 +9479,28 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX manager hostname matches certificate CN).
-<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Verify admin credentials are correct and URL-encoded (special characters like <code>@</code> or <code>#</code> in password must be percent-encoded).
-<strong><code>{"error_code":404,"error_message":"Virtual machine not found"}</code></strong> — Confirm the <code>&lt;vm-moid&gt;</code> value is the correct vSphere managed object ID (obtain via vCenter inventory or <code>govc vm.info</code> command).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX manager hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Unauthorized"}</code></td>
+<td>Verify admin credentials are correct and URL-encoded (special characters like <code>@</code> or <code>#</code> in password must be percent-encoded).</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"Virtual machine not found"}</code></td>
+<td>Confirm the <code>&lt;vm-moid&gt;</code> value is the correct vSphere managed object ID (obtain via vCenter inventory or <code>govc vm.info</code> command).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After any rule or group change, re-run Traceflow to confirm the packet now shows <strong>Delivered</strong> at the destination.</p>
 <p>Look for: if Traceflow shows Delivered but the application still fails — the issue is now above Layer 4 (application layer, TLS, auth) rather than DFW.</p>
@@ -9496,9 +9534,28 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>World ID not found</code></strong> — Run <code>esxcli network vm list</code> first to identify the correct WorldID, then pass it with <code>-w &lt;WorldID&gt;</code> to the port list command.
-<strong><code>pktcap-uw: command not found</code></strong> — Enable SSH on the ESXi host and ensure you are connected directly to the ESXi shell (not vCenter); pktcap-uw is only available on ESXi hosts.
-<strong><code>Permission denied: /tmp/cap.pcap</code></strong> — Run the pktcap-uw command with root privileges or write to a world-writable directory like <code>/tmp</code> after verifying disk space with <code>df -h</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>World ID not found</code></td>
+<td>Run <code>esxcli network vm list</code> first to identify the correct WorldID, then pass it with <code>-w &lt;WorldID&gt;</code> to the port list command.</td>
+</tr>
+<tr>
+<td><code>pktcap-uw: command not found</code></td>
+<td>Enable SSH on the ESXi host and ensure you are connected directly to the ESXi shell (not vCenter); pktcap-uw is only available on ESXi hosts.</td>
+</tr>
+<tr>
+<td><code>Permission denied: /tmp/cap.pcap</code></td>
+<td>Run the pktcap-uw command with root privileges or write to a world-writable directory like <code>/tmp</code> after verifying disk space with <code>df -h</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: TCP RST packets in the capture confirm the DFW is sending a reset (REJECT rule). No response at all confirms a DROP rule. If neither appears and traffic is flowing out the vNIC, the issue is downstream.</p>
 <hr />
@@ -9588,7 +9645,7 @@ opening broad exceptions — using Traceflow, hit count analysis, and packet cap
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

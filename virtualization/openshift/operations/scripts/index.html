@@ -7574,9 +7574,28 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "clusterversion"</code></strong> — Verify the cluster is OpenShift (not vanilla Kubernetes) and that the user has cluster-admin permissions.
-<strong><code>Unable to connect to the server: dial tcp: lookup api.cluster.local on 127.0.0.11:53: no such host</code></strong> — Ensure KUBECONFIG points to a valid kubeconfig file and the cluster API is reachable (check <code>oc status</code>).
-<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Re-authenticate with <code>oc login</code> or ensure the KUBECONFIG token has not expired.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "clusterversion"</code></td>
+<td>Verify the cluster is OpenShift (not vanilla Kubernetes) and that the user has cluster-admin permissions.</td>
+</tr>
+<tr>
+<td><code>Unable to connect to the server: dial tcp: lookup api.cluster.local on 127.0.0.11:53: no such host</code></td>
+<td>Ensure KUBECONFIG points to a valid kubeconfig file and the cluster API is reachable (check <code>oc status</code>).</td>
+</tr>
+<tr>
+<td><code>error: You must be logged in to the server (Unauthorized)</code></td>
+<td>Re-authenticate with <code>oc login</code> or ensure the KUBECONFIG token has not expired.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="auto-approve-csrssh">auto-approve-csrs.sh<a class="headerlink" href="#auto-approve-csrssh" title="Permanent link">&para;</a></h2>
 <p>Polls <code>oc get csr</code> every 30 seconds and approves all Pending CSRs. Useful during UPI installs or node replacement operations. Runs until Ctrl-C.</p>
@@ -7613,9 +7632,28 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to connect to the server: dial tcp: lookup api.cluster.local on [IP]: no such host</code></strong> — Ensure KUBECONFIG is set correctly and the cluster API endpoint is reachable: <code>export KUBECONFIG=/path/to/kubeconfig</code>.
-<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Re-authenticate with the cluster using <code>oc login</code> or verify your service account token has sufficient permissions.
-<strong><code>xargs: oc: No such file or directory</code></strong> — Add the oc binary to your PATH or use the full path to oc (e.g., <code>/usr/local/bin/oc</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to connect to the server: dial tcp: lookup api.cluster.local on [IP]: no such host</code></td>
+<td>Ensure KUBECONFIG is set correctly and the cluster API endpoint is reachable: <code>export KUBECONFIG=/path/to/kubeconfig</code>.</td>
+</tr>
+<tr>
+<td><code>error: You must be logged in to the server (Unauthorized)</code></td>
+<td>Re-authenticate with the cluster using <code>oc login</code> or verify your service account token has sufficient permissions.</td>
+</tr>
+<tr>
+<td><code>xargs: oc: No such file or directory</code></td>
+<td>Add the oc binary to your PATH or use the full path to oc (e.g., <code>/usr/local/bin/oc</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="etcd-backupsh">etcd-backup.sh<a class="headerlink" href="#etcd-backupsh" title="Permanent link">&para;</a></h2>
 <p>SSHes to master-0 (auto-detected or supplied), runs <code>cluster-backup.sh</code>, copies the tarball to a local path, and verifies the backup file is larger than 100 KB.</p>
@@ -7669,9 +7707,28 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: no master node found or supplied</code></strong> — Ensure the OpenShift cluster is accessible via <code>oc</code> and at least one master node is labeled with <code>node-role.kubernetes.io/master</code>.
-<strong><code>Permission denied (publickey,gssapi-keyexchange)</code></strong> — Verify SSH key-based authentication is configured for the <code>core</code> user on the master node, or add the public key to <code>~/.ssh/authorized_keys</code>.
-<strong><code>ERROR: snapshot file not found in /tmp/etcd-backup-2024-01-15</code></strong> — Check that <code>/usr/local/bin/cluster-backup.sh</code> exists and executed successfully on the master node by running it manually via SSH.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: no master node found or supplied</code></td>
+<td>Ensure the OpenShift cluster is accessible via <code>oc</code> and at least one master node is labeled with <code>node-role.kubernetes.io/master</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,gssapi-keyexchange)</code></td>
+<td>Verify SSH key-based authentication is configured for the <code>core</code> user on the master node, or add the public key to <code>~/.ssh/authorized_keys</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: snapshot file not found in /tmp/etcd-backup-2024-01-15</code></td>
+<td>Check that <code>/usr/local/bin/cluster-backup.sh</code> exists and executed successfully on the master node by running it manually via SSH.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="node-drainsh">node-drain.sh<a class="headerlink" href="#node-drainsh" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="ch">#!/bin/bash</span>
@@ -7715,9 +7772,28 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to drain node "worker-node-03", aborting command:there are pending pods when an error is occurred: default/stuck-pod-xyz</code></strong> — Add <code>--force</code> flag or manually delete the blocking pod with <code>oc delete pod stuck-pod-xyz -n default --grace-period=0 --force</code> before draining.
-<strong><code>ABORT: degraded operators: authentication,ingress</code></strong> — Wait for operators to recover with <code>oc get co -w</code> or investigate root cause with <code>oc describe co &lt;operator-name&gt;</code> before attempting drain.
-<strong><code>error: node "worker-node-04" not found</code></strong> — Verify the node name exists with <code>oc get nodes</code> and use the correct node identifier.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to drain node "worker-node-03", aborting command:there are pending pods when an error is occurred: default/stuck-pod-xyz</code></td>
+<td>Add <code>--force</code> flag or manually delete the blocking pod with <code>oc delete pod stuck-pod-xyz -n default --grace-period=0 --force</code> before draining.</td>
+</tr>
+<tr>
+<td><code>ABORT: degraded operators: authentication,ingress</code></td>
+<td>Wait for operators to recover with <code>oc get co -w</code> or investigate root cause with <code>oc describe co &lt;operator-name&gt;</code> before attempting drain.</td>
+</tr>
+<tr>
+<td><code>error: node "worker-node-04" not found</code></td>
+<td>Verify the node name exists with <code>oc get nodes</code> and use the correct node identifier.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="pod-restart-detectorsh">pod-restart-detector.sh<a class="headerlink" href="#pod-restart-detectorsh" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="ch">#!/bin/bash</span>
@@ -7740,8 +7816,24 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "containerStatuses"</code></strong> — Add a null check: <code>select(.status.containerStatuses != null and (.status.containerStatuses | length) &gt; 0)</code> before accessing the array.
-<strong><code>awk: syntax error in pattern near line 1</code></strong> — Ensure <code>$THRESHOLD</code> is passed as a numeric value; quote the entire awk script or use <code>awk -v t="$THRESHOLD"</code> without embedded shell variables.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "containerStatuses"</code></td>
+<td>Add a null check: <code>select(.status.containerStatuses != null and (.status.containerStatuses | length) &gt; 0)</code> before accessing the array.</td>
+</tr>
+<tr>
+<td><code>awk: syntax error in pattern near line 1</code></td>
+<td>Ensure <code>$THRESHOLD</code> is passed as a numeric value; quote the entire awk script or use <code>awk -v t="$THRESHOLD"</code> without embedded shell variables.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="csr-approvesh">csr-approve.sh<a class="headerlink" href="#csr-approvesh" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="ch">#!/bin/bash</span>
@@ -7768,8 +7860,24 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "csr"</code></strong> — Ensure you are connected to a valid OpenShift cluster with <code>oc login</code> and have appropriate RBAC permissions.
-<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Authenticate to the OpenShift cluster using <code>oc login &lt;cluster-url&gt;</code> with valid credentials.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "csr"</code></td>
+<td>Ensure you are connected to a valid OpenShift cluster with <code>oc login</code> and have appropriate RBAC permissions.</td>
+</tr>
+<tr>
+<td><code>error: You must be logged in to the server (Unauthorized)</code></td>
+<td>Authenticate to the OpenShift cluster using <code>oc login &lt;cluster-url&gt;</code> with valid credentials.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="health-checksh">health-check.sh<a class="headerlink" href="#health-checksh" title="Permanent link">&para;</a></h2>
 <p>Legacy version — minimal output, good for cron + email alerting.</p>
@@ -7831,9 +7939,28 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: Unable to connect to the server: dial tcp: lookup api.cluster.local on 10.0.2.2:53: no such host</code></strong> — Verify KUBECONFIG points to a valid cluster config file and the API server is reachable.
-<strong><code>error: the server doesn't have a resource type "co"</code></strong> — Ensure you are running against OpenShift 4.x (not Kubernetes); older OpenShift versions use <code>clusteroperators</code> instead of <code>co</code>.
-<strong><code>error: metrics-server not available</code></strong> — Install the metrics-server addon with <code>oc apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml</code> to enable resource usage reporting.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: Unable to connect to the server: dial tcp: lookup api.cluster.local on 10.0.2.2:53: no such host</code></td>
+<td>Verify KUBECONFIG points to a valid cluster config file and the API server is reachable.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "co"</code></td>
+<td>Ensure you are running against OpenShift 4.x (not Kubernetes); older OpenShift versions use <code>clusteroperators</code> instead of <code>co</code>.</td>
+</tr>
+<tr>
+<td><code>error: metrics-server not available</code></td>
+<td>Install the metrics-server addon with <code>oc apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml</code> to enable resource usage reporting.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -7869,7 +7996,7 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

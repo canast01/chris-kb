@@ -8028,9 +8028,28 @@ Use these commands to verify TLS configuration on servers, check certificate val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>verify error:num=20:unable to get local issuer certificate</code></strong> — Add the missing intermediate CA certificate to your system's CA bundle or use <code>openssl s_client -CAfile /path/to/ca-bundle.crt</code>.
-<strong><code>connect: Connection refused</code></strong> — Verify the hostname and port are correct, and that the service is listening on that port with <code>netstat -tlnp | grep :443</code>.
-<strong><code>Verify return code: 21 (unable to verify the first certificate)</code></strong> — Check that the server certificate chain is complete; the server may be missing the intermediate certificate in its configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify error:num=20:unable to get local issuer certificate</code></td>
+<td>Add the missing intermediate CA certificate to your system's CA bundle or use <code>openssl s_client -CAfile /path/to/ca-bundle.crt</code>.</td>
+</tr>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the hostname and port are correct, and that the service is listening on that port with <code>netstat -tlnp | grep :443</code>.</td>
+</tr>
+<tr>
+<td><code>Verify return code: 21 (unable to verify the first certificate)</code></td>
+<td>Check that the server certificate chain is complete; the server may be missing the intermediate certificate in its configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="certificate-validity-checks">Certificate Validity Checks<a class="headerlink" href="#certificate-validity-checks" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Expiry date</span>
@@ -8069,9 +8088,28 @@ Use these commands to verify TLS configuration on servers, check certificate val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify the hostname is correct and the service is listening on port 443 with <code>netstat -tlnp | grep 443</code>.
-<strong><code>unable to get local issuer certificate</code></strong> — This is expected output from s_client; the issuer information is still extracted correctly by the piped openssl x509 command.
-<strong><code>error in x509 parsing</code></strong> — Ensure the certificate chain is complete by testing with <code>openssl s_client -connect &lt;hostname&gt;:443 -showcerts</code> to diagnose intermediate certificate issues.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the hostname is correct and the service is listening on port 443 with <code>netstat -tlnp | grep 443</code>.</td>
+</tr>
+<tr>
+<td><code>unable to get local issuer certificate</code></td>
+<td>This is expected output from s_client; the issuer information is still extracted correctly by the piped openssl x509 command.</td>
+</tr>
+<tr>
+<td><code>error in x509 parsing</code></td>
+<td>Ensure the certificate chain is complete by testing with <code>openssl s_client -connect &lt;hostname&gt;:443 -showcerts</code> to diagnose intermediate certificate issues.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="chain-validation">Chain Validation<a class="headerlink" href="#chain-validation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show the full chain presented</span>
@@ -8091,8 +8129,24 @@ Use these commands to verify TLS configuration on servers, check certificate val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>verify error:num=20:unable to get local issuer certificate</code></strong> — Add the missing intermediate CA certificate to your CA bundle or use <code>-partial_chain</code> flag to accept partial chains.
-<strong><code>s_client: No such file or directory</code></strong> — Verify the CA bundle path exists with <code>ls -la /etc/ssl/certs/ca-certificates.crt</code> and update the path if using a different distribution (e.g., <code>/etc/pki/tls/certs/ca-bundle.crt</code> on RHEL).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify error:num=20:unable to get local issuer certificate</code></td>
+<td>Add the missing intermediate CA certificate to your CA bundle or use <code>-partial_chain</code> flag to accept partial chains.</td>
+</tr>
+<tr>
+<td><code>s_client: No such file or directory</code></td>
+<td>Verify the CA bundle path exists with <code>ls -la /etc/ssl/certs/ca-certificates.crt</code> and update the path if using a different distribution (e.g., <code>/etc/pki/tls/certs/ca-bundle.crt</code> on RHEL).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="protocol-and-cipher-checks">Protocol and Cipher Checks<a class="headerlink" href="#protocol-and-cipher-checks" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Force specific TLS version (test what the server accepts)</span>
@@ -8206,9 +8260,28 @@ Use these commands to verify TLS configuration on servers, check certificate val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the self-signed CA to your system trust store or use <code>--cacert /path/to/ca.pem</code> to specify the certificate bundle.
-<strong><code>curl: (51) Unable to communicate securely with peer: requested domain name does not match the server's certificate</code></strong> — Verify the hostname matches the certificate CN/SAN, or use <code>-k</code> flag only for testing (never in production).
-<strong><code>curl: (77) error setting certificate verify locations</code></strong> — Ensure the CA bundle path is correct and readable with <code>ls -la /path/to/internal-ca.pem</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the self-signed CA to your system trust store or use <code>--cacert /path/to/ca.pem</code> to specify the certificate bundle.</td>
+</tr>
+<tr>
+<td><code>curl: (51) Unable to communicate securely with peer: requested domain name does not match the server's certificate</code></td>
+<td>Verify the hostname matches the certificate CN/SAN, or use <code>-k</code> flag only for testing (never in production).</td>
+</tr>
+<tr>
+<td><code>curl: (77) error setting certificate verify locations</code></td>
+<td>Ensure the CA bundle path is correct and readable with <code>ls -la /path/to/internal-ca.pem</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="validating-a-certificate-file">Validating a Certificate File<a class="headerlink" href="#validating-a-certificate-file" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check cert file is valid PEM</span>
@@ -8248,9 +8321,28 @@ Use these commands to verify TLS configuration on servers, check certificate val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load certificate</code></strong> — Verify the cert.pem file exists and is a valid PEM-formatted certificate, not DER or another format.
-<strong><code>unable to load Private Key</code></strong> — Check that key.pem is readable and contains a valid RSA private key; convert from PKCS#8 if needed with <code>openssl pkey -in key.pem -traditional -out key.pem</code>.
-<strong><code>error 20 at 0 depth lookup: unable to get local issuer certificate</code></strong> — Add the root CA certificate to the trust store or provide it with <code>-CAfile</code>, and ensure the certificate chain is complete with <code>-untrusted intermediate.crt</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Verify the cert.pem file exists and is a valid PEM-formatted certificate, not DER or another format.</td>
+</tr>
+<tr>
+<td><code>unable to load Private Key</code></td>
+<td>Check that key.pem is readable and contains a valid RSA private key; convert from PKCS#8 if needed with <code>openssl pkey -in key.pem -traditional -out key.pem</code>.</td>
+</tr>
+<tr>
+<td><code>error 20 at 0 depth lookup: unable to get local issuer certificate</code></td>
+<td>Add the root CA certificate to the trust store or provide it with <code>-CAfile</code>, and ensure the certificate chain is complete with <code>-untrusted intermediate.crt</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="ocsp-revocation-check">OCSP / Revocation Check<a class="headerlink" href="#ocsp-revocation-check" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Get OCSP URL from certificate</span>
@@ -8273,9 +8365,28 @@ Use these commands to verify TLS configuration on servers, check certificate val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error querying OCSP responder</code></strong> — Verify the OCSP URL is correct and accessible by testing with <code>curl -I &lt;ocsp-url&gt;</code> first.
-<strong><code>issuer certificate does not have OCSP signing capability</code></strong> — Use the correct intermediate CA certificate that signed the end-entity certificate, or obtain the OCSP signing certificate from your CA.
-<strong><code>socket: Connection refused</code></strong> — Ensure your firewall allows outbound HTTPS to the OCSP responder URL and check network connectivity with <code>ping</code> or <code>nc</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error querying OCSP responder</code></td>
+<td>Verify the OCSP URL is correct and accessible by testing with <code>curl -I &lt;ocsp-url&gt;</code> first.</td>
+</tr>
+<tr>
+<td><code>issuer certificate does not have OCSP signing capability</code></td>
+<td>Use the correct intermediate CA certificate that signed the end-entity certificate, or obtain the OCSP signing certificate from your CA.</td>
+</tr>
+<tr>
+<td><code>socket: Connection refused</code></td>
+<td>Ensure your firewall allows outbound HTTPS to the OCSP responder URL and check network connectivity with <code>ping</code> or <code>nc</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="comprehensive-scan-testsslsh">Comprehensive Scan — testssl.sh<a class="headerlink" href="#comprehensive-scan-testsslsh" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Install</span>
@@ -8330,9 +8441,28 @@ Use these commands to verify TLS configuration on servers, check certificate val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>./testssl.sh: command not found</code></strong> — Ensure the script has execute permissions with <code>chmod +x testssl.sh</code> and run from the correct directory.
-<strong><code>ERROR: couldn't connect to host:port &lt;hostname&gt;:443</code></strong> — Verify the hostname is resolvable and port 443 is accessible; check firewall rules and DNS with <code>nslookup &lt;hostname&gt;</code>.
-<strong><code>bash: git: command not found</code></strong> — Install git using your package manager (<code>apt install git</code> on Debian/Ubuntu or <code>brew install git</code> on macOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>./testssl.sh: command not found</code></td>
+<td>Ensure the script has execute permissions with <code>chmod +x testssl.sh</code> and run from the correct directory.</td>
+</tr>
+<tr>
+<td><code>ERROR: couldn't connect to host:port &lt;hostname&gt;:443</code></td>
+<td>Verify the hostname is resolvable and port 443 is accessible; check firewall rules and DNS with <code>nslookup &lt;hostname&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>bash: git: command not found</code></td>
+<td>Install git using your package manager (<code>apt install git</code> on Debian/Ubuntu or <code>brew install git</code> on macOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
 <table>
@@ -8440,7 +8570,7 @@ Use these commands to verify TLS configuration on servers, check certificate val
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

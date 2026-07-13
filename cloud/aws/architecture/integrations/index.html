@@ -8112,9 +8112,28 @@ AWS integration patterns: Active Directory Connector, VPC peering and PrivateLin
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The password does not meet complexity requirements</code></strong> — Ensure the service account password meets AWS AD Connector requirements (minimum 8 characters, uppercase, lowercase, number, and special character).
-<strong><code>An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The specified subnet is not available in the VPC</code></strong> — Verify both subnets exist in the specified VPC and are in different availability zones.
-<strong><code>An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The specified DNS IP is not reachable</code></strong> — Confirm the customer DNS IPs are reachable from the specified subnets and that security groups allow DNS traffic (port 53).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The password does not meet complexity requirements</code></td>
+<td>Ensure the service account password meets AWS AD Connector requirements (minimum 8 characters, uppercase, lowercase, number, and special character).</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The specified subnet is not available in the VPC</code></td>
+<td>Verify both subnets exist in the specified VPC and are in different availability zones.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The specified DNS IP is not reachable</code></td>
+<td>Confirm the customer DNS IPs are reachable from the specified subnets and that security groups allow DNS traffic (port 53).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="iam-identity-center-sso">IAM Identity Center (SSO)<a class="headerlink" href="#iam-identity-center-sso" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List permission sets</span>
@@ -8150,9 +8169,28 @@ AWS integration patterns: Active Directory Connector, VPC peering and PrivateLin
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (ValidationException) when calling the ListPermissionSets operation: 1 validation error detected: Value '&lt;sso-instance-arn&gt;' at 'instanceArn' failed to match pattern</code></strong> — Replace <code>&lt;sso-instance-arn&gt;</code> with the actual SSO instance ARN (format: <code>arn:aws:sso:::instance/sso-instance-xxxxxxxx</code>).
-<strong><code>An error occurred (ResourceNotFoundException) when calling the ListAccountAssignments operation: Permission set arn:aws:sso:::permissionSet/... does not exist</code></strong> — Verify the permission set ARN exists by running the first command and copying an ARN from the output.
-<strong><code>An error occurred (AccessDeniedException) when calling the ListPermissionSets operation: User is not authorized to perform: sso:ListPermissionSets</code></strong> — Ensure your IAM user/role has <code>sso:ListPermissionSets</code> and <code>sso:ListAccountAssignments</code> permissions attached.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (ValidationException) when calling the ListPermissionSets operation: 1 validation error detected: Value '&lt;sso-instance-arn&gt;' at 'instanceArn' failed to match pattern</code></td>
+<td>Replace <code>&lt;sso-instance-arn&gt;</code> with the actual SSO instance ARN (format: <code>arn:aws:sso:::instance/sso-instance-xxxxxxxx</code>).</td>
+</tr>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the ListAccountAssignments operation: Permission set arn:aws:sso:::permissionSet/... does not exist</code></td>
+<td>Verify the permission set ARN exists by running the first command and copying an ARN from the output.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDeniedException) when calling the ListPermissionSets operation: User is not authorized to perform: sso:ListPermissionSets</code></td>
+<td>Ensure your IAM user/role has <code>sso:ListPermissionSets</code> and <code>sso:ListAccountAssignments</code> permissions attached.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cloudtrail-to-siem">CloudTrail to SIEM<a class="headerlink" href="#cloudtrail-to-siem" title="Permanent link">&para;</a></h2>
 <p>Centralise CloudTrail logs to the log-archive account:</p>
@@ -8193,8 +8231,24 @@ AWS integration patterns: Active Directory Connector, VPC peering and PrivateLin
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (TrailNotFoundException) when calling the DescribeTrails operation: Unknown trail: &lt;trail-name&gt;</code></strong> — Verify the trail name exists in the current region with <code>aws cloudtrail describe-trails --region &lt;region&gt;</code>.
-<strong><code>An error occurred (InvalidCloudTrailARNException) when calling the GetTrailStatus operation: Invalid CloudTrail ARN</code></strong> — Use the exact trail name (not ARN) with <code>get-trail-status</code>, or provide the full ARN with the <code>--name</code> parameter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (TrailNotFoundException) when calling the DescribeTrails operation: Unknown trail: &lt;trail-name&gt;</code></td>
+<td>Verify the trail name exists in the current region with <code>aws cloudtrail describe-trails --region &lt;region&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidCloudTrailARNException) when calling the GetTrailStatus operation: Invalid CloudTrail ARN</code></td>
+<td>Use the exact trail name (not ARN) with <code>get-trail-status</code>, or provide the full ARN with the <code>--name</code> parameter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Stream to Splunk/Elastic via Kinesis Firehose:
 1. Create Kinesis Data Firehose delivery stream to SIEM endpoint
@@ -8246,9 +8300,28 @@ AWS integration patterns: Active Directory Connector, VPC peering and PrivateLin
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the CreateBackupPlan operation: Invalid backup vault name</code></strong> — Ensure the target backup vault exists first using <code>aws backup create-backup-vault --backup-vault-name prod-vault</code>.
-<strong><code>An error occurred (AccessDenied) when calling the PutBackupVaultAccessPolicy operation: User is not authorized to perform: backup:PutBackupVaultAccessPolicy</code></strong> — Add <code>backup:PutBackupVaultAccessPolicy</code> permission to your IAM role's backup policy.
-<strong><code>An error occurred (InvalidParameterException) when calling the PutBackupVaultAccessPolicy operation: Invalid policy document</code></strong> — Validate the JSON syntax in <code>vault-policy.json</code> and ensure it contains a valid principal ARN for the cross-account role.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the CreateBackupPlan operation: Invalid backup vault name</code></td>
+<td>Ensure the target backup vault exists first using <code>aws backup create-backup-vault --backup-vault-name prod-vault</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the PutBackupVaultAccessPolicy operation: User is not authorized to perform: backup:PutBackupVaultAccessPolicy</code></td>
+<td>Add <code>backup:PutBackupVaultAccessPolicy</code> permission to your IAM role's backup policy.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the PutBackupVaultAccessPolicy operation: Invalid policy document</code></td>
+<td>Validate the JSON syntax in <code>vault-policy.json</code> and ensure it contains a valid principal ARN for the cross-account role.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cloudformation-stack-lifecycle">CloudFormation Stack Lifecycle<a class="headerlink" href="#cloudformation-stack-lifecycle" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1UclqwzAQvfsrhtxD7zkU3MSUtk4cbLdQMARFmjiiimS0JIXSf68ULzjEvQ2zvHkL4xqp5UouQPP6aKPI4qkRxOICZmVXVvK1yDbwAJ_xOp3BjzmSxs_DJZG1wN_oTARn7dFHV1aSXAxQoRw7KH0i4Qn0e_P-yyQa1ehHhSX0ywMu8yQuk93LZrfNs-c8KYpKajTKaYrQaHXmxkNzWU9jKf8Ir8w6oGW23qZJmVTShA-gnG2cNUDOhAuyF9OcXNPpe9-u7ujQo99CMGgBv5G6oHUSRSsh9q2sPEvTp3j5dot08BycRmCeMrXIJlEYBkW9P6skqPnHH4tEM3WZZjNkDfPHIZohy9AcJTFO5TrqjB0cDs3Wpc6s263b696I0erQGgOOpEZ_ZU3xsQ==?" /></p>
@@ -8309,7 +8382,7 @@ AWS integration patterns: Active Directory Connector, VPC peering and PrivateLin
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

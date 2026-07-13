@@ -6979,9 +6979,28 @@ Response procedure for an ESXi host showing "Not Responding" or "Disconnected" i
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: unknown host &lt;vm-ip&gt;</code></strong> — Replace <code>&lt;vm-ip&gt;</code> with the actual IP address (e.g., <code>ping 192.168.45.87</code>).
-<strong><code>From 192.168.1.1 icmp_seq=1 Destination Host Unreachable</code></strong> — Verify the VM is powered on and check network connectivity; confirm the IP address is correct and on the same subnet.
-<strong><code>ping: sendto: Operation not permitted</code></strong> — Run the command with appropriate permissions or check if ICMP is blocked by a firewall rule on the host or network.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: unknown host &lt;vm-ip&gt;</code></td>
+<td>Replace <code>&lt;vm-ip&gt;</code> with the actual IP address (e.g., <code>ping 192.168.45.87</code>).</td>
+</tr>
+<tr>
+<td><code>From 192.168.1.1 icmp_seq=1 Destination Host Unreachable</code></td>
+<td>Verify the VM is powered on and check network connectivity; confirm the IP address is correct and on the same subnet.</td>
+</tr>
+<tr>
+<td><code>ping: sendto: Operation not permitted</code></td>
+<td>Run the command with appropriate permissions or check if ICMP is blocked by a firewall rule on the host or network.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If VMs respond to ping, the host is up but vCenter lost the management agent — lower urgency.</p>
 <p><strong>Check HA events</strong> — did HA already handle it?
@@ -7002,8 +7021,24 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: unknown host &lt;esxi-management-ip&gt;</code></strong> — Replace <code>&lt;esxi-management-ip&gt;</code> with the actual ESXi management IP address (e.g., <code>192.168.1.42</code>).
-<strong><code>From 192.168.1.1 icmp_seq=1 Destination Host Unreachable</code></strong> — Verify the ESXi host is powered on and the management network is reachable; check physical connectivity and firewall rules.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: unknown host &lt;esxi-management-ip&gt;</code></td>
+<td>Replace <code>&lt;esxi-management-ip&gt;</code> with the actual ESXi management IP address (e.g., <code>192.168.1.42</code>).</td>
+</tr>
+<tr>
+<td><code>From 192.168.1.1 icmp_seq=1 Destination Host Unreachable</code></td>
+<td>Verify the ESXi host is powered on and the management network is reachable; check physical connectivity and firewall rules.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -7051,9 +7086,28 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: connect to host &lt;esxi-management-ip&gt; port 22: Connection timed out</code></strong> — Verify the ESXi host is powered on and reachable by pinging the management IP; check firewall rules allow SSH on port 22.
-<strong><code>hostd is stopped.</code></strong> — Restart the management agent with <code>/etc/init.d/hostd start</code> and check <code>/var/log/hostd.log</code> for startup errors.
-<strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — Verify the ESXi host filesystem is accessible; if corrupted, boot into maintenance mode and check <code>/var/log/vmkernel.log</code> path exists.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: connect to host &lt;esxi-management-ip&gt; port 22: Connection timed out</code></td>
+<td>Verify the ESXi host is powered on and reachable by pinging the management IP; check firewall rules allow SSH on port 22.</td>
+</tr>
+<tr>
+<td><code>hostd is stopped.</code></td>
+<td>Restart the management agent with <code>/etc/init.d/hostd start</code> and check <code>/var/log/hostd.log</code> for startup errors.</td>
+</tr>
+<tr>
+<td><code>grep: /var/log/vmkernel.log: No such file or directory</code></td>
+<td>Verify the ESXi host filesystem is accessible; if corrupted, boot into maintenance mode and check <code>/var/log/vmkernel.log</code> path exists.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-3-try-vsphere-host-client-directly">Step 3 — Try vSphere Host Client directly<a class="headerlink" href="#step-3-try-vsphere-host-client-directly" title="Permanent link">&para;</a></h3>
 <p>Browse to <code>https://&lt;esxi-ip&gt;/ui</code> — if this loads, the host is healthy but the vCenter agent has crashed.</p>
@@ -7088,8 +7142,24 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>hostd: unrecognized service</code></strong> — Verify you are running this command on an ESXi host (not vCenter); these services only exist on ESXi.
-<strong><code>/etc/init.d/hostd: Permission denied</code></strong> — Execute the commands with root privileges using <code>sudo</code> or by logging in as root.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hostd: unrecognized service</code></td>
+<td>Verify you are running this command on an ESXi host (not vCenter); these services only exist on ESXi.</td>
+</tr>
+<tr>
+<td><code>/etc/init.d/hostd: Permission denied</code></td>
+<td>Execute the commands with root privileges using <code>sudo</code> or by logging in as root.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Wait 60–90 seconds — the host should reconnect to vCenter automatically.</p>
 <h2 id="fix-option-c-reconnect-via-powercli">Fix — Option C: Reconnect via PowerCLI<a class="headerlink" href="#fix-option-c-reconnect-via-powercli" title="Permanent link">&para;</a></h2>
@@ -7109,8 +7179,24 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option or flag '--enable'</code></strong> — Use <code>esxcli system maintenanceMode set --enable=true</code> with an equals sign instead of a space.
-<strong><code>Error: Permission denied</code></strong> — Ensure you are logged in as root or a user with administrative privileges on the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option or flag '--enable'</code></td>
+<td>Use <code>esxcli system maintenanceMode set --enable=true</code> with an equals sign instead of a space.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Ensure you are logged in as root or a user with administrative privileges on the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="if-vms-are-inaccessible-and-host-is-down">If VMs Are Inaccessible and Host Is Down<a class="headerlink" href="#if-vms-are-inaccessible-and-host-is-down" title="Permanent link">&para;</a></h2>
 <ol>
@@ -7156,7 +7242,7 @@ vCenter → Host → Monitor → Events → filter "HA restarted VM"</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

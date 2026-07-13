@@ -7581,9 +7581,28 @@ DR failback procedure: confirm production site healthy, reverse-resync storage r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>system health status show: command not found</code></strong> — Verify you are connected to the ONTAP cluster management IP and have appropriate SSH credentials configured.
-<strong><code>purecli: command not found</code></strong> — Install the Pure Storage CLI package or ensure the FlashArray management network is reachable and purecli is in your PATH.
-<strong><code>show interface fc brief: command not found</code></strong> — Confirm you are in the correct CLI context (Cisco MDS switch) and not in a different device shell.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system health status show: command not found</code></td>
+<td>Verify you are connected to the ONTAP cluster management IP and have appropriate SSH credentials configured.</td>
+</tr>
+<tr>
+<td><code>purecli: command not found</code></td>
+<td>Install the Pure Storage CLI package or ensure the FlashArray management network is reachable and purecli is in your PATH.</td>
+</tr>
+<tr>
+<td><code>show interface fc brief: command not found</code></td>
+<td>Confirm you are in the correct CLI context (Cisco MDS switch) and not in a different device shell.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># ONTAP — confirm lag is zero before breaking</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;<span class="w"> </span>-fields<span class="w"> </span>lag-time
@@ -7642,9 +7661,28 @@ DR failback procedure: confirm production site healthy, reverse-resync storage r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit app-service.service not found.</code></strong> — Verify the service file exists at <code>/etc/systemd/system/app-service.service</code> and run <code>systemctl daemon-reload</code> before starting.
-<strong><code>curl: (7) Failed to connect to primary-app-01.prod.local port 443: Connection refused</code></strong> — Confirm the application service is listening on port 443 and firewall rules allow inbound HTTPS traffic to the primary host.
-<strong><code>Device or resource busy</code></strong> — Ensure no other processes are accessing the multipath devices and that the failback operation has fully completed before attempting to remount storage.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit app-service.service not found.</code></td>
+<td>Verify the service file exists at <code>/etc/systemd/system/app-service.service</code> and run <code>systemctl daemon-reload</code> before starting.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to primary-app-01.prod.local port 443: Connection refused</code></td>
+<td>Confirm the application service is listening on port 443 and firewall rules allow inbound HTTPS traffic to the primary host.</td>
+</tr>
+<tr>
+<td><code>Device or resource busy</code></td>
+<td>Ensure no other processes are accessing the multipath devices and that the failback operation has fully completed before attempting to remount storage.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># PostgreSQL</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_database_size(&#39;&lt;db&gt;&#39;);&quot;</span>
@@ -7662,9 +7700,28 @@ DR failback procedure: confirm production site healthy, reverse-resync storage r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></strong> — Verify the PostgreSQL service is running and the hostname/port in your connection string is correct.
-<strong><code>Login failed for user '&lt;user&gt;'. Reason: Could not find a login matching the name provided.</code></strong> — Ensure the SQL Server account exists and has appropriate permissions on the target instance.
-<strong><code>DBCC CHECKDB statement not recognized</code></strong> — Confirm you are running the Invoke-Sqlcmd command on a Windows system with SQL Server PowerShell module installed (Install-Module SqlServer).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></td>
+<td>Verify the PostgreSQL service is running and the hostname/port in your connection string is correct.</td>
+</tr>
+<tr>
+<td><code>Login failed for user '&lt;user&gt;'. Reason: Could not find a login matching the name provided.</code></td>
+<td>Ensure the SQL Server account exists and has appropriate permissions on the target instance.</td>
+</tr>
+<tr>
+<td><code>DBCC CHECKDB statement not recognized</code></td>
+<td>Confirm you are running the Invoke-Sqlcmd command on a Windows system with SQL Server PowerShell module installed (Install-Module SqlServer).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># ONTAP — resync back to original direction</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-source-path<span class="w"> </span>&lt;primary-svm&gt;:&lt;primary-vol&gt;<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dr-svm&gt;:&lt;dr-vol&gt;
@@ -7703,7 +7760,7 @@ DR failback procedure: confirm production site healthy, reverse-resync storage r
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

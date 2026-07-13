@@ -6804,9 +6804,28 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nslookup: can't resolve '&lt;hostname&gt;': Non-existent domain</code></strong> — Verify the hostname spelling and that DNS resolution is working by testing with a known domain like google.com.
-<strong><code>dig: couldn't get address for '&lt;dns_server_ip&gt;': not known</code></strong> — Ensure the DNS server IP address is correct and reachable; verify connectivity with <code>ping &lt;dns_server_ip&gt;</code>.
-<strong><code>connection timed out; no servers could be reached</code></strong> — Check that your network connectivity is active and the DNS server is accessible; try querying a public DNS server like 8.8.8.8 to isolate the issue.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nslookup: can't resolve '&lt;hostname&gt;': Non-existent domain</code></td>
+<td>Verify the hostname spelling and that DNS resolution is working by testing with a known domain like google.com.</td>
+</tr>
+<tr>
+<td><code>dig: couldn't get address for '&lt;dns_server_ip&gt;': not known</code></td>
+<td>Ensure the DNS server IP address is correct and reachable; verify connectivity with <code>ping &lt;dns_server_ip&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>connection timed out; no servers could be reached</code></td>
+<td>Check that your network connectivity is active and the DNS server is accessible; try querying a public DNS server like 8.8.8.8 to isolate the issue.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ping<span class="w"> </span>&lt;dns_server_ip&gt;
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nslookup<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>&lt;dns_server_ip&gt;
@@ -6829,9 +6848,28 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: unknown host &lt;dns_server_ip&gt;</code></strong> — Replace <code>&lt;dns_server_ip&gt;</code> with an actual IP address like <code>8.8.8.8</code> or verify the DNS server is reachable.
-<strong><code>** server can't find &lt;hostname&gt;: NXDOMAIN</code></strong> — Verify the hostname is correct and exists in the DNS server's zone; check with <code>nslookup &lt;hostname&gt;</code> against a known working DNS server.
-<strong><code>connection timed out; no servers could be reached</code></strong> — Confirm the DNS server IP is correct and accessible on port 53, and check firewall rules allow DNS traffic.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: unknown host &lt;dns_server_ip&gt;</code></td>
+<td>Replace <code>&lt;dns_server_ip&gt;</code> with an actual IP address like <code>8.8.8.8</code> or verify the DNS server is reachable.</td>
+</tr>
+<tr>
+<td><code>** server can't find &lt;hostname&gt;: NXDOMAIN</code></td>
+<td>Verify the hostname is correct and exists in the DNS server's zone; check with <code>nslookup &lt;hostname&gt;</code> against a known working DNS server.</td>
+</tr>
+<tr>
+<td><code>connection timed out; no servers could be reached</code></td>
+<td>Confirm the DNS server IP is correct and accessible on port 53, and check firewall rules allow DNS traffic.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Forward: name → IP</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dig<span class="w"> </span>&lt;hostname&gt;
@@ -6850,8 +6888,24 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Failed to flush caches: Access denied</code></strong> — Run the command with <code>sudo</code> since cache flushing requires root privileges.
-<strong><code>Unit systemd-resolved.service not found.</code></strong> — Ensure systemd-resolved is installed and enabled with <code>systemctl enable systemd-resolved</code> on your distribution.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Failed to flush caches: Access denied</code></td>
+<td>Run the command with <code>sudo</code> since cache flushing requires root privileges.</td>
+</tr>
+<tr>
+<td><code>Unit systemd-resolved.service not found.</code></td>
+<td>Ensure systemd-resolved is installed and enabled with <code>systemctl enable systemd-resolved</code> on your distribution.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Linux — check interface link state</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show
@@ -6873,8 +6927,24 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ethtool: command not found</code></strong> — Install ethtool with <code>sudo apt install ethtool</code> (Debian/Ubuntu) or <code>sudo yum install ethtool</code> (RHEL/CentOS).
-<strong><code>Cannot get device settings: No such device</code></strong> — Verify the interface name is correct by running <code>ip link show</code> first; common typos include <code>eth0</code> vs <code>en0</code> or <code>ens0</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ethtool: command not found</code></td>
+<td>Install ethtool with <code>sudo apt install ethtool</code> (Debian/Ubuntu) or <code>sudo yum install ethtool</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>Cannot get device settings: No such device</code></td>
+<td>Verify the interface name is correct by running <code>ip link show</code> first; common typos include <code>eth0</code> vs <code>en0</code> or <code>ens0</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check ARP table (confirm MAC resolved)</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>arp<span class="w"> </span>-a
@@ -6895,8 +6965,24 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>INCOMPLETE ENTRY</code></strong> — Run <code>ping &lt;IP&gt;</code> to trigger ARP resolution, then check <code>arp -a</code> again.
-<strong><code>No ARP entries found</code></strong> — Verify the interface is up with <code>ip link show</code> and the network is reachable with <code>ping</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INCOMPLETE ENTRY</code></td>
+<td>Run <code>ping &lt;IP&gt;</code> to trigger ARP resolution, then check <code>arp -a</code> again.</td>
+</tr>
+<tr>
+<td><code>No ARP entries found</code></td>
+<td>Verify the interface is up with <code>ip link show</code> and the network is reachable with <code>ping</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Confirm IP configuration</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
@@ -6935,9 +7021,28 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>RTNETLINK answers: No such file or directory</code></strong> — Ensure the network interface exists with <code>ip link show</code> and verify the interface name is correct.
-<strong><code>ping: unknown host &lt;gateway_ip&gt;</code></strong> — Replace <code>&lt;gateway_ip&gt;</code> with an actual IP address (e.g., <code>192.168.1.1</code>) instead of the placeholder variable.
-<strong><code>Network is unreachable</code></strong> — Verify the default gateway is configured with <code>ip route show default</code> and that the interface is UP with <code>ip link show</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RTNETLINK answers: No such file or directory</code></td>
+<td>Ensure the network interface exists with <code>ip link show</code> and verify the interface name is correct.</td>
+</tr>
+<tr>
+<td><code>ping: unknown host &lt;gateway_ip&gt;</code></td>
+<td>Replace <code>&lt;gateway_ip&gt;</code> with an actual IP address (e.g., <code>192.168.1.1</code>) instead of the placeholder variable.</td>
+</tr>
+<tr>
+<td><code>Network is unreachable</code></td>
+<td>Verify the default gateway is configured with <code>ip route show default</code> and that the interface is UP with <code>ip link show</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Test specific TCP port</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
@@ -6985,9 +7090,28 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nc: getaddrinfo: Name or service not known</code></strong> — Verify the hostname is correct and resolvable with <code>nslookup &lt;host&gt;</code> or <code>dig &lt;host&gt;</code>.
-<strong><code>Connection refused</code></strong> — Confirm the service is running on the target host with <code>netstat -tlnp | grep &lt;port&gt;</code> or <code>ss -tlnp | grep &lt;port&gt;</code>.
-<strong><code>firewall-cmd: command not found</code></strong> — Use <code>iptables -L -n</code> instead if firewalld is not installed, or install firewalld with <code>dnf install firewalld</code> on RHEL/Fedora systems.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nc: getaddrinfo: Name or service not known</code></td>
+<td>Verify the hostname is correct and resolvable with <code>nslookup &lt;host&gt;</code> or <code>dig &lt;host&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Confirm the service is running on the target host with <code>netstat -tlnp | grep &lt;port&gt;</code> or <code>ss -tlnp | grep &lt;port&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>firewall-cmd: command not found</code></td>
+<td>Use <code>iptables -L -n</code> instead if firewalld is not installed, or install firewalld with <code>dnf install firewalld</code> on RHEL/Fedora systems.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>traceroute<span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># Linux/Mac</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>tracert<span class="w"> </span>&lt;destination&gt;<span class="w">       </span><span class="c1"># Windows</span>
@@ -7002,9 +7126,28 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>traceroute: command not found</code></strong> — Install traceroute with <code>apt-get install traceroute</code> (Linux) or <code>brew install traceroute</code> (macOS).
-<strong><code>traceroute: sendto: Operation not permitted</code></strong> — Run the command with <code>sudo</code> to obtain the necessary raw socket permissions.
-<strong><code>traceroute: getaddrinfo: Name or service not known</code></strong> — Verify the destination hostname or IP address is correct and reachable from your network.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>traceroute: command not found</code></td>
+<td>Install traceroute with <code>apt-get install traceroute</code> (Linux) or <code>brew install traceroute</code> (macOS).</td>
+</tr>
+<tr>
+<td><code>traceroute: sendto: Operation not permitted</code></td>
+<td>Run the command with <code>sudo</code> to obtain the necessary raw socket permissions.</td>
+</tr>
+<tr>
+<td><code>traceroute: getaddrinfo: Name or service not known</code></td>
+<td>Verify the destination hostname or IP address is correct and reachable from your network.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># ICMP ping</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;host&gt;
@@ -7048,9 +7191,28 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: unknown host &lt;destination&gt;</code></strong> — Replace <code>&lt;destination&gt;</code> with an actual hostname or IP address (e.g., <code>8.8.8.8</code> or <code>google.com</code>).
-<strong><code>mtr: command not found</code></strong> — Install mtr using your package manager (<code>apt install mtr</code> on Debian/Ubuntu or <code>brew install mtr</code> on macOS).
-<strong><code>ICMP administratively prohibited</code></strong> — Verify the destination allows ICMP traffic; some firewalls block ping requests, so check network policies or use <code>mtr --tcp</code> as an alternative.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: unknown host &lt;destination&gt;</code></td>
+<td>Replace <code>&lt;destination&gt;</code> with an actual hostname or IP address (e.g., <code>8.8.8.8</code> or <code>google.com</code>).</td>
+</tr>
+<tr>
+<td><code>mtr: command not found</code></td>
+<td>Install mtr using your package manager (<code>apt install mtr</code> on Debian/Ubuntu or <code>brew install mtr</code> on macOS).</td>
+</tr>
+<tr>
+<td><code>ICMP administratively prohibited</code></td>
+<td>Verify the destination allows ICMP traffic; some firewalls block ping requests, so check network policies or use <code>mtr --tcp</code> as an alternative.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Linux</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>ethtool<span class="w"> </span>-S<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
@@ -7090,8 +7252,24 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ethtool: operation not permitted</code></strong> — Run the command with <code>sudo</code> or as root user.
-<strong><code>Device "eth0" does not exist</code></strong> — Replace <code>eth0</code> with the correct interface name from <code>ip link show</code> or <code>ifconfig</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ethtool: operation not permitted</code></td>
+<td>Run the command with <code>sudo</code> or as root user.</td>
+</tr>
+<tr>
+<td><code>Device "eth0" does not exist</code></td>
+<td>Replace <code>eth0</code> with the correct interface name from <code>ip link show</code> or <code>ifconfig</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ethtool<span class="w"> </span>&lt;interface&gt;
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1"># Look for: Speed: 1000Mb/s, Duplex: Full</span>
@@ -7117,9 +7295,28 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>No such device</code></strong> — Verify the interface name with <code>ip link show</code> and use the correct interface (e.g., eth0, ens3, wlan0).
-<strong><code>Operation not permitted</code></strong> — Run the command with <code>sudo</code> or as root: <code>sudo ethtool &lt;interface&gt;</code>.
-<strong><code>Speed: Unknown!</code></strong> — Check physical cable connection and NIC driver; restart the interface with <code>sudo ip link set &lt;interface&gt; down &amp;&amp; sudo ip link set &lt;interface&gt; up</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>No such device</code></td>
+<td>Verify the interface name with <code>ip link show</code> and use the correct interface (e.g., eth0, ens3, wlan0).</td>
+</tr>
+<tr>
+<td><code>Operation not permitted</code></td>
+<td>Run the command with <code>sudo</code> or as root: <code>sudo ethtool &lt;interface&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Speed: Unknown!</code></td>
+<td>Check physical cable connection and NIC driver; restart the interface with <code>sudo ip link set &lt;interface&gt; down &amp;&amp; sudo ip link set &lt;interface&gt; up</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># Look for: duplex full, 1000 Mbps</span>
@@ -7143,9 +7340,28 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the interface name format matches your device type (e.g., <code>GigabitEthernet0/0/1</code>, <code>eth0</code>, or <code>Ethernet1/1</code>).
-<strong><code>% Incomplete command.</code></strong> — Provide the full interface identifier after the command (e.g., <code>show interface GigabitEthernet0/0/1</code>).
-<strong><code>Interface &lt;int&gt; does not exist.</code></strong> — Confirm the interface exists on the device using <code>show ip interface brief</code> to list all available interfaces.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid input detected at '^' marker.</code></td>
+<td>Verify the interface name format matches your device type (e.g., <code>GigabitEthernet0/0/1</code>, <code>eth0</code>, or <code>Ethernet1/1</code>).</td>
+</tr>
+<tr>
+<td><code>% Incomplete command.</code></td>
+<td>Provide the full interface identifier after the command (e.g., <code>show interface GigabitEthernet0/0/1</code>).</td>
+</tr>
+<tr>
+<td><code>Interface &lt;int&gt; does not exist.</code></td>
+<td>Confirm the interface exists on the device using <code>show ip interface brief</code> to list all available interfaces.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Linux — show interface TX/RX drops</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
@@ -7159,8 +7375,24 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Device "eth0" does not exist.</code></strong> — Verify the interface name with <code>ip link show</code> and substitute the correct interface name.
-<strong><code>RTNETLINK answers: Operation not permitted</code></strong> — Run the command with <code>sudo</code> or as root user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Device "eth0" does not exist.</code></td>
+<td>Verify the interface name with <code>ip link show</code> and substitute the correct interface name.</td>
+</tr>
+<tr>
+<td><code>RTNETLINK answers: Operation not permitted</code></td>
+<td>Run the command with <code>sudo</code> or as root user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>counters<span class="w">    </span><span class="c1"># Cisco</span>
 <a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w">             </span><span class="c1"># look for output drops</span>
@@ -7180,8 +7412,24 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the interface name matches your platform syntax (e.g., <code>GigabitEthernet0/0/1</code> vs <code>Ethernet0/0</code>).
-<strong><code>% Incomplete command.</code></strong> — Add the full interface identifier after the command; <code>show interface</code> alone may not work on all Cisco IOS versions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid input detected at '^' marker.</code></td>
+<td>Verify the interface name matches your platform syntax (e.g., <code>GigabitEthernet0/0/1</code> vs <code>Ethernet0/0</code>).</td>
+</tr>
+<tr>
+<td><code>% Incomplete command.</code></td>
+<td>Add the full interface identifier after the command; <code>show interface</code> alone may not work on all Cisco IOS versions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Check SFP/cable on the switch port</span>
 <a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>transceiver<span class="w">    </span><span class="c1"># Cisco</span>
@@ -7206,9 +7454,28 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the interface name syntax matches your platform (e.g., <code>GigabitEthernet0/0/1</code> vs <code>Ethernet1/1</code>) and check device documentation.
-<strong><code>% Transceiver information not available.</code></strong> — Reseat the SFP module or replace it; the transceiver may not be fully inserted or is faulty.
-<strong><code>RX Power: -15.2 dBm (below spec: -6.5 to -0.5 dBm)</code></strong> — Check cable connections for dirt/damage, verify the remote end is transmitting, and test with a known-good cable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid input detected at '^' marker.</code></td>
+<td>Verify the interface name syntax matches your platform (e.g., <code>GigabitEthernet0/0/1</code> vs <code>Ethernet1/1</code>) and check device documentation.</td>
+</tr>
+<tr>
+<td><code>% Transceiver information not available.</code></td>
+<td>Reseat the SFP module or replace it; the transceiver may not be fully inserted or is faulty.</td>
+</tr>
+<tr>
+<td><code>RX Power: -15.2 dBm (below spec: -6.5 to -0.5 dBm)</code></td>
+<td>Check cable connections for dirt/damage, verify the remote end is transmitting, and test with a known-good cable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># iSCSI/NFS MTU test (9000 bytes)</span>
 <a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># standard MTU test</span>
@@ -7233,8 +7500,24 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: sendto: Message too long</code></strong> — Reduce packet size or verify the interface MTU supports jumbo frames with <code>ip link show</code> and increase with <code>ip link set dev &lt;interface&gt; mtu 9000</code>.
-<strong><code>ping: unknown host &lt;destination&gt;</code></strong> — Verify the hostname or IP address is correct and reachable on the network.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: sendto: Message too long</code></td>
+<td>Reduce packet size or verify the interface MTU supports jumbo frames with <code>ip link show</code> and increase with <code>ip link set dev &lt;interface&gt; mtu 9000</code>.</td>
+</tr>
+<tr>
+<td><code>ping: unknown host &lt;destination&gt;</code></td>
+<td>Verify the hostname or IP address is correct and reachable on the network.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="network-connectivity/"><strong>Network Connectivity</strong><span>End-to-end connectivity troubleshooting — L1 through L7 diagnostic procedures and tools.</span></a>
@@ -7316,7 +7599,7 @@ Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

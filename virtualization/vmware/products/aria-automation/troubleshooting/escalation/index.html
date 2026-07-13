@@ -9237,9 +9237,28 @@ How to escalate VMware Aria Automation issues to Broadcom support: what data to 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vracli: command not found</code></strong> — Ensure you are logged in as root and the Aria Automation service is running; if not, source the environment with <code>source /etc/profile.d/vra-env.sh</code> or restart the appliance.
-<strong><code>Permission denied (publickey,password)</code></strong> — Verify the root SSH credentials are correct and SSH is enabled on the appliance by checking <code>/etc/ssh/sshd_config</code> for <code>PermitRootLogin yes</code>.
-<strong><code>Connection refused</code></strong> — Confirm the appliance hostname resolves correctly with <code>nslookup &lt;vra-fqdn&gt;</code> and that port 22 is accessible from your client using <code>telnet &lt;vra-fqdn&gt; 22</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vracli: command not found</code></td>
+<td>Ensure you are logged in as root and the Aria Automation service is running; if not, source the environment with <code>source /etc/profile.d/vra-env.sh</code> or restart the appliance.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Verify the root SSH credentials are correct and SSH is enabled on the appliance by checking <code>/etc/ssh/sshd_config</code> for <code>PermitRootLogin yes</code>.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Confirm the appliance hostname resolves correctly with <code>nslookup &lt;vra-fqdn&gt;</code> and that port 22 is accessible from your client using <code>telnet &lt;vra-fqdn&gt; 22</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-check-pod-health-all-vra-microservices-run-as-pods">2. Check pod health (all vRA microservices run as pods)<a class="headerlink" href="#2-check-pod-health-all-vra-microservices-run-as-pods" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get pod state in the prelude namespace</span>
@@ -9273,9 +9292,28 @@ How to escalate VMware Aria Automation issues to Broadcom support: what data to 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error from server (NotFound): pods "&lt;pod-name&gt;" not found</code></strong> — Replace <code>&lt;pod-name&gt;</code> with the actual pod name from the first kubectl get output (e.g., <code>prelude-controller-8f2c1a9d-lm3k9</code>).
-<strong><code>error: you must specify a body with the request body</code></strong> — Ensure the pod name is specified correctly and the namespace flag <code>-n prelude</code> is included in the kubectl logs command.
-<strong><code>The connection to the server localhost:8080 was refused</code></strong> — Verify kubectl is configured correctly by running <code>kubectl cluster-info</code> and check that your kubeconfig points to the correct cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error from server (NotFound): pods "&lt;pod-name&gt;" not found</code></td>
+<td>Replace <code>&lt;pod-name&gt;</code> with the actual pod name from the first kubectl get output (e.g., <code>prelude-controller-8f2c1a9d-lm3k9</code>).</td>
+</tr>
+<tr>
+<td><code>error: you must specify a body with the request body</code></td>
+<td>Ensure the pod name is specified correctly and the namespace flag <code>-n prelude</code> is included in the kubectl logs command.</td>
+</tr>
+<tr>
+<td><code>The connection to the server localhost:8080 was refused</code></td>
+<td>Verify kubectl is configured correctly by running <code>kubectl cluster-info</code> and check that your kubeconfig points to the correct cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="3-generate-the-vracli-support-bundle">3. Generate the vracli support bundle<a class="headerlink" href="#3-generate-the-vracli-support-bundle" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate the support bundle — takes 5–15 minutes</span>
@@ -9299,9 +9337,28 @@ How to escalate VMware Aria Automation issues to Broadcom support: what data to 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vracli: command not found</code></strong> — Ensure vracli is installed and in the system PATH, or run <code>/opt/vmware/vra/bin/vracli support-bundle</code> with the full path.
-<strong><code>Permission denied</code></strong> — Run the command with sudo or as the root user, as support bundle generation requires elevated privileges.
-<strong><code>No space left on device</code></strong> — Free up disk space on /tmp (typically need 3–5 GB available) or specify an alternate location with <code>vracli support-bundle --output-dir /var/tmp</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vracli: command not found</code></td>
+<td>Ensure vracli is installed and in the system PATH, or run <code>/opt/vmware/vra/bin/vracli support-bundle</code> with the full path.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with sudo or as the root user, as support bundle generation requires elevated privileges.</td>
+</tr>
+<tr>
+<td><code>No space left on device</code></td>
+<td>Free up disk space on /tmp (typically need 3–5 GB available) or specify an alternate location with <code>vracli support-bundle --output-dir /var/tmp</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>This bundle contains pod logs, Postgres state, configuration, and the last 72h of service logs.</p>
 <h3 id="4-collect-vami-cluster-status-for-upgrade-failures">4. Collect VAMI cluster status (for upgrade failures)<a class="headerlink" href="#4-collect-vami-cluster-status-for-upgrade-failures" title="Permanent link">&para;</a></h3>
@@ -9491,9 +9548,28 @@ How to escalate VMware Aria Automation issues to Broadcom support: what data to 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>kubectl: command not found</code></strong> — Ensure you are SSH'd directly to the vRA appliance as root, not a separate management node; kubectl is only available on the appliance itself.
-<strong><code>Error: Unable to connect to vIDM. Check network connectivity and vIDM certificate.</code></strong> — Verify vIDM hostname resolution with <code>nslookup</code> and confirm the vRA appliance can reach vIDM on port 443; check certificate expiration with <code>openssl s_client -connect &lt;vIDM-IP&gt;:443</code>.
-<strong><code>Filesystem /dev/sda1: 95% used — Disk space critically low</code></strong> — Delete old pod logs with <code>kubectl delete pods --all-namespaces --field-selector status.phase=Failed</code> and clear package cache with <code>apt-get clean</code>, then monitor with <code>df -h</code> again.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kubectl: command not found</code></td>
+<td>Ensure you are SSH'd directly to the vRA appliance as root, not a separate management node; kubectl is only available on the appliance itself.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to vIDM. Check network connectivity and vIDM certificate.</code></td>
+<td>Verify vIDM hostname resolution with <code>nslookup</code> and confirm the vRA appliance can reach vIDM on port 443; check certificate expiration with <code>openssl s_client -connect &lt;vIDM-IP&gt;:443</code>.</td>
+</tr>
+<tr>
+<td><code>Filesystem /dev/sda1: 95% used — Disk space critically low</code></td>
+<td>Delete old pod logs with <code>kubectl delete pods --all-namespaces --field-selector status.phase=Failed</code> and clear package cache with <code>apt-get clean</code>, then monitor with <code>df -h</code> again.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
@@ -9567,7 +9643,7 @@ How to escalate VMware Aria Automation issues to Broadcom support: what data to 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

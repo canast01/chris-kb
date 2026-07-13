@@ -8509,8 +8509,24 @@ Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The resource with id /subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507 does not exist.</code></strong> — Verify the snapshot name and subscription ID match an existing snapshot using <code>az snapshot list --resource-group rg-compute-prod</code>.
-<strong><code>The VM 'vm01' cannot have its OS disk updated while it is in the running state.</code></strong> — Ensure the VM is fully deallocated before updating the OS disk by running <code>az vm deallocate --resource-group rg-compute-prod --name vm01</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The resource with id /subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507 does not exist.</code></td>
+<td>Verify the snapshot name and subscription ID match an existing snapshot using <code>az snapshot list --resource-group rg-compute-prod</code>.</td>
+</tr>
+<tr>
+<td><code>The VM 'vm01' cannot have its OS disk updated while it is in the running state.</code></td>
+<td>Ensure the VM is fully deallocated before updating the OS disk by running <code>az vm deallocate --resource-group rg-compute-prod --name vm01</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cross-region-snapshot-copy">Cross-Region Snapshot Copy<a class="headerlink" href="#cross-region-snapshot-copy" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Copy a snapshot to another region</span>
@@ -8545,9 +8561,28 @@ Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The resource with id /subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507 could not be found.</code></strong> — Verify the source snapshot name and resource group exist in the source region using <code>az snapshot list --resource-group rg-compute-prod</code>.
-<strong><code>The provided location 'westus2' is not a valid location for the subscription.</code></strong> — List available regions with <code>az account list-locations --query "[].name"</code> and use a valid region name.
-<strong><code>The resource group 'rg-compute-dr' does not exist.</code></strong> — Create the target resource group first with <code>az group create --name rg-compute-dr --location westus2</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The resource with id /subscriptions/&lt;sub-id&gt;/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507 could not be found.</code></td>
+<td>Verify the source snapshot name and resource group exist in the source region using <code>az snapshot list --resource-group rg-compute-prod</code>.</td>
+</tr>
+<tr>
+<td><code>The provided location 'westus2' is not a valid location for the subscription.</code></td>
+<td>List available regions with <code>az account list-locations --query "[].name"</code> and use a valid region name.</td>
+</tr>
+<tr>
+<td><code>The resource group 'rg-compute-dr' does not exist.</code></td>
+<td>Create the target resource group first with <code>az group create --name rg-compute-dr --location westus2</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="snapshot-retention-and-cleanup">Snapshot Retention and Cleanup<a class="headerlink" href="#snapshot-retention-and-cleanup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List snapshots older than 30 days</span>
@@ -8588,9 +8623,28 @@ Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound : The resource 'Microsoft.Compute/snapshots/snap-vm01-osdisk-20260407' under resource group 'rg-compute-prod' was not found.</code></strong> — Verify the snapshot name exists with <code>az snapshot list --resource-group rg-compute-prod</code> before attempting deletion.
-<strong><code>AuthorizationFailed : The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Compute/snapshots/delete' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260310'.</code></strong> — Ensure your Azure account has Contributor or Owner role on the resource group or subscription.
-<strong><code>CLIError: 'date' is not recognized as an internal or external command</code></strong> — On Windows, replace the <code>date</code> command with PowerShell equivalent or use WSL; on macOS/Linux ensure GNU coreutils is installed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound : The resource 'Microsoft.Compute/snapshots/snap-vm01-osdisk-20260407' under resource group 'rg-compute-prod' was not found.</code></td>
+<td>Verify the snapshot name exists with <code>az snapshot list --resource-group rg-compute-prod</code> before attempting deletion.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed : The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Compute/snapshots/delete' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260310'.</code></td>
+<td>Ensure your Azure account has Contributor or Owner role on the resource group or subscription.</td>
+</tr>
+<tr>
+<td><code>CLIError: 'date' is not recognized as an internal or external command</code></td>
+<td>On Windows, replace the <code>date</code> command with PowerShell equivalent or use WSL; on macOS/Linux ensure GNU coreutils is installed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="snapshot-costs">Snapshot Costs<a class="headerlink" href="#snapshot-costs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Get snapshot storage used (bytes)</span>
@@ -8608,8 +8662,24 @@ Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507-incr' under resource group 'rg-compute-prod' was not found.</code></strong> — Verify the snapshot name and resource group name are correct with <code>az snapshot list --resource-group rg-compute-prod</code>.
-<strong><code>AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Compute/snapshots/read' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507-incr'.</code></strong> — Ensure your Azure account has at least Reader role on the resource group or subscription.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507-incr' under resource group 'rg-compute-prod' was not found.</code></td>
+<td>Verify the snapshot name and resource group name are correct with <code>az snapshot list --resource-group rg-compute-prod</code>.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Compute/snapshots/read' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/snapshots/snap-vm01-osdisk-20260507-incr'.</code></td>
+<td>Ensure your Azure account has at least Reader role on the resource group or subscription.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Snapshot storage pricing reference:</p>
 <table>
@@ -8660,7 +8730,7 @@ Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating S
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

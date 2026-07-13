@@ -8444,8 +8444,24 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Relationship does not exist.</code></strong> — Verify the destination path exists with <code>snapmirror show</code> and confirm the SVM and volume names are correct.
-<strong><code>Error: command failed: Encryption cannot be enabled on unhealthy relationship.</code></strong> — Resynchronize the SnapMirror relationship with <code>snapmirror resync -destination-path svm_dst:vol_dst</code> before modifying encryption settings.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Relationship does not exist.</code></td>
+<td>Verify the destination path exists with <code>snapmirror show</code> and confirm the SVM and volume names are correct.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Encryption cannot be enabled on unhealthy relationship.</code></td>
+<td>Resynchronize the SnapMirror relationship with <code>snapmirror resync -destination-path svm_dst:vol_dst</code> before modifying encryption settings.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="enable-encryption-at-relationship-creation">Enable Encryption at Relationship Creation<a class="headerlink" href="#enable-encryption-at-relationship-creation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a new XDP relationship with encryption enabled from the start</span>
@@ -8478,9 +8494,28 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Relationship already exists.</code></strong> — Verify the destination volume doesn't already have an active SnapMirror relationship using <code>snapmirror show -destination-path svm_dr:vol_data</code>.
-<strong><code>Error: command failed: Source volume svm_prod:vol_data does not exist.</code></strong> — Confirm the source SVM and volume names are correct and the source cluster is reachable with <code>volume show -vserver svm_prod</code>.
-<strong><code>Error: command failed: Encryption is not supported with policy MirrorAllSnapshots.</code></strong> — Use a policy that supports encryption such as <code>MirrorAndVault</code> or create a custom policy with encryption enabled.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Relationship already exists.</code></td>
+<td>Verify the destination volume doesn't already have an active SnapMirror relationship using <code>snapmirror show -destination-path svm_dr:vol_data</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Source volume svm_prod:vol_data does not exist.</code></td>
+<td>Confirm the source SVM and volume names are correct and the source cluster is reachable with <code>volume show -vserver svm_prod</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Encryption is not supported with policy MirrorAllSnapshots.</code></td>
+<td>Use a policy that supports encryption such as <code>MirrorAndVault</code> or create a custom policy with encryption enabled.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="verify-encryption-across-all-relationships">Verify Encryption Across All Relationships<a class="headerlink" href="#verify-encryption-across-all-relationships" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all relationships and their encryption state</span>
@@ -8501,8 +8536,24 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into a NetApp ONTAP cluster CLI session, not a Linux/Unix shell.
-<strong><code>Error: invalid field name "encryption-algorithm"</code></strong> — Verify your ONTAP version supports the encryption-algorithm field (9.7+); use <code>snapmirror show</code> without fields to confirm available columns.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: snapmirror</code></td>
+<td>Ensure you are logged into a NetApp ONTAP cluster CLI session, not a Linux/Unix shell.</td>
+</tr>
+<tr>
+<td><code>Error: invalid field name "encryption-algorithm"</code></td>
+<td>Verify your ONTAP version supports the encryption-algorithm field (9.7+); use <code>snapmirror show</code> without fields to confirm available columns.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="encryption-at-rest">Encryption at Rest<a class="headerlink" href="#encryption-at-rest" title="Permanent link">&para;</a></h2>
@@ -8538,9 +8589,28 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: 2621440 reason "Aggregate "aggr_dr" does not exist"</code></strong> — Verify the aggregate name exists on the destination cluster using <code>storage aggregate show</code>.
-<strong><code>Error: command failed: 13001 reason "Vserver "svm_dr" does not exist"</code></strong> — Create the destination SVM first using <code>vserver create -vserver svm_dr</code> or confirm the SVM name matches your DR environment.
-<strong><code>encryption-state: unencrypted</code></strong> — Configure the onboard key manager or external key server using <code>security key-manager setup</code> before creating encrypted volumes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: 2621440 reason "Aggregate "aggr_dr" does not exist"</code></td>
+<td>Verify the aggregate name exists on the destination cluster using <code>storage aggregate show</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: 13001 reason "Vserver "svm_dr" does not exist"</code></td>
+<td>Create the destination SVM first using <code>vserver create -vserver svm_dr</code> or confirm the SVM name matches your DR environment.</td>
+</tr>
+<tr>
+<td><code>encryption-state: unencrypted</code></td>
+<td>Configure the onboard key manager or external key server using <code>security key-manager setup</code> before creating encrypted volumes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="enabling-nve-on-an-existing-destination-volume">Enabling NVE on an Existing Destination Volume<a class="headerlink" href="#enabling-nve-on-an-existing-destination-volume" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable NVE on an existing unencrypted DP volume</span>
@@ -8574,9 +8644,28 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: volume encryption conversion start: Volume vol_data_dr is not quiesced</code></strong> — Run <code>snapmirror quiesce -destination-path svm_dr:vol_data_dr</code> before attempting encryption conversion.
-<strong><code>Error: command failed: snapmirror quiesce: SnapMirror relationship does not exist for destination svm_dr:vol_data_dr</code></strong> — Verify the SnapMirror relationship exists and use the correct destination path format <code>vserver:volume</code>.
-<strong><code>Error: command failed: volume encryption conversion start: Volume vol_data_dr is already encrypted</code></strong> — Check if NVE is already enabled on the volume using <code>volume encryption show -vserver svm_dr -volume vol_data_dr</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: volume encryption conversion start: Volume vol_data_dr is not quiesced</code></td>
+<td>Run <code>snapmirror quiesce -destination-path svm_dr:vol_data_dr</code> before attempting encryption conversion.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: snapmirror quiesce: SnapMirror relationship does not exist for destination svm_dr:vol_data_dr</code></td>
+<td>Verify the SnapMirror relationship exists and use the correct destination path format <code>vserver:volume</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: volume encryption conversion start: Volume vol_data_dr is already encrypted</code></td>
+<td>Check if NVE is already enabled on the volume using <code>volume encryption show -vserver svm_dr -volume vol_data_dr</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="key-management-for-encrypted-destination-volumes">Key Management for Encrypted Destination Volumes<a class="headerlink" href="#key-management-for-encrypted-destination-volumes" title="Permanent link">&para;</a></h2>
@@ -8609,8 +8698,24 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: security key-manager show</code></strong> — Verify you are connected to a NetApp ONTAP cluster with sufficient privileges (run <code>cluster show</code> first to confirm connection).
-<strong><code>Error: No matching entries were found for the specified query</code></strong> — Ensure the destination SVM name and volume name are correct by running <code>volume show -vserver svm_dr</code> to list available volumes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: security key-manager show</code></td>
+<td>Verify you are connected to a NetApp ONTAP cluster with sufficient privileges (run <code>cluster show</code> first to confirm connection).</td>
+</tr>
+<tr>
+<td><code>Error: No matching entries were found for the specified query</code></td>
+<td>Ensure the destination SVM name and volume name are correct by running <code>volume show -vserver svm_dr</code> to list available volumes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>The source and destination clusters can use different key managers independently — encryption at the destination is entirely managed by the destination cluster's key manager configuration.</p>
 <hr />
@@ -8639,8 +8744,24 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: This operation is not supported on relationships of type "sync"</code></strong> — Encryption cannot be modified on synchronous SnapMirror relationships; use asynchronous relationships instead.
-<strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the ONTAP cluster CLI and have appropriate admin privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: This operation is not supported on relationships of type "sync"</code></td>
+<td>Encryption cannot be modified on synchronous SnapMirror relationships; use asynchronous relationships instead.</td>
+</tr>
+<tr>
+<td><code>Error: command not found: snapmirror</code></td>
+<td>Ensure you are logged into the ONTAP cluster CLI and have appropriate admin privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="compliance-mapping">Compliance Mapping<a class="headerlink" href="#compliance-mapping" title="Permanent link">&para;</a></h2>
@@ -8709,7 +8830,7 @@ SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirro
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

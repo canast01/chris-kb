@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="NSX — Backup and Restore · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Backup and Restore", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Backup and Restore", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -9154,9 +9154,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's not removed in production use with proper CA certificates).
-<strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Verify the NSX Manager admin credentials are correct and the user has backup configuration privileges.
-<strong><code>{"error_code":400,"error_message":"Connection to backup server failed"}</code></strong> — Confirm the backup server hostname/IP is reachable from NSX Manager and SFTP port 22 is open in firewall rules.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's not removed in production use with proper CA certificates).</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Invalid credentials"}</code></td>
+<td>Verify the NSX Manager admin credentials are correct and the user has backup configuration privileges.</td>
+</tr>
+<tr>
+<td><code>{"error_code":400,"error_message":"Connection to backup server failed"}</code></td>
+<td>Confirm the backup server hostname/IP is reachable from NSX Manager and SFTP port 22 is open in firewall rules.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>nsxcli
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
@@ -9187,9 +9206,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to connect to nsx-manager</code></strong> — Verify NSX Manager hostname/IP is reachable and nsxcli is configured with correct credentials in ~/.nsxclirc.
-<strong><code>error: cluster status unavailable - quorum lost</code></strong> — Restart the NSX Manager cluster services or check network connectivity between manager nodes; if persistent, restore from backup.
-<strong><code>error: authentication failed</code></strong> — Ensure your NSX Manager admin credentials are correct and the user account has not been locked after failed login attempts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to connect to nsx-manager</code></td>
+<td>Verify NSX Manager hostname/IP is reachable and nsxcli is configured with correct credentials in ~/.nsxclirc.</td>
+</tr>
+<tr>
+<td><code>error: cluster status unavailable - quorum lost</code></td>
+<td>Restart the NSX Manager cluster services or check network connectivity between manager nodes; if persistent, restore from backup.</td>
+</tr>
+<tr>
+<td><code>error: authentication failed</code></td>
+<td>Ensure your NSX Manager admin credentials are correct and the user account has not been locked after failed login attempts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Cluster health</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
@@ -9272,9 +9310,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify NSX Manager hostname matches certificate CN).
-<strong><code>401 Unauthorized</code></strong> — Verify admin credentials are correct and user has API access permissions; check NSX Manager audit logs for failed authentication attempts.
-<strong><code>transport-node-status: tn-edge-01 DISCONNECTED</code></strong> — Check Edge node VM power state, network connectivity to NSX Manager, and certificate expiration on the Edge node via <code>get certificate-info</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify NSX Manager hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Verify admin credentials are correct and user has API access permissions; check NSX Manager audit logs for failed authentication attempts.</td>
+</tr>
+<tr>
+<td><code>transport-node-status: tn-edge-01 DISCONNECTED</code></td>
+<td>Check Edge node VM power state, network connectivity to NSX Manager, and certificate expiration on the Edge node via <code>get certificate-info</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Export full policy config as JSON (use before changes for comparison)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9294,9 +9351,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or use <code>--cacert /path/to/ca.pem</code> with a valid certificate bundle.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Verify the NSX Manager hostname/IP is correct and the API service is running with <code>curl -sk https://&lt;nsx-manager&gt;/api/v1/node/status</code>.
-<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Confirm the admin credentials are correct and the user has API access permissions in NSX Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already present) or use <code>--cacert /path/to/ca.pem</code> with a valid certificate bundle.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Verify the NSX Manager hostname/IP is correct and the API service is running with <code>curl -sk https://&lt;nsx-manager&gt;/api/v1/node/status</code>.</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Unauthorized"}</code></td>
+<td>Confirm the admin credentials are correct and the user has API access permissions in NSX Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Query the last successful backup timestamp</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9318,9 +9394,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Verify the NSX Manager hostname is correct and reachable, and confirm credentials are valid by testing with <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/cluster/backups/history"</code> directly.
-<strong><code>KeyError: 'end_time'</code></strong> — Check that backups exist and have completed; if the API returns an empty results array or malformed backup objects, verify NSX backup jobs have run successfully via the NSX UI.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></td>
+<td>Verify the NSX Manager hostname is correct and reachable, and confirm credentials are valid by testing with <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/cluster/backups/history"</code> directly.</td>
+</tr>
+<tr>
+<td><code>KeyError: 'end_time'</code></td>
+<td>Check that backups exist and have completed; if the API returns an empty results array or malformed backup objects, verify NSX backup jobs have run successfully via the NSX UI.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9365,7 +9460,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

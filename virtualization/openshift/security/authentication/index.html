@@ -7380,8 +7380,24 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>htpasswd: cannot open file htpasswd.file for read</code></strong> — Remove the <code>-c</code> flag from the second htpasswd command, as <code>-c</code> creates a new file and overwrites existing entries.
-<strong><code>error: unable to recognize "STDIN": no matches for kind "OAuth" in version "config.openshift.io/v1"</code></strong> — Verify the OpenShift cluster version supports the OAuth API; use <code>oc api-resources | grep oauth</code> to confirm availability.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>htpasswd: cannot open file htpasswd.file for read</code></td>
+<td>Remove the <code>-c</code> flag from the second htpasswd command, as <code>-c</code> creates a new file and overwrites existing entries.</td>
+</tr>
+<tr>
+<td><code>error: unable to recognize "STDIN": no matches for kind "OAuth" in version "config.openshift.io/v1"</code></td>
+<td>Verify the OpenShift cluster version supports the OAuth API; use <code>oc api-resources | grep oauth</code> to confirm availability.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="htpasswd-update-procedure">HTPasswd Update Procedure<a class="headerlink" href="#htpasswd-update-procedure" title="Permanent link">&para;</a></h3>
 <p>Adding or removing users requires updating the Secret in-place — the OAuth server watches for changes.</p>
@@ -7412,9 +7428,28 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>htpasswd: cannot open file /tmp/users.htpasswd for read</code></strong> — Ensure the base64 decode step completed successfully and the file exists before running htpasswd commands.
-<strong><code>error: the server doesn't have a resource type "secret"</code></strong> — Verify you are connected to the correct cluster with <code>oc cluster-info</code> and that the htpass-secret exists in openshift-config namespace.
-<strong><code>error: deployment.apps "oauth-openshift" not found</code></strong> — Check that the OAuth deployment exists with <code>oc get deployment -n openshift-authentication</code> and wait for the pods to stabilize after the secret update.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>htpasswd: cannot open file /tmp/users.htpasswd for read</code></td>
+<td>Ensure the base64 decode step completed successfully and the file exists before running htpasswd commands.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "secret"</code></td>
+<td>Verify you are connected to the correct cluster with <code>oc cluster-info</code> and that the htpass-secret exists in openshift-config namespace.</td>
+</tr>
+<tr>
+<td><code>error: deployment.apps "oauth-openshift" not found</code></td>
+<td>Check that the OAuth deployment exists with <code>oc get deployment -n openshift-authentication</code> and wait for the pods to stabilize after the secret update.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="ldap-identity-provider">LDAP Identity Provider<a class="headerlink" href="#ldap-identity-provider" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create bind password secret</span>
@@ -7458,9 +7493,28 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to read ca.crt: no such file or directory</code></strong> — Ensure the ldap-ca.crt file exists in your current working directory before running the configmap creation command.
-<strong><code>error: unable to authenticate to LDAP server at ldaps://ad.example.com: x509: certificate signed by unknown authority</code></strong> — Verify the CA certificate in ldap-ca.crt matches the LDAP server's certificate chain, or set <code>insecure: true</code> temporarily for testing only.
-<strong><code>error: the server doesn't have a resource type "oauth" in group "config.openshift.io"</code></strong> — Confirm you are connected to an OpenShift 4.x cluster with sufficient permissions (cluster-admin role required) to modify OAuth configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to read ca.crt: no such file or directory</code></td>
+<td>Ensure the ldap-ca.crt file exists in your current working directory before running the configmap creation command.</td>
+</tr>
+<tr>
+<td><code>error: unable to authenticate to LDAP server at ldaps://ad.example.com: x509: certificate signed by unknown authority</code></td>
+<td>Verify the CA certificate in ldap-ca.crt matches the LDAP server's certificate chain, or set <code>insecure: true</code> temporarily for testing only.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "oauth" in group "config.openshift.io"</code></td>
+<td>Confirm you are connected to an OpenShift 4.x cluster with sufficient permissions (cluster-admin role required) to modify OAuth configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="openid-connect-oidc">OpenID Connect (OIDC)<a class="headerlink" href="#openid-connect-oidc" title="Permanent link">&para;</a></h2>
 <p>OIDC providers (Okta, Azure AD, Keycloak, Dex) issue JWTs verified by the OAuth server. MFA is handled entirely by the external IdP.</p>
@@ -7495,9 +7549,28 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: failed to create secret: secrets "oidc-client-secret" already exists</code></strong> — Delete the existing secret with <code>oc delete secret oidc-client-secret -n openshift-config</code> before recreating it, or use <code>oc patch</code> to update it instead.
-<strong><code>error: unable to recognize "": no matches for kind "OAuth" in version "config.openshift.io/v1"</code></strong> — Verify the OpenShift cluster version supports this OAuth API by running <code>oc api-resources | grep oauth</code> and check cluster compatibility documentation.
-<strong><code>The OAuth server is not available</code></strong> — Wait 2-3 minutes for the OAuth operator to reconcile the configuration, then verify with <code>oc get oauth cluster -o yaml</code> to check the status conditions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: failed to create secret: secrets "oidc-client-secret" already exists</code></td>
+<td>Delete the existing secret with <code>oc delete secret oidc-client-secret -n openshift-config</code> before recreating it, or use <code>oc patch</code> to update it instead.</td>
+</tr>
+<tr>
+<td><code>error: unable to recognize "": no matches for kind "OAuth" in version "config.openshift.io/v1"</code></td>
+<td>Verify the OpenShift cluster version supports this OAuth API by running <code>oc api-resources | grep oauth</code> and check cluster compatibility documentation.</td>
+</tr>
+<tr>
+<td><code>The OAuth server is not available</code></td>
+<td>Wait 2-3 minutes for the OAuth operator to reconcile the configuration, then verify with <code>oc get oauth cluster -o yaml</code> to check the status conditions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="oidc-token-refresh-behavior">OIDC Token Refresh Behavior<a class="headerlink" href="#oidc-token-refresh-behavior" title="Permanent link">&para;</a></h3>
 <p>OCP issues its own OAuth tokens (not the OIDC JWT). The OAuth token defaults to 24 h TTL. The OIDC session at the external IdP is separate — on token expiry, the user must re-authenticate through the OIDC flow. Refresh tokens are issued by OCP with a 30-day TTL (configurable via <code>tokenConfig</code>).</p>
@@ -7517,8 +7590,24 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "oauth" in group "oauth.openshift.io"</code></strong> — Verify you are connected to an OpenShift cluster with <code>oc cluster-info</code> and have the correct API group installed.
-<strong><code>Error from server (Forbidden): oauths.oauth.openshift.io "cluster" is forbidden: User "system:serviceaccount:default:deployer" cannot patch resource "oauths" in API group "oauth.openshift.io" at the cluster scope</code></strong> — Use a cluster-admin account or bind the necessary RBAC role with <code>oc adm policy add-cluster-role-to-user cluster-admin &lt;username&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "oauth" in group "oauth.openshift.io"</code></td>
+<td>Verify you are connected to an OpenShift cluster with <code>oc cluster-info</code> and have the correct API group installed.</td>
+</tr>
+<tr>
+<td><code>Error from server (Forbidden): oauths.oauth.openshift.io "cluster" is forbidden: User "system:serviceaccount:default:deployer" cannot patch resource "oauths" in API group "oauth.openshift.io" at the cluster scope</code></td>
+<td>Use a cluster-admin account or bind the necessary RBAC role with <code>oc adm policy add-cluster-role-to-user cluster-admin &lt;username&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="certificate-based-authentication">Certificate-Based Authentication<a class="headerlink" href="#certificate-based-authentication" title="Permanent link">&para;</a></h2>
 <p>Client certificates signed by the cluster CA are used by system components (scheduler, controller-manager, kubelets). Also useful for scripted automation that cannot interactively authenticate.</p>
@@ -7560,9 +7649,28 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: certificate authority file "/etc/kubernetes/pki/ca.crt" does not exist</code></strong> — Verify the CA certificate path matches your cluster's PKI directory (often <code>/etc/kubernetes/pki</code> on control planes or mounted in containers).
-<strong><code>error: unable to read certificate authority file: permission denied</code></strong> — Run the command with appropriate privileges (sudo or as a user with read access to the PKI directory).
-<strong><code>error: the server doesn't have a resource type "secret" in group ""</code></strong> — Ensure you are connected to a valid OpenShift cluster and the kube-controller-manager namespace exists; check your KUBECONFIG context.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: certificate authority file "/etc/kubernetes/pki/ca.crt" does not exist</code></td>
+<td>Verify the CA certificate path matches your cluster's PKI directory (often <code>/etc/kubernetes/pki</code> on control planes or mounted in containers).</td>
+</tr>
+<tr>
+<td><code>error: unable to read certificate authority file: permission denied</code></td>
+<td>Run the command with appropriate privileges (sudo or as a user with read access to the PKI directory).</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "secret" in group ""</code></td>
+<td>Ensure you are connected to a valid OpenShift cluster and the kube-controller-manager namespace exists; check your KUBECONFIG context.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="token-management">Token Management<a class="headerlink" href="#token-management" title="Permanent link">&para;</a></h2>
 <h3 id="checking-and-rotating-tokens">Checking and Rotating Tokens<a class="headerlink" href="#checking-and-rotating-tokens" title="Permanent link">&para;</a></h3>
@@ -7658,8 +7766,24 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error from server (Forbidden): oauthaccesstokens.oauth.openshift.io is forbidden: User "alice" cannot list resource "oauthaccesstokens"</code></strong> — Run the command with cluster-admin credentials or request a cluster administrator to execute the token revocation.
-<strong><code>error: the server doesn't have a resource type "oauthaccesstoken"</code></strong> — Verify the OpenShift API version supports OAuth token management (requires OpenShift 4.x) and check that the OAuth API server is running with <code>oc get clusteroperators | grep oauth</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error from server (Forbidden): oauthaccesstokens.oauth.openshift.io is forbidden: User "alice" cannot list resource "oauthaccesstokens"</code></td>
+<td>Run the command with cluster-admin credentials or request a cluster administrator to execute the token revocation.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "oauthaccesstoken"</code></td>
+<td>Verify the OpenShift API version supports OAuth token management (requires OpenShift 4.x) and check that the OAuth API server is running with <code>oc get clusteroperators | grep oauth</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="post-setup-disable-kubeadmin">Post-Setup: Disable kubeadmin<a class="headerlink" href="#post-setup-disable-kubeadmin" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Only after: at least one admin user confirmed working via LDAP/OIDC/HTPasswd</span>
@@ -7696,9 +7820,28 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to connect to the server: dial tcp: lookup api.cluster.local on 8.8.8.8:53: no such host</code></strong> — Verify the cluster API endpoint is reachable and your KUBECONFIG points to the correct cluster context.
-<strong><code>Error from server (Forbidden): clusterrolebindings.rbac.authorization.k8s.io "cluster-admin" is forbidden: User "system:serviceaccount:kube-system:default" cannot create resource "clusterrolebindings"</code></strong> — Ensure you are logged in as an existing cluster-admin user before attempting to grant cluster-admin to the new IDP user.
-<strong><code>error: secrets "kubeadmin" not found</code></strong> — The kubeadmin secret may have already been deleted in a previous operation; verify with <code>oc get secret -n kube-system | grep kubeadmin</code> before attempting deletion.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to connect to the server: dial tcp: lookup api.cluster.local on 8.8.8.8:53: no such host</code></td>
+<td>Verify the cluster API endpoint is reachable and your KUBECONFIG points to the correct cluster context.</td>
+</tr>
+<tr>
+<td><code>Error from server (Forbidden): clusterrolebindings.rbac.authorization.k8s.io "cluster-admin" is forbidden: User "system:serviceaccount:kube-system:default" cannot create resource "clusterrolebindings"</code></td>
+<td>Ensure you are logged in as an existing cluster-admin user before attempting to grant cluster-admin to the new IDP user.</td>
+</tr>
+<tr>
+<td><code>error: secrets "kubeadmin" not found</code></td>
+<td>The kubeadmin secret may have already been deleted in a previous operation; verify with <code>oc get secret -n kube-system | grep kubeadmin</code> before attempting deletion.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="oauth-configuration-reference">OAuth Configuration Reference<a class="headerlink" href="#oauth-configuration-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -7773,8 +7916,24 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "oauth"</code></strong> — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with <code>oc cluster-info</code>.
-<strong><code>No resources found in openshift-authentication namespace.</code></strong> — Check that the openshift-authentication namespace exists and the OAuth operator is running with <code>oc get ns openshift-authentication</code> and <code>oc get clusteroperator authentication</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "oauth"</code></td>
+<td>Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with <code>oc cluster-info</code>.</td>
+</tr>
+<tr>
+<td><code>No resources found in openshift-authentication namespace.</code></td>
+<td>Check that the openshift-authentication namespace exists and the OAuth operator is running with <code>oc get ns openshift-authentication</code> and <code>oc get clusteroperator authentication</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7803,7 +7962,7 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -9455,8 +9455,24 @@ and identifying driver/firmware mismatch as the most common production cause.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: (standard input): No such file or directory</code></strong> — Ensure vmkernel.log exists at /var/log/vmkernel.log; check file permissions with <code>ls -la /var/log/vmkernel.log</code>.
-<strong><code>tail: cannot open '50' for reading: No such file or directory</code></strong> — Remove the pipe and use <code>tail -50 /var/log/vmkernel.log | grep -iE "PSOD|panic|backtrace|oops"</code> instead (correct command order).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: (standard input): No such file or directory</code></td>
+<td>Ensure vmkernel.log exists at /var/log/vmkernel.log; check file permissions with <code>ls -la /var/log/vmkernel.log</code>.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '50' for reading: No such file or directory</code></td>
+<td>Remove the pipe and use <code>tail -50 /var/log/vmkernel.log | grep -iE "PSOD|panic|backtrace|oops"</code> instead (correct command order).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cat<span class="w"> </span>/var/log/vmksummary.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
@@ -9473,8 +9489,24 @@ and identifying driver/firmware mismatch as the most common production cause.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cat: /var/log/vmksummary.log: No such file or directory</code></strong> — Verify the ESXi host is running and the log file path is correct; on some ESXi versions the file may be <code>/var/log/vmkernel.log</code> instead.
-<strong><code>tail: cannot open '/var/log/vmksummary.log' for reading: Permission denied</code></strong> — Run the command with root privileges using <code>sudo</code> or SSH directly as root to the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat: /var/log/vmksummary.log: No such file or directory</code></td>
+<td>Verify the ESXi host is running and the log file path is correct; on some ESXi versions the file may be <code>/var/log/vmkernel.log</code> instead.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/vmksummary.log' for reading: Permission denied</code></td>
+<td>Run the command with root privileges using <code>sudo</code> or SSH directly as root to the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: the vmksummary.log gives a concise summary of the crash (timestamp, panic type, initiating world). The vmkernel.log contains the full backtrace.</p>
 <p>Check hostd for precursor events in the seconds before the crash:</p>
@@ -9493,8 +9525,24 @@ and identifying driver/firmware mismatch as the most common production cause.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cat: /var/log/hostd.log: No such file or directory</code></strong> — Verify the ESXi host is running and the hostd service is active with <code>systemctl status hostd</code> or check the correct log path for your vSphere version.
-<strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with elevated privileges using <code>sudo</code> or as root, since hostd logs typically require root access.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat: /var/log/hostd.log: No such file or directory</code></td>
+<td>Verify the ESXi host is running and the hostd service is active with <code>systemctl status hostd</code> or check the correct log path for your vSphere version.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): Permission denied</code></td>
+<td>Run the command with elevated privileges using <code>sudo</code> or as root, since hostd logs typically require root access.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="5-generate-a-vm-support-bundle">5. Generate a vm-support Bundle<a class="headerlink" href="#5-generate-a-vm-support-bundle" title="Permanent link">&para;</a></h2>
@@ -9513,9 +9561,28 @@ and identifying driver/firmware mismatch as the most common production cause.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vm-support: command not found</code></strong> — Ensure you are running this command on an ESXi host with VMware Tools installed, or load the appropriate VMware module.
-<strong><code>Permission denied: /tmp/</code></strong> — Run the command with appropriate privileges (sudo or as root) or specify a writable directory where your user has write permissions.
-<strong><code>No space left on device</code></strong> — Free up disk space on the target filesystem or specify an alternate output directory with sufficient capacity (typically 500 MB+ required).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vm-support: command not found</code></td>
+<td>Ensure you are running this command on an ESXi host with VMware Tools installed, or load the appropriate VMware module.</td>
+</tr>
+<tr>
+<td><code>Permission denied: /tmp/</code></td>
+<td>Run the command with appropriate privileges (sudo or as root) or specify a writable directory where your user has write permissions.</td>
+</tr>
+<tr>
+<td><code>No space left on device</code></td>
+<td>Free up disk space on the target filesystem or specify an alternate output directory with sufficient capacity (typically 500 MB+ required).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>This creates a compressed archive in <code>/tmp/</code> containing all logs, configuration, and system state. Transfer with SCP.</p>
 <p>Alternatively, generate from vCenter: right-click the host → <strong>Export System Logs</strong> — equivalent but saves directly to your local machine.</p>
@@ -9585,8 +9652,24 @@ and identifying driver/firmware mismatch as the most common production cause.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>VIB net-driver-bnx2x not found.</code></strong> — Verify the exact VIB name with <code>esxcli software vib list | grep -i &lt;partial-name&gt;</code> and use the correct name from the output.
-<strong><code>Cannot remove VIB: VIB is part of an Image Profile and cannot be removed independently.</code></strong> — Use LCM (Lifecycle Manager) or boot into maintenance mode and remove via <code>esxcli software vib remove --vibname &lt;vib-name&gt; --force</code> if safe to do so.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VIB net-driver-bnx2x not found.</code></td>
+<td>Verify the exact VIB name with <code>esxcli software vib list | grep -i &lt;partial-name&gt;</code> and use the correct name from the output.</td>
+</tr>
+<tr>
+<td><code>Cannot remove VIB: VIB is part of an Image Profile and cannot be removed independently.</code></td>
+<td>Use LCM (Lifecycle Manager) or boot into maintenance mode and remove via <code>esxcli software vib remove --vibname &lt;vib-name&gt; --force</code> if safe to do so.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Then use VxRail Manager → LCM to apply the correct validated driver as part of a bundle upgrade. For the full VxRail LCM upgrade procedure, see the
 <a href="../vxrail-lcm-upgrade-failure/">VxRail LCM Upgrade Failure</a> scenario.</p>
@@ -9698,7 +9781,7 @@ and identifying driver/firmware mismatch as the most common production cause.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

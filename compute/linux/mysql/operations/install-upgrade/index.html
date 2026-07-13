@@ -8141,9 +8141,28 @@ MySQL install and upgrade procedures — major version upgrade path, in-place up
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mysqlcheck: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES)</code></strong> — Verify the root password is correct and the user has SUPER privilege by running <code>mysql -u root -p -e "SHOW GRANTS FOR root@localhost;"</code>
-<strong><code>ERROR: Shell.Sql.Error: Unknown database 'mysql' (code 1049)</code></strong> — Ensure the MySQL server is running and accessible with <code>mysql -u root -p -e "SELECT VERSION();"</code> before running the upgrade checker.
-<strong><code>mysqldump: Got error: 2003: Can't connect to MySQL server on 'localhost' (111)</code></strong> — Confirm the MySQL service is running with <code>systemctl status mysql</code> and listening on port 3306 with <code>netstat -tlnp | grep 3306</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mysqlcheck: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES)</code></td>
+<td>Verify the root password is correct and the user has SUPER privilege by running <code>mysql -u root -p -e "SHOW GRANTS FOR root@localhost;"</code></td>
+</tr>
+<tr>
+<td><code>ERROR: Shell.Sql.Error: Unknown database 'mysql' (code 1049)</code></td>
+<td>Ensure the MySQL server is running and accessible with <code>mysql -u root -p -e "SELECT VERSION();"</code> before running the upgrade checker.</td>
+</tr>
+<tr>
+<td><code>mysqldump: Got error: 2003: Can't connect to MySQL server on 'localhost' (111)</code></td>
+<td>Confirm the MySQL service is running with <code>systemctl status mysql</code> and listening on port 3306 with <code>netstat -tlnp | grep 3306</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="in-place-upgrade-rhel-rocky">In-Place Upgrade (RHEL / Rocky)<a class="headerlink" href="#in-place-upgrade-rhel-rocky" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Stop MySQL</span>
@@ -8193,8 +8212,24 @@ MySQL install and upgrade procedures — major version upgrade path, in-place up
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)</code></strong> — Verify the root password is correct and the user account exists; reset it with <code>sudo mysqld_safe --skip-grant-tables</code> if needed.
-<strong><code>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'</code></strong> — Ensure mysqld is running with <code>sudo systemctl status mysqld</code> and check that <code>/var/run/mysqld/</code> directory exists with proper permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)</code></td>
+<td>Verify the root password is correct and the user account exists; reset it with <code>sudo mysqld_safe --skip-grant-tables</code> if needed.</td>
+</tr>
+<tr>
+<td><code>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'</code></td>
+<td>Ensure mysqld is running with <code>sudo systemctl status mysqld</code> and check that <code>/var/run/mysqld/</code> directory exists with proper permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="in-place-upgrade-ubuntu">In-Place Upgrade (Ubuntu)<a class="headerlink" href="#in-place-upgrade-ubuntu" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>mysql
@@ -8221,8 +8256,24 @@ MySQL install and upgrade procedures — major version upgrade path, in-place up
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)</code></strong> — Verify the root password is correct or reset it using <code>sudo mysql -u root</code> if no password is set.
-<strong><code>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'</code></strong> — Ensure MySQL started successfully with <code>sudo systemctl status mysql</code> and check logs with <code>sudo journalctl -u mysql -n 20</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)</code></td>
+<td>Verify the root password is correct or reset it using <code>sudo mysql -u root</code> if no password is set.</td>
+</tr>
+<tr>
+<td><code>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'</code></td>
+<td>Ensure MySQL started successfully with <code>sudo systemctl status mysql</code> and check logs with <code>sudo journalctl -u mysql -n 20</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check error log for upgrade warnings</span>
@@ -8256,9 +8307,28 @@ MySQL install and upgrade procedures — major version upgrade path, in-place up
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)</code></strong> — Verify the root password is correct and the user has not been locked; reset with <code>mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'newpassword';"</code> if needed.
-<strong><code>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'</code></strong> — Confirm MySQL service is running with <code>sudo systemctl status mysql</code> and restart if necessary using <code>sudo systemctl restart mysql</code>.
-<strong><code>grep: /var/log/mysqld.log: No such file or directory</code></strong> — Check the actual log location with <code>sudo find /var/log -name "*mysql*" -type f</code> as the path may differ by distribution (e.g., <code>/var/log/mysql/error.log</code> on Debian).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)</code></td>
+<td>Verify the root password is correct and the user has not been locked; reset with <code>mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'newpassword';"</code> if needed.</td>
+</tr>
+<tr>
+<td><code>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'</code></td>
+<td>Confirm MySQL service is running with <code>sudo systemctl status mysql</code> and restart if necessary using <code>sudo systemctl restart mysql</code>.</td>
+</tr>
+<tr>
+<td><code>grep: /var/log/mysqld.log: No such file or directory</code></td>
+<td>Check the actual log location with <code>sudo find /var/log -name "*mysql*" -type f</code> as the path may differ by distribution (e.g., <code>/var/log/mysql/error.log</code> on Debian).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rolling-upgrade-replicated-setup">Rolling Upgrade (Replicated Setup)<a class="headerlink" href="#rolling-upgrade-replicated-setup" title="Permanent link">&para;</a></h2>
 <ol>
@@ -8303,7 +8373,7 @@ MySQL install and upgrade procedures — major version upgrade path, in-place up
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

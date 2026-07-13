@@ -8022,8 +8022,24 @@ SQL Server backup: `BACKUP DATABASE TO DISK`, full/diff/log chain, Ola Hallengre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: stanza 'prod-db-01' not found</code></strong> — Verify the stanza name matches your pgBackRest configuration file (usually /etc/pgbackrest/pgbackrest.conf).
-<strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></strong> — Ensure PostgreSQL is running and the postgres user has passwordless local connections configured in pg_hba.conf.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: stanza 'prod-db-01' not found</code></td>
+<td>Verify the stanza name matches your pgBackRest configuration file (usually /etc/pgbackrest/pgbackrest.conf).</td>
+</tr>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></td>
+<td>Ensure PostgreSQL is running and the postgres user has passwordless local connections configured in pg_hba.conf.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PostgreSQL — verify backup with pgBackRest</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>check
@@ -8052,9 +8068,28 @@ SQL Server backup: `BACKUP DATABASE TO DISK`, full/diff/log chain, Ola Hallengre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pgbackrest: ERROR: archive-push command failed: backup path does not exist</code></strong> — Create the backup directory with <code>mkdir -p /var/lib/pgbackrest/backup/&lt;stanza-name&gt;</code> and ensure the postgres user owns it.
-<strong><code>xtrabackup: error: cannot open file /backup/mysql/latest/ibdata1</code></strong> — Verify the backup path exists and xtrabackup process has read permissions with <code>ls -la /backup/mysql/latest/</code>.
-<strong><code>Msg 3013, Level 16, State 1 — RESTORE VERIFYONLY failed</code></strong> — Check that the backup file path is correct and the SQL Server service account has read permissions on the .bak file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pgbackrest: ERROR: archive-push command failed: backup path does not exist</code></td>
+<td>Create the backup directory with <code>mkdir -p /var/lib/pgbackrest/backup/&lt;stanza-name&gt;</code> and ensure the postgres user owns it.</td>
+</tr>
+<tr>
+<td><code>xtrabackup: error: cannot open file /backup/mysql/latest/ibdata1</code></td>
+<td>Verify the backup path exists and xtrabackup process has read permissions with <code>ls -la /backup/mysql/latest/</code>.</td>
+</tr>
+<tr>
+<td><code>Msg 3013, Level 16, State 1 — RESTORE VERIFYONLY failed</code></td>
+<td>Check that the backup file path is correct and the SQL Server service account has read permissions on the .bak file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restore to test instance</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>--pg1-path<span class="o">=</span>/var/lib/pgsql/test-restore<span class="w"> </span>restore
@@ -8077,9 +8112,28 @@ SQL Server backup: `BACKUP DATABASE TO DISK`, full/diff/log chain, Ola Hallengre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: archive directory missing: /var/lib/pgbackrest/archive/prod-db</code></strong> — Verify pgbackrest archive path is configured correctly in pgbackrest.conf and the directory exists with proper permissions.
-<strong><code>FATAL: could not open file "/var/lib/pgsql/test-restore/global/pg_control": No such file or directory</code></strong> — Ensure the restore completed successfully and the destination path /var/lib/pgsql/test-restore has sufficient disk space and proper ownership.
-<strong><code>psql: error: could not translate host name "localhost" to address: Name or service not known</code></strong> — Verify PostgreSQL is listening on port 5433 by checking pg_isready -p 5433 or confirming the port in postgresql.conf.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: archive directory missing: /var/lib/pgbackrest/archive/prod-db</code></td>
+<td>Verify pgbackrest archive path is configured correctly in pgbackrest.conf and the directory exists with proper permissions.</td>
+</tr>
+<tr>
+<td><code>FATAL: could not open file "/var/lib/pgsql/test-restore/global/pg_control": No such file or directory</code></td>
+<td>Ensure the restore completed successfully and the destination path /var/lib/pgsql/test-restore has sufficient disk space and proper ownership.</td>
+</tr>
+<tr>
+<td><code>psql: error: could not translate host name "localhost" to address: Name or service not known</code></td>
+<td>Verify PostgreSQL is listening on port 5433 by checking pg_isready -p 5433 or confirming the port in postgresql.conf.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Copy backup to test directory</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>xtrabackup<span class="w"> </span>--prepare<span class="w"> </span>--target-dir<span class="o">=</span>/restore/mysql-test/
@@ -8132,7 +8186,7 @@ SQL Server backup: `BACKUP DATABASE TO DISK`, full/diff/log chain, Ola Hallengre
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

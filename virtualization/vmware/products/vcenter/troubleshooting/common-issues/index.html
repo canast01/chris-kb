@@ -9481,9 +9481,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Service vpxd failed to start: timeout waiting for service to become available</code></strong> — Increase the startup timeout by running <code>service-control --start vpxd --timeout 300</code> or check database connectivity with <code>service-control --status vmware-vpostgres</code>.
-<strong><code>find: '/var/log/vmware': Permission denied</code></strong> — Run the commands with <code>sudo</code> or as root user since <code>/var/log/vmware</code> requires elevated privileges.
-<strong><code>service-control: command not found</code></strong> — Ensure you are running this on a vCenter Server appliance (VCSA) and not a Windows vCenter installation; use <code>systemctl</code> instead on Linux-based systems if service-control is unavailable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Service vpxd failed to start: timeout waiting for service to become available</code></td>
+<td>Increase the startup timeout by running <code>service-control --start vpxd --timeout 300</code> or check database connectivity with <code>service-control --status vmware-vpostgres</code>.</td>
+</tr>
+<tr>
+<td><code>find: '/var/log/vmware': Permission denied</code></td>
+<td>Run the commands with <code>sudo</code> or as root user since <code>/var/log/vmware</code> requires elevated privileges.</td>
+</tr>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Ensure you are running this on a vCenter Server appliance (VCSA) and not a Windows vCenter installation; use <code>systemctl</code> instead on Linux-based systems if service-control is unavailable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Log location:</strong> <code>/var/log/vmware/vpxd/vpxd.log</code></p>
 <hr />
@@ -9527,9 +9546,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify the vCenter FQDN is correct and port 443 is accessible from your client (check firewall rules and network connectivity).
-<strong><code>error in x509 lookup routine:X509_LIB</code></strong> — The openssl s_client connection succeeded but returned invalid certificate data; restart the vCenter SSL service with <code>service-control --restart vsphere-ui</code> on the VCSA.
-<strong><code>Error: Could not connect to localhost:2012</code></strong> — Run the vecs-cli command directly on the VCSA via SSH, not from a remote client; VECS is a local service only.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the vCenter FQDN is correct and port 443 is accessible from your client (check firewall rules and network connectivity).</td>
+</tr>
+<tr>
+<td><code>error in x509 lookup routine:X509_LIB</code></td>
+<td>The openssl s_client connection succeeded but returned invalid certificate data; restart the vCenter SSL service with <code>service-control --restart vsphere-ui</code> on the VCSA.</td>
+</tr>
+<tr>
+<td><code>Error: Could not connect to localhost:2012</code></td>
+<td>Run the vecs-cli command directly on the VCSA via SSH, not from a remote client; VECS is a local service only.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution-renew-machine-ssl-vmca-signed">Resolution — Renew Machine SSL (VMCA-signed)<a class="headerlink" href="#resolution-renew-machine-ssl-vmca-signed" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From VCSA SSH: launch certificate manager</span>
@@ -9555,9 +9593,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bash: /usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory</code></strong> — Verify the VCSA version and confirm the certificate-manager binary exists; try <code>/usr/lib/vmware-vmca/bin/certificate-manager.py</code> on newer versions.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure you are logged in as root on the VCSA appliance.
-<strong><code>Error: Unable to connect to the local Platform Services Controller</code></strong> — Restart the vCenter services using <code>service-control --start --all</code> before running certificate-manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bash: /usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory</code></td>
+<td>Verify the VCSA version and confirm the certificate-manager binary exists; try <code>/usr/lib/vmware-vmca/bin/certificate-manager.py</code> on newer versions.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure you are logged in as root on the VCSA appliance.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to the local Platform Services Controller</code></td>
+<td>Restart the vCenter services using <code>service-control --start --all</code> before running certificate-manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After renewal, restart services and verify:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
@@ -9576,9 +9633,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>service-control: command not found</code></strong> — Ensure you are running this command on the vCenter Server appliance itself, not a remote client; service-control is only available on VCSA.
-<strong><code>unable to load certificate</code></strong> — The certificate chain is incomplete or the vCenter service failed to start; wait 30-60 seconds after service restart and retry the openssl command.
-<strong><code>Connection refused</code></strong> — Port 443 is not listening yet after service restart; allow 2-3 minutes for all vCenter services to fully initialize before retrying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Ensure you are running this command on the vCenter Server appliance itself, not a remote client; service-control is only available on VCSA.</td>
+</tr>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>The certificate chain is incomplete or the vCenter service failed to start; wait 30-60 seconds after service restart and retry the openssl command.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Port 443 is not listening yet after service restart; allow 2-3 minutes for all vCenter services to fully initialize before retrying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Log location:</strong> <code>/var/log/vmware/vmcad/certificate-manager.log</code></p>
 <hr />
@@ -9626,9 +9702,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-VMHost : The term 'Get-VMHost' is not recognized</code></strong> — Load the VMware.VimAutomation.Core PowerCLI module with <code>Import-Module VMware.VimAutomation.Core</code> before running cmdlets.
-<strong><code>grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory</code></strong> — SSH into the vCenter Server Appliance (VCSA) directly rather than the ESXi host; the vpxd log only exists on vCenter.
-<strong><code>hostd is stopped</code></strong> — Restart the hostd service on the ESXi host with <code>/etc/init.d/hostd restart</code> and verify network connectivity to vCenter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-VMHost : The term 'Get-VMHost' is not recognized</code></td>
+<td>Load the VMware.VimAutomation.Core PowerCLI module with <code>Import-Module VMware.VimAutomation.Core</code> before running cmdlets.</td>
+</tr>
+<tr>
+<td><code>grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory</code></td>
+<td>SSH into the vCenter Server Appliance (VCSA) directly rather than the ESXi host; the vpxd log only exists on vCenter.</td>
+</tr>
+<tr>
+<td><code>hostd is stopped</code></td>
+<td>Restart the hostd service on the ESXi host with <code>/etc/init.d/hostd restart</code> and verify network connectivity to vCenter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_1">Resolution<a class="headerlink" href="#resolution_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># PowerCLI: attempt reconnect</span>
@@ -9647,9 +9742,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect-VIServer : The specified item could not be found.</code></strong> — Verify the ESXi hostname matches exactly in vCenter inventory and that you are connected to vCenter with Get-VIServer before running the reconnect command.
-<strong><code>/etc/init.d/vpxa: not found</code></strong> — SSH directly to the ESXi host using root credentials and confirm you are in the correct shell; use <code>sh /etc/init.d/vpxa restart</code> if the direct path fails.
-<strong><code>Cannot contact the vCenter Server system.</code></strong> — Wait 30–60 seconds after restarting hostd and vpxa for the ESXi host to re-register with vCenter before attempting further operations.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect-VIServer : The specified item could not be found.</code></td>
+<td>Verify the ESXi hostname matches exactly in vCenter inventory and that you are connected to vCenter with Get-VIServer before running the reconnect command.</td>
+</tr>
+<tr>
+<td><code>/etc/init.d/vpxa: not found</code></td>
+<td>SSH directly to the ESXi host using root credentials and confirm you are in the correct shell; use <code>sh /etc/init.d/vpxa restart</code> if the direct path fails.</td>
+</tr>
+<tr>
+<td><code>Cannot contact the vCenter Server system.</code></td>
+<td>Wait 30–60 seconds after restarting hostd and vpxa for the ESXi host to re-register with vCenter before attempting further operations.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Log locations:</strong>
 - VCSA: <code>/var/log/vmware/vpxd/vpxd.log</code>
@@ -9701,9 +9815,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldapsearch: error code 49 "80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839 WILL_NOT_PERFORM"</code></strong> — Verify the bind user credentials are correct and the account is not locked; reset the password in Active Directory and re-run the ldapsearch command.
-<strong><code>nslookup: can't resolve '&lt;ad-domain&gt;': No address associated with hostname</code></strong> — Confirm the DNS server IP is reachable from VCSA and that the AD domain name is correctly spelled; check <code>/etc/resolv.conf</code> on VCSA to ensure the correct DNS server is configured.
-<strong><code>ldapsearch: error code 1 "000004DC: LdapErr: DSID-0C090A4C, comment: In order to perform this operation a successful bind must be completed on the connection, data 0, v3839"</code></strong> — Ensure the LDAP bind user has proper permissions in Active Directory and that the domain controller firewall allows LDAP (port 389) traffic from the VCSA IP address.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldapsearch: error code 49 "80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839 WILL_NOT_PERFORM"</code></td>
+<td>Verify the bind user credentials are correct and the account is not locked; reset the password in Active Directory and re-run the ldapsearch command.</td>
+</tr>
+<tr>
+<td><code>nslookup: can't resolve '&lt;ad-domain&gt;': No address associated with hostname</code></td>
+<td>Confirm the DNS server IP is reachable from VCSA and that the AD domain name is correctly spelled; check <code>/etc/resolv.conf</code> on VCSA to ensure the correct DNS server is configured.</td>
+</tr>
+<tr>
+<td><code>ldapsearch: error code 1 "000004DC: LdapErr: DSID-0C090A4C, comment: In order to perform this operation a successful bind must be completed on the connection, data 0, v3839"</code></td>
+<td>Ensure the LDAP bind user has proper permissions in Active Directory and that the domain controller firewall allows LDAP (port 389) traffic from the VCSA IP address.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_2">Resolution<a class="headerlink" href="#resolution_2" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Restart SSO services if stsd is stopped</span>
@@ -9722,9 +9855,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>service-control: command not found</code></strong> — Ensure you are running this command on the vCenter Server appliance (VCSA) as root, not on a Windows vCenter installation.
-<strong><code>Error: Unable to connect to directory service on localhost:389</code></strong> — Verify that vmware-vmafd service is running with <code>service-control --status vmware-vmafd</code> and restart it if needed.
-<strong><code>Error: Invalid credentials provided</code></strong> — Replace <code>&lt;current-admin-pwd&gt;</code> with the actual administrator@vsphere.local password in plaintext or use an interactive prompt.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Ensure you are running this command on the vCenter Server appliance (VCSA) as root, not on a Windows vCenter installation.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to directory service on localhost:389</code></td>
+<td>Verify that vmware-vmafd service is running with <code>service-control --status vmware-vmafd</code> and restart it if needed.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid credentials provided</code></td>
+<td>Replace <code>&lt;current-admin-pwd&gt;</code> with the actual administrator@vsphere.local password in plaintext or use an interactive prompt.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Log location:</strong> <code>/var/log/vmware/sso/vmware-sts-idmd.log</code>, <code>/var/log/vmware/sso/ssoAdminServer.log</code></p>
 <hr />
@@ -9767,9 +9919,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit applmgmt.service could not be found.</code></strong> — Ensure you are running on a vCenter Server Appliance (VCSA) and not a standalone ESXi host; this service only exists on VCSA.
-<strong><code>ss: No such file or directory</code></strong> — Install the iproute2 package with <code>apt-get install iproute2</code> or use <code>netstat -tlnp | grep 5480</code> as an alternative.
-<strong><code>tail: cannot open '/var/log/vmware/applmgmt/applmgmt.log' for reading: No such file or directory</code></strong> — Check that the applmgmt service has actually started and created log files; verify the correct log path with <code>find /var/log/vmware -name '*applmgmt*'</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit applmgmt.service could not be found.</code></td>
+<td>Ensure you are running on a vCenter Server Appliance (VCSA) and not a standalone ESXi host; this service only exists on VCSA.</td>
+</tr>
+<tr>
+<td><code>ss: No such file or directory</code></td>
+<td>Install the iproute2 package with <code>apt-get install iproute2</code> or use <code>netstat -tlnp | grep 5480</code> as an alternative.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/applmgmt/applmgmt.log' for reading: No such file or directory</code></td>
+<td>Check that the applmgmt service has actually started and created log files; verify the correct log path with <code>find /var/log/vmware -name '*applmgmt*'</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_3">Resolution<a class="headerlink" href="#resolution_3" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Start the applmgmt service</span>
@@ -9787,9 +9958,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Operation being performed: Start applmgmt</code></strong> — Wait 30-60 seconds for the service to fully initialize before checking port status, as applmgmt requires time to bind to the port.
-<strong><code>ss: No such file or directory</code></strong> — Use <code>netstat -tlnp | grep 5480</code> instead if <code>ss</code> is not available on your vCenter version.
-<strong><code>(No such process)</code></strong> — Verify the applmgmt service started successfully by running <code>service-control --status applmgmt</code> before checking the port.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Operation being performed: Start applmgmt</code></td>
+<td>Wait 30-60 seconds for the service to fully initialize before checking port status, as applmgmt requires time to bind to the port.</td>
+</tr>
+<tr>
+<td><code>ss: No such file or directory</code></td>
+<td>Use <code>netstat -tlnp | grep 5480</code> instead if <code>ss</code> is not available on your vCenter version.</td>
+</tr>
+<tr>
+<td><code>(No such process)</code></td>
+<td>Verify the applmgmt service started successfully by running <code>service-control --status applmgmt</code> before checking the port.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If SSH itself is inaccessible, use the VCSA VM console in ESXi direct UI to log in as root.</p>
 <hr />
@@ -9831,9 +10021,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-Datastore : The term 'Get-Datastore' is not recognized</code></strong> — Load the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running PowerCLI cmdlets.
-<strong><code>You are not currently connected to any servers. Please connect to at least one server before running this command.</code></strong> — Connect to vCenter first using <code>Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)</code>.
-<strong><code>Cannot index into a null array</code></strong> — Ensure datastores exist and are visible to vCenter; verify vCenter has proper permissions and network connectivity to storage.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-Datastore : The term 'Get-Datastore' is not recognized</code></td>
+<td>Load the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running PowerCLI cmdlets.</td>
+</tr>
+<tr>
+<td><code>You are not currently connected to any servers. Please connect to at least one server before running this command.</code></td>
+<td>Connect to vCenter first using <code>Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)</code>.</td>
+</tr>
+<tr>
+<td><code>Cannot index into a null array</code></td>
+<td>Ensure datastores exist and are visible to vCenter; verify vCenter has proper permissions and network connectivity to storage.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="drs-ha-configuration-warnings">DRS / HA Configuration Warnings<a class="headerlink" href="#drs-ha-configuration-warnings" title="Permanent link">&para;</a></h2>
@@ -9865,9 +10074,28 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet</code></strong> — Import the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running PowerCLI commands.
-<strong><code>You are not currently connected to any servers. Please connect to at least one server before running this command.</code></strong> — Connect to vCenter using <code>Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)</code> first.
-<strong><code>Get-VIEvent : Cannot find cluster with name "cluster-name"</code></strong> — Replace <code>"cluster-name"</code> with the actual cluster name from the first command's output, such as <code>"prod-cluster-01"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet</code></td>
+<td>Import the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running PowerCLI commands.</td>
+</tr>
+<tr>
+<td><code>You are not currently connected to any servers. Please connect to at least one server before running this command.</code></td>
+<td>Connect to vCenter using <code>Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)</code> first.</td>
+</tr>
+<tr>
+<td><code>Get-VIEvent : Cannot find cluster with name "cluster-name"</code></td>
+<td>Replace <code>"cluster-name"</code> with the actual cluster name from the first command's output, such as <code>"prod-cluster-01"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_4">Resolution<a class="headerlink" href="#resolution_4" title="Permanent link">&para;</a></h3>
 <p>Most HA config warnings are resolved by:
@@ -9902,8 +10130,24 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Precheck failed: insufficient disk space on /storage/db</code></strong> — Expand the /storage/db partition or delete old logs/snapshots to free at least 50GB before retrying the upgrade.
-<strong><code>tail: cannot open '/var/log/vmware/applmgmt/applmgmt.log' for reading: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user to access VCSA system logs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Precheck failed: insufficient disk space on /storage/db</code></td>
+<td>Expand the /storage/db partition or delete old logs/snapshots to free at least 50GB before retrying the upgrade.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/applmgmt/applmgmt.log' for reading: Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root user to access VCSA system logs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_5">Resolution<a class="headerlink" href="#resolution_5" title="Permanent link">&para;</a></h3>
 <ol>
@@ -10024,7 +10268,7 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

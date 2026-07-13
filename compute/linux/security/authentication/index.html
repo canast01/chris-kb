@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Linux — Authentication · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Linux — Authentication", "url": "https://chrisanastasiadis.com/compute/linux/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Linux — Authentication", "url": "https://chrisanastasiadis.com/compute/linux/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7585,9 +7585,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>useradd: user 'svcaccount' already exists</code></strong> — Check if the account exists with <code>id svcaccount</code> and use <code>userdel</code> to remove it first if needed.
-<strong><code>usermod: user 'username' does not exist</code></strong> — Verify the username exists with <code>getent passwd username</code> before attempting to modify it.
-<strong><code>passwd: user 'username' is not a known user</code></strong> — Ensure the user exists in <code>/etc/passwd</code> by running <code>useradd</code> first or checking the correct spelling.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>useradd: user 'svcaccount' already exists</code></td>
+<td>Check if the account exists with <code>id svcaccount</code> and use <code>userdel</code> to remove it first if needed.</td>
+</tr>
+<tr>
+<td><code>usermod: user 'username' does not exist</code></td>
+<td>Verify the username exists with <code>getent passwd username</code> before attempting to modify it.</td>
+</tr>
+<tr>
+<td><code>passwd: user 'username' is not a known user</code></td>
+<td>Ensure the user exists in <code>/etc/passwd</code> by running <code>useradd</code> first or checking the correct spelling.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/security/pwquality.conf</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">minlen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">14</span>
@@ -7604,8 +7623,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pwquality: invalid option 'minlen'</code></strong> — Remove spaces around the <code>=</code> operator; use <code>minlen=14</code> instead of <code>minlen = 14</code>.
-<strong><code>Permission denied</code></strong> — Run with <code>sudo</code> or as root; <code>/etc/security/pwquality.conf</code> requires elevated privileges to edit.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pwquality: invalid option 'minlen'</code></td>
+<td>Remove spaces around the <code>=</code> operator; use <code>minlen=14</code> instead of <code>minlen = 14</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run with <code>sudo</code> or as root; <code>/etc/security/pwquality.conf</code> requires elevated privileges to edit.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/pam.d/system-auth — add pwquality to password section</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>password<span class="w">    </span>requisite<span class="w">     </span>pam_pwquality.so<span class="w"> </span>try_first_pass<span class="w"> </span>local_users_only<span class="w"> </span><span class="nv">retry</span><span class="o">=</span><span class="m">3</span>
@@ -7614,8 +7649,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/etc/pam.d/system-auth: Permission denied</code></strong> — Run the command with <code>sudo</code> or edit the file as root using <code>sudo nano /etc/pam.d/system-auth</code>.
-<strong><code>pam_pwquality.so: cannot open shared object file: No such file or directory</code></strong> — Install the libpwquality package with <code>sudo apt-get install libpwquality0</code> (Debian/Ubuntu) or <code>sudo yum install libpwquality</code> (RHEL/CentOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/etc/pam.d/system-auth: Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or edit the file as root using <code>sudo nano /etc/pam.d/system-auth</code>.</td>
+</tr>
+<tr>
+<td><code>pam_pwquality.so: cannot open shared object file: No such file or directory</code></td>
+<td>Install the libpwquality package with <code>sudo apt-get install libpwquality0</code> (Debian/Ubuntu) or <code>sudo yum install libpwquality</code> (RHEL/CentOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># /etc/pam.d/system-auth — auth section (RHEL 8+)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>auth<span class="w">        </span>required<span class="w">      </span>pam_faillock.so<span class="w"> </span>preauth<span class="w"> </span>silent<span class="w"> </span><span class="nv">deny</span><span class="o">=</span><span class="m">5</span><span class="w"> </span><span class="nv">unlock_time</span><span class="o">=</span><span class="m">900</span>
@@ -7629,9 +7680,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pam_faillock.so: Module not found</code></strong> — Install the <code>pam</code> package with <code>sudo yum install pam</code> and verify <code>/usr/lib64/security/pam_faillock.so</code> exists.
-<strong><code>syntax error in /etc/pam.d/system-auth at line 1</code></strong> — Ensure each PAM rule uses tabs (not spaces) between columns and that there are no trailing whitespace characters.
-<strong><code>User locked out after 5 failed login attempts</code></strong> — Reset the lockout manually with <code>sudo faillock --user &lt;username&gt; --reset</code> or wait 900 seconds (15 minutes) for automatic unlock.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pam_faillock.so: Module not found</code></td>
+<td>Install the <code>pam</code> package with <code>sudo yum install pam</code> and verify <code>/usr/lib64/security/pam_faillock.so</code> exists.</td>
+</tr>
+<tr>
+<td><code>syntax error in /etc/pam.d/system-auth at line 1</code></td>
+<td>Ensure each PAM rule uses tabs (not spaces) between columns and that there are no trailing whitespace characters.</td>
+</tr>
+<tr>
+<td><code>User locked out after 5 failed login attempts</code></td>
+<td>Reset the lockout manually with <code>sudo faillock --user &lt;username&gt; --reset</code> or wait 900 seconds (15 minutes) for automatic unlock.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View failed attempt count for a user</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>faillock<span class="w"> </span>--user<span class="w"> </span>jsmith
@@ -7655,9 +7725,28 @@ jsmith:
     Failures: 0</p>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>faillock: user jsmith does not exist</code></strong> — Verify the username is correct and the user exists in the system with <code>getent passwd jsmith</code>.</p>
-<p><strong><code>faillock: Permission denied</code></strong> — Run the command with <code>sudo</code> since faillock requires root privileges to modify lockout records.</p>
-<p><strong><code>faillock: Cannot open /var/run/faillock/jsmith: No such file or directory</code></strong> — This is expected if the user has never had a failed login attempt; the account is not locked.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>faillock: user jsmith does not exist</code></td>
+<td>Verify the username is correct and the user exists in the system with <code>getent passwd jsmith</code>.</td>
+</tr>
+<tr>
+<td><code>faillock: Permission denied</code></td>
+<td>Run the command with <code>sudo</code> since faillock requires root privileges to modify lockout records.</td>
+</tr>
+<tr>
+<td><code>faillock: Cannot open /var/run/faillock/jsmith: No such file or directory</code></td>
+<td>This is expected if the user has never had a failed login attempt; the account is not locked.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># /etc/ssh/sshd_config — recommended hardened settings</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Protocol<span class="w"> </span><span class="m">2</span>
@@ -7687,9 +7776,28 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sshd_config: line 16: Bad configuration option: AllowGroups</code></strong> — Verify the sshd_config syntax with <code>sshd -T</code> and ensure group names don't contain spaces without proper escaping (use <code>AllowGroups sshusers</code> or quote the entire value).
-<strong><code>Unable to negotiate with 192.168.1.50 port 22: no matching key exchange method found</code></strong> — Add legacy algorithms to KexAlgorithms if connecting from older clients, or update the client SSH version to support curve25519-sha256.
-<strong><code>Permission denied (publickey)</code></strong> — Ensure the user's public key is in <code>~/.ssh/authorized_keys</code> with correct permissions (600 on the file, 700 on the .ssh directory) and verify the AuthorizedKeysFile path matches the actual key location.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd_config: line 16: Bad configuration option: AllowGroups</code></td>
+<td>Verify the sshd_config syntax with <code>sshd -T</code> and ensure group names don't contain spaces without proper escaping (use <code>AllowGroups sshusers</code> or quote the entire value).</td>
+</tr>
+<tr>
+<td><code>Unable to negotiate with 192.168.1.50 port 22: no matching key exchange method found</code></td>
+<td>Add legacy algorithms to KexAlgorithms if connecting from older clients, or update the client SSH version to support curve25519-sha256.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey)</code></td>
+<td>Ensure the user's public key is in <code>~/.ssh/authorized_keys</code> with correct permissions (600 on the file, 700 on the .ssh directory) and verify the AuthorizedKeysFile path matches the actual key location.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Validate config and reload</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sshd<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>sshd
@@ -7698,8 +7806,24 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Ensure SSH host keys exist in <code>/etc/ssh/</code> (typically <code>ssh_host_rsa_key</code>, <code>ssh_host_ed25519_key</code>) or regenerate them with <code>ssh-keygen -A</code>.
-<strong><code>Job for ssh.service failed because the control process exited with error code.</code></strong> — Fix syntax errors in <code>/etc/ssh/sshd_config</code> by running <code>sshd -T</code> to display the parsed configuration and identify the problematic line.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd: no hostkeys available -- exiting.</code></td>
+<td>Ensure SSH host keys exist in <code>/etc/ssh/</code> (typically <code>ssh_host_rsa_key</code>, <code>ssh_host_ed25519_key</code>) or regenerate them with <code>ssh-keygen -A</code>.</td>
+</tr>
+<tr>
+<td><code>Job for ssh.service failed because the control process exited with error code.</code></td>
+<td>Fix syntax errors in <code>/etc/ssh/sshd_config</code> by running <code>sshd -T</code> to display the parsed configuration and identify the problematic line.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Generate an Ed25519 key (preferred) with passphrase</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;jsmith@corp.local&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/id_ed25519
@@ -7739,8 +7863,24 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey).</code></strong> — Verify authorized_keys permissions are 600 and ~/.ssh is 700 on the remote server using <code>ssh jsmith@server01 "ls -la ~/.ssh"</code>
-<strong><code>ssh-copy-id: command not found</code></strong> — Use the manual append method with <code>cat ~/.ssh/id_ed25519.pub | ssh jsmith@server01 "mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys"</code> instead</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Verify authorized_keys permissions are 600 and ~/.ssh is 700 on the remote server using <code>ssh jsmith@server01 "ls -la ~/.ssh"</code></td>
+</tr>
+<tr>
+<td><code>ssh-copy-id: command not found</code></td>
+<td>Use the manual append method with <code>cat ~/.ssh/id_ed25519.pub | ssh jsmith@server01 "mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys"</code> instead</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Install required packages (RHEL)</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>realmd<span class="w"> </span>sssd<span class="w"> </span>oddjob<span class="w"> </span>oddjob-mkhomedir<span class="w"> </span>adcli<span class="w"> </span>samba-common
@@ -7790,9 +7930,28 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>System has not been booted with systemd as init system (PID 1). Can't operate.</code></strong> — Verify the system uses systemd with <code>ps -p 1</code> and check if running in a container that requires different service management.
-<strong><code>id: 'jsmith': no such user</code></strong> — Confirm SSSD started successfully with <code>systemctl status sssd</code> and check <code>/var/log/sssd/sssd.log</code> for authentication backend connectivity issues.
-<strong><code>getent: getent passwd jsmith: Success</code></strong> (returns nothing) — Wait 10-15 seconds for SSSD cache to populate after restart, or manually clear cache with <code>sss_cache -E</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>System has not been booted with systemd as init system (PID 1). Can't operate.</code></td>
+<td>Verify the system uses systemd with <code>ps -p 1</code> and check if running in a container that requires different service management.</td>
+</tr>
+<tr>
+<td><code>id: 'jsmith': no such user</code></td>
+<td>Confirm SSSD started successfully with <code>systemctl status sssd</code> and check <code>/var/log/sssd/sssd.log</code> for authentication backend connectivity issues.</td>
+</tr>
+<tr>
+<td><strong><code>getent: getent passwd jsmith: Success</code></strong> (returns nothing) — Wait 10-15 seconds for SSSD cache to populate after restart, or manually clear cache with <code>sss_cache -E</code>.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># /etc/pam.d/system-auth — session section</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>session<span class="w">     </span>optional<span class="w">      </span>pam_oddjob_mkhomedir.so<span class="w"> </span><span class="nv">umask</span><span class="o">=</span><span class="m">0077</span>
@@ -7806,9 +7965,28 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>update-rc.d: error: oddjobd Default-Start contains no runlevels, aborting.</code></strong> — Install the <code>oddjob</code> package first with <code>apt-get install oddjob</code> or <code>yum install oddjob</code> depending on your distribution.
-<strong><code>Failed to start oddjobd.service: Unit oddjobd.service not found.</code></strong> — Verify the oddjob package is installed and the service file exists at <code>/usr/lib/systemd/system/oddjobd.service</code> before enabling.
-<strong><code>permission denied: /etc/pam.d/system-auth</code></strong> — Edit <code>/etc/pam.d/system-auth</code> with <code>sudo</code> or as root, not as a regular user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>update-rc.d: error: oddjobd Default-Start contains no runlevels, aborting.</code></td>
+<td>Install the <code>oddjob</code> package first with <code>apt-get install oddjob</code> or <code>yum install oddjob</code> depending on your distribution.</td>
+</tr>
+<tr>
+<td><code>Failed to start oddjobd.service: Unit oddjobd.service not found.</code></td>
+<td>Verify the oddjob package is installed and the service file exists at <code>/usr/lib/systemd/system/oddjobd.service</code> before enabling.</td>
+</tr>
+<tr>
+<td><code>permission denied: /etc/pam.d/system-auth</code></td>
+<td>Edit <code>/etc/pam.d/system-auth</code> with <code>sudo</code> or as root, not as a regular user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>visudo
 </code></pre></div>
@@ -7832,8 +8010,24 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>visudo: /etc/sudoers busy</code></strong> — Wait for other editors to close the sudoers file or kill stale editor processes with <code>pkill -f visudo</code>.
-<strong><code>&gt;&gt;&gt; /etc/sudoers: syntax error near line 42</code></strong> — Fix the syntax error (missing colon, incorrect spacing, or malformed rule) before exiting the editor; visudo will prevent you from saving invalid syntax.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>visudo: /etc/sudoers busy</code></td>
+<td>Wait for other editors to close the sudoers file or kill stale editor processes with <code>pkill -f visudo</code>.</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;&gt; /etc/sudoers: syntax error near line 42</code></td>
+<td>Fix the syntax error (missing colon, incorrect spacing, or malformed rule) before exiting the editor; visudo will prevent you from saving invalid syntax.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># /etc/sudoers — safe baseline</span>
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>Defaults<span class="w">    </span>requiretty
@@ -7856,9 +8050,28 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudoers:5: syntax error near line 5 of /etc/sudoers</code></strong> — Use <code>visudo</code> to edit <code>/etc/sudoers</code> instead of a text editor; it validates syntax before saving.
-<strong><code>%linuxadmins@corp.local : command not allowed</code></strong> — Verify the AD group name matches exactly in <code>/etc/sssd.conf</code> and that SSSD is running with <code>systemctl status sssd</code>.
-<strong><code>sudo: no password was provided</code></strong> — Add <code>NOPASSWD:</code> before the command list for the service account, or remove it if a password prompt is required.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudoers:5: syntax error near line 5 of /etc/sudoers</code></td>
+<td>Use <code>visudo</code> to edit <code>/etc/sudoers</code> instead of a text editor; it validates syntax before saving.</td>
+</tr>
+<tr>
+<td><code>%linuxadmins@corp.local : command not allowed</code></td>
+<td>Verify the AD group name matches exactly in <code>/etc/sssd.conf</code> and that SSSD is running with <code>systemctl status sssd</code>.</td>
+</tr>
+<tr>
+<td><code>sudo: no password was provided</code></td>
+<td>Add <code>NOPASSWD:</code> before the command list for the service account, or remove it if a password prompt is required.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Add a user to the wheel group</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>wheel<span class="w"> </span>jsmith
@@ -7886,9 +8099,28 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>usermod: user 'jsmith' does not exist</code></strong> — Create the user first with <code>useradd jsmith</code> before adding to the wheel group.
-<strong><code>sudo: /var/log/sudo.log: No such file or directory</code></strong> — Enable sudo logging by adding <code>Defaults logfile="/var/log/sudo.log"</code> to <code>/etc/sudoers</code> via <code>visudo</code>.
-<strong><code>sudo: sorry, you must have a tty to run sudo</code></strong> — Ensure the user is running the command from an interactive terminal, not a non-interactive shell or cron job.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>usermod: user 'jsmith' does not exist</code></td>
+<td>Create the user first with <code>useradd jsmith</code> before adding to the wheel group.</td>
+</tr>
+<tr>
+<td><code>sudo: /var/log/sudo.log: No such file or directory</code></td>
+<td>Enable sudo logging by adding <code>Defaults logfile="/var/log/sudo.log"</code> to <code>/etc/sudoers</code> via <code>visudo</code>.</td>
+</tr>
+<tr>
+<td><code>sudo: sorry, you must have a tty to run sudo</code></td>
+<td>Ensure the user is running the command from an interactive terminal, not a non-interactive shell or cron job.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Place overrides in /etc/sudoers.d/ — avoids editing main sudoers</span>
 <a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/sudoers.d/99-linuxadmins<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
@@ -7903,9 +8135,28 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/etc/sudoers.d/99-linuxadmins: syntax error near line 1</code></strong> — Review the file for typos (e.g., missing spaces around <code>ALL</code>) and re-run <code>visudo -c -f /etc/sudoers.d/99-linuxadmins</code> to validate.
-<strong><code>chmod: changing permissions of '/etc/sudoers.d/99-linuxadmins': Operation not permitted</code></strong> — Ensure you are running as root (use <code>sudo</code> or <code>su -</code>) before executing this block.
-<strong><code>/etc/sudoers.d/99-linuxadmins: wrong owner/permissions</code></strong> — Run <code>chmod 0440 /etc/sudoers.d/99-linuxadmins</code> and <code>chown root:root /etc/sudoers.d/99-linuxadmins</code> to fix ownership and permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/etc/sudoers.d/99-linuxadmins: syntax error near line 1</code></td>
+<td>Review the file for typos (e.g., missing spaces around <code>ALL</code>) and re-run <code>visudo -c -f /etc/sudoers.d/99-linuxadmins</code> to validate.</td>
+</tr>
+<tr>
+<td><code>chmod: changing permissions of '/etc/sudoers.d/99-linuxadmins': Operation not permitted</code></td>
+<td>Ensure you are running as root (use <code>sudo</code> or <code>su -</code>) before executing this block.</td>
+</tr>
+<tr>
+<td><code>/etc/sudoers.d/99-linuxadmins: wrong owner/permissions</code></td>
+<td>Run <code>chmod 0440 /etc/sudoers.d/99-linuxadmins</code> and <code>chown root:root /etc/sudoers.d/99-linuxadmins</code> to fix ownership and permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Install</span>
 <a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>google-authenticator<span class="w">   </span><span class="c1"># RHEL</span>
@@ -7931,9 +8182,28 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>google-authenticator: command not found</code></strong> — Install the package using <code>dnf install -y google-authenticator</code> on RHEL or <code>apt install -y libpam-google-authenticator</code> on Ubuntu.
-<strong><code>Permission denied: /home/user/.google_authenticator</code></strong> — Run the command as the user who will authenticate (not root), or ensure the home directory is writable.
-<strong><code>Failed to update /home/user/.google_authenticator</code></strong> — Verify the user has write permissions to their home directory with <code>chmod 700 ~/.google_authenticator</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>google-authenticator: command not found</code></td>
+<td>Install the package using <code>dnf install -y google-authenticator</code> on RHEL or <code>apt install -y libpam-google-authenticator</code> on Ubuntu.</td>
+</tr>
+<tr>
+<td><code>Permission denied: /home/user/.google_authenticator</code></td>
+<td>Run the command as the user who will authenticate (not root), or ensure the home directory is writable.</td>
+</tr>
+<tr>
+<td><code>Failed to update /home/user/.google_authenticator</code></td>
+<td>Verify the user has write permissions to their home directory with <code>chmod 700 ~/.google_authenticator</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># /etc/pam.d/sshd — add TOTP requirement</span>
 <a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>auth<span class="w">    </span>required<span class="w">    </span>pam_google_authenticator.so<span class="w"> </span>nullok
@@ -7942,8 +8212,24 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Module pam_google_authenticator.so not found</code></strong> — Install the libpam-google-authenticator package with <code>apt-get install libpam-google-authenticator</code> (Debian/Ubuntu) or <code>yum install google-authenticator</code> (RHEL/CentOS).
-<strong><code>sshd[1234]: fatal: /etc/pam.d/sshd: line 5: unknown module type: pam_google_authenticator.so</code></strong> — Verify the module path is correct and the PAM library is installed in <code>/lib/x86_64-linux-gnu/security/</code> or <code>/lib64/security/</code>, then restart sshd with <code>systemctl restart sshd</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Module pam_google_authenticator.so not found</code></td>
+<td>Install the libpam-google-authenticator package with <code>apt-get install libpam-google-authenticator</code> (Debian/Ubuntu) or <code>yum install google-authenticator</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>sshd[1234]: fatal: /etc/pam.d/sshd: line 5: unknown module type: pam_google_authenticator.so</code></td>
+<td>Verify the module path is correct and the PAM library is installed in <code>/lib/x86_64-linux-gnu/security/</code> or <code>/lib64/security/</code>, then restart sshd with <code>systemctl restart sshd</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># /etc/ssh/sshd_config — require both key and TOTP</span>
 <a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>AuthenticationMethods<span class="w"> </span>publickey,keyboard-interactive
@@ -7953,8 +8239,24 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sshd[12847]: error: Unsupported AuthenticationMethods 'publickey,keyboard-interactive'</code></strong> — Ensure <code>ChallengeResponseAuthentication yes</code> is set before <code>AuthenticationMethods</code> and restart sshd with <code>systemctl restart sshd</code>.
-<strong><code>sshd[12847]: fatal: /etc/ssh/sshd_config line 45: Unsupported authentication method "keyboard-interactive"</code></strong> — Install and configure a PAM module like <code>libpam-google-authenticator</code> or <code>libpam-oath</code> to support keyboard-interactive authentication.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd[12847]: error: Unsupported AuthenticationMethods 'publickey,keyboard-interactive'</code></td>
+<td>Ensure <code>ChallengeResponseAuthentication yes</code> is set before <code>AuthenticationMethods</code> and restart sshd with <code>systemctl restart sshd</code>.</td>
+</tr>
+<tr>
+<td><code>sshd[12847]: fatal: /etc/ssh/sshd_config line 45: Unsupported authentication method "keyboard-interactive"</code></td>
+<td>Install and configure a PAM module like <code>libpam-google-authenticator</code> or <code>libpam-oath</code> to support keyboard-interactive authentication.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>sshd
 </code></pre></div>
@@ -7962,8 +8264,24 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Job for ssh.service/sshd.service failed because the control process exited with error code.</code></strong> — Run <code>sshd -t</code> to validate the SSH configuration file for syntax errors before reloading.
-<strong><code>Failed to reload sshd.service: Unit sshd.service not loaded.</code></strong> — Verify the SSH service name with <code>systemctl list-unit-files | grep ssh</code> and use the correct service name (may be <code>ssh.service</code> on Debian/Ubuntu or <code>sshd.service</code> on RHEL/CentOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Job for ssh.service/sshd.service failed because the control process exited with error code.</code></td>
+<td>Run <code>sshd -t</code> to validate the SSH configuration file for syntax errors before reloading.</td>
+</tr>
+<tr>
+<td><code>Failed to reload sshd.service: Unit sshd.service not loaded.</code></td>
+<td>Verify the SSH service name with <code>systemctl list-unit-files | grep ssh</code> and use the correct service name (may be <code>ssh.service</code> on Debian/Ubuntu or <code>sshd.service</code> on RHEL/CentOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># /etc/pam.d/sshd — Duo PAM integration</span>
 <a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>auth<span class="w">    </span>sufficient<span class="w">    </span>/lib64/security/pam_duo.so
@@ -7979,9 +8297,28 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: [/lib64/security/pam_duo.so] cannot open shared object file: No such file or directory</code></strong> — Install the Duo Unix package with <code>apt-get install duo-unix</code> (Debian/Ubuntu) or <code>yum install duo_unix</code> (RHEL/CentOS).
-<strong><code>error: Failed to connect to api-XXXXXXXX.duosecurity.com: Name or service not known</code></strong> — Verify the Duo host value matches your account's API hostname and that DNS resolution works with <code>nslookup api-XXXXXXXX.duosecurity.com</code>.
-<strong><code>error: Invalid ikey or skey in /etc/duo/pam_duo.conf</code></strong> — Confirm the integration key and secret key are copied correctly from the Duo Admin Panel without extra whitespace or truncation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: [/lib64/security/pam_duo.so] cannot open shared object file: No such file or directory</code></td>
+<td>Install the Duo Unix package with <code>apt-get install duo-unix</code> (Debian/Ubuntu) or <code>yum install duo_unix</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>error: Failed to connect to api-XXXXXXXX.duosecurity.com: Name or service not known</code></td>
+<td>Verify the Duo host value matches your account's API hostname and that DNS resolution works with <code>nslookup api-XXXXXXXX.duosecurity.com</code>.</td>
+</tr>
+<tr>
+<td><code>error: Invalid ikey or skey in /etc/duo/pam_duo.conf</code></td>
+<td>Confirm the integration key and secret key are copied correctly from the Duo Admin Panel without extra whitespace or truncation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># Configure SSH to accept certificate-signed keys</span>
 <a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="c1"># /etc/ssh/sshd_config</span>
@@ -8003,9 +8340,28 @@ jsmith:
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sign the key: invalid format</code></strong> — Ensure the CA private key path is correct and the key file is in OpenSSH format (not PEM); convert with <code>ssh-keygen -p -N "" -m pem -f ca_key</code> if needed.
-<strong><code>Permission denied (publickey,gssapi-keyex,gssapi-with-mic)</code></strong> — Verify that <code>/etc/ssh/ca.pub</code> is readable on the server and contains the correct CA public key with no extra whitespace.
-<strong><code>Could not open a connection to your authentication agent</code></strong> — Start the SSH agent with <code>eval $(ssh-agent -s)</code> and add the key with <code>ssh-add ~/.ssh/id_ed25519</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sign the key: invalid format</code></td>
+<td>Ensure the CA private key path is correct and the key file is in OpenSSH format (not PEM); convert with <code>ssh-keygen -p -N "" -m pem -f ca_key</code> if needed.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,gssapi-keyex,gssapi-with-mic)</code></td>
+<td>Verify that <code>/etc/ssh/ca.pub</code> is readable on the server and contains the correct CA public key with no extra whitespace.</td>
+</tr>
+<tr>
+<td><code>Could not open a connection to your authentication agent</code></td>
+<td>Start the SSH agent with <code>eval $(ssh-agent -s)</code> and add the key with <code>ssh-add ~/.ssh/id_ed25519</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># Failed SSH logins</span>
 <a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed password\|Invalid user&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
@@ -8063,7 +8419,7 @@ jsmith:
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:43:37 UTC"><span class="timeago" datetime="2026-06-29T14:43:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:43:37 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

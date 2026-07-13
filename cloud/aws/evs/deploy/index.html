@@ -8330,9 +8330,28 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (AccessDenied) when calling the RequestServiceQuotaIncrease operation: User: arn:aws:iam::123456789012:user/deploy is not authorized to perform: servicequotas:RequestServiceQuotaIncrease</code></strong> — Add the <code>servicequotas:RequestServiceQuotaIncrease</code> IAM permission to the user or role.
-<strong><code>An error occurred (InvalidParameterException) when calling the RequestServiceQuotaIncrease operation: Invalid quota code: L-34B43A08</code></strong> — Verify the quota code is correct by running <code>aws service-quotas list-service-quotas --service-code ec2 --region us-east-1</code>.
-<strong><code>An error occurred (ServiceException) when calling the RequestServiceQuotaIncrease operation: The request rate exceeded the limit. Please retry after some time.</code></strong> — Wait a few seconds before retrying the quota increase request.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the RequestServiceQuotaIncrease operation: User: arn:aws:iam::123456789012:user/deploy is not authorized to perform: servicequotas:RequestServiceQuotaIncrease</code></td>
+<td>Add the <code>servicequotas:RequestServiceQuotaIncrease</code> IAM permission to the user or role.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the RequestServiceQuotaIncrease operation: Invalid quota code: L-34B43A08</code></td>
+<td>Verify the quota code is correct by running <code>aws service-quotas list-service-quotas --service-code ec2 --region us-east-1</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (ServiceException) when calling the RequestServiceQuotaIncrease operation: The request rate exceeded the limit. Please retry after some time.</code></td>
+<td>Wait a few seconds before retrying the quota increase request.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Track the request until it reaches <code>CASE_CLOSED</code> with the new limit applied:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>get-requested-service-quota-change<span class="w"> </span><span class="se">\</span>
@@ -8343,8 +8362,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (AccessDeniedException) when calling the GetRequestedServiceQuotaChange operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: servicequotas:GetRequestedServiceQuotaChange</code></strong> — Add the <code>servicequotas:GetRequestedServiceQuotaChange</code> permission to the IAM user or role's policy.
-<strong><code>An error occurred (ResourceNotFoundException) when calling the GetRequestedServiceQuotaChange operation: Request ID req-1234567890abcdef not found</code></strong> — Verify the request ID is correct and the quota increase request exists in your account.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (AccessDeniedException) when calling the GetRequestedServiceQuotaChange operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: servicequotas:GetRequestedServiceQuotaChange</code></td>
+<td>Add the <code>servicequotas:GetRequestedServiceQuotaChange</code> permission to the IAM user or role's policy.</td>
+</tr>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the GetRequestedServiceQuotaChange operation: Request ID req-1234567890abcdef not found</code></td>
+<td>Verify the request ID is correct and the quota increase request exists in your account.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="networking-prerequisites">Networking Prerequisites<a class="headerlink" href="#networking-prerequisites" title="Permanent link">&para;</a></h3>
 <p>The VPC must have DNS resolution and DNS hostnames enabled. EVS relies on AWS-provided DNS for internal service discovery during bootstrapping.</p>
@@ -8508,8 +8543,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the DescribeVirtualInterfaces operation: Invalid filter name</code></strong> — Verify the <code>--query</code> syntax uses backticks for string literals and check AWS CLI version supports JMESPath filtering.
-<strong><code>An error occurred (InvalidVpcID.NotFound) when calling the DescribeRouteTables operation: The vpc ID 'vpc-xxx' does not exist</code></strong> — Replace <code>vpc-xxx</code> with an actual VPC ID from your AWS account using <code>aws ec2 describe-vpcs</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the DescribeVirtualInterfaces operation: Invalid filter name</code></td>
+<td>Verify the <code>--query</code> syntax uses backticks for string literals and check AWS CLI version supports JMESPath filtering.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidVpcID.NotFound) when calling the DescribeRouteTables operation: The vpc ID 'vpc-xxx' does not exist</code></td>
+<td>Replace <code>vpc-xxx</code> with an actual VPC ID from your AWS account using <code>aws ec2 describe-vpcs</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="iam-prerequisites">IAM Prerequisites<a class="headerlink" href="#iam-prerequisites" title="Permanent link">&para;</a></h3>
 <p>The user or role performing cluster operations needs the following minimum permissions. Attach this policy to your deployment role before running <code>create-environment</code>.</p>
@@ -8550,8 +8601,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidInput) when calling the CreateServiceLinkedRole operation: The service-linked role already exists.</code></strong> — The role exists; skip creation and proceed directly to verification with the get-role command.
-<strong><code>An error occurred (AccessDenied) when calling the CreateServiceLinkedRole operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: iam:CreateServiceLinkedRole</code></strong> — Attach the IAM policy <code>iam:CreateServiceLinkedRole</code> permission to your user or assume a role with sufficient privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidInput) when calling the CreateServiceLinkedRole operation: The service-linked role already exists.</code></td>
+<td>The role exists; skip creation and proceed directly to verification with the get-role command.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the CreateServiceLinkedRole operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: iam:CreateServiceLinkedRole</code></td>
+<td>Attach the IAM policy <code>iam:CreateServiceLinkedRole</code> permission to your user or assume a role with sufficient privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Security groups for EVS require specific ports. Create the management SG before cluster creation:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span><span class="se">\</span>
@@ -8627,8 +8694,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the CreateSecurityGroup operation: Invalid id: "vpc-xxx" id does not exist</code></strong> — Replace <code>vpc-xxx</code> with a valid VPC ID from your AWS account (e.g., <code>vpc-0a1b2c3d4e5f6g7h8</code>).
-<strong><code>An error occurred (InvalidGroup.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-0a7f2c9e1b4d5f8k2' does not exist</code></strong> — Add a short delay (`</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the CreateSecurityGroup operation: Invalid id: "vpc-xxx" id does not exist</code></td>
+<td>Replace <code>vpc-xxx</code> with a valid VPC ID from your AWS account (e.g., <code>vpc-0a1b2c3d4e5f6g7h8</code>).</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidGroup.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-0a7f2c9e1b4d5f8k2' does not exist</code></td>
+<td>Add a short delay (`</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Create the SSH key pair for ESXi DCUI access:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-key-pair<span class="w"> </span>--key-name<span class="w"> </span>evs-cluster-key<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span>&gt;<span class="w"> </span>evs-cluster-key.pem
@@ -8639,8 +8722,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'evs-cluster-key' already exists.</code></strong> — Delete the existing key pair with <code>aws ec2 delete-key-pair --key-name evs-cluster-key</code> before recreating it.
-<strong><code>Unable to locate credentials. You have not configured AWS credentials.</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'evs-cluster-key' already exists.</code></td>
+<td>Delete the existing key pair with <code>aws ec2 delete-key-pair --key-name evs-cluster-key</code> before recreating it.</td>
+</tr>
+<tr>
+<td><code>Unable to locate credentials. You have not configured AWS credentials.</code></td>
+<td>Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="create-evs-cluster-aws-cli">Create EVS Cluster (AWS CLI)<a class="headerlink" href="#create-evs-cluster-aws-cli" title="Permanent link">&para;</a></h2>
 <p>Submit the cluster with all required parameters. The <code>connectivityInfo</code> block references the VPC created in the previous step. The <code>initialVlanSubnetTags</code> tells EVS which existing subnets to use for management and VTEP traffic.</p>
@@ -8715,9 +8814,28 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: VPC vpc-xxx does not exist or is not accessible</code></strong> — Replace <code>vpc-xxx</code> with a valid VPC ID from your AWS account using <code>aws ec2 describe-vpcs</code>.
-<strong><code>An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: Route server rs-xxx not found in VPC</code></strong> — Verify the route server ID exists in the specified VPC and is in an AVAILABLE state using <code>aws ec2 describe-route-servers</code>.
-<strong><code>An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: Key pair evs-cluster-key does not exist</code></strong> — Create the EC2 key pair first using <code>aws ec2 create-key-pair --key-name evs-cluster-key</code> or use an existing key name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: VPC vpc-xxx does not exist or is not accessible</code></td>
+<td>Replace <code>vpc-xxx</code> with a valid VPC ID from your AWS account using <code>aws ec2 describe-vpcs</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: Route server rs-xxx not found in VPC</code></td>
+<td>Verify the route server ID exists in the specified VPC and is in an AVAILABLE state using <code>aws ec2 describe-route-servers</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: Key pair evs-cluster-key does not exist</code></td>
+<td>Create the EC2 key pair first using <code>aws ec2 create-key-pair --key-name evs-cluster-key</code> or use an existing key name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Capture the environment ID from the response, then poll until the state reaches <code>CREATED</code>. The transition from <code>CREATING</code> to <code>CREATED</code> normally takes 90-120 minutes.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nv">ENV_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>list-environments<span class="w"> </span><span class="se">\</span>
@@ -8738,8 +8856,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment prod-evs-cluster-01 not found</code></strong> — Verify the environment name matches exactly in your AWS account and region with <code>aws evs list-environments</code>.
-<strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_PROFILE</code>, <code>AWS_ACCESS_KEY_ID</code>, and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment prod-evs-cluster-01 not found</code></td>
+<td>Verify the environment name matches exactly in your AWS account and region with <code>aws evs list-environments</code>.</td>
+</tr>
+<tr>
+<td><code>Unable to locate credentials</code></td>
+<td>Configure AWS credentials using <code>aws configure</code> or set <code>AWS_PROFILE</code>, <code>AWS_ACCESS_KEY_ID</code>, and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Verify all hosts reached the <code>CREATED</code> state before proceeding:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span><span class="se">\</span>
@@ -8761,8 +8895,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID format</code></strong> — Verify that <code>$ENV_ID</code> is set correctly with <code>echo $ENV_ID</code> and matches the expected environment identifier format.
-<strong><code>An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts</code></strong> — Add the <code>evs:ListEnvironmentHosts</code> permission to your IAM user or role's policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID format</code></td>
+<td>Verify that <code>$ENV_ID</code> is set correctly with <code>echo $ENV_ID</code> and matches the expected environment identifier format.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts</code></td>
+<td>Add the <code>evs:ListEnvironmentHosts</code> permission to your IAM user or role's policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Retrieve the SDDC Manager URL from the environment details:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>aws<span class="w"> </span>evs<span class="w"> </span>get-environment<span class="w"> </span><span class="se">\</span>
@@ -8774,9 +8924,28 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the GetEnvironment operation: Invalid environment ID format</code></strong> — Verify the <code>$ENV_ID</code> variable is set correctly with <code>echo $ENV_ID</code> and matches the expected UUID format.
-<strong><code>An error occurred (AccessDeniedException) when calling the GetEnvironment operation: User is not authorized to perform: evs:GetEnvironment</code></strong> — Ensure your AWS IAM user/role has the <code>evs:GetEnvironment</code> permission attached in the IAM policy.
-<strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the GetEnvironment operation: Invalid environment ID format</code></td>
+<td>Verify the <code>$ENV_ID</code> variable is set correctly with <code>echo $ENV_ID</code> and matches the expected UUID format.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDeniedException) when calling the GetEnvironment operation: User is not authorized to perform: evs:GetEnvironment</code></td>
+<td>Ensure your AWS IAM user/role has the <code>evs:GetEnvironment</code> permission attached in the IAM policy.</td>
+</tr>
+<tr>
+<td><code>Unable to locate credentials</code></td>
+<td>Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="vcf-initial-configuration">VCF Initial Configuration<a class="headerlink" href="#vcf-initial-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="retrieve-credentials">Retrieve Credentials<a class="headerlink" href="#retrieve-credentials" title="Permanent link">&para;</a></h3>
@@ -8804,9 +8973,28 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.</code></strong> — Verify the secret ID path is correct and the secret exists in the same AWS region as your CLI configuration.
-<strong><code>An error occurred (AccessDeniedException) when calling the GetSecretValue operation: User: arn:aws:iam::123456789012:user/deployer is not authorized to perform: secretsmanager:GetSecretValue</code></strong> — Add the <code>secretsmanager:GetSecretValue</code> permission to the IAM user or role's policy.
-<strong><code>parse error: Invalid numeric literal at line 1, column 5</code></strong> — Remove the <code>| jq .</code> pipe if the secret value is not valid JSON, or ensure the secret was stored as properly formatted JSON.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.</code></td>
+<td>Verify the secret ID path is correct and the secret exists in the same AWS region as your CLI configuration.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDeniedException) when calling the GetSecretValue operation: User: arn:aws:iam::123456789012:user/deployer is not authorized to perform: secretsmanager:GetSecretValue</code></td>
+<td>Add the <code>secretsmanager:GetSecretValue</code> permission to the IAM user or role's policy.</td>
+</tr>
+<tr>
+<td><code>parse error: Invalid numeric literal at line 1, column 5</code></td>
+<td>Remove the <code>| jq .</code> pipe if the secret value is not valid JSON, or ensure the secret was stored as properly formatted JSON.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="access-sddc-manager-and-vcenter">Access SDDC Manager and vCenter<a class="headerlink" href="#access-sddc-manager-and-vcenter" title="Permanent link">&para;</a></h3>
 <p>Log in to SDDC Manager at the URL returned above. Change the default passwords immediately after first login. The vCenter URL is visible under SDDC Manager → vCenters; use <code>administrator@vsphere.local</code> with the password from Secrets Manager.</p>
@@ -8836,9 +9024,28 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID</code></strong> — Verify that <code>$ENV_ID</code> is set correctly with <code>echo $ENV_ID</code> and matches an existing environment in your AWS account.
-<strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or ensure <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables are exported.
-<strong><code>An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation</code></strong> — Add <code>evs:ListEnvironmentHosts</code> and <code>evs:GetEnvironmentHost</code> permissions to your IAM user or role policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID</code></td>
+<td>Verify that <code>$ENV_ID</code> is set correctly with <code>echo $ENV_ID</code> and matches an existing environment in your AWS account.</td>
+</tr>
+<tr>
+<td><code>Unable to locate credentials</code></td>
+<td>Configure AWS credentials using <code>aws configure</code> or ensure <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables are exported.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation</code></td>
+<td>Add <code>evs:ListEnvironmentHosts</code> and <code>evs:GetEnvironmentHost</code> permissions to your IAM user or role policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>SSH to each ESXi host and confirm:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
@@ -8857,8 +9064,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>command not found: ntpq</code></strong> — Install the ntp or chrony package (e.g., <code>apt-get install ntp</code> on Debian/Ubuntu or <code>yum install ntp</code> on RHEL).
-<strong><code>Connection refused</code></strong> — Ensure the NTP daemon is running with <code>systemctl start ntp</code> or <code>systemctl start chrony</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found: ntpq</code></td>
+<td>Install the ntp or chrony package (e.g., <code>apt-get install ntp</code> on Debian/Ubuntu or <code>yum install ntp</code> on RHEL).</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Ensure the NTP daemon is running with <code>systemctl start ntp</code> or <code>systemctl start chrony</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="configure-dns-entries">Configure DNS Entries<a class="headerlink" href="#configure-dns-entries" title="Permanent link">&para;</a></h3>
 <p>Create forward and reverse DNS records for all VCF components before running any SDDC Manager workflows. Missing DNS entries cause workflow failures during domain deployment and certificate generation.</p>
@@ -8918,8 +9141,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>** server can't find sddc-manager.vcf.internal: NXDOMAIN</code></strong> — Verify the hostname is correctly spelled and exists in DNS, or check that your DNS server IP is correct.
-<strong><code>nslookup: couldn't get address for '&lt;your-dns-server&gt;': not known</code></strong> — Replace <code>&lt;your-dns-server&gt;</code> with an actual DNS server IP address (e.g., <code>10.0.0.53</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>** server can't find sddc-manager.vcf.internal: NXDOMAIN</code></td>
+<td>Verify the hostname is correctly spelled and exists in DNS, or check that your DNS server IP is correct.</td>
+</tr>
+<tr>
+<td><code>nslookup: couldn't get address for '&lt;your-dns-server&gt;': not known</code></td>
+<td>Replace <code>&lt;your-dns-server&gt;</code> with an actual DNS server IP address (e.g., <code>10.0.0.53</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="verify-vsan-cluster-health">Verify vSAN Cluster Health<a class="headerlink" href="#verify-vsan-cluster-health" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># vCenter → Cluster → vSAN → Skyline Health</span>
@@ -8994,9 +9233,28 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if still failing, verify HCX Manager IP and HTTPS connectivity on port 443).
-<strong><code>jq: parse error: Cannot index number with string "displayName"</code></strong> — The API response structure differs from expected; run the curl command without <code>jq</code> to inspect raw JSON and confirm <code>.data[]</code> contains objects with <code>displayName</code> and <code>state</code> fields.
-<strong><code>curl: (401) Unauthorized</code></strong> — Verify the admin password is correct and URL-encoded if it contains special characters; test credentials directly in HCX Manager UI first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; if still failing, verify HCX Manager IP and HTTPS connectivity on port 443).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index number with string "displayName"</code></td>
+<td>The API response structure differs from expected; run the curl command without <code>jq</code> to inspect raw JSON and confirm <code>.data[]</code> contains objects with <code>displayName</code> and <code>state</code> fields.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Verify the admin password is correct and URL-encoded if it contains special characters; test credentials directly in HCX Manager UI first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected state: <code>UP</code>. A state of <code>DEGRADED</code> indicates a connectivity issue between the NE appliances. Check that UDP 4500 (IPSEC NAT-T) and TCP 443 are open between the on-premises HCX appliance and the EVS HCX Cloud appliance.</p>
 <h2 id="post-deploy-validation-checklist">Post-Deploy Validation Checklist<a class="headerlink" href="#post-deploy-validation-checklist" title="Permanent link">&para;</a></h2>
@@ -9010,8 +9268,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the GetEnvironment operation: Invalid environment ID format</code></strong> — Ensure <code>$ENV_ID</code> is set to a valid environment identifier (e.g., <code>aws evs list-environments</code> to find valid IDs).
-<strong><code>An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment not found</code></strong> — Verify the environment exists in the current AWS region and account; check with <code>aws evs list-environments --region &lt;region&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the GetEnvironment operation: Invalid environment ID format</code></td>
+<td>Ensure <code>$ENV_ID</code> is set to a valid environment identifier (e.g., <code>aws evs list-environments</code> to find valid IDs).</td>
+</tr>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment not found</code></td>
+<td>Verify the environment exists in the current AWS region and account; check with <code>aws evs list-environments --region &lt;region&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected output: <code>CREATED</code>. Any other state requires investigation in AWS CloudTrail and SDDC Manager logs.</p>
 <h3 id="check-2-all-hosts-connected-in-vcenter">Check 2: All Hosts Connected in vCenter<a class="headerlink" href="#check-2-all-hosts-connected-in-vcenter" title="Permanent link">&para;</a></h3>
@@ -9029,8 +9303,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Install VMware PowerCLI module using <code>Install-Module -Name VMware.PowerCLI -Force</code>.
-<strong><code>Connect-VIServer : Cannot connect to vCenter server. The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.</code></strong> — Add the vCenter certificate to the trusted store or use <code>Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false</code> before connecting.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></td>
+<td>Install VMware PowerCLI module using <code>Install-Module -Name VMware.PowerCLI -Force</code>.</td>
+</tr>
+<tr>
+<td><code>Connect-VIServer : Cannot connect to vCenter server. The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.</code></td>
+<td>Add the vCenter certificate to the trusted store or use <code>Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false</code> before connecting.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="check-3-vsan-health-green">Check 3: vSAN Health Green<a class="headerlink" href="#check-3-vsan-health-green" title="Permanent link">&para;</a></h3>
 <p>vCenter → Cluster → Monitor → vSAN → Skyline Health. Every health check must show green before deploying workload VMs. Pay particular attention to:</p>
@@ -9060,9 +9350,28 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: connect: Network is unreachable</code></strong> — Verify the test VM has a default route configured with <code>ip route show</code> and the security group allows outbound traffic.
-<strong><code>curl: (7) Failed to connect to ifconfig.me port 443: Connection timed out</code></strong> — Check that DNS resolution works with <code>nslookup ifconfig.me</code> and that the security group permits HTTPS outbound on port 443.
-<strong><code>curl: (60) SSL certificate problem: unable to get local issuer certificate</code></strong> — Update the CA certificate bundle with <code>apt-get install ca-certificates</code> or use <code>curl -k</code> to skip verification for testing only.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: connect: Network is unreachable</code></td>
+<td>Verify the test VM has a default route configured with <code>ip route show</code> and the security group allows outbound traffic.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to ifconfig.me port 443: Connection timed out</code></td>
+<td>Check that DNS resolution works with <code>nslookup ifconfig.me</code> and that the security group permits HTTPS outbound on port 443.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: unable to get local issuer certificate</code></td>
+<td>Update the CA certificate bundle with <code>apt-get install ca-certificates</code> or use <code>curl -k</code> to skip verification for testing only.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="check-6-hcx-service-mesh-status">Check 6: HCX Service Mesh Status<a class="headerlink" href="#check-6-hcx-service-mesh-status" title="Permanent link">&para;</a></h3>
 <p>HCX Manager → Interconnect → Service Mesh. All appliances (IX, WAN Opt, NE) must show <code>Green</code> under the Status column. A yellow or red status requires checking the HCX system events log.</p>
@@ -9078,8 +9387,24 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.</code></strong> — Verify the secret name matches exactly and exists in the current AWS region with <code>aws secretsmanager list-secrets</code>.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — The secret value is not valid JSON; remove the <code>| jq .lastRotated</code> pipe and inspect the raw output with <code>--query 'SecretString' --output text</code> alone.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.</code></td>
+<td>Verify the secret name matches exactly and exists in the current AWS region with <code>aws secretsmanager list-secrets</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>The secret value is not valid JSON; remove the <code>| jq .lastRotated</code> pipe and inspect the raw output with <code>--query 'SecretString' --output text</code> alone.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="check-8-bidirectional-dns-resolution">Check 8: Bidirectional DNS Resolution<a class="headerlink" href="#check-8-bidirectional-dns-resolution" title="Permanent link">&para;</a></h3>
 <p>Verify DNS works in both directions: from a VM inside EVS to on-premises hostnames, and from on-premises hosts to EVS component names.</p>
@@ -9115,9 +9440,28 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>** server can't find &lt;on-prem-hostname&gt;: NXDOMAIN</code></strong> — Verify the hostname spelling and confirm the on-premises DNS server IP is correct and reachable.
-<strong><code>curl: (7) Failed to connect to vcenter.vcf.internal port 443: Connection timed out</code></strong> — Confirm the Direct Connect virtual interface is active and the security group/firewall rules allow HTTPS traffic from on-premises to the EVS vCenter IP.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to the curl command to skip certificate validation, or import the vCenter's self-signed certificate into your system's trusted store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>** server can't find &lt;on-prem-hostname&gt;: NXDOMAIN</code></td>
+<td>Verify the hostname spelling and confirm the on-premises DNS server IP is correct and reachable.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vcenter.vcf.internal port 443: Connection timed out</code></td>
+<td>Confirm the Direct Connect virtual interface is active and the security group/firewall rules allow HTTPS traffic from on-premises to the EVS vCenter IP.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to the curl command to skip certificate validation, or import the vCenter's self-signed certificate into your system's trusted store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected: <code>200</code> for the curl check. DNS failures in either direction indicate a DHCP options or forwarder misconfiguration that must be resolved before running any migrations.</p>
 <hr />
@@ -9155,7 +9499,7 @@ EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS conso
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

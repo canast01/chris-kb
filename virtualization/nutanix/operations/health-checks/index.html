@@ -7541,9 +7541,28 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection refused</code></strong> — Verify the CVM IP address is correct and the SSH service is running with <code>sudo systemctl status sshd</code> on the CVM.
-<strong><code>Permission denied (publickey,password)</code></strong> — Ensure you are using the correct nutanix user credentials and that SSH key-based authentication is properly configured if required by your cluster.
-<strong><code>cluster: command not found</code></strong> — SSH into a CVM and verify the Nutanix cluster tools are installed by running <code>which cluster</code> or check if you need to source the environment with <code>source /etc/profile</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify the CVM IP address is correct and the SSH service is running with <code>sudo systemctl status sshd</code> on the CVM.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Ensure you are using the correct nutanix user credentials and that SSH key-based authentication is properly configured if required by your cluster.</td>
+</tr>
+<tr>
+<td><code>cluster: command not found</code></td>
+<td>SSH into a CVM and verify the Nutanix cluster tools are installed by running <code>which cluster</code> or check if you need to source the environment with <code>source /etc/profile</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output:</strong> All services listed as <code>UP</code>. If any service shows <code>DOWN</code>, investigate that service before continuing.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all CVMs are reachable and services are running</span>
@@ -7567,9 +7586,28 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>allssh: command not found</code></strong> — Ensure you are running this command from a Nutanix cluster node or source the Nutanix environment setup script.
-<strong><code>Connection refused on node-2</code></strong> — Verify the CVM on node-2 is powered on and the network connectivity between cluster nodes is functional.
-<strong><code>Permission denied (publickey)</code></strong> — Confirm SSH keys are properly configured in ~/.ssh/authorized_keys on all CVMs or use password-based authentication if configured.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allssh: command not found</code></td>
+<td>Ensure you are running this command from a Nutanix cluster node or source the Nutanix environment setup script.</td>
+</tr>
+<tr>
+<td><code>Connection refused on node-2</code></td>
+<td>Verify the CVM on node-2 is powered on and the network connectivity between cluster nodes is functional.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey)</code></td>
+<td>Confirm SSH keys are properly configured in ~/.ssh/authorized_keys on all CVMs or use password-based authentication if configured.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected:</strong> Each CVM returns <code>Genesis is running.</code></p>
 <h3 id="2-ncc-quick-check-critical-tests-only">2. NCC Quick Check (Critical Tests Only)<a class="headerlink" href="#2-ncc-quick-check-critical-tests-only" title="Permanent link">&para;</a></h3>
@@ -7593,9 +7631,28 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ncc: command not found</code></strong> — Ensure NCC is installed on the CVM or add its path to $PATH (typically <code>/home/nutanix/ncc/bin/ncc</code>).
-<strong><code>ERROR: Failed to connect to cluster — Connection refused</code></strong> — Verify cluster connectivity and that Prism Element is accessible; check network connectivity from the CVM.
-<strong><code>WARNING: Some checks skipped — insufficient permissions</code></strong> — Run the command with appropriate sudo privileges or as the nutanix user account.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ncc: command not found</code></td>
+<td>Ensure NCC is installed on the CVM or add its path to $PATH (typically <code>/home/nutanix/ncc/bin/ncc</code>).</td>
+</tr>
+<tr>
+<td><code>ERROR: Failed to connect to cluster — Connection refused</code></td>
+<td>Verify cluster connectivity and that Prism Element is accessible; check network connectivity from the CVM.</td>
+</tr>
+<tr>
+<td><code>WARNING: Some checks skipped — insufficient permissions</code></td>
+<td>Run the command with appropriate sudo privileges or as the nutanix user account.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected:</strong> <code>PASS</code> for all critical checks. Any <code>FAIL</code> must be investigated immediately.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Full NCC run (all 400+ checks) — run weekly or before maintenance</span>
@@ -7627,9 +7684,28 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ncc: command not found</code></strong> — Ensure NCC is installed via <code>yum install nutanix-cluster-check</code> or verify PATH includes <code>/opt/nutanix/bin</code>.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as the <code>nutanix</code> user; NCC requires elevated privileges to access cluster health data.
-<strong><code>Connection refused to Prism (127.0.0.1:9440)</code></strong> — Verify Prism Central/Element is running with <code>systemctl status prism-gw</code> and check network connectivity to the cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ncc: command not found</code></td>
+<td>Ensure NCC is installed via <code>yum install nutanix-cluster-check</code> or verify PATH includes <code>/opt/nutanix/bin</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as the <code>nutanix</code> user; NCC requires elevated privileges to access cluster health data.</td>
+</tr>
+<tr>
+<td><code>Connection refused to Prism (127.0.0.1:9440)</code></td>
+<td>Verify Prism Central/Element is running with <code>systemctl status prism-gw</code> and check network connectivity to the cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="3-cluster-resilience">3. Cluster Resilience<a class="headerlink" href="#3-cluster-resilience" title="Permanent link">&para;</a></h3>
 <p><img alt="3. Cluster Resilience" src="../../../../assets/virtualization-nutanix-hc-3-cluster-resilience.svg" /></p>
@@ -7655,8 +7731,24 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Connection refused on 127.0.0.1:9440</code></strong> — Ensure the Nutanix cluster is running and accessible; verify network connectivity to the cluster IP.
-<strong><code>Error: Authentication failed - invalid credentials</code></strong> — Verify your ncli credentials are correct and your user has cluster admin permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Connection refused on 127.0.0.1:9440</code></td>
+<td>Ensure the Nutanix cluster is running and accessible; verify network connectivity to the cluster IP.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed - invalid credentials</code></td>
+<td>Verify your ncli credentials are correct and your user has cluster admin permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected:</strong> <code>CAN_TOLERATE_FAILURE_COUNT</code> ≥ 1 (RF2) or ≥ 2 (RF3).</p>
 <p>If <code>CAN_TOLERATE_FAILURE_COUNT=0</code>, the cluster cannot tolerate any additional failure — investigate immediately (node down, disk missing, degraded objects).</p>
@@ -7693,9 +7785,28 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ncli: command not found</code></strong> — Ensure you are running this command on a Nutanix cluster node or install the Nutanix CLI tools in your PATH.
-<strong><code>Error: Not authenticated to cluster</code></strong> — Run <code>ncli -u admin -p &lt;password&gt;</code> or ensure your Nutanix credentials are configured in your environment.
-<strong><code>Error: container-backup: Over-provisioned (105.3% usage)</code></strong> — Expand the container capacity or migrate data to another container with available space immediately.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ncli: command not found</code></td>
+<td>Ensure you are running this command on a Nutanix cluster node or install the Nutanix CLI tools in your PATH.</td>
+</tr>
+<tr>
+<td><code>Error: Not authenticated to cluster</code></td>
+<td>Run <code>ncli -u admin -p &lt;password&gt;</code> or ensure your Nutanix credentials are configured in your environment.</td>
+</tr>
+<tr>
+<td><code>Error: container-backup: Over-provisioned (105.3% usage)</code></td>
+<td>Expand the container capacity or migrate data to another container with available space immediately.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected:</strong> Used capacity below 70% on each container. Alert at 70%; critical at 80%.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check for any storage-related alerts</span>
@@ -7715,8 +7826,24 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Connection refused (127.0.0.1:9440)</code></strong> — Verify the Nutanix cluster is reachable and ncli is configured with correct credentials using <code>ncli -h &lt;cluster-ip&gt;</code>.
-<strong><code>Error: Invalid severity value 'critical'. Valid values are: CRITICAL, WARNING, INFO</code></strong> — Use uppercase severity levels: <code>ncli alert list severity=CRITICAL</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Connection refused (127.0.0.1:9440)</code></td>
+<td>Verify the Nutanix cluster is reachable and ncli is configured with correct credentials using <code>ncli -h &lt;cluster-ip&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid severity value 'critical'. Valid values are: CRITICAL, WARNING, INFO</code></td>
+<td>Use uppercase severity levels: <code>ncli alert list severity=CRITICAL</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="5-cvm-health">5. CVM Health<a class="headerlink" href="#5-cvm-health" title="Permanent link">&para;</a></h3>
 <p><img alt="5. CVM Health" src="../../../../assets/virtualization-nutanix-hc-5-cvm-health.svg" /></p>
@@ -7748,8 +7875,24 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>allssh: command not found</code></strong> — Ensure you are running this command from a CVM with the Nutanix environment sourced, or use <code>ssh</code> to each CVM individually.
-<strong><code>DN  192.168.1.102  100.0 GB  256     33.3%</code></strong> — A node showing "DN" (Down/Normal) indicates the Cassandra service is down; restart it with <code>allssh "service cassandra restart"</code> on the affected CVM.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allssh: command not found</code></td>
+<td>Ensure you are running this command from a CVM with the Nutanix environment sourced, or use <code>ssh</code> to each CVM individually.</td>
+</tr>
+<tr>
+<td><code>DN  192.168.1.102  100.0 GB  256     33.3%</code></td>
+<td>A node showing "DN" (Down/Normal) indicates the Cassandra service is down; restart it with <code>allssh "service cassandra restart"</code> on the affected CVM.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="6-ahv-host-health">6. AHV Host Health<a class="headerlink" href="#6-ahv-host-health" title="Permanent link">&para;</a></h3>
 <p><img alt="6. AHV Host Health" src="../../../../assets/virtualization-nutanix-hc-6-ahv-host-health.svg" /></p>
@@ -7795,8 +7938,24 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>acli: command not found</code></strong> — Ensure you are running this command from a Nutanix cluster node or have the Nutanix CLI tools installed in your PATH.
-<strong><code>allssh: command not found</code></strong> — Run this command from the Nutanix cluster master node where allssh is available, or source the Nutanix environment setup script.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>acli: command not found</code></td>
+<td>Ensure you are running this command from a Nutanix cluster node or have the Nutanix CLI tools installed in your PATH.</td>
+</tr>
+<tr>
+<td><code>allssh: command not found</code></td>
+<td>Run this command from the Nutanix cluster master node where allssh is available, or source the Nutanix environment setup script.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected:</strong> All hosts show <code>normal</code> state; no unexpected maintenance mode entries.</p>
 <h3 id="7-vm-health">7. VM Health<a class="headerlink" href="#7-vm-health" title="Permanent link">&para;</a></h3>
@@ -7820,9 +7979,28 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>acli: error code 4001 — VM filter not supported</code></strong> — Remove the <code>--include_filter</code> parameter; use <code>acli vm.list</code> and pipe to <code>grep</code> instead to filter by NIC count.
-<strong><code>Connection refused</code></strong> — Ensure the Nutanix cluster is reachable and acli is authenticated; verify cluster IP and credentials with <code>acli cluster status</code>.
-<strong><code>grep: (standard input) is empty</code></strong> — Confirm VMs exist in the cluster by running <code>acli vm.list</code> without filters; if empty, the cluster may have no VMs or acli connection is broken.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>acli: error code 4001 — VM filter not supported</code></td>
+<td>Remove the <code>--include_filter</code> parameter; use <code>acli vm.list</code> and pipe to <code>grep</code> instead to filter by NIC count.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Ensure the Nutanix cluster is reachable and acli is authenticated; verify cluster IP and credentials with <code>acli cluster status</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>Confirm VMs exist in the cluster by running <code>acli vm.list</code> without filters; if empty, the cluster may have no VMs or acli connection is broken.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="8-alert-review">8. Alert Review<a class="headerlink" href="#8-alert-review" title="Permanent link">&para;</a></h3>
 <p><img alt="8. Alert Review" src="../../../../assets/virtualization-nutanix-hc-8-alert-review.svg" /></p>
@@ -7850,8 +8028,24 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid time format for start-time parameter</code></strong> — Ensure the date command outputs milliseconds in the correct format; use <code>date -d "24 hours ago" +%s000</code> without the trailing zeros.
-<strong><code>Error: Alert ID not found or already acknowledged</code></strong> — Verify the alert ID exists and is unacknowledged by running <code>ncli alert list</code> first to confirm the exact alert UUID.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid time format for start-time parameter</code></td>
+<td>Ensure the date command outputs milliseconds in the correct format; use <code>date -d "24 hours ago" +%s000</code> without the trailing zeros.</td>
+</tr>
+<tr>
+<td><code>Error: Alert ID not found or already acknowledged</code></td>
+<td>Verify the alert ID exists and is unacknowledged by running <code>ncli alert list</code> first to confirm the exact alert UUID.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>From Prism Element:</strong> Home → Alerts → filter by Severity = Critical. Acknowledge or create tickets for all unacknowledged critical alerts.</p>
 <hr />
@@ -7944,9 +8138,28 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ncli: command not found</code></strong> — Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI installed; verify PATH includes <code>/usr/local/nutanix/bin</code>.
-<strong><code>Error: Cluster is not accessible</code></strong> — Verify cluster connectivity with <code>ncli cluster status</code> and confirm your user has appropriate RBAC permissions.
-<strong><code>grep: (standard input) is empty</code></strong> — The NCC result may be empty if no checks have run in the past 7 days; run <code>ncli ncc run</code> to trigger a health check.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ncli: command not found</code></td>
+<td>Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI installed; verify PATH includes <code>/usr/local/nutanix/bin</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Cluster is not accessible</code></td>
+<td>Verify cluster connectivity with <code>ncli cluster status</code> and confirm your user has appropriate RBAC permissions.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>The NCC result may be empty if no checks have run in the past 7 days; run <code>ncli ncc run</code> to trigger a health check.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <hr />
@@ -7986,7 +8199,7 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

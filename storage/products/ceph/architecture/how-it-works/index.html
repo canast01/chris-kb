@@ -7776,8 +7776,24 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: osd.0 does not exist</code></strong> — Verify the OSD ID is correct with <code>ceph osd tree</code> and ensure the OSD is up.
-<strong><code>Error connecting to daemon socket: No such file or directory</code></strong> — Start the OSD daemon with <code>systemctl start ceph-osd@0</code> or check that the OSD process is running.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: osd.0 does not exist</code></td>
+<td>Verify the OSD ID is correct with <code>ceph osd tree</code> and ensure the OSD is up.</td>
+</tr>
+<tr>
+<td><code>Error connecting to daemon socket: No such file or directory</code></td>
+<td>Start the OSD daemon with <code>systemctl start ceph-osd@0</code> or check that the OSD process is running.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="pg-lifecycle">PG Lifecycle<a class="headerlink" href="#pg-lifecycle" title="Permanent link">&para;</a></h2>
 <table>
@@ -7888,8 +7904,24 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: pg 1.xyz not found</code></strong> — Verify the PG ID format matches output from <code>ceph pg stat</code> (use dot notation like <code>1.a2f</code>).
-<strong><code>Error: health detail requires a connected monitor</code></strong> — Ensure the Ceph cluster is running and your <code>ceph.conf</code> points to a valid monitor address.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: pg 1.xyz not found</code></td>
+<td>Verify the PG ID format matches output from <code>ceph pg stat</code> (use dot notation like <code>1.a2f</code>).</td>
+</tr>
+<tr>
+<td><code>Error: health detail requires a connected monitor</code></td>
+<td>Ensure the Ceph cluster is running and your <code>ceph.conf</code> points to a valid monitor address.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="crush-deep-dive">CRUSH Deep Dive<a class="headerlink" href="#crush-deep-dive" title="Permanent link">&para;</a></h2>
 <p>CRUSH (Controlled Replication Under Scalable Hashing) is a pseudo-random placement algorithm. Clients compute OSD targets locally — no central lookup.</p>
@@ -7989,9 +8021,28 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EINVAL: invalid crush map</code></strong> — Verify the crush.txt syntax by running <code>crushtool -d crush.bin -o crush.txt</code> again and check for malformed bucket or rule definitions.
-<strong><code>Error: osd.5 does not exist</code></strong> — Confirm the OSD ID is valid by running <code>ceph osd tree</code> before attempting to reweight.
-<strong><code>Error EACCES: permission denied</code></strong> — Ensure you have admin privileges by running commands with <code>sudo</code> or as a user in the <code>ceph</code> group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EINVAL: invalid crush map</code></td>
+<td>Verify the crush.txt syntax by running <code>crushtool -d crush.bin -o crush.txt</code> again and check for malformed bucket or rule definitions.</td>
+</tr>
+<tr>
+<td><code>Error: osd.5 does not exist</code></td>
+<td>Confirm the OSD ID is valid by running <code>ceph osd tree</code> before attempting to reweight.</td>
+</tr>
+<tr>
+<td><code>Error EACCES: permission denied</code></td>
+<td>Ensure you have admin privileges by running commands with <code>sudo</code> or as a user in the <code>ceph</code> group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="mon-quorum">MON Quorum<a class="headerlink" href="#mon-quorum" title="Permanent link">&para;</a></h2>
 <p>MONs use the <strong>Paxos</strong> consensus protocol to maintain authoritative cluster maps. A majority must agree before any map update (OSD up/down, PG changes) is committed.</p>
@@ -8061,8 +8112,24 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: mon.mon3 does not exist or not in monmap</code></strong> — Verify the MON ID exists with <code>ceph mon dump</code> before attempting removal.
-<strong><code>Error: cannot remove mon, not enough monitors in quorum</code></strong> — Ensure at least 2 MONs remain healthy; add a replacement MON before removing the failed one.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: mon.mon3 does not exist or not in monmap</code></td>
+<td>Verify the MON ID exists with <code>ceph mon dump</code> before attempting removal.</td>
+</tr>
+<tr>
+<td><code>Error: cannot remove mon, not enough monitors in quorum</code></td>
+<td>Ensure at least 2 MONs remain healthy; add a replacement MON before removing the failed one.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="osd-heartbeat-and-failure-detection">OSD Heartbeat and Failure Detection<a class="headerlink" href="#osd-heartbeat-and-failure-detection" title="Permanent link">&para;</a></h2>
 <p>OSDs send heartbeat pings to their peers and to the MONs on a regular interval.</p>
@@ -8134,9 +8201,28 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: osd.7 does not exist</code></strong> — Verify the OSD number exists with <code>ceph osd tree</code> before attempting to mark it out.
-<strong><code>Error: admin_socket: stat failed on '/var/run/ceph/ceph-osd.0.asok': No such file or directory</code></strong> — Ensure the OSD daemon is running with <code>systemctl status ceph-osd@0</code> and the socket path is correct.
-<strong><code>Error EPERM: you do not have permission to perform this operation</code></strong> — Run commands with appropriate privileges (sudo or as ceph user) or ensure your keyring has admin capabilities.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: osd.7 does not exist</code></td>
+<td>Verify the OSD number exists with <code>ceph osd tree</code> before attempting to mark it out.</td>
+</tr>
+<tr>
+<td><code>Error: admin_socket: stat failed on '/var/run/ceph/ceph-osd.0.asok': No such file or directory</code></td>
+<td>Ensure the OSD daemon is running with <code>systemctl status ceph-osd@0</code> and the socket path is correct.</td>
+</tr>
+<tr>
+<td><code>Error EPERM: you do not have permission to perform this operation</code></td>
+<td>Run commands with appropriate privileges (sudo or as ceph user) or ensure your keyring has admin capabilities.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="storage-pool-types">Storage Pool Types<a class="headerlink" href="#storage-pool-types" title="Permanent link">&para;</a></h2>
 <table>
@@ -8227,9 +8313,28 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: pool 'rbd-pool' does not exist</code></strong> — Run the pool creation command before attempting to set pool parameters.
-<strong><code>Error EINVAL: allow_ec_overwrites requires BlueStore</code></strong> — Verify all OSDs use BlueStore backend with <code>ceph osd metadata | grep osd_objectstore</code>.
-<strong><code>Error ERANGE: invalid erasure code profile: k=4 m=2 requires at least 6 OSDs</code></strong> — Ensure your cluster has at least k+m OSDs available before creating the erasure-coded pool.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: pool 'rbd-pool' does not exist</code></td>
+<td>Run the pool creation command before attempting to set pool parameters.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: allow_ec_overwrites requires BlueStore</code></td>
+<td>Verify all OSDs use BlueStore backend with <code>ceph osd metadata | grep osd_objectstore</code>.</td>
+</tr>
+<tr>
+<td><code>Error ERANGE: invalid erasure code profile: k=4 m=2 requires at least 6 OSDs</code></td>
+<td>Ensure your cluster has at least k+m OSDs available before creating the erasure-coded pool.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cluster-health-quick-reference">Cluster Health Quick Reference<a class="headerlink" href="#cluster-health-quick-reference" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Overall status — always start here</span>
@@ -8336,7 +8441,7 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

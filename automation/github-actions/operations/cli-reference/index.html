@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="GitHub Actions — CLI Reference · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GitHub Actions — CLI Reference", "url": "https://chrisanastasiadis.com/automation/github-actions/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GitHub Actions — CLI Reference", "url": "https://chrisanastasiadis.com/automation/github-actions/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7540,9 +7540,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to cli.github.com port 443: Connection refused</code></strong> — Verify network connectivity and check if the GitHub CLI repository is accessible from your environment.
-<strong><code>E: Unable to locate package gh</code></strong> — Run <code>apt update</code> before <code>apt install gh</code> to refresh the package cache.
-<strong><code>error: failed to authenticate git credential</code></strong> — Complete <code>gh auth login</code> with valid GitHub credentials before attempting to use authenticated git operations.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to cli.github.com port 443: Connection refused</code></td>
+<td>Verify network connectivity and check if the GitHub CLI repository is accessible from your environment.</td>
+</tr>
+<tr>
+<td><code>E: Unable to locate package gh</code></td>
+<td>Run <code>apt update</code> before <code>apt install gh</code> to refresh the package cache.</td>
+</tr>
+<tr>
+<td><code>error: failed to authenticate git credential</code></td>
+<td>Complete <code>gh auth login</code> with valid GitHub credentials before attempting to use authenticated git operations.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List environments</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>gh<span class="w"> </span>api<span class="w"> </span>repos/OWNER/REPO/environments<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.environments[].name&#39;</span>
@@ -7582,9 +7601,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HTTP 404: Not Found</code></strong> — Verify OWNER and REPO values match your GitHub repository path exactly (case-sensitive).
-<strong><code>HTTP 403: Forbidden</code></strong> — Ensure your GitHub token has <code>repo</code> scope and admin access to the target repository.
-<strong><code>parse error: Cannot index number with string "environments"</code></strong> — The API response is not an array; check that the endpoint returns an object with an <code>environments</code> key, or remove the array indexing from the jq filter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HTTP 404: Not Found</code></td>
+<td>Verify OWNER and REPO values match your GitHub repository path exactly (case-sensitive).</td>
+</tr>
+<tr>
+<td><code>HTTP 403: Forbidden</code></td>
+<td>Ensure your GitHub token has <code>repo</code> scope and admin access to the target repository.</td>
+</tr>
+<tr>
+<td><code>parse error: Cannot index number with string "environments"</code></td>
+<td>The API response is not an array; check that the endpoint returns an object with an <code>environments</code> key, or remove the array indexing from the jq filter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List runners</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gh<span class="w"> </span>api<span class="w"> </span>repos/OWNER/REPO/actions/runners<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.runners[] | {id, name, status, labels}&#39;</span>
@@ -7651,9 +7689,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HTTP 404: Not Found (repository.actions.disabled)</code></strong> — Enable GitHub Actions in the repository settings under Actions &gt; General.
-<strong><code>HTTP 401: Unauthorized</code></strong> — Ensure your GitHub CLI token has <code>admin:org</code> or <code>repo</code> scope by running <code>gh auth status</code> and re-authenticating with <code>gh auth login</code>.
-<strong><code>jq: error (at &lt;stdin&gt;:0): Cannot index null with string "runners"</code></strong> — Verify OWNER/REPO/ORG values are correct and the runner exists before querying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HTTP 404: Not Found (repository.actions.disabled)</code></td>
+<td>Enable GitHub Actions in the repository settings under Actions &gt; General.</td>
+</tr>
+<tr>
+<td><code>HTTP 401: Unauthorized</code></td>
+<td>Ensure your GitHub CLI token has <code>admin:org</code> or <code>repo</code> scope by running <code>gh auth status</code> and re-authenticating with <code>gh auth login</code>.</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:0): Cannot index null with string "runners"</code></td>
+<td>Verify OWNER/REPO/ORG values are correct and the runner exists before querying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List artifacts for a run</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>gh<span class="w"> </span>api<span class="w"> </span>repos/OWNER/REPO/actions/runs/RUN_ID/artifacts<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.artifacts[]&#39;</span>
@@ -7699,8 +7756,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HTTP 404: Not Found</code></strong> — Verify OWNER, REPO, and RUN_ID are correct and the run exists in your repository.
-<strong><code>gh: could not authenticate</code></strong> — Ensure you are logged in with <code>gh auth login</code> and have <code>repo</code> scope permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HTTP 404: Not Found</code></td>
+<td>Verify OWNER, REPO, and RUN_ID are correct and the run exists in your repository.</td>
+</tr>
+<tr>
+<td><code>gh: could not authenticate</code></td>
+<td>Ensure you are logged in with <code>gh auth login</code> and have <code>repo</code> scope permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List caches</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>gh<span class="w"> </span>cache<span class="w"> </span>list
@@ -7741,8 +7814,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: resource not found</code></strong> — Verify the CACHE_KEY exists by running <code>gh cache list</code> and use the exact ID from the output.
-<strong><code>gh: authentication required</code></strong> — Ensure you are authenticated with <code>gh auth login</code> and have <code>repo</code> scope permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: resource not found</code></td>
+<td>Verify the CACHE_KEY exists by running <code>gh cache list</code> and use the exact ID from the output.</td>
+</tr>
+<tr>
+<td><code>gh: authentication required</code></td>
+<td>Ensure you are authenticated with <code>gh auth login</code> and have <code>repo</code> scope permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check Actions minutes usage (org)</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>gh<span class="w"> </span>api<span class="w"> </span>orgs/ORG/settings/billing/actions<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{</span>
@@ -7771,8 +7860,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HTTP 404: Not Found (https://api.github.com/orgs/ORG/settings/billing/actions)</code></strong> — Replace <code>ORG</code> with your actual organization name and verify you have admin permissions on that org.
-<strong><code>HTTP 403: Resource not accessible by integration</code></strong> — Ensure your GitHub token has <code>admin:org_hook</code> and <code>read:org</code> scopes, or use <code>gh auth login</code> to re-authenticate with proper permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HTTP 404: Not Found (https://api.github.com/orgs/ORG/settings/billing/actions)</code></td>
+<td>Replace <code>ORG</code> with your actual organization name and verify you have admin permissions on that org.</td>
+</tr>
+<tr>
+<td><code>HTTP 403: Resource not accessible by integration</code></td>
+<td>Ensure your GitHub token has <code>admin:org_hook</code> and <code>read:org</code> scopes, or use <code>gh auth login</code> to re-authenticate with proper permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Find all failed runs in the last 7 days</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failure<span class="w"> </span>--json<span class="w"> </span>databaseId,name,createdAt<span class="w"> </span><span class="se">\</span>
@@ -7863,7 +7968,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

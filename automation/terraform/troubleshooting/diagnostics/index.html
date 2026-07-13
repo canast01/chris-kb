@@ -7363,9 +7363,28 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid or unsupported block type on main.tf line 42, in resource "aws_instance" "web"</code></strong> — Review the resource block syntax and ensure the resource type matches the provider schema.
-<strong><code>Error: Unsupported argument on variables.tf line 15, in variable "instance_count"</code></strong> — Remove or correct the argument name; check the Terraform documentation for valid variable block arguments.
-<strong><code>Error: Failed to query available provider versions on registry.terraform.io</code></strong> — Verify internet connectivity and that the provider registry is accessible, or configure a custom registry mirror.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid or unsupported block type on main.tf line 42, in resource "aws_instance" "web"</code></td>
+<td>Review the resource block syntax and ensure the resource type matches the provider schema.</td>
+</tr>
+<tr>
+<td><code>Error: Unsupported argument on variables.tf line 15, in variable "instance_count"</code></td>
+<td>Remove or correct the argument name; check the Terraform documentation for valid variable block arguments.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to query available provider versions on registry.terraform.io</code></td>
+<td>Verify internet connectivity and that the provider registry is accessible, or configure a custom registry mirror.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-2-enable-debug-logging">Step 2 — Enable debug logging<a class="headerlink" href="#step-2-enable-debug-logging" title="Permanent link">&para;</a></h2>
@@ -7416,9 +7435,28 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>AccessDenied: User: arn:aws:iam::123456789012:user/terraform is not authorized to perform: ec2:ModifyInstanceAttribute</code></strong> — Add the required IAM policy action <code>ec2:ModifyInstanceAttribute</code> to the Terraform user's IAM role or policy.
-<strong><code>HTTP 403 Forbidden</code></strong> — Verify AWS credentials are correct and the IAM user/role has permissions for the resource being modified; check credential expiration with <code>aws sts get-caller-identity</code>.
-<strong><code>HTTP 401 Unauthorized - Invalid AWS credentials</code></strong> — Ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are set correctly or update your AWS credentials file at <code>~/.aws/credentials</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AccessDenied: User: arn:aws:iam::123456789012:user/terraform is not authorized to perform: ec2:ModifyInstanceAttribute</code></td>
+<td>Add the required IAM policy action <code>ec2:ModifyInstanceAttribute</code> to the Terraform user's IAM role or policy.</td>
+</tr>
+<tr>
+<td><code>HTTP 403 Forbidden</code></td>
+<td>Verify AWS credentials are correct and the IAM user/role has permissions for the resource being modified; check credential expiration with <code>aws sts get-caller-identity</code>.</td>
+</tr>
+<tr>
+<td><code>HTTP 401 Unauthorized - Invalid AWS credentials</code></td>
+<td>Ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are set correctly or update your AWS credentials file at <code>~/.aws/credentials</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-3-debug-provider-authentication">Step 3 — Debug provider authentication<a class="headerlink" href="#step-3-debug-provider-authentication" title="Permanent link">&para;</a></h2>
@@ -7500,9 +7538,28 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Failed to query available provider packages could not query provider registry for registry.terraform.io/hashicorp/aws: no credentials found</code></strong> — Ensure at least one credential environment variable (AWS_ACCESS_KEY_ID, ARM_CLIENT_ID, GOOGLE_CREDENTIALS, or VSPHERE_USER) is properly set before running Terraform.
-<strong><code>error: VSPHERE_PASSWORD: command not found</code></strong> — Wrap the govc command in quotes or escape special characters, or use a credentials file instead of environment variables for vSphere authentication.
-<strong><code>Error: Failed to retrieve caller identity: InvalidClientId.NotFound</code></strong> — Verify the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are correct and the IAM user has not been deleted or disabled.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Failed to query available provider packages could not query provider registry for registry.terraform.io/hashicorp/aws: no credentials found</code></td>
+<td>Ensure at least one credential environment variable (AWS_ACCESS_KEY_ID, ARM_CLIENT_ID, GOOGLE_CREDENTIALS, or VSPHERE_USER) is properly set before running Terraform.</td>
+</tr>
+<tr>
+<td><code>error: VSPHERE_PASSWORD: command not found</code></td>
+<td>Wrap the govc command in quotes or escape special characters, or use a credentials file instead of environment variables for vSphere authentication.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to retrieve caller identity: InvalidClientId.NotFound</code></td>
+<td>Verify the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are correct and the IAM user has not been deleted or disabled.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-4-inspect-and-audit-state">Step 4 — Inspect and audit state<a class="headerlink" href="#step-4-inspect-and-audit-state" title="Permanent link">&para;</a></h2>
@@ -7579,8 +7636,24 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: error reading state: state file not found</code></strong> — Ensure you are in the correct Terraform working directory and have initialized the backend with <code>terraform init</code>.
-<strong><code>Error: error reading the S3 bucket in the current account: AccessDenied</code></strong> — Verify your AWS credentials have <code>s3:GetObject</code> and <code>dynamodb:Scan</code> permissions for the state bucket and lock table.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: error reading state: state file not found</code></td>
+<td>Ensure you are in the correct Terraform working directory and have initialized the backend with <code>terraform init</code>.</td>
+</tr>
+<tr>
+<td><code>Error: error reading the S3 bucket in the current account: AccessDenied</code></td>
+<td>Verify your AWS credentials have <code>s3:GetObject</code> and <code>dynamodb:Scan</code> permissions for the state bucket and lock table.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-5-diagnose-backend-connectivity">Step 5 — Diagnose backend connectivity<a class="headerlink" href="#step-5-diagnose-backend-connectivity" title="Permanent link">&para;</a></h2>
@@ -7654,9 +7727,28 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (AccessDenied) when calling the ListBucket operation: Access Denied</code></strong> — Verify the IAM role/user has <code>s3:ListBucket</code> and <code>s3:GetObject</code> permissions on the state bucket.
-<strong><code>Error: error reading the backend configuration: unsupported attribute "region"</code></strong> — Remove or correct the region attribute in the backend block; use <code>aws_region</code> environment variable instead.
-<strong><code>error: Item not found</code></strong> — No lock exists; if Terraform is hanging, check for network connectivity to DynamoDB or verify the lock table name matches your backend configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the ListBucket operation: Access Denied</code></td>
+<td>Verify the IAM role/user has <code>s3:ListBucket</code> and <code>s3:GetObject</code> permissions on the state bucket.</td>
+</tr>
+<tr>
+<td><code>Error: error reading the backend configuration: unsupported attribute "region"</code></td>
+<td>Remove or correct the region attribute in the backend block; use <code>aws_region</code> environment variable instead.</td>
+</tr>
+<tr>
+<td><code>error: Item not found</code></td>
+<td>No lock exists; if Terraform is hanging, check for network connectivity to DynamoDB or verify the lock table name matches your backend configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-6-state-lock-recovery-caution">Step 6 — State lock recovery (caution)<a class="headerlink" href="#step-6-state-lock-recovery-caution" title="Permanent link">&para;</a></h2>
@@ -7698,8 +7790,24 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Error locking state: Error acquiring the state lock: ConditionalCheckFailedException: The conditional request failed</code></strong> — Run <code>terraform force-unlock &lt;lock-id&gt;</code> only after confirming no active terraform process holds the lock by checking CI/CD pipeline status or other terminal sessions.
-<strong><code>Error: error reading state: failed to read state from backend: AccessDenied: User is not authorized to perform: dynamodb:GetItem</code></strong> — Verify your AWS credentials have DynamoDB read/write permissions for the state lock table (typically <code>terraform-locks</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Error locking state: Error acquiring the state lock: ConditionalCheckFailedException: The conditional request failed</code></td>
+<td>Run <code>terraform force-unlock &lt;lock-id&gt;</code> only after confirming no active terraform process holds the lock by checking CI/CD pipeline status or other terminal sessions.</td>
+</tr>
+<tr>
+<td><code>Error: error reading state: failed to read state from backend: AccessDenied: User is not authorized to perform: dynamodb:GetItem</code></td>
+<td>Verify your AWS credentials have DynamoDB read/write permissions for the state lock table (typically <code>terraform-locks</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="plan-inspection">Plan inspection<a class="headerlink" href="#plan-inspection" title="Permanent link">&para;</a></h2>
@@ -7774,9 +7882,28 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: No configuration files found in working directory.</code></strong> — Run <code>terraform init</code> first to initialize the working directory and download required providers.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the plan file exists and is valid by running <code>terraform plan -out=tfplan</code> before attempting to parse it with <code>jq</code>.
-<strong><code>Error: Graphviz not found in PATH</code></strong> — Install Graphviz with <code>apt-get install graphviz</code> (Ubuntu/Debian) or <code>brew install graphviz</code> (macOS) to convert the graph to SVG format.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: No configuration files found in working directory.</code></td>
+<td>Run <code>terraform init</code> first to initialize the working directory and download required providers.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure the plan file exists and is valid by running <code>terraform plan -out=tfplan</code> before attempting to parse it with <code>jq</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Graphviz not found in PATH</code></td>
+<td>Install Graphviz with <code>apt-get install graphviz</code> (Ubuntu/Debian) or <code>brew install graphviz</code> (macOS) to convert the graph to SVG format.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -7815,7 +7942,7 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -6995,9 +6995,28 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/etc/logrotate.d/syslog: line 2: syntax error near unexpected token '{'</code></strong> — Ensure the logrotate configuration file uses proper syntax; this error typically occurs if the file is edited with incorrect line endings or missing newlines—use <code>dos2unix /etc/logrotate.d/syslog</code> to fix.
-<strong><code>error: stat of /var/log/syslog failed: No such file or directory</code></strong> — Create the syslog file before applying logrotate rules with <code>touch /var/log/syslog &amp;&amp; chown syslog:adm /var/log/syslog &amp;&amp; chmod 640 /var/log/syslog</code>.
-<strong><code>error: error executing postrotate script for /var/log/syslog</code></strong> — Verify that <code>/usr/lib/rsyslog/rsyslog-rotate</code> exists and is executable with <code>ls -la /usr/lib/rsyslog/rsyslog-rotate &amp;&amp; chmod +x /usr/lib/rsyslog/rsyslog-rotate</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/etc/logrotate.d/syslog: line 2: syntax error near unexpected token '{'</code></td>
+<td>Ensure the logrotate configuration file uses proper syntax; this error typically occurs if the file is edited with incorrect line endings or missing newlines—use <code>dos2unix /etc/logrotate.d/syslog</code> to fix.</td>
+</tr>
+<tr>
+<td><code>error: stat of /var/log/syslog failed: No such file or directory</code></td>
+<td>Create the syslog file before applying logrotate rules with <code>touch /var/log/syslog &amp;&amp; chown syslog:adm /var/log/syslog &amp;&amp; chmod 640 /var/log/syslog</code>.</td>
+</tr>
+<tr>
+<td><code>error: error executing postrotate script for /var/log/syslog</code></td>
+<td>Verify that <code>/usr/lib/rsyslog/rsyslog-rotate</code> exists and is executable with <code>ls -la /usr/lib/rsyslog/rsyslog-rotate &amp;&amp; chmod +x /usr/lib/rsyslog/rsyslog-rotate</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Remote forwarding to SIEM is required; local rotation is a buffer for connectivity loss.</p>
 <hr />
@@ -7103,8 +7122,24 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symdev: Error: Device 0A1B not found in array 001</code></strong> — Verify the DeviceID exists on the specified array SID using <code>symdev -sid 001 list</code>.
-<strong><code>symdev: Error: Insufficient privileges for secure_erase operation</code></strong> — Ensure your user account has array admin role; contact your storage administrator to grant permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symdev: Error: Device 0A1B not found in array 001</code></td>
+<td>Verify the DeviceID exists on the specified array SID using <code>symdev -sid 001 list</code>.</td>
+</tr>
+<tr>
+<td><code>symdev: Error: Insufficient privileges for secure_erase operation</code></td>
+<td>Ensure your user account has array admin role; contact your storage administrator to grant permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="retention-compliance-monitoring">Retention Compliance Monitoring<a class="headerlink" href="#retention-compliance-monitoring" title="Permanent link">&para;</a></h2>
@@ -7135,9 +7170,28 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>find: '/mnt/archive/audit_logs': No such file or directory</code></strong> — Verify the NFS share is mounted with <code>mount | grep archive</code> and mount it if necessary using <code>mount -t nfs server:/export/audit_logs /mnt/archive/audit_logs</code>.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the archive directory with <code>sudo chmod g+rx /mnt/archive/audit_logs</code>.
-<strong><code>find: paths must begin with "." or "/"</code></strong> — Check for typos in the path and ensure <code>/mnt/archive/audit_logs</code> is an absolute path starting with <code>/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find: '/mnt/archive/audit_logs': No such file or directory</code></td>
+<td>Verify the NFS share is mounted with <code>mount | grep archive</code> and mount it if necessary using <code>mount -t nfs server:/export/audit_logs /mnt/archive/audit_logs</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user has read permissions on the archive directory with <code>sudo chmod g+rx /mnt/archive/audit_logs</code>.</td>
+</tr>
+<tr>
+<td><code>find: paths must begin with "." or "/"</code></td>
+<td>Check for typos in the path and ensure <code>/mnt/archive/audit_logs</code> is an absolute path starting with <code>/</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="exceptions-and-escalation">Exceptions and Escalation<a class="headerlink" href="#exceptions-and-escalation" title="Permanent link">&para;</a></h2>
@@ -7196,7 +7250,7 @@ This policy defines mandatory retention periods, storage tier assignments, and d
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

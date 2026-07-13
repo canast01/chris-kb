@@ -9361,9 +9361,28 @@ again. This scenario covers identification, rotation order, and validation acros
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to connect to vcenter.domain.local:443</code></strong> — Verify the hostname is correct and the vCenter server is reachable with <code>ping vcenter.domain.local</code> or <code>nc -zv vcenter.domain.local 443</code>.
-<strong><code>routines:tls_process_server_certificate:certificate verify failed</code></strong> — Add <code>-showcerts</code> flag or use <code>openssl s_client -connect &lt;host&gt;:443 -servername &lt;host&gt;</code> to properly retrieve the certificate chain.
-<strong><code>error in x509_print_fp:num=20:unable to get local issuer certificate</code></strong> — This is a warning about certificate chain validation; the dates will still display—ignore it if you only need expiry information.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to connect to vcenter.domain.local:443</code></td>
+<td>Verify the hostname is correct and the vCenter server is reachable with <code>ping vcenter.domain.local</code> or <code>nc -zv vcenter.domain.local 443</code>.</td>
+</tr>
+<tr>
+<td><code>routines:tls_process_server_certificate:certificate verify failed</code></td>
+<td>Add <code>-showcerts</code> flag or use <code>openssl s_client -connect &lt;host&gt;:443 -servername &lt;host&gt;</code> to properly retrieve the certificate chain.</td>
+</tr>
+<tr>
+<td><code>error in x509_print_fp:num=20:unable to get local issuer certificate</code></td>
+<td>This is a warning about certificate chain validation; the dates will still display—ignore it if you only need expiry information.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Batch audit across all known VMware hosts — outputs hostname and notAfter date</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>vcenter.domain.local<span class="w"> </span>nsxmanager.domain.local<span class="w"> </span>ariaops.domain.local<span class="w"> </span>arialogs.domain.local<span class="p">;</span><span class="w"> </span><span class="k">do</span>
@@ -9379,9 +9398,28 @@ again. This scenario covers identification, rotation order, and validation acros
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load certificate</code></strong> — Verify the host is reachable on port 443 and the certificate chain is complete; try <code>openssl s_client -connect $host:443 -showcerts</code> to diagnose.
-<strong><code>grep: (standard input) is empty</code></strong> — The host may not be presenting a valid SSL certificate or the connection timed out; add a timeout flag with <code>timeout 5 echo | openssl s_client -connect $host:443</code>.
-<strong><code>Name or service not known</code></strong> — Ensure all hostnames resolve correctly by running <code>nslookup $host</code> or update the host list to use IP addresses instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Verify the host is reachable on port 443 and the certificate chain is complete; try <code>openssl s_client -connect $host:443 -showcerts</code> to diagnose.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>The host may not be presenting a valid SSL certificate or the connection timed out; add a timeout flag with <code>timeout 5 echo | openssl s_client -connect $host:443</code>.</td>
+</tr>
+<tr>
+<td><code>Name or service not known</code></td>
+<td>Ensure all hostnames resolve correctly by running <code>nslookup $host</code> or update the host list to use IP addresses instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected: each line prints the hostname and a <code>notAfter</code> date; any date within 60 days requires rotation.</p>
 <hr />
@@ -9405,9 +9443,28 @@ again. This scenario covers identification, rotation order, and validation acros
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>certificate-manager: command not found</code></strong> — Verify you are logged into the VCSA appliance via SSH and not a Windows vCenter instance; the tool only exists on Linux-based VCSA deployments.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as root: <code>sudo /usr/lib/vmware-vmca/bin/certificate-manager</code>.
-<strong><code>/usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory</code></strong> — Confirm the vCenter version is 6.0 or later and the vmware-vmca package is installed by running <code>rpm -qa | grep vmware-vmca</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>certificate-manager: command not found</code></td>
+<td>Verify you are logged into the VCSA appliance via SSH and not a Windows vCenter instance; the tool only exists on Linux-based VCSA deployments.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root: <code>sudo /usr/lib/vmware-vmca/bin/certificate-manager</code>.</td>
+</tr>
+<tr>
+<td><code>/usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory</code></td>
+<td>Confirm the vCenter version is 6.0 or later and the vmware-vmca package is installed by running <code>rpm -qa | grep vmware-vmca</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>In the certificate manager menu:</p>
 <ol>
@@ -9449,9 +9506,28 @@ again. This scenario covers identification, rotation order, and validation acros
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Certificate generation failed - insufficient disk space</code></strong> — Ensure at least 2GB free space in /etc/vmware-vpx/ssl and run the command again.
-<strong><code>Error: Failed to restart vCenter services - timeout waiting for service startup</code></strong> — Wait 5-10 minutes for services to fully initialize, then verify with <code>service-control --status --all</code>.
-<strong><code>Error: Permission denied - cannot write to /etc/vmware-vpx/ssl</code></strong> — Run the certificate-manager command with root privileges using <code>sudo</code> or as the root user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Certificate generation failed - insufficient disk space</code></td>
+<td>Ensure at least 2GB free space in /etc/vmware-vpx/ssl and run the command again.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to restart vCenter services - timeout waiting for service startup</code></td>
+<td>Wait 5-10 minutes for services to fully initialize, then verify with <code>service-control --status --all</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied - cannot write to /etc/vmware-vpx/ssl</code></td>
+<td>Run the certificate-manager command with root privileges using <code>sudo</code> or as the root user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected: VCSA services restart; <code>openssl s_client</code> against vCenter returns a <code>notAfter</code> date beyond 1 year from today.</p>
 <hr />
@@ -9551,9 +9627,28 @@ root — the new cert is immediately untrusted, breaking product-to-vCenter comm
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to connect to host:443</code></strong> — Verify the hostname resolves and the management interface is reachable on port 443 with <code>ping</code> and <code>nc -zv</code>.
-<strong><code>depth=0 self signed certificate</code></strong> — This is a warning, not an error; the script will still extract the expiry date, but if you need to verify the certificate chain, use <code>openssl s_client -connect $host:443 -showcerts</code>.
-<strong><code>grep: (standard input) is empty</code></strong> — The certificate was not returned; check that the host is running and SSL/TLS is enabled, or add <code>-servername $host</code> to the openssl command for SNI support.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to connect to host:443</code></td>
+<td>Verify the hostname resolves and the management interface is reachable on port 443 with <code>ping</code> and <code>nc -zv</code>.</td>
+</tr>
+<tr>
+<td><code>depth=0 self signed certificate</code></td>
+<td>This is a warning, not an error; the script will still extract the expiry date, but if you need to verify the certificate chain, use <code>openssl s_client -connect $host:443 -showcerts</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>The certificate was not returned; check that the host is running and SSL/TLS is enabled, or add <code>-servername $host</code> to the openssl command for SNI support.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -9677,7 +9772,7 @@ root — the new cert is immediately untrusted, breaking product-to-vCenter comm
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

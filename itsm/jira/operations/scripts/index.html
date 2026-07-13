@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Jira — Operations Scripts · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Jira — Operations Scripts", "url": "https://chrisanastasiadis.com/itsm/jira/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Jira — Operations Scripts", "url": "https://chrisanastasiadis.com/itsm/jira/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7593,9 +7593,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (6) Could not resolve host: jira.example.com</code></strong> — Verify <code>JIRA_URL</code> environment variable is set correctly and the Jira instance is reachable.
-<strong><code>FAIL &lt;KEY&gt; — HTTP 401</code></strong> — Confirm <code>JIRA_USER</code> and <code>JIRA_TOKEN</code> environment variables are set and the token has not expired.
-<strong><code>FAIL &lt;KEY&gt; — HTTP 403</code></strong> — Ensure the authenticated user has the "Transition Issues" permission in the target project.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (6) Could not resolve host: jira.example.com</code></td>
+<td>Verify <code>JIRA_URL</code> environment variable is set correctly and the Jira instance is reachable.</td>
+</tr>
+<tr>
+<td><code>FAIL &lt;KEY&gt; — HTTP 401</code></td>
+<td>Confirm <code>JIRA_USER</code> and <code>JIRA_TOKEN</code> environment variables are set and the token has not expired.</td>
+</tr>
+<tr>
+<td><code>FAIL &lt;KEY&gt; — HTTP 403</code></td>
+<td>Ensure the authenticated user has the "Transition Issues" permission in the target project.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># jira-project-cleanup.sh — Report stale projects and issues</span>
@@ -7675,9 +7694,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify <code>$JIRA_URL</code> is correct and the Jira server is accessible; check firewall rules and VPN connectivity.
-<strong><code>Invalid JSON in response: Expecting value: line 1 column 1</code></strong> — Confirm <code>$JIRA_USER</code> and <code>$JIRA_TOKEN</code> are valid; regenerate the API token in Jira if authentication has expired.
-<strong><code>FileNotFoundError: [Errno 2] No such file or directory: '/tmp/jira-cleanup-20250115/project-activity.csv'</code></strong> — Ensure the script has write permissions to <code>/tmp</code> and that the curl requests to fetch projects succeeded before the Python filtering step.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></td>
+<td>Verify <code>$JIRA_URL</code> is correct and the Jira server is accessible; check firewall rules and VPN connectivity.</td>
+</tr>
+<tr>
+<td><code>Invalid JSON in response: Expecting value: line 1 column 1</code></td>
+<td>Confirm <code>$JIRA_USER</code> and <code>$JIRA_TOKEN</code> are valid; regenerate the API token in Jira if authentication has expired.</td>
+</tr>
+<tr>
+<td><code>FileNotFoundError: [Errno 2] No such file or directory: '/tmp/jira-cleanup-20250115/project-activity.csv'</code></td>
+<td>Ensure the script has write permissions to <code>/tmp</code> and that the curl requests to fetch projects succeeded before the Python filtering step.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># jira-plugin-list.sh — Export all installed apps with version and status</span>
@@ -7759,8 +7797,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: stat of /var/log/jira/atlassian-jira.log failed: No such file or directory</code></strong> — Verify the log file path in <code>/etc/logrotate.d/jira</code> matches your actual JIRA installation directory.
-<strong><code>error: error opening /etc/logrotate.d/jira: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the logrotate configuration file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: stat of /var/log/jira/atlassian-jira.log failed: No such file or directory</code></td>
+<td>Verify the log file path in <code>/etc/logrotate.d/jira</code> matches your actual JIRA installation directory.</td>
+</tr>
+<tr>
+<td><code>error: error opening /etc/logrotate.d/jira: Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user has read permissions on the logrotate configuration file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># archive-logs.sh — Move logs older than 30 days to S3</span>
@@ -7776,9 +7830,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials via <code>aws configure</code> or set <code>AWS_PROFILE</code> environment variable before running the script.
-<strong><code>An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist</code></strong> — Verify the S3 bucket name in <code>S3_BUCKET</code> variable matches an existing bucket and that your AWS account has access to it.
-<strong><code>find: '/opt/atlassian/jira/logs': No such file or directory</code></strong> — Confirm the <code>LOG_DIR</code> path is correct and the JIRA logs directory exists on this system.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unable to locate credentials</code></td>
+<td>Configure AWS credentials via <code>aws configure</code> or set <code>AWS_PROFILE</code> environment variable before running the script.</td>
+</tr>
+<tr>
+<td><code>An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist</code></td>
+<td>Verify the S3 bucket name in <code>S3_BUCKET</code> variable matches an existing bucket and that your AWS account has access to it.</td>
+</tr>
+<tr>
+<td><code>find: '/opt/atlassian/jira/logs': No such file or directory</code></td>
+<td>Confirm the <code>LOG_DIR</code> path is correct and the JIRA logs directory exists on this system.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># jira-heap-dump.sh — Capture JVM heap dump from Jira process</span>
@@ -7822,9 +7895,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: Jira process not found</code></strong> — Verify Jira is running with <code>systemctl status jira</code> or check the exact process name with <code>ps aux | grep jira</code>.
-<strong><code>Exception in thread "main" java.io.FileNotFoundException: /var/atlassian/jira-dumps/jira-heap-*.hprof (Permission denied)</code></strong> — Ensure the output directory is writable by the jira user with <code>sudo chown jira:jira /var/atlassian/jira-dumps &amp;&amp; sudo chmod 755 /var/atlassian/jira-dumps</code>.
-<strong><code>sudo: jmap: command not found</code></strong> — Install the JDK (not just JRE) on the system; jmap is part of <code>java-*-openjdk-devel</code> or equivalent package.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: Jira process not found</code></td>
+<td>Verify Jira is running with <code>systemctl status jira</code> or check the exact process name with <code>ps aux | grep jira</code>.</td>
+</tr>
+<tr>
+<td><code>Exception in thread "main" java.io.FileNotFoundException: /var/atlassian/jira-dumps/jira-heap-*.hprof (Permission denied)</code></td>
+<td>Ensure the output directory is writable by the jira user with <code>sudo chown jira:jira /var/atlassian/jira-dumps &amp;&amp; sudo chmod 755 /var/atlassian/jira-dumps</code>.</td>
+</tr>
+<tr>
+<td><code>sudo: jmap: command not found</code></td>
+<td>Install the JDK (not just JRE) on the system; jmap is part of <code>java-*-openjdk-devel</code> or equivalent package.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># jira-thread-dump.sh — Capture 3 consecutive thread dumps (for deadlock/hang analysis)</span>
@@ -7854,9 +7946,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pgrep: no matching processes found</code></strong> — Verify JIRA is running with <code>ps aux | grep atlassian-jira</code> and check the process name matches exactly.
-<strong><code>sudo: no tty present and no -S password option specified</code></strong> — Run the script with <code>sudo bash jira-thread-dump.sh</code> instead of calling sudo within the script, or configure passwordless sudo for the kill command.
-<strong><code>grep: /opt/atlassian/jira/logs/catalina.out: No such file or directory</code></strong> — Verify the JIRA logs directory path with <code>find /opt/atlassian -name catalina.out 2&gt;/dev/null</code> and update the path in the script.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pgrep: no matching processes found</code></td>
+<td>Verify JIRA is running with <code>ps aux | grep atlassian-jira</code> and check the process name matches exactly.</td>
+</tr>
+<tr>
+<td><code>sudo: no tty present and no -S password option specified</code></td>
+<td>Run the script with <code>sudo bash jira-thread-dump.sh</code> instead of calling sudo within the script, or configure passwordless sudo for the kill command.</td>
+</tr>
+<tr>
+<td><code>grep: /opt/atlassian/jira/logs/catalina.out: No such file or directory</code></td>
+<td>Verify the JIRA logs directory path with <code>find /opt/atlassian -name catalina.out 2&gt;/dev/null</code> and update the path in the script.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Monitor GC in real time</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">JIRA_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s1">&#39;atlassian-jira&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
@@ -7918,7 +8029,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

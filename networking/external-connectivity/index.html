@@ -6663,9 +6663,28 @@ Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to api.example.com port 443: Connection refused</code></strong> — Verify the API endpoint is reachable and listening; check firewall rules and DNS resolution with <code>ndig api.example.com</code>.
-<strong><code>ping: sendmsg: Operation not permitted</code></strong> — The <code>-M do</code> flag requires root or CAP_NET_RAW capability; run with <code>sudo</code> or adjust system capabilities.
-**<code>notAfter=Jan 14 10:22:33 2024 GMT</code> (certificate expired)<code>** — Renew the TLS certificate immediately using your certificate provider or</code>certbot renew` for Let's Encrypt certificates.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to api.example.com port 443: Connection refused</code></td>
+<td>Verify the API endpoint is reachable and listening; check firewall rules and DNS resolution with <code>ndig api.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>ping: sendmsg: Operation not permitted</code></td>
+<td>The <code>-M do</code> flag requires root or CAP_NET_RAW capability; run with <code>sudo</code> or adjust system capabilities.</td>
+</tr>
+<tr>
+<td><code>notAfter=Jan 14 10:22:33 2024 GMT</code> (certificate expired)<code>| Renew the TLS certificate immediately using your certificate provider or</code>certbot renew` for Let's Encrypt certificates.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="route-and-latency">Route and latency<a class="headerlink" href="#route-and-latency" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Traceroute to confirm path and hop count (Linux)</span>
@@ -6704,9 +6723,28 @@ Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>traceroute: command not found</code></strong> — Install traceroute using <code>apt-get install traceroute</code> on Debian/Ubuntu or <code>yum install traceroute</code> on RHEL/CentOS.
-<strong><code>nc: command not found</code></strong> — Install netcat using <code>apt-get install netcat-openbsd</code> or verify the correct package name for your distribution.
-<strong><code>Test-NetConnection : The term 'Test-NetConnection' is not recognized</code></strong> — Ensure you are running PowerShell 4.0 or later on Windows; use <code>$PSVersionTable.PSVersion</code> to verify.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>traceroute: command not found</code></td>
+<td>Install traceroute using <code>apt-get install traceroute</code> on Debian/Ubuntu or <code>yum install traceroute</code> on RHEL/CentOS.</td>
+</tr>
+<tr>
+<td><code>nc: command not found</code></td>
+<td>Install netcat using <code>apt-get install netcat-openbsd</code> or verify the correct package name for your distribution.</td>
+</tr>
+<tr>
+<td><code>Test-NetConnection : The term 'Test-NetConnection' is not recognized</code></td>
+<td>Ensure you are running PowerShell 4.0 or later on Windows; use <code>$PSVersionTable.PSVersion</code> to verify.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="dns-resolution">DNS resolution<a class="headerlink" href="#dns-resolution" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm DNS resolves to expected addresses</span>
@@ -6730,8 +6768,24 @@ Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>dig: couldn't get address for '10.0.0.53': not known</code></strong> — Verify the resolver IP is reachable and correct with <code>ping 10.0.0.53</code> before running dig.
-<strong><code>SERVFAIL</code></strong> — Check that the DNS resolver at 10.0.0.53 has zone authority or conditional forwarding rules configured for api.example.com.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dig: couldn't get address for '10.0.0.53': not known</code></td>
+<td>Verify the resolver IP is reachable and correct with <code>ping 10.0.0.53</code> before running dig.</td>
+</tr>
+<tr>
+<td><code>SERVFAIL</code></td>
+<td>Check that the DNS resolver at 10.0.0.53 has zone authority or conditional forwarding rules configured for api.example.com.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="cloud-direct-connect-expressroute">Cloud Direct Connect / ExpressRoute<a class="headerlink" href="#cloud-direct-connect-expressroute" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># AWS: verify BGP session state on a virtual interface</span>
@@ -6765,8 +6819,24 @@ Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the DescribeVirtualInterfaces operation: Invalid virtual interface ID</code></strong> — Verify the virtual interface exists in your AWS account and region using <code>aws directconnect describe-virtual-interfaces</code> without filters.
-<strong><code>The following arguments are required: --name, --resource-group</code></strong> — Replace <code>&lt;circuit-name&gt;</code> and <code>&lt;rg&gt;</code> with actual ExpressRoute circuit name and resource group name, or use <code>az network express-route list</code> to find valid values.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the DescribeVirtualInterfaces operation: Invalid virtual interface ID</code></td>
+<td>Verify the virtual interface exists in your AWS account and region using <code>aws directconnect describe-virtual-interfaces</code> without filters.</td>
+</tr>
+<tr>
+<td><code>The following arguments are required: --name, --resource-group</code></td>
+<td>Replace <code>&lt;circuit-name&gt;</code> and <code>&lt;rg&gt;</code> with actual ExpressRoute circuit name and resource group name, or use <code>az network express-route list</code> to find valid values.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="firewall-rule-verification">Firewall Rule Verification<a class="headerlink" href="#firewall-rule-verification" title="Permanent link">&para;</a></h2>
@@ -6886,7 +6956,7 @@ Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connecti
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

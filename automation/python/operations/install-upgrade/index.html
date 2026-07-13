@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Python — Install &amp; Upgrade · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Python — Install &amp; Upgrade", "url": "https://chrisanastasiadis.com/automation/python/operations/install-upgrade/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Python — Install &amp; Upgrade", "url": "https://chrisanastasiadis.com/automation/python/operations/install-upgrade/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7550,9 +7550,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to pyenv.run port 443: Connection timed out</code></strong> — Verify network connectivity and retry, or manually clone pyenv from https://github.com/pyenv/pyenv.git to ~/.pyenv.
-<strong><code>pyenv: command not found</code></strong> — Ensure the shell profile edits were saved and run <code>exec "$SHELL"</code> to reload the shell with updated PATH.
-<strong><code>ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?</code></strong> — Install required build dependencies with <code>sudo apt-get install libssl-dev libffi-dev python3-dev</code> (Ubuntu/Debian) or <code>brew install openssl</code> (macOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to pyenv.run port 443: Connection timed out</code></td>
+<td>Verify network connectivity and retry, or manually clone pyenv from https://github.com/pyenv/pyenv.git to ~/.pyenv.</td>
+</tr>
+<tr>
+<td><code>pyenv: command not found</code></td>
+<td>Ensure the shell profile edits were saved and run <code>exec "$SHELL"</code> to reload the shell with updated PATH.</td>
+</tr>
+<tr>
+<td><code>ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?</code></td>
+<td>Install required build dependencies with <code>sudo apt-get install libssl-dev libffi-dev python3-dev</code> (Ubuntu/Debian) or <code>brew install openssl</code> (macOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Inventory all automation using Python on this host</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>find<span class="w"> </span>/opt<span class="w"> </span>/home<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;*/.venv/*&quot;</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;*/__pycache__/*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
@@ -7603,9 +7622,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pyenv: command not found</code></strong> — Install pyenv with <code>curl https://pyenv.run | bash</code> and add it to your PATH, or use <code>apt install pyenv</code> on Debian-based systems.
-<strong><code>ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'</code></strong> — Ensure you are in the correct project directory containing requirements.txt before running pip install.
-<strong><code>FAILED tests/integration/test_deploy.py::test_api_connection - ConnectionError: Failed to connect to localhost:8080</code></strong> — Start required test services (database, API mock server) or mark integration tests as skipped with <code>@pytest.mark.skip</code> before running in isolated environments.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pyenv: command not found</code></td>
+<td>Install pyenv with <code>curl https://pyenv.run | bash</code> and add it to your PATH, or use <code>apt install pyenv</code> on Debian-based systems.</td>
+</tr>
+<tr>
+<td><code>ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'</code></td>
+<td>Ensure you are in the correct project directory containing requirements.txt before running pip install.</td>
+</tr>
+<tr>
+<td><code>FAILED tests/integration/test_deploy.py::test_api_connection - ConnectionError: Failed to connect to localhost:8080</code></td>
+<td>Start required test services (database, API mock server) or mark integration tests as skipped with <code>@pytest.mark.skip</code> before running in isolated environments.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1: Install new Python version (alongside existing)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pyenv<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.12.3<span class="w">  </span><span class="c1"># Does NOT replace existing</span>
@@ -7685,9 +7723,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pyenv: command not found</code></strong> — Install pyenv using your package manager (apt install pyenv on Ubuntu, or brew install pyenv on macOS) and add it to your PATH.
-<strong><code>ERROR: Could not find a version that satisfies the requirement &lt;package&gt;==X.Y.Z</code></strong> — Check requirements.txt for version pins incompatible with Python 3.12; update or remove version constraints and re-run pip install.
-<strong><code>ModuleNotFoundError: No module named 'pytest'</code></strong> — Add pytest to requirements.txt and re-run pip install -r requirements.txt in the activated venv.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pyenv: command not found</code></td>
+<td>Install pyenv using your package manager (apt install pyenv on Ubuntu, or brew install pyenv on macOS) and add it to your PATH.</td>
+</tr>
+<tr>
+<td><code>ERROR: Could not find a version that satisfies the requirement &lt;package&gt;==X.Y.Z</code></td>
+<td>Check requirements.txt for version pins incompatible with Python 3.12; update or remove version constraints and re-run pip install.</td>
+</tr>
+<tr>
+<td><code>ModuleNotFoundError: No module named 'pytest'</code></td>
+<td>Add pytest to requirements.txt and re-run pip install -r requirements.txt in the activated venv.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># pip-audit — checks PyPI advisory database</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pip<span class="w"> </span>install<span class="w"> </span>pip-audit
@@ -7727,8 +7784,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: Could not find a version that satisfies the requirement pip-audit</code></strong> — Ensure pip is up to date with <code>pip install --upgrade pip</code> and check your PyPI index connectivity.
-<strong><code>ERROR: pip-audit: command not found</code></strong> — Add the pip user bin directory to PATH with <code>export PATH="$HOME/.local/bin:$PATH"</code> or reinstall with <code>pip install --user pip-audit</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: Could not find a version that satisfies the requirement pip-audit</code></td>
+<td>Ensure pip is up to date with <code>pip install --upgrade pip</code> and check your PyPI index connectivity.</td>
+</tr>
+<tr>
+<td><code>ERROR: pip-audit: command not found</code></td>
+<td>Add the pip user bin directory to PATH with <code>export PATH="$HOME/.local/bin:$PATH"</code> or reinstall with <code>pip install --user pip-audit</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check outdated packages</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pip<span class="w"> </span>list<span class="w"> </span>--outdated
@@ -7795,9 +7868,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: Could not find a version that satisfies the requirement requests==2.32.3</code></strong> — Check PyPI connectivity and verify the package version exists with <code>pip index versions requests</code>.
-<strong><code>FAILED tests/ — AssertionError: expected 200 but got 404</code></strong> — Revert the upgrade with <code>pip install -r requirements.txt.bak</code> and investigate breaking API changes in the upgraded package.
-<strong><code>awk: command not found</code></strong> — Install awk with your system package manager (<code>apt-get install gawk</code> on Ubuntu or <code>brew install gawk</code> on macOS) or use Python's built-in tools instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: Could not find a version that satisfies the requirement requests==2.32.3</code></td>
+<td>Check PyPI connectivity and verify the package version exists with <code>pip index versions requests</code>.</td>
+</tr>
+<tr>
+<td><code>FAILED tests/ — AssertionError: expected 200 but got 404</code></td>
+<td>Revert the upgrade with <code>pip install -r requirements.txt.bak</code> and investigate breaking API changes in the upgraded package.</td>
+</tr>
+<tr>
+<td><code>awk: command not found</code></td>
+<td>Install awk with your system package manager (<code>apt-get install gawk</code> on Ubuntu or <code>brew install gawk</code> on macOS) or use Python's built-in tools instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Show outdated dependencies</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>poetry<span class="w"> </span>show<span class="w"> </span>--outdated
@@ -7940,7 +8032,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

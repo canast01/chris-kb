@@ -7749,9 +7749,28 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EINVAL: invalid spec: service_type 'osd' requires 'placement' or 'unmanaged: true'</code></strong> — Add a <code>placement</code> section to the spec or set <code>unmanaged: true</code> if managing OSDs manually.
-<strong><code>Error: No available devices found on hosts [node1, node2, node3]</code></strong> — Verify devices exist and are not already in use with <code>ceph orch device ls</code>, and ensure hosts are in the cluster with <code>ceph orch host ls</code>.
-<strong><code>Error: --encrypted flag requires Ceph version Octopus or later</code></strong> — Upgrade Ceph to Octopus (v15.2.0+) or later, as encryption support was added in that release.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EINVAL: invalid spec: service_type 'osd' requires 'placement' or 'unmanaged: true'</code></td>
+<td>Add a <code>placement</code> section to the spec or set <code>unmanaged: true</code> if managing OSDs manually.</td>
+</tr>
+<tr>
+<td><code>Error: No available devices found on hosts [node1, node2, node3]</code></td>
+<td>Verify devices exist and are not already in use with <code>ceph orch device ls</code>, and ensure hosts are in the cluster with <code>ceph orch host ls</code>.</td>
+</tr>
+<tr>
+<td><code>Error: --encrypted flag requires Ceph version Octopus or later</code></td>
+<td>Upgrade Ceph to Octopus (v15.2.0+) or later, as encryption support was added in that release.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="dm-crypt-key-management">dm-crypt Key Management<a class="headerlink" href="#dm-crypt-key-management" title="Permanent link">&para;</a></h2>
 <p>cephadm generates a unique random LUKS key per OSD. Keys are stored in the MON KV store — no external KMS is required, but the MON quorum must remain intact or encrypted OSDs cannot be unlocked.</p>
@@ -7782,8 +7801,24 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: permission denied</code></strong> — Ensure your Ceph client has admin capabilities by checking your keyring and using <code>ceph auth list</code> to verify permissions.
-<strong><code>error: No such file or directory</code></strong> — Verify the OSD ID exists and the device mapper path is correct by running <code>ls /dev/mapper/ceph-*</code> to list active encrypted volumes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: permission denied</code></td>
+<td>Ensure your Ceph client has admin capabilities by checking your keyring and using <code>ceph auth list</code> to verify permissions.</td>
+</tr>
+<tr>
+<td><code>error: No such file or directory</code></td>
+<td>Verify the OSD ID exists and the device mapper path is correct by running <code>ls /dev/mapper/ceph-*</code> to list active encrypted volumes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p><strong>Critical</strong>: if all MONs are lost, encrypted OSD data is unrecoverable. Always maintain MON quorum and back up MON keyrings separately from the cluster.</p>
@@ -7820,9 +7855,28 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Command 'cryptsetup' not found</code></strong> — Install cryptsetup with <code>apt-get install cryptsetup</code> (Debian/Ubuntu) or <code>yum install cryptsetup</code> (RHEL/CentOS).
-<strong><code>Device /dev/sdb does not contain a LUKS header</code></strong> — Verify the correct device path with <code>lsblk</code> and ensure the OSD was deployed with encryption enabled in the spec.
-<strong><code>No such device or address</code></strong> — Confirm the device exists and is accessible on the OSD host with <code>lsblk</code> before running cryptsetup.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Command 'cryptsetup' not found</code></td>
+<td>Install cryptsetup with <code>apt-get install cryptsetup</code> (Debian/Ubuntu) or <code>yum install cryptsetup</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>Device /dev/sdb does not contain a LUKS header</code></td>
+<td>Verify the correct device path with <code>lsblk</code> and ensure the OSD was deployed with encryption enabled in the spec.</td>
+</tr>
+<tr>
+<td><code>No such device or address</code></td>
+<td>Confirm the device exists and is accessible on the OSD host with <code>lsblk</code> before running cryptsetup.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rbd-image-encryption">RBD Image Encryption<a class="headerlink" href="#rbd-image-encryption" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Per-image encryption (Quincy+) — encrypt specific RBD images</span>
@@ -7847,9 +7901,28 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>rbd: error: image rbd/encrypted-vol already exists</code></strong> — Delete the existing image with <code>rbd rm rbd/encrypted-vol</code> or use a different image name.
-<strong><code>rbd: error: unable to read passphrase file /root/secret.key: No such file or directory</code></strong> — Create the passphrase file first with <code>echo 'your-passphrase' &gt; /root/secret.key &amp;&amp; chmod 600 /root/secret.key</code>.
-<strong><code>rbd: error: image rbd/encrypted-vol is not encrypted or encryption format not recognized</code></strong> — Ensure the image was formatted with <code>rbd encryption format</code> before attempting to open it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rbd: error: image rbd/encrypted-vol already exists</code></td>
+<td>Delete the existing image with <code>rbd rm rbd/encrypted-vol</code> or use a different image name.</td>
+</tr>
+<tr>
+<td><code>rbd: error: unable to read passphrase file /root/secret.key: No such file or directory</code></td>
+<td>Create the passphrase file first with <code>echo 'your-passphrase' &gt; /root/secret.key &amp;&amp; chmod 600 /root/secret.key</code>.</td>
+</tr>
+<tr>
+<td><code>rbd: error: image rbd/encrypted-vol is not encrypted or encryption format not recognized</code></td>
+<td>Ensure the image was formatted with <code>rbd encryption format</code> before attempting to open it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rgw-server-side-encryption-sse">RGW Server-Side Encryption (SSE)<a class="headerlink" href="#rgw-server-side-encryption-sse" title="Permanent link">&para;</a></h2>
 <h3 id="sse-s3-ceph-managed-keys">SSE-S3: Ceph-Managed Keys<a class="headerlink" href="#sse-s3-ceph-managed-keys" title="Permanent link">&para;</a></h3>
@@ -7868,8 +7941,24 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error putting object: InvalidArgument: The Ceph RGW server does not support the requested encryption method.</code></strong> — Verify that <code>rgw_crypt_s3_kms_backend</code> is set to a supported backend (e.g., <code>vault</code>, <code>barbican</code>, or <code>secrettable</code>) and that the RGW daemon has been restarted after the config change.
-<strong><code>error: Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables with valid RGW user credentials.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error putting object: InvalidArgument: The Ceph RGW server does not support the requested encryption method.</code></td>
+<td>Verify that <code>rgw_crypt_s3_kms_backend</code> is set to a supported backend (e.g., <code>vault</code>, <code>barbican</code>, or <code>secrettable</code>) and that the RGW daemon has been restarted after the config change.</td>
+</tr>
+<tr>
+<td><code>error: Unable to locate credentials</code></td>
+<td>Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables with valid RGW user credentials.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="sse-kms-hashicorp-vault-backed-keys">SSE-KMS: HashiCorp Vault-Backed Keys<a class="headerlink" href="#sse-kms-hashicorp-vault-backed-keys" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Configure Vault integration in ceph.conf / config DB</span>
@@ -7892,9 +7981,28 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: error setting config option 'rgw_crypt_vault_addr': (22) Invalid argument</code></strong> — Verify the Vault URL is reachable and uses the correct protocol (https://) with valid hostname and port.
-<strong><code>fatal error: An error occurred (InvalidArgument) when calling the PutObject operation: The KMS key ID is invalid or not found</code></strong> — Ensure the vault-key-id exists in Vault and the RGW service account has read permissions on that key path.
-<strong><code>Error: error setting config option 'rgw_crypt_vault_token_file': (2) No such file or directory</code></strong> — Create the Vault token file at /etc/ceph/vault-token with appropriate permissions (readable by ceph user) before applying the configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: error setting config option 'rgw_crypt_vault_addr': (22) Invalid argument</code></td>
+<td>Verify the Vault URL is reachable and uses the correct protocol (https://) with valid hostname and port.</td>
+</tr>
+<tr>
+<td><code>fatal error: An error occurred (InvalidArgument) when calling the PutObject operation: The KMS key ID is invalid or not found</code></td>
+<td>Ensure the vault-key-id exists in Vault and the RGW service account has read permissions on that key path.</td>
+</tr>
+<tr>
+<td><code>Error: error setting config option 'rgw_crypt_vault_token_file': (2) No such file or directory</code></td>
+<td>Create the Vault token file at /etc/ceph/vault-token with appropriate permissions (readable by ceph user) before applying the configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="sse-c-client-provided-keys">SSE-C: Client-Provided Keys<a class="headerlink" href="#sse-c-client-provided-keys" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Client supplies the encryption key with every request</span>
@@ -7910,8 +8018,24 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidArgument) when calling the PutObject operation: The object was stored using a form of Server Side Encryption. The correct parameters must be provided to retrieve the object.</code></strong> — Supply the same <code>--sse-c</code> and <code>--sse-c-key</code> parameters on all subsequent GET/HEAD operations for this object.
-<strong><code>An error occurred (InvalidRequest) when calling the PutObject operation: Bad Request</code></strong> — Verify the key file exists at the specified path and contains exactly 32 bytes (use <code>wc -c /path/to/32-byte-key.bin</code> to confirm).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidArgument) when calling the PutObject operation: The object was stored using a form of Server Side Encryption. The correct parameters must be provided to retrieve the object.</code></td>
+<td>Supply the same <code>--sse-c</code> and <code>--sse-c-key</code> parameters on all subsequent GET/HEAD operations for this object.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidRequest) when calling the PutObject operation: Bad Request</code></td>
+<td>Verify the key file exists at the specified path and contains exactly 32 bytes (use <code>wc -c /path/to/32-byte-key.bin</code> to confirm).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="encryption-options-summary">Encryption Options Summary<a class="headerlink" href="#encryption-options-summary" title="Permanent link">&para;</a></h2>
 <table>
@@ -7992,8 +8116,24 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EINVAL: ms_cluster_mode is not a valid setting</code></strong> — Use <code>ceph config help global</code> to verify the correct parameter name; the setting may be <code>ms_cluster_mode</code> only on specific Ceph versions (14.2.0+).
-<strong><code>Error: unable to get config value: (2) No such file or directory</code></strong> — Ensure the monitor daemon is running with <code>ceph -s</code> and that you have proper authentication credentials in <code>/etc/ceph/ceph.conf</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EINVAL: ms_cluster_mode is not a valid setting</code></td>
+<td>Use <code>ceph config help global</code> to verify the correct parameter name; the setting may be <code>ms_cluster_mode</code> only on specific Ceph versions (14.2.0+).</td>
+</tr>
+<tr>
+<td><code>Error: unable to get config value: (2) No such file or directory</code></td>
+<td>Ensure the monitor daemon is running with <code>ceph -s</code> and that you have proper authentication credentials in <code>/etc/ceph/ceph.conf</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="encryption-deployment-checklist">Encryption Deployment Checklist<a class="headerlink" href="#encryption-deployment-checklist" title="Permanent link">&para;</a></h2>
 <table>
@@ -8064,8 +8204,24 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>--cacert /path/to/vault-ca.crt</code> to the curl command or use <code>-k</code> if testing in non-production.
-<strong><code>Error ENOENT: error reading /etc/ceph/vault-token</code></strong> — Ensure the Vault token file exists and is readable by the user running the command; regenerate with <code>ceph config-key put client.rgw/vault-token &lt;token&gt;</code> if missing.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>--cacert /path/to/vault-ca.crt</code> to the curl command or use <code>-k</code> if testing in non-production.</td>
+</tr>
+<tr>
+<td><code>Error ENOENT: error reading /etc/ceph/vault-token</code></td>
+<td>Ensure the Vault token file exists and is readable by the user running the command; regenerate with <code>ceph config-key put client.rgw/vault-token &lt;token&gt;</code> if missing.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="performance-impact-reference">Performance Impact Reference<a class="headerlink" href="#performance-impact-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -8132,7 +8288,7 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

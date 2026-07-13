@@ -7941,9 +7941,28 @@ NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>getent passwd 1001: no such user</code></strong> — The UID 1001 does not exist on the client; create it with <code>useradd -u 1001 -g 1001 -M -s /sbin/nologin nfsuser</code> to match the server.
-<strong><code>useradd: UID 1001 is already in use</code></strong> — The UID already exists on the client with a different username; either use a different UID or delete the conflicting user first with <code>userdel</code>.
-<strong><code>id: nfsnobody: no such user</code></strong> — The nfsnobody user does not exist on this system; install the nfs-utils package or create it manually with <code>useradd -u 65534 -g 65534 -M nfsnobody</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getent passwd 1001: no such user</code></td>
+<td>The UID 1001 does not exist on the client; create it with <code>useradd -u 1001 -g 1001 -M -s /sbin/nologin nfsuser</code> to match the server.</td>
+</tr>
+<tr>
+<td><code>useradd: UID 1001 is already in use</code></td>
+<td>The UID already exists on the client with a different username; either use a different UID or delete the conflicting user first with <code>userdel</code>.</td>
+</tr>
+<tr>
+<td><code>id: nfsnobody: no such user</code></td>
+<td>The nfsnobody user does not exist on this system; install the nfs-utils package or create it manually with <code>useradd -u 65534 -g 65534 -M nfsnobody</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="nfsv4-id-mapping-idmapd">NFSv4 ID Mapping (idmapd)<a class="headerlink" href="#nfsv4-id-mapping-idmapd" title="Permanent link">&para;</a></h2>
 <p>NFSv4 uses <code>user@domain</code> strings for identity. The <code>idmapd</code> daemon translates between names and UID/GIDs.</p>
@@ -7978,9 +7997,28 @@ NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>systemctl: command not found</code></strong> — Verify the system uses systemd (RHEL/CentOS 7+, Ubuntu 15.04+); older distros use <code>service nfs-idmapd restart</code> instead.
-<strong><code>nfsidmap: command not found</code></strong> — Install the nfs-utils package with <code>apt-get install nfs-utils</code> (Debian/Ubuntu) or <code>yum install nfs-utils</code> (RHEL/CentOS).
-**<code>Domain = corp.local</code> not taking effect (files still show "nobody")<code>** — Ensure</code>/etc/idmapd.conf<code>has identical</code>Domain<code>values on both client and server, then run</code>nfsidmap -c` and remount the NFS share.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>systemctl: command not found</code></td>
+<td>Verify the system uses systemd (RHEL/CentOS 7+, Ubuntu 15.04+); older distros use <code>service nfs-idmapd restart</code> instead.</td>
+</tr>
+<tr>
+<td><code>nfsidmap: command not found</code></td>
+<td>Install the nfs-utils package with <code>apt-get install nfs-utils</code> (Debian/Ubuntu) or <code>yum install nfs-utils</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>Domain = corp.local</code> not taking effect (files still show "nobody")<code>| Ensure</code>/etc/idmapd.conf<code>has identical</code>Domain<code>values on both client and server, then run</code>nfsidmap -c` and remount the NFS share.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="kerberos-security-modes">Kerberos Security Modes<a class="headerlink" href="#kerberos-security-modes" title="Permanent link">&para;</a></h2>
 <table>
@@ -8037,9 +8075,28 @@ NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount.nfs4: access denied by server while mounting 192.168.10.10:/data/secure</code></strong> — Verify the client IP is within the 192.168.10.0/24 range in /etc/exports and reload exports with <code>exportfs -ra</code>.
-<strong><code>klist: No such file or directory while opening keytab /etc/krb5.keytab</code></strong> — Generate the keytab on the NFS server using <code>kadmin.local -q "ktadd -k /etc/krb5.keytab nfs/nfsserver.example.com@REALM"</code>.
-<strong><code>mount.nfs4: No security policy found for sec=krb5i</code></strong> — Install nfs-utils with Kerberos support (<code>yum install nfs-utils</code> on RHEL/CentOS or <code>apt install nfs-common</code> on Debian) and restart the NFS service.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount.nfs4: access denied by server while mounting 192.168.10.10:/data/secure</code></td>
+<td>Verify the client IP is within the 192.168.10.0/24 range in /etc/exports and reload exports with <code>exportfs -ra</code>.</td>
+</tr>
+<tr>
+<td><code>klist: No such file or directory while opening keytab /etc/krb5.keytab</code></td>
+<td>Generate the keytab on the NFS server using <code>kadmin.local -q "ktadd -k /etc/krb5.keytab nfs/nfsserver.example.com@REALM"</code>.</td>
+</tr>
+<tr>
+<td><code>mount.nfs4: No security policy found for sec=krb5i</code></td>
+<td>Install nfs-utils with Kerberos support (<code>yum install nfs-utils</code> on RHEL/CentOS or <code>apt install nfs-common</code> on Debian) and restart the NFS service.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="acl-interaction">ACL Interaction<a class="headerlink" href="#acl-interaction" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check if ACLs are supported on the NFS mount</span>
@@ -8083,9 +8140,28 @@ NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>setfacl: /data/shared/project: Operation not supported</code></strong> — Verify ACLs are enabled on the NFS server filesystem with <code>tune2fs -l /dev/sda1 | grep acl</code> and remount with <code>mount -o remount,acl /data</code> if needed.
-<strong><code>getfacl: /mnt/shared/project: No such file or directory</code></strong> — Ensure the NFS mount is active with <code>mount | grep nfs</code> and the export path exists on the server with <code>exportfs -v</code>.
-<strong><code>mount.nfs4: access denied by server while mounting 192.168.10.10:/data/shared</code></strong> — Verify the export is configured in <code>/etc/exports</code> on the server and run <code>exportfs -ra</code> to apply changes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setfacl: /data/shared/project: Operation not supported</code></td>
+<td>Verify ACLs are enabled on the NFS server filesystem with <code>tune2fs -l /dev/sda1 | grep acl</code> and remount with <code>mount -o remount,acl /data</code> if needed.</td>
+</tr>
+<tr>
+<td><code>getfacl: /mnt/shared/project: No such file or directory</code></td>
+<td>Ensure the NFS mount is active with <code>mount | grep nfs</code> and the export path exists on the server with <code>exportfs -v</code>.</td>
+</tr>
+<tr>
+<td><code>mount.nfs4: access denied by server while mounting 192.168.10.10:/data/shared</code></td>
+<td>Verify the export is configured in <code>/etc/exports</code> on the server and run <code>exportfs -ra</code> to apply changes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8115,7 +8191,7 @@ NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

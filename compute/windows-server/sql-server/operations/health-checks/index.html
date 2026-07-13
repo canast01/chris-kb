@@ -8116,9 +8116,28 @@ SQL Server health checks: `sys.dm_exec_query_stats`, AG replica sync state, job 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "&lt;host&gt;" to address: Name or service not known</code></strong> — Replace <code>&lt;host&gt;</code> with the actual PostgreSQL server hostname or IP address.
-<strong><code>mysql: [Warning] Using a password on the command line interface can be insecure.</code></strong> — Use a MySQL configuration file (~/.my.cnf) with restricted permissions instead of passing the password as a command-line argument.
-<strong><code>nc: getaddrinfo: Name or service not known</code></strong> — Verify the database hostname is correct and resolvable; check DNS or use the IP address directly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "&lt;host&gt;" to address: Name or service not known</code></td>
+<td>Replace <code>&lt;host&gt;</code> with the actual PostgreSQL server hostname or IP address.</td>
+</tr>
+<tr>
+<td><code>mysql: [Warning] Using a password on the command line interface can be insecure.</code></td>
+<td>Use a MySQL configuration file (~/.my.cnf) with restricted permissions instead of passing the password as a command-line argument.</td>
+</tr>
+<tr>
+<td><code>nc: getaddrinfo: Name or service not known</code></td>
+<td>Verify the database hostname is correct and resolvable; check DNS or use the IP address directly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="database-capacity-monitoring">Database — Capacity Monitoring<a class="headerlink" href="#database-capacity-monitoring" title="Permanent link">&para;</a></h2>
 <p><img alt="Database — Capacity Monitoring" src="../../../../../assets/compute-windows-server-sql-server-hc-database-capacity-monitoring.svg" /></p>
@@ -8185,9 +8204,28 @@ SQL Server health checks: `sys.dm_exec_query_stats`, AG replica sync state, job 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>du: cannot access '/var/lib/postgresql/data/*': No such file or directory</code></strong> — Verify PostgreSQL is installed and the data directory path is correct, or adjust the path to match your actual PostgreSQL PGDATA location.
-<strong><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost'</code></strong> — Use the correct MySQL credentials (e.g., <code>mysql -u root -p</code> and enter the password, or use a .my.cnf file with stored credentials).
-<strong><code>df: '/var/opt/mssql': No such file or directory</code></strong> — Remove <code>/var/opt/mssql</code> from the command if SQL Server is not installed, or verify the correct installation path with <code>find / -name mssql -type d 2&gt;/dev/null</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>du: cannot access '/var/lib/postgresql/data/*': No such file or directory</code></td>
+<td>Verify PostgreSQL is installed and the data directory path is correct, or adjust the path to match your actual PostgreSQL PGDATA location.</td>
+</tr>
+<tr>
+<td><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost'</code></td>
+<td>Use the correct MySQL credentials (e.g., <code>mysql -u root -p</code> and enter the password, or use a .my.cnf file with stored credentials).</td>
+</tr>
+<tr>
+<td><code>df: '/var/opt/mssql': No such file or directory</code></td>
+<td>Remove <code>/var/opt/mssql</code> from the command if SQL Server is not installed, or verify the correct installation path with <code>find / -name mssql -type d 2&gt;/dev/null</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Weekly snapshots — capture to track growth</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-Atc<span class="w"> </span><span class="s2">&quot;SELECT pg_database_size(&#39;mydb&#39;);&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/db-size-mydb.log
@@ -8290,9 +8328,28 @@ SQL Server health checks: `sys.dm_exec_query_stats`, AG replica sync state, job 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pg_basebackup: could not connect to server: FATAL: no pg_hba.conf entry for replication connection from "10.45.12.8" user "replication"</code></strong> — Add a replication entry to pg_hba.conf on the primary (e.g., <code>host replication replication 10.45.12.8/32 md5</code>) and reload PostgreSQL.
-<strong><code>pg_basebackup: directory "/var/lib/postgresql/data-new" exists but is not empty</code></strong> — Remove or rename the target directory before running pg_basebackup, or use an empty path.
-<strong><code>pg_basebackup: could not identify system: got 0 rows</code></strong> — Verify the replication user exists and has REPLICATION privilege on the primary with <code>ALTER USER replication WITH REPLICATION;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pg_basebackup: could not connect to server: FATAL: no pg_hba.conf entry for replication connection from "10.45.12.8" user "replication"</code></td>
+<td>Add a replication entry to pg_hba.conf on the primary (e.g., <code>host replication replication 10.45.12.8/32 md5</code>) and reload PostgreSQL.</td>
+</tr>
+<tr>
+<td><code>pg_basebackup: directory "/var/lib/postgresql/data-new" exists but is not empty</code></td>
+<td>Remove or rename the target directory before running pg_basebackup, or use an empty path.</td>
+</tr>
+<tr>
+<td><code>pg_basebackup: could not identify system: got 0 rows</code></td>
+<td>Verify the replication user exists and has REPLICATION privilege on the primary with <code>ALTER USER replication WITH REPLICATION;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8330,7 +8387,7 @@ SQL Server health checks: `sys.dm_exec_query_stats`, AG replica sync state, job 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

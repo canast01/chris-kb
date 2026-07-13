@@ -9224,9 +9224,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection refused</code></strong> — Verify the VMS IP address is correct and the VPLEX management server is running with <code>systemctl status vplex-vms</code>.
-<strong><code>Authentication failed for user 'service'</code></strong> — Confirm the service account password is current and the account has not been locked; reset via VPLEX admin console if needed.
-<strong><code>No such object: /clusters/cluster-1</code></strong> — Check cluster name spelling and confirm the cluster exists by running <code>ls /clusters</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify the VMS IP address is correct and the VPLEX management server is running with <code>systemctl status vplex-vms</code>.</td>
+</tr>
+<tr>
+<td><code>Authentication failed for user 'service'</code></td>
+<td>Confirm the service account password is current and the account has not been locked; reset via VPLEX admin console if needed.</td>
+</tr>
+<tr>
+<td><code>No such object: /clusters/cluster-1</code></td>
+<td>Check cluster name spelling and confirm the cluster exists by running <code>ls /clusters</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Key health-indication values:</strong></p>
 <table>
@@ -9327,9 +9346,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Storage volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001 is already claimed</code></strong> — Verify the storage volume is not in use by another virtual volume or extent using <code>vplexcli -q -e "ll /storage-elements/storage-arrays/array-A/storage-volumes/sv_001"</code> before claiming.
-<strong><code>Error: Virtual volume my_app_vol_1 is in use by storage view prod-sv-001, cannot destroy</code></strong> — Remove the virtual volume from all storage views using the VPLEX management console or <code>storage-view remove-member</code> before attempting destruction.
-<strong><code>Error: Extent ext_app_001 expansion failed: backend LUN size unchanged</code></strong> — Expand the LUN size on the storage array first, then run <code>storage-volume rediscover</code> before attempting extent expansion.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Storage volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001 is already claimed</code></td>
+<td>Verify the storage volume is not in use by another virtual volume or extent using <code>vplexcli -q -e "ll /storage-elements/storage-arrays/array-A/storage-volumes/sv_001"</code> before claiming.</td>
+</tr>
+<tr>
+<td><code>Error: Virtual volume my_app_vol_1 is in use by storage view prod-sv-001, cannot destroy</code></td>
+<td>Remove the virtual volume from all storage views using the VPLEX management console or <code>storage-view remove-member</code> before attempting destruction.</td>
+</tr>
+<tr>
+<td><code>Error: Extent ext_app_001 expansion failed: backend LUN size unchanged</code></td>
+<td>Expand the LUN size on the storage array first, then run <code>storage-volume rediscover</code> before attempting extent expansion.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="distributed-device-operations-vplex-metro">Distributed Device Operations (VPLEX Metro)<a class="headerlink" href="#distributed-device-operations-vplex-metro" title="Permanent link">&para;</a></h2>
@@ -9435,9 +9473,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Device /clusters/cluster-1/devices/dev_app_001 not found</code></strong> — Verify the local device exists on cluster-1 by running <code>vplexcli -q -e "ls /clusters/cluster-1/devices"</code> before creating the distributed device.
-<strong><code>Error: Consistency group /distributed-storage/consistency-groups/cg_app_tier already exists</code></strong> — Use a unique consistency group name or delete the existing group first with <code>vplexcli -q -e "consistency-group delete --consistency-group /distributed-storage/consistency-groups/cg_app_tier"</code>.
-<strong><code>Error: Witness connectivity lost on cluster-2</code></strong> — Check network connectivity between the cluster and witness node, and verify witness service is running with <code>systemctl status witness-service</code> on the witness appliance.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Device /clusters/cluster-1/devices/dev_app_001 not found</code></td>
+<td>Verify the local device exists on cluster-1 by running <code>vplexcli -q -e "ls /clusters/cluster-1/devices"</code> before creating the distributed device.</td>
+</tr>
+<tr>
+<td><code>Error: Consistency group /distributed-storage/consistency-groups/cg_app_tier already exists</code></td>
+<td>Use a unique consistency group name or delete the existing group first with <code>vplexcli -q -e "consistency-group delete --consistency-group /distributed-storage/consistency-groups/cg_app_tier"</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Witness connectivity lost on cluster-2</code></td>
+<td>Check network connectivity between the cluster and witness node, and verify witness service is running with <code>systemctl status witness-service</code> on the witness appliance.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Distributed device health states:</strong></p>
 <table>
@@ -9558,9 +9615,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Storage view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 not found</code></strong> — Verify the storage view name and cluster path are correct using <code>ls /clusters/cluster-1/exports/storage-views</code>.
-<strong><code>Error: Initiator port 10:00:00:00:c9:ab:cd:ef already registered</code></strong> — Use a different WWN or query existing initiator ports with <code>ls /clusters/cluster-1/exports/initiator-ports</code> to avoid duplicates.
-<strong><code>Error: Cannot destroy storage view with virtual volumes still assigned</code></strong> — Remove all virtual volumes from the storage view before deletion using the <code>remove-virtual-volumes</code> command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Storage view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 not found</code></td>
+<td>Verify the storage view name and cluster path are correct using <code>ls /clusters/cluster-1/exports/storage-views</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Initiator port 10:00:00:00:c9:ab:cd:ef already registered</code></td>
+<td>Use a different WWN or query existing initiator ports with <code>ls /clusters/cluster-1/exports/initiator-ports</code> to avoid duplicates.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot destroy storage view with virtual volumes still assigned</code></td>
+<td>Remove all virtual volumes from the storage view before deletion using the <code>remove-virtual-volumes</code> command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="data-migration">Data Migration<a class="headerlink" href="#data-migration" title="Permanent link">&para;</a></h2>
@@ -9628,9 +9704,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Storage volume /storage-elements/storage-arrays/array-B/storage-volumes/sv_target_001 is already claimed</code></strong> — Release the volume first with <code>vplexcli -q -e "storage-volume unclaim --storage-volume &lt;path&gt;"</code> or choose an unclaimed target volume.
-<strong><code>Error: Virtual volume /virtual-volumes/my_app_vol_1 is already involved in an active migration</code></strong> — Wait for the existing migration to complete or destroy it with <code>data-migration destroy</code> before creating a new one.
-<strong><code>Error: Cannot commit migration mig_app_vol_1: migration is not in IN_PROGRESS state</code></strong> — Verify the migration has started and reached sufficient progress with <code>ll /data-migrations/mig_app_vol_1/</code> before attempting commit.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Storage volume /storage-elements/storage-arrays/array-B/storage-volumes/sv_target_001 is already claimed</code></td>
+<td>Release the volume first with <code>vplexcli -q -e "storage-volume unclaim --storage-volume &lt;path&gt;"</code> or choose an unclaimed target volume.</td>
+</tr>
+<tr>
+<td><code>Error: Virtual volume /virtual-volumes/my_app_vol_1 is already involved in an active migration</code></td>
+<td>Wait for the existing migration to complete or destroy it with <code>data-migration destroy</code> before creating a new one.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot commit migration mig_app_vol_1: migration is not in IN_PROGRESS state</code></td>
+<td>Verify the migration has started and reached sufficient progress with <code>ll /data-migrations/mig_app_vol_1/</code> before attempting commit.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="logs-and-diagnostics">Logs and Diagnostics<a class="headerlink" href="#logs-and-diagnostics" title="Permanent link">&para;</a></h2>
@@ -9711,9 +9806,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection refused</code></strong> — Verify the VMS IP address is correct and SSH service is running on port 22 with <code>ssh -v service@&lt;VMS_IP&gt;</code>.
-<strong><code>Permission denied (publickey,password)</code></strong> — Ensure the service account password is correct or add your SSH public key to <code>/home/service/.ssh/authorized_keys</code> on the VMS.
-<strong><code>vplexcli: command not found</code></strong> — Source the VPLEX CLI environment or add <code>/opt/VPlex/bin</code> to your PATH with <code>export PATH=$PATH:/opt/VPlex/bin</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify the VMS IP address is correct and SSH service is running on port 22 with <code>ssh -v service@&lt;VMS_IP&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Ensure the service account password is correct or add your SSH public key to <code>/home/service/.ssh/authorized_keys</code> on the VMS.</td>
+</tr>
+<tr>
+<td><code>vplexcli: command not found</code></td>
+<td>Source the VPLEX CLI environment or add <code>/opt/VPlex/bin</code> to your PATH with <code>export PATH=$PATH:/opt/VPlex/bin</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -9751,7 +9865,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

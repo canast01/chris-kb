@@ -8879,9 +8879,28 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nslookup: can't resolve 'aac.example.local': No address associated with hostname</code></strong> — Verify DNS server is reachable and the hostname is registered in your DNS zone; use <code>nslookup @&lt;dns-ip&gt; aac.example.local</code> to test a specific server.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the vIDM certificate into your system's CA bundle with <code>curl -cacert /path/to/cert.pem https://vidm.example.local/SAAS/auth/heartbeat</code>.
-<strong><code>curl: (7) Failed to connect to vidm.example.local port 443: Connection refused</code></strong> — Verify vIDM appliance is running and accessible on port 443 using <code>telnet vidm.example.local 443</code> or check firewall rules between LCM and vIDM.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nslookup: can't resolve 'aac.example.local': No address associated with hostname</code></td>
+<td>Verify DNS server is reachable and the hostname is registered in your DNS zone; use <code>nslookup @&lt;dns-ip&gt; aac.example.local</code> to test a specific server.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already present) or import the vIDM certificate into your system's CA bundle with <code>curl -cacert /path/to/cert.pem https://vidm.example.local/SAAS/auth/heartbeat</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vidm.example.local port 443: Connection refused</code></td>
+<td>Verify vIDM appliance is running and accessible on port 443 using <code>telnet vidm.example.local 443</code> or check firewall rules between LCM and vIDM.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>TLS: generate a SAN cert covering all FQDNs above; upload to LCM Certificate Management before deployment.</p>
 <hr />
@@ -8905,9 +8924,28 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey).</code></strong> — Ensure SSH key is configured or use <code>ssh-keyscan</code> to add the host key, then verify root SSH access is enabled on the LCM appliance.
-<strong><code>tail: cannot open '/var/log/vmware/lcm/lcm-debug.log' for reading: No such file or directory</code></strong> — Verify the LCM service is running with <code>systemctl status vmware-lcm</code> and check the correct log path with <code>find /var/log -name "*lcm*"</code>.
-<strong><code>grep: (standard input): No such device or address</code></strong> — The log file may be rotating; use <code>tail -f /var/log/vmware/lcm/lcm-debug.log*</code> to follow all rotated logs or increase the buffer with <code>tail -f -n 100</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Ensure SSH key is configured or use <code>ssh-keyscan</code> to add the host key, then verify root SSH access is enabled on the LCM appliance.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/lcm/lcm-debug.log' for reading: No such file or directory</code></td>
+<td>Verify the LCM service is running with <code>systemctl status vmware-lcm</code> and check the correct log path with <code>find /var/log -name "*lcm*"</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): No such device or address</code></td>
+<td>The log file may be rotating; use <code>tail -f /var/log/vmware/lcm/lcm-debug.log*</code> to follow all rotated logs or increase the buffer with <code>tail -f -n 100</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After the 60–90 minute deployment:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>root@aac.example.local
@@ -8934,9 +8972,28 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vracli: command not found</code></strong> — Ensure you are logged in as root and the vRA CLI is installed in the PATH; check <code>/opt/vmware/vra/bin/vracli</code> exists.
-<strong><code>Unable to connect to Kubernetes cluster</code></strong> — Verify kubectl is configured with the correct kubeconfig and the cluster API server is reachable from this node.
-<strong><code>pod status shows CrashLoopBackOff or ImagePullBackOff</code></strong> — Check pod logs with <code>kubectl logs &lt;pod-name&gt; -n &lt;namespace&gt;</code> and verify container images are accessible in your registry.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vracli: command not found</code></td>
+<td>Ensure you are logged in as root and the vRA CLI is installed in the PATH; check <code>/opt/vmware/vra/bin/vracli</code> exists.</td>
+</tr>
+<tr>
+<td><code>Unable to connect to Kubernetes cluster</code></td>
+<td>Verify kubectl is configured with the correct kubeconfig and the cluster API server is reachable from this node.</td>
+</tr>
+<tr>
+<td><code>pod status shows CrashLoopBackOff or ImagePullBackOff</code></td>
+<td>Check pod logs with <code>kubectl logs &lt;pod-name&gt; -n &lt;namespace&gt;</code> and verify container images are accessible in your registry.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-3-cloud-account-configuration">Phase 3 — Cloud Account Configuration<a class="headerlink" href="#phase-3-cloud-account-configuration" title="Permanent link">&para;</a></h2>
@@ -8961,9 +9018,28 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Cloud account not found: &lt;id&gt;</code></strong> — Verify the account ID with <code>vracli cloud-account list</code> and use the exact UUID from the ID column.
-<strong><code>Error: Sync already in progress for this account</code></strong> — Wait for the previous sync job to complete or check status with <code>vracli cloud-account show --id &lt;id&gt;</code>.
-<strong><code>Error: Authentication failed for cloud account</code></strong> — Re-validate the cloud account credentials in the Aria Automation UI under Infrastructure &gt; Cloud Accounts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Cloud account not found: &lt;id&gt;</code></td>
+<td>Verify the account ID with <code>vracli cloud-account list</code> and use the exact UUID from the ID column.</td>
+</tr>
+<tr>
+<td><code>Error: Sync already in progress for this account</code></td>
+<td>Wait for the previous sync job to complete or check status with <code>vracli cloud-account show --id &lt;id&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed for cloud account</code></td>
+<td>Re-validate the cloud account credentials in the Aria Automation UI under Infrastructure &gt; Cloud Accounts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Create Cloud Zones — define per-cluster subsets available to projects:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Infrastructure → Configure → Cloud Zones → New Cloud Zone
@@ -9035,9 +9111,28 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection refused</code></strong> — Verify SSH is enabled on the AAC appliance and the hostname/IP is correct with <code>ping aac.example.local</code>.
-<strong><code>vracli: command not found</code></strong> — Ensure you are logged in as root and the vracli binary is in the PATH; check <code>/opt/vmware/vra/bin/</code> exists.
-<strong><code>CrashLoopBackOff</code> or <code>ImagePullBackOff</code> in pod status</strong> — Check pod logs with <code>kubectl logs &lt;pod-name&gt; -n &lt;namespace&gt;</code> and verify image registry connectivity and disk space.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify SSH is enabled on the AAC appliance and the hostname/IP is correct with <code>ping aac.example.local</code>.</td>
+</tr>
+<tr>
+<td><code>vracli: command not found</code></td>
+<td>Ensure you are logged in as root and the vracli binary is in the PATH; check <code>/opt/vmware/vra/bin/</code> exists.</td>
+</tr>
+<tr>
+<td><code>CrashLoopBackOff</code> or <code>ImagePullBackOff</code> in pod status<code>| Check pod logs with</code>kubectl logs <pod-name> -n <namespace>` and verify image registry connectivity and disk space.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Submit a smoke-test deployment from Service Broker and confirm it reaches <code>DEPLOYMENT_SUCCESSFUL</code>, then delete it.</p>
 <table>
@@ -9131,7 +9226,7 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

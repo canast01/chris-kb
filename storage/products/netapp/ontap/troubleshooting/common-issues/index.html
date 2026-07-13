@@ -8884,8 +8884,24 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: No such vserver &lt;svm&gt;</code></strong> — Verify the SVM name with <code>vserver show</code> and use the exact name from the Vserver column.
-<strong><code>Error: command failed: No such volume &lt;vol&gt;</code></strong> — Confirm the volume exists on the target SVM using <code>volume show -vserver &lt;svm&gt;</code> before running field-specific queries.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: No such vserver &lt;svm&gt;</code></td>
+<td>Verify the SVM name with <code>vserver show</code> and use the exact name from the Vserver column.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: No such volume &lt;vol&gt;</code></td>
+<td>Confirm the volume exists on the target SVM using <code>volume show -vserver &lt;svm&gt;</code> before running field-specific queries.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution">Resolution<a class="headerlink" href="#resolution" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Option 1 — Increase volume size immediately</span>
@@ -8936,9 +8952,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: entry doesn't have a value for field "snapshot"</code></strong> — Specify the exact snapshot name or use <code>*</code> with <code>-force true</code> to delete all non-busy snapshots.
-<strong><code>Error: volume is currently involved in a SnapMirror transfer</code></strong> — Wait for the active SnapMirror operation to complete before modifying volume properties or deleting snapshots.
-<strong><code>Error: cannot set max-autosize to a value smaller than current volume size</code></strong> — Set <code>-max-autosize</code> to a value larger than the current volume size (e.g., 1T for a 500G volume).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: entry doesn't have a value for field "snapshot"</code></td>
+<td>Specify the exact snapshot name or use <code>*</code> with <code>-force true</code> to delete all non-busy snapshots.</td>
+</tr>
+<tr>
+<td><code>Error: volume is currently involved in a SnapMirror transfer</code></td>
+<td>Wait for the active SnapMirror operation to complete before modifying volume properties or deleting snapshots.</td>
+</tr>
+<tr>
+<td><code>Error: cannot set max-autosize to a value smaller than current volume size</code></td>
+<td>Set <code>-max-autosize</code> to a value larger than the current volume size (e.g., 1T for a 500G volume).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="prevention">Prevention<a class="headerlink" href="#prevention" title="Permanent link">&para;</a></h3>
 <ul>
@@ -9001,9 +9036,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: storage aggregate show</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell.
-<strong><code>Error: There is no entry in the Compat database for command "storage aggregate show-space"</code></strong> — Verify your ONTAP version supports this command (available in ONTAP 9.1+); use <code>version</code> to check cluster version.
-<strong><code>Error: invalid fieldname "percent-used"</code></strong> — Use the correct field name <code>percent_used</code> (underscore instead of hyphen) in the -fields parameter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: storage aggregate show</code></td>
+<td>Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell.</td>
+</tr>
+<tr>
+<td><code>Error: There is no entry in the Compat database for command "storage aggregate show-space"</code></td>
+<td>Verify your ONTAP version supports this command (available in ONTAP 9.1+); use <code>version</code> to check cluster version.</td>
+</tr>
+<tr>
+<td><code>Error: invalid fieldname "percent-used"</code></td>
+<td>Use the correct field name <code>percent_used</code> (underscore instead of hyphen) in the -fields parameter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_1">Resolution<a class="headerlink" href="#resolution_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Option 1 — Move a volume to a less-full aggregate (non-disruptive)</span>
@@ -9049,9 +9103,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: No unassigned disks available</code></strong> — Verify spare disks exist with <code>storage disk show -container-type spare</code> and ensure they are not reserved for RAID reconstruction.
-<strong><code>Error: volume move failed: Destination aggregate does not have sufficient space</code></strong> — Check destination aggregate free space with <code>storage aggregate show -fields usedsize,availsize</code> and select an aggregate with at least 120% of the source volume size.
-<strong><code>Error: Invalid percent-snapshot-space value: must be between 0 and 90</code></strong> — Use a snapshot reserve percentage within the valid range (typically 5–20% for production volumes).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: No unassigned disks available</code></td>
+<td>Verify spare disks exist with <code>storage disk show -container-type spare</code> and ensure they are not reserved for RAID reconstruction.</td>
+</tr>
+<tr>
+<td><code>Error: volume move failed: Destination aggregate does not have sufficient space</code></td>
+<td>Check destination aggregate free space with <code>storage aggregate show -fields usedsize,availsize</code> and select an aggregate with at least 120% of the source volume size.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid percent-snapshot-space value: must be between 0 and 90</code></td>
+<td>Use a snapshot reserve percentage within the valid range (typically 5–20% for production volumes).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="snapmirror-lag-unhealthy-relationship">SnapMirror Lag / Unhealthy Relationship<a class="headerlink" href="#snapmirror-lag-unhealthy-relationship" title="Permanent link">&para;</a></h2>
@@ -9121,9 +9194,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: No snapmirror relationships found</code></strong> — Verify the source and destination paths exist and the snapmirror relationship has been initialized with <code>snapmirror initialize -source-path &lt;src&gt; -destination-path &lt;dst&gt;</code>.
-<strong><code>Error: network ping: failed to resolve destination address</code></strong> — Confirm the remote intercluster LIF IP address is correct and reachable by checking <code>cluster peer show</code> and verifying firewall rules allow ICMP traffic on port 10000-10001.
-<strong><code>Error: command failed: Intercluster LIF is not configured</code></strong> — Create an intercluster LIF on both clusters using `network interface create -vserver <admin_svm> -lif <lif_name> -role intercluster -home-node <node> -home-port <port> -address <ip> -netmask</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: No snapmirror relationships found</code></td>
+<td>Verify the source and destination paths exist and the snapmirror relationship has been initialized with <code>snapmirror initialize -source-path &lt;src&gt; -destination-path &lt;dst&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: network ping: failed to resolve destination address</code></td>
+<td>Confirm the remote intercluster LIF IP address is correct and reachable by checking <code>cluster peer show</code> and verifying firewall rules allow ICMP traffic on port 10000-10001.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Intercluster LIF is not configured</code></td>
+<td>Create an intercluster LIF on both clusters using `network interface create -vserver <admin_svm> -lif <lif_name> -role intercluster -home-node <node> -home-port <port> -address <ip> -netmask</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_2">Resolution<a class="headerlink" href="#resolution_2" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Resume a quiesced relationship</span>
@@ -9155,9 +9247,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: There is no SnapMirror relationship for destination "dr_svm:dr_vol01"</code></strong> — Verify the destination SVM and volume names are correct using <code>snapmirror show</code>.
-<strong><code>Error: command failed: SnapMirror relationship is in "broken-off" state and cannot be resumed</code></strong> — Use <code>snapmirror resync</code> instead of <code>snapmirror resume</code> for broken-off relationships.
-<strong><code>Error: command failed: Transfer is already in progress for destination "dr_svm:dr_vol01"</code></strong> — Wait for the current transfer to complete or use <code>snapmirror abort</code> before issuing a new update command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: There is no SnapMirror relationship for destination "dr_svm:dr_vol01"</code></td>
+<td>Verify the destination SVM and volume names are correct using <code>snapmirror show</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: SnapMirror relationship is in "broken-off" state and cannot be resumed</code></td>
+<td>Use <code>snapmirror resync</code> instead of <code>snapmirror resume</code> for broken-off relationships.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Transfer is already in progress for destination "dr_svm:dr_vol01"</code></td>
+<td>Wait for the current transfer to complete or use <code>snapmirror abort</code> before issuing a new update command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="nfs-mount-hangs-stale-lock-after-failover">NFS Mount Hangs / Stale Lock After Failover<a class="headerlink" href="#nfs-mount-hangs-stale-lock-after-failover" title="Permanent link">&para;</a></h2>
@@ -9218,9 +9329,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Invalid field "status-oper" for "network interface show"</code></strong> — Use <code>status-admin</code> and <code>status-oper</code> as separate queries, or check ONTAP version compatibility for field names.
-<strong><code>Error: There is no data to display</code></strong> — Verify the SVM name is correct with <code>vserver show</code> and confirm NFS is licensed and enabled on the SVM.
-<strong><code>Error: command failed: Invalid vserver name "nfs_svm"</code></strong> — Confirm the SVM exists and you are connected to the correct cluster with <code>vserver show</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Invalid field "status-oper" for "network interface show"</code></td>
+<td>Use <code>status-admin</code> and <code>status-oper</code> as separate queries, or check ONTAP version compatibility for field names.</td>
+</tr>
+<tr>
+<td><code>Error: There is no data to display</code></td>
+<td>Verify the SVM name is correct with <code>vserver show</code> and confirm NFS is licensed and enabled on the SVM.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Invalid vserver name "nfs_svm"</code></td>
+<td>Confirm the SVM exists and you are connected to the correct cluster with <code>vserver show</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_3">Resolution<a class="headerlink" href="#resolution_3" title="Permanent link">&para;</a></h3>
 <p>On the storage side:</p>
@@ -9242,9 +9372,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "data_lif01" does not exist</code></strong> — Verify the LIF name is correct and exists on the specified Vserver using <code>network interface show -vserver &lt;svm&gt;</code>.
-<strong><code>Error: LIF data_lif01 is administratively down</code></strong> — Bring the LIF online with <code>network interface modify -vserver &lt;svm&gt; -lif &lt;lif_name&gt; -status-admin up</code> before reverting.
-<strong><code>PING: sendto: No route to host</code></strong> — Ensure the client IP is reachable and on the same network segment as the LIF, or check firewall rules blocking ICMP traffic.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "data_lif01" does not exist</code></td>
+<td>Verify the LIF name is correct and exists on the specified Vserver using <code>network interface show -vserver &lt;svm&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: LIF data_lif01 is administratively down</code></td>
+<td>Bring the LIF online with <code>network interface modify -vserver &lt;svm&gt; -lif &lt;lif_name&gt; -status-admin up</code> before reverting.</td>
+</tr>
+<tr>
+<td><code>PING: sendto: No route to host</code></td>
+<td>Ensure the client IP is reachable and on the same network segment as the LIF, or check firewall rules blocking ICMP traffic.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>On the NFS client side:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Force unmount a hung NFS mount (lazy unmount)</span>
@@ -9263,9 +9412,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>umount: /mnt/data: target is busy</code></strong> — Use <code>lsof /mnt/data</code> to identify processes holding the mount, kill them, then retry the lazy unmount.
-<strong><code>mount.nfs: Connection timed out</code></strong> — Verify the LIF IP is reachable with <code>ping &lt;lif_ip&gt;</code> and confirm the NFS export exists on the NetApp array with <code>ssh admin@&lt;netapp_ip&gt; volume show</code>.
-<strong><code>Failed to restart autofs.service: Unit autofs.service not found</code></strong> — Install autofs with <code>apt-get install autofs</code> (Debian/Ubuntu) or <code>yum install autofs</code> (RHEL/CentOS), then retry the systemctl restart.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>umount: /mnt/data: target is busy</code></td>
+<td>Use <code>lsof /mnt/data</code> to identify processes holding the mount, kill them, then retry the lazy unmount.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: Connection timed out</code></td>
+<td>Verify the LIF IP is reachable with <code>ping &lt;lif_ip&gt;</code> and confirm the NFS export exists on the NetApp array with <code>ssh admin@&lt;netapp_ip&gt; volume show</code>.</td>
+</tr>
+<tr>
+<td><code>Failed to restart autofs.service: Unit autofs.service not found</code></td>
+<td>Install autofs with <code>apt-get install autofs</code> (Debian/Ubuntu) or <code>yum install autofs</code> (RHEL/CentOS), then retry the systemctl restart.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If NFSv4 state is stale, the NFS server grace period (default 45 seconds) must expire before new locks are granted. Do not reboot NFS clients during the grace period — this resets their lock reclaim timer.</p>
 <hr />
@@ -9319,9 +9487,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "No iSCSI sessions found for Vserver &lt;svm&gt;"</code></strong> — Verify the initiator is connected and the target portal group is reachable using <code>iscsi connection show</code>.
-<strong><code>Error: "LUN is offline"</code></strong> — Check the volume status with <code>volume show -vserver &lt;svm&gt;</code> and verify the aggregate is online.
-<strong><code>Error: "Initiator IQN not found in igroup"</code></strong> — Add the missing initiator IQN to the igroup using <code>lun igroup add -vserver &lt;svm&gt; -igroup &lt;igroup_name&gt; -initiator &lt;iqn&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "No iSCSI sessions found for Vserver &lt;svm&gt;"</code></td>
+<td>Verify the initiator is connected and the target portal group is reachable using <code>iscsi connection show</code>.</td>
+</tr>
+<tr>
+<td><code>Error: "LUN is offline"</code></td>
+<td>Check the volume status with <code>volume show -vserver &lt;svm&gt;</code> and verify the aggregate is online.</td>
+</tr>
+<tr>
+<td><code>Error: "Initiator IQN not found in igroup"</code></td>
+<td>Add the missing initiator IQN to the igroup using <code>lun igroup add -vserver &lt;svm&gt; -igroup &lt;igroup_name&gt; -initiator &lt;iqn&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_4">Resolution<a class="headerlink" href="#resolution_4" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Bring a LUN back online if it went offline</span>
@@ -9347,9 +9534,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: LUN /vol/data_vol/lun_prod_01 is not found</code></strong> — Verify the volume and LUN names exist with <code>lun show -vserver &lt;svm&gt;</code> and correct the path syntax.
-<strong><code>Error: command failed: Vserver &lt;svm&gt; does not exist</code></strong> — Confirm the SVM name is correct by running <code>vserver show</code> to list all available SVMs.
-<strong><code>Error: command failed: LUN /vol/data_vol/lun_prod_01 is already online</code></strong> — This is informational; the LUN is already in the desired state and no action is needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: LUN /vol/data_vol/lun_prod_01 is not found</code></td>
+<td>Verify the volume and LUN names exist with <code>lun show -vserver &lt;svm&gt;</code> and correct the path syntax.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Vserver &lt;svm&gt; does not exist</code></td>
+<td>Confirm the SVM name is correct by running <code>vserver show</code> to list all available SVMs.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: LUN /vol/data_vol/lun_prod_01 is already online</code></td>
+<td>This is informational; the LUN is already in the desired state and no action is needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>On the Linux host:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Rescan iSCSI targets</span>
@@ -9384,9 +9590,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iscsiadm: No records found</code></strong> — Verify the target IQN and portal IP are correct, and that the iSCSI daemon is running with <code>systemctl status iscsid</code>.
-<strong><code>rescan-scsi-bus.sh: command not found</code></strong> — Install the sg3-utils package with <code>apt-get install sg3-utils</code> or <code>yum install sg3-utils</code>.
-<strong><code>multipathd: error in blacklist section</code></strong> — Check <code>/etc/multipath.conf</code> for syntax errors and reload the daemon with <code>systemctl restart multipathd</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iscsiadm: No records found</code></td>
+<td>Verify the target IQN and portal IP are correct, and that the iSCSI daemon is running with <code>systemctl status iscsid</code>.</td>
+</tr>
+<tr>
+<td><code>rescan-scsi-bus.sh: command not found</code></td>
+<td>Install the sg3-utils package with <code>apt-get install sg3-utils</code> or <code>yum install sg3-utils</code>.</td>
+</tr>
+<tr>
+<td><code>multipathd: error in blacklist section</code></td>
+<td>Check <code>/etc/multipath.conf</code> for syntax errors and reload the daemon with <code>systemctl restart multipathd</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="storage-failover-ha-not-triggering">Storage Failover (HA) Not Triggering<a class="headerlink" href="#storage-failover-ha-not-triggering" title="Permanent link">&para;</a></h2>
@@ -9438,9 +9663,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: storage failover show</code></strong> — Verify you are connected to the cluster management interface and have cluster admin privileges.
-<strong><code>Cluster Ping to &lt;node&gt; (&lt;ip&gt;): Sent 5, Received 0, Lost 100%</code></strong> — Check network connectivity and HA interconnect cables; verify the target node is online with <code>cluster show</code>.
-<strong><code>Node           Enabled Mode</code></strong> <code>node-01        false   HA</code> — Re-enable failover with <code>storage failover modify -node &lt;node_name&gt; -enabled true</code> if failover was manually disabled.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: storage failover show</code></td>
+<td>Verify you are connected to the cluster management interface and have cluster admin privileges.</td>
+</tr>
+<tr>
+<td><code>Cluster Ping to &lt;node&gt; (&lt;ip&gt;): Sent 5, Received 0, Lost 100%</code></td>
+<td>Check network connectivity and HA interconnect cables; verify the target node is online with <code>cluster show</code>.</td>
+</tr>
+<tr>
+<td><strong><code>Node           Enabled Mode</code></strong> <code>node-01        false   HA</code> — Re-enable failover with <code>storage failover modify -node &lt;node_name&gt; -enabled true</code> if failover was manually disabled.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_5">Resolution<a class="headerlink" href="#resolution_5" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Re-enable storage failover if it was disabled</span>
@@ -9468,9 +9712,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: node node-02 is not in a halted state</code></strong> — Ensure the node has fully shut down before attempting giveback, or use <code>system node halt -node &lt;node_name&gt;</code> to force shutdown.
-<strong><code>Error: storage failover is not enabled for node node-01</code></strong> — Run <code>storage failover modify -node &lt;node_name&gt; -enabled true</code> on both nodes to enable failover before takeover.
-<strong><code>Error: giveback cannot proceed, aggregates are offline</code></strong> — Wait for aggregates to come online using <code>storage aggregate show</code> to verify state, or manually bring them online with <code>storage aggregate online -aggregate &lt;name&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: node node-02 is not in a halted state</code></td>
+<td>Ensure the node has fully shut down before attempting giveback, or use <code>system node halt -node &lt;node_name&gt;</code> to force shutdown.</td>
+</tr>
+<tr>
+<td><code>Error: storage failover is not enabled for node node-01</code></td>
+<td>Run <code>storage failover modify -node &lt;node_name&gt; -enabled true</code> on both nodes to enable failover before takeover.</td>
+</tr>
+<tr>
+<td><code>Error: giveback cannot proceed, aggregates are offline</code></td>
+<td>Wait for aggregates to come online using <code>storage aggregate show</code> to verify state, or manually bring them online with <code>storage aggregate online -aggregate &lt;name&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="smbcifs-share-inaccessible">SMB/CIFS Share Inaccessible<a class="headerlink" href="#smbcifs-share-inaccessible" title="Permanent link">&para;</a></h2>
@@ -9527,9 +9790,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>CIFS server check for vserver "svm-prod-01": Active Directory: FAILED</code></strong> — Verify DNS resolution is working with <code>dns check -vserver &lt;svm&gt;</code> and confirm the CIFS server account password is synchronized with Active Directory.
-<strong><code>vserver cifs show: There is no data to display</code></strong> — Create a CIFS server configuration on the SVM using <code>vserver cifs create -vserver &lt;svm&gt; -cifs-server &lt;server-name&gt; -domain &lt;domain-name&gt;</code>.
-<strong><code>network interface show: There is no data to display</code></strong> — Create a CIFS data LIF on the SVM with <code>network interface create -vserver &lt;svm&gt; -lif &lt;lif-name&gt; -role data -data-protocol cifs -home-node &lt;node&gt; -home-port &lt;port&gt; -address &lt;ip&gt; -netmask &lt;mask&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CIFS server check for vserver "svm-prod-01": Active Directory: FAILED</code></td>
+<td>Verify DNS resolution is working with <code>dns check -vserver &lt;svm&gt;</code> and confirm the CIFS server account password is synchronized with Active Directory.</td>
+</tr>
+<tr>
+<td><code>vserver cifs show: There is no data to display</code></td>
+<td>Create a CIFS server configuration on the SVM using <code>vserver cifs create -vserver &lt;svm&gt; -cifs-server &lt;server-name&gt; -domain &lt;domain-name&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>network interface show: There is no data to display</code></td>
+<td>Create a CIFS data LIF on the SVM with <code>network interface create -vserver &lt;svm&gt; -lif &lt;lif-name&gt; -role data -data-protocol cifs -home-node &lt;node&gt; -home-port &lt;port&gt; -address &lt;ip&gt; -netmask &lt;mask&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_6">Resolution<a class="headerlink" href="#resolution_6" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Start the SVM if it is stopped</span>
@@ -9565,9 +9847,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: CIFS configuration already exists for SVM "svm_prod_01"</code></strong> — Delete the existing CIFS configuration with <code>vserver cifs delete -vserver &lt;svm&gt;</code> before creating a new one.
-<strong><code>Error: DNS name resolution failed for domain.corp</code></strong> — Verify DNS nameservers are configured on the SVM with <code>vserver services name-service dns modify -vserver &lt;svm&gt; -servers &lt;ip1&gt;,&lt;ip2&gt;</code> and that the domain controller is reachable.
-<strong><code>Error: Failed to reset CIFS machine account password: Access Denied</code></strong> — Ensure the account running the command has Domain Admin privileges and the machine account exists in Active Directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: CIFS configuration already exists for SVM "svm_prod_01"</code></td>
+<td>Delete the existing CIFS configuration with <code>vserver cifs delete -vserver &lt;svm&gt;</code> before creating a new one.</td>
+</tr>
+<tr>
+<td><code>Error: DNS name resolution failed for domain.corp</code></td>
+<td>Verify DNS nameservers are configured on the SVM with <code>vserver services name-service dns modify -vserver &lt;svm&gt; -servers &lt;ip1&gt;,&lt;ip2&gt;</code> and that the domain controller is reachable.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to reset CIFS machine account password: Access Denied</code></td>
+<td>Ensure the account running the command has Domain Admin privileges and the machine account exists in Active Directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="disk-failure-raid-degraded">Disk Failure / RAID Degraded<a class="headerlink" href="#disk-failure-raid-degraded" title="Permanent link">&para;</a></h2>
@@ -9631,9 +9932,28 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: storage</code></strong> — Ensure you are logged into the ONTAP cluster CLI (not the host shell) and have cluster admin privileges.
-<strong><code>Error: There is no entry in the Compat database for the specified aggregate &lt;aggr_name&gt;</code></strong> — Verify the aggregate name is correct by running <code>storage aggregate show</code> without the <code>-aggregate</code> parameter.
-<strong><code>Error: Access denied. You do not have permission to run this command</code></strong> — Confirm your user role includes "admin" or equivalent cluster-wide permissions using <code>security login show</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: storage</code></td>
+<td>Ensure you are logged into the ONTAP cluster CLI (not the host shell) and have cluster admin privileges.</td>
+</tr>
+<tr>
+<td><code>Error: There is no entry in the Compat database for the specified aggregate &lt;aggr_name&gt;</code></td>
+<td>Verify the aggregate name is correct by running <code>storage aggregate show</code> without the <code>-aggregate</code> parameter.</td>
+</tr>
+<tr>
+<td><code>Error: Access denied. You do not have permission to run this command</code></td>
+<td>Confirm your user role includes "admin" or equivalent cluster-wide permissions using <code>security login show</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resolution_7">Resolution<a class="headerlink" href="#resolution_7" title="Permanent link">&para;</a></h3>
 <p>ONTAP will automatically initiate RAID reconstruction when a spare disk is available. No manual intervention is needed for reconstruction to start.</p>
@@ -9660,8 +9980,24 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: disk &lt;disk_id&gt; is not in a failed state</code></strong> — Use <code>storage disk show</code> to verify the disk state before attempting to unfail it.
-<strong><code>Error: No spare disks available for assignment</code></strong> — Confirm spare disks exist with <code>storage disk show -container-type spare</code> and check node ownership constraints.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: disk &lt;disk_id&gt; is not in a failed state</code></td>
+<td>Use <code>storage disk show</code> to verify the disk state before attempting to unfail it.</td>
+</tr>
+<tr>
+<td><code>Error: No spare disks available for assignment</code></td>
+<td>Confirm spare disks exist with <code>storage disk show -container-type spare</code> and check node ownership constraints.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If no spare disks are available, RAID reconstruction cannot proceed. Escalate immediately — a second disk failure in the same RAID group will cause aggregate loss.</p>
 <hr />
@@ -9711,7 +10047,7 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

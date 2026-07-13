@@ -8114,9 +8114,28 @@ PostgreSQL automation scripts — base backup, WAL archiving, replication lag mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pg_basebackup: could not connect to server: FATAL:  role "replication" does not exist</code></strong> — Create the replication role with <code>createuser -U postgres --replication replication</code> or verify the role exists with <code>psql -U postgres -c "\du"</code>.
-<strong><code>mkdir: cannot create directory '/backup/postgresql/2024-01-15': Permission denied</code></strong> — Ensure the PostgreSQL system user (usually <code>postgres</code>) owns the <code>/backup/postgresql</code> directory with <code>sudo chown postgres:postgres /backup/postgresql &amp;&amp; sudo chmod 700 /backup/postgresql</code>.
-<strong><code>pg_basebackup: could not create directory "/backup/postgresql/2024-01-15": No space left on device</code></strong> — Check available disk space with <code>df -h /backup</code> and free up space or expand the partition before retrying the backup.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pg_basebackup: could not connect to server: FATAL:  role "replication" does not exist</code></td>
+<td>Create the replication role with <code>createuser -U postgres --replication replication</code> or verify the role exists with <code>psql -U postgres -c "\du"</code>.</td>
+</tr>
+<tr>
+<td><code>mkdir: cannot create directory '/backup/postgresql/2024-01-15': Permission denied</code></td>
+<td>Ensure the PostgreSQL system user (usually <code>postgres</code>) owns the <code>/backup/postgresql</code> directory with <code>sudo chown postgres:postgres /backup/postgresql &amp;&amp; sudo chmod 700 /backup/postgresql</code>.</td>
+</tr>
+<tr>
+<td><code>pg_basebackup: could not create directory "/backup/postgresql/2024-01-15": No space left on device</code></td>
+<td>Check available disk space with <code>df -h /backup</code> and free up space or expand the partition before retrying the backup.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="replication-lag-monitor">Replication Lag Monitor<a class="headerlink" href="#replication-lag-monitor" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/bin/bash</span>
@@ -8131,9 +8150,28 @@ PostgreSQL automation scripts — base backup, WAL archiving, replication lag mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></strong> — Ensure the PostgreSQL server is running and the monitor user has connection permissions; check <code>pg_hba.conf</code> for the monitor user's host-based authentication rules.
-<strong><code>mail: command not found</code></strong> — Install a mail utility (e.g., <code>apt-get install mailutils</code> on Debian/Ubuntu or <code>yum install mailx</code> on RHEL) or configure an alternative alerting mechanism.
-<strong><code>psql: error: FATAL: role "monitor" does not exist</code></strong> — Create the monitor role with <code>createuser -U postgres monitor</code> and grant it CONNECT privileges on the replication database.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></td>
+<td>Ensure the PostgreSQL server is running and the monitor user has connection permissions; check <code>pg_hba.conf</code> for the monitor user's host-based authentication rules.</td>
+</tr>
+<tr>
+<td><code>mail: command not found</code></td>
+<td>Install a mail utility (e.g., <code>apt-get install mailutils</code> on Debian/Ubuntu or <code>yum install mailx</code> on RHEL) or configure an alternative alerting mechanism.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: role "monitor" does not exist</code></td>
+<td>Create the monitor role with <code>createuser -U postgres monitor</code> and grant it CONNECT privileges on the replication database.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="bloat-report">Bloat Report<a class="headerlink" href="#bloat-report" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">relname</span><span class="p">,</span>
@@ -8170,9 +8208,28 @@ PostgreSQL automation scripts — base backup, WAL archiving, replication lag mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></strong> — Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check that the monitor user has connection permissions in <code>pg_hba.conf</code>.
-<strong><code>psql: error: FATAL: role "monitor" does not exist</code></strong> — Create the monitoring role with <code>createuser -U postgres monitor</code> or verify the role name matches your actual PostgreSQL user.
-<strong><code>Permission denied</code></strong> — Ensure the <code>/var/log/</code> directory is writable by the user running the command, or redirect to a writable location like <code>/tmp/pg-connections.csv</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></td>
+<td>Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check that the monitor user has connection permissions in <code>pg_hba.conf</code>.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: role "monitor" does not exist</code></td>
+<td>Create the monitoring role with <code>createuser -U postgres monitor</code> or verify the role name matches your actual PostgreSQL user.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure the <code>/var/log/</code> directory is writable by the user running the command, or redirect to a writable location like <code>/tmp/pg-connections.csv</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8210,7 +8267,7 @@ PostgreSQL automation scripts — base backup, WAL archiving, replication lag mo
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

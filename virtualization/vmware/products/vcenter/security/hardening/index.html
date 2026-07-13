@@ -9232,9 +9232,28 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vmafd-cli: command not found</code></strong> — Verify vmafd service is running with <code>systemctl status vmware-vmafd</code> and check the correct binary path.
-<strong><code>ERROR: Failed to update TLS version: Service dependency error</code></strong> — Restart all vCenter services with <code>/etc/init.d/vmware-vpxd restart</code> before retrying the TLS update.
-<strong><code>ERROR: Certificate validation failed during reconfiguration</code></strong> — Regenerate the vCenter certificate using the Certificate Manager tool before applying TLS changes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vmafd-cli: command not found</code></td>
+<td>Verify vmafd service is running with <code>systemctl status vmware-vmafd</code> and check the correct binary path.</td>
+</tr>
+<tr>
+<td><code>ERROR: Failed to update TLS version: Service dependency error</code></td>
+<td>Restart all vCenter services with <code>/etc/init.d/vmware-vpxd restart</code> before retrying the TLS update.</td>
+</tr>
+<tr>
+<td><code>ERROR: Certificate validation failed during reconfiguration</code></td>
+<td>Regenerate the vCenter certificate using the Certificate Manager tool before applying TLS changes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Test TLS from outside the appliance:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify only TLS 1.2+ is accepted</span>
@@ -9271,9 +9290,28 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify vCenter is running and listening on port 443 with <code>netstat -tlnp | grep 443</code>.
-<strong><code>error:1409442E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version</code></strong> — This is expected output indicating TLS 1.0 is correctly rejected; no action needed.
-<strong><code>error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure</code></strong> — This is expected output indicating TLS 1.1 is correctly rejected; no action needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify vCenter is running and listening on port 443 with <code>netstat -tlnp | grep 443</code>.</td>
+</tr>
+<tr>
+<td><code>error:1409442E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version</code></td>
+<td>This is expected output indicating TLS 1.0 is correctly rejected; no action needed.</td>
+</tr>
+<tr>
+<td><code>error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure</code></td>
+<td>This is expected output indicating TLS 1.1 is correctly rejected; no action needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="sso-password-and-lockout-policy">SSO Password and Lockout Policy<a class="headerlink" href="#sso-password-and-lockout-policy" title="Permanent link">&para;</a></h2>
@@ -9432,8 +9470,24 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option or malformed command line.</code></strong> — Verify the ruleset ID exists with <code>esxcli network firewall ruleset list</code> and check for typos in the ruleset name.
-<strong><code>Error: The IP address format is invalid.</code></strong> — Use valid CIDR notation (e.g., <code>10.0.1.0/24</code>) or a single IP without a prefix (e.g., <code>10.0.1.50</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option or malformed command line.</code></td>
+<td>Verify the ruleset ID exists with <code>esxcli network firewall ruleset list</code> and check for typos in the ruleset name.</td>
+</tr>
+<tr>
+<td><code>Error: The IP address format is invalid.</code></td>
+<td>Use valid CIDR notation (e.g., <code>10.0.1.0/24</code>) or a single IP without a prefix (e.g., <code>10.0.1.50</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="audit-logging-configuration">Audit Logging Configuration<a class="headerlink" href="#audit-logging-configuration" title="Permanent link">&para;</a></h2>
@@ -9592,7 +9646,7 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

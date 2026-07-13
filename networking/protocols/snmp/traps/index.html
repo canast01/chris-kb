@@ -7960,9 +7960,28 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error on line 3: unknown token: trapsink</code></strong> — Use <code>trap2sink</code> for SNMPv2c traps, or verify snmpd version supports legacy <code>trapsink</code> syntax.
-<strong><code>error on line 9: Unknown user name "trapuser"</code></strong> — Create the SNMPv3 user first with <code>net-snmp-create-v3-user -A &lt;authpass&gt; -X &lt;privpass&gt; -a SHA -x AES trapuser</code> before restarting snmpd.
-<strong><code>Job for snmpd.service failed because the control process exited with error code</code></strong> — Check <code>/var/log/snmpd.log</code> or run <code>snmpd -f -L s 6</code> to validate configuration syntax before restart.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error on line 3: unknown token: trapsink</code></td>
+<td>Use <code>trap2sink</code> for SNMPv2c traps, or verify snmpd version supports legacy <code>trapsink</code> syntax.</td>
+</tr>
+<tr>
+<td><code>error on line 9: Unknown user name "trapuser"</code></td>
+<td>Create the SNMPv3 user first with <code>net-snmp-create-v3-user -A &lt;authpass&gt; -X &lt;privpass&gt; -a SHA -x AES trapuser</code> before restarting snmpd.</td>
+</tr>
+<tr>
+<td><code>Job for snmpd.service failed because the control process exited with error code</code></td>
+<td>Check <code>/var/log/snmpd.log</code> or run <code>snmpd -f -L s 6</code> to validate configuration syntax before restart.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="cisco-ios">Cisco IOS<a class="headerlink" href="#cisco-ios" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps
@@ -7997,9 +8016,28 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the NMS IP address format is valid (e.g., 192.168.x.x) and that the community string contains no spaces or special characters.
-<strong><code>% Incomplete command.</code></strong> — Ensure you specify both the NMS IP address and community string; <code>snmp-server host</code> requires at least these two parameters.
-<strong><code>% Unknown SNMP trap type 'envmon'</code></strong> — Check device platform support; some devices use <code>snmp-server enable traps enviromental</code> or <code>snmp-server enable traps entity</code> instead of <code>envmon</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid input detected at '^' marker.</code></td>
+<td>Verify the NMS IP address format is valid (e.g., 192.168.x.x) and that the community string contains no spaces or special characters.</td>
+</tr>
+<tr>
+<td><code>% Incomplete command.</code></td>
+<td>Ensure you specify both the NMS IP address and community string; <code>snmp-server host</code> requires at least these two parameters.</td>
+</tr>
+<tr>
+<td><code>% Unknown SNMP trap type 'envmon'</code></td>
+<td>Check device platform support; some devices use <code>snmp-server enable traps enviromental</code> or <code>snmp-server enable traps entity</code> instead of <code>envmon</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="arista-eos">Arista EOS<a class="headerlink" href="#arista-eos" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>snmp-server host &lt;nms-ip&gt; version 2c &lt;community&gt;
@@ -8032,9 +8070,28 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>snmpconfig: command not found</code></strong> — Verify SNMP tools are installed with <code>apt-get install snmp snmp-mibs-downloader</code> or equivalent for your distribution.
-<strong><code>Error: Unable to write configuration — Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has write access to <code>/etc/snmp/</code> configuration directories.
-<strong><code>Invalid IP address format</code></strong> — Enter the trap recipient IP in valid dotted-decimal notation (e.g., 192.168.1.50) without CIDR notation or hostnames.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>snmpconfig: command not found</code></td>
+<td>Verify SNMP tools are installed with <code>apt-get install snmp snmp-mibs-downloader</code> or equivalent for your distribution.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to write configuration — Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user has write access to <code>/etc/snmp/</code> configuration directories.</td>
+</tr>
+<tr>
+<td><code>Invalid IP address format</code></td>
+<td>Enter the trap recipient IP in valid dotted-decimal notation (e.g., 192.168.1.50) without CIDR notation or hostnames.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="testing-trap-delivery">Testing Trap Delivery<a class="headerlink" href="#testing-trap-delivery" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Send a test trap from Linux to NMS</span>
@@ -8058,9 +8115,28 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>snmptrap: Unknown host "&lt;nms-ip&gt;"</code></strong> — Replace <code>&lt;nms-ip&gt;</code> with a valid IP address or resolvable hostname (e.g., <code>192.168.1.100</code>).
-<strong><code>snmptrapd: Error opening specified endpoint "UDP: [0.0.0.0]:162"</code></strong> — Ensure snmptrapd is not already running on port 162 and that you have root/sudo privileges to bind to port 162.
-<strong><code>snmptrap: No response from &lt;nms-ip&gt;:162</code></strong> — Verify the NMS host is reachable, the SNMP community string matches the NMS configuration, and firewall rules allow UDP 162 inbound.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>snmptrap: Unknown host "&lt;nms-ip&gt;"</code></td>
+<td>Replace <code>&lt;nms-ip&gt;</code> with a valid IP address or resolvable hostname (e.g., <code>192.168.1.100</code>).</td>
+</tr>
+<tr>
+<td><code>snmptrapd: Error opening specified endpoint "UDP: [0.0.0.0]:162"</code></td>
+<td>Ensure snmptrapd is not already running on port 162 and that you have root/sudo privileges to bind to port 162.</td>
+</tr>
+<tr>
+<td><code>snmptrap: No response from &lt;nms-ip&gt;:162</code></td>
+<td>Verify the NMS host is reachable, the SNMP community string matches the NMS configuration, and firewall rules allow UDP 162 inbound.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="common-trap-oids">Common Trap OIDs<a class="headerlink" href="#common-trap-oids" title="Permanent link">&para;</a></h2>
 <table>
@@ -8110,8 +8186,24 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: [NET FAILURE] Unknown host name</code></strong> — Verify the SNMP trap source hostname/IP is resolvable; add it to <code>/etc/hosts</code> or ensure DNS is configured correctly.
-<strong><code>error opening specified logfile /var/log/snmptrapd.log: Permission denied</code></strong> — Create the log file with proper permissions: <code>touch /var/log/snmptrapd.log &amp;&amp; chmod 644 /var/log/snmptrapd.log &amp;&amp; chown snmp:snmp /var/log/snmptrapd.log</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: [NET FAILURE] Unknown host name</code></td>
+<td>Verify the SNMP trap source hostname/IP is resolvable; add it to <code>/etc/hosts</code> or ensure DNS is configured correctly.</td>
+</tr>
+<tr>
+<td><code>error opening specified logfile /var/log/snmptrapd.log: Permission denied</code></td>
+<td>Create the log file with proper permissions: <code>touch /var/log/snmptrapd.log &amp;&amp; chmod 644 /var/log/snmptrapd.log &amp;&amp; chown snmp:snmp /var/log/snmptrapd.log</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
@@ -8167,7 +8259,7 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

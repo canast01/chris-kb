@@ -9085,9 +9085,28 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symcfg: Command not found</code></strong> — Ensure Solutions Enabler is installed and the <code>$PATH</code> includes the SE installation directory (typically <code>/opt/emc/SYMCLI/bin</code>).
-<strong><code>Symmetrix ID: &lt;SID&gt; -- Not Found</code></strong> — Verify the SID is correct and the array is properly discovered by running <code>symcfg list</code> first to see all available arrays.
-<strong><code>Permission denied</code></strong> — Run the command with appropriate privileges (use <code>sudo</code> or ensure your user is in the <code>symcli</code> or <code>root</code> group).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symcfg: Command not found</code></td>
+<td>Ensure Solutions Enabler is installed and the <code>$PATH</code> includes the SE installation directory (typically <code>/opt/emc/SYMCLI/bin</code>).</td>
+</tr>
+<tr>
+<td><code>Symmetrix ID: &lt;SID&gt; -- Not Found</code></td>
+<td>Verify the SID is correct and the array is properly discovered by running <code>symcfg list</code> first to see all available arrays.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with appropriate privileges (use <code>sudo</code> or ensure your user is in the <code>symcli</code> or <code>root</code> group).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-collect-current-license-state">2. Collect current license state<a class="headerlink" href="#2-collect-current-license-state" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all currently active licenses and their state</span>
@@ -9124,9 +9143,28 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symlicense: command not found</code></strong> — Ensure the Dell EMC Symmetrix CLI tools are installed and the PATH includes the bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
-<strong><code>Error: Invalid SID &lt;SID&gt; — SID not found in configuration</code></strong> — Replace <code>&lt;SID&gt;</code> with an actual Symmetrix array ID from <code>symcfg list</code> output.
-<strong><code>Error: License file not found: /path/to/cod-key.lic</code></strong> — Verify the license key file path exists and is readable by the user running the command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symlicense: command not found</code></td>
+<td>Ensure the Dell EMC Symmetrix CLI tools are installed and the PATH includes the bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).</td>
+</tr>
+<tr>
+<td><code>Error: Invalid SID &lt;SID&gt; — SID not found in configuration</code></td>
+<td>Replace <code>&lt;SID&gt;</code> with an actual Symmetrix array ID from <code>symcfg list</code> output.</td>
+</tr>
+<tr>
+<td><code>Error: License file not found: /path/to/cod-key.lic</code></td>
+<td>Verify the license key file path exists and is readable by the user running the command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="3-capture-the-error-from-a-failed-key-import">3. Capture the error from a failed key import<a class="headerlink" href="#3-capture-the-error-from-a-failed-key-import" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Attempt to import the CoD key and capture all output</span>
@@ -9151,9 +9189,28 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMAPI_C_INVALID_LICENSE: License key file is invalid or serial number mismatch</code></strong> — Verify the license file path is correct and the serial number in the key matches your array's SN using <code>symlicense -sid &lt;SID&gt; query</code>.
-<strong><code>SYMAPI_C_LICENSE_CONFLICT: A conflicting license is already active on this array</code></strong> — Remove the existing license with <code>symlicense -sid &lt;SID&gt; remove -id &lt;LICENSE_ID&gt;</code> before installing the new key.
-<strong><code>SYMAPI_C_NO_LICENSE: Feature requires additional license entitlement</code></strong> — Confirm your CoD key file includes the required feature codes and contact Dell EMC support if the key is incomplete.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMAPI_C_INVALID_LICENSE: License key file is invalid or serial number mismatch</code></td>
+<td>Verify the license file path is correct and the serial number in the key matches your array's SN using <code>symlicense -sid &lt;SID&gt; query</code>.</td>
+</tr>
+<tr>
+<td><code>SYMAPI_C_LICENSE_CONFLICT: A conflicting license is already active on this array</code></td>
+<td>Remove the existing license with <code>symlicense -sid &lt;SID&gt; remove -id &lt;LICENSE_ID&gt;</code> before installing the new key.</td>
+</tr>
+<tr>
+<td><code>SYMAPI_C_NO_LICENSE: Feature requires additional license entitlement</code></td>
+<td>Confirm your CoD key file includes the required feature codes and contact Dell EMC support if the key is incomplete.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="4-collect-unisphere-events-and-symapi-logs">4. Collect Unisphere events and SYMAPI logs<a class="headerlink" href="#4-collect-unisphere-events-and-symapi-logs" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SYMAPI error log (on the Solutions Enabler host)</span>
@@ -9180,9 +9237,28 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cat: /var/symapi/log/symapi_log.txt: No such file or directory</code></strong> — Verify Solutions Enabler is installed and running with <code>symcfg list</code>, or check the correct log path for your SE version.
-<strong><code>symaudit: command not found</code></strong> — Add Solutions Enabler bin directory to PATH with <code>export PATH=$PATH:/opt/emc/symapi/bin</code> or use the full path <code>/opt/emc/symapi/bin/symaudit</code>.
-<strong><code>ERROR: Invalid SID &lt;SID&gt;</code></strong> — Replace <code>&lt;SID&gt;</code> with an actual array serial number from <code>symcfg list</code> output (e.g., <code>000296900001</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat: /var/symapi/log/symapi_log.txt: No such file or directory</code></td>
+<td>Verify Solutions Enabler is installed and running with <code>symcfg list</code>, or check the correct log path for your SE version.</td>
+</tr>
+<tr>
+<td><code>symaudit: command not found</code></td>
+<td>Add Solutions Enabler bin directory to PATH with <code>export PATH=$PATH:/opt/emc/symapi/bin</code> or use the full path <code>/opt/emc/symapi/bin/symaudit</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: Invalid SID &lt;SID&gt;</code></td>
+<td>Replace <code>&lt;SID&gt;</code> with an actual array serial number from <code>symcfg list</code> output (e.g., <code>000296900001</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="5-check-key-file-fields-do-not-share-key-file-publicly">5. Check key file fields (do not share key file publicly)<a class="headerlink" href="#5-check-key-file-fields-do-not-share-key-file-publicly" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Key files are plain text — check the VENDOR_SN field to confirm it matches your array SID</span>
@@ -9206,9 +9282,28 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /path/to/cod-key.lic: No such file or directory</code></strong> — Replace <code>/path/to/cod-key.lic</code> with the actual path to your license file (typically <code>/opt/dell/storage/cod-key.lic</code> or similar).
-<strong><code>grep: (standard input): No such file or directory</code></strong> — Ensure the file path is quoted correctly and the file exists; verify with <code>ls -la /path/to/cod-key.lic</code> first.
-<strong><code>VENDOR_SN field not found or does not match array SID</code></strong> — Confirm the SID from your array's management interface matches the VENDOR_SN in the key file; contact Dell licensing if they differ.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /path/to/cod-key.lic: No such file or directory</code></td>
+<td>Replace <code>/path/to/cod-key.lic</code> with the actual path to your license file (typically <code>/opt/dell/storage/cod-key.lic</code> or similar).</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): No such file or directory</code></td>
+<td>Ensure the file path is quoted correctly and the file exists; verify with <code>ls -la /path/to/cod-key.lic</code> first.</td>
+</tr>
+<tr>
+<td><code>VENDOR_SN field not found or does not match array SID</code></td>
+<td>Confirm the SID from your array's management interface matches the VENDOR_SN in the key file; contact Dell licensing if they differ.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="6-write-the-timeline">6. Write the timeline<a class="headerlink" href="#6-write-the-timeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Array SID: 000120000001 (PowerMax 8000)
@@ -9375,9 +9470,28 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symlicense: Cannot connect to SYMAPI daemon</code></strong> — Verify SYMAPI is running with <code>service symapi status</code> and restart if needed with <code>service symapi restart</code>.
-<strong><code>Preview: License key expired or invalid</code></strong> — Confirm the .lic file path is correct and the key has not passed its expiration date by checking with Dell EMC support.
-<strong><code>symaudit: SID not found in configuration</code></strong> — Ensure the SID is correct and the array is discovered by running <code>symcfg discover</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symlicense: Cannot connect to SYMAPI daemon</code></td>
+<td>Verify SYMAPI is running with <code>service symapi status</code> and restart if needed with <code>service symapi restart</code>.</td>
+</tr>
+<tr>
+<td><code>Preview: License key expired or invalid</code></td>
+<td>Confirm the .lic file path is correct and the key has not passed its expiration date by checking with Dell EMC support.</td>
+</tr>
+<tr>
+<td><code>symaudit: SID not found in configuration</code></td>
+<td>Ensure the SID is correct and the array is discovered by running <code>symcfg discover</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
@@ -9418,7 +9532,7 @@ Dell Cloud on Demand (COD) escalation: how to collect array license state, key f
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

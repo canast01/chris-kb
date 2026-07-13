@@ -8110,9 +8110,28 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The resource with name '&lt;nic-name&gt;' does not exist in the resource group '&lt;rg&gt;'</code></strong> — Verify the NIC name and resource group name match exactly using <code>az network nic list -g &lt;rg&gt;</code>.
-<strong><code>(ResourceNotFound) Resource not found</code></strong> — Ensure the Network Watcher extension is enabled in the region and the source VM exists with <code>az network watcher list -g &lt;rg&gt;</code>.
-<strong><code>The storage account '&lt;sa&gt;' does not exist or you do not have access to it</code></strong> — Confirm the storage account name is correct and your account has Contributor role on it using <code>az storage account show -n &lt;sa&gt; -g &lt;rg&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The resource with name '&lt;nic-name&gt;' does not exist in the resource group '&lt;rg&gt;'</code></td>
+<td>Verify the NIC name and resource group name match exactly using <code>az network nic list -g &lt;rg&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>(ResourceNotFound) Resource not found</code></td>
+<td>Ensure the Network Watcher extension is enabled in the region and the source VM exists with <code>az network watcher list -g &lt;rg&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>The storage account '&lt;sa&gt;' does not exist or you do not have access to it</code></td>
+<td>Confirm the storage account name is correct and your account has Contributor role on it using <code>az storage account show -n &lt;sa&gt; -g &lt;rg&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Common causes:
 - NSG deny rule at NIC level (NIC NSG takes precedence over Subnet NSG)
@@ -8157,8 +8176,24 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Network/networkSecurityGroups/&lt;nsg-id&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the NSG ID is correct and exists in the target resource group with <code>az network nsg list -g &lt;resource-group&gt;</code>.
-<strong><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Network/networkWatchers/checkIPFlow/action'.</code></strong> — Ensure your Azure account has Network Contributor or higher role assigned to the subscription or resource group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.Network/networkSecurityGroups/&lt;nsg-id&gt;' under resource group '&lt;rg&gt;' was not found.</code></td>
+<td>Verify the NSG ID is correct and exists in the target resource group with <code>az network nsg list -g &lt;resource-group&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Network/networkWatchers/checkIPFlow/action'.</code></td>
+<td>Ensure your Azure account has Network Contributor or higher role assigned to the subscription or resource group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="azure-ad-authentication-errors">Azure AD Authentication Errors<a class="headerlink" href="#azure-ad-authentication-errors" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check token issuance via Entra ID sign-in logs</span>
@@ -8220,9 +8255,28 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The provided object id '&lt;sp-object-id&gt;' does not refer to a valid service principal object.</code></strong> — Verify the service principal object ID with <code>az ad sp list --filter "displayName eq 'your-sp-name'"</code> and use the correct <code>id</code> field.
-<strong><code>Federated credential not found for the given application.</code></strong> — Confirm the app ID is correct and that federated credentials have been configured; if none exist, create one with <code>az ad app federated-credential create</code>.
-<strong><code>Authorization_RequestDenied: Insufficient privileges to complete the operation.</code></strong> — Ensure your Azure CLI session has the <code>Application.ReadWrite.All</code> or <code>Directory.ReadWrite.All</code> permission in Entra ID.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The provided object id '&lt;sp-object-id&gt;' does not refer to a valid service principal object.</code></td>
+<td>Verify the service principal object ID with <code>az ad sp list --filter "displayName eq 'your-sp-name'"</code> and use the correct <code>id</code> field.</td>
+</tr>
+<tr>
+<td><code>Federated credential not found for the given application.</code></td>
+<td>Confirm the app ID is correct and that federated credentials have been configured; if none exist, create one with <code>az ad app federated-credential create</code>.</td>
+</tr>
+<tr>
+<td><code>Authorization_RequestDenied: Insufficient privileges to complete the operation.</code></td>
+<td>Ensure your Azure CLI session has the <code>Application.ReadWrite.All</code> or <code>Directory.ReadWrite.All</code> permission in Entra ID.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Common causes:
 - Conditional Access policy blocking (no MFA, non-compliant device, suspicious location)
@@ -8273,9 +8327,28 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/&lt;storage-account&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the storage account name and resource group are correct, and that you are querying the correct subscription.
-<strong><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/read' over scope '&lt;scope&gt;'.</code></strong> — Ensure your user or service principal has at least Reader role on the storage account or its resource group.
-<strong><code>InvalidAuthenticationTokenTenant: The access token is from the wrong tenant.</code></strong> — Run <code>az account set --subscription &lt;subscription-id&gt;</code> to switch to the correct subscription context.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/&lt;storage-account&gt;' under resource group '&lt;rg&gt;' was not found.</code></td>
+<td>Verify the storage account name and resource group are correct, and that you are querying the correct subscription.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/read' over scope '&lt;scope&gt;'.</code></td>
+<td>Ensure your user or service principal has at least Reader role on the storage account or its resource group.</td>
+</tr>
+<tr>
+<td><code>InvalidAuthenticationTokenTenant: The access token is from the wrong tenant.</code></td>
+<td>Run <code>az account set --subscription &lt;subscription-id&gt;</code> to switch to the correct subscription context.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="aks-pod-not-starting">AKS Pod Not Starting<a class="headerlink" href="#aks-pod-not-starting" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Get pod description and events</span>
@@ -8343,8 +8416,24 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound : The Resource 'Microsoft.Web/serverfarms/&lt;plan-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the App Service Plan name and resource group name are correct with <code>az appservice plan list -g &lt;rg&gt;</code>.
-<strong><code>AuthorizationFailed : The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Web/serverfarms/write' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Web/serverfarms/&lt;plan-name&gt;'.</code></strong> — Ensure your Azure account has Contributor or App Service Plan Contributor role on the resource group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound : The Resource 'Microsoft.Web/serverfarms/&lt;plan-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></td>
+<td>Verify the App Service Plan name and resource group name are correct with <code>az appservice plan list -g &lt;rg&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed : The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Web/serverfarms/write' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Web/serverfarms/&lt;plan-name&gt;'.</code></td>
+<td>Ensure your Azure account has Contributor or App Service Plan Contributor role on the resource group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
@@ -8382,7 +8471,7 @@ Azure common issues — VM connectivity failures, NSG rule analysis, effective r
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

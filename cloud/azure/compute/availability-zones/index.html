@@ -8424,9 +8424,28 @@ Availability Zones are physically separate datacenters within an Azure region, e
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: The following arguments are required: --location</code></strong> — Add <code>--location eastus</code> (or your target region) to the <code>az vm list-skus</code> command.
-<strong><code>No JSON object could be decoded</code></strong> — Ensure your Azure CLI is updated with <code>az upgrade</code> and you're authenticated with <code>az login</code>.
-<strong><code>The resource type 'virtualMachines' is invalid</code></strong> — Use lowercase <code>virtualmachines</code> or omit the <code>--resource-type</code> flag to query all resources in the location.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: The following arguments are required: --location</code></td>
+<td>Add <code>--location eastus</code> (or your target region) to the <code>az vm list-skus</code> command.</td>
+</tr>
+<tr>
+<td><code>No JSON object could be decoded</code></td>
+<td>Ensure your Azure CLI is updated with <code>az upgrade</code> and you're authenticated with <code>az login</code>.</td>
+</tr>
+<tr>
+<td><code>The resource type 'virtualMachines' is invalid</code></td>
+<td>Use lowercase <code>virtualmachines</code> or omit the <code>--resource-type</code> flag to query all resources in the location.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="deploying-zone-pinned-vms">Deploying Zone-Pinned VMs<a class="headerlink" href="#deploying-zone-pinned-vms" title="Permanent link">&para;</a></h2>
@@ -8513,9 +8532,28 @@ Availability Zones are physically separate datacenters within an Azure region, e
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceGroupNotFound</code></strong> — Verify the resource group name is correct and exists in your subscription with <code>az group list</code>.
-<strong><code>InvalidImageName</code></strong> — Replace <code>Ubuntu2204</code> with a valid image URN like <code>UbuntuLTS</code> or <code>Canonical:0001-com-ubuntu-server-jammy:22_04-lts-gen2:latest</code>.
-<strong><code>ZoneNotAvailable</code></strong> — Confirm availability zones 1–3 are supported in your region with <code>az vm list-skus --location &lt;region&gt; --query "[?zones]" --output table</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceGroupNotFound</code></td>
+<td>Verify the resource group name is correct and exists in your subscription with <code>az group list</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidImageName</code></td>
+<td>Replace <code>Ubuntu2204</code> with a valid image URN like <code>UbuntuLTS</code> or <code>Canonical:0001-com-ubuntu-server-jammy:22_04-lts-gen2:latest</code>.</td>
+</tr>
+<tr>
+<td><code>ZoneNotAvailable</code></td>
+<td>Confirm availability zones 1–3 are supported in your region with <code>az vm list-skus --location &lt;region&gt; --query "[?zones]" --output table</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="zone-redundant-managed-disks">Zone-Redundant Managed Disks<a class="headerlink" href="#zone-redundant-managed-disks" title="Permanent link">&para;</a></h2>
@@ -8555,9 +8593,28 @@ Availability Zones are physically separate datacenters within an Azure region, e
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound : The Resource 'Microsoft.Compute/disks/&lt;disk-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the disk name and resource group match exactly, and that the disk creation completed successfully before attempting attachment.
-<strong><code>InvalidParameter : The resource with id '/subscriptions/.../virtualMachines/&lt;vm-name&gt;' could not be found.</code></strong> — Confirm the VM name and resource group are correct, and that the VM exists in the same region and resource group as the disk.
-<strong><code>SkuNotAvailable : The requested sku 'Premium_ZRS' is not available in location 'eastus'.</code></strong> — Check Azure's current SKU availability for your region using <code>az vm list-skus --location eastus --query "[?name=='Premium_ZRS']"</code> and select an available location.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound : The Resource 'Microsoft.Compute/disks/&lt;disk-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></td>
+<td>Verify the disk name and resource group match exactly, and that the disk creation completed successfully before attempting attachment.</td>
+</tr>
+<tr>
+<td><code>InvalidParameter : The resource with id '/subscriptions/.../virtualMachines/&lt;vm-name&gt;' could not be found.</code></td>
+<td>Confirm the VM name and resource group are correct, and that the VM exists in the same region and resource group as the disk.</td>
+</tr>
+<tr>
+<td><code>SkuNotAvailable : The requested sku 'Premium_ZRS' is not available in location 'eastus'.</code></td>
+<td>Check Azure's current SKU availability for your region using <code>az vm list-skus --location eastus --query "[?name=='Premium_ZRS']"</code> and select an available location.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -8674,9 +8731,28 @@ Availability Zones are physically separate datacenters within an Azure region, e
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>BadRequest: The resource with id ... does not exist.</code></strong> — Verify the resource group name, public IP name, and load balancer name exist before running the address pool command.
-<strong><code>InvalidResourceReference: The vnet parameter must be a full resource ID, not a name.</code></strong> — Use the full vnet resource ID format: <code>/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Network/virtualNetworks/&lt;vnet-name&gt;</code>.
-<strong><code>ConflictingUserInput: Cannot use zones parameter with Basic SKU public IP.</code></strong> — Remove the <code>--zone</code> parameter or change the SKU to <code>Standard</code> for zone-redundancy support.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BadRequest: The resource with id ... does not exist.</code></td>
+<td>Verify the resource group name, public IP name, and load balancer name exist before running the address pool command.</td>
+</tr>
+<tr>
+<td><code>InvalidResourceReference: The vnet parameter must be a full resource ID, not a name.</code></td>
+<td>Use the full vnet resource ID format: <code>/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Network/virtualNetworks/&lt;vnet-name&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>ConflictingUserInput: Cannot use zones parameter with Basic SKU public IP.</code></td>
+<td>Remove the <code>--zone</code> parameter or change the SKU to <code>Standard</code> for zone-redundancy support.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="cross-zone-latency-considerations">Cross-Zone Latency Considerations<a class="headerlink" href="#cross-zone-latency-considerations" title="Permanent link">&para;</a></h2>
@@ -8736,9 +8812,28 @@ Availability Zones are physically separate datacenters within an Azure region, e
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/&lt;vm-name-z1&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the VM name and resource group name are correct using <code>az vm list --resource-group &lt;rg&gt;</code>.
-<strong><code>The client '&lt;principal-id&gt;' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action'</code></strong> — Assign the VM Contributor or higher role to your user/service principal using <code>az role assignment create</code>.
-<strong><code>Network connectivity failed: 100% packet loss</code></strong> — Ensure the target VM's private IP is correct, both VMs are in the same virtual network or peered networks, and NSG rules allow ICMP traffic between them.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/&lt;vm-name-z1&gt;' under resource group '&lt;rg&gt;' was not found.</code></td>
+<td>Verify the VM name and resource group name are correct using <code>az vm list --resource-group &lt;rg&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>The client '&lt;principal-id&gt;' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action'</code></td>
+<td>Assign the VM Contributor or higher role to your user/service principal using <code>az role assignment create</code>.</td>
+</tr>
+<tr>
+<td><code>Network connectivity failed: 100% packet loss</code></td>
+<td>Ensure the target VM's private IP is correct, both VMs are in the same virtual network or peered networks, and NSG rules allow ICMP traffic between them.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="availability-zones-vs-availability-sets">Availability Zones vs Availability Sets<a class="headerlink" href="#availability-zones-vs-availability-sets" title="Permanent link">&para;</a></h2>
@@ -8797,8 +8892,24 @@ Availability Zones are physically separate datacenters within an Azure region, e
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound : The Resource 'Microsoft.Network/publicIPAddresses/&lt;pip-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the public IP name and resource group name are correct with <code>az network public-ip list --resource-group &lt;rg&gt;</code>.
-<strong><code>ResourceNotFound : The Resource 'Microsoft.Compute/disks/&lt;disk-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Confirm the disk name exists in the resource group using <code>az disk list --resource-group &lt;rg&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound : The Resource 'Microsoft.Network/publicIPAddresses/&lt;pip-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></td>
+<td>Verify the public IP name and resource group name are correct with <code>az network public-ip list --resource-group &lt;rg&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFound : The Resource 'Microsoft.Compute/disks/&lt;disk-name&gt;' under resource group '&lt;rg&gt;' was not found.</code></td>
+<td>Confirm the disk name exists in the resource group using <code>az disk list --resource-group &lt;rg&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8822,7 +8933,7 @@ Availability Zones are physically separate datacenters within an Azure region, e
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

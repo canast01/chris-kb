@@ -9033,9 +9033,28 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>powermt: command not found</code></strong> — Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and ensure <code>/opt/emc/powerpath/bin</code> is in your PATH.
-<strong><code>powermt display: Insufficient privilege</code></strong> — Run the command with <code>sudo</code> or as root, as PowerPath requires elevated permissions to query device status.
-<strong><code>Restore operation failed: No dead paths detected</code></strong> — This is informational output when all paths are already healthy; confirm actual path status with <code>powermt display dev=all</code> to verify.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and ensure <code>/opt/emc/powerpath/bin</code> is in your PATH.</td>
+</tr>
+<tr>
+<td><code>powermt display: Insufficient privilege</code></td>
+<td>Run the command with <code>sudo</code> or as root, as PowerPath requires elevated permissions to query device status.</td>
+</tr>
+<tr>
+<td><code>Restore operation failed: No dead paths detected</code></td>
+<td>This is informational output when all paths are already healthy; confirm actual path status with <code>powermt display dev=all</code> to verify.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If paths remain dead after <code>powermt restore</code>:</p>
 <ol>
@@ -9112,9 +9131,28 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>powermt: Command not found</code></strong> — Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and ensure <code>/opt/emc/powerpath/bin</code> is in your PATH.
-<strong><code>Cannot open /sys/class/fc_host/host0/issue_lip: No such file or directory</code></strong> — Confirm the HBA driver is loaded with <code>lsmod | grep qla2xxx</code> and verify the correct host number using <code>ls /sys/class/fc_host/</code>.
-<strong><code>powermt restore: No devices to restore</code></strong> — Check that devices are actually in a failed state with <code>powermt display</code> and verify array-side LUN masking is still active before attempting restore.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>powermt: Command not found</code></td>
+<td>Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and ensure <code>/opt/emc/powerpath/bin</code> is in your PATH.</td>
+</tr>
+<tr>
+<td><code>Cannot open /sys/class/fc_host/host0/issue_lip: No such file or directory</code></td>
+<td>Confirm the HBA driver is loaded with <code>lsmod | grep qla2xxx</code> and verify the correct host number using <code>ls /sys/class/fc_host/</code>.</td>
+</tr>
+<tr>
+<td><code>powermt restore: No devices to restore</code></td>
+<td>Check that devices are actually in a failed state with <code>powermt display</code> and verify array-side LUN masking is still active before attempting restore.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Check these causes in order:
 - <strong>Array-side</strong>: LUN masking removed, or storage view/masking view deleted accidentally
@@ -9178,9 +9216,28 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bash: /usr/bin/rescan-scsi-bus.sh: No such file or directory</code></strong> — Install the sg3_utils package with <code>yum install sg3_utils</code> or skip this step if using native SCSI rescan.
-<strong><code>powermt: command not found</code></strong> — Verify PowerPath is installed and the EMC PowerPath daemon is running with <code>systemctl status PowerPath</code> or <code>/etc/init.d/PowerPath status</code>.
-<strong><code>Device not found in powermt display dev=all output</code></strong> — Increase the rescan delay or manually trigger <code>powermt config</code> again after 10–15 seconds to allow the storage array to present the LUN.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bash: /usr/bin/rescan-scsi-bus.sh: No such file or directory</code></td>
+<td>Install the sg3_utils package with <code>yum install sg3_utils</code> or skip this step if using native SCSI rescan.</td>
+</tr>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Verify PowerPath is installed and the EMC PowerPath daemon is running with <code>systemctl status PowerPath</code> or <code>/etc/init.d/PowerPath status</code>.</td>
+</tr>
+<tr>
+<td><code>Device not found in powermt display dev=all output</code></td>
+<td>Increase the rescan delay or manually trigger <code>powermt config</code> again after 10–15 seconds to allow the storage array to present the LUN.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If the device still does not appear after HBA rescan and <code>powermt config</code>:
 - Confirm at the array that the LUN is in a ready/online state (not provisioning or in error)
@@ -9257,9 +9314,28 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cat: cannot open file '&lt;hostname&gt;-powermt-baseline-&lt;date&gt;.txt' (No such file or directory)</code></strong> — Verify the baseline filename matches the actual saved file in the current directory using <code>ls -la *powermt-baseline*</code>.
-<strong><code>powermt: Command not found</code></strong> — Install or load the EMC PowerPath software package and ensure <code>/opt/powerpath/bin</code> is in your PATH environment variable.
-<strong><code>Symmetrix ID not found or device offline</code></strong> — Confirm the device name is correct and the storage array is accessible by running <code>powermt check</code> to validate all paths.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat: cannot open file '&lt;hostname&gt;-powermt-baseline-&lt;date&gt;.txt' (No such file or directory)</code></td>
+<td>Verify the baseline filename matches the actual saved file in the current directory using <code>ls -la *powermt-baseline*</code>.</td>
+</tr>
+<tr>
+<td><code>powermt: Command not found</code></td>
+<td>Install or load the EMC PowerPath software package and ensure <code>/opt/powerpath/bin</code> is in your PATH environment variable.</td>
+</tr>
+<tr>
+<td><code>Symmetrix ID not found or device offline</code></td>
+<td>Confirm the device name is correct and the storage array is accessible by running <code>powermt check</code> to validate all paths.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Causes of low path count:</strong></p>
 <ul>
@@ -9312,9 +9388,28 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>powermt: Command not found</code></strong> — Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and ensure <code>/opt/emc/powerpath/bin</code> is in your PATH.
-<strong><code>powermt: You must be root to run this command</code></strong> — Re-run all powermt commands with <code>sudo</code> or as the root user.
-<strong><code>powermt save: Configuration not saved</code></strong> — Ensure <code>/etc/powerpath/</code> directory is writable with <code>ls -ld /etc/powerpath/</code> and check disk space with <code>df /etc</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>powermt: Command not found</code></td>
+<td>Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and ensure <code>/opt/emc/powerpath/bin</code> is in your PATH.</td>
+</tr>
+<tr>
+<td><code>powermt: You must be root to run this command</code></td>
+<td>Re-run all powermt commands with <code>sudo</code> or as the root user.</td>
+</tr>
+<tr>
+<td><code>powermt save: Configuration not saved</code></td>
+<td>Ensure <code>/etc/powerpath/</code> directory is writable with <code>ls -ld /etc/powerpath/</code> and check disk space with <code>df /etc</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Why policy matters:</strong> <code>RoundRobin</code> sends I/O over non-optimised (standby storage processor) paths on active/passive arrays like Unity and older CLARiiON. The array must trespass those I/Os to the owning SP, adding latency. CLAROpt is ALUA-aware and only uses optimised paths under normal conditions.</p>
 <hr />
@@ -9367,9 +9462,28 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>modprobe: FATAL: Module emcp not found in directory /lib/modules/5.15.0-91-generic</code></strong> — Rebuild the module with <code>dkms autoinstall</code> or reinstall PowerPath package matching your kernel version from Dell support portal.
-<strong><code>● PowerPath.service - EMC PowerPath Storage Multipathing ... Active: inactive (dead)</code></strong> — Start the service with <code>systemctl start PowerPath</code> and check for licensing or hardware detection issues in <code>/var/log/PowerPath/powerpath.log</code>.
-<strong><code>dkms autoinstall: Error! Could not find module source directory.</code></strong> — Reinstall PowerPath package with <code>rpm -i</code> or <code>dpkg -i</code> to restore DKMS source files in <code>/usr/src/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>modprobe: FATAL: Module emcp not found in directory /lib/modules/5.15.0-91-generic</code></td>
+<td>Rebuild the module with <code>dkms autoinstall</code> or reinstall PowerPath package matching your kernel version from Dell support portal.</td>
+</tr>
+<tr>
+<td><code>● PowerPath.service - EMC PowerPath Storage Multipathing ... Active: inactive (dead)</code></td>
+<td>Start the service with <code>systemctl start PowerPath</code> and check for licensing or hardware detection issues in <code>/var/log/PowerPath/powerpath.log</code>.</td>
+</tr>
+<tr>
+<td><code>dkms autoinstall: Error! Could not find module source directory.</code></td>
+<td>Reinstall PowerPath package with <code>rpm -i</code> or <code>dpkg -i</code> to restore DKMS source files in <code>/usr/src/</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>After resolving the module issue:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Start the service</span>
@@ -9409,9 +9523,28 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>powermt: error: daemon not running</code></strong> — Run <code>systemctl start PowerPath</code> and wait 10-15 seconds for the daemon to fully initialize before running powermt commands.
-<strong><code>powermt: error: no devices found</code></strong> — Verify SAN connectivity and zoning with <code>powermt check_registration</code>, then rescan with <code>powermt config</code> before running restore.
-<strong><code>systemctl start PowerPath: Job for PowerPath.service failed</code></strong> — Check service logs with <code>journalctl -u PowerPath -n 50</code> to identify initialization failures or missing dependencies.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>powermt: error: daemon not running</code></td>
+<td>Run <code>systemctl start PowerPath</code> and wait 10-15 seconds for the daemon to fully initialize before running powermt commands.</td>
+</tr>
+<tr>
+<td><code>powermt: error: no devices found</code></td>
+<td>Verify SAN connectivity and zoning with <code>powermt check_registration</code>, then rescan with <code>powermt config</code> before running restore.</td>
+</tr>
+<tr>
+<td><code>systemctl start PowerPath: Job for PowerPath.service failed</code></td>
+<td>Check service logs with <code>journalctl -u PowerPath -n 50</code> to identify initialization failures or missing dependencies.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configuration-not-persisting-across-reboots">Configuration Not Persisting Across Reboots<a class="headerlink" href="#configuration-not-persisting-across-reboots" title="Permanent link">&para;</a></h2>
@@ -9446,9 +9579,28 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>powermt: command not found</code></strong> — Verify EMC PowerPath is installed with <code>rpm -qa | grep PowerPath</code> and load the module with <code>modprobe emc_powerpath</code>.
-<strong><code>Permission denied</code></strong> — Run the powermt commands with sudo or as root user.
-<strong><code>CLAROpt: Invalid policy name</code></strong> — Check available policies with <code>powermt display policies</code> and use the exact policy name matching your storage array configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Verify EMC PowerPath is installed with <code>rpm -qa | grep PowerPath</code> and load the module with <code>modprobe emc_powerpath</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the powermt commands with sudo or as root user.</td>
+</tr>
+<tr>
+<td><code>CLAROpt: Invalid policy name</code></td>
+<td>Check available policies with <code>powermt display policies</code> and use the exact policy name matching your storage array configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Prevention:</strong> After every <code>powermt config</code>, <code>powermt set policy</code>, or <code>powermt remove</code> operation, always run <code>powermt save</code> as the final step.</p>
 <hr />
@@ -9502,9 +9654,28 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/messages: No such file or directory</code></strong> — Check the correct syslog location with <code>ls /var/log/syslog* /var/log/messages*</code> as it varies by distribution.
-<strong><code>cat: /sys/class/fc_host/host0/statistics/link_failure_count: No such file or directory</code></strong> — Verify the HBA is present with <code>ls /sys/class/fc_host/</code> and adjust the host number accordingly.
-<strong><code>powermt: command not found</code></strong> — Install EMC PowerPath with <code>rpm -ivh PowerPath*.rpm</code> or verify the installation path with <code>which powermt</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/messages: No such file or directory</code></td>
+<td>Check the correct syslog location with <code>ls /var/log/syslog* /var/log/messages*</code> as it varies by distribution.</td>
+</tr>
+<tr>
+<td><code>cat: /sys/class/fc_host/host0/statistics/link_failure_count: No such file or directory</code></td>
+<td>Verify the HBA is present with <code>ls /sys/class/fc_host/</code> and adjust the host number accordingly.</td>
+</tr>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Install EMC PowerPath with <code>rpm -ivh PowerPath*.rpm</code> or verify the installation path with <code>which powermt</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Root cause and resolution:</strong> Path flapping is a physical layer symptom. Common causes:
 - Marginal SFP (transmit power below threshold intermittently)
@@ -9572,9 +9743,28 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>multipath: command not found</code></strong> — Install device-mapper-multipath package with <code>yum install device-mapper-multipath</code> or <code>apt install multipath-tools</code>.
-<strong><code>sed: can't read /etc/multipath.conf: No such file or directory</code></strong> — Create the base multipath.conf file with <code>touch /etc/multipath.conf</code> or copy from <code>/usr/share/doc/device-mapper-multipath/multipath.conf.example</code>.
-<strong><code>Failed to reload multipathd: Unit multipathd.service not found.</code></strong> — Ensure multipathd is installed and the service file exists; reinstall with <code>yum reinstall device-mapper-multipath</code> or <code>apt reinstall multipath-tools</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>multipath: command not found</code></td>
+<td>Install device-mapper-multipath package with <code>yum install device-mapper-multipath</code> or <code>apt install multipath-tools</code>.</td>
+</tr>
+<tr>
+<td><code>sed: can't read /etc/multipath.conf: No such file or directory</code></td>
+<td>Create the base multipath.conf file with <code>touch /etc/multipath.conf</code> or copy from <code>/usr/share/doc/device-mapper-multipath/multipath.conf.example</code>.</td>
+</tr>
+<tr>
+<td><code>Failed to reload multipathd: Unit multipathd.service not found.</code></td>
+<td>Ensure multipathd is installed and the service file exists; reinstall with <code>yum reinstall device-mapper-multipath</code> or <code>apt reinstall multipath-tools</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="common-issues-reference">Common Issues Reference<a class="headerlink" href="#common-issues-reference" title="Permanent link">&para;</a></h2>
@@ -9675,7 +9865,7 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

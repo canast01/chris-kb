@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Integration — Service Integrations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Integration — Service Integrations", "url": "https://chrisanastasiadis.com/networking/protocols/service-integrations/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-05"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Integration — Service Integrations", "url": "https://chrisanastasiadis.com/networking/protocols/service-integrations/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-05"}</script>
   
 
   </head>
@@ -7620,9 +7620,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to prometheus port 9090: Connection refused</code></strong> — Verify Prometheus is running with <code>docker ps | grep prometheus</code> or check service status with <code>systemctl status prometheus</code>.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the endpoint is responding with valid JSON by testing with <code>curl -s http://prometheus:9090/api/v1/targets | head -c 200</code> first.
-<strong><code>curl: (401) Unauthorized</code></strong> — Update the Grafana credentials in the curl command to match your actual admin password, or generate an API token with <code>-H "Authorization: Bearer &lt;token&gt;"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to prometheus port 9090: Connection refused</code></td>
+<td>Verify Prometheus is running with <code>docker ps | grep prometheus</code> or check service status with <code>systemctl status prometheus</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure the endpoint is responding with valid JSON by testing with <code>curl -s http://prometheus:9090/api/v1/targets | head -c 200</code> first.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Update the Grafana credentials in the curl command to match your actual admin password, or generate an API token with <code>-H "Authorization: Bearer &lt;token&gt;"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSSD on Linux</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sssd
@@ -7674,9 +7693,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Could not get domain status for &lt;domain&gt;: No such domain</code></strong> — Verify the domain name matches SSSD configuration in <code>/etc/sssd/sssd.conf</code> and restart sssd with <code>systemctl restart sssd</code>.
-<strong><code>wbinfo: error looking up domain users</code></strong> — Ensure Winbind is running with <code>systemctl start winbind</code> and the domain trust is established via <code>net ads join -U administrator</code>.
-<strong><code>ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090400, comment: AcceptSecurityContext error, data 52e, v3839</code></strong> — Verify AD user credentials are correct and the account is not locked; use a service account with appropriate permissions for LDAP queries.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Could not get domain status for &lt;domain&gt;: No such domain</code></td>
+<td>Verify the domain name matches SSSD configuration in <code>/etc/sssd/sssd.conf</code> and restart sssd with <code>systemctl restart sssd</code>.</td>
+</tr>
+<tr>
+<td><code>wbinfo: error looking up domain users</code></td>
+<td>Ensure Winbind is running with <code>systemctl start winbind</code> and the domain trust is established via <code>net ads join -U administrator</code>.</td>
+</tr>
+<tr>
+<td><code>ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090400, comment: AcceptSecurityContext error, data 52e, v3839</code></td>
+<td>Verify AD user credentials are correct and the account is not locked; use a service account with appropriate permissions for LDAP queries.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PgBouncer status</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW POOLS;&quot;</span>
@@ -7704,9 +7742,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "/tmp" to address: Name or service not known</code></strong> — Verify PgBouncer is listening on the Unix socket path <code>/tmp</code> or use <code>-h 127.0.0.1</code> with the correct TCP port.
-<strong><code>ERROR 1045 (28000): Access denied for user 'admin'@'127.0.0.1' (using password: YES)</code></strong> — Confirm ProxySQL admin credentials in <code>/etc/proxysql.cnf</code> or reset them with <code>proxysql --initial</code>.
-<strong><code>psql: error: connection refused</code></strong> — Ensure PgBouncer is running with <code>systemctl status pgbouncer</code> and listening on port 6432.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "/tmp" to address: Name or service not known</code></td>
+<td>Verify PgBouncer is listening on the Unix socket path <code>/tmp</code> or use <code>-h 127.0.0.1</code> with the correct TCP port.</td>
+</tr>
+<tr>
+<td><code>ERROR 1045 (28000): Access denied for user 'admin'@'127.0.0.1' (using password: YES)</code></td>
+<td>Confirm ProxySQL admin credentials in <code>/etc/proxysql.cnf</code> or reset them with <code>proxysql --initial</code>.</td>
+</tr>
+<tr>
+<td><code>psql: error: connection refused</code></td>
+<td>Ensure PgBouncer is running with <code>systemctl status pgbouncer</code> and listening on port 6432.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSSD (re-read AD group membership)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sssctl<span class="w"> </span>cache-remove<span class="w"> </span>-y<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
@@ -7743,7 +7800,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

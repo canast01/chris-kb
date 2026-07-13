@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="vSphere Storage Architecture — Datastores, Policies, and Advanced Features · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSphere Storage Architecture — Datastores, Policies, and Advanced Features", "url": "https://chrisanastasiadis.com/virtualization/vmware/internals/vsphere-storage/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-06-04"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSphere Storage Architecture — Datastores, Policies, and Advanced Features", "url": "https://chrisanastasiadis.com/virtualization/vmware/internals/vsphere-storage/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-06-04"}</script>
   
 
   </head>
@@ -8189,9 +8189,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The specified disk naa.xxx is not found or is not available</code></strong> — Verify the exact NAA ID using <code>esxcli storage core device list</code> and ensure the LUN is properly presented to the ESXi host.
-<strong><code>Error: Disk naa.5001438019b4e5c7f is already formatted with VMFS</code></strong> — Use a different disk or destroy the existing VMFS partition with <code>esxcli storage vmfs unmap</code> before reusing the device.
-<strong><code>Error: Insufficient permissions to execute this command</code></strong> — Run the command as root or with appropriate vSphere permissions; use <code>sudo</code> or execute from an account with Administrator role.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The specified disk naa.xxx is not found or is not available</code></td>
+<td>Verify the exact NAA ID using <code>esxcli storage core device list</code> and ensure the LUN is properly presented to the ESXi host.</td>
+</tr>
+<tr>
+<td><code>Error: Disk naa.5001438019b4e5c7f is already formatted with VMFS</code></td>
+<td>Use a different disk or destroy the existing VMFS partition with <code>esxcli storage vmfs unmap</code> before reusing the device.</td>
+</tr>
+<tr>
+<td><code>Error: Insufficient permissions to execute this command</code></td>
+<td>Run the command as root or with appropriate vSphere permissions; use <code>sudo</code> or execute from an account with Administrator role.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="nfs-41">NFS 4.1<a class="headerlink" href="#nfs-41" title="Permanent link">&para;</a></h3>
 <p>NFS datastores mount a network file share directly from a NAS array. NFS 4.1 (recommended over 3.x) adds:
@@ -8438,9 +8457,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The object reference is not valid.</code></strong> — Verify the adapter name is correct with <code>esxcli iscsi adapter list</code> and ensure the adapter exists before binding ports.
-<strong><code>Error: The specified portgroup does not exist.</code></strong> — Confirm the VMkernel port (vmk1, vmk2) exists on the vSwitch using <code>esxcli network ip interface list</code>.
-<strong><code>Error: Network portal already bound to adapter.</code></strong> — Remove the existing binding with <code>esxcli iscsi networkportal remove --adapter vmhba65 --nic vmk1</code> before re-adding it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The object reference is not valid.</code></td>
+<td>Verify the adapter name is correct with <code>esxcli iscsi adapter list</code> and ensure the adapter exists before binding ports.</td>
+</tr>
+<tr>
+<td><code>Error: The specified portgroup does not exist.</code></td>
+<td>Confirm the VMkernel port (vmk1, vmk2) exists on the vSwitch using <code>esxcli network ip interface list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Network portal already bound to adapter.</code></td>
+<td>Remove the existing binding with <code>esxcli iscsi networkportal remove --adapter vmhba65 --nic vmk1</code> before re-adding it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>ALUA (Asymmetric Logical Unit Access) arrays expose preferred/non-preferred path states. ESXi selects paths accordingly via the SATP.</p>
 <hr />
@@ -8550,8 +8588,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vim-cmd: Unknown command 'vmsvc/get.summary'</code></strong> — Verify the VM ID is numeric and the vSphere API service is running with <code>service vmware-vpxa status</code>.
-<strong><code>esxcli: Unknown command or namespace storage core device list</code></strong> — Ensure you are running the command on an ESXi host directly (not vCenter) and esxcli is properly initialized.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vim-cmd: Unknown command 'vmsvc/get.summary'</code></td>
+<td>Verify the VM ID is numeric and the vSphere API service is running with <code>service vmware-vpxa status</code>.</td>
+</tr>
+<tr>
+<td><code>esxcli: Unknown command or namespace storage core device list</code></td>
+<td>Ensure you are running the command on an ESXi host directly (not vCenter) and esxcli is properly initialized.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="advanced-storage-pmem-nvme-and-nvme-of">Advanced Storage: PMem, NVMe, and NVMe-oF<a class="headerlink" href="#advanced-storage-pmem-nvme-and-nvme-of" title="Permanent link">&para;</a></h2>
@@ -8589,8 +8643,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown adapter vmhba1</code></strong> — Verify the adapter name with <code>esxcli nvme adapter list</code> and use the correct vmhba identifier.
-<strong><code>Error: Could not connect to the host</code></strong> — Ensure you are connected to the ESXi host via SSH or vSphere CLI with appropriate credentials.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown adapter vmhba1</code></td>
+<td>Verify the adapter name with <code>esxcli nvme adapter list</code> and use the correct vmhba identifier.</td>
+</tr>
+<tr>
+<td><code>Error: Could not connect to the host</code></td>
+<td>Ensure you are connected to the ESXi host via SSH or vSphere CLI with appropriate credentials.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="nvme-of-nvme-over-fabrics">NVMe-oF — NVMe over Fabrics<a class="headerlink" href="#nvme-of-nvme-over-fabrics" title="Permanent link">&para;</a></h3>
 <p>NVMe-oF extends NVMe semantics over a network fabric, enabling shared NVMe storage with near-local latency:</p>
@@ -8704,7 +8774,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 01:43:12 UTC"><span class="timeago" datetime="2026-06-29T01:43:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 01:43:12 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

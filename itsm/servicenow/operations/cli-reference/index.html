@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="ServiceNow — CLI Reference · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ServiceNow — CLI Reference", "url": "https://chrisanastasiadis.com/itsm/servicenow/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ServiceNow — CLI Reference", "url": "https://chrisanastasiadis.com/itsm/servicenow/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7946,8 +7946,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p>**<code>bash: export:</code>your-password': not a valid identifier<code>** — Wrap the password in quotes if it contains special characters:</code>export PASS="your-password"<code>or use single quotes for literal strings.
-**</code>bash: mycompany.service-now.com: command not found<code>** — Remove the protocol from the INSTANCE variable or wrap the full URL in quotes:</code>export INSTANCE="https://mycompany.service-now.com"`.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bash: export:</code>your-password': not a valid identifier<code>| Wrap the password in quotes if it contains special characters:</code>export PASS="your-password"` or use single quotes for literal strings.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>bash: mycompany.service-now.com: command not found</code></td>
+<td>Remove the protocol from the INSTANCE variable or wrap the full URL in quotes: <code>export INSTANCE="https://mycompany.service-now.com"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an incident</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7971,9 +7987,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to servicenow-instance.service-now.com port 443: Connection refused</code></strong> — Verify the <code>$INSTANCE</code> variable is set correctly and the ServiceNow instance is accessible (e.g., <code>echo $INSTANCE</code>).
-<strong><code>{"error":{"message":"Invalid field value","detail":"Invalid value for field 'impact': must be between 1 and 5"},"status":"failure"}</code></strong> — Ensure all field values conform to ServiceNow's constraints; check the incident table schema for valid impact/urgency ranges.
-<strong><code>jq: parse error: Cannot index number with string "sys_id"</code></strong> — Verify the API response contains a <code>result</code> object by testing without the jq filter first (<code>curl ... | jq '.'</code>) to inspect the full response structure.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to servicenow-instance.service-now.com port 443: Connection refused</code></td>
+<td>Verify the <code>$INSTANCE</code> variable is set correctly and the ServiceNow instance is accessible (e.g., <code>echo $INSTANCE</code>).</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid field value","detail":"Invalid value for field 'impact': must be between 1 and 5"},"status":"failure"}</code></td>
+<td>Ensure all field values conform to ServiceNow's constraints; check the incident table schema for valid impact/urgency ranges.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index number with string "sys_id"</code></td>
+<td>Verify the API response contains a <code>result</code> object by testing without the jq filter first (<code>curl ... | jq '.'</code>) to inspect the full response structure.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Assign an incident to a user and update state to In Progress</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7991,9 +8026,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to instance.service-now.com port 443: Connection timed out</code></strong> — Verify the $INSTANCE variable is set correctly and the ServiceNow instance is accessible from your network.
-<strong><code>{"error":{"message":"Invalid table API id","status":"failure"}}</code></strong> — Confirm the incident sys_id (abc123def456abc123def456abc12345) exists and is valid by querying the incident table first.
-<strong><code>jq: parse error: Cannot index string with string "result"</code></strong> — Remove the <code>| jq '.result.number'</code> pipe if the API response is not JSON-formatted, or check that the PATCH request succeeded with a 200 status code.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to instance.service-now.com port 443: Connection timed out</code></td>
+<td>Verify the $INSTANCE variable is set correctly and the ServiceNow instance is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API id","status":"failure"}}</code></td>
+<td>Confirm the incident sys_id (abc123def456abc123def456abc12345) exists and is valid by querying the incident table first.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index string with string "result"</code></td>
+<td>Remove the <code>| jq '.result.number'</code> pipe if the API response is not JSON-formatted, or check that the PATCH request succeeded with a 200 status code.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Delete a record (use with caution; prefer closing/cancelling)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -8006,9 +8060,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to instance.service-now.com port 443: Connection timed out</code></strong> — Verify the <code>$INSTANCE</code> variable is set correctly and the ServiceNow instance is accessible from your network.
-<strong><code>{"error":{"message":"Invalid table API DELETE not allowed","status":"failure"}}</code></strong> — Check that the table allows DELETE operations in its ACL configuration; some tables restrict deletion for compliance reasons.
-<strong><code>401 Unauthorized</code></strong> — Ensure <code>$USER</code> and <code>$PASS</code> credentials are valid and the user has the <code>rest_api_explorer</code> or appropriate delete role assigned in ServiceNow.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to instance.service-now.com port 443: Connection timed out</code></td>
+<td>Verify the <code>$INSTANCE</code> variable is set correctly and the ServiceNow instance is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API DELETE not allowed","status":"failure"}}</code></td>
+<td>Check that the table allows DELETE operations in its ACL configuration; some tables restrict deletion for compliance reasons.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Ensure <code>$USER</code> and <code>$PASS</code> credentials are valid and the user has the <code>rest_api_explorer</code> or appropriate delete role assigned in ServiceNow.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Count open incidents by priority</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -8040,9 +8113,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to instance.service-now.com port 443: Connection timed out</code></strong> — Verify the <code>$INSTANCE</code> variable is set correctly and the ServiceNow instance is accessible from your network.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Remove the <code>-H "Accept: application/json"</code> header or ensure the API endpoint returns valid JSON; some ServiceNow versions require <code>Content-Type</code> instead.
-<strong><code>401 Unauthorized</code></strong> — Verify that <code>$USER</code> and <code>$PASS</code> credentials are correct and the user account has API access permissions in ServiceNow.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to instance.service-now.com port 443: Connection timed out</code></td>
+<td>Verify the <code>$INSTANCE</code> variable is set correctly and the ServiceNow instance is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Remove the <code>-H "Accept: application/json"</code> header or ensure the API endpoint returns valid JSON; some ServiceNow versions require <code>Content-Type</code> instead.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Verify that <code>$USER</code> and <code>$PASS</code> credentials are correct and the user account has API access permissions in ServiceNow.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Average resolution time for P1 incidents closed this month</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -8068,9 +8160,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to instance.service-now.com port 443: Connection refused</code></strong> — Verify the <code>$INSTANCE</code> variable is set correctly (e.g., <code>export INSTANCE="https://dev12345.service-now.com"</code>) and the instance is accessible.
-<strong><code>{"error":{"message":"Invalid table API. (Hint: allowed tables are ...)","status":"failure"}}</code></strong> — Confirm the <code>/api/now/stats/</code> endpoint is available in your ServiceNow version; use <code>/api/now/table/incident</code> with aggregation parameters as an alternative.
-<strong><code>jq: parse error: Invalid numeric literal at line 1 column 10</code></strong> — Remove the <code>-s</code> flag or check that the API response is valid JSON; add <code>-v</code> to curl to debug the raw response.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to instance.service-now.com port 443: Connection refused</code></td>
+<td>Verify the <code>$INSTANCE</code> variable is set correctly (e.g., <code>export INSTANCE="https://dev12345.service-now.com"</code>) and the instance is accessible.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API. (Hint: allowed tables are ...)","status":"failure"}}</code></td>
+<td>Confirm the <code>/api/now/stats/</code> endpoint is available in your ServiceNow version; use <code>/api/now/table/incident</code> with aggregation parameters as an alternative.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid numeric literal at line 1 column 10</code></td>
+<td>Remove the <code>-s</code> flag or check that the API response is valid JSON; add <code>-v</code> to curl to debug the raw response.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Push a CI record to the import set staging table</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -8217,9 +8328,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to instance.service-now.com port 443: Connection refused</code></strong> — Verify the $INSTANCE variable is set correctly and the ServiceNow instance is accessible from your network.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Remove the <code>-s</code> flag temporarily to see the actual response; the API may be returning an error page or HTML instead of JSON.
-<strong><code>curl: (401) Unauthorized</code></strong> — Ensure $USER and $PASS credentials are correct and the API user has the <code>mycompany_operations_read</code> role in ServiceNow.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to instance.service-now.com port 443: Connection refused</code></td>
+<td>Verify the $INSTANCE variable is set correctly and the ServiceNow instance is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Remove the <code>-s</code> flag temporarily to see the actual response; the API may be returning an error page or HTML instead of JSON.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Ensure $USER and $PASS credentials are correct and the API user has the <code>mycompany_operations_read</code> role in ServiceNow.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># macOS via Homebrew</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>brew<span class="w"> </span>install<span class="w"> </span>servicenow-cli
@@ -8237,8 +8367,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: servicenow-cli: no bottle available for this macOS version</code></strong> — Update Homebrew with <code>brew update</code> and try again, or install from developer.servicenow.com directly.
-<strong><code>Error: Permission denied @ rb_sysopen - /usr/local/Cellar/servicenow-cli</code></strong> — Run the command with <code>sudo brew install servicenow-cli</code> or fix Homebrew permissions with <code>sudo chown -R $(whoami) /usr/local/Cellar</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: servicenow-cli: no bottle available for this macOS version</code></td>
+<td>Update Homebrew with <code>brew update</code> and try again, or install from developer.servicenow.com directly.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied @ rb_sysopen - /usr/local/Cellar/servicenow-cli</code></td>
+<td>Run the command with <code>sudo brew install servicenow-cli</code> or fix Homebrew permissions with <code>sudo chown -R $(whoami) /usr/local/Cellar</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>snc<span class="w"> </span>configure<span class="w"> </span>profile<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>--profile<span class="w"> </span>production<span class="w"> </span><span class="se">\</span>
@@ -8258,9 +8404,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid URL format. Expected https://[instance].service-now.com</code></strong> — Verify the URL matches the correct ServiceNow instance domain format without trailing slashes.
-<strong><code>Error: Authentication failed - Invalid credentials</code></strong> — Confirm the API user account exists, is active, and the password stored in $SN_PASS is correct and not expired.
-<strong><code>Error: Profile 'production' not found</code></strong> — Ensure the profile was successfully created in the first command before attempting to activate it; check with <code>snc configure profile list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid URL format. Expected https://[instance].service-now.com</code></td>
+<td>Verify the URL matches the correct ServiceNow instance domain format without trailing slashes.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed - Invalid credentials</code></td>
+<td>Confirm the API user account exists, is active, and the password stored in $SN_PASS is correct and not expired.</td>
+</tr>
+<tr>
+<td><code>Error: Profile 'production' not found</code></td>
+<td>Ensure the profile was successfully created in the first command before attempting to activate it; check with <code>snc configure profile list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Verify connectivity</span>
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>snc<span class="w"> </span>instance<span class="w"> </span>info
@@ -8358,7 +8523,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

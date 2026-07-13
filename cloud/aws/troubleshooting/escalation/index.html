@@ -8181,8 +8181,24 @@ AWS support case creation, severity level selection, data collection with AWS CL
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.
-<strong><code>An error occurred (UnauthorizedOperation) when calling the GetCallerIdentity operation: User: arn:aws:iam::123456789012:user/restricted-user is not authorized to perform: sts:GetCallerIdentity</code></strong> — Add the <code>sts:GetCallerIdentity</code> permission to the IAM user's policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unable to locate credentials</code></td>
+<td>Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</td>
+</tr>
+<tr>
+<td><code>An error occurred (UnauthorizedOperation) when calling the GetCallerIdentity operation: User: arn:aws:iam::123456789012:user/restricted-user is not authorized to perform: sts:GetCallerIdentity</code></td>
+<td>Add the <code>sts:GetCallerIdentity</code> permission to the IAM user's policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-collect-cloudtrail-events-for-the-failing-action">2. Collect CloudTrail events for the failing action<a class="headerlink" href="#2-collect-cloudtrail-events-for-the-failing-action" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Find API errors in the last 4 hours for a specific service</span>
@@ -8230,9 +8246,28 @@ AWS support case creation, severity level selection, data collection with AWS CL
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidStartTime) when calling the LookupEvents operation: The start time is invalid.</code></strong> — Ensure the date command produces valid ISO 8601 format; test with <code>date -u -d '4 hours ago' +%FT%TZ</code> to verify output.
-<strong><code>An error occurred (AccessDenied) when calling the LookupEvents operation: User is not authorized to perform: cloudtrail:LookupEvents</code></strong> — Add <code>cloudtrail:LookupEvents</code> permission to the IAM user/role executing the command.
-<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index string with string "Time"</code></strong> — The CloudTrailEvent field contains a JSON string, not an object; parse it with <code>| fromjson</code> in jq or use <code>--output text</code> instead of json.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidStartTime) when calling the LookupEvents operation: The start time is invalid.</code></td>
+<td>Ensure the date command produces valid ISO 8601 format; test with <code>date -u -d '4 hours ago' +%FT%TZ</code> to verify output.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the LookupEvents operation: User is not authorized to perform: cloudtrail:LookupEvents</code></td>
+<td>Add <code>cloudtrail:LookupEvents</code> permission to the IAM user/role executing the command.</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Cannot index string with string "Time"</code></td>
+<td>The CloudTrailEvent field contains a JSON string, not an object; parse it with <code>| fromjson</code> in jq or use <code>--output text</code> instead of json.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="3-collect-resource-specific-diagnostics">3. Collect resource-specific diagnostics<a class="headerlink" href="#3-collect-resource-specific-diagnostics" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># EC2: instance status and recent logs</span>
@@ -8334,7 +8369,20 @@ AWS support case creation, severity level selection, data collection with AWS CL
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstanceStatus operation: The instance ID '&lt;instance-id&gt;' does not exist</code></strong> — Verify the instance ID is correct and exists in the current AWS region; check `aws</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstanceStatus operation: The instance ID '&lt;instance-id&gt;' does not exist</code></td>
+<td>Verify the instance ID is correct and exists in the current AWS region; check `aws</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="4-collect-cloudwatch-metrics-and-logs">4. Collect CloudWatch metrics and logs<a class="headerlink" href="#4-collect-cloudwatch-metrics-and-logs" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Get CPU and network metrics for an EC2 instance</span>
@@ -8390,9 +8438,28 @@ AWS support case creation, severity level selection, data collection with AWS CL
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: The parameter StartTime is invalid.</code></strong> — Ensure the instance ID is valid and replace <code>&lt;instance-id&gt;</code> with an actual EC2 instance ID (e.g., <code>i-0a1b2c3d4e5f6g7h8</code>).
-<strong><code>ResourceNotFoundException: The specified log group does not exist.</code></strong> — Verify the log group name exists by running <code>aws logs describe-log-groups | grep /var/log/app</code> and use the correct group name.
-<strong><code>An error occurred (AccessDenied) when calling the GetMetricStatistics operation: User is not authorized to perform: cloudwatch:GetMetricStatistics</code></strong> — Add <code>cloudwatch:GetMetricStatistics</code> and <code>logs:FilterLogEvents</code> permissions to the IAM role or user policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: The parameter StartTime is invalid.</code></td>
+<td>Ensure the instance ID is valid and replace <code>&lt;instance-id&gt;</code> with an actual EC2 instance ID (e.g., <code>i-0a1b2c3d4e5f6g7h8</code>).</td>
+</tr>
+<tr>
+<td><code>ResourceNotFoundException: The specified log group does not exist.</code></td>
+<td>Verify the log group name exists by running <code>aws logs describe-log-groups | grep /var/log/app</code> and use the correct group name.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the GetMetricStatistics operation: User is not authorized to perform: cloudwatch:GetMetricStatistics</code></td>
+<td>Add <code>cloudwatch:GetMetricStatistics</code> and <code>logs:FilterLogEvents</code> permissions to the IAM role or user policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>AWS Account ID: 123456789012
@@ -8576,9 +8643,28 @@ AWS support case creation, severity level selection, data collection with AWS CL
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (UnauthorizedOperation) when calling the DescribeEvents operation: You are not authorized to perform: health:DescribeEvents</code></strong> — Add <code>health:DescribeEvents</code> permission to the IAM role or user policy.
-<strong><code>An error occurred (InvalidParameterValue) when calling the GetConsoleOutput operation: The instance ID '&lt;instance-id&gt;' does not exist</code></strong> — Verify the instance ID is correct and exists in the specified region using <code>aws ec2 describe-instances</code>.
-<strong><code>An error occurred (InvalidParameterCombination) when calling the GetMetricStatistics operation: The parameter StartTime must be before EndTime</code></strong> — Ensure the start-time is earlier than end-time; check system clock synchronization with <code>date -u</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (UnauthorizedOperation) when calling the DescribeEvents operation: You are not authorized to perform: health:DescribeEvents</code></td>
+<td>Add <code>health:DescribeEvents</code> permission to the IAM role or user policy.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the GetConsoleOutput operation: The instance ID '&lt;instance-id&gt;' does not exist</code></td>
+<td>Verify the instance ID is correct and exists in the specified region using <code>aws ec2 describe-instances</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterCombination) when calling the GetMetricStatistics operation: The parameter StartTime must be before EndTime</code></td>
+<td>Ensure the start-time is earlier than end-time; check system clock synchronization with <code>date -u</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8616,7 +8702,7 @@ AWS support case creation, severity level selection, data collection with AWS CL
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

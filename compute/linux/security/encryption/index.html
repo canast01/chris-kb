@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Linux — Encryption · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Linux — Encryption", "url": "https://chrisanastasiadis.com/compute/linux/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Linux — Encryption", "url": "https://chrisanastasiadis.com/compute/linux/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7616,9 +7616,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Device /dev/sdb is not a block device or does not exist.</code></strong> — Verify the correct device path with <code>lsblk</code> and ensure the device is attached and visible to the system.
-<strong><code>No key available with this passphrase.</code></strong> — Ensure the passphrase entered during <code>luksOpen</code> exactly matches the one set during <code>luksFormat</code>, including case and special characters.
-<strong><code>Device /dev/mapper/secure-data is busy</code></strong> — Unmount the filesystem with <code>umount /mnt/secure-data</code> and close the LUKS device with `cryptsetup l</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Device /dev/sdb is not a block device or does not exist.</code></td>
+<td>Verify the correct device path with <code>lsblk</code> and ensure the device is attached and visible to the system.</td>
+</tr>
+<tr>
+<td><code>No key available with this passphrase.</code></td>
+<td>Ensure the passphrase entered during <code>luksOpen</code> exactly matches the one set during <code>luksFormat</code>, including case and special characters.</td>
+</tr>
+<tr>
+<td><code>Device /dev/mapper/secure-data is busy</code></td>
+<td>Unmount the filesystem with <code>umount /mnt/secure-data</code> and close the LUKS device with `cryptsetup l</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get the UUID of the LUKS device</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>blkid<span class="w"> </span>/dev/sdb
@@ -7627,8 +7646,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>blkid: command not found</code></strong> — Install util-linux package with <code>apt-get install util-linux</code> or <code>yum install util-linux</code>.
-<strong><code>blkid: error: /dev/sdb: No such file or directory</code></strong> — Verify the device exists with <code>lsblk</code> and use the correct device path (e.g., <code>/dev/nvme0n1</code> for NVMe drives).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blkid: command not found</code></td>
+<td>Install util-linux package with <code>apt-get install util-linux</code> or <code>yum install util-linux</code>.</td>
+</tr>
+<tr>
+<td><code>blkid: error: /dev/sdb: No such file or directory</code></td>
+<td>Verify the device exists with <code>lsblk</code> and use the correct device path (e.g., <code>/dev/nvme0n1</code> for NVMe drives).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/crypttab — maps the encrypted device to a name at boot</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Format: name  device-or-UUID  key-file  options</span>
@@ -7641,8 +7676,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cryptsetup: ERROR: Device UUID=a1b2c3d4-e5f6-7890-abcd-ef1234567890 not found.</code></strong> — Verify the UUID matches the actual encrypted device using <code>blkid</code> and correct the entry in <code>/etc/crypttab</code>.
-<strong><code>cryptsetup: ERROR: Keyfile /root/keyfile does not exist or is not readable.</code></strong> — Ensure the keyfile exists and has restrictive permissions (<code>chmod 600 /root/keyfile</code>) and is readable by root.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cryptsetup: ERROR: Device UUID=a1b2c3d4-e5f6-7890-abcd-ef1234567890 not found.</code></td>
+<td>Verify the UUID matches the actual encrypted device using <code>blkid</code> and correct the entry in <code>/etc/crypttab</code>.</td>
+</tr>
+<tr>
+<td><code>cryptsetup: ERROR: Keyfile /root/keyfile does not exist or is not readable.</code></td>
+<td>Ensure the keyfile exists and has restrictive permissions (<code>chmod 600 /root/keyfile</code>) and is readable by root.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># /etc/fstab — mount the mapped device</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/dev/mapper/secure-data<span class="w">  </span>/mnt/secure-data<span class="w">  </span>xfs<span class="w">  </span>defaults,_netdev<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
@@ -7651,8 +7702,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount: /mnt/secure-data: special device /dev/mapper/secure-data does not exist.</code></strong> — Ensure the LUKS volume is unlocked with <code>cryptsetup luksOpen /dev/sdXN secure-data</code> before mounting or at boot via crypttab.
-<strong><code>mount: /mnt/secure-data: mount point does not exist.</code></strong> — Create the mount directory with <code>mkdir -p /mnt/secure-data</code> before attempting to mount.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount: /mnt/secure-data: special device /dev/mapper/secure-data does not exist.</code></td>
+<td>Ensure the LUKS volume is unlocked with <code>cryptsetup luksOpen /dev/sdXN secure-data</code> before mounting or at boot via crypttab.</td>
+</tr>
+<tr>
+<td><code>mount: /mnt/secure-data: mount point does not exist.</code></td>
+<td>Create the mount directory with <code>mkdir -p /mnt/secure-data</code> before attempting to mount.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Test without rebooting</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>systemctl<span class="w"> </span>daemon-reload
@@ -7665,8 +7732,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Failed to start systemd-cryptsetup@secure-data.service: Unit systemd-cryptsetup@secure-data.service not found.</code></strong> — Verify the encrypted device is defined in <code>/etc/crypttab</code> with the correct name <code>secure-data</code>.
-<strong><code>mount: /mnt/secure-data: special device /dev/mapper/secure-data does not exist.</code></strong> — Ensure the cryptsetup unit started successfully by checking <code>systemctl status systemd-cryptsetup@secure-data</code> before attempting to mount.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Failed to start systemd-cryptsetup@secure-data.service: Unit systemd-cryptsetup@secure-data.service not found.</code></td>
+<td>Verify the encrypted device is defined in <code>/etc/crypttab</code> with the correct name <code>secure-data</code>.</td>
+</tr>
+<tr>
+<td><code>mount: /mnt/secure-data: special device /dev/mapper/secure-data does not exist.</code></td>
+<td>Ensure the cryptsetup unit started successfully by checking <code>systemctl status systemd-cryptsetup@secure-data</code> before attempting to mount.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Backup header to a secure location</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>cryptsetup<span class="w"> </span>luksHeaderBackup<span class="w"> </span>/dev/sdb<span class="w"> </span>--header-backup-file<span class="w"> </span>/secure-backup/sdb-luks-header.bak
@@ -7679,9 +7762,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Device /dev/sdb is in use.</code></strong> — Close all open file handles to the device with <code>lsof /dev/sdb</code> and unmount it with <code>umount /dev/sdb</code> before running the command.
-<strong><code>No such file or directory</code></strong> — Ensure the backup directory <code>/secure-backup/</code> exists and is writable by running <code>mkdir -p /secure-backup/</code> with appropriate permissions.
-<strong><code>No key available with this passphrase.</code></strong> — Verify you are using the correct LUKS passphrase or keyfile when restoring the header.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Device /dev/sdb is in use.</code></td>
+<td>Close all open file handles to the device with <code>lsof /dev/sdb</code> and unmount it with <code>umount /dev/sdb</code> before running the command.</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Ensure the backup directory <code>/secure-backup/</code> exists and is writable by running <code>mkdir -p /secure-backup/</code> with appropriate permissions.</td>
+</tr>
+<tr>
+<td><code>No key available with this passphrase.</code></td>
+<td>Verify you are using the correct LUKS passphrase or keyfile when restoring the header.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Install Tang on the key escrow server</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>tang
@@ -7727,9 +7829,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>dnf: command not found</code></strong> — Verify you are on a RHEL/CentOS/Fedora system; on Debian-based systems use <code>apt install tang</code> instead.
-<strong><code>Error getting authority: Could not connect to system bus</code></strong> — Run commands with <code>sudo</code> or as root to allow systemctl to access the system bus.
-<strong><code>Failed to enable unit: Unit /etc/systemd/system/tangd.socket is masked</code></strong> — Unmask the unit with <code>systemctl unmask tangd.socket</code> before enabling it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dnf: command not found</code></td>
+<td>Verify you are on a RHEL/CentOS/Fedora system; on Debian-based systems use <code>apt install tang</code> instead.</td>
+</tr>
+<tr>
+<td><code>Error getting authority: Could not connect to system bus</code></td>
+<td>Run commands with <code>sudo</code> or as root to allow systemctl to access the system bus.</td>
+</tr>
+<tr>
+<td><code>Failed to enable unit: Unit /etc/systemd/system/tangd.socket is masked</code></td>
+<td>Unmask the unit with <code>systemctl unmask tangd.socket</code> before enabling it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Install Clevis on the server with the LUKS volume</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>clevis<span class="w"> </span>clevis-luks<span class="w"> </span>clevis-dracut
@@ -7785,9 +7906,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error connecting to Tang server at http://tang.example.local: Connection refused</code></strong> — Verify the Tang server is running and accessible at the specified URL and port (default 80).
-<strong><code>clevis: error: LUKS device /dev/sdb not found</code></strong> — Confirm the device path is correct and the LUKS volume exists with <code>cryptsetup luksDump /dev/sdb</code>.
-<strong><code>dracut: FAILED to install a file: /usr/lib/clevis/clevis-luks-askpass</code></strong> — Reinstall clevis-dracut with <code>dnf reinstall clevis-dracut</code> to ensure all dracut modules are properly installed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error connecting to Tang server at http://tang.example.local: Connection refused</code></td>
+<td>Verify the Tang server is running and accessible at the specified URL and port (default 80).</td>
+</tr>
+<tr>
+<td><code>clevis: error: LUKS device /dev/sdb not found</code></td>
+<td>Confirm the device path is correct and the LUKS volume exists with <code>cryptsetup luksDump /dev/sdb</code>.</td>
+</tr>
+<tr>
+<td><code>dracut: FAILED to install a file: /usr/lib/clevis/clevis-luks-askpass</code></td>
+<td>Reinstall clevis-dracut with <code>dnf reinstall clevis-dracut</code> to ensure all dracut modules are properly installed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Bind to two Tang servers — unlock if either is reachable (threshold: 1 of 2)</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>clevis<span class="w"> </span>luks<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>-d<span class="w"> </span>/dev/sdb<span class="w"> </span>sss<span class="w"> </span><span class="s1">&#39;{&quot;t&quot;:1,&quot;pins&quot;:{&quot;tang&quot;:[{&quot;url&quot;:&quot;http://tang1.example.local&quot;,&quot;thp&quot;:&quot;&lt;thp1&gt;&quot;},{&quot;url&quot;:&quot;http://tang2.example.local&quot;,&quot;thp&quot;:&quot;&lt;thp2&gt;&quot;}]}}&#39;</span>
@@ -7805,9 +7945,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: No key material found. Is the LUKS device already bound?</code></strong> — Ensure the LUKS device is initialized with <code>cryptsetup luksFormat</code> before binding, or use a different slot with <code>clevis luks bind -s &lt;slot&gt;</code>.
-<strong><code>Error connecting to http://tang1.example.local: Name or service not known</code></strong> — Verify Tang server hostnames are resolvable and reachable from the system; check DNS and network connectivity to both Tang endpoints.
-<strong><code>Error: Invalid JSON policy</code></strong> — Validate the JSON syntax in the policy string, ensuring all quotes are properly escaped and the threshold value <code>t</code> does not exceed the number of Tang servers defined.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: No key material found. Is the LUKS device already bound?</code></td>
+<td>Ensure the LUKS device is initialized with <code>cryptsetup luksFormat</code> before binding, or use a different slot with <code>clevis luks bind -s &lt;slot&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error connecting to http://tang1.example.local: Name or service not known</code></td>
+<td>Verify Tang server hostnames are resolvable and reachable from the system; check DNS and network connectivity to both Tang endpoints.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid JSON policy</code></td>
+<td>Validate the JSON syntax in the policy string, ensuring all quotes are properly escaped and the threshold value <code>t</code> does not exceed the number of Tang servers defined.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Manually test that Clevis can unlock the device</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>clevis<span class="w"> </span>luks<span class="w"> </span>unlock<span class="w"> </span>-d<span class="w"> </span>/dev/sdb
@@ -7863,9 +8022,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>openssl: No such file or directory</code></strong> — Install OpenSSL with <code>yum install openssl</code> (RHEL/CentOS) or <code>apt install openssl</code> (Debian/Ubuntu).
-<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or as root, since <code>/etc/pki/tls/</code> requires elevated privileges.
-<strong><code>No such file or directory</code></strong> — Create the required directories first with <code>mkdir -p /etc/pki/tls/{private,certs,misc}</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>openssl: No such file or directory</code></td>
+<td>Install OpenSSL with <code>yum install openssl</code> (RHEL/CentOS) or <code>apt install openssl</code> (Debian/Ubuntu).</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the commands with <code>sudo</code> or as root, since <code>/etc/pki/tls/</code> requires elevated privileges.</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Create the required directories first with <code>mkdir -p /etc/pki/tls/{private,certs,misc}</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Check certificate presented by a service</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>server01.example.local:443<span class="w"> </span>-servername<span class="w"> </span>server01.example.local<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Not After&quot;</span>
@@ -7923,9 +8101,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>update-crypto-policies: command not found</code></strong> — Install the crypto-policies package with <code>sudo yum install crypto-policies</code> or <code>sudo apt install crypto-policies</code>.
-<strong><code>Failed to restart sshd: Unit sshd.service not found.</code></strong> — Verify the SSH service name with <code>systemctl list-unit-files | grep ssh</code> and use the correct unit name in the restart command.
-<strong><code>Error: Policy 'FUTURE' is not available on this system.</code></strong> — Update the crypto-policies package to the latest version with <code>sudo yum update crypto-policies</code> to access newer policy levels.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>update-crypto-policies: command not found</code></td>
+<td>Install the crypto-policies package with <code>sudo yum install crypto-policies</code> or <code>sudo apt install crypto-policies</code>.</td>
+</tr>
+<tr>
+<td><code>Failed to restart sshd: Unit sshd.service not found.</code></td>
+<td>Verify the SSH service name with <code>systemctl list-unit-files | grep ssh</code> and use the correct unit name in the restart command.</td>
+</tr>
+<tr>
+<td><code>Error: Policy 'FUTURE' is not available on this system.</code></td>
+<td>Update the crypto-policies package to the latest version with <code>sudo yum update crypto-policies</code> to access newer policy levels.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Configure encrypted swap in /etc/crypttab</span>
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># Using random key — cleared on reboot, no data persistence needed</span>
@@ -7939,9 +8136,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cryptsetup: error while loading shared libraries: libcryptsetup.so.12: cannot open shared object file</code></strong> — Install libcryptsetup-dev or cryptsetup package with <code>apt-get install cryptsetup</code> (Debian/Ubuntu) or <code>dnf install cryptsetup</code> (RHEL/Fedora).
-<strong><code>swapon: /dev/mapper/swap: read-only file system</code></strong> — Ensure the root filesystem is mounted read-write during boot; if in read-only mode, remount with <code>mount -o remount,rw /</code>.
-<strong><code>cryptsetup: No such file or directory: /dev/sda2</code></strong> — Verify the correct block device path with <code>lsblk</code> or <code>fdisk -l</code> and update <code>/etc/crypttab</code> with the actual device name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cryptsetup: error while loading shared libraries: libcryptsetup.so.12: cannot open shared object file</code></td>
+<td>Install libcryptsetup-dev or cryptsetup package with <code>apt-get install cryptsetup</code> (Debian/Ubuntu) or <code>dnf install cryptsetup</code> (RHEL/Fedora).</td>
+</tr>
+<tr>
+<td><code>swapon: /dev/mapper/swap: read-only file system</code></td>
+<td>Ensure the root filesystem is mounted read-write during boot; if in read-only mode, remount with <code>mount -o remount,rw /</code>.</td>
+</tr>
+<tr>
+<td><code>cryptsetup: No such file or directory: /dev/sda2</code></td>
+<td>Verify the correct block device path with <code>lsblk</code> or <code>fdisk -l</code> and update <code>/etc/crypttab</code> with the actual device name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Encrypt a file for a recipient (using their public key)</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>gpg<span class="w"> </span>--encrypt<span class="w"> </span>--recipient<span class="w"> </span>jsmith@corp.local<span class="w"> </span>--armor<span class="w"> </span>/path/to/sensitive.tar.gz
@@ -7976,9 +8192,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gpg: error reading key: No public key</code></strong> — Import the recipient's public key first using <code>gpg --import recipient-pubkey.asc</code>.
-<strong><code>gpg: decryption failed: No secret key</code></strong> — Ensure your private key is available in your keyring; verify with <code>gpg --list-secret-keys</code>.
-<strong><code>gpg: WARNING: no command supplied. Trying to guess what you meant ...</code></strong> — Specify an explicit action flag like <code>--encrypt</code>, <code>--decrypt</code>, or <code>--symmetric</code> before the filename.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gpg: error reading key: No public key</code></td>
+<td>Import the recipient's public key first using <code>gpg --import recipient-pubkey.asc</code>.</td>
+</tr>
+<tr>
+<td><code>gpg: decryption failed: No secret key</code></td>
+<td>Ensure your private key is available in your keyring; verify with <code>gpg --list-secret-keys</code>.</td>
+</tr>
+<tr>
+<td><code>gpg: WARNING: no command supplied. Trying to guess what you meant ...</code></td>
+<td>Specify an explicit action flag like <code>--encrypt</code>, <code>--decrypt</code>, or <code>--symmetric</code> before the filename.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Find unencrypted block devices (no LUKS signature)</span>
 <a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,FSTYPE,MOUNTPOINT<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>crypto_LUKS
@@ -8036,7 +8271,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

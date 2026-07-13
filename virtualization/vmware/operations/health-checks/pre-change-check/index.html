@@ -7877,9 +7877,28 @@ Pre-change checks confirm the platform is healthy before maintenance begins. Run
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Cluster Status: DEGRADED</code></strong> — Check vSAN health details with <code>esxcli vsan health cluster get</code> and verify all hosts are online and network connectivity is stable.
-<strong><code>Resync Operations: &lt;number greater than 0&gt;</code></strong> — Wait for ongoing resync operations to complete before entering maintenance mode, or check disk/network issues with <code>esxcli vsan cluster get</code>.
-<strong><code>Error: Unknown command or namespace</code></strong> — Verify vSAN is licensed and enabled on the host with <code>esxcli vsan cluster get</code>, and ensure you are running the command on an ESXi host (not vCenter).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cluster Status: DEGRADED</code></td>
+<td>Check vSAN health details with <code>esxcli vsan health cluster get</code> and verify all hosts are online and network connectivity is stable.</td>
+</tr>
+<tr>
+<td><code>Resync Operations: &lt;number greater than 0&gt;</code></td>
+<td>Wait for ongoing resync operations to complete before entering maintenance mode, or check disk/network issues with <code>esxcli vsan cluster get</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Unknown command or namespace</code></td>
+<td>Verify vSAN is licensed and enabled on the host with <code>esxcli vsan cluster get</code>, and ensure you are running the command on an ESXi host (not vCenter).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="7-storage-paths">7. Storage Paths<a class="headerlink" href="#7-storage-paths" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Any dead paths?</span>
@@ -7894,8 +7913,24 @@ Pre-change checks confirm the platform is healthy before maintenance begins. Run
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxcli: command not found</code></strong> — Run this command directly on an ESXi host via SSH or vSphere CLI, not from a remote management station.
-<strong><code>Unknown command or namespace storage.core.path</code></strong> — Verify the ESXi host version supports this namespace; use <code>esxcli storage core path list --help</code> to confirm availability.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxcli: command not found</code></td>
+<td>Run this command directly on an ESXi host via SSH or vSphere CLI, not from a remote management station.</td>
+</tr>
+<tr>
+<td><code>Unknown command or namespace storage.core.path</code></td>
+<td>Verify the ESXi host version supports this namespace; use <code>esxcli storage core path list --help</code> to confirm availability.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="8-ntp-and-dns">8. NTP and DNS<a class="headerlink" href="#8-ntp-and-dns" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># ESXi host time is synchronised</span>
@@ -7923,8 +7958,24 @@ Pre-change checks confirm the platform is healthy before maintenance begins. Run
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>can't find $(hostname): Non-existent domain</code></strong> — Replace <code>$(hostname)</code> with the actual hostname or use backticks instead: <code>nslookup `hostname`</code>
-<strong><code>connection timed out; no servers could be reached</code></strong> — Verify DNS server is reachable and configured in <code>/etc/resolv.conf</code>, or specify the DNS server explicitly: <code>nslookup vcenter.example.local 10.0.53.53</code></p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>can't find $(hostname): Non-existent domain</code></td>
+<td>Replace <code>$(hostname)</code> with the actual hostname or use backticks instead: <code>nslookup `hostname`</code></td>
+</tr>
+<tr>
+<td><code>connection timed out; no servers could be reached</code></td>
+<td>Verify DNS server is reachable and configured in <code>/etc/resolv.conf</code>, or specify the DNS server explicitly: <code>nslookup vcenter.example.local 10.0.53.53</code></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="9-cluster-ha-and-drs">9. Cluster HA and DRS<a class="headerlink" href="#9-cluster-ha-and-drs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># HA and DRS state</span>
@@ -8048,7 +8099,7 @@ Pre-change checks confirm the platform is healthy before maintenance begins. Run
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

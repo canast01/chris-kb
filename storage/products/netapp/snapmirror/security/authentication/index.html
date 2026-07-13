@@ -8433,8 +8433,24 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Cluster peer create failed. Reason: Connection refused to peer address 192.168.1.50</code></strong> — Verify the destination intercluster LIF IP is correct and reachable by pinging it from the source cluster.
-<strong><code>Error: command failed: Cluster peer create failed. Reason: Authentication failed. Invalid passphrase</code></strong> — Ensure the passphrase was copied exactly without whitespace and that it matches the one generated on the source cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Cluster peer create failed. Reason: Connection refused to peer address 192.168.1.50</code></td>
+<td>Verify the destination intercluster LIF IP is correct and reachable by pinging it from the source cluster.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Cluster peer create failed. Reason: Authentication failed. Invalid passphrase</code></td>
+<td>Ensure the passphrase was copied exactly without whitespace and that it matches the one generated on the source cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="establishing-an-svm-peer-relationship">Establishing an SVM Peer Relationship<a class="headerlink" href="#establishing-an-svm-peer-relationship" title="Permanent link">&para;</a></h3>
 <p>SVM peering is required before any volume-level relationship can be created. It uses the already-authenticated cluster peer channel and adds SVM-scope trust.</p>
@@ -8464,9 +8480,28 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Vserver peer relationship already exists.</code></strong> — Check existing peer relationships with <code>vserver peer show</code> and remove the old one using <code>vserver peer delete</code> if needed.
-<strong><code>Error: command failed: Peer cluster dr-cluster is not reachable.</code></strong> — Verify cluster peering exists first with <code>cluster peer show</code> and ensure network connectivity between clusters on port 11104.
-<strong><code>Error: command failed: Vserver svm_dr does not exist on peer cluster dr-cluster.</code></strong> — Confirm the SVM name and cluster name are correct, and create the SVM on the DR cluster if it doesn't exist.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Vserver peer relationship already exists.</code></td>
+<td>Check existing peer relationships with <code>vserver peer show</code> and remove the old one using <code>vserver peer delete</code> if needed.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Peer cluster dr-cluster is not reachable.</code></td>
+<td>Verify cluster peering exists first with <code>cluster peer show</code> and ensure network connectivity between clusters on port 11104.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Vserver svm_dr does not exist on peer cluster dr-cluster.</code></td>
+<td>Confirm the SVM name and cluster name are correct, and create the SVM on the DR cluster if it doesn't exist.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="reviewing-and-rotating-peer-authentication">Reviewing and Rotating Peer Authentication<a class="headerlink" href="#reviewing-and-rotating-peer-authentication" title="Permanent link">&para;</a></h3>
 <p>Stale or unused cluster peer relationships should be reviewed annually and removed. Peer relationships persist indefinitely; removing an unused peer eliminates unnecessary trust scope.</p>
@@ -8489,8 +8524,24 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Cluster peer relationship cannot be deleted: SVM peer relationships exist</code></strong> — Delete all SVM peer relationships with <code>vserver peer delete -vserver &lt;local-svm&gt; -peer-vserver &lt;remote-svm&gt;</code> before removing the cluster peer.
-<strong><code>Error: command failed: Cluster peer relationship cannot be deleted: SnapMirror relationships exist</code></strong> — Delete all SnapMirror relationships referencing this peer with <code>snapmirror delete -destination-path &lt;dest-svm&gt;:&lt;vol&gt;</code> before removing the cluster peer.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Cluster peer relationship cannot be deleted: SVM peer relationships exist</code></td>
+<td>Delete all SVM peer relationships with <code>vserver peer delete -vserver &lt;local-svm&gt; -peer-vserver &lt;remote-svm&gt;</code> before removing the cluster peer.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Cluster peer relationship cannot be deleted: SnapMirror relationships exist</code></td>
+<td>Delete all SnapMirror relationships referencing this peer with <code>snapmirror delete -destination-path &lt;dest-svm&gt;:&lt;vol&gt;</code> before removing the cluster peer.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="ontap-credential-security-for-replication-management">ONTAP Credential Security for Replication Management<a class="headerlink" href="#ontap-credential-security-for-replication-management" title="Permanent link">&para;</a></h2>
@@ -8558,9 +8609,28 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: The role "snapmirror-ops" does not exist.</code></strong> — Create the role with the DEFAULT command first before assigning specific command permissions to it.
-<strong><code>Error: command failed: Invalid vserver name "&lt;cluster-name&gt;"</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster or SVM name (e.g., <code>cluster1</code> or <code>svm-dr</code>).
-<strong><code>Error: command failed: User "svc-snapmirror" already exists.</code></strong> — Delete the existing user with <code>security login delete -username svc-snapmirror -vserver &lt;cluster-name&gt;</code> before recreating it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: The role "snapmirror-ops" does not exist.</code></td>
+<td>Create the role with the DEFAULT command first before assigning specific command permissions to it.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Invalid vserver name "&lt;cluster-name&gt;"</code></td>
+<td>Replace <code>&lt;cluster-name&gt;</code> with the actual cluster or SVM name (e.g., <code>cluster1</code> or <code>svm-dr</code>).</td>
+</tr>
+<tr>
+<td><code>Error: command failed: User "svc-snapmirror" already exists.</code></td>
+<td>Delete the existing user with <code>security login delete -username svc-snapmirror -vserver &lt;cluster-name&gt;</code> before recreating it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="read-only-monitoring-role">Read-Only Monitoring Role<a class="headerlink" href="#read-only-monitoring-role" title="Permanent link">&para;</a></h3>
 <p>Separate monitoring-only access from operational access. Monitoring tools (Prometheus ONTAP exporter, Zabbix, Nagios) only need <code>snapmirror show</code> and related read-only commands.</p>
@@ -8608,9 +8678,28 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: entry already exists</code></strong> — Drop the existing role with <code>security login role delete -role snapmirror-monitor -vserver &lt;cluster-name&gt;</code> before recreating it.
-<strong><code>Error: Invalid public key format</code></strong> — Ensure the public key string is complete and valid; verify it starts with <code>ssh-ed25519</code> or <code>ssh-rsa</code> and contains no line breaks.
-<strong><code>Error: User "svc-sm-monitor" already exists</code></strong> — Delete the existing user with <code>security login delete -username svc-sm-monitor -vserver &lt;cluster-name&gt;</code> before creating a new one.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: entry already exists</code></td>
+<td>Drop the existing role with <code>security login role delete -role snapmirror-monitor -vserver &lt;cluster-name&gt;</code> before recreating it.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid public key format</code></td>
+<td>Ensure the public key string is complete and valid; verify it starts with <code>ssh-ed25519</code> or <code>ssh-rsa</code> and contains no line breaks.</td>
+</tr>
+<tr>
+<td><code>Error: User "svc-sm-monitor" already exists</code></td>
+<td>Delete the existing user with <code>security login delete -username svc-sm-monitor -vserver &lt;cluster-name&gt;</code> before creating a new one.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="rest-api-authentication">REST API Authentication<a class="headerlink" href="#rest-api-authentication" title="Permanent link">&para;</a></h2>
@@ -8665,9 +8754,28 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid application "http". Valid applications are: ontapi, http, console, snmp</code></strong> — Use <code>http</code> (lowercase) or specify <code>ontapi</code> if using ZAPI instead of REST.
-<strong><code>Error: REST API token not supported on this cluster. Minimum ONTAP version required: 9.12.0</code></strong> — Upgrade ONTAP to 9.12 or later, or use basic authentication with <code>-u username:password</code> in curl instead.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or install the cluster's CA certificate in your trust store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid application "http". Valid applications are: ontapi, http, console, snmp</code></td>
+<td>Use <code>http</code> (lowercase) or specify <code>ontapi</code> if using ZAPI instead of REST.</td>
+</tr>
+<tr>
+<td><code>Error: REST API token not supported on this cluster. Minimum ONTAP version required: 9.12.0</code></td>
+<td>Upgrade ONTAP to 9.12 or later, or use basic authentication with <code>-u username:password</code> in curl instead.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or install the cluster's CA certificate in your trust store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="smbc-mediator-authentication">SMBC Mediator Authentication<a class="headerlink" href="#smbc-mediator-authentication" title="Permanent link">&para;</a></h2>
@@ -8697,9 +8805,28 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Mediator address 192.168.1.45 is already configured</code></strong> — Remove the existing mediator entry first using <code>snapmirror mediator remove</code> before re-adding it.
-<strong><code>Error: Failed to authenticate to mediator at 192.168.1.45: Connection refused</code></strong> — Verify the mediator IP address is correct, the mediator service is running, and network connectivity exists between the cluster and mediator host.
-<strong><code>Error: Cannot remove mediator 192.168.1.45: mediator is in use by active SnapMirror relationships</code></strong> — Delete or quiesce all active SnapMirror relationships using this mediator before attempting removal.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Mediator address 192.168.1.45 is already configured</code></td>
+<td>Remove the existing mediator entry first using <code>snapmirror mediator remove</code> before re-adding it.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to authenticate to mediator at 192.168.1.45: Connection refused</code></td>
+<td>Verify the mediator IP address is correct, the mediator service is running, and network connectivity exists between the cluster and mediator host.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot remove mediator 192.168.1.45: mediator is in use by active SnapMirror relationships</code></td>
+<td>Delete or quiesce all active SnapMirror relationships using this mediator before attempting removal.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Mediator credentials are configured during Mediator VM installation. The Mediator VM password should be stored in a secrets vault and rotated per the password policy. Certificate trust between ONTAP and the Mediator is established at <code>snapmirror mediator add</code> time — certificates are not manually managed.</p>
 <hr />
@@ -8731,7 +8858,7 @@ SnapMirror authentication: intercluster cluster peer passphrase management, `clu
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -7676,8 +7676,24 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cat: /usr/openv/netbackup/bin/version: No such file or directory</code></strong> — Verify NetBackup is installed on this system with <code>rpm -qa | grep netbackup</code> or check the correct installation path.
-<strong><code>nbpem: command not found</code></strong> — Ensure the NetBackup PATH is set correctly by sourcing <code>/usr/openv/netbackup/bin/bp.env</code> or add <code>/usr/openv/netbackup/bin/goodies</code> to your PATH.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat: /usr/openv/netbackup/bin/version: No such file or directory</code></td>
+<td>Verify NetBackup is installed on this system with <code>rpm -qa | grep netbackup</code> or check the correct installation path.</td>
+</tr>
+<tr>
+<td><code>nbpem: command not found</code></td>
+<td>Ensure the NetBackup PATH is set correctly by sourcing <code>/usr/openv/netbackup/bin/bp.env</code> or add <code>/usr/openv/netbackup/bin/goodies</code> to your PATH.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-collect-failing-job-details">2. Collect failing job details<a class="headerlink" href="#2-collect-failing-job-details" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List failed jobs in the last 48 hours</span>
@@ -7734,9 +7750,28 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bpdbjobs: command not found</code></strong> — Ensure the NetBackup client is installed and <code>/usr/openv/netbackup/bin</code> is in your PATH, or run the command with the full path <code>/usr/openv/netbackup/bin/bpdbjobs</code>.
-<strong><code>cat: /usr/openv/netbackup/logs/user_ops/&lt;jobid&gt;: No such file or directory</code></strong> — Replace <code>&lt;jobid&gt;</code> with an actual numeric job ID (e.g., <code>12847561</code>) and verify the log directory exists with <code>ls -la /usr/openv/netbackup/logs/user_ops/</code>.
-<strong><code>bppllist: policy &lt;policy-name&gt; does not exist</code></strong> — Verify the policy name is correct by running <code>bppllist -L</code> to list all available policies, then use the exact policy name from the output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bpdbjobs: command not found</code></td>
+<td>Ensure the NetBackup client is installed and <code>/usr/openv/netbackup/bin</code> is in your PATH, or run the command with the full path <code>/usr/openv/netbackup/bin/bpdbjobs</code>.</td>
+</tr>
+<tr>
+<td><code>cat: /usr/openv/netbackup/logs/user_ops/&lt;jobid&gt;: No such file or directory</code></td>
+<td>Replace <code>&lt;jobid&gt;</code> with an actual numeric job ID (e.g., <code>12847561</code>) and verify the log directory exists with <code>ls -la /usr/openv/netbackup/logs/user_ops/</code>.</td>
+</tr>
+<tr>
+<td><code>bppllist: policy &lt;policy-name&gt; does not exist</code></td>
+<td>Verify the policy name is correct by running <code>bppllist -L</code> to list all available policies, then use the exact policy name from the output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="3-run-the-nbsu-support-utility">3. Run the nbsu support utility<a class="headerlink" href="#3-run-the-nbsu-support-utility" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Run nbsu on the master server — this is the primary artifact for Veritas support</span>
@@ -7764,9 +7799,28 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/usr/openv/netbackup/bin/support/nbsu: Permission denied</code></strong> — Run the command with sudo or as root user.
-<strong><code>ERROR: Unable to write to /usr/openv/support/ — disk full</code></strong> — Free up disk space on the /usr/openv partition (nbsu bundles typically require 3–5 GB free space).
-<strong><code>ERROR: NetBackup services not running — cannot collect process data</code></strong> — Start NetBackup services with <code>systemctl start netbackup</code> or <code>/usr/openv/netbackup/bin/bpup -start</code> before running nbsu.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/usr/openv/netbackup/bin/support/nbsu: Permission denied</code></td>
+<td>Run the command with sudo or as root user.</td>
+</tr>
+<tr>
+<td><code>ERROR: Unable to write to /usr/openv/support/ — disk full</code></td>
+<td>Free up disk space on the /usr/openv partition (nbsu bundles typically require 3–5 GB free space).</td>
+</tr>
+<tr>
+<td><code>ERROR: NetBackup services not running — cannot collect process data</code></td>
+<td>Start NetBackup services with <code>systemctl start netbackup</code> or <code>/usr/openv/netbackup/bin/bpup -start</code> before running nbsu.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="4-collect-key-log-files-manually-if-nbsu-fails">4. Collect key log files manually (if nbsu fails)<a class="headerlink" href="#4-collect-key-log-files-manually-if-nbsu-fails" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Last 500 lines of the backup process manager log</span>
@@ -7810,9 +7864,28 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tail: cannot open '/usr/openv/netbackup/logs/bpbrm/log.&lt;today-date&gt;' for reading: No such file or directory</code></strong> — Replace <code>&lt;today-date&gt;</code> with the actual date in YYYYMMDD format (e.g., <code>log.20240115</code>) or use <code>ls /usr/openv/netbackup/logs/bpbrm/</code> to find the correct filename.
-<strong><code>bpdbm: command not found</code></strong> — Ensure the NetBackup client is installed and <code>/usr/openv/netbackup/bin</code> is in your PATH, or run the command with the full path <code>/usr/openv/netbackup/bin/bpdbm</code>.
-<strong><code>vmquery: command not found</code></strong> — Run the command as root or with sudo, and verify NetBackup services are running with <code>bpps -a</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tail: cannot open '/usr/openv/netbackup/logs/bpbrm/log.&lt;today-date&gt;' for reading: No such file or directory</code></td>
+<td>Replace <code>&lt;today-date&gt;</code> with the actual date in YYYYMMDD format (e.g., <code>log.20240115</code>) or use <code>ls /usr/openv/netbackup/logs/bpbrm/</code> to find the correct filename.</td>
+</tr>
+<tr>
+<td><code>bpdbm: command not found</code></td>
+<td>Ensure the NetBackup client is installed and <code>/usr/openv/netbackup/bin</code> is in your PATH, or run the command with the full path <code>/usr/openv/netbackup/bin/bpdbm</code>.</td>
+</tr>
+<tr>
+<td><code>vmquery: command not found</code></td>
+<td>Run the command as root or with sudo, and verify NetBackup services are running with <code>bpps -a</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>NetBackup version: 10.3.0.1
@@ -8007,9 +8080,28 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bpps: command not found</code></strong> — Verify NetBackup is installed and /usr/openv/netbackup/bin is in PATH, or use full path /usr/openv/netbackup/bin/bpps.
-<strong><code>bpdbjobs: Database connection failed</code></strong> — Check that the NetBackup database is running with bpdbm and verify disk space on /usr/openv/db/ is above 10%.
-<strong><code>nbdevquery: No devices found matching filter</code></strong> — Confirm MSDP pool name is correct and PureDisk devices are configured in NetBackup Admin Console under Storage &gt; Disk Pools.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bpps: command not found</code></td>
+<td>Verify NetBackup is installed and /usr/openv/netbackup/bin is in PATH, or use full path /usr/openv/netbackup/bin/bpps.</td>
+</tr>
+<tr>
+<td><code>bpdbjobs: Database connection failed</code></td>
+<td>Check that the NetBackup database is running with bpdbm and verify disk space on /usr/openv/db/ is above 10%.</td>
+</tr>
+<tr>
+<td><code>nbdevquery: No devices found matching filter</code></td>
+<td>Confirm MSDP pool name is correct and PureDisk devices are configured in NetBackup Admin Console under Storage &gt; Disk Pools.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8047,7 +8139,7 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

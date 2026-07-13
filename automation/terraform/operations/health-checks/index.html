@@ -7564,8 +7564,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Backend initialization required: please run "terraform init"</code></strong> — Run <code>terraform init</code> in the working directory to initialize the backend and download provider plugins.
-<strong><code>Error: Error acquiring the state lock</code></strong> — Verify backend connectivity and check for stale locks with <code>terraform force-unlock &lt;lock-id&gt;</code> if the lock is orphaned.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Backend initialization required: please run "terraform init"</code></td>
+<td>Run <code>terraform init</code> in the working directory to initialize the backend and download provider plugins.</td>
+</tr>
+<tr>
+<td><code>Error: Error acquiring the state lock</code></td>
+<td>Verify backend connectivity and check for stale locks with <code>terraform force-unlock &lt;lock-id&gt;</code> if the lock is orphaned.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Compare the output against the expected resource count tracked in your runbook. A sudden drop or spike indicates a state manipulation issue.</p>
 <p><strong>Inspect a specific resource</strong></p>
@@ -7595,8 +7611,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: resource address "resource_address" not found in the current state</code></strong> — Replace <code>&lt;resource_address&gt;</code> with the actual resource type and name (e.g., <code>aws_instance.web_server</code>).
-<strong><code>Error: No state file found</code></strong> — Initialize the Terraform working directory with <code>terraform init</code> and ensure a state file exists in the current directory or remote backend.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: resource address "resource_address" not found in the current state</code></td>
+<td>Replace <code>&lt;resource_address&gt;</code> with the actual resource type and name (e.g., <code>aws_instance.web_server</code>).</td>
+</tr>
+<tr>
+<td><code>Error: No state file found</code></td>
+<td>Initialize the Terraform working directory with <code>terraform init</code> and ensure a state file exists in the current directory or remote backend.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Remove a stale resource from state (non-destructive)</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>terraform<span class="w"> </span>state<span class="w"> </span>rm<span class="w"> </span>&lt;resource_address&gt;
@@ -7605,8 +7637,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: resource address "aws_instance.web_server" does not exist in the current state</code></strong> — Verify the exact resource address with <code>terraform state list</code> before attempting removal.
-<strong><code>Error: Failed to read state</code></strong> — Ensure you have read/write permissions on the state file and backend is accessible (check <code>terraform init</code> completed successfully).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: resource address "aws_instance.web_server" does not exist in the current state</code></td>
+<td>Verify the exact resource address with <code>terraform state list</code> before attempting removal.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to read state</code></td>
+<td>Ensure you have read/write permissions on the state file and backend is accessible (check <code>terraform init</code> completed successfully).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Use only when a resource has been manually deleted outside Terraform and the state entry is orphaned.</p>
 <p><strong>Pull remote state to inspect locally</strong></p>
@@ -7616,8 +7664,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Failed to read state</code> — Ensure you are in the correct Terraform working directory and have initialized the workspace with <code>terraform init</code>.</strong>
-<strong><code>Error: Insufficient permissions to read state</code> — Verify your AWS/cloud credentials are configured and have <code>s3:GetObject</code> permissions if using remote state.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Failed to read state</code></td>
+<td>Ensure you are in the correct Terraform working directory and have initialized the workspace with <code>terraform init</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Insufficient permissions to read state</code></td>
+<td>Verify your AWS/cloud credentials are configured and have <code>s3:GetObject</code> permissions if using remote state.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Review <code>state-snapshot.json</code> for unexpected <code>null</code> values, duplicate serial numbers, or missing resource blocks.</p>
 <p><strong>Key health indicators</strong></p>
@@ -7677,8 +7741,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: No configuration files</code></strong> — Run <code>terraform init</code> first to initialize the working directory and download provider plugins.
-<strong><code>Error: Incompatible provider version</code></strong> — Update the provider constraint in your <code>.tf</code> files or run <code>terraform init -upgrade</code> to fetch compatible versions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: No configuration files</code></td>
+<td>Run <code>terraform init</code> first to initialize the working directory and download provider plugins.</td>
+</tr>
+<tr>
+<td><code>Error: Incompatible provider version</code></td>
+<td>Update the provider constraint in your <code>.tf</code> files or run <code>terraform init -upgrade</code> to fetch compatible versions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Review lock file constraints</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cat<span class="w"> </span>.terraform.lock.hcl
@@ -7705,8 +7785,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cat: .terraform.lock.hcl: No such file or directory</code></strong> — Run <code>terraform init</code> in the working directory to generate the lock file.
-<strong><code>Permission denied</code></strong> — Check file permissions with <code>ls -la .terraform.lock.hcl</code> and ensure the user has read access.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat: .terraform.lock.hcl: No such file or directory</code></td>
+<td>Run <code>terraform init</code> in the working directory to generate the lock file.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Check file permissions with <code>ls -la .terraform.lock.hcl</code> and ensure the user has read access.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Confirm that the <code>version</code> and <code>constraints</code> fields in the lock file match the versions declared in <code>versions.tf</code> or the root module.</p>
 <p><strong>Re-initialise and upgrade providers (controlled)</strong></p>
@@ -7729,8 +7825,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Failed to download module source</code></strong> — Verify the module source URL is correct and accessible, and check your network connectivity and VCS credentials.
-<strong><code>Error: Incompatible provider version</code></strong> — Review the required_providers block in your configuration and adjust version constraints to match available releases.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Failed to download module source</code></td>
+<td>Verify the module source URL is correct and accessible, and check your network connectivity and VCS credentials.</td>
+</tr>
+<tr>
+<td><code>Error: Incompatible provider version</code></td>
+<td>Review the required_providers block in your configuration and adjust version constraints to match available releases.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Run this only during a planned maintenance window. After upgrading, run <code>terraform plan</code> to verify no unintended resource changes are introduced by the new provider version.</p>
 <p><strong>Key health indicators</strong></p>
@@ -7773,8 +7885,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Not a valid terraform directory</code></strong> — Run the command from the directory containing your <code>.terraform</code> directory or re-initialize with <code>terraform init</code>.
-<strong><code>Error: Failed to read state file</code></strong> — Ensure the backend is accessible (check AWS credentials, network connectivity, or remote state lock) and run <code>terraform init</code> to reinitialize the backend.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Not a valid terraform directory</code></td>
+<td>Run the command from the directory containing your <code>.terraform</code> directory or re-initialize with <code>terraform init</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to read state file</code></td>
+<td>Ensure the backend is accessible (check AWS credentials, network connectivity, or remote state lock) and run <code>terraform init</code> to reinitialize the backend.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>The active workspace is marked with <code>*</code>.</p>
 <p><strong>Show current workspace</strong></p>
@@ -7784,8 +7912,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Not a valid terraform directory</code></strong> — Run the command from the directory containing your <code>.terraform</code> directory or re-initialize with <code>terraform init</code>.
-<strong><code>Error: Failed to read state file</code></strong> — Ensure the state backend is accessible and credentials are valid; check <code>terraform login</code> or backend configuration in <code>terraform.tf</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Not a valid terraform directory</code></td>
+<td>Run the command from the directory containing your <code>.terraform</code> directory or re-initialize with <code>terraform init</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to read state file</code></td>
+<td>Ensure the state backend is accessible and credentials are valid; check <code>terraform login</code> or backend configuration in <code>terraform.tf</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Switch workspace</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>&lt;workspace_name&gt;
@@ -7794,8 +7938,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: workspace "&lt;workspace_name&gt;" does not exist</code></strong> — Run <code>terraform workspace list</code> to see available workspaces, then use the correct name.
-<strong><code>Error: Failed to select workspace: invalid character in workspace name</code></strong> — Workspace names must contain only alphanumeric characters, hyphens, and underscores; rename or use a valid existing workspace.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: workspace "&lt;workspace_name&gt;" does not exist</code></td>
+<td>Run <code>terraform workspace list</code> to see available workspaces, then use the correct name.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to select workspace: invalid character in workspace name</code></td>
+<td>Workspace names must contain only alphanumeric characters, hyphens, and underscores; rename or use a valid existing workspace.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Confirm state is scoped to the correct workspace</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>terraform<span class="w"> </span>state<span class="w"> </span>list
@@ -7811,8 +7971,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: No state file was found!</code></strong> — Initialize the Terraform working directory with <code>terraform init</code> to create or load the state file.
-<strong><code>Error: Error reading state file: stat .terraform/terraform.tfstate: permission denied</code></strong> — Ensure your user has read permissions on the <code>.terraform</code> directory and state file with <code>chmod 600 .terraform/terraform.tfstate</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: No state file was found!</code></td>
+<td>Initialize the Terraform working directory with <code>terraform init</code> to create or load the state file.</td>
+</tr>
+<tr>
+<td><code>Error: Error reading state file: stat .terraform/terraform.tfstate: permission denied</code></td>
+<td>Ensure your user has read permissions on the <code>.terraform</code> directory and state file with <code>chmod 600 .terraform/terraform.tfstate</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Run this immediately after switching workspaces to verify the resource list matches the expected environment.</p>
 <p><strong>Key health indicators</strong></p>
@@ -7866,8 +8042,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unsupported or incorrectly formatted backend configuration</code></strong> — Verify the backend block in your terraform configuration files has valid syntax and the backend type is supported.
-<strong><code>Error: Failed to download provider plugin</code></strong> — Check your internet connection and ensure your Terraform registry credentials are configured if using a private registry.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unsupported or incorrectly formatted backend configuration</code></td>
+<td>Verify the backend block in your terraform configuration files has valid syntax and the backend type is supported.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to download provider plugin</code></td>
+<td>Check your internet connection and ensure your Terraform registry credentials are configured if using a private registry.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>A clean init with no errors confirms backend credentials and network access are valid.</p>
 <p><strong>Check backend configuration</strong></p>
@@ -7893,8 +8085,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cat: backend.tf: No such file or directory</code></strong> — Ensure you are in the correct Terraform working directory (typically the root of your infrastructure-as-code repository).
-<strong><code>Permission denied</code></strong> — Run <code>chmod +r backend.tf</code> or check that your user has read permissions on the file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat: backend.tf: No such file or directory</code></td>
+<td>Ensure you are in the correct Terraform working directory (typically the root of your infrastructure-as-code repository).</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run <code>chmod +r backend.tf</code> or check that your user has read permissions on the file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Verify that the bucket/container name, region, and key path are correct for the current environment.</p>
 <p><strong>Validate credentials (AWS example)</strong></p>
@@ -7908,8 +8116,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.
-<strong><code>An error occurred (UnauthorizedOperation) when calling the GetCallerIdentity operation: User: arn:aws:iam::987654321098:user/terraform-admin is not authorized to perform: sts:GetCallerIdentity</code></strong> — Add the <code>sts:GetCallerIdentity</code> permission to the IAM user or role's policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unable to locate credentials</code></td>
+<td>Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</td>
+</tr>
+<tr>
+<td><code>An error occurred (UnauthorizedOperation) when calling the GetCallerIdentity operation: User: arn:aws:iam::987654321098:user/terraform-admin is not authorized to perform: sts:GetCallerIdentity</code></td>
+<td>Add the <code>sts:GetCallerIdentity</code> permission to the IAM user or role's policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Replace with the equivalent CLI check for your cloud provider (e.g., <code>az account show</code> for Azure, <code>gcloud auth list</code> for GCP).</p>
 <p><strong>Force-unlock a stale lock (use with caution)</strong></p>
@@ -7919,8 +8143,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Error acquiring the state lock</code></strong> — Verify the lock ID is correct and the state backend is accessible by checking <code>terraform state list</code>.
-<strong><code>Error: resource not found</code></strong> — Ensure you are in the correct Terraform working directory and the backend configuration matches the locked state.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Error acquiring the state lock</code></td>
+<td>Verify the lock ID is correct and the state backend is accessible by checking <code>terraform state list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: resource not found</code></td>
+<td>Ensure you are in the correct Terraform working directory and the backend configuration matches the locked state.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Obtain the lock ID from the backend error message or by inspecting the lock object directly in the backend store. Only unlock if you have confirmed no active <code>apply</code> is running.</p>
 <p><strong>Key health indicators</strong></p>
@@ -7982,9 +8222,28 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: resource address "aws_instance.web01" does not exist in the configuration</code></strong> — Add the resource block <code>resource "aws_instance" "web01" {}</code> to your Terraform configuration before running import.
-<strong><code>Error: error reading resource: ResourceNotFound</code></strong> — Verify the resource ID is correct and exists in the target cloud account/subscription.
-<strong><code>Error: error reading resource: Unauthorized</code></strong> — Ensure your cloud credentials (AWS_PROFILE, ARM_CLIENT_ID, etc.) have permissions to read the target resource.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: resource address "aws_instance.web01" does not exist in the configuration</code></td>
+<td>Add the resource block <code>resource "aws_instance" "web01" {}</code> to your Terraform configuration before running import.</td>
+</tr>
+<tr>
+<td><code>Error: error reading resource: ResourceNotFound</code></td>
+<td>Verify the resource ID is correct and exists in the target cloud account/subscription.</td>
+</tr>
+<tr>
+<td><code>Error: error reading resource: Unauthorized</code></td>
+<td>Ensure your cloud credentials (AWS_PROFILE, ARM_CLIENT_ID, etc.) have permissions to read the target resource.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After import, add the matching resource block to your <code>.tf</code> files, then run <code>terraform plan</code> to verify state matches configuration.</p>
 <h3 id="moved-blocks">moved Blocks<a class="headerlink" href="#moved-blocks" title="Permanent link">&para;</a></h3>
@@ -8020,8 +8279,24 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Resource instance managed by a different state</code></strong> — Ensure all <code>moved</code> blocks reference the correct source and destination resource addresses, and run <code>terraform state list</code> to verify the current state structure.
-<strong><code>Error: Invalid moved block: source and destination cannot be the same</code></strong> — Remove or correct the <code>moved</code> block so source and destination addresses differ (e.g., <code>from = aws_instance.old</code> to <code>to = aws_instance.new</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Resource instance managed by a different state</code></td>
+<td>Ensure all <code>moved</code> blocks reference the correct source and destination resource addresses, and run <code>terraform state list</code> to verify the current state structure.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid moved block: source and destination cannot be the same</code></td>
+<td>Remove or correct the <code>moved</code> block so source and destination addresses differ (e.g., <code>from = aws_instance.old</code> to <code>to = aws_instance.new</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="scheduled-drift-detection">Scheduled Drift Detection<a class="headerlink" href="#scheduled-drift-detection" title="Permanent link">&para;</a></h3>
 <p>Run drift checks on a schedule in CI/CD to get early warnings.</p>
@@ -8174,7 +8449,7 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

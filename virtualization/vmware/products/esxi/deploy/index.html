@@ -8896,9 +8896,28 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>** server can't find esxi-host-01.domain.local: NXDOMAIN</code></strong> — Verify the DNS A record exists in your DNS server and the domain suffix is correct; check <code>nslookup esxi-host-01.domain.local &lt;dns-server-ip&gt;</code> against the authoritative nameserver.
-<strong><code>** server can't find 10.0.0.10.in-addr.arpa: NXDOMAIN</code></strong> — Create a reverse DNS PTR record for 10.0.0.10 pointing to esxi-host-01.domain.local in your DNS reverse zone.
-<strong><code>nslookup: command not found</code></strong> — Install <code>bind-utils</code> (RHEL/CentOS) or <code>dnsutils</code> (Debian/Ubuntu), or use <code>dig</code> or <code>host</code> as alternatives.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>** server can't find esxi-host-01.domain.local: NXDOMAIN</code></td>
+<td>Verify the DNS A record exists in your DNS server and the domain suffix is correct; check <code>nslookup esxi-host-01.domain.local &lt;dns-server-ip&gt;</code> against the authoritative nameserver.</td>
+</tr>
+<tr>
+<td><code>** server can't find 10.0.0.10.in-addr.arpa: NXDOMAIN</code></td>
+<td>Create a reverse DNS PTR record for 10.0.0.10 pointing to esxi-host-01.domain.local in your DNS reverse zone.</td>
+</tr>
+<tr>
+<td><code>nslookup: command not found</code></td>
+<td>Install <code>bind-utils</code> (RHEL/CentOS) or <code>dnsutils</code> (Debian/Ubuntu), or use <code>dig</code> or <code>host</code> as alternatives.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>NTP reachability</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From a jump host on the management VLAN</span>
@@ -8909,9 +8928,28 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ntpdate[12847]: no server suitable for synchronization found</code></strong> — Verify NTP server hostname resolves and is reachable from the management VLAN (ping ntp1.domain.local).
-<strong><code>ntpdate: command not found</code></strong> — Install ntpdate package or use <code>chronyc -a makestep</code> / <code>timedatectl set-ntp true</code> on modern systems instead.
-<strong><code>ntpdate[12847]: socket in use - exiting</code></strong> — Stop the ntpd/chronyd service first with <code>systemctl stop ntpd</code> or <code>systemctl stop chronyd</code> before running ntpdate.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ntpdate[12847]: no server suitable for synchronization found</code></td>
+<td>Verify NTP server hostname resolves and is reachable from the management VLAN (ping ntp1.domain.local).</td>
+</tr>
+<tr>
+<td><code>ntpdate: command not found</code></td>
+<td>Install ntpdate package or use <code>chronyc -a makestep</code> / <code>timedatectl set-ntp true</code> on modern systems instead.</td>
+</tr>
+<tr>
+<td><code>ntpdate[12847]: socket in use - exiting</code></td>
+<td>Stop the ntpd/chronyd service first with <code>systemctl stop ntpd</code> or <code>systemctl stop chronyd</code> before running ntpdate.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Cabling</strong></p>
 <ul>
@@ -9035,9 +9073,28 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The object already exists.</code></strong> — Verify the VMkernel interface name does not already exist with <code>esxcli network ip interface list</code>.
-<strong><code>Error: The portgroup 'vMotion' does not exist.</code></strong> — Create the vMotion portgroup on the vSwitch before adding the interface using <code>esxcli vswitch standard portgroup add</code>.
-<strong><code>Error: The tag 'VMotion' is not a valid tag.</code></strong> — Use the correct tag name <code>vMotion</code> (case-sensitive) instead of <code>VMotion</code> with <code>esxcli network ip interface tag add --interface-name vmk1 --tagname vMotion</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The object already exists.</code></td>
+<td>Verify the VMkernel interface name does not already exist with <code>esxcli network ip interface list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: The portgroup 'vMotion' does not exist.</code></td>
+<td>Create the vMotion portgroup on the vSwitch before adding the interface using <code>esxcli vswitch standard portgroup add</code>.</td>
+</tr>
+<tr>
+<td><code>Error: The tag 'VMotion' is not a valid tag.</code></td>
+<td>Use the correct tag name <code>vMotion</code> (case-sensitive) instead of <code>VMotion</code> with <code>esxcli network ip interface tag add --interface-name vmk1 --tagname vMotion</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Create vSAN VMkernel</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vSAN&quot;</span>
@@ -9055,9 +9112,28 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The object already exists.</code></strong> — Verify the vmk2 interface doesn't already exist with <code>esxcli network ip interface list</code> before adding it.
-<strong><code>Error: The portgroup "vSAN" does not exist.</code></strong> — Create the vSAN portgroup on vSwitch1 first using vCenter or <code>esxcli network vswitch standard portgroup add --vswitch-name vSwitch1 --portgroup-name "vSAN"</code>.
-<strong><code>Error: The vswitch vSwitch1 does not exist.</code></strong> — Confirm the vSwitch name with <code>esxcli network vswitch standard list</code> and use the correct vSwitch identifier.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The object already exists.</code></td>
+<td>Verify the vmk2 interface doesn't already exist with <code>esxcli network ip interface list</code> before adding it.</td>
+</tr>
+<tr>
+<td><code>Error: The portgroup "vSAN" does not exist.</code></td>
+<td>Create the vSAN portgroup on vSwitch1 first using vCenter or <code>esxcli network vswitch standard portgroup add --vswitch-name vSwitch1 --portgroup-name "vSAN"</code>.</td>
+</tr>
+<tr>
+<td><code>Error: The vswitch vSwitch1 does not exist.</code></td>
+<td>Confirm the vSwitch name with <code>esxcli network vswitch standard list</code> and use the correct vSwitch identifier.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Verify connectivity from each VMkernel</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Ping gateway from specific VMkernel</span>
@@ -9084,8 +9160,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vmkping: Unknown interface vmk2</code></strong> — Verify the VMkernel interface exists with <code>esxcli network ip interface list</code> and use the correct interface name.
-<strong><code>PING 10.20.1.1 (10.20.1.1): 8972 data bytes ... 100% packet loss</code></strong> — Confirm the gateway IP is reachable and that the MTU is set to 9000 on both the ESXi interface and upstream switch port with <code>esxcli network ip interface get -i vmk2</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vmkping: Unknown interface vmk2</code></td>
+<td>Verify the VMkernel interface exists with <code>esxcli network ip interface list</code> and use the correct interface name.</td>
+</tr>
+<tr>
+<td><code>PING 10.20.1.1 (10.20.1.1): 8972 data bytes ... 100% packet loss</code></td>
+<td>Confirm the gateway IP is reachable and that the MTU is set to 9000 on both the ESXi interface and upstream switch port with <code>esxcli network ip interface get -i vmk2</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>List all VMkernel interfaces</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
@@ -9099,8 +9191,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown command or namespace esxcli</code></strong> — Ensure you are logged into an ESXi host directly via SSH or console; this command does not work on vCenter Server.
-<strong><code>Error: Permission denied</code></strong> — Run the command as root or a user with administrative privileges on the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown command or namespace esxcli</code></td>
+<td>Ensure you are logged into an ESXi host directly via SSH or console; this command does not work on vCenter Server.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Run the command as root or a user with administrative privileges on the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-4-storage-configuration">Phase 4: Storage Configuration<a class="headerlink" href="#phase-4-storage-configuration" title="Permanent link">&para;</a></h2>
@@ -9144,9 +9252,28 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Could not connect to the host. The host is not reachable.</code></strong> — Verify network connectivity to the ESXi host and ensure you have valid credentials in your esxcli session.
-<strong><code>Error: Discovery sendtarget failed: Connection refused (111)</code></strong> — Confirm the iSCSI target portal IP address and port are correct, and that the storage array is reachable from the ESXi management network.
-<strong><code>Error: Adapter vmhba65 not found</code></strong> — Verify the software iSCSI initiator is enabled and the adapter name is correct by running <code>esxcli iscsi adapter list</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Could not connect to the host. The host is not reachable.</code></td>
+<td>Verify network connectivity to the ESXi host and ensure you have valid credentials in your esxcli session.</td>
+</tr>
+<tr>
+<td><code>Error: Discovery sendtarget failed: Connection refused (111)</code></td>
+<td>Confirm the iSCSI target portal IP address and port are correct, and that the storage array is reachable from the ESXi management network.</td>
+</tr>
+<tr>
+<td><code>Error: Adapter vmhba65 not found</code></td>
+<td>Verify the software iSCSI initiator is enabled and the adapter name is correct by running <code>esxcli iscsi adapter list</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Fibre Channel</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># List HBA WWPNs (provide to storage team for zoning)</span>
@@ -9176,8 +9303,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Could not get device list. Error: Permission denied</code></strong> — Run the commands as root or with sudo, or ensure your account has ESXi administrator privileges.
-<strong><code>No matching HBAs found</code></strong> — Verify FC HBAs are installed and detected by running <code>esxcli storage core adapter list</code> without grep to confirm adapter presence.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Could not get device list. Error: Permission denied</code></td>
+<td>Run the commands as root or with sudo, or ensure your account has ESXi administrator privileges.</td>
+</tr>
+<tr>
+<td><code>No matching HBAs found</code></td>
+<td>Verify FC HBAs are installed and detected by running <code>esxcli storage core adapter list</code> without grep to confirm adapter presence.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Multipathing (PSP)</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Set Round Robin for active-active arrays</span>
@@ -9206,8 +9349,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Could not find device naa.6001405abc123def456789abcdef0123</code></strong> — Verify the device NAA ID with <code>esxcli storage nmp device list</code> and use the correct identifier.
-<strong><code>Error: The specified path is not valid for this device</code></strong> — Ensure all paths are properly discovered and active by rescanning storage with <code>esxcli storage core adapter rescan --adapter vmhbaX</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Could not find device naa.6001405abc123def456789abcdef0123</code></td>
+<td>Verify the device NAA ID with <code>esxcli storage nmp device list</code> and use the correct identifier.</td>
+</tr>
+<tr>
+<td><code>Error: The specified path is not valid for this device</code></td>
+<td>Ensure all paths are properly discovered and active by rescanning storage with <code>esxcli storage core adapter rescan --adapter vmhbaX</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>VAAI plugin</strong></p>
 <p>Install the array vendor's VAAI plugin via VUM/LCM if the array supports hardware acceleration (XCOPY, ATS, WriteSame). Verify:</p>
@@ -9224,8 +9383,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown command or namespace esxcli storage core device vaai</code></strong> — Verify the ESXi version supports VAAI (vSphere 5.0+) and that esxcli is properly initialized.
-<strong><code>Error: Unable to connect to the local hostd agent</code></strong> — Restart the hostd service with <code>services.sh restart</code> or reboot the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown command or namespace esxcli storage core device vaai</code></td>
+<td>Verify the ESXi version supports VAAI (vSphere 5.0+) and that esxcli is properly initialized.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to the local hostd agent</code></td>
+<td>Restart the hostd service with <code>services.sh restart</code> or reboot the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Confirm datastores</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
@@ -9241,8 +9416,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Could not get list of filesystems</code></strong> — Verify the esxcli service is running with <code>systemctl status esxcli</code> and check network connectivity to the ESXi host.
-<strong><code>Error: Permission denied</code></strong> — Run the command as root or with appropriate vSphere credentials; non-root users cannot access esxcli storage commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Could not get list of filesystems</code></td>
+<td>Verify the esxcli service is running with <code>systemctl status esxcli</code> and check network connectivity to the ESXi host.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Run the command as root or with appropriate vSphere credentials; non-root users cannot access esxcli storage commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-5-add-host-to-vcenter">Phase 5: Add Host to vCenter<a class="headerlink" href="#phase-5-add-host-to-vcenter" title="Permanent link">&para;</a></h2>
@@ -9269,8 +9460,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect-VIServer : Cannot find a certificate or crmf request for the object named 'vcenter.domain.local'.</code></strong> — Verify the vCenter FQDN is correct and resolvable via DNS, or use the IP address instead.
-<strong><code>Get-VMHost : The object 'esxi-host-01.domain.local' was not found on the server.</code></strong> — Confirm the ESXi hostname matches exactly in vCenter inventory (check capitalization and domain suffix).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect-VIServer : Cannot find a certificate or crmf request for the object named 'vcenter.domain.local'.</code></td>
+<td>Verify the vCenter FQDN is correct and resolvable via DNS, or use the IP address instead.</td>
+</tr>
+<tr>
+<td><code>Get-VMHost : The object 'esxi-host-01.domain.local' was not found on the server.</code></td>
+<td>Confirm the ESXi hostname matches exactly in vCenter inventory (check capitalization and domain suffix).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected output:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>Name                          ConnectionState  PowerState
@@ -9290,8 +9497,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vmware-fdm is stopped</code></strong> — Start the service with <code>/etc/init.d/vmware-fdm start</code> and verify cluster membership with <code>esxcli cluster get</code>.
-<strong><code>Command not found: /etc/init.d/vmware-fdm</code></strong> — Verify you are on an ESXi host with vSAN or HA enabled; if not present, the service is not installed on this host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vmware-fdm is stopped</code></td>
+<td>Start the service with <code>/etc/init.d/vmware-fdm start</code> and verify cluster membership with <code>esxcli cluster get</code>.</td>
+</tr>
+<tr>
+<td><code>Command not found: /etc/init.d/vmware-fdm</code></td>
+<td>Verify you are on an ESXi host with vSAN or HA enabled; if not present, the service is not installed on this host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-6-hardening-baseline">Phase 6: Hardening &amp; Baseline<a class="headerlink" href="#phase-6-hardening-baseline" title="Permanent link">&para;</a></h2>
@@ -9308,8 +9531,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>You do not have permission to perform this operation.</code></strong> — Verify your vCenter user account has Administrator role or equivalent Host.Config.Security privileges on the target ESXi host.
-<strong><code>The object has already been deleted or has not been completely created.</code></strong> — Ensure the ESXi host is still connected to vCenter and in a healthy state; reconnect the host if necessary.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>You do not have permission to perform this operation.</code></td>
+<td>Verify your vCenter user account has Administrator role or equivalent Host.Config.Security privileges on the target ESXi host.</td>
+</tr>
+<tr>
+<td><code>The object has already been deleted or has not been completely created.</code></td>
+<td>Ensure the ESXi host is still connected to vCenter and in a healthy state; reconnect the host if necessary.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Disable SSH and ESXi Shell post-configuration</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># vCenter → Host → Configure → Security Profile → Services → SSH → Stop + Policy: Start/stop manually</span>
@@ -9324,8 +9563,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vim-cmd: command not found</code></strong> — Run commands directly on the ESXi host console or via an active SSH session before disabling SSH access.
-<strong><code>Error: The object or item referenced could not be found.</code></strong> — Verify the host is not in a disconnected state in vCenter; reconnect the host and retry the vim-cmd commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vim-cmd: command not found</code></td>
+<td>Run commands directly on the ESXi host console or via an active SSH session before disabling SSH access.</td>
+</tr>
+<tr>
+<td><code>Error: The object or item referenced could not be found.</code></td>
+<td>Verify the host is not in a disconnected state in vCenter; reconnect the host and retry the vim-cmd commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>NTP service</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>ntp1.domain.local<span class="w"> </span>--server<span class="w"> </span>ntp2.domain.local
@@ -9350,8 +9605,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to set NTP server ntp1.domain.local</code></strong> — Verify the NTP server hostname is resolvable and reachable from the ESXi host using <code>ping</code> or <code>nslookup</code>.
-<strong><code>ntpq: read: Connection refused</code></strong> — Ensure the NTP daemon is running with <code>systemctl start ntpd</code> or restart the service with <code>systemctl restart ntpd</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to set NTP server ntp1.domain.local</code></td>
+<td>Verify the NTP server hostname is resolvable and reachable from the ESXi host using <code>ping</code> or <code>nslookup</code>.</td>
+</tr>
+<tr>
+<td><code>ntpq: read: Connection refused</code></td>
+<td>Ensure the NTP daemon is running with <code>systemctl start ntpd</code> or restart the service with <code>systemctl restart ntpd</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Syslog forwarding</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Forward to Aria Operations for Logs or a syslog server</span>
@@ -9378,8 +9649,24 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The object has already been modified.</code></strong> — Wait 30 seconds before running the reload command, as the config set operation may still be processing.
-<strong><code>Error: Unknown option or malformed command.</code></strong> — Verify the syslog server hostname is reachable and the UDP port 514 is not blocked by upstream firewalls; use <code>esxcli network firewall ruleset list</code> to confirm syslog ruleset exists.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The object has already been modified.</code></td>
+<td>Wait 30 seconds before running the reload command, as the config set operation may still be processing.</td>
+</tr>
+<tr>
+<td><code>Error: Unknown option or malformed command.</code></td>
+<td>Verify the syslog server hostname is reachable and the UDP port 514 is not blocked by upstream firewalls; use <code>esxcli network firewall ruleset list</code> to confirm syslog ruleset exists.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>LCM baseline remediation</strong></p>
 <ol>
@@ -9488,7 +9775,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

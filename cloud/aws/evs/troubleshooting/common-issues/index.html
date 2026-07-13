@@ -8632,9 +8632,28 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID format</code></strong> — Verify the environment ID is set correctly with <code>echo $ENV_ID</code> and matches the format <code>env-xxxxxxxxxxxxxxxx</code>.
-<strong><code>An error occurred (AccessDenied) when calling the FilterLogEvents operation: User is not authorized to perform: logs:FilterLogEvents</code></strong> — Add the <code>logs:FilterLogEvents</code> permission to your IAM policy or use an IAM role with CloudTrail log access.
-<strong><code>An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform this operation</code></strong> — Ensure your IAM user/role has <code>ec2:DescribeInstanceStatus</code> permission attached.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID format</code></td>
+<td>Verify the environment ID is set correctly with <code>echo $ENV_ID</code> and matches the format <code>env-xxxxxxxxxxxxxxxx</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the FilterLogEvents operation: User is not authorized to perform: logs:FilterLogEvents</code></td>
+<td>Add the <code>logs:FilterLogEvents</code> permission to your IAM policy or use an IAM role with CloudTrail log access.</td>
+</tr>
+<tr>
+<td><code>An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform this operation</code></td>
+<td>Ensure your IAM user/role has <code>ec2:DescribeInstanceStatus</code> permission attached.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Get the host's event history to understand the sequence of state transitions:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get recent EVS API events for a specific host</span>
@@ -8670,9 +8689,28 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the LookupEvents operation: Invalid start time format</code></strong> — Ensure the date command uses the correct format flag for your OS (use <code>date -u -d "72 hours ago" +%Y-%m-%dT%H:%M:%SZ</code> on Linux instead of <code>-v-72H</code>).
-<strong><code>An error occurred (ResourceNotFoundException) when calling the GetEnvironmentHost operation: Host not found</code></strong> — Verify that <code>$ENV_ID</code> and <code>$HOST_ID</code> variables are set correctly and the host exists in the specified environment.
-<strong><code>An error occurred (UnauthorizedOperation) when calling the DescribeNetworkInterfaces operation: You are not authorized to perform this operation</code></strong> — Ensure your AWS IAM credentials have <code>ec2:DescribeNetworkInterfaces</code> and <code>evs:GetEnvironmentHost</code> permissions attached.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the LookupEvents operation: Invalid start time format</code></td>
+<td>Ensure the date command uses the correct format flag for your OS (use <code>date -u -d "72 hours ago" +%Y-%m-%dT%H:%M:%SZ</code> on Linux instead of <code>-v-72H</code>).</td>
+</tr>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the GetEnvironmentHost operation: Host not found</code></td>
+<td>Verify that <code>$ENV_ID</code> and <code>$HOST_ID</code> variables are set correctly and the host exists in the specified environment.</td>
+</tr>
+<tr>
+<td><code>An error occurred (UnauthorizedOperation) when calling the DescribeNetworkInterfaces operation: You are not authorized to perform this operation</code></td>
+<td>Ensure your AWS IAM credentials have <code>ec2:DescribeNetworkInterfaces</code> and <code>evs:GetEnvironmentHost</code> permissions attached.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Determining recovery vs replacement:
 - If ENIs are detached or the EC2 instance status shows a system failure, the host needs replacement — AWS support will coordinate.
@@ -8814,9 +8852,28 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip certificate verification for self-signed HCX Manager certificates.
-<strong><code>An error occurred (InvalidGroupId.NotFound) when calling the DescribeSecurityGroups operation: The security group 'sg-hcx' does not exist</code></strong> — Replace <code>sg-hcx</code> with the actual security group ID (e.g., <code>sg-0a1b2c3d4e5f6g7h8</code>) from your AWS console.
-<strong><code>jq: command not found</code></strong> — Install jq with <code>sudo yum install jq</code> or <code>sudo apt-get install jq</code>, or use the provided Python JSON parser instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip certificate verification for self-signed HCX Manager certificates.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidGroupId.NotFound) when calling the DescribeSecurityGroups operation: The security group 'sg-hcx' does not exist</code></td>
+<td>Replace <code>sg-hcx</code> with the actual security group ID (e.g., <code>sg-0a1b2c3d4e5f6g7h8</code>) from your AWS console.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install jq with <code>sudo yum install jq</code> or <code>sudo apt-get install jq</code>, or use the provided Python JSON parser instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>To restart individual HCX appliances without redeploying the entire service mesh:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From vCenter, power cycle the specific HCX appliance VM</span>
@@ -8846,9 +8903,28 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-VM : The term 'Get-VM' is not recognized</code></strong> — Load the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running the script.
-<strong><code>curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused</code></strong> — Wait 2-3 minutes after the appliance starts for HCX services to fully initialize before monitoring the API endpoint.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></strong> — Verify the HCX_PASSWORD variable is set correctly and the HCX manager IP is reachable with <code>ping $HCX_MANAGER_IP</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-VM : The term 'Get-VM' is not recognized</code></td>
+<td>Load the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running the script.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused</code></td>
+<td>Wait 2-3 minutes after the appliance starts for HCX services to fully initialize before monitoring the API endpoint.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></td>
+<td>Verify the HCX_PASSWORD variable is set correctly and the HCX manager IP is reachable with <code>ping $HCX_MANAGER_IP</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Common HCX outage causes:</p>
 <table>
@@ -8935,9 +9011,28 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command or import NSX Manager's CA certificate into your system trust store.
-<strong><code>jq: command not found</code></strong> — Install jq with <code>apt-get install jq</code> or <code>yum install jq</code>, or use the provided Python JSON parser instead.
-<strong><code>An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The vpc ID 'vpc-xxxxx' does not exist</code></strong> — Verify the <code>$EVS_VPC_ID</code> environment variable is set correctly with <code>echo $EVS_VPC_ID</code> and matches an actual VPC in your AWS account.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command or import NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install jq with <code>apt-get install jq</code> or <code>yum install jq</code>, or use the provided Python JSON parser instead.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The vpc ID 'vpc-xxxxx' does not exist</code></td>
+<td>Verify the <code>$EVS_VPC_ID</code> environment variable is set correctly with <code>echo $EVS_VPC_ID</code> and matches an actual VPC in your AWS account.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Check T0 BGP neighbor state via the NSX-T Policy API (preferred for NSX-T 3.x+):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List T0 gateways</span>
@@ -8984,9 +9079,28 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification or configure proper CA certificates in your environment.
-<strong><code>jq: command not found</code></strong> — Install <code>python3-json</code> or use the provided Python one-liner instead of piping to <code>jq</code>.
-<strong><code>An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The filter 'vpc-id' does not exist</code></strong> — Use <code>--filters Name=vpc-id,Values=$EVS_VPC_ID</code> with correct filter syntax or verify the VPC ID variable is set with <code>echo $EVS_VPC_ID</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification or configure proper CA certificates in your environment.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>python3-json</code> or use the provided Python one-liner instead of piping to <code>jq</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The filter 'vpc-id' does not exist</code></td>
+<td>Use <code>--filters Name=vpc-id,Values=$EVS_VPC_ID</code> with correct filter syntax or verify the VPC ID variable is set with <code>echo $EVS_VPC_ID</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="aws-evs-api-errors">AWS EVS API Errors<a class="headerlink" href="#aws-evs-api-errors" title="Permanent link">&para;</a></h2>
 <table>
@@ -9090,9 +9204,28 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (AccessDenied) when calling the GetServiceQuota operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: service-quotas:GetServiceQuota</code></strong> — Add <code>service-quotas:GetServiceQuota</code> and <code>service-quotas:RequestServiceQuotaIncrease</code> permissions to the IAM user or role.
-<strong><code>An error occurred (InvalidParameterException) when calling the GetServiceQuota operation: Invalid quota code: L-XXXXXXXX</code></strong> — Replace the placeholder quota code with the actual code from the AWS console (e.g., <code>L-A1B2C3D4</code>).
-<strong><code>An error occurred (QuotaExceededException) when calling the RequestServiceQuotaIncrease operation: You have already requested a quota increase for this quota</code></strong> — Wait for the existing quota increase request to complete or be rejected before submitting a new one.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the GetServiceQuota operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: service-quotas:GetServiceQuota</code></td>
+<td>Add <code>service-quotas:GetServiceQuota</code> and <code>service-quotas:RequestServiceQuotaIncrease</code> permissions to the IAM user or role.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the GetServiceQuota operation: Invalid quota code: L-XXXXXXXX</code></td>
+<td>Replace the placeholder quota code with the actual code from the AWS console (e.g., <code>L-A1B2C3D4</code>).</td>
+</tr>
+<tr>
+<td><code>An error occurred (QuotaExceededException) when calling the RequestServiceQuotaIncrease operation: You have already requested a quota increase for this quota</code></td>
+<td>Wait for the existing quota increase request to complete or be rejected before submitting a new one.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9129,7 +9262,7 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

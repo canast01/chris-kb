@@ -8338,9 +8338,28 @@ Backup & Restore reference covering EBS Snapshot — Manual, Restore EC2 from EB
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidSnapshot.NotFound) when calling the CreateVolume operation: The snapshot 'snap-0abc123def456789' does not exist</code></strong> — Verify the snapshot ID exists in the correct region using <code>aws ec2 describe-snapshots --snapshot-ids snap-0abc123def456789</code>.
-<strong><code>An error occurred (InvalidVolume.InUse) when calling the DetachVolume operation: The volume 'vol-0existing789abc' is still in use</code></strong> — Ensure the instance is fully stopped before detaching by waiting 10-15 seconds after the stop command completes.
-<strong><code>An error occurred (InvalidParameterValue) when calling the AttachVolume operation: Invalid device name /dev/xvda</code></strong> — Use <code>/dev/sda1</code> for EBS-backed instances or verify the correct device mapping for your instance type.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidSnapshot.NotFound) when calling the CreateVolume operation: The snapshot 'snap-0abc123def456789' does not exist</code></td>
+<td>Verify the snapshot ID exists in the correct region using <code>aws ec2 describe-snapshots --snapshot-ids snap-0abc123def456789</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidVolume.InUse) when calling the DetachVolume operation: The volume 'vol-0existing789abc' is still in use</code></td>
+<td>Ensure the instance is fully stopped before detaching by waiting 10-15 seconds after the stop command completes.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the AttachVolume operation: Invalid device name /dev/xvda</code></td>
+<td>Use <code>/dev/sda1</code> for EBS-backed instances or verify the correct device mapping for your instance type.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="rds-restore">RDS Restore<a class="headerlink" href="#rds-restore" title="Permanent link">&para;</a></h2>
@@ -8403,9 +8422,28 @@ Backup & Restore reference covering EBS Snapshot — Manual, Restore EC2 from EB
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (DBSnapshotNotFound) when calling the DescribeDBSnapshots operation: DBSnapshot rds:prod-mysql-2026-05-15-02-30 not found.</code></strong> — Verify the snapshot identifier exists by running describe-db-snapshots without filters or check the snapshot region.
-<strong><code>An error occurred (InvalidDBInstanceState) when calling the RestoreDBInstanceFromDBSnapshot operation: DB instance prod-mysql is not in a valid state.</code></strong> — Ensure the source DB instance is in "available" state and not undergoing maintenance before attempting restore.
-<strong><code>An error occurred (InvalidParameterValue) when calling the RestoreDBInstanceToPointInTime operation: The restore time must be before the current time.</code></strong> — Use a restore time in the past within your backup retention period (typically 7 days by default).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (DBSnapshotNotFound) when calling the DescribeDBSnapshots operation: DBSnapshot rds:prod-mysql-2026-05-15-02-30 not found.</code></td>
+<td>Verify the snapshot identifier exists by running describe-db-snapshots without filters or check the snapshot region.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidDBInstanceState) when calling the RestoreDBInstanceFromDBSnapshot operation: DB instance prod-mysql is not in a valid state.</code></td>
+<td>Ensure the source DB instance is in "available" state and not undergoing maintenance before attempting restore.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the RestoreDBInstanceToPointInTime operation: The restore time must be before the current time.</code></td>
+<td>Use a restore time in the past within your backup retention period (typically 7 days by default).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="s3-restore-a-deleted-object-versioning">S3 — Restore a Deleted Object (Versioning)<a class="headerlink" href="#s3-restore-a-deleted-object-versioning" title="Permanent link">&para;</a></h2>
@@ -8465,9 +8503,28 @@ Backup & Restore reference covering EBS Snapshot — Manual, Restore EC2 from EB
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (NoSuchBucket) when calling the ListObjectVersions operation: The specified bucket does not exist</code></strong> — Verify the bucket name is correct and exists in the current AWS region with <code>aws s3 ls</code>.
-<strong><code>An error occurred (InvalidArgument) when calling the DeleteObject operation: Invalid version id specified</code></strong> — Ensure the <code>&lt;delete-marker-version-id&gt;</code> is copied exactly from the DeleteMarkers output and is not a regular version ID.
-<strong><code>An error occurred (NoSuchKey) when calling the CopyObject operation: The specified key does not exist.</code></strong> — Confirm the <code>&lt;version-id&gt;</code> exists in the Versions list and the source bucket/key path matches the original object location exactly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (NoSuchBucket) when calling the ListObjectVersions operation: The specified bucket does not exist</code></td>
+<td>Verify the bucket name is correct and exists in the current AWS region with <code>aws s3 ls</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidArgument) when calling the DeleteObject operation: Invalid version id specified</code></td>
+<td>Ensure the <code>&lt;delete-marker-version-id&gt;</code> is copied exactly from the DeleteMarkers output and is not a regular version ID.</td>
+</tr>
+<tr>
+<td><code>An error occurred (NoSuchKey) when calling the CopyObject operation: The specified key does not exist.</code></td>
+<td>Confirm the <code>&lt;version-id&gt;</code> exists in the Versions list and the source bucket/key path matches the original object location exactly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="aws-backup-restore-job">AWS Backup — Restore Job<a class="headerlink" href="#aws-backup-restore-job" title="Permanent link">&para;</a></h2>
@@ -8514,9 +8571,28 @@ Backup & Restore reference covering EBS Snapshot — Manual, Restore EC2 from EB
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the ListRecoveryPointsByResource operation: Invalid resource ARN format</code></strong> — Verify the resource ARN matches the exact format for your resource type and region.
-<strong><code>An error occurred (AccessDenied) when calling the StartRestoreJob operation: User is not authorized to perform: iam:PassRole on resource</code></strong> — Ensure your IAM user has <code>iam:PassRole</code> permission for the AWSBackupDefaultServiceRole.
-<strong><code>An error occurred (ResourceNotFoundException) when calling the DescribeRestoreJob operation: Restore job not found</code></strong> — Replace <code>&lt;job-id&gt;</code> with the actual RestoreJobId returned from the start-restore-job command output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the ListRecoveryPointsByResource operation: Invalid resource ARN format</code></td>
+<td>Verify the resource ARN matches the exact format for your resource type and region.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the StartRestoreJob operation: User is not authorized to perform: iam:PassRole on resource</code></td>
+<td>Ensure your IAM user has <code>iam:PassRole</code> permission for the AWSBackupDefaultServiceRole.</td>
+</tr>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the DescribeRestoreJob operation: Restore job not found</code></td>
+<td>Replace <code>&lt;job-id&gt;</code> with the actual RestoreJobId returned from the start-restore-job command output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify-backup-coverage">Verify Backup Coverage<a class="headerlink" href="#verify-backup-coverage" title="Permanent link">&para;</a></h2>
@@ -8551,8 +8627,24 @@ Backup & Restore reference covering EBS Snapshot — Manual, Restore EC2 from EB
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the ListProtectedResources operation: AWS Backup is not enabled for this account</code></strong> — Enable AWS Backup in the AWS Backup console or use <code>aws backup create-backup-vault</code> to initialize the service.
-<strong><code>An error occurred (AccessDenied) when calling the ListBackupJobs operation: User is not authorized to perform: backup:ListBackupJobs</code></strong> — Add the <code>backup:ListBackupJobs</code> permission to your IAM user/role policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the ListProtectedResources operation: AWS Backup is not enabled for this account</code></td>
+<td>Enable AWS Backup in the AWS Backup console or use <code>aws backup create-backup-vault</code> to initialize the service.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the ListBackupJobs operation: User is not authorized to perform: backup:ListBackupJobs</code></td>
+<td>Add the <code>backup:ListBackupJobs</code> permission to your IAM user/role policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8583,7 +8675,7 @@ Backup & Restore reference covering EBS Snapshot — Manual, Restore EC2 from EB
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

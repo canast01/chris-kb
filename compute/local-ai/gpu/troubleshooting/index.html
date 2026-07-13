@@ -7251,9 +7251,28 @@ This page covers the most common GPU workload failures: out-of-memory errors, CU
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>command not found: nvidia-smi</code></strong> — Install NVIDIA GPU drivers using your system package manager (e.g., <code>apt install nvidia-driver-535</code> on Ubuntu).
-<strong><code>ModuleNotFoundError: No module named 'torch'</code></strong> — Install PyTorch with CUDA support using <code>pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121</code>.
-<strong><code>CUDA version mismatch: CUDA driver version 12.1 is insufficient for CUDA toolkit version 12.2</code></strong> — Upgrade your NVIDIA driver to version 550+ or downgrade TensorFlow to 2.14 which supports CUDA 12.1.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found: nvidia-smi</code></td>
+<td>Install NVIDIA GPU drivers using your system package manager (e.g., <code>apt install nvidia-driver-535</code> on Ubuntu).</td>
+</tr>
+<tr>
+<td><code>ModuleNotFoundError: No module named 'torch'</code></td>
+<td>Install PyTorch with CUDA support using <code>pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121</code>.</td>
+</tr>
+<tr>
+<td><code>CUDA version mismatch: CUDA driver version 12.1 is insufficient for CUDA toolkit version 12.2</code></td>
+<td>Upgrade your NVIDIA driver to version 550+ or downgrade TensorFlow to 2.14 which supports CUDA 12.1.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If versions conflict:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Install a specific PyTorch build matching your CUDA version</span>
@@ -7310,9 +7329,28 @@ This page covers the most common GPU workload failures: out-of-memory errors, CU
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>modprobe: FATAL: Module nvidia not found in directory /lib/modules/5.15.0-86-generic/kernel</code></strong> — Install the NVIDIA driver package matching your kernel version with <code>apt install nvidia-driver-XXX</code> or use <code>nvidia-driver-installer</code>.
-<strong><code>lspci: command not found</code></strong> — Install the <code>pciutils</code> package with <code>apt install pciutils</code> or <code>yum install pciutils</code>.
-<strong><code>ERROR: could not insert 'nvidia': Operation not permitted</code></strong> — Disable Secure Boot in BIOS/UEFI or enroll the NVIDIA MOK key with <code>mokutil --import /var/lib/shim-signed/mok/MOK.der</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>modprobe: FATAL: Module nvidia not found in directory /lib/modules/5.15.0-86-generic/kernel</code></td>
+<td>Install the NVIDIA driver package matching your kernel version with <code>apt install nvidia-driver-XXX</code> or use <code>nvidia-driver-installer</code>.</td>
+</tr>
+<tr>
+<td><code>lspci: command not found</code></td>
+<td>Install the <code>pciutils</code> package with <code>apt install pciutils</code> or <code>yum install pciutils</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: could not insert 'nvidia': Operation not permitted</code></td>
+<td>Disable Secure Boot in BIOS/UEFI or enroll the NVIDIA MOK key with <code>mokutil --import /var/lib/shim-signed/mok/MOK.der</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="temperature-and-throttling">Temperature and Throttling<a class="headerlink" href="#temperature-and-throttling" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check for thermal throttling</span>
@@ -7344,8 +7382,24 @@ This page covers the most common GPU workload failures: out-of-memory errors, CU
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.</code></strong> — Verify the NVIDIA driver is installed with <code>nvidia-smi</code> (without arguments) and reinstall if needed with <code>sudo apt install nvidia-driver-XXX</code> (replacing XXX with your driver version).
-<strong><code>command not found: watch</code></strong> — Install the procps-ng package with <code>sudo apt install procps-ng</code> or use <code>nvidia-smi --loop=2</code> as an alternative.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.</code></td>
+<td>Verify the NVIDIA driver is installed with <code>nvidia-smi</code> (without arguments) and reinstall if needed with <code>sudo apt install nvidia-driver-XXX</code> (replacing XXX with your driver version).</td>
+</tr>
+<tr>
+<td><code>command not found: watch</code></td>
+<td>Install the procps-ng package with <code>sudo apt install procps-ng</code> or use <code>nvidia-smi --loop=2</code> as an alternative.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If throttling occurs, check airflow, verify TDP power limits are set correctly, and confirm the cooling solution is adequate for sustained workloads.</p>
 <hr />
@@ -7385,7 +7439,7 @@ This page covers the most common GPU workload failures: out-of-memory errors, CU
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

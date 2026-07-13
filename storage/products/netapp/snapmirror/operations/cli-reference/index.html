@@ -8630,9 +8630,28 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: snapmirror</code></strong> — Verify you are connected to a NetApp cluster with SnapMirror licensed and enabled, or use the full path <code>snapmirror</code> from the ONTAP CLI.
-<strong><code>Error: No matching relationships found</code></strong> — Confirm the destination path exists and is formatted as <code>svm_name:volume_name</code> with correct SVM and volume names.
-<strong><code>Error: Access denied for command "snapmirror show"</code></strong> — Ensure your ONTAP user role has the "snapmirror" capability; contact your cluster administrator to grant appropriate permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: snapmirror</code></td>
+<td>Verify you are connected to a NetApp cluster with SnapMirror licensed and enabled, or use the full path <code>snapmirror</code> from the ONTAP CLI.</td>
+</tr>
+<tr>
+<td><code>Error: No matching relationships found</code></td>
+<td>Confirm the destination path exists and is formatted as <code>svm_name:volume_name</code> with correct SVM and volume names.</td>
+</tr>
+<tr>
+<td><code>Error: Access denied for command "snapmirror show"</code></td>
+<td>Ensure your ONTAP user role has the "snapmirror" capability; contact your cluster administrator to grant appropriate permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="create-and-initialize">Create and Initialize<a class="headerlink" href="#create-and-initialize" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an async SnapMirror relationship (XDP — preferred for SVM-DR and volume DR)</span>
@@ -8669,9 +8688,28 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Relationship does not exist.</code></strong> — Verify the source and destination paths are correct and the relationship was successfully created with the first command.
-<strong><code>Error: command failed: Cannot initialize relationship with policy "MirrorAllSnapshots" and schedule "hourly".</code></strong> — Remove the <code>-schedule</code> parameter when creating XDP relationships; scheduling is configured separately after creation.
-<strong><code>Error: command failed: Insufficient space on destination volume.</code></strong> — Ensure the destination volume has at least 110% of the source volume's used capacity available.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Relationship does not exist.</code></td>
+<td>Verify the source and destination paths are correct and the relationship was successfully created with the first command.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Cannot initialize relationship with policy "MirrorAllSnapshots" and schedule "hourly".</code></td>
+<td>Remove the <code>-schedule</code> parameter when creating XDP relationships; scheduling is configured separately after creation.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Insufficient space on destination volume.</code></td>
+<td>Ensure the destination volume has at least 110% of the source volume's used capacity available.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="updates-and-quiesce">Updates and Quiesce<a class="headerlink" href="#updates-and-quiesce" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Manual incremental update</span>
@@ -8699,9 +8737,28 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_data"</code></strong> — Verify the relationship exists with <code>snapmirror show -destination-path svm_dr:vol_data</code> and ensure the destination path is correctly formatted.
-<strong><code>Error: command failed: SnapMirror transfer is not in progress for destination "svm_dr:vol_data"</code></strong> — Check the current transfer status with <code>snapmirror show -destination-path svm_dr:vol_data</code> before attempting to abort.
-<strong><code>Error: command failed: Insufficient privileges to perform SnapMirror operations</code></strong> — Ensure your user account has the required RBAC role; contact your cluster administrator to grant <code>snapmirror</code> command permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_data"</code></td>
+<td>Verify the relationship exists with <code>snapmirror show -destination-path svm_dr:vol_data</code> and ensure the destination path is correctly formatted.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: SnapMirror transfer is not in progress for destination "svm_dr:vol_data"</code></td>
+<td>Check the current transfer status with <code>snapmirror show -destination-path svm_dr:vol_data</code> before attempting to abort.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Insufficient privileges to perform SnapMirror operations</code></td>
+<td>Ensure your user account has the required RBAC role; contact your cluster administrator to grant <code>snapmirror</code> command permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="dr-failover-procedure">DR Failover Procedure<a class="headerlink" href="#dr-failover-procedure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Step 1: Quiesce (allow final transfer to finish if possible)</span>
@@ -8732,9 +8789,28 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: SnapMirror relationship is in "transferring" state and cannot be quiesced</code></strong> — Wait for the active transfer to complete or use <code>snapmirror abort</code> to force-stop the transfer before quiescing.
-<strong><code>Error: volume mount failed: Junction path "/vol_data" already exists</code></strong> — Remove the existing junction path with <code>volume unmount -vserver svm_dr -volume vol_data</code> or use a different junction path.
-<strong><code>Error: SnapMirror relationship is not in "snapmirrored" state</code></strong> — Verify the relationship status with <code>snapmirror show -destination-path svm_dr:vol_data</code> and ensure it is not already broken or in an error state.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: SnapMirror relationship is in "transferring" state and cannot be quiesced</code></td>
+<td>Wait for the active transfer to complete or use <code>snapmirror abort</code> to force-stop the transfer before quiescing.</td>
+</tr>
+<tr>
+<td><code>Error: volume mount failed: Junction path "/vol_data" already exists</code></td>
+<td>Remove the existing junction path with <code>volume unmount -vserver svm_dr -volume vol_data</code> or use a different junction path.</td>
+</tr>
+<tr>
+<td><code>Error: SnapMirror relationship is not in "snapmirrored" state</code></td>
+<td>Verify the relationship status with <code>snapmirror show -destination-path svm_dr:vol_data</code> and ensure it is not already broken or in an error state.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="failback-sequence">Failback Sequence<a class="headerlink" href="#failback-sequence" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># After source is recovered — re-establish reverse mirror from DR back to source</span>
@@ -8767,9 +8843,28 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Snapmirror relationship does not exist.</code></strong> — Verify the relationship exists with <code>snapmirror show</code> and confirm SVM and volume names match exactly.
-<strong><code>Error: This destination is not quiesced. Quiesce the destination before breaking the relationship.</code></strong> — Run <code>snapmirror quiesce -destination-path svm_prod:vol_data</code> and wait for the operation to complete before breaking.
-<strong><code>Error: Snapmirror relationship is in transfer. Cannot resync while a transfer is in progress.</code></strong> — Wait for the current transfer to finish using <code>snapmirror show -destination-path svm_prod:vol_data</code> or abort it with <code>snapmirror abort</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Snapmirror relationship does not exist.</code></td>
+<td>Verify the relationship exists with <code>snapmirror show</code> and confirm SVM and volume names match exactly.</td>
+</tr>
+<tr>
+<td><code>Error: This destination is not quiesced. Quiesce the destination before breaking the relationship.</code></td>
+<td>Run <code>snapmirror quiesce -destination-path svm_prod:vol_data</code> and wait for the operation to complete before breaking.</td>
+</tr>
+<tr>
+<td><code>Error: Snapmirror relationship is in transfer. Cannot resync while a transfer is in progress.</code></td>
+<td>Wait for the current transfer to finish using <code>snapmirror show -destination-path svm_prod:vol_data</code> or abort it with <code>snapmirror abort</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="delete-a-relationship">Delete a Relationship<a class="headerlink" href="#delete-a-relationship" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Must quiesce/break first if Snapmirrored</span>
@@ -8793,9 +8888,28 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_data"</code></strong> — Verify the relationship exists with <code>snapmirror show -destination-path svm_dr:vol_data</code> before attempting to quiesce.
-<strong><code>Error: command failed: Cannot delete snapshot(s): snapshot(s) are locked by SnapMirror</code></strong> — Ensure the SnapMirror relationship is fully broken (not just quiesced) before deleting snapshots.
-<strong><code>Error: command failed: Volume vol_data does not exist on Vserver svm_dr</code></strong> — Confirm the destination volume name and SVM name are correct using <code>volume show -vserver svm_dr</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_data"</code></td>
+<td>Verify the relationship exists with <code>snapmirror show -destination-path svm_dr:vol_data</code> before attempting to quiesce.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Cannot delete snapshot(s): snapshot(s) are locked by SnapMirror</code></td>
+<td>Ensure the SnapMirror relationship is fully broken (not just quiesced) before deleting snapshots.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Volume vol_data does not exist on Vserver svm_dr</code></td>
+<td>Confirm the destination volume name and SVM name are correct using <code>volume show -vserver svm_dr</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="lag-monitoring-and-alerts">Lag Monitoring and Alerts<a class="headerlink" href="#lag-monitoring-and-alerts" title="Permanent link">&para;</a></h2>
@@ -8831,8 +8945,24 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>awk: syntax error near line 1</code></strong> — Use numeric comparison <code>$3 &gt; "02:00:00"</code> or convert lag-time to seconds for proper awk filtering.
-<strong><code>Error: entry doesn't exist: snap-lag-email</code></strong> — Create the notification destination before referencing it in the event notification command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>awk: syntax error near line 1</code></td>
+<td>Use numeric comparison <code>$3 &gt; "02:00:00"</code> or convert lag-time to seconds for proper awk filtering.</td>
+</tr>
+<tr>
+<td><code>Error: entry doesn't exist: snap-lag-email</code></td>
+<td>Create the notification destination before referencing it in the event notification command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
@@ -8910,9 +9040,28 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or install the cluster's CA certificate in your system trust store.
-<strong><code>{"error":{"message":"Invalid UUID format","code":4}}</code></strong> — Replace <code>&lt;uuid&gt;</code> placeholder with an actual relationship UUID from the list output (e.g., <code>a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6</code>).
-<strong><code>curl: (7) Failed to connect to ontap-cluster.example.com port 443: Connection refused</code></strong> — Verify the ONTAP cluster hostname/IP is correct and the REST API service is running; check firewall rules allowing port 443 from your client.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification, or install the cluster's CA certificate in your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid UUID format","code":4}}</code></td>
+<td>Replace <code>&lt;uuid&gt;</code> placeholder with an actual relationship UUID from the list output (e.g., <code>a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6</code>).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to ontap-cluster.example.com port 443: Connection refused</code></td>
+<td>Verify the ONTAP cluster hostname/IP is correct and the REST API service is running; check firewall rules allowing port 443 from your client.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8950,7 +9099,7 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

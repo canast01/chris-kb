@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Aria Operations for Logs — Backup and Restore · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Aria Operations for Logs — Backup and Restore", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/aria-operations-for-logs/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Aria Operations for Logs — Backup and Restore", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/aria-operations-for-logs/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -9118,9 +9118,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but verify it's not being removed).
-<strong><code>jq: command not found</code></strong> — Install jq on the VRLI node with <code>yum install -y jq</code> or use <code>grep</code> and <code>sed</code> to parse JSON if jq is unavailable.
-<strong><code>Permission denied (publickey,password)</code></strong> — Verify the admin account credentials and SSH key are correct, and confirm the admin user has SSH access enabled in VRLI settings.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but verify it's not being removed).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install jq on the VRLI node with <code>yum install -y jq</code> or use <code>grep</code> and <code>sed</code> to parse JSON if jq is unavailable.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Verify the admin account credentials and SSH key are correct, and confirm the admin user has SSH access enabled in VRLI settings.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://vrli-prod-01.example.local&quot;</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">AUTH</span><span class="o">=</span><span class="s2">&quot;admin:&lt;password&gt;&quot;</span>
@@ -9153,9 +9172,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount.nfs: access denied by server while mounting nas-01.example.local:/exports/vrli-archive</code></strong> — Verify the master node IP is in the NFS export's allowed subnet (10.20.0.0/24) and check <code>/etc/exports</code> on nas-01 for correct permissions.
-<strong><code>mount.nfs: No such file or directory</code></strong> — Confirm the NFS export path <code>/exports/vrli-archive</code> exists on nas-01 by running <code>ls -la /exports/</code> on the NAS server.
-<strong><code>umount: /mnt/test-archive: target is busy</code></strong> — Close any open file handles with <code>lsof /mnt/test-archive</code> and kill the associated processes before unmounting.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting nas-01.example.local:/exports/vrli-archive</code></td>
+<td>Verify the master node IP is in the NFS export's allowed subnet (10.20.0.0/24) and check <code>/etc/exports</code> on nas-01 for correct permissions.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: No such file or directory</code></td>
+<td>Confirm the NFS export path <code>/exports/vrli-archive</code> exists on nas-01 by running <code>ls -la /exports/</code> on the NAS server.</td>
+</tr>
+<tr>
+<td><code>umount: /mnt/test-archive: target is busy</code></td>
+<td>Close any open file handles with <code>lsof /mnt/test-archive</code> and kill the associated processes before unmounting.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>admin@vrli-prod-01.example.local
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9171,9 +9209,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example, but ensure it's not removed).
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the API endpoint is correct and the service is responding with valid JSON; check that authentication credentials are valid by testing with <code>curl -sk -u 'admin:&lt;password&gt;' "https://vrli-prod-01.example.local/api/v2/alerts" | head -20</code>.
-<strong><code>curl: (401) Unauthorized</code></strong> — Confirm the admin password is correct and URL-encoded if it contains special characters; test credentials separately with a simpler endpoint like <code>/api/v2/health</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Verify the API endpoint is correct and the service is responding with valid JSON; check that authentication credentials are valid by testing with <code>curl -sk -u 'admin:&lt;password&gt;' "https://vrli-prod-01.example.local/api/v2/alerts" | head -20</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Confirm the admin password is correct and URL-encoded if it contains special characters; test credentials separately with a simpler endpoint like <code>/api/v2/health</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9218,7 +9275,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

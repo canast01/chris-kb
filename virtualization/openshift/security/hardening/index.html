@@ -7448,9 +7448,28 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to connect to the server: dial tcp: lookup api.example.com on 8.8.8.8:53: no such host</code></strong> — Verify your KUBECONFIG is set correctly and the cluster API endpoint is reachable.
-<strong><code>Error from server (BadRequest): error when creating "STDIN": MachineConfig.machineconfiguration.openshift.io "99-worker-sysctl" is invalid: spec.config.storage.files[0].contents.source: Invalid value: "data:,net.ipv4.ip_forward%3D1...": must be a valid data URL</code></strong> — Ensure the data URL is properly percent-encoded and the ignition version matches your OpenShift release.
-<strong><code>error: nodes "worker-1" not found</code></strong> — Verify the node name with <code>oc get nodes</code> and use the exact name from the output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to connect to the server: dial tcp: lookup api.example.com on 8.8.8.8:53: no such host</code></td>
+<td>Verify your KUBECONFIG is set correctly and the cluster API endpoint is reachable.</td>
+</tr>
+<tr>
+<td><code>Error from server (BadRequest): error when creating "STDIN": MachineConfig.machineconfiguration.openshift.io "99-worker-sysctl" is invalid: spec.config.storage.files[0].contents.source: Invalid value: "data:,net.ipv4.ip_forward%3D1...": must be a valid data URL</code></td>
+<td>Ensure the data URL is properly percent-encoded and the ignition version matches your OpenShift release.</td>
+</tr>
+<tr>
+<td><code>error: nodes "worker-1" not found</code></td>
+<td>Verify the node name with <code>oc get nodes</code> and use the exact name from the output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="compliance-operator">Compliance Operator<a class="headerlink" href="#compliance-operator" title="Permanent link">&para;</a></h2>
 <p>The Compliance Operator runs OpenSCAP-based scans against CIS, PCI-DSS, FedRAMP, and STIG profiles.</p>
@@ -7529,9 +7548,28 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: resource mapping not found for name: "cis-compliance" namespace: "openshift-compliance" from "": no matches for kind "ScanSettingBinding" in version "compliance.openshift.io/v1alpha1"</code></strong> — Verify the Compliance Operator is installed in openshift-compliance namespace with <code>oc get deployment -n openshift-compliance</code>.
-<strong><code>Error from server (NotFound): complianceremediations.compliance.openshift.io "&lt;name&gt;" not found</code></strong> — Confirm the remediation name matches output from <code>oc get complianceremediations -n openshift-compliance</code> and wait for scans to complete.
-<strong><code>error: no matches for kind "ScanSetting" in version "compliance.openshift.io/v1alpha1"</code></strong> — Create the default ScanSetting resource first with <code>oc apply -f - &lt;&lt;EOF</code> using the ScanSetting template from the Compliance Operator documentation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: resource mapping not found for name: "cis-compliance" namespace: "openshift-compliance" from "": no matches for kind "ScanSettingBinding" in version "compliance.openshift.io/v1alpha1"</code></td>
+<td>Verify the Compliance Operator is installed in openshift-compliance namespace with <code>oc get deployment -n openshift-compliance</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): complianceremediations.compliance.openshift.io "&lt;name&gt;" not found</code></td>
+<td>Confirm the remediation name matches output from <code>oc get complianceremediations -n openshift-compliance</code> and wait for scans to complete.</td>
+</tr>
+<tr>
+<td><code>error: no matches for kind "ScanSetting" in version "compliance.openshift.io/v1alpha1"</code></td>
+<td>Create the default ScanSetting resource first with <code>oc apply -f - &lt;&lt;EOF</code> using the ScanSetting template from the Compliance Operator documentation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="pod-security-admission-labels">Pod Security Admission Labels<a class="headerlink" href="#pod-security-admission-labels" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Levels: privileged | baseline | restricted</span>
@@ -7571,9 +7609,28 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error from server (NotFound): namespaces "my-project" not found</code></strong> — Verify the namespace exists with <code>oc get namespaces</code> and use the correct name.
-<strong><code>error: unable to recognize "": no matches for kind "PodSecurityPolicy" in version "policy/v1beta1"</code></strong> — Pod Security Policies are deprecated; use Pod Security Admission (PSA) labels on namespaces instead.
-<strong><code>Warning: pod-security.kubernetes.io/enforce: restricted is not a valid label value</code></strong> — Ensure the label value is exactly <code>restricted</code>, <code>baseline</code>, or <code>privileged</code> with no typos or extra whitespace.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error from server (NotFound): namespaces "my-project" not found</code></td>
+<td>Verify the namespace exists with <code>oc get namespaces</code> and use the correct name.</td>
+</tr>
+<tr>
+<td><code>error: unable to recognize "": no matches for kind "PodSecurityPolicy" in version "policy/v1beta1"</code></td>
+<td>Pod Security Policies are deprecated; use Pod Security Admission (PSA) labels on namespaces instead.</td>
+</tr>
+<tr>
+<td><code>Warning: pod-security.kubernetes.io/enforce: restricted is not a valid label value</code></td>
+<td>Ensure the label value is exactly <code>restricted</code>, <code>baseline</code>, or <code>privileged</code> with no typos or extra whitespace.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="networkpolicy-defaults">NetworkPolicy Defaults<a class="headerlink" href="#networkpolicy-defaults" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># deny-all-ingress-egress.yaml — apply to every application namespace</span>
@@ -7643,8 +7700,24 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error from server (NotFound): namespaces "my-project" not found</code></strong> — Verify the project exists with <code>oc get projects</code> and create it if needed using <code>oc new-project my-project</code>.
-<strong><code>Error from server (AlreadyExists): networkpolicies.networking.k8s.io "deny-all-ingress-egress" already exists</code></strong> — Delete the existing policy first with <code>oc delete networkpolicy deny-all-ingress-egress -n my-project</code> or use <code>oc apply --force-conflicts=true</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error from server (NotFound): namespaces "my-project" not found</code></td>
+<td>Verify the project exists with <code>oc get projects</code> and create it if needed using <code>oc new-project my-project</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (AlreadyExists): networkpolicies.networking.k8s.io "deny-all-ingress-egress" already exists</code></td>
+<td>Delete the existing policy first with <code>oc delete networkpolicy deny-all-ingress-egress -n my-project</code> or use <code>oc apply --force-conflicts=true</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="image-security">Image Security<a class="headerlink" href="#image-security" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Schedule periodic re-import to pick up patched base images</span>
@@ -7695,8 +7768,24 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "imagepruner"</code></strong> — Ensure the image-registry operator is installed and running with <code>oc get operator image-registry -o wide</code>.
-<strong><code>error: unable to connect to quay.io/myorg/myapp:latest: unauthorized</code></strong> — Verify the image pull secret exists in the namespace with <code>oc get secrets -n my-project | grep pull-secret</code> and that credentials have pull access to the registry.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "imagepruner"</code></td>
+<td>Ensure the image-registry operator is installed and running with <code>oc get operator image-registry -o wide</code>.</td>
+</tr>
+<tr>
+<td><code>error: unable to connect to quay.io/myorg/myapp:latest: unauthorized</code></td>
+<td>Verify the image pull secret exists in the namespace with <code>oc get secrets -n my-project | grep pull-secret</code> and that credentials have pull access to the registry.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Enable API audit logging</span>
@@ -7732,9 +7821,28 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "apiserver"</code></strong> — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with <code>oc api-resources | grep apiserver</code>.
-<strong><code>journalctl: command not found</code></strong> — Run <code>chroot /host</code> first before executing journalctl to access the host filesystem.
-<strong><code>No such file or directory: /var/log/kube-apiserver/audit.log</code></strong> — Check the actual audit log path with <code>find /var/log -name "*audit*"</code> or verify the audit profile has been applied with <code>oc get apiserver cluster -o yaml</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "apiserver"</code></td>
+<td>Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with <code>oc api-resources | grep apiserver</code>.</td>
+</tr>
+<tr>
+<td><code>journalctl: command not found</code></td>
+<td>Run <code>chroot /host</code> first before executing journalctl to access the host filesystem.</td>
+</tr>
+<tr>
+<td><code>No such file or directory: /var/log/kube-apiserver/audit.log</code></td>
+<td>Check the actual audit log path with <code>find /var/log -name "*audit*"</code> or verify the audit profile has been applied with <code>oc get apiserver cluster -o yaml</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cis-ocp-4-benchmark-key-controls">CIS OCP 4 Benchmark — Key Controls<a class="headerlink" href="#cis-ocp-4-benchmark-key-controls" title="Permanent link">&para;</a></h2>
 <table>
@@ -7846,7 +7954,7 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

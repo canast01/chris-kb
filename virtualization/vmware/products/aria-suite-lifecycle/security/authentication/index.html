@@ -9079,8 +9079,24 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the CA certificate into your system trust store.
-<strong><code>curl: (7) Failed to connect to vidm.example.local port 443: Connection refused</code></strong> — Verify the vIDM hostname/IP is correct, the service is running (<code>systemctl status vidm</code>), and network connectivity exists from lcm-prod-01 to the vIDM appliance.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vidm.example.local port 443: Connection refused</code></td>
+<td>Verify the vIDM hostname/IP is correct, the service is running (<code>systemctl status vidm</code>), and network connectivity exists from lcm-prod-01 to the vIDM appliance.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After registration, the LCM login page shows a "Log In with Workspace ONE" button that redirects to VIDM for authentication.</p>
 <hr />
@@ -9160,9 +9176,28 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl (already present in example, but verify SSL verification is intentionally disabled for self-signed certs).
-<strong><code>jq: parse error: Cannot index null with string "token"</code></strong> — Verify credentials are correct and the login endpoint is accessible; check response with <code>curl -sk ... | jq '.'</code> to see actual error message.
-<strong><code>curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Connection refused</code></strong> — Confirm the LCM hostname/IP is correct and the service is running with <code>curl -sk https://lcm-prod-01.example.local/lcm/health</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl (already present in example, but verify SSL verification is intentionally disabled for self-signed certs).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index null with string "token"</code></td>
+<td>Verify credentials are correct and the login endpoint is accessible; check response with <code>curl -sk ... | jq '.'</code> to see actual error message.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Connection refused</code></td>
+<td>Confirm the LCM hostname/IP is correct and the service is running with <code>curl -sk https://lcm-prod-01.example.local/lcm/health</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>For automation pipelines, store the service account password in a secrets manager (HashiCorp Vault, CyberArk) and retrieve it at runtime rather than hardcoding in scripts.</p>
 <hr />
@@ -9210,9 +9245,28 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example, but ensure it's included if removed).
-<strong><code>{"errorCode":401,"message":"Invalid or expired authentication token"}</code></strong> — Verify the <code>$TOKEN</code> variable is set correctly with <code>echo $TOKEN</code> and re-authenticate if expired.
-<strong><code>{"errorCode":400,"message":"oldPassword does not match current password"}</code></strong> — Confirm the old password value in the JSON payload matches the current admin password exactly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>{"errorCode":401,"message":"Invalid or expired authentication token"}</code></td>
+<td>Verify the <code>$TOKEN</code> variable is set correctly with <code>echo $TOKEN</code> and re-authenticate if expired.</td>
+</tr>
+<tr>
+<td><code>{"errorCode":400,"message":"oldPassword does not match current password"}</code></td>
+<td>Confirm the old password value in the JSON payload matches the current admin password exactly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="certificate-trust-for-api-clients">Certificate Trust for API Clients<a class="headerlink" href="#certificate-trust-for-api-clients" title="Permanent link">&para;</a></h2>
@@ -9231,9 +9285,28 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cp: cannot create regular file '/usr/local/share/ca-certificates/lcm-ca.crt': Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user.
-<strong><code>update-ca-certificates: command not found</code></strong> — Use <code>trust anchor lcm-ca.crt</code> instead if on RHEL/Fedora, or install <code>ca-certificates</code> package on Debian/Ubuntu.
-<strong><code>trust: command not found</code></strong> — Install the <code>p11-kit</code> package which provides the <code>trust</code> utility, or use <code>update-ca-certificates</code> on Debian/Ubuntu systems.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cp: cannot create regular file '/usr/local/share/ca-certificates/lcm-ca.crt': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root user.</td>
+</tr>
+<tr>
+<td><code>update-ca-certificates: command not found</code></td>
+<td>Use <code>trust anchor lcm-ca.crt</code> instead if on RHEL/Fedora, or install <code>ca-certificates</code> package on Debian/Ubuntu.</td>
+</tr>
+<tr>
+<td><code>trust: command not found</code></td>
+<td>Install the <code>p11-kit</code> package which provides the <code>trust</code> utility, or use <code>update-ca-certificates</code> on Debian/Ubuntu systems.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="session-and-token-policies">Session and Token Policies<a class="headerlink" href="#session-and-token-policies" title="Permanent link">&para;</a></h2>
@@ -9305,7 +9378,7 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

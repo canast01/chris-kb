@@ -8227,9 +8227,28 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxtop: command not found</code></strong> — Run esxtop directly on an ESXi host via SSH or vSphere Client console, not from a Windows/Linux management station.
-<strong><code>Get-Stat : The term 'Get-Stat' is not recognized</code></strong> — Install VMware PowerCLI module with <code>Install-Module -Name VMware.PowerCLI -Force</code> and import it via <code>Import-Module VMware.PowerCLI</code>.
-<strong><code>Exception calling "AddHours" with "1" argument(s): Object reference not set to an instance of an object.</code></strong> — Ensure you are connected to vCenter with <code>Connect-VIServer -Server vcenter.example.com</code> before running Get-Stat.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxtop: command not found</code></td>
+<td>Run esxtop directly on an ESXi host via SSH or vSphere Client console, not from a Windows/Linux management station.</td>
+</tr>
+<tr>
+<td><code>Get-Stat : The term 'Get-Stat' is not recognized</code></td>
+<td>Install VMware PowerCLI module with <code>Install-Module -Name VMware.PowerCLI -Force</code> and import it via <code>Import-Module VMware.PowerCLI</code>.</td>
+</tr>
+<tr>
+<td><code>Exception calling "AddHours" with "1" argument(s): Object reference not set to an instance of an object.</code></td>
+<td>Ensure you are connected to vCenter with <code>Connect-VIServer -Server vcenter.example.com</code> before running Get-Stat.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p><strong>VCP-DCV Exam Note:</strong> <strong>CPU Ready threshold is typically &gt; 10 ms per 20-second interval</strong> (or expressed as &gt; 5% in some older references). CPU Ready is caused by too many vCPUs competing for too few physical cores — common with over-provisioned VMs. The fix is to reduce the number of vCPUs on VMs that don't need them, not to add more hosts. <strong>CPU Co-Stop</strong> is specific to Fault Tolerance VMs — it measures synchronization pauses between primary and secondary VMs.</p>
@@ -8313,8 +8332,24 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.</code></strong> — Add <code>-SkipCertificateCheck</code> parameter or import the vCenter certificate into PowerCLI's certificate store.
-<strong><code>Get-Stat : Cannot bind argument to parameter 'Entity' because it is null.</code></strong> — Verify the ESXi hostname matches exactly and the vCenter account has permissions to query that host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.</code></td>
+<td>Add <code>-SkipCertificateCheck</code> parameter or import the vCenter certificate into PowerCLI's certificate store.</td>
+</tr>
+<tr>
+<td><code>Get-Stat : Cannot bind argument to parameter 'Entity' because it is null.</code></td>
+<td>Verify the ESXi hostname matches exactly and the vCenter account has permissions to query that host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p><strong>VCP-DCV Exam Note:</strong> Know what each memory metric means and the reclamation order. <strong>Balloon</strong> means the VMkernel is asking guests to return memory. <strong>Swap</strong> means memory is being written to disk — this indicates severe pressure and will cause noticeable VM performance degradation. <strong>Active memory</strong> is the most accurate measure of a VM's true memory need — a VM with 8 GB allocated but only 500 MB active is a candidate for reclamation.</p>
@@ -8381,8 +8416,24 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown device naa.xxxxxx</code></strong> — Replace <code>naa.xxxxxx</code> with the actual NAA identifier from <code>esxcli storage core device list</code>.
-<strong><code>Error: esxtop: command not found</code></strong> — Ensure you are connected directly to an ESXi host via SSH or console; esxtop only runs on ESXi, not vCenter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown device naa.xxxxxx</code></td>
+<td>Replace <code>naa.xxxxxx</code> with the actual NAA identifier from <code>esxcli storage core device list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: esxtop: command not found</code></td>
+<td>Ensure you are connected directly to an ESXi host via SSH or console; esxtop only runs on ESXi, not vCenter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="network-metrics">Network Metrics<a class="headerlink" href="#network-metrics" title="Permanent link">&para;</a></h3>
 <table>
@@ -8599,9 +8650,28 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vm-support: error: insufficient space on /var/tmp</code></strong> — Specify an alternate writable datastore path with <code>-w /vmfs/volumes/datastore_name/</code> or free space on the host.
-<strong><code>Permission denied (publickey,password).</code></strong> — Ensure SSH is enabled on the ESXi host and root credentials are correct; verify firewall rules allow port 22 inbound.
-<strong><code>vim-cmd: Unknown command</code></strong> — Run the command from the ESXi shell directly (not from vCenter); if using vCenter, use <code>esxcli system syslog config get</code> instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vm-support: error: insufficient space on /var/tmp</code></td>
+<td>Specify an alternate writable datastore path with <code>-w /vmfs/volumes/datastore_name/</code> or free space on the host.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Ensure SSH is enabled on the ESXi host and root credentials are correct; verify firewall rules allow port 22 inbound.</td>
+</tr>
+<tr>
+<td><code>vim-cmd: Unknown command</code></td>
+<td>Run the command from the ESXi shell directly (not from vCenter); if using vCenter, use <code>esxcli system syslog config get</code> instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="vcsa-support-bundle">VCSA Support Bundle<a class="headerlink" href="#vcsa-support-bundle" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># From VAMI (port 5480): Administration → Support → Create Support Bundle</span>
@@ -8635,9 +8705,28 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or use the FQDN that matches the certificate CN.
-<strong><code>HTTP/1.1 401 Unauthorized</code></strong> — Ensure the session token is valid and not expired; obtain a fresh token via <code>/api/session</code> endpoint with valid vCenter credentials.
-<strong><code>vc-support.sh: command not found</code></strong> — Run the command from the vCenter shell (SSH to VCSA) or use the full path <code>/usr/lib/vmware-vmafd/bin/vc-support.sh</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or use the FQDN that matches the certificate CN.</td>
+</tr>
+<tr>
+<td><code>HTTP/1.1 401 Unauthorized</code></td>
+<td>Ensure the session token is valid and not expired; obtain a fresh token via <code>/api/session</code> endpoint with valid vCenter credentials.</td>
+</tr>
+<tr>
+<td><code>vc-support.sh: command not found</code></td>
+<td>Run the command from the vCenter shell (SSH to VCSA) or use the full path <code>/usr/lib/vmware-vmafd/bin/vc-support.sh</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="vsphere-cluster-services-vcls-retreat-mode">vSphere Cluster Services (vCLS) Retreat Mode<a class="headerlink" href="#vsphere-cluster-services-vcls-retreat-mode" title="Permanent link">&para;</a></h2>
@@ -8665,8 +8754,24 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Load the VMware PowerCLI module first with <code>Import-Module VMware.PowerCLI</code>.
-<strong><code>You do not have permission to perform this operation.</code></strong> — Ensure your vCenter user account has Administrator or Cluster Administrator role on the target cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></td>
+<td>Load the VMware PowerCLI module first with <code>Import-Module VMware.PowerCLI</code>.</td>
+</tr>
+<tr>
+<td><code>You do not have permission to perform this operation.</code></td>
+<td>Ensure your vCenter user account has Administrator or Cluster Administrator role on the target cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Impact of retreat mode:</strong>
 - vCLS agent VMs are powered off and removed
@@ -8736,9 +8841,28 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the collector's CA certificate into your system trust store.
-<strong><code>The term 'Get-View' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Load the VMware.VimAutomation.Core PowerCLI module with <code>Import-Module VMware.VimAutomation.Core</code> before running Get-View commands.
-<strong><code>Unable to connect to the remote server</code></strong> — Verify the Skyline Collector appliance is running and accessible on the network; check firewall rules and DNS resolution for sc-collector.vmware.com.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already present) or import the collector's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>The term 'Get-View' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></td>
+<td>Load the VMware.VimAutomation.Core PowerCLI module with <code>Import-Module VMware.VimAutomation.Core</code> before running Get-View commands.</td>
+</tr>
+<tr>
+<td><code>Unable to connect to the remote server</code></td>
+<td>Verify the Skyline Collector appliance is running and accessible on the network; check firewall rules and DNS resolution for sc-collector.vmware.com.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="relationship-to-aria-operations">Relationship to Aria Operations<a class="headerlink" href="#relationship-to-aria-operations" title="Permanent link">&para;</a></h3>
 <p>VMware Aria Operations (formerly vRealize Operations) and Skyline serve different purposes:
@@ -8822,9 +8946,28 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Cannot open batch file /tmp/perf_data.csv</code></strong> — Verify the batch file exists and was created successfully with <code>ls -la /tmp/perf_data.csv</code>.
-<strong><code>Error: esxtop: command not found</code></strong> — Run esxtop directly on an ESXi host via SSH or vSphere console, not from a remote management station.
-<strong><code>Error: Permission denied writing to /tmp/perf_data.csv</code></strong> — Ensure the user running esxtop has write permissions to /tmp or specify an alternative writable directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Cannot open batch file /tmp/perf_data.csv</code></td>
+<td>Verify the batch file exists and was created successfully with <code>ls -la /tmp/perf_data.csv</code>.</td>
+</tr>
+<tr>
+<td><code>Error: esxtop: command not found</code></td>
+<td>Run esxtop directly on an ESXi host via SSH or vSphere console, not from a remote management station.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied writing to /tmp/perf_data.csv</code></td>
+<td>Ensure the user running esxtop has write permissions to /tmp or specify an alternative writable directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resxtop">RESXTOP<a class="headerlink" href="#resxtop" title="Permanent link">&para;</a></h3>
 <p>RESXTOP is ESXTOP accessed remotely without SSH, using the vSphere CLI. It connects to a host via the vSphere API and presents the same interface as ESXTOP.</p>
@@ -8855,9 +8998,28 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to connect to host esxi01.corp.local on port 443</code></strong> — Verify the ESXi hostname is resolvable and accessible, and check firewall rules for port 443.
-<strong><code>Error: Authentication failed for user root</code></strong> — Confirm the root password is correct and the account is not locked; use <code>--password</code> flag or enter interactively when prompted.
-<strong><code>Error: resxtop: command not found</code></strong> — Install the vSphere CLI package (e.g., <code>apt-get install vmware-vsphere-cli</code> on Linux or download from VMware) and ensure it is in your PATH.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to connect to host esxi01.corp.local on port 443</code></td>
+<td>Verify the ESXi hostname is resolvable and accessible, and check firewall rules for port 443.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed for user root</code></td>
+<td>Confirm the root password is correct and the account is not locked; use <code>--password</code> flag or enter interactively when prompted.</td>
+</tr>
+<tr>
+<td><code>Error: resxtop: command not found</code></td>
+<td>Install the vSphere CLI package (e.g., <code>apt-get install vmware-vsphere-cli</code> on Linux or download from VMware) and ensure it is in your PATH.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="powercli-get-stat">PowerCLI Get-Stat<a class="headerlink" href="#powercli-get-stat" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Get CPU Ready for a VM over the last hour (20s intervals)</span>
@@ -8899,9 +9061,28 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-VM : The term 'Get-VM' is not recognized</code></strong> — Load the VMware PowerCLI module with <code>Import-Module VMware.VimAutomation.Core</code> before running these commands.
-<strong><code>You are not currently connected to any vCenter servers</code></strong> — Connect to vCenter first using <code>Connect-VIServer -Server &lt;vcenter-fqdn&gt;</code> with appropriate credentials.
-<strong><code>Get-Stat : A parameter cannot be found that matches parameter name 'Interval'</code></strong> — Use <code>-IntervalSecs</code> instead of <code>-Interval</code> for the time period in seconds.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-VM : The term 'Get-VM' is not recognized</code></td>
+<td>Load the VMware PowerCLI module with <code>Import-Module VMware.VimAutomation.Core</code> before running these commands.</td>
+</tr>
+<tr>
+<td><code>You are not currently connected to any vCenter servers</code></td>
+<td>Connect to vCenter first using <code>Connect-VIServer -Server &lt;vcenter-fqdn&gt;</code> with appropriate credentials.</td>
+</tr>
+<tr>
+<td><code>Get-Stat : A parameter cannot be found that matches parameter name 'Interval'</code></td>
+<td>Use <code>-IntervalSecs</code> instead of <code>-Interval</code> for the time period in seconds.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="key-metrics-summary-table">Key Metrics Summary Table<a class="headerlink" href="#key-metrics-summary-table" title="Permanent link">&para;</a></h3>
 <table>
@@ -8989,7 +9170,7 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

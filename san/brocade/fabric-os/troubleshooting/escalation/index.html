@@ -7701,8 +7701,24 @@ How to escalate Brocade SAN switch issues to Broadcom TAC: what data to collect,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>switchshow: command not found</code></strong> — Ensure you are logged into the Brocade switch via SSH/Telnet, not your local workstation; these commands run on the switch itself.
-<strong><code>Permission denied</code></strong> — Verify your user account has admin privileges on the switch; use <code>userconfig --show</code> to check your role.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>switchshow: command not found</code></td>
+<td>Ensure you are logged into the Brocade switch via SSH/Telnet, not your local workstation; these commands run on the switch itself.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Verify your user account has admin privileges on the switch; use <code>userconfig --show</code> to check your role.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-capture-fabric-state-before-anything-changes">2. Capture fabric state (before anything changes)<a class="headerlink" href="#2-capture-fabric-state-before-anything-changes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Full fabric topology — shows all switches, domain IDs, and ISLs</span>
@@ -7747,9 +7763,28 @@ How to escalate Brocade SAN switch issues to Broadcom TAC: what data to collect,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fabricshow: command not found</code></strong> — Verify you are logged into the Brocade switch CLI (not the host OS) by checking the prompt shows <code>switch&gt;</code> or <code>switch#</code>.
-<strong><code>Access denied: insufficient privileges</code></strong> — Ensure your user account has admin or read-only permissions; use <code>userconfig --show</code> to verify role assignments.
-<strong><code>ISL port offline or isolated</code></strong> — Check physical cable connections and run <code>portshow &lt;port&gt;</code> to diagnose link state; verify switch firmware versions match across the fabric.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fabricshow: command not found</code></td>
+<td>Verify you are logged into the Brocade switch CLI (not the host OS) by checking the prompt shows <code>switch&gt;</code> or <code>switch#</code>.</td>
+</tr>
+<tr>
+<td><code>Access denied: insufficient privileges</code></td>
+<td>Ensure your user account has admin or read-only permissions; use <code>userconfig --show</code> to verify role assignments.</td>
+</tr>
+<tr>
+<td><code>ISL port offline or isolated</code></td>
+<td>Check physical cable connections and run <code>portshow &lt;port&gt;</code> to diagnose link state; verify switch firmware versions match across the fabric.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Copy the full output of each command into a text file. Paste this into the TAC case description — it gives TAC an immediate view of the fabric state at the time of the issue.</p>
 <h3 id="3-run-supportsave-on-each-affected-switch-takes-25-minutes-per-switch">3. Run supportsave on each affected switch (takes 2–5 minutes per switch)<a class="headerlink" href="#3-run-supportsave-on-each-affected-switch-takes-25-minutes-per-switch" title="Permanent link">&para;</a></h3>
@@ -7777,9 +7812,28 @@ How to escalate Brocade SAN switch issues to Broadcom TAC: what data to collect,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials and that the SCP server's SSH key is configured with <code>ssave --scp &lt;username&gt;@&lt;scp-server-ip&gt;:&lt;path&gt;</code> using a valid user account.
-<strong><code>No space left on device</code></strong> — Check available disk space on the SCP destination with <code>df -h</code> and ensure at least 500 MB is free, or configure an alternate SCP path.
-<strong><code>Connection refused</code></strong> — Confirm the SCP server is reachable and SSH is running on port 22 by testing with <code>ping &lt;scp-server-ip&gt;</code> and <code>telnet &lt;scp-server-ip&gt; 22</code> from the switch.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify SSH credentials and that the SCP server's SSH key is configured with <code>ssave --scp &lt;username&gt;@&lt;scp-server-ip&gt;:&lt;path&gt;</code> using a valid user account.</td>
+</tr>
+<tr>
+<td><code>No space left on device</code></td>
+<td>Check available disk space on the SCP destination with <code>df -h</code> and ensure at least 500 MB is free, or configure an alternate SCP path.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Confirm the SCP server is reachable and SSH is running on port 22 by testing with <code>ping &lt;scp-server-ip&gt;</code> and <code>telnet &lt;scp-server-ip&gt; 22</code> from the switch.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Run supportsave on <strong>every</strong> switch in the affected fabric, not just the one that appears to be the source. Fabric issues often show on the downstream switch, not the root cause switch.</p>
 <h3 id="4-capture-the-error-log-timeline-of-events">4. Capture the error log (timeline of events)<a class="headerlink" href="#4-capture-the-error-log-timeline-of-events" title="Permanent link">&para;</a></h3>
@@ -7820,8 +7874,24 @@ How to escalate Brocade SAN switch issues to Broadcom TAC: what data to collect,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>errshow: command not found</code></strong> — Verify you are logged into a Brocade Fabric OS switch (not a Linux host); this command only exists on switch CLI.
-<strong><code>Permission denied</code></strong> — Ensure your user account has administrative privileges; request <code>admin</code> role assignment from the fabric administrator.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>errshow: command not found</code></td>
+<td>Verify you are logged into a Brocade Fabric OS switch (not a Linux host); this command only exists on switch CLI.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure your user account has administrative privileges; request <code>admin</code> role assignment from the fabric administrator.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>FOS version: v9.2.1d build 2023120
@@ -8093,7 +8163,7 @@ How to escalate Brocade SAN switch issues to Broadcom TAC: what data to collect,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

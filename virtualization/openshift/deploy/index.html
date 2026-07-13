@@ -7188,9 +7188,28 @@ IPI vs UPI vs agent-based installation methods, install-config.yaml structure fo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nslookup: can't resolve 'api.ocp.example.com': No address associated with hostname</code></strong> — Verify DNS A record exists for api.ocp.example.com and resolves to the load balancer VIP.
-<strong><code>dig: couldn't get address for '_etcd-server-ssl._tcp.ocp.example.com': not known</code></strong> — Create SRV records for etcd cluster members or ensure DNS is configured with proper etcd service discovery entries.
-<strong><code>System clock unsynchronized: no</code></strong> — Start and enable chrony/ntpd service with <code>systemctl start chronyd &amp;&amp; systemctl enable chronyd</code>, then wait 1–2 minutes for clock synchronization.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nslookup: can't resolve 'api.ocp.example.com': No address associated with hostname</code></td>
+<td>Verify DNS A record exists for api.ocp.example.com and resolves to the load balancer VIP.</td>
+</tr>
+<tr>
+<td><code>dig: couldn't get address for '_etcd-server-ssl._tcp.ocp.example.com': not known</code></td>
+<td>Create SRV records for etcd cluster members or ensure DNS is configured with proper etcd service discovery entries.</td>
+</tr>
+<tr>
+<td><code>System clock unsynchronized: no</code></td>
+<td>Start and enable chrony/ntpd service with <code>systemctl start chronyd &amp;&amp; systemctl enable chronyd</code>, then wait 1–2 minutes for clock synchronization.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="install-configyaml-vsphere-ipi-full-example">install-config.yaml (vSphere IPI — Full Example)<a class="headerlink" href="#install-configyaml-vsphere-ipi-full-example" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
@@ -7386,9 +7405,28 @@ IPI vs UPI vs agent-based installation methods, install-config.yaml structure fo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: open ocp-install/manifests/cluster-scheduler-02-config.yml: no such file or directory</code></strong> — Run <code>./openshift-install create manifests --dir ocp-install</code> first to generate the manifests directory.
-<strong><code>error: Unable to connect to the server: dial tcp: lookup api.ocp.example.com: no such host</code></strong> — Ensure DNS is resolving your API endpoint and the cluster network is reachable before running wait-for commands.
-<strong><code>error: http.server: Address already in use</code></strong> — Kill the existing process on port 8080 with <code>lsof -ti:8080 | xargs kill -9</code> or use a different port with <code>python3 -m http.server 8081</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: open ocp-install/manifests/cluster-scheduler-02-config.yml: no such file or directory</code></td>
+<td>Run <code>./openshift-install create manifests --dir ocp-install</code> first to generate the manifests directory.</td>
+</tr>
+<tr>
+<td><code>error: Unable to connect to the server: dial tcp: lookup api.ocp.example.com: no such host</code></td>
+<td>Ensure DNS is resolving your API endpoint and the cluster network is reachable before running wait-for commands.</td>
+</tr>
+<tr>
+<td><code>error: http.server: Address already in use</code></td>
+<td>Kill the existing process on port 8080 with <code>lsof -ti:8080 | xargs kill -9</code> or use a different port with <code>python3 -m http.server 8081</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="agent-based-install">Agent-Based Install<a class="headerlink" href="#agent-based-install" title="Permanent link">&para;</a></h2>
 <p>Agent-based install (<code>openshift-install agent create image</code>) generates a bootable ISO that combines ignition, networking config, and the install agent. Use when: bare-metal without PXE infrastructure, disconnected/air-gap environments, single-node OCP (SNO).</p>
@@ -7494,9 +7532,28 @@ IPI vs UPI vs agent-based installation methods, install-config.yaml structure fo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: install-config.yaml not found in ocp-install directory</code></strong> — Ensure install-config.yaml and agent-config.yaml are present in the ocp-install directory before running the create image command.
-<strong><code>Error: failed to discover agents: no agents joined the cluster within timeout</code></strong> — Verify all nodes have booted from the ISO, network connectivity is functional, and firewall rules allow agent communication on port 8090.
-<strong><code>Error: bootstrap did not complete: pending csr approvals</code></strong> — Manually approve pending certificate signing requests using <code>oc adm certificate approve &lt;csr-name&gt;</code> or ensure automatic CSR approval is configured.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: install-config.yaml not found in ocp-install directory</code></td>
+<td>Ensure install-config.yaml and agent-config.yaml are present in the ocp-install directory before running the create image command.</td>
+</tr>
+<tr>
+<td><code>Error: failed to discover agents: no agents joined the cluster within timeout</code></td>
+<td>Verify all nodes have booted from the ISO, network connectivity is functional, and firewall rules allow agent communication on port 8090.</td>
+</tr>
+<tr>
+<td><code>Error: bootstrap did not complete: pending csr approvals</code></td>
+<td>Manually approve pending certificate signing requests using <code>oc adm certificate approve &lt;csr-name&gt;</code> or ensure automatic CSR approval is configured.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="air-gap-mirror-setup">Air-Gap Mirror Setup<a class="headerlink" href="#air-gap-mirror-setup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># imageset-config.yaml (oc-mirror v2)</span>
@@ -7557,9 +7614,28 @@ IPI vs UPI vs agent-based installation methods, install-config.yaml structure fo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to connect to quay.local:8443: x509: certificate signed by unknown authority</code></strong> — Add <code>--dest-skip-tls</code> flag to the mirror command or import the registry's CA certificate into the cluster's trusted store.
-<strong><code>Error from server (NotFound): imagecontentsourcepolicies.config.openshift.io "release-0" not found</code></strong> — Verify the ICSP YAML file path is correct and the <code>oc apply</code> command targeted the correct results directory with wildcard expansion.
-<strong><code>error: unable to pull image: rpc error: code = Unknown desc = failed to pull and unpack image: failed to resolve reference: name not found</code></strong> — Ensure the image was successfully mirrored by checking <code>oc-mirror-workspace/results-*/mapping.txt</code> and verify the mirror registry hostname is resolvable from the node.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to connect to quay.local:8443: x509: certificate signed by unknown authority</code></td>
+<td>Add <code>--dest-skip-tls</code> flag to the mirror command or import the registry's CA certificate into the cluster's trusted store.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): imagecontentsourcepolicies.config.openshift.io "release-0" not found</code></td>
+<td>Verify the ICSP YAML file path is correct and the <code>oc apply</code> command targeted the correct results directory with wildcard expansion.</td>
+</tr>
+<tr>
+<td><code>error: unable to pull image: rpc error: code = Unknown desc = failed to pull and unpack image: failed to resolve reference: name not found</code></td>
+<td>Ensure the image was successfully mirrored by checking <code>oc-mirror-workspace/results-*/mapping.txt</code> and verify the mirror registry hostname is resolvable from the node.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="post-install-validation-checklist">Post-Install Validation Checklist<a class="headerlink" href="#post-install-validation-checklist" title="Permanent link">&para;</a></h2>
 <table>
@@ -7652,9 +7728,28 @@ IPI vs UPI vs agent-based installation methods, install-config.yaml structure fo
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to read the kubeconfig file "ocp-install/auth/kubeconfig": open ocp-install/auth/kubeconfig: no such file or directory</code></strong> — Verify the installation directory path is correct and run the command from the parent directory where <code>ocp-install/</code> exists.
-<strong><code>error: the server has asked for the client to provide credentials</code></strong> — Ensure the kubeconfig file has valid credentials and the API server is accessible; regenerate kubeconfig if corrupted.
-<strong><code>error: secrets "kubeadmin" not found</code></strong> — The kubeadmin secret may have already been deleted or the cluster uses a different identity provider; verify the secret exists before deletion with <code>oc get secret kubeadmin -n kube-system</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to read the kubeconfig file "ocp-install/auth/kubeconfig": open ocp-install/auth/kubeconfig: no such file or directory</code></td>
+<td>Verify the installation directory path is correct and run the command from the parent directory where <code>ocp-install/</code> exists.</td>
+</tr>
+<tr>
+<td><code>error: the server has asked for the client to provide credentials</code></td>
+<td>Ensure the kubeconfig file has valid credentials and the API server is accessible; regenerate kubeconfig if corrupted.</td>
+</tr>
+<tr>
+<td><code>error: secrets "kubeadmin" not found</code></td>
+<td>The kubeadmin secret may have already been deleted or the cluster uses a different identity provider; verify the secret exists before deletion with <code>oc get secret kubeadmin -n kube-system</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -7691,7 +7786,7 @@ IPI vs UPI vs agent-based installation methods, install-config.yaml structure fo
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

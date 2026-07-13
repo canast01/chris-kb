@@ -9133,9 +9133,28 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; if error persists, verify vRA appliance certificate is valid).
-<strong><code>jq: error (at &lt;stdin&gt;:0): Cannot index object with string "cspAuthToken"</code></strong> — Verify credentials are correct and domain is set to <code>vsphere.local</code>; check vIDM is reachable and user account is not locked.
-<strong><code>curl: (7) Failed to connect to &lt;vra-fqdn&gt; port 443: Connection refused</code></strong> — Confirm vRA FQDN is correct and vRA appliance is running; check network connectivity and firewall rules allow port 443.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; if error persists, verify vRA appliance certificate is valid).</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:0): Cannot index object with string "cspAuthToken"</code></td>
+<td>Verify credentials are correct and domain is set to <code>vsphere.local</code>; check vIDM is reachable and user account is not locked.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;vra-fqdn&gt; port 443: Connection refused</code></td>
+<td>Confirm vRA FQDN is correct and vRA appliance is running; check network connectivity and firewall rules allow port 443.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-2-check-failed-deployments">Step 2 — Check failed deployments<a class="headerlink" href="#step-2-check-failed-deployments" title="Permanent link">&para;</a></h2>
@@ -9210,9 +9229,28 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the VRA certificate into your system CA bundle.
-<strong><code>jq: command not found</code></strong> — Install python3-json or use <code>python3 -m json.tool</code> instead of piping to jq for JSON formatting.
-<strong><code>Authorization: Bearer $TOKEN: command not found</code></strong> — Ensure <code>$TOKEN</code> variable is set by running <code>TOKEN=$(curl -sk -u admin:password "https://&lt;vra-fqdn&gt;/iaas/api/login" | grep -o '"token":"[^"]*' | cut -d'"' -f4)</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or import the VRA certificate into your system CA bundle.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install python3-json or use <code>python3 -m json.tool</code> instead of piping to jq for JSON formatting.</td>
+</tr>
+<tr>
+<td><code>Authorization: Bearer $TOKEN: command not found</code></td>
+<td>Ensure <code>$TOKEN</code> variable is set by running <code>TOKEN=$(curl -sk -u admin:password "https://&lt;vra-fqdn&gt;/iaas/api/login" | grep -o '"token":"[^"]*' | cut -d'"' -f4)</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-3-check-catalog-request-status">Step 3 — Check catalog request status<a class="headerlink" href="#step-3-check-catalog-request-status" title="Permanent link">&para;</a></h2>
@@ -9269,9 +9307,28 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the VRA certificate into your system's trusted CA store.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></strong> — Verify the <code>$TOKEN</code> variable is set correctly with a valid bearer token and the VRA API endpoint is reachable.
-<strong><code>"reason": ""</code></strong> — Check the request events endpoint for detailed error messages, as some failures only populate the event log rather than the reason field.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification, or import the VRA certificate into your system's trusted CA store.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></td>
+<td>Verify the <code>$TOKEN</code> variable is set correctly with a valid bearer token and the VRA API endpoint is reachable.</td>
+</tr>
+<tr>
+<td><code>"reason": ""</code></td>
+<td>Check the request events endpoint for detailed error messages, as some failures only populate the event log rather than the reason field.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-4-inspect-kubernetes-pod-logs">Step 4 — Inspect Kubernetes pod logs<a class="headerlink" href="#step-4-inspect-kubernetes-pod-logs" title="Permanent link">&para;</a></h2>
@@ -9336,9 +9393,28 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "pods"</code></strong> — Verify kubectl is configured correctly and you have access to the cluster with <code>kubectl cluster-info</code>.
-<strong><code>Unable to connect to the server: dial tcp: lookup &lt;vra-appliance-ip&gt;: no such host</code></strong> — Ensure the vRA appliance IP is correct and reachable, or use the FQDN instead of IP address.
-<strong><code>Error from server (NotFound): pods "&lt;pod-name&gt;" not found</code></strong> — Confirm the pod name is spelled correctly and exists in the prelude namespace with <code>kubectl get pods -n prelude</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "pods"</code></td>
+<td>Verify kubectl is configured correctly and you have access to the cluster with <code>kubectl cluster-info</code>.</td>
+</tr>
+<tr>
+<td><code>Unable to connect to the server: dial tcp: lookup &lt;vra-appliance-ip&gt;: no such host</code></td>
+<td>Ensure the vRA appliance IP is correct and reachable, or use the FQDN instead of IP address.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): pods "&lt;pod-name&gt;" not found</code></td>
+<td>Confirm the pod name is spelled correctly and exists in the prelude namespace with <code>kubectl get pods -n prelude</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-5-check-postgresql-database-health">Step 5 — Check PostgreSQL database health<a class="headerlink" href="#step-5-check-postgresql-database-health" title="Permanent link">&para;</a></h2>
@@ -9394,8 +9470,24 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"</code></strong> — Run the psql command directly on the vRA appliance or configure pg_hba.conf to allow password authentication.
-<strong><code>ERROR: permission denied for schema public</code></strong> — Connect as the vcac database owner instead: <code>psql -U vcac -d vcac</code> or grant appropriate privileges to the postgres user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"</code></td>
+<td>Run the psql command directly on the vRA appliance or configure pg_hba.conf to allow password authentication.</td>
+</tr>
+<tr>
+<td><code>ERROR: permission denied for schema public</code></td>
+<td>Connect as the vcac database owner instead: <code>psql -U vcac -d vcac</code> or grant appropriate privileges to the postgres user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-6-check-abx-action-failures">Step 6 — Check ABX action failures<a class="headerlink" href="#step-6-check-abx-action-failures" title="Permanent link">&para;</a></h2>
@@ -9444,9 +9536,28 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the vRA root CA into your system trust store.
-<strong><code>jq: command not found</code></strong> — Install <code>jq</code> with <code>apt-get install jq</code> or <code>yum install jq</code>, or use the Python JSON parser shown in the example instead.
-<strong><code>Authorization: Bearer $TOKEN: command not found</code></strong> — Ensure <code>$TOKEN</code> is set by running <code>TOKEN=$(curl -sk ... /api/login)</code> first, or use explicit token value in quotes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the vRA root CA into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>jq</code> with <code>apt-get install jq</code> or <code>yum install jq</code>, or use the Python JSON parser shown in the example instead.</td>
+</tr>
+<tr>
+<td><code>Authorization: Bearer $TOKEN: command not found</code></td>
+<td>Ensure <code>$TOKEN</code> is set by running <code>TOKEN=$(curl -sk ... /api/login)</code> first, or use explicit token value in quotes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-7-collect-support-bundle">Step 7 — Collect support bundle<a class="headerlink" href="#step-7-collect-support-bundle" title="Permanent link">&para;</a></h2>
@@ -9488,9 +9599,28 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/var/log/vmware/vra/support-bundle.sh: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure you are logged in as root user.
-<strong><code>/tmp: No space left on device</code></strong> — Free up disk space on the appliance (check with <code>df -h</code>) or specify an alternate output directory before running the script.
-<strong><code>support-bundle.sh: command not found</code></strong> — Verify the vRA appliance is fully deployed and the support tools are installed; check <code>/var/log/vmware/vra/</code> exists with <code>ls -la /var/log/vmware/vra/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/var/log/vmware/vra/support-bundle.sh: Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure you are logged in as root user.</td>
+</tr>
+<tr>
+<td><code>/tmp: No space left on device</code></td>
+<td>Free up disk space on the appliance (check with <code>df -h</code>) or specify an alternate output directory before running the script.</td>
+</tr>
+<tr>
+<td><code>support-bundle.sh: command not found</code></td>
+<td>Verify the vRA appliance is fully deployed and the support tools are installed; check <code>/var/log/vmware/vra/</code> exists with <code>ls -la /var/log/vmware/vra/</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
@@ -9565,7 +9695,7 @@ Aria Automation diagnostic commands: query failed deployments and requests via R
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Brocade SANnav — CLI Reference · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Brocade SANnav — CLI Reference", "url": "https://chrisanastasiadis.com/san/brocade/sannav/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Brocade SANnav — CLI Reference", "url": "https://chrisanastasiadis.com/san/brocade/sannav/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7615,9 +7615,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sannav: command not found</code></strong> — Ensure SANnav is installed and <code>/opt/sannav/bin</code> is in your PATH, or use the full path <code>/opt/sannav/bin/sannav</code>.
-<strong><code>Error: Failed to start sannav-db [FAILED]</code></strong> — Check database disk space with <code>df -h /var/lib/sannav</code> and verify database service logs with <code>journalctl -u sannav-db -n 50</code>.
-<strong><code>Error: License expired or invalid</code></strong> — Renew or update your SANnav license file in <code>/opt/sannav/etc/license.key</code> and restart services.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sannav: command not found</code></td>
+<td>Ensure SANnav is installed and <code>/opt/sannav/bin</code> is in your PATH, or use the full path <code>/opt/sannav/bin/sannav</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to start sannav-db [FAILED]</code></td>
+<td>Check database disk space with <code>df -h /var/lib/sannav</code> and verify database service logs with <code>journalctl -u sannav-db -n 50</code>.</td>
+</tr>
+<tr>
+<td><code>Error: License expired or invalid</code></td>
+<td>Renew or update your SANnav license file in <code>/opt/sannav/etc/license.key</code> and restart services.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show current IP configuration</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span>eth0
@@ -7663,9 +7682,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to &lt;switch-ip&gt; port 443: Connection refused</code></strong> — Verify the switch IP is correct and the management interface is reachable with <code>ping &lt;switch-ip&gt;</code> before retrying.
-<strong><code>ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)</code></strong> — Confirm LDAP server hostname resolves and port 636 is accessible; check firewall rules and DNS with <code>nslookup ldaps://ldap.corp.example.com</code>.
-<strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the DN path matches your Active Directory structure.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;switch-ip&gt; port 443: Connection refused</code></td>
+<td>Verify the switch IP is correct and the management interface is reachable with <code>ping &lt;switch-ip&gt;</code> before retrying.</td>
+</tr>
+<tr>
+<td><code>ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)</code></td>
+<td>Confirm LDAP server hostname resolves and port 636 is accessible; check firewall rules and DNS with <code>nslookup ldaps://ldap.corp.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>ldap_bind: Invalid credentials (49)</code></td>
+<td>Verify the service account password is correct and the DN path matches your Active Directory structure.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Main application log</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/sannav/logs/server.log
@@ -7759,8 +7797,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>du: cannot access '/opt/sannav/data/': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure the user has read permissions on the SANnav data directory.
-<strong><code>Filesystem /opt/sannav/data/ is 100% full</code></strong> — Archive or delete old metrics data from InfluxDB or PostgreSQL, or expand the underlying storage volume.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>du: cannot access '/opt/sannav/data/': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure the user has read permissions on the SANnav data directory.</td>
+</tr>
+<tr>
+<td><code>Filesystem /opt/sannav/data/ is 100% full</code></td>
+<td>Archive or delete old metrics data from InfluxDB or PostgreSQL, or expand the underlying storage volume.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Login — obtain token</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://sannav-dc1.corp.example.com/rest/login<span class="w"> </span><span class="se">\</span>
@@ -7781,9 +7835,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl (already present) or import the CA certificate into your system trust store.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Verify credentials are correct and the SanNav REST API endpoint is responding; check firewall/network connectivity to sannav-dc1.corp.example.com.
-<strong><code>curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Connection refused</code></strong> — Confirm the SanNav service is running and listening on port 443 using <code>systemctl status sannav</code> on the target host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl (already present) or import the CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></td>
+<td>Verify credentials are correct and the SanNav REST API endpoint is responding; check firewall/network connectivity to sannav-dc1.corp.example.com.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Connection refused</code></td>
+<td>Confirm the SanNav service is running and listening on port 443 using <code>systemctl status sannav</code> on the target host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List all resource groups (fabrics)</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://sannav-dc1.corp.example.com/rest/resourcegroups<span class="w"> </span><span class="se">\</span>
@@ -7877,8 +7950,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-<strong><code>jq: command not found</code> or <code>json.tool: No module named json</code></strong> — Install Python 3 (<code>apt-get install python3</code>) or use <code>jq</code> instead of `python3 -</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code> or <code>json.tool: No module named json</code></td>
+<td>Install Python 3 (<code>apt-get install python3</code>) or use <code>jq</code> instead of `python3 -</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Get active alerts (last 100)</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://sannav-dc1.corp.example.com/rest/resourcegroups/all/events?limit=100&amp;filter=acknowledged:false&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7921,9 +8010,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's not removed).
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Verify <code>$TOKEN</code> environment variable is set with a valid bearer token via <code>echo $TOKEN</code>.
-<strong><code>curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Name or service not known</code></strong> — Confirm DNS resolution and network connectivity to the SAN Nav appliance with <code>nslookup sannav-dc1.corp.example.com</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Verify <code>$TOKEN</code> environment variable is set with a valid bearer token via <code>echo $TOKEN</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Name or service not known</code></td>
+<td>Confirm DNS resolution and network connectivity to the SAN Nav appliance with <code>nslookup sannav-dc1.corp.example.com</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Get defined zone set for a fabric</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://sannav-dc1.corp.example.com/rest/resourcegroups/&lt;fabricId&gt;/zonedb&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7975,9 +8083,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Verify the <code>$TOKEN</code> variable is set and valid by running <code>echo $TOKEN</code> and refreshing credentials if expired.
-<strong><code>curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443</code></strong> — Confirm the SANnav hostname is correct and the management interface is reachable with <code>ping sannav-dc1.corp.example.com</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Verify the <code>$TOKEN</code> variable is set and valid by running <code>echo $TOKEN</code> and refreshing credentials if expired.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443</code></td>
+<td>Confirm the SANnav hostname is correct and the management interface is reachable with <code>ping sannav-dc1.corp.example.com</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Export all switches to CSV (use Accept header for CSV format)</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches<span class="w"> </span><span class="se">\</span>
@@ -7990,9 +8117,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in the example, so ensure your curl version supports it or use <code>--insecure</code> instead).
-<strong><code>curl: (401) Unauthorized</code></strong> — Verify the <code>$TOKEN</code> variable is set and valid by running <code>echo $TOKEN</code> and confirming it matches an active API token from SANnav.
-<strong><code>curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443</code></strong> — Check network connectivity and DNS resolution with <code>ping sannav-dc1.corp.example.com</code> and <code>nslookup sannav-dc1.corp.example.com</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in the example, so ensure your curl version supports it or use <code>--insecure</code> instead).</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Verify the <code>$TOKEN</code> variable is set and valid by running <code>echo $TOKEN</code> and confirming it matches an active API token from SANnav.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443</code></td>
+<td>Check network connectivity and DNS resolution with <code>ping sannav-dc1.corp.example.com</code> and <code>nslookup sannav-dc1.corp.example.com</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># List available firmware images</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://sannav-dc1.corp.example.com/rest/firmware/images<span class="w"> </span><span class="se">\</span>
@@ -8049,9 +8195,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure <code>curl</code> version supports it).
-<strong><code>"error": "Invalid or expired token"</code></strong> — Regenerate the <code>$TOKEN</code> variable using the authentication endpoint and ensure it hasn't exceeded its TTL.
-<strong><code>"error": "Switch ID not found or not managed by this SANnav instance"</code></strong> — Verify the switch ID exists in SANnav inventory with <code>curl -sk https://sannav-dc1.corp.example.com/rest/switches -H "Authorization: Bearer $TOKEN"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure <code>curl</code> version supports it).</td>
+</tr>
+<tr>
+<td><code>"error": "Invalid or expired token"</code></td>
+<td>Regenerate the <code>$TOKEN</code> variable using the authentication endpoint and ensure it hasn't exceeded its TTL.</td>
+</tr>
+<tr>
+<td><code>"error": "Switch ID not found or not managed by this SANnav instance"</code></td>
+<td>Verify the switch ID exists in SANnav inventory with <code>curl -sk https://sannav-dc1.corp.example.com/rest/switches -H "Authorization: Bearer $TOKEN"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Count managed switches by connectivity state</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches<span class="w"> </span><span class="se">\</span>
@@ -8082,9 +8247,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl (already present) or import the certificate into your system's CA bundle.
-<strong><code>curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Connection refused</code></strong> — Verify the SAN Nav appliance is running and accessible on the network; check firewall rules and DNS resolution with <code>nslookup sannav-dc1.corp.example.com</code>.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></strong> — Confirm the <code>$TOKEN</code> variable is set and valid by running <code>echo $TOKEN</code> and regenerating it if expired.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl (already present) or import the certificate into your system's CA bundle.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Connection refused</code></td>
+<td>Verify the SAN Nav appliance is running and accessible on the network; check firewall rules and DNS resolution with <code>nslookup sannav-dc1.corp.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></td>
+<td>Confirm the <code>$TOKEN</code> variable is set and valid by running <code>echo $TOKEN</code> and regenerating it if expired.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8130,7 +8314,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

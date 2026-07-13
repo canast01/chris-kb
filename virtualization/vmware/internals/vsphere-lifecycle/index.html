@@ -8177,9 +8177,28 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect-VIServer : Cannot find a certificate or crmf request for the specified credentials.</code></strong> — Ensure vCenter certificate is trusted or use <code>-SkipCertificateCheck</code> parameter in PowerCLI 12.0+.
-<strong><code>esxcli software sources vib list : Unknown command or namespace</code></strong> — Verify SSH is enabled on the ESXi host and you are running the command directly on the host, not remotely.
-<strong><code>Get-LcmImageDepot : The object 'HostSystem' cannot be found on 'vcenter.corp.local'.</code></strong> — Connect to vCenter first with <code>Connect-VIServer</code> before running vLCM cmdlets, or ensure vLCM is enabled on the cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect-VIServer : Cannot find a certificate or crmf request for the specified credentials.</code></td>
+<td>Ensure vCenter certificate is trusted or use <code>-SkipCertificateCheck</code> parameter in PowerCLI 12.0+.</td>
+</tr>
+<tr>
+<td><code>esxcli software sources vib list : Unknown command or namespace</code></td>
+<td>Verify SSH is enabled on the ESXi host and you are running the command directly on the host, not remotely.</td>
+</tr>
+<tr>
+<td><code>Get-LcmImageDepot : The object 'HostSystem' cannot be found on 'vcenter.corp.local'.</code></td>
+<td>Connect to vCenter first with <code>Connect-VIServer</code> before running vLCM cmdlets, or ensure vLCM is enabled on the cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="cluster-images">Cluster Images<a class="headerlink" href="#cluster-images" title="Permanent link">&para;</a></h2>
@@ -8257,8 +8276,24 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-LcmRecommendation : The term 'Get-LcmRecommendation' is not recognized</code></strong> — Import the VMware.VimAutomation.Lifecycle module with <code>Import-Module VMware.VimAutomation.Lifecycle</code>.
-<strong><code>Invoke-LcmRemediation : Cluster Production-Cluster is not in maintenance mode</code></strong> — Place all hosts in the cluster into maintenance mode before invoking remediation, or use <code>-SkipMaintenanceMode</code> if supported by your vSphere version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-LcmRecommendation : The term 'Get-LcmRecommendation' is not recognized</code></td>
+<td>Import the VMware.VimAutomation.Lifecycle module with <code>Import-Module VMware.VimAutomation.Lifecycle</code>.</td>
+</tr>
+<tr>
+<td><code>Invoke-LcmRemediation : Cluster Production-Cluster is not in maintenance mode</code></td>
+<td>Place all hosts in the cluster into maintenance mode before invoking remediation, or use <code>-SkipMaintenanceMode</code> if supported by your vSphere version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="update-planner">Update Planner<a class="headerlink" href="#update-planner" title="Permanent link">&para;</a></h2>
@@ -8297,9 +8332,28 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the vCenter certificate into your system trust store.
-<strong><code>{"error":{"messages":[{"default_message":"Invalid session token"}]}}</code></strong> — Obtain a valid session token by authenticating first with <code>curl -X POST https://vcenter.corp.local/api/com/vmware/cis/session -u administrator@vsphere.local:&lt;password&gt;</code>.
-<strong><code>curl: (7) Failed to connect to vcenter.corp.local port 443: Connection refused</code></strong> — Verify vCenter hostname/IP is correct and the HTTPS service is running with <code>systemctl status vmware-vpxd</code> on the VCSA appliance.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or import the vCenter certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error":{"messages":[{"default_message":"Invalid session token"}]}}</code></td>
+<td>Obtain a valid session token by authenticating first with <code>curl -X POST https://vcenter.corp.local/api/com/vmware/cis/session -u administrator@vsphere.local:&lt;password&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vcenter.corp.local port 443: Connection refused</code></td>
+<td>Verify vCenter hostname/IP is correct and the HTTPS service is running with <code>systemctl status vmware-vpxd</code> on the VCSA appliance.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Pre-check results are categorized as:</strong>
 - <strong>Error</strong> — must be resolved before upgrade can proceed
@@ -8376,9 +8430,28 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/bin/checkQuickBoot.sh: command not found</code></strong> — Verify the script exists at that path or use the full path <code>/opt/vmware/bin/checkQuickBoot.sh</code> if installed in a different location.
-<strong><code>Permission denied</code></strong> — Run the script with appropriate privileges using <code>sudo /bin/checkQuickBoot.sh</code> or as root.
-<strong><code>Quick Boot Support: NOT SUPPORTED</code></strong> — Update the host's BIOS/firmware to a version that supports Quick Boot, or use traditional full reboots via Lifecycle Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/bin/checkQuickBoot.sh: command not found</code></td>
+<td>Verify the script exists at that path or use the full path <code>/opt/vmware/bin/checkQuickBoot.sh</code> if installed in a different location.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the script with appropriate privileges using <code>sudo /bin/checkQuickBoot.sh</code> or as root.</td>
+</tr>
+<tr>
+<td><code>Quick Boot Support: NOT SUPPORTED</code></td>
+<td>Update the host's BIOS/firmware to a version that supports Quick Boot, or use traditional full reboots via Lifecycle Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p><strong>VCP-DCV Exam Note:</strong> <strong>Quick Boot requires UEFI</strong> — hosts using legacy BIOS firmware are not eligible. Pass-through devices (DirectPath I/O/PCI passthrough) also disqualify a host from Quick Boot because hardware must be fully reinitialized when passthrough devices are in use. Know these two disqualifying conditions for the exam.</p>
@@ -8421,9 +8494,28 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Secure Boot is not supported on this host.</code></strong> — Verify the ESXi host hardware supports UEFI and Secure Boot in the BIOS/firmware settings.
-<strong><code>Cannot enable Secure Boot: Host is in maintenance mode.</code></strong> — Exit maintenance mode using <code>esxcli system maintenanceMode set --enable false</code> before enabling Secure Boot.
-<strong><code>Secure Boot keys are invalid or corrupted.</code></strong> — Reset Secure Boot keys in the host's UEFI firmware settings or contact VMware support for key restoration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Secure Boot is not supported on this host.</code></td>
+<td>Verify the ESXi host hardware supports UEFI and Secure Boot in the BIOS/firmware settings.</td>
+</tr>
+<tr>
+<td><code>Cannot enable Secure Boot: Host is in maintenance mode.</code></td>
+<td>Exit maintenance mode using <code>esxcli system maintenanceMode set --enable false</code> before enabling Secure Boot.</td>
+</tr>
+<tr>
+<td><code>Secure Boot keys are invalid or corrupted.</code></td>
+<td>Reset Secure Boot keys in the host's UEFI firmware settings or contact VMware support for key restoration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Requirements:</strong>
 - UEFI firmware with Secure Boot support
@@ -8502,9 +8594,28 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Import the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running PowerCLI commands.
-<strong><code>Apply-VMHostProfile : The host is not in maintenance mode. Profiles can only be applied when the host is in maintenance mode.</code></strong> — Place the target host in maintenance mode using <code>Set-VMHost -VMHost $targetHost -State Maintenance</code> before applying the profile.
-<strong><code>New-VMHostProfile : Reference host esxi01.corp.local is not in a valid state for profile creation.</code></strong> — Ensure the reference host is connected and in a healthy state by running <code>Get-VMHost esxi01.corp.local | Select-Object Name, ConnectionState, PowerState</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></td>
+<td>Import the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running PowerCLI commands.</td>
+</tr>
+<tr>
+<td><code>Apply-VMHostProfile : The host is not in maintenance mode. Profiles can only be applied when the host is in maintenance mode.</code></td>
+<td>Place the target host in maintenance mode using <code>Set-VMHost -VMHost $targetHost -State Maintenance</code> before applying the profile.</td>
+</tr>
+<tr>
+<td><code>New-VMHostProfile : Reference host esxi01.corp.local is not in a valid state for profile creation.</code></td>
+<td>Ensure the reference host is connected and in a healthy state by running <code>Get-VMHost esxi01.corp.local | Select-Object Name, ConnectionState, PowerState</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="answer-files">Answer Files<a class="headerlink" href="#answer-files" title="Permanent link">&para;</a></h3>
 <p>Some host profile settings are <strong>host-specific</strong> — for example, the management VMkernel IP address, which is different on every host. These values are stored in an <strong>Answer File</strong> associated with each host.</p>
@@ -8570,9 +8681,28 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-ContentLibraryItem : The term 'Get-ContentLibraryItem' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Import the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running the script.</p>
-<p><strong><code>New-VM : The object 'vSAN-Datastore' cannot be found.</code></strong> — Verify the datastore name matches exactly with <code>Get-Datastore | Select-Object Name</code> and ensure you are connected to the correct vCenter server.</p>
-<p><strong><code>New-VM : Cannot bind argument to parameter 'ResourcePool' because it is an invalid ResourcePool object.</code></strong> — Replace <code>-ResourcePool $cluster</code> with <code>-ResourcePool (Get-ResourcePool -Name "Resources" -Location $cluster)</code> to pass a valid resource pool instead of a cluster object.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-ContentLibraryItem : The term 'Get-ContentLibraryItem' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></td>
+<td>Import the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code> before running the script.</td>
+</tr>
+<tr>
+<td><code>New-VM : The object 'vSAN-Datastore' cannot be found.</code></td>
+<td>Verify the datastore name matches exactly with <code>Get-Datastore | Select-Object Name</code> and ensure you are connected to the correct vCenter server.</td>
+</tr>
+<tr>
+<td><code>New-VM : Cannot bind argument to parameter 'ResourcePool' because it is an invalid ResourcePool object.</code></td>
+<td>Replace <code>-ResourcePool $cluster</code> with <code>-ResourcePool (Get-ResourcePool -Name "Resources" -Location $cluster)</code> to pass a valid resource pool instead of a cluster object.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="version-management">Version Management<a class="headerlink" href="#version-management" title="Permanent link">&para;</a></h3>
 <p>VM templates in Content Library support versioning. When you update a template (e.g., apply OS patches), a new version is created. Subscribed libraries sync the latest version automatically (if configured for immediate sync) or on demand.</p>
@@ -8610,7 +8740,7 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

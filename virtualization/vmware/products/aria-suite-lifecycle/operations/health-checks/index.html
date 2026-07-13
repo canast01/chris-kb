@@ -9292,9 +9292,28 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the LCM root CA into your system trust store.
-<strong><code>jq: error (at &lt;stdin&gt;:0): Cannot index null with string "token"</code></strong> — Verify the LCM credentials are correct and the login endpoint is reachable; check that the password is URL-encoded if it contains special characters.
-<strong><code>curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Name or service not known</code></strong> — Confirm the LCM hostname resolves in DNS and is reachable from your current network location, or use the IP address directly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or import the LCM root CA into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:0): Cannot index null with string "token"</code></td>
+<td>Verify the LCM credentials are correct and the login endpoint is reachable; check that the password is URL-encoded if it contains special characters.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Name or service not known</code></td>
+<td>Confirm the LCM hostname resolves in DNS and is reachable from your current network location, or use the IP address directly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>UI path: <strong>LCM → Locker → Certificates</strong> — columns show Alias, Subject, Expiry, and Status. Sort by Expiry to identify near-term renewals.</p>
 <table>
@@ -9387,9 +9406,28 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify the LCM hostname resolves correctly).
-<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "productId"</code></strong> — Verify the <code>$TOKEN</code> variable is set and valid by running <code>echo $TOKEN</code> and checking the API response contains actual product data.
-<strong><code>curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Name or service not known</code></strong> — Replace <code>lcm-prod-01.example.local</code> with the correct LCM appliance hostname and verify network connectivity with <code>ping</code> or <code>nslookup</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify the LCM hostname resolves correctly).</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "productId"</code></td>
+<td>Verify the <code>$TOKEN</code> variable is set and valid by running <code>echo $TOKEN</code> and checking the API response contains actual product data.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Name or service not known</code></td>
+<td>Replace <code>lcm-prod-01.example.local</code> with the correct LCM appliance hostname and verify network connectivity with <code>ping</code> or <code>nslookup</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected output: <code>health</code> field should be <code>GREEN</code> for all products in a healthy environment. <code>YELLOW</code> indicates a configuration warning; <code>RED</code> indicates a failure requiring investigation.</p>
 <hr />
@@ -9465,8 +9503,24 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: No such file or directory</code></strong> — Verify the vrlcm service is installed and running with <code>systemctl status vrlcm</code>, or check the correct log path with <code>find /var/log -name "*lcm*" -type f</code>.
-**`tail: cannot open '/var/log/vmware/vrlc</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: No such file or directory</code></td>
+<td>Verify the vrlcm service is installed and running with <code>systemctl status vrlcm</code>, or check the correct log path with <code>find /var/log -name "*lcm*" -type f</code>.</td>
+</tr>
+<tr>
+<td>**`tail: cannot open '/var/log/vmware/vrlc</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="environment-deployment-health">Environment Deployment Health<a class="headerlink" href="#environment-deployment-health" title="Permanent link">&para;</a></h2>
@@ -9492,9 +9546,28 @@ Navigate to <strong>LCM → Lifecycle Operations → Requests → Active Request
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: No such file or directory</code></strong> — Verify the LCM service is running with <code>systemctl status vrlcm</code> and confirm the log directory exists at <code>/var/log/vmware/vrlcm/</code>.
-<strong><code>grep: (standard input) is empty</code></strong> — The log file exists but contains no data; check if the LCM service has written logs by running <code>ls -lh /var/log/vmware/vrlcm/lcm-app.log</code> to verify file size and timestamp.
-<strong><code>&lt;request-id&gt;: No such file or directory</code></strong> — Replace <code>&lt;request-id&gt;</code> with an actual request ID value (e.g., <code>req-a7f2c9e1-4d8b-11ee-b56f-0242ac120002</code>) or use a pattern like <code>grep "req-"</code> to search for any request IDs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: No such file or directory</code></td>
+<td>Verify the LCM service is running with <code>systemctl status vrlcm</code> and confirm the log directory exists at <code>/var/log/vmware/vrlcm/</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>The log file exists but contains no data; check if the LCM service has written logs by running <code>ls -lh /var/log/vmware/vrlcm/lcm-app.log</code> to verify file size and timestamp.</td>
+</tr>
+<tr>
+<td><code>&lt;request-id&gt;: No such file or directory</code></td>
+<td>Replace <code>&lt;request-id&gt;</code> with an actual request ID value (e.g., <code>req-a7f2c9e1-4d8b-11ee-b56f-0242ac120002</code>) or use a pattern like <code>grep "req-"</code> to search for any request IDs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Common causes of stuck tasks: expired certificates mid-workflow, vCenter connectivity loss, NFS mount dropped, or a product VM that lost its management IP.</p>
 <p><strong>LCM service log</strong> — primary location: <code>/var/log/vmware/lcm/lcm.log</code> on the LCM appliance. Tail this file for real-time ERROR entries during any active operation.</p>
@@ -9520,9 +9593,28 @@ LCM → <strong>Locker → Certificates</strong> — review the Expiry Date colu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify the Aria Suite Lifecycle service is running with <code>systemctl status aria-suite-lifecycle</code> and listening on port 443.
-<strong><code>unable to load certificate</code></strong> — Ensure the certificate chain is properly installed in the keystore; check <code>/opt/vmware/aria/lifecycle/conf/keystore.jks</code> exists and contains valid certificates.
-<strong><code>Hostname mismatch</code></strong> — Confirm the certificate's CN or SAN matches the FQDN returned by <code>hostname -f</code>; regenerate or import the correct certificate if they don't align.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the Aria Suite Lifecycle service is running with <code>systemctl status aria-suite-lifecycle</code> and listening on port 443.</td>
+</tr>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Ensure the certificate chain is properly installed in the keystore; check <code>/opt/vmware/aria/lifecycle/conf/keystore.jks</code> exists and contains valid certificates.</td>
+</tr>
+<tr>
+<td><code>Hostname mismatch</code></td>
+<td>Confirm the certificate's CN or SAN matches the FQDN returned by <code>hostname -f</code>; regenerate or import the correct certificate if they don't align.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>CLI check — each managed product (run from any host with network access):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Replace &lt;product-fqdn&gt; with the product&#39;s FQDN (e.g., vrops-prod-01.example.local)</span>
@@ -9545,9 +9637,28 @@ LCM → <strong>Locker → Certificates</strong> — review the Expiry Date colu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to connect to &lt;product-fqdn&gt;:443</code></strong> — Verify the FQDN is correct, the host is reachable on port 443, and no firewall rules are blocking the connection.
-<strong><code>error in x509 certificate routines:x509_check_cert_time:certificate has expired</code></strong> — The SSL certificate has expired; regenerate and install a new certificate on the affected product instance.
-<strong><code>cut: the delimiter does not appear in this line</code></strong> — The openssl command failed silently (likely due to network timeout or invalid hostname); add explicit error handling or verify DNS resolution with <code>nslookup &lt;fqdn&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to connect to &lt;product-fqdn&gt;:443</code></td>
+<td>Verify the FQDN is correct, the host is reachable on port 443, and no firewall rules are blocking the connection.</td>
+</tr>
+<tr>
+<td><code>error in x509 certificate routines:x509_check_cert_time:certificate has expired</code></td>
+<td>The SSL certificate has expired; regenerate and install a new certificate on the affected product instance.</td>
+</tr>
+<tr>
+<td><code>cut: the delimiter does not appear in this line</code></td>
+<td>The openssl command failed silently (likely due to network timeout or invalid hostname); add explicit error handling or verify DNS resolution with <code>nslookup &lt;fqdn&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Renew any certificate expiring within 60 days using the procedure in the Procedures page (Request and Install Product Certificates via LCM).</p>
 <hr />
@@ -9572,8 +9683,24 @@ Navigate to <strong>Settings → Backup and Restore</strong> — confirm the <st
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ls: cannot access '/backup/lcm-backup-*': No such file or directory</code></strong> — Verify the backup directory path is correct and backups are being written to <code>/backup/</code> by checking the LCM backup job configuration.
-<strong><code>du: cannot access '/backup/lcm-backup-20241115*': No such file or directory</code></strong> — Run the backup job manually or check the system date/cron scheduler to ensure today's backup has completed; use <code>ls -lh /backup/lcm-backup-*</code> to see available backups.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ls: cannot access '/backup/lcm-backup-*': No such file or directory</code></td>
+<td>Verify the backup directory path is correct and backups are being written to <code>/backup/</code> by checking the LCM backup job configuration.</td>
+</tr>
+<tr>
+<td><code>du: cannot access '/backup/lcm-backup-20241115*': No such file or directory</code></td>
+<td>Run the backup job manually or check the system date/cron scheduler to ensure today's backup has completed; use <code>ls -lh /backup/lcm-backup-*</code> to see available backups.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If no backup file exists for today: check LCM → Settings → Backup and Restore → review error messages; common causes are SFTP credential expiry, NFS connectivity loss, or insufficient disk space on the target.</p>
 <hr />
@@ -9609,8 +9736,24 @@ Navigate to <strong>Settings → Backup and Restore</strong> — confirm the <st
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>du: cannot access '/data/*': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure the user has read permissions on the /data directory.
-<strong><code>Filesystem /dev/mapper/data not found</code></strong> — Verify the LVM volume is mounted with <code>sudo lvdisplay</code> and mount it if necessary using <code>sudo mount /dev/mapper/data /data</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>du: cannot access '/data/*': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure the user has read permissions on the /data directory.</td>
+</tr>
+<tr>
+<td><code>Filesystem /dev/mapper/data not found</code></td>
+<td>Verify the LVM volume is mounted with <code>sudo lvdisplay</code> and mount it if necessary using <code>sudo mount /dev/mapper/data /data</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Clean unused binaries (UI):</strong>
 Navigate to <strong>Locker → Binary Mappings</strong> — identify product versions that are no longer needed (older than two versions back from current). Select the binary mapping and click <strong>Delete</strong> — this removes the binary from <code>/data/</code> and frees disk space.</p>
@@ -9626,8 +9769,24 @@ Navigate to <strong>Locker → Binary Mappings</strong> — identify product ver
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>find: '/data/lcm/upgrade/': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure the user has read and execute permissions on the directory.
-<strong><code>find: paths must begin with "." or "/"</code></strong> — Verify the path <code>/data/lcm/upgrade/</code> exists and is correctly spelled; check with <code>ls -ld /data/lcm/upgrade/</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find: '/data/lcm/upgrade/': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure the user has read and execute permissions on the directory.</td>
+</tr>
+<tr>
+<td><code>find: paths must begin with "." or "/"</code></td>
+<td>Verify the path <code>/data/lcm/upgrade/</code> exists and is correctly spelled; check with <code>ls -ld /data/lcm/upgrade/</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="integration-health">Integration Health<a class="headerlink" href="#integration-health" title="Permanent link">&para;</a></h2>
@@ -9646,9 +9805,28 @@ Navigate to <strong>LCM → Settings → vCenter Servers</strong> (or <strong>Li
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to vcenter.example.com port 443: Connection timed out</code></strong> — Verify network connectivity from the LCM appliance to vCenter using <code>ping</code> or <code>traceroute</code>, and confirm firewall rules allow port 443.
-<strong><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"Invalid user name or password","id":"com.vmware.vapi.std.errors.invalid_request"}]}}</code></strong> — Verify the service account credentials are correct and the account has not been locked; reset the password in vCenter if needed.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — The <code>-k</code> flag should suppress this, but if it persists, ensure you're using the correct vCenter FQDN that matches the SSL certificate.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to vcenter.example.com port 443: Connection timed out</code></td>
+<td>Verify network connectivity from the LCM appliance to vCenter using <code>ping</code> or <code>traceroute</code>, and confirm firewall rules allow port 443.</td>
+</tr>
+<tr>
+<td><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"Invalid user name or password","id":"com.vmware.vapi.std.errors.invalid_request"}]}}</code></td>
+<td>Verify the service account credentials are correct and the account has not been locked; reset the password in vCenter if needed.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>The <code>-k</code> flag should suppress this, but if it persists, ensure you're using the correct vCenter FQDN that matches the SSL certificate.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>VIDM (Workspace ONE Access) connectivity:</strong>
 Navigate to <strong>LCM → Settings → VIDM</strong> — click <strong>Test Connection</strong>. A successful test returns a green indicator; failure means either the VIDM service is down or the LCM-to-VIDM network path is blocked (TCP 443).</p>
@@ -9670,9 +9848,28 @@ Navigate to <strong>LCM → Settings → VIDM</strong> — click <strong>Test Co
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the VIDM CA certificate into the LCM appliance's trust store.
-<strong><code>curl: (7) Failed to connect to &lt;vidm-fqdn&gt; port 443: Connection refused</code></strong> — Verify VIDM is running and accessible on the network; check firewall rules and DNS resolution with <code>nslookup &lt;vidm-fqdn&gt;</code>.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the endpoint is returning valid JSON; test with <code>curl -sk https://&lt;vidm-fqdn&gt;/SAAS/API/1.0/REST/system/health</code> without piping to <code>jq</code> to see the raw response.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the VIDM CA certificate into the LCM appliance's trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;vidm-fqdn&gt; port 443: Connection refused</code></td>
+<td>Verify VIDM is running and accessible on the network; check firewall rules and DNS resolution with <code>nslookup &lt;vidm-fqdn&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure the endpoint is returning valid JSON; test with <code>curl -sk https://&lt;vidm-fqdn&gt;/SAAS/API/1.0/REST/system/health</code> without piping to <code>jq</code> to see the raw response.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Depot connectivity (online depot):</strong>
 Navigate to <strong>LCM → Settings → My VMware / Broadcom Support Portal</strong> — verify the depot status shows as Connected. If offline: check proxy settings under <strong>Settings → Proxy</strong> and verify outbound HTTPS to <code>depot.vmware.com</code> is permitted by the firewall.</p>
@@ -9711,7 +9908,7 @@ Navigate to <strong>LCM → Settings → My VMware / Broadcom Support Portal</st
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

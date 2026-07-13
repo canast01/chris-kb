@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Aria Operations Security Hardening · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Aria Operations Security Hardening", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/aria-operations/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Aria Operations Security Hardening", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/aria-operations/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -9029,8 +9029,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to connect to vrops-prod-01.example.local:443</code></strong> — Verify the hostname is correct, the vROps appliance is running, and port 443 is accessible from your current network location.
-<strong><code>error:0900006e:PEM routines:PEM_read_bio:no start line</code></strong> — Ensure the openssl s_client connection succeeded; if the host is unreachable, the pipe receives no certificate data and x509 parsing fails.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to connect to vrops-prod-01.example.local:443</code></td>
+<td>Verify the hostname is correct, the vROps appliance is running, and port 443 is accessible from your current network location.</td>
+</tr>
+<tr>
+<td><code>error:0900006e:PEM routines:PEM_read_bio:no start line</code></td>
+<td>Ensure the openssl s_client connection succeeded; if the host is unreachable, the pipe receives no certificate data and x509 parsing fails.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Limit SSH access to the management network</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Edit /etc/hosts.allow on the Aria Operations appliance</span>
@@ -9049,9 +9065,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sed: can't read /etc/ssh/sshd_config: No such file or directory</code></strong> — Use a text editor like <code>sed -i 's/^PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config</code> or edit the file directly with <code>vi /etc/ssh/sshd_config</code>.
-<strong><code>Job for sshd.service failed because the control process exited with error code.</code></strong> — Validate the sshd_config syntax with <code>sshd -t</code> before restarting to catch configuration errors.
-<strong><code>Permission denied (publickey,password).</code></strong> — Ensure you have SSH key-based authentication configured and copied to <code>~/.ssh/authorized_keys</code> before restricting root password login, or you will lock yourself out.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sed: can't read /etc/ssh/sshd_config: No such file or directory</code></td>
+<td>Use a text editor like <code>sed -i 's/^PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config</code> or edit the file directly with <code>vi /etc/ssh/sshd_config</code>.</td>
+</tr>
+<tr>
+<td><code>Job for sshd.service failed because the control process exited with error code.</code></td>
+<td>Validate the sshd_config syntax with <code>sshd -t</code> before restarting to catch configuration errors.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Ensure you have SSH key-based authentication configured and copied to <code>~/.ssh/authorized_keys</code> before restricting root password login, or you will lock yourself out.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure syslog forwarding from Aria Operations appliance</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/rsyslog.d/vrops-remote.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
@@ -9064,8 +9099,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Job for rsyslog.service failed because the control process exited with error code.</code></strong> — Verify the rsyslog configuration syntax with <code>rsyslog -N1</code> before restarting, and check <code>/var/log/messages</code> for parsing errors in the appended configuration.
-<strong><code>Name or service not known</code></strong> — Ensure the syslog server hostname <code>vrli-prod-01.example.local</code> is resolvable by testing with <code>nslookup vrli-prod-01.example.local</code> or updating <code>/etc/hosts</code> if DNS is unavailable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Job for rsyslog.service failed because the control process exited with error code.</code></td>
+<td>Verify the rsyslog configuration syntax with <code>rsyslog -N1</code> before restarting, and check <code>/var/log/messages</code> for parsing errors in the appended configuration.</td>
+</tr>
+<tr>
+<td><code>Name or service not known</code></td>
+<td>Ensure the syslog server hostname <code>vrli-prod-01.example.local</code> is resolvable by testing with <code>nslookup vrli-prod-01.example.local</code> or updating <code>/etc/hosts</code> if DNS is unavailable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View authentication and admin action logs on the appliance</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/data/vcops/log/casa.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|logout\|admin\|role&quot;</span>
@@ -9081,9 +9132,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tail: cannot open '/data/vcops/log/casa.log' for reading: No such file or directory</code></strong> — Verify the Aria Operations appliance is fully deployed and the log directory exists; check mount points with <code>df -h /data</code>.
-<strong><code>tail: inotify resources exhausted</code></strong> — Increase the system's inotify watch limit by running <code>echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf &amp;&amp; sudo sysctl -p</code>.
-<strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the casa.log file with <code>sudo chmod 644 /data/vcops/log/casa.log</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tail: cannot open '/data/vcops/log/casa.log' for reading: No such file or directory</code></td>
+<td>Verify the Aria Operations appliance is fully deployed and the log directory exists; check mount points with <code>df -h /data</code>.</td>
+</tr>
+<tr>
+<td><code>tail: inotify resources exhausted</code></td>
+<td>Increase the system's inotify watch limit by running <code>echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf &amp;&amp; sudo sysctl -p</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user has read permissions on the casa.log file with <code>sudo chmod 644 /data/vcops/log/casa.log</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9121,7 +9191,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

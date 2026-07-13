@@ -7521,8 +7521,24 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>service-control: command not found</code></strong> — Ensure you are logged into the VCSA appliance directly (SSH to the vCenter Server Appliance hostname/IP), not a Windows vCenter instance.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or log in as root user to the VCSA appliance.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Ensure you are logged into the VCSA appliance directly (SSH to the vCenter Server Appliance hostname/IP), not a Windows vCenter instance.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or log in as root user to the VCSA appliance.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output:</strong> No output (all services RUNNING). If any service appears, restart it:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>&lt;service-name&gt;
@@ -7536,9 +7552,28 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown service '&lt;service-name&gt;'</code></strong> — Replace <code>&lt;service-name&gt;</code> with a valid VMware service name like <code>vmware-vpxd</code>, <code>vmware-esx-hostd</code>, or <code>vpxa</code>.
-<strong><code>Error: Permission denied</code></strong> — Run the command with root privileges using <code>sudo service-control --restart &lt;service-name&gt;</code> or as the root user.
-<strong><code>Timeout waiting for service to start</code></strong> — Check service dependencies and logs with <code>service-control --status &lt;service-name&gt;</code> and review <code>/var/log/vmware/vpxd/vpxd.log</code> for startup errors.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown service '&lt;service-name&gt;'</code></td>
+<td>Replace <code>&lt;service-name&gt;</code> with a valid VMware service name like <code>vmware-vpxd</code>, <code>vmware-esx-hostd</code>, or <code>vpxa</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Run the command with root privileges using <code>sudo service-control --restart &lt;service-name&gt;</code> or as the root user.</td>
+</tr>
+<tr>
+<td><code>Timeout waiting for service to start</code></td>
+<td>Check service dependencies and logs with <code>service-control --status &lt;service-name&gt;</code> and review <code>/var/log/vmware/vpxd/vpxd.log</code> for startup errors.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Check alarms in vSphere Client: <strong>Home → Alarms → All Alarms</strong> — filter to <code>Critical</code>. Any critical alarm here blocks the rest of the routine until acknowledged or resolved.</p>
 <p>Verify backup:</p>
@@ -7550,8 +7585,24 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/vmware/applmgmt/backup.log: No such file or directory</code></strong> — Verify the vCenter appliance has backup logging enabled and check the correct log path with <code>find /var/log -name "*backup*"</code>.
-<strong><code>(no output returned)</code></strong> — The backup log exists but contains no successful completions; check <code>/var/log/vmware/applmgmt/backup.log</code> directly or review VAMI for backup job status and errors.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/vmware/applmgmt/backup.log: No such file or directory</code></td>
+<td>Verify the vCenter appliance has backup logging enabled and check the correct log path with <code>find /var/log -name "*backup*"</code>.</td>
+</tr>
+<tr>
+<td><code>(no output returned)</code></td>
+<td>The backup log exists but contains no successful completions; check <code>/var/log/vmware/applmgmt/backup.log</code> directly or review VAMI for backup job status and errors.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output:</strong> Timestamp within last 24 hours.</p>
 <p><strong>Escalate if:</strong> Any service not running after restart · Last backup &gt; 24 h ago · Critical alarms present.</p>
@@ -7589,9 +7640,28 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect timed out</code></strong> — Verify the ESXi host is reachable and SSH is enabled via <code>esxcli system ssh set --enabled=true</code> on the target host.
-<strong><code>Unknown command or namespace</code></strong> — Ensure you're connected to an ESXi host with vSAN enabled; run <code>esxcli vsan cluster list</code> first to confirm vSAN is active on the cluster.
-<strong><code>Permission denied</code></strong> — Confirm your SSH user has root or equivalent privileges; use an account with administrative rights to the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect timed out</code></td>
+<td>Verify the ESXi host is reachable and SSH is enabled via <code>esxcli system ssh set --enabled=true</code> on the target host.</td>
+</tr>
+<tr>
+<td><code>Unknown command or namespace</code></td>
+<td>Ensure you're connected to an ESXi host with vSAN enabled; run <code>esxcli vsan cluster list</code> first to confirm vSAN is active on the cluster.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Confirm your SSH user has root or equivalent privileges; use an account with administrative rights to the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output:</strong> No output (all checks green). Any non-green line needs investigation.</p>
 <p>Check object health:</p>
@@ -7607,8 +7677,24 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxcli: command not found</code></strong> — Ensure you are running this command directly on an ESXi host (SSH session), not from vCenter; if on vCenter, use SSH to connect to the ESXi host first.
-<strong><code>VSAN is not enabled on this cluster</code></strong> — Verify VSAN is licensed and enabled on the cluster by checking vSphere Client &gt; Cluster &gt; Configure &gt; vSAN &gt; General.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxcli: command not found</code></td>
+<td>Ensure you are running this command directly on an ESXi host (SSH session), not from vCenter; if on vCenter, use SSH to connect to the ESXi host first.</td>
+</tr>
+<tr>
+<td><code>VSAN is not enabled on this cluster</code></td>
+<td>Verify VSAN is licensed and enabled on the cluster by checking vSphere Client &gt; Cluster &gt; Configure &gt; vSAN &gt; General.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output:</strong> No output, or only objects in <code>state:resyncing</code> (acceptable if resync is making progress).</p>
 <p>Check capacity:</p>
@@ -7623,8 +7709,24 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect to localhost failed. Error: Unable to connect to the vSAN Health Service</code></strong> — Ensure vSAN is enabled on the cluster and the vSAN Health Service is running; restart the service with <code>systemctl restart vsanvpd</code> if needed.
-<strong><code>Unknown command or namespace vsan</code></strong> — Verify the ESXi host has vSAN licensed and enabled; check with <code>esxcli vsan cluster get</code> to confirm vSAN is active on the cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect to localhost failed. Error: Unable to connect to the vSAN Health Service</code></td>
+<td>Ensure vSAN is enabled on the cluster and the vSAN Health Service is running; restart the service with <code>systemctl restart vsanvpd</code> if needed.</td>
+</tr>
+<tr>
+<td><code>Unknown command or namespace vsan</code></td>
+<td>Verify the ESXi host has vSAN licensed and enabled; check with <code>esxcli vsan cluster get</code> to confirm vSAN is active on the cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output:</strong> Used capacity &lt; 70% of total. At 70% set a ticket; at 80% escalate immediately.</p>
 <p>Check resync throughput (if objects are resyncing):</p>
@@ -7656,9 +7758,28 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl to skip SSL verification (already present in the example, so verify the flag wasn't removed).
-<strong><code>curl: (7) Failed to connect to &lt;nsx-mgr&gt;: Name or service not known</code></strong> — Verify the NSX Manager hostname or IP address is correct and resolvable from your network.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Check that the NSX Manager API is responding and the credentials are valid; a 401/403 response will produce invalid JSON.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl to skip SSL verification (already present in the example, so verify the flag wasn't removed).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-mgr&gt;: Name or service not known</code></td>
+<td>Verify the NSX Manager hostname or IP address is correct and resolvable from your network.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></td>
+<td>Check that the NSX Manager API is responding and the credentials are valid; a 401/403 response will produce invalid JSON.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output:</strong> DFW section count matches previous day. An unexpected increase may indicate a runaway automation job.</p>
 <p><strong>Escalate if:</strong> Any NSX Manager node not active · Any Edge node down · BGP session not Established · DFW count changed unexpectedly by &gt; 5.</p>
@@ -7733,7 +7854,7 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -7997,9 +7997,28 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HEALTH_WARN</code></strong> — Address the warning with <code>ceph health detail</code> and resolve underlying issues (e.g., slow requests, misplaced objects) before proceeding.
-<strong><code>error: (2) No such file or directory</code></strong> — Verify the Ceph cluster is initialized and the monitor is running with <code>ceph -s</code>; check <code>/etc/ceph/ceph.conf</code> exists and <code>CEPH_ARGS</code> environment variable is not overriding the cluster name.
-<strong><code>require_osd_release mismatch detected</code></strong> — Set the require-osd-release flag to match the current cluster version with <code>ceph osd set-require-osd-release &lt;version&gt;</code> before upgrading OSDs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HEALTH_WARN</code></td>
+<td>Address the warning with <code>ceph health detail</code> and resolve underlying issues (e.g., slow requests, misplaced objects) before proceeding.</td>
+</tr>
+<tr>
+<td><code>error: (2) No such file or directory</code></td>
+<td>Verify the Ceph cluster is initialized and the monitor is running with <code>ceph -s</code>; check <code>/etc/ceph/ceph.conf</code> exists and <code>CEPH_ARGS</code> environment variable is not overriding the cluster name.</td>
+</tr>
+<tr>
+<td><code>require_osd_release mismatch detected</code></td>
+<td>Set the require-osd-release flag to match the current cluster version with <code>ceph osd set-require-osd-release &lt;version&gt;</code> before upgrading OSDs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="upgrade-with-cephadm">Upgrade with cephadm<a class="headerlink" href="#upgrade-with-cephadm" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-update-cephadm-itself">Step 1 — Update cephadm itself<a class="headerlink" href="#step-1-update-cephadm-itself" title="Permanent link">&para;</a></h3>
@@ -8024,9 +8043,28 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: No module named 'cephadm'</code></strong> — Ensure cephadm is installed on the bootstrap node with <code>curl --silent --remote-name --location https://github.com/ceph/ceph/raw/octopus/src/cephadm/cephadm &amp;&amp; chmod +x cephadm</code>.
-<strong><code>Error: mgr module 'cephadm' is not available</code></strong> — Verify the Ceph cluster is healthy with <code>ceph health</code> and check that the mgr daemon is running with <code>ceph mgr stat</code>.
-<strong><code>command not found: cephadm</code></strong> — Add cephadm to your PATH or use the full path <code>/usr/sbin/cephadm</code> if installed via package manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: No module named 'cephadm'</code></td>
+<td>Ensure cephadm is installed on the bootstrap node with <code>curl --silent --remote-name --location https://github.com/ceph/ceph/raw/octopus/src/cephadm/cephadm &amp;&amp; chmod +x cephadm</code>.</td>
+</tr>
+<tr>
+<td><code>Error: mgr module 'cephadm' is not available</code></td>
+<td>Verify the Ceph cluster is healthy with <code>ceph health</code> and check that the mgr daemon is running with <code>ceph mgr stat</code>.</td>
+</tr>
+<tr>
+<td><code>command not found: cephadm</code></td>
+<td>Add cephadm to your PATH or use the full path <code>/usr/sbin/cephadm</code> if installed via package manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-2-start-the-rolling-upgrade">Step 2 — Start the rolling upgrade<a class="headerlink" href="#step-2-start-the-rolling-upgrade" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Specify the exact version or a container image tag</span>
@@ -8057,9 +8095,28 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: invalid ceph version '18.2.4'</code></strong> — Use the full semantic version format (e.g., <code>18.2.4</code>) or verify the version exists on quay.io/ceph/ceph.
-<strong><code>Error: unable to pull image quay.io/ceph/ceph:v18.2.4: connection timeout</code></strong> — Ensure the Ceph cluster nodes have outbound HTTPS access to quay.io or use a private registry mirror.
-<strong><code>Error: upgrade already in progress</code></strong> — Wait for the current upgrade to complete or use <code>ceph orch upgrade pause</code> then <code>ceph orch upgrade resume</code> to restart.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: invalid ceph version '18.2.4'</code></td>
+<td>Use the full semantic version format (e.g., <code>18.2.4</code>) or verify the version exists on quay.io/ceph/ceph.</td>
+</tr>
+<tr>
+<td><code>Error: unable to pull image quay.io/ceph/ceph:v18.2.4: connection timeout</code></td>
+<td>Ensure the Ceph cluster nodes have outbound HTTPS access to quay.io or use a private registry mirror.</td>
+</tr>
+<tr>
+<td><code>Error: upgrade already in progress</code></td>
+<td>Wait for the current upgrade to complete or use <code>ceph orch upgrade pause</code> then <code>ceph orch upgrade resume</code> to restart.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-3-monitor-upgrade-progress">Step 3 — Monitor upgrade progress<a class="headerlink" href="#step-3-monitor-upgrade-progress" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Watch upgrade status — refreshes every 10 s</span>
@@ -8123,8 +8180,24 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: No orchestrator backend found</code></strong> — Ensure Cephadm is deployed with <code>ceph orch status</code> and that the mgr orchestrator module is enabled.
-<strong><code>Error: upgrade already in progress</code></strong> — Wait for the current upgrade to complete or check <code>ceph orch upgrade pause</code> to pause and resume safely.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: No orchestrator backend found</code></td>
+<td>Ensure Cephadm is deployed with <code>ceph orch status</code> and that the mgr orchestrator module is enabled.</td>
+</tr>
+<tr>
+<td><code>Error: upgrade already in progress</code></td>
+<td>Wait for the current upgrade to complete or check <code>ceph orch upgrade pause</code> to pause and resume safely.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-4-pause-and-resume-if-needed">Step 4 — Pause and resume if needed<a class="headerlink" href="#step-4-pause-and-resume-if-needed" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Pause upgrade (e.g., unexpected HEALTH_WARN during OSD upgrades)</span>
@@ -8161,8 +8234,24 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: no upgrade in progress</code></strong> — Ensure an upgrade was actually initiated with <code>ceph orch upgrade start</code> before attempting to pause or resume.
-<strong><code>Error EINVAL: cannot pause: upgrade is already paused</code></strong> — Check current upgrade state with <code>ceph orch upgrade status</code> before issuing pause/resume commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: no upgrade in progress</code></td>
+<td>Ensure an upgrade was actually initiated with <code>ceph orch upgrade start</code> before attempting to pause or resume.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: cannot pause: upgrade is already paused</code></td>
+<td>Check current upgrade state with <code>ceph orch upgrade status</code> before issuing pause/resume commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rolling-upgrade-behaviour">Rolling Upgrade Behaviour<a class="headerlink" href="#rolling-upgrade-behaviour" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8226,8 +8315,24 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EPERM: insufficient caps</code></strong> — Run the commands with appropriate admin privileges (e.g., as root or with <code>sudo ceph</code>) and ensure your keyring has <code>osd</code> capability.
-<strong><code>Error EINVAL: invalid release name 'quincy'</code></strong> — Verify the release codename matches your target version exactly (e.g., <code>reef</code>, <code>squid</code>) and that all daemons have already been upgraded to that version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EPERM: insufficient caps</code></td>
+<td>Run the commands with appropriate admin privileges (e.g., as root or with <code>sudo ceph</code>) and ensure your keyring has <code>osd</code> capability.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: invalid release name 'quincy'</code></td>
+<td>Verify the release codename matches your target version exactly (e.g., <code>reef</code>, <code>squid</code>) and that all daemons have already been upgraded to that version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
 <table>
@@ -8354,9 +8459,28 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EINVAL: unknown daemon type &lt;daemon-type&gt;</code></strong> — Replace <code>&lt;daemon-type&gt;</code> with a valid daemon type (mon, mgr, osd, mds, rgw, etc.).
-<strong><code>Error: No such daemon mgr.ceph-node1</code></strong> — Verify the daemon exists by running <code>ceph orch ps</code> and use the correct daemon name from the output.
-<strong><code>Error pulling image quay.io/ceph/ceph:v18.2.2: image not found</code></strong> — Ensure the image tag exists in the registry and the host has network access to quay.io.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EINVAL: unknown daemon type &lt;daemon-type&gt;</code></td>
+<td>Replace <code>&lt;daemon-type&gt;</code> with a valid daemon type (mon, mgr, osd, mds, rgw, etc.).</td>
+</tr>
+<tr>
+<td><code>Error: No such daemon mgr.ceph-node1</code></td>
+<td>Verify the daemon exists by running <code>ceph orch ps</code> and use the correct daemon name from the output.</td>
+</tr>
+<tr>
+<td><code>Error pulling image quay.io/ceph/ceph:v18.2.2: image not found</code></td>
+<td>Ensure the image tag exists in the registry and the host has network access to quay.io.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ul>
 <li>Major version rollback (e.g., Reef → Quincy) is not supported and will corrupt OSD data if attempted after <code>ceph osd require-osd-release</code> has been updated.</li>
@@ -8396,7 +8520,7 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

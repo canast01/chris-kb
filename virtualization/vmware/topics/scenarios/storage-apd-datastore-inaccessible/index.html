@@ -9449,7 +9449,20 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — Verify you are running the command directly on the ESXi host</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/vmkernel.log: No such file or directory</code></td>
+<td>Verify you are running the command directly on the ESXi host</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Common vmkernel.log entries:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NMP: nmp_PathDetermineState: ... path state changed to dead
@@ -9498,9 +9511,28 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxcli: command not found</code></strong> — Verify you are running this command on an ESXi host with direct SSH access, not a vCenter Server.
-<strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — Confirm the ESXi host is fully booted and the /var/log directory is mounted; try <code>ls -la /var/log/</code> to verify.
-<strong><code>No such FC HBA found</code></strong> — Check that FC HBAs are installed and recognized by running <code>esxcli storage san fc list</code> without filters to see all available adapters.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxcli: command not found</code></td>
+<td>Verify you are running this command on an ESXi host with direct SSH access, not a vCenter Server.</td>
+</tr>
+<tr>
+<td><code>grep: /var/log/vmkernel.log: No such file or directory</code></td>
+<td>Confirm the ESXi host is fully booted and the /var/log directory is mounted; try <code>ls -la /var/log/</code> to verify.</td>
+</tr>
+<tr>
+<td><code>No such FC HBA found</code></td>
+<td>Check that FC HBAs are installed and recognized by running <code>esxcli storage san fc list</code> without filters to see all available adapters.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>iSCSI:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List iSCSI adapters and sessions</span>
@@ -9535,8 +9567,24 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown command or namespace iscsi.adapter</code></strong> — Verify the iSCSI software adapter is installed and loaded with <code>esxcli iscsi adapter list</code>; if empty, enable it via vSphere Client or <code>esxcli iscsi adapter set --adapter=vmhba64 -e true</code>.
-<strong><code>Error: Could not find adapter vmhba64</code></strong> — Confirm the adapter name is correct by running <code>esxcli iscsi adapter list</code> first, as adapter numbers vary by host configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown command or namespace iscsi.adapter</code></td>
+<td>Verify the iSCSI software adapter is installed and loaded with <code>esxcli iscsi adapter list</code>; if empty, enable it via vSphere Client or <code>esxcli iscsi adapter set --adapter=vmhba64 -e true</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Could not find adapter vmhba64</code></td>
+<td>Confirm the adapter name is correct by running <code>esxcli iscsi adapter list</code> first, as adapter numbers vary by host configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>NFS:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check NFS mount status</span>
@@ -9567,9 +9615,28 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>NFS mount failed: Permission denied</code></strong> — Verify NFS server export permissions include the ESXi host IP and that the export is readable/writable.
-<strong><code>vmkping: Unknown host 192.168.10.45</code></strong> — Confirm the NFS server IP is correct and that the vmk1 interface has network connectivity and a valid route to the NFS server subnet.
-<strong><code>NFS datastore nfs-datastore-prod is still mounted</code></strong> — Unmount the datastore from all VMs and remove any locks using <code>esxcli storage nfs list</code> before attempting removal.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NFS mount failed: Permission denied</code></td>
+<td>Verify NFS server export permissions include the ESXi host IP and that the export is readable/writable.</td>
+</tr>
+<tr>
+<td><code>vmkping: Unknown host 192.168.10.45</code></td>
+<td>Confirm the NFS server IP is correct and that the vmk1 interface has network connectivity and a valid route to the NFS server subnet.</td>
+</tr>
+<tr>
+<td><code>NFS datastore nfs-datastore-prod is still mounted</code></td>
+<td>Unmount the datastore from all VMs and remove any locks using <code>esxcli storage nfs list</code> before attempting removal.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: if FC HBA shows <code>LinkState = Link Down</code>, the issue is the physical link or SFP. If iSCSI sessions are absent, check network reachability from the VMkernel port. For NFS, a ping failure to the NFS server confirms a network or server outage.</p>
 <hr />
@@ -9598,9 +9665,28 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Import the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running the command.
-<strong><code>Get-Cluster : Could not find cluster with name 'cluster-name'.</code></strong> — Replace <code>"cluster-name"</code> with the actual cluster name; verify it exists with <code>Get-Cluster | Select-Object Name</code>.
-<strong><code>Access to the resource is forbidden.</code></strong> — Ensure your vCenter user account has at least read-only permissions on the cluster object.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></td>
+<td>Import the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running the command.</td>
+</tr>
+<tr>
+<td><code>Get-Cluster : Could not find cluster with name 'cluster-name'.</code></td>
+<td>Replace <code>"cluster-name"</code> with the actual cluster name; verify it exists with <code>Get-Cluster | Select-Object Name</code>.</td>
+</tr>
+<tr>
+<td><code>Access to the resource is forbidden.</code></td>
+<td>Ensure your vCenter user account has at least read-only permissions on the cluster object.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: <code>vmReactionOnAPDCleared = reset</code> means vCenter automatically restores VMs when paths recover — monitor whether this triggers correctly after fabric is restored.</p>
 <hr />
@@ -9628,9 +9714,28 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option --all</code></strong> — Use <code>-a</code> instead of <code>--all</code> for the rescan command.
-<strong><code>Error: Could not find HBA adapter vmhba0</code></strong> — Verify the HBA name with <code>esxcli storage core adapter list</code> before rescanning.
-<strong><code>NFS mount timeout or stale NFS handle detected</code></strong> — Remount the NFS datastore using <code>esxcli storage nfs remove -v &lt;volume-name&gt;</code> followed by <code>esxcli storage nfs add</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option --all</code></td>
+<td>Use <code>-a</code> instead of <code>--all</code> for the rescan command.</td>
+</tr>
+<tr>
+<td><code>Error: Could not find HBA adapter vmhba0</code></td>
+<td>Verify the HBA name with <code>esxcli storage core adapter list</code> before rescanning.</td>
+</tr>
+<tr>
+<td><code>NFS mount timeout or stale NFS handle detected</code></td>
+<td>Remount the NFS datastore using <code>esxcli storage nfs remove -v &lt;volume-name&gt;</code> followed by <code>esxcli storage nfs add</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>In vCenter: <strong>Storage → Datastores → right-click affected datastore → Rescan Storage</strong>.</p>
 <p>After paths recover, monitor vmkernel.log:</p>
@@ -9647,8 +9752,24 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/vmkernel.log: No such file or directory</code></strong> — Verify the ESXi host is accessible and the vmkernel.log path is correct; on some versions it may be in <code>/var/log/vmkernel</code> or rotated to dated files like <code>vmkernel.1.log</code>.
-<strong><code>grep: (standard input): No such file or directory</code></strong> — Ensure you have read permissions on the vmkernel.log file; run the command with <code>sudo</code> or as root if access is denied.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/vmkernel.log: No such file or directory</code></td>
+<td>Verify the ESXi host is accessible and the vmkernel.log path is correct; on some versions it may be in <code>/var/log/vmkernel</code> or rotated to dated files like <code>vmkernel.1.log</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): No such file or directory</code></td>
+<td>Ensure you have read permissions on the vmkernel.log file; run the command with <code>sudo</code> or as root if access is denied.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: <code>APD cleared</code> entries confirm all paths are restored. VMs that were not powered off by VMCP will resume I/O automatically within seconds.</p>
 <hr />
@@ -9780,7 +9901,7 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

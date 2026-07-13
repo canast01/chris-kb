@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Confluence — CLI Reference · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Confluence — CLI Reference", "url": "https://chrisanastasiadis.com/itsm/confluence/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Confluence — CLI Reference", "url": "https://chrisanastasiadis.com/itsm/confluence/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7495,8 +7495,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bash: CF_TOKEN: Unbound variable</code></strong> — Replace <code>&lt;your-PAT-here&gt;</code> with an actual Personal Access Token generated in Confluence settings.
-<strong><code>curl: (6) Could not resolve host: confluence.example.com</code></strong> — Update <code>CF_URL</code> to match your actual Confluence instance hostname (e.g., <code>https://confluence.company.internal</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bash: CF_TOKEN: Unbound variable</code></td>
+<td>Replace <code>&lt;your-PAT-here&gt;</code> with an actual Personal Access Token generated in Confluence settings.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host: confluence.example.com</code></td>
+<td>Update <code>CF_URL</code> to match your actual Confluence instance hostname (e.g., <code>https://confluence.company.internal</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get current authenticated user</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CF_AUTH</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7544,9 +7560,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify <code>${CF_URL}</code> is correct and Confluence server is running and accessible.
-<strong><code>jq: parse error: Cannot index string with string "results"</code></strong> — Ensure the API endpoint returns JSON; check that <code>${CF_AUTH}</code> header is valid and the user has API access permissions.
-<strong><code>{"statusCode":401,"message":"Unauthorized"}</code></strong> — Verify the <code>${CF_AUTH}</code> header contains a valid Bearer token or Basic auth credentials.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify <code>${CF_URL}</code> is correct and Confluence server is running and accessible.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index string with string "results"</code></td>
+<td>Ensure the API endpoint returns JSON; check that <code>${CF_AUTH}</code> header is valid and the user has API access permissions.</td>
+</tr>
+<tr>
+<td><code>{"statusCode":401,"message":"Unauthorized"}</code></td>
+<td>Verify the <code>${CF_AUTH}</code> header contains a valid Bearer token or Basic auth credentials.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get labels on a page</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CF_AUTH</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7593,9 +7628,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify <code>$CF_URL</code> is correct and the Confluence instance is running and accessible from your network.
-<strong><code>{"statusCode":401,"message":"Unauthorized"}</code></strong> — Ensure <code>$CF_AUTH</code> is set correctly (e.g., <code>"Authorization: Bearer $TOKEN"</code> or <code>"Authorization: Basic $(echo -n user:pass | base64)"</code>) and the token/credentials have not expired.
-<strong><code>jq: parse error: Cannot index number with string "results"</code></strong> — Check that the API response is valid JSON; the endpoint may have returned an error code instead of the expected data structure.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify <code>$CF_URL</code> is correct and the Confluence instance is running and accessible from your network.</td>
+</tr>
+<tr>
+<td><code>{"statusCode":401,"message":"Unauthorized"}</code></td>
+<td>Ensure <code>$CF_AUTH</code> is set correctly (e.g., <code>"Authorization: Bearer $TOKEN"</code> or <code>"Authorization: Basic $(echo -n user:pass | base64)"</code>) and the token/credentials have not expired.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index number with string "results"</code></td>
+<td>Check that the API response is valid JSON; the endpoint may have returned an error code instead of the expected data structure.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># export-all-pages.sh — outputs CSV: space_key,page_id,page_title</span>
@@ -7637,9 +7691,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence URL is correct and the instance is accessible from your network (test with <code>curl -I https://confluence.example.com</code>).
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure your PAT token is valid and has API access permissions; an invalid token returns HTML error pages instead of JSON.
-<strong><code>Permission denied</code></strong> — Run the script from a directory where you have write permissions, or specify an absolute path for the OUTPUT variable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify the Confluence URL is correct and the instance is accessible from your network (test with <code>curl -I https://confluence.example.com</code>).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure your PAT token is valid and has API access permissions; an invalid token returns HTML error pages instead of JSON.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the script from a directory where you have write permissions, or specify an absolute path for the OUTPUT variable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># delete-pages-by-label.sh — trash all pages with a given label in a space</span>
@@ -7668,9 +7741,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the Confluence URL is correct and the API token has read permissions on the space.
-<strong><code>curl: (401) Unauthorized</code></strong> — Ensure the PAT token is valid and has not expired; regenerate it in Confluence if necessary.
-<strong><code>curl: (403) Forbidden</code></strong> — Confirm the API token has delete permissions; check Confluence user permissions for the OPS space.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Verify the Confluence URL is correct and the API token has read permissions on the space.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Ensure the PAT token is valid and has not expired; regenerate it in Confluence if necessary.</td>
+</tr>
+<tr>
+<td><code>curl: (403) Forbidden</code></td>
+<td>Confirm the API token has delete permissions; check Confluence user permissions for the OPS space.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Download from https://bobswift.atlassian.net/wiki/spaces/ACLI/</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Requires Java 11+</span>
@@ -7700,9 +7792,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>wget: command not found</code></strong> — Install wget with <code>apt-get install wget</code> (Debian/Ubuntu) or <code>yum install wget</code> (RHEL/CentOS).
-<strong><code>unzip: command not found</code></strong> — Install unzip with <code>apt-get install unzip</code> or <code>yum install unzip</code>.
-<strong><code>ln: failed to create symbolic link '/usr/local/bin/acli': File exists</code></strong> — Remove the existing symlink with <code>rm /usr/local/bin/acli</code> before creating a new one.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>wget: command not found</code></td>
+<td>Install wget with <code>apt-get install wget</code> (Debian/Ubuntu) or <code>yum install wget</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>unzip: command not found</code></td>
+<td>Install unzip with <code>apt-get install unzip</code> or <code>yum install unzip</code>.</td>
+</tr>
+<tr>
+<td><code>ln: failed to create symbolic link '/usr/local/bin/acli': File exists</code></td>
+<td>Remove the existing symlink with <code>rm /usr/local/bin/acli</code> before creating a new one.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Base connection options (use in all commands)</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">ACLI_OPTS</span><span class="o">=</span><span class="s2">&quot;--server https://confluence.example.com \</span>
@@ -7779,9 +7890,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to authenticate user 'admin'. Check credentials and server URL.</code></strong> — Verify <code>$ADMIN_PASS</code> is set correctly and the server URL is accessible with <code>curl -I https://confluence.example.com</code>.
-<strong><code>Error: Space 'OPS' does not exist or user lacks permission to access it.</code></strong> — Confirm the space key is correct and the admin user has space-level permissions in Confluence.
-<strong><code>Error: File 'page_content.html' not found.</code></strong> — Ensure the file path is absolute or relative to the current working directory, and verify it exists with <code>ls -la page_content.html</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to authenticate user 'admin'. Check credentials and server URL.</code></td>
+<td>Verify <code>$ADMIN_PASS</code> is set correctly and the server URL is accessible with <code>curl -I https://confluence.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Space 'OPS' does not exist or user lacks permission to access it.</code></td>
+<td>Confirm the space key is correct and the admin user has space-level permissions in Confluence.</td>
+</tr>
+<tr>
+<td><code>Error: File 'page_content.html' not found.</code></td>
+<td>Ensure the file path is absolute or relative to the current working directory, and verify it exists with <code>ls -la page_content.html</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Start Confluence</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>/opt/atlassian/confluence/bin/start-confluence.sh
@@ -7815,9 +7945,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/opt/atlassian/confluence/bin/start-confluence.sh: Permission denied</code></strong> — Run <code>chmod +x /opt/atlassian/confluence/bin/start-confluence.sh</code> to make the script executable.
-<strong><code>Address already in use</code></strong> — Either stop the existing Confluence process with <code>stop-confluence.sh</code> or change the port in <code>/opt/atlassian/confluence/conf/server.xml</code>.
-<strong><code>Not running</code></strong> — The process is not active; check <code>/opt/atlassian/confluence/logs/catalina.out</code> for startup errors and retry with <code>start-confluence.sh</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/opt/atlassian/confluence/bin/start-confluence.sh: Permission denied</code></td>
+<td>Run <code>chmod +x /opt/atlassian/confluence/bin/start-confluence.sh</code> to make the script executable.</td>
+</tr>
+<tr>
+<td><code>Address already in use</code></td>
+<td>Either stop the existing Confluence process with <code>stop-confluence.sh</code> or change the port in <code>/opt/atlassian/confluence/conf/server.xml</code>.</td>
+</tr>
+<tr>
+<td><code>Not running</code></td>
+<td>The process is not active; check <code>/opt/atlassian/confluence/logs/catalina.out</code> for startup errors and retry with <code>start-confluence.sh</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Production-recommended JVM flags</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">JAVA_OPTS</span><span class="o">=</span><span class="s2">&quot;-Xms4g -Xmx8g \</span>
@@ -7835,9 +7984,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mkdir: cannot create directory '/var/atlassian/application-data/confluence/dumps/': Permission denied</code></strong> — Run the command with sudo or ensure the confluence user owns the parent directory with <code>chown -R confluence:confluence /var/atlassian/application-data/confluence/</code>.
-<strong><code>Error occurred during initialization of VM: Could not allocate metaspace: 1073741824 bytes</code></strong> — Reduce <code>-XX:MaxMetaspaceSize</code> value (e.g., to 512m) or increase system available memory.
-<strong><code>-Xmx8g is invalid or too large for this system</code></strong> — Verify available RAM with <code>free -h</code> and set <code>-Xmx</code> to no more than 75% of total system memory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mkdir: cannot create directory '/var/atlassian/application-data/confluence/dumps/': Permission denied</code></td>
+<td>Run the command with sudo or ensure the confluence user owns the parent directory with <code>chown -R confluence:confluence /var/atlassian/application-data/confluence/</code>.</td>
+</tr>
+<tr>
+<td><code>Error occurred during initialization of VM: Could not allocate metaspace: 1073741824 bytes</code></td>
+<td>Reduce <code>-XX:MaxMetaspaceSize</code> value (e.g., to 512m) or increase system available memory.</td>
+</tr>
+<tr>
+<td><code>-Xmx8g is invalid or too large for this system</code></td>
+<td>Verify available RAM with <code>free -h</code> and set <code>-Xmx</code> to no more than 75% of total system memory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Find the Confluence PID</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;confluence&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
@@ -7862,9 +8030,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>jstack: command not found</code></strong> — Install the JDK (not just JRE) or use <code>kill -3</code> to write dumps to catalina.out instead.
-<strong><code>jstack: Unable to open socket file: target process not responding or HotSpot VM not loaded</code></strong> — Ensure the Confluence process is running and you are executing jstack as the same user (or root) that owns the Java process.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as the confluence service user to access the running JVM process.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jstack: command not found</code></td>
+<td>Install the JDK (not just JRE) or use <code>kill -3</code> to write dumps to catalina.out instead.</td>
+</tr>
+<tr>
+<td><code>jstack: Unable to open socket file: target process not responding or HotSpot VM not loaded</code></td>
+<td>Ensure the Confluence process is running and you are executing jstack as the same user (or root) that owns the Java process.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as the confluence service user to access the running JVM process.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># On-demand heap dump (non-destructive, app stays up)</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;confluence&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
@@ -7956,7 +8143,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

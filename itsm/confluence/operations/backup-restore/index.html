@@ -7549,9 +7549,28 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pg_dump: error: connection to server at "db.internal.example.com" (10.45.12.8), port 5432 failed: Connection refused</code></strong> — Verify the database host is reachable and PostgreSQL is running with <code>psql -h db.internal.example.com -U confluence -d confluencedb</code>.
-<strong><code>pg_dump: error: FATAL: password authentication failed for user "confluence"</code></strong> — Ensure the <code>DB_PASSWORD</code> environment variable is set correctly before running the script with <code>export DB_PASSWORD="your_password"</code>.
-<strong><code>mkdir: cannot create directory '/backup/confluence/db': Permission denied</code></strong> — Run the script with sudo or change <code>BACKUP_DIR</code> to a location where the current user has write permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pg_dump: error: connection to server at "db.internal.example.com" (10.45.12.8), port 5432 failed: Connection refused</code></td>
+<td>Verify the database host is reachable and PostgreSQL is running with <code>psql -h db.internal.example.com -U confluence -d confluencedb</code>.</td>
+</tr>
+<tr>
+<td><code>pg_dump: error: FATAL: password authentication failed for user "confluence"</code></td>
+<td>Ensure the <code>DB_PASSWORD</code> environment variable is set correctly before running the script with <code>export DB_PASSWORD="your_password"</code>.</td>
+</tr>
+<tr>
+<td><code>mkdir: cannot create directory '/backup/confluence/db': Permission denied</code></td>
+<td>Run the script with sudo or change <code>BACKUP_DIR</code> to a location where the current user has write permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h4 id="pg_dump-format-options"><code>pg_dump</code> Format Options<a class="headerlink" href="#pg_dump-format-options" title="Permanent link">&para;</a></h4>
 <table>
@@ -7627,9 +7646,28 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pg_restore: error: could not connect to database server: FATAL: role "postgres" does not exist</code></strong> — Verify the PostgreSQL superuser exists and the <code>--username</code> parameter matches an actual database role.
-<strong><code>pg_restore: error: input file appears to be a text format dump</code></strong> — Ensure <code>$BACKUP_FILE</code> is a custom-format dump (created with <code>pg_dump -Fc</code>), not a plain SQL text dump.
-<strong><code>ERROR: database "confluence_verify" already exists</code></strong> — Drop the existing test database first with <code>dropdb confluence_verify</code> before running <code>createdb</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pg_restore: error: could not connect to database server: FATAL: role "postgres" does not exist</code></td>
+<td>Verify the PostgreSQL superuser exists and the <code>--username</code> parameter matches an actual database role.</td>
+</tr>
+<tr>
+<td><code>pg_restore: error: input file appears to be a text format dump</code></td>
+<td>Ensure <code>$BACKUP_FILE</code> is a custom-format dump (created with <code>pg_dump -Fc</code>), not a plain SQL text dump.</td>
+</tr>
+<tr>
+<td><code>ERROR: database "confluence_verify" already exists</code></td>
+<td>Drop the existing test database first with <code>dropdb confluence_verify</code> before running <code>createdb</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="filesystem-backup-shared-home">Filesystem Backup — Shared Home<a class="headerlink" href="#filesystem-backup-shared-home" title="Permanent link">&para;</a></h2>
@@ -7670,9 +7708,28 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>rsync: change_dir "/mnt/confluence-shared" failed: No such file or directory (2)</code></strong> — Verify the SHARED_HOME path exists and is mounted with <code>mount | grep confluence-shared</code>.
-<strong><code>rsync: mkdir "/backup/confluence/shared-home/20240315_143027" failed: Permission denied (13)</code></strong> — Ensure the script runs with sufficient privileges (sudo) and the backup destination directory is writable by the user.
-<strong><code>rsync: write failed on "/backup/confluence/shared-home/20240315_143027/attachments/ver3/abc123def456/page-12847-v5.pdf": No space left on device (28)</code></strong> — Check available disk space on the backup destination with <code>df -h /backup</code> and free up space or expand the volume.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rsync: change_dir "/mnt/confluence-shared" failed: No such file or directory (2)</code></td>
+<td>Verify the SHARED_HOME path exists and is mounted with <code>mount | grep confluence-shared</code>.</td>
+</tr>
+<tr>
+<td><code>rsync: mkdir "/backup/confluence/shared-home/20240315_143027" failed: Permission denied (13)</code></td>
+<td>Ensure the script runs with sufficient privileges (sudo) and the backup destination directory is writable by the user.</td>
+</tr>
+<tr>
+<td><code>rsync: write failed on "/backup/confluence/shared-home/20240315_143027/attachments/ver3/abc123def456/page-12847-v5.pdf": No space left on device (28)</code></td>
+<td>Check available disk space on the backup destination with <code>df -h /backup</code> and free up space or expand the volume.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="what-to-include-exclude">What to Include / Exclude<a class="headerlink" href="#what-to-include-exclude" title="Permanent link">&para;</a></h3>
 <table>
@@ -7756,9 +7813,28 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pg_restore: [archiver] could not open input file "/backup/confluence/db/confluence_20260508_020000.dump": No such file or directory</code></strong> — Verify the backup file path exists and the full filename matches exactly with <code>ls -lh /backup/confluence/db/</code>.
-<strong><code>pg_restore: error: connection to server at "db.internal.example.com" (10.42.8.15), port 5432 failed: Connection refused</code></strong> — Confirm the PostgreSQL server is running on the target host and the hostname/port are correct with <code>psql -h db.internal.example.com -U postgres -c "SELECT version();"</code>.
-<strong><code>pg_restore: error: role "confluence" does not exist</code></strong> — Create the Confluence database owner role first with <code>psql -U postgres -c "CREATE ROLE confluence WITH LOGIN;"</code> before running the restore.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pg_restore: [archiver] could not open input file "/backup/confluence/db/confluence_20260508_020000.dump": No such file or directory</code></td>
+<td>Verify the backup file path exists and the full filename matches exactly with <code>ls -lh /backup/confluence/db/</code>.</td>
+</tr>
+<tr>
+<td><code>pg_restore: error: connection to server at "db.internal.example.com" (10.42.8.15), port 5432 failed: Connection refused</code></td>
+<td>Confirm the PostgreSQL server is running on the target host and the hostname/port are correct with <code>psql -h db.internal.example.com -U postgres -c "SELECT version();"</code>.</td>
+</tr>
+<tr>
+<td><code>pg_restore: error: role "confluence" does not exist</code></td>
+<td>Create the Confluence database owner role first with <code>psql -U postgres -c "CREATE ROLE confluence WITH LOGIN;"</code> before running the restore.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-restore-the-shared-home">2. Restore the Shared Home<a class="headerlink" href="#2-restore-the-shared-home" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Stop all Confluence nodes first!</span>
@@ -7779,9 +7855,28 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>rsync: change_dir "/backup/confluence/shared-home/20260508_020000" failed: No such file or directory (2)</code></strong> — Verify the backup directory path exists and the date format matches your actual backup naming convention.
-<strong><code>chown: changing ownership of '/mnt/confluence-shared/': Operation not permitted</code></strong> — Run the command with <code>sudo</code> or ensure you have root privileges before executing chown.
-<strong><code>rsync: [Receiver] mkdir "/mnt/confluence-shared" failed: No such file or directory (2)</code></strong> — Create the destination directory with <code>mkdir -p /mnt/confluence-shared/</code> before running rsync.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rsync: change_dir "/backup/confluence/shared-home/20260508_020000" failed: No such file or directory (2)</code></td>
+<td>Verify the backup directory path exists and the date format matches your actual backup naming convention.</td>
+</tr>
+<tr>
+<td><code>chown: changing ownership of '/mnt/confluence-shared/': Operation not permitted</code></td>
+<td>Run the command with <code>sudo</code> or ensure you have root privileges before executing chown.</td>
+</tr>
+<tr>
+<td><code>rsync: [Receiver] mkdir "/mnt/confluence-shared" failed: No such file or directory (2)</code></td>
+<td>Create the destination directory with <code>mkdir -p /mnt/confluence-shared/</code> before running rsync.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="3-restore-from-xml-backup-ui">3. Restore from XML Backup (UI)<a class="headerlink" href="#3-restore-from-xml-backup-ui" title="Permanent link">&para;</a></h3>
 <p>If restoring from an XML site backup (small instances or content-only restore):</p>
@@ -7836,9 +7931,28 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command or configure proper SSL certificates on the Confluence server.
-<strong><code>ERROR [main] [com.atlassian.confluence.setup.BootstrapManager] Database connection failed</code></strong> — Verify database credentials and connectivity in <code>confluence.cfg.xml</code> and ensure the database service is running and accessible.
-<strong><code>ERROR [main] [com.atlassian.confluence.search.v2.ContentIndexer] Search index corruption detected</code></strong> — Delete the corrupted index directory at <code>/var/atlassian/application-data/confluence/index</code> and restart Confluence to rebuild</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command or configure proper SSL certificates on the Confluence server.</td>
+</tr>
+<tr>
+<td><code>ERROR [main] [com.atlassian.confluence.setup.BootstrapManager] Database connection failed</code></td>
+<td>Verify database credentials and connectivity in <code>confluence.cfg.xml</code> and ensure the database service is running and accessible.</td>
+</tr>
+<tr>
+<td><code>ERROR [main] [com.atlassian.confluence.search.v2.ContentIndexer] Search index corruption detected</code></td>
+<td>Delete the corrupted index directory at <code>/var/atlassian/application-data/confluence/index</code> and restart Confluence to rebuild</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="data-center-backup-best-practices">Data Center Backup Best Practices<a class="headerlink" href="#data-center-backup-best-practices" title="Permanent link">&para;</a></h2>
@@ -7897,9 +8011,28 @@ This page covers all backup and restore methods for Confluence Data Center: buil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist</code></strong> — Verify the S3 bucket name matches your AWS account and region with <code>aws s3 ls | grep confluence-backups</code>.
-<strong><code>An error occurred (AccessDenied) when calling the PutObject operation: User: arn:aws:iam::123456789012:user/backup-user is not authorized to perform: s3:PutObject</code></strong> — Add <code>s3:PutObject</code> and <code>kms:Decrypt</code> permissions to the IAM user's policy for the backup bucket and KMS key.
-<strong><code>An error occurred (InvalidKeyId.NotFound) when calling the PutObject operation: Invalid keyId: alias/confluence-backup-key</code></strong> — Confirm the KMS key alias exists with <code>aws kms list-aliases | grep confluence-backup-key</code> and matches your region.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist</code></td>
+<td>Verify the S3 bucket name matches your AWS account and region with <code>aws s3 ls | grep confluence-backups</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the PutObject operation: User: arn:aws:iam::123456789012:user/backup-user is not authorized to perform: s3:PutObject</code></td>
+<td>Add <code>s3:PutObject</code> and <code>kms:Decrypt</code> permissions to the IAM user's policy for the backup bucket and KMS key.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidKeyId.NotFound) when calling the PutObject operation: Invalid keyId: alias/confluence-backup-key</code></td>
+<td>Confirm the KMS key alias exists with <code>aws kms list-aliases | grep confluence-backup-key</code> and matches your region.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -7937,7 +8070,7 @@ This page covers all backup and restore methods for Confluence Data Center: buil
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

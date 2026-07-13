@@ -8718,9 +8718,28 @@ Azure Key Vault is a managed service for storing and controlling access to secre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceGroupNotFound</code></strong> — Verify the resource group exists with <code>az group list</code> and use the correct <code>--resource-group</code> name.
-<strong><code>InvalidObjectId</code></strong> — Retrieve your object ID with <code>az ad signed-in-user show --query id -o tsv</code> and pass it to <code>--assignee</code>.
-<strong><code>PrincipalNotFound</code></strong> — Wait 15–30 seconds for Azure AD replication to complete before assigning the role, or verify the user exists in your tenant.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceGroupNotFound</code></td>
+<td>Verify the resource group exists with <code>az group list</code> and use the correct <code>--resource-group</code> name.</td>
+</tr>
+<tr>
+<td><code>InvalidObjectId</code></td>
+<td>Retrieve your object ID with <code>az ad signed-in-user show --query id -o tsv</code> and pass it to <code>--assignee</code>.</td>
+</tr>
+<tr>
+<td><code>PrincipalNotFound</code></td>
+<td>Wait 15–30 seconds for Azure AD replication to complete before assigning the role, or verify the user exists in your tenant.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="managing-secrets">Managing Secrets<a class="headerlink" href="#managing-secrets" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create/update a secret</span>
@@ -8806,9 +8825,28 @@ Azure Key Vault is a managed service for storing and controlling access to secre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Vault not found. (VaultNotFound)</code></strong> — Verify the vault name is correct and exists in your subscription with <code>az keyvault list</code>.
-<strong><code>The user, group or application does not have the 'get' permission on the object.</code></strong> — Ensure your user or service principal has Key Vault Secret User or Officer role assigned via <code>az role assignment create</code>.
-<strong><code>Purge is not allowed on this vault because purge protection is enabled.</code></strong> — Disable purge protection on the vault with <code>az keyvault update --name &lt;vault-name&gt; --enable-purge-protection false</code> before purging.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Vault not found. (VaultNotFound)</code></td>
+<td>Verify the vault name is correct and exists in your subscription with <code>az keyvault list</code>.</td>
+</tr>
+<tr>
+<td><code>The user, group or application does not have the 'get' permission on the object.</code></td>
+<td>Ensure your user or service principal has Key Vault Secret User or Officer role assigned via <code>az role assignment create</code>.</td>
+</tr>
+<tr>
+<td><code>Purge is not allowed on this vault because purge protection is enabled.</code></td>
+<td>Disable purge protection on the vault with <code>az keyvault update --name &lt;vault-name&gt; --enable-purge-protection false</code> before purging.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="soft-delete-and-purge-protection">Soft Delete and Purge Protection<a class="headerlink" href="#soft-delete-and-purge-protection" title="Permanent link">&para;</a></h2>
 <p><strong>Soft delete</strong> — deleted objects are retained for the configured period (7–90 days). The vault and all objects cannot be immediately destroyed; this prevents accidental loss.</p>
@@ -8824,8 +8862,24 @@ Azure Key Vault is a managed service for storing and controlling access to secre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The specified vault does not exist in the specified subscription and resource group.</code></strong> — Verify the vault name is correct and you are authenticated to the correct Azure subscription with <code>az account show</code>.
-<strong><code>Authorization failed for template deployment. The client with object id does not have permission to perform action 'Microsoft.KeyVault/vaults/read' on scope.</code></strong> — Ensure your Azure user or service principal has at least Reader role on the Key Vault resource.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The specified vault does not exist in the specified subscription and resource group.</code></td>
+<td>Verify the vault name is correct and you are authenticated to the correct Azure subscription with <code>az account show</code>.</td>
+</tr>
+<tr>
+<td><code>Authorization failed for template deployment. The client with object id does not have permission to perform action 'Microsoft.KeyVault/vaults/read' on scope.</code></td>
+<td>Ensure your Azure user or service principal has at least Reader role on the Key Vault resource.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="networking-private-endpoint">Networking — Private Endpoint<a class="headerlink" href="#networking-private-endpoint" title="Permanent link">&para;</a></h2>
 <p>Restrict Key Vault access to a private network:</p>
@@ -8879,9 +8933,28 @@ Azure Key Vault is a managed service for storing and controlling access to secre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>(BadRequest) The resource with name '&lt;vault-name&gt;' does not exist in the resource group '&lt;rg&gt;'.</code></strong> — Verify the vault name and resource group name are correct and the vault exists in the specified region.
-<strong><code>(BadRequest) The subnet '&lt;subnet&gt;' does not exist in virtual network '&lt;vnet&gt;'.</code></strong> — Confirm the subnet name and virtual network name are spelled correctly and exist in the same resource group and region.
-<strong><code>(Conflict) The private endpoint '&lt;vault-name&gt;-pe' already exists in resource group '&lt;rg&gt;'.</code></strong> — Delete the existing private endpoint first using <code>az network private-endpoint delete --name &lt;vault-name&gt;-pe --resource-group &lt;rg&gt;</code> or use a different endpoint name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(BadRequest) The resource with name '&lt;vault-name&gt;' does not exist in the resource group '&lt;rg&gt;'.</code></td>
+<td>Verify the vault name and resource group name are correct and the vault exists in the specified region.</td>
+</tr>
+<tr>
+<td><code>(BadRequest) The subnet '&lt;subnet&gt;' does not exist in virtual network '&lt;vnet&gt;'.</code></td>
+<td>Confirm the subnet name and virtual network name are spelled correctly and exist in the same resource group and region.</td>
+</tr>
+<tr>
+<td><code>(Conflict) The private endpoint '&lt;vault-name&gt;-pe' already exists in resource group '&lt;rg&gt;'.</code></td>
+<td>Delete the existing private endpoint first using <code>az network private-endpoint delete --name &lt;vault-name&gt;-pe --resource-group &lt;rg&gt;</code> or use a different endpoint name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After creating the private endpoint, add a DNS A record in the <code>privatelink.vaultcore.azure.net</code> private DNS zone pointing to the private endpoint IP.</p>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
@@ -8907,9 +8980,28 @@ Azure Key Vault is a managed service for storing and controlling access to secre
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The resource '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.KeyVault/vaults/&lt;vault-name&gt;' could not be found.</code></strong> — Verify the subscription ID, resource group name, and Key Vault name are correct and exist in your Azure account.
-<strong><code>InvalidResourceId: The provided resource ID is invalid or malformed.</code></strong> — Ensure the resource ID follows the exact format with correct casing for Microsoft.KeyVault and no trailing slashes.
-<strong><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'microsoft.insights/diagnosticSettings/write' on resource '&lt;vault-id&gt;'.</code></strong> — Grant the user or service principal the "Monitoring Contributor" role on the Key Vault resource.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The resource '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.KeyVault/vaults/&lt;vault-name&gt;' could not be found.</code></td>
+<td>Verify the subscription ID, resource group name, and Key Vault name are correct and exist in your Azure account.</td>
+</tr>
+<tr>
+<td><code>InvalidResourceId: The provided resource ID is invalid or malformed.</code></td>
+<td>Ensure the resource ID follows the exact format with correct casing for Microsoft.KeyVault and no trailing slashes.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'microsoft.insights/diagnosticSettings/write' on resource '&lt;vault-id&gt;'.</code></td>
+<td>Grant the user or service principal the "Monitoring Contributor" role on the Key Vault resource.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Query audit logs in Log Analytics:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">AzureDiagnostics</span>
@@ -8977,7 +9069,7 @@ Azure Key Vault is a managed service for storing and controlling access to secre
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -8735,9 +8735,28 @@ AWS support escalation for EVS: severity levels, required data for support cases
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID format</code></strong> — Verify that <code>$ENV_ID</code> is set correctly with <code>echo $ENV_ID</code> and matches the format <code>env-xxxxxxxxxxxxxxxx</code>.
-<strong><code>An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform: ec2:DescribeInstanceStatus</code></strong> — Add <code>ec2:DescribeInstanceStatus</code> permission to your IAM user/role policy.
-<strong><code>date: illegal time format</code></strong> — Use <code>date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ</code> on Linux systems instead of the BSD <code>-v</code> flag.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID format</code></td>
+<td>Verify that <code>$ENV_ID</code> is set correctly with <code>echo $ENV_ID</code> and matches the format <code>env-xxxxxxxxxxxxxxxx</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform: ec2:DescribeInstanceStatus</code></td>
+<td>Add <code>ec2:DescribeInstanceStatus</code> permission to your IAM user/role policy.</td>
+</tr>
+<tr>
+<td><code>date: illegal time format</code></td>
+<td>Use <code>date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ</code> on Linux systems instead of the BSD <code>-v</code> flag.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>For networking issues (HCX tunnel down, BGP failure), also include:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># VPC route tables</span>
@@ -8800,9 +8819,28 @@ AWS support escalation for EVS: severity levels, required data for support cases
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The filter 'vpc-id' is invalid</code></strong> — Verify the filter name is correct; use <code>Name=vpc-id</code> (not <code>vpcId</code>) and ensure <code>$EVS_VPC_ID</code> variable is set with <code>echo $EVS_VPC_ID</code>.
-<strong><code>Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_PROFILE</code>, <code>AWS_ACCESS_KEY_ID</code>, and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.
-<strong><code>An error occurred (InvalidSubnetID.NotFound) when calling the DescribeNetworkInterfaces operation: The subnet ID 'subnet-xxx' does not exist</code></strong> — Confirm the subnet ID in <code>$EVS_MGMT_SUBNET_ID</code> exists in the correct region with <code>aws ec2 describe-subnets --region &lt;region&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The filter 'vpc-id' is invalid</code></td>
+<td>Verify the filter name is correct; use <code>Name=vpc-id</code> (not <code>vpcId</code>) and ensure <code>$EVS_VPC_ID</code> variable is set with <code>echo $EVS_VPC_ID</code>.</td>
+</tr>
+<tr>
+<td><code>Unable to locate credentials</code></td>
+<td>Configure AWS credentials using <code>aws configure</code> or set <code>AWS_PROFILE</code>, <code>AWS_ACCESS_KEY_ID</code>, and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidSubnetID.NotFound) when calling the DescribeNetworkInterfaces operation: The subnet ID 'subnet-xxx' does not exist</code></td>
+<td>Confirm the subnet ID in <code>$EVS_MGMT_SUBNET_ID</code> exists in the correct region with <code>aws ec2 describe-subnets --region &lt;region&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="vmware-support-case-requirements">VMware Support Case Requirements<a class="headerlink" href="#vmware-support-case-requirements" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Always gather before calling VMware support</span>
@@ -8843,9 +8881,28 @@ AWS support escalation for EVS: severity levels, required data for support cases
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip certificate verification (already present; verify NSX_URL and NSX_PASSWORD environment variables are set correctly).
-<strong><code>jq: command not found</code></strong> — Install python3-json or use <code>python3 -m json.tool</code> instead of piping to <code>jq</code> for JSON formatting.
-<strong><code>curl: (7) Failed to connect to sddc-manager.vcf.internal port 443: Name or service not known</code></strong> — Verify SDDC Manager hostname resolves and is reachable from the management network; check <code>/etc/hosts</code> or DNS configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip certificate verification (already present; verify NSX_URL and NSX_PASSWORD environment variables are set correctly).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install python3-json or use <code>python3 -m json.tool</code> instead of piping to <code>jq</code> for JSON formatting.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to sddc-manager.vcf.internal port 443: Name or service not known</code></td>
+<td>Verify SDDC Manager hostname resolves and is reachable from the management network; check <code>/etc/hosts</code> or DNS configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Additional data for VMware support cases:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># VCF version and build numbers</span>
@@ -8913,9 +8970,28 @@ AWS support escalation for EVS: severity levels, required data for support cases
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (ValidationException) when calling the CreateCase operation: Invalid severity code 'critical' for service 'aws-elastic-vmware-service'</code></strong> — Use <code>--severity-code "urgent"</code> instead, as EVS support cases require the "urgent" severity level.
-<strong><code>An error occurred (AccessDeniedException) when calling the CreateCase operation: User is not authorized to perform: support:CreateCase</code></strong> — Attach the <code>AWSSupportAccess</code> IAM policy to the user or role executing this command.
-<strong><code>An error occurred (InvalidParameterException) when calling the CreateCase operation: Service code 'aws-elastic-vmware-service' is not valid</code></strong> — Verify the correct service code with <code>aws support describe-services --query 'services[?name==</code>VMware Cloud on AWS<code>]'</code> and use the returned serviceCode value.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (ValidationException) when calling the CreateCase operation: Invalid severity code 'critical' for service 'aws-elastic-vmware-service'</code></td>
+<td>Use <code>--severity-code "urgent"</code> instead, as EVS support cases require the "urgent" severity level.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDeniedException) when calling the CreateCase operation: User is not authorized to perform: support:CreateCase</code></td>
+<td>Attach the <code>AWSSupportAccess</code> IAM policy to the user or role executing this command.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the CreateCase operation: Service code 'aws-elastic-vmware-service' is not valid</code></td>
+<td>Verify the correct service code with <code>aws support describe-services --query 'services[?name==</code>VMware Cloud on AWS<code>]'</code> and use the returned serviceCode value.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected response times by support tier:</p>
 <table>
@@ -9023,7 +9099,7 @@ AWS support escalation for EVS: severity levels, required data for support cases
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

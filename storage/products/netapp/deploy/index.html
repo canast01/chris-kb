@@ -7699,8 +7699,24 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: cluster show</code></strong> — Ensure you are logged into the NetApp cluster management interface (SSH to the cluster management IP) rather than a node management IP.
-<strong><code>Health: false</code></strong> — Check cluster event logs with <code>event log show</code> and resolve any failed disk or network issues before proceeding.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: cluster show</code></td>
+<td>Ensure you are logged into the NetApp cluster management interface (SSH to the cluster management IP) rather than a node management IP.</td>
+</tr>
+<tr>
+<td><code>Health: false</code></td>
+<td>Check cluster event logs with <code>event log show</code> and resolve any failed disk or network issues before proceeding.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Create a cluster-wide service policy for management traffic (if using separated management VLANs):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster_name&gt;<span class="w"> </span>-lif<span class="w"> </span>cluster_mgmt<span class="w"> </span>-role<span class="w"> </span>cluster-mgmt<span class="w"> </span>-home-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-home-port<span class="w"> </span>e0M<span class="w"> </span>-address<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-netmask<span class="w"> </span>&lt;mask&gt;
@@ -7711,9 +7727,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: EINVALIDARGUMENT: Invalid value specified for "address" : &lt;ip&gt;</code></strong> — Verify the IP address format is valid (e.g., 192.168.1.100) and not already in use on the network.
-<strong><code>Error: command failed: EOBJECTNOTFOUND: Vserver "&lt;cluster_name&gt;" does not exist.</code></strong> — Ensure the vserver name matches an existing cluster and is spelled correctly.
-<strong><code>Error: command failed: EOBJECTNOTFOUND: Node "&lt;node_name&gt;" does not exist.</code></strong> — Confirm the node name is valid and part of the cluster using <code>cluster show</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: EINVALIDARGUMENT: Invalid value specified for "address" : &lt;ip&gt;</code></td>
+<td>Verify the IP address format is valid (e.g., 192.168.1.100) and not already in use on the network.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: EOBJECTNOTFOUND: Vserver "&lt;cluster_name&gt;" does not exist.</code></td>
+<td>Ensure the vserver name matches an existing cluster and is spelled correctly.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: EOBJECTNOTFOUND: Node "&lt;node_name&gt;" does not exist.</code></td>
+<td>Confirm the node name is valid and part of the cluster using <code>cluster show</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="svm-creation">SVM Creation<a class="headerlink" href="#svm-creation" title="Permanent link">&para;</a></h2>
@@ -7750,9 +7785,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Vserver "svm_nfs01" already exists.</code></strong> — Delete the existing SVM with <code>vserver delete -vserver svm_nfs01</code> or use a different SVM name.
-<strong><code>Error: command failed: Port "e0d" does not exist on node "&lt;node_name&gt;".</code></strong> — Verify the correct port name using <code>network port show -node &lt;node_name&gt;</code> and update the <code>-home-port</code> parameter.
-<strong><code>Error: command failed: IP address 192.168.10.50 is already in use.</code></strong> — Check for address conflicts with <code>network interface show -address 192.168.10.50</code> and assign an unused IP address.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Vserver "svm_nfs01" already exists.</code></td>
+<td>Delete the existing SVM with <code>vserver delete -vserver svm_nfs01</code> or use a different SVM name.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Port "e0d" does not exist on node "&lt;node_name&gt;".</code></td>
+<td>Verify the correct port name using <code>network port show -node &lt;node_name&gt;</code> and update the <code>-home-port</code> parameter.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: IP address 192.168.10.50 is already in use.</code></td>
+<td>Check for address conflicts with <code>network interface show -address 192.168.10.50</code> and assign an unused IP address.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Create an iSCSI SVM:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vserver<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_iscsi01<span class="w"> </span>-rootvolume<span class="w"> </span>root_iscsi01<span class="w"> </span>-rootvolume-security-style<span class="w"> </span>unix
@@ -7794,9 +7848,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Vserver "svm_iscsi01" already exists.</code></strong> — Verify the SVM name is unique or delete the existing SVM with <code>vserver delete -vserver svm_iscsi01</code> before retrying.
-<strong><code>Error: command failed: Port "e0e" does not exist on node "node1".</code></strong> — Confirm the correct iSCSI port names with <code>network port show -node &lt;node&gt;</code> and update the <code>-home-port</code> parameter accordingly.
-<strong><code>Error: command failed: Address 10.0.10.50 is already in use.</code></strong> — Verify the IP address is not assigned to another interface using <code>network interface show -address 10.0.10.50</code> and choose an unused address.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Vserver "svm_iscsi01" already exists.</code></td>
+<td>Verify the SVM name is unique or delete the existing SVM with <code>vserver delete -vserver svm_iscsi01</code> before retrying.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Port "e0e" does not exist on node "node1".</code></td>
+<td>Confirm the correct iSCSI port names with <code>network port show -node &lt;node&gt;</code> and update the <code>-home-port</code> parameter accordingly.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Address 10.0.10.50 is already in use.</code></td>
+<td>Verify the IP address is not assigned to another interface using <code>network interface show -address 10.0.10.50</code> and choose an unused address.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="volume-provisioning">Volume Provisioning<a class="headerlink" href="#volume-provisioning" title="Permanent link">&para;</a></h2>
@@ -7820,8 +7893,24 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: aggr</code></strong> — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a Linux shell.
-<strong><code>Error: This operation is not permitted: insufficient privileges</code></strong> — Log in with an admin-level account or request cluster administrator credentials.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: aggr</code></td>
+<td>Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a Linux shell.</td>
+</tr>
+<tr>
+<td><code>Error: This operation is not permitted: insufficient privileges</code></td>
+<td>Log in with an admin-level account or request cluster administrator credentials.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Create an NFS volume:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>volume<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01<span class="w"> </span>-volume<span class="w"> </span>vol_nfs_data01<span class="w"> </span>-aggregate<span class="w"> </span>aggr1_node1<span class="w"> </span>-size<span class="w"> </span>1TB<span class="w"> </span>-junction-path<span class="w"> </span>/nfs_data01<span class="w"> </span>-security-style<span class="w"> </span>unix<span class="w"> </span>-snapshot-policy<span class="w"> </span>default
@@ -7836,9 +7925,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: No matching aggregates found for given criteria</code></strong> — Verify the aggregate name exists with <code>storage aggregate show</code> and ensure it belongs to the correct node.
-<strong><code>Error: command failed: Vserver "svm_nfs01" does not exist</code></strong> — Create the SVM first using <code>vserver create -vserver svm_nfs01</code> or confirm the SVM name matches your environment.
-<strong><code>Error: command failed: Export policy "default" does not exist</code></strong> — Create the export policy with <code>export-policy create -vserver svm_nfs01 -policyname default</code> before adding rules.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: No matching aggregates found for given criteria</code></td>
+<td>Verify the aggregate name exists with <code>storage aggregate show</code> and ensure it belongs to the correct node.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Vserver "svm_nfs01" does not exist</code></td>
+<td>Create the SVM first using <code>vserver create -vserver svm_nfs01</code> or confirm the SVM name matches your environment.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Export policy "default" does not exist</code></td>
+<td>Create the export policy with <code>export-policy create -vserver svm_nfs01 -policyname default</code> before adding rules.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Create an iSCSI LUN:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create the containing volume</span>
@@ -7853,9 +7961,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: No space left on device</code></strong> — Verify aggregate aggr1_node1 has sufficient free space with <code>storage aggregate show -aggregate aggr1_node1</code>.
-<strong><code>Error: command failed: Vserver "svm_iscsi01" does not exist</code></strong> — Create the SVM first using <code>vserver create -vserver svm_iscsi01 -rootvolume root_svm_iscsi01 -aggregate aggr1_node1</code>.
-<strong><code>Error: command failed: LUN path /vol/vol_lun_sql01/lun_sql01_data already exists</code></strong> — Use a unique LUN name or delete the existing LUN with <code>lun delete -vserver svm_iscsi01 -path /vol/vol_lun_sql01/lun_sql01_data</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: No space left on device</code></td>
+<td>Verify aggregate aggr1_node1 has sufficient free space with <code>storage aggregate show -aggregate aggr1_node1</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Vserver "svm_iscsi01" does not exist</code></td>
+<td>Create the SVM first using <code>vserver create -vserver svm_iscsi01 -rootvolume root_svm_iscsi01 -aggregate aggr1_node1</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: LUN path /vol/vol_lun_sql01/lun_sql01_data already exists</code></td>
+<td>Use a unique LUN name or delete the existing LUN with <code>lun delete -vserver svm_iscsi01 -path /vol/vol_lun_sql01/lun_sql01_data</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Verify volumes:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm_nfs01
@@ -7874,8 +8001,24 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: volume</code></strong> — Ensure you are connected to the NetApp cluster CLI (use <code>ssh admin@&lt;cluster-ip&gt;</code>) and not a local shell.
-<strong><code>Error: "svm_nfs01" does not exist</code></strong> — Verify the SVM name is correct by running <code>vserver show</code> to list all available SVMs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: volume</code></td>
+<td>Ensure you are connected to the NetApp cluster CLI (use <code>ssh admin@&lt;cluster-ip&gt;</code>) and not a local shell.</td>
+</tr>
+<tr>
+<td><code>Error: "svm_nfs01" does not exist</code></td>
+<td>Verify the SVM name is correct by running <code>vserver show</code> to list all available SVMs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="host-connectivity">Host Connectivity<a class="headerlink" href="#host-connectivity" title="Permanent link">&para;</a></h2>
@@ -7888,9 +8031,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount.nfs: access denied by server while mounting 192.168.10.50:/nfs_data01</code></strong> — Verify the NFS export policy on the NetApp filer permits the client IP and check firewall rules allow port 2049/111.
-<strong><code>mount.nfs: No such file or directory</code></strong> — Confirm the export path <code>/nfs_data01</code> exists on the NetApp filer and the mount point <code>/mnt/ontap_nfs</code> exists locally (create with <code>mkdir -p /mnt/ontap_nfs</code> if needed).
-<strong><code>mount: wrong fs type, bad option, bad superblock on 192.168.10.50:/nfs_data01</code></strong> — Verify NFSv3 is enabled on the NetApp filer and the client has nfs-utils installed (<code>yum install nfs-utils</code> on RHEL/CentOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting 192.168.10.50:/nfs_data01</code></td>
+<td>Verify the NFS export policy on the NetApp filer permits the client IP and check firewall rules allow port 2049/111.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: No such file or directory</code></td>
+<td>Confirm the export path <code>/nfs_data01</code> exists on the NetApp filer and the mount point <code>/mnt/ontap_nfs</code> exists locally (create with <code>mkdir -p /mnt/ontap_nfs</code> if needed).</td>
+</tr>
+<tr>
+<td><code>mount: wrong fs type, bad option, bad superblock on 192.168.10.50:/nfs_data01</code></td>
+<td>Verify NFSv3 is enabled on the NetApp filer and the client has nfs-utils installed (<code>yum install nfs-utils</code> on RHEL/CentOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>iSCSI initiator setup (Linux):</strong></p>
 <ol>
@@ -7920,8 +8082,24 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>No package iscsi-initiator-utils available.</code></strong> — Ensure the RHEL/CentOS base repository is enabled with <code>yum repolist</code> and update the package cache with <code>yum clean all &amp;&amp; yum makecache</code>.
-<strong><code>Failed to enable unit: Unit file /usr/lib/systemd/system/iscsid.service not found.</code></strong> — Verify the iscsi-initiator-utils package installed successfully and check <code>/usr/lib/systemd/system/</code> for the iscsid.service file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>No package iscsi-initiator-utils available.</code></td>
+<td>Ensure the RHEL/CentOS base repository is enabled with <code>yum repolist</code> and update the package cache with <code>yum clean all &amp;&amp; yum makecache</code>.</td>
+</tr>
+<tr>
+<td><code>Failed to enable unit: Unit file /usr/lib/systemd/system/iscsid.service not found.</code></td>
+<td>Verify the iscsi-initiator-utils package installed successfully and check <code>/usr/lib/systemd/system/</code> for the iscsid.service file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ol>
 <li>Discover ONTAP iSCSI targets:</li>
@@ -7933,8 +8111,24 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iscsiadm: No records found</code></strong> — Verify the iSCSI target IP address is correct and reachable with <code>ping 10.0.10.50</code>.
-<strong><code>iscsiadm: cannot connect to discovery address 10.0.10.50 port 3260</code></strong> — Ensure the iSCSI target service is running on the NetApp array and firewall rules allow port 3260 from the initiator host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iscsiadm: No records found</code></td>
+<td>Verify the iSCSI target IP address is correct and reachable with <code>ping 10.0.10.50</code>.</td>
+</tr>
+<tr>
+<td><code>iscsiadm: cannot connect to discovery address 10.0.10.50 port 3260</code></td>
+<td>Ensure the iSCSI target service is running on the NetApp array and firewall rules allow port 3260 from the initiator host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ol>
 <li>Log in to all discovered targets:</li>
@@ -7950,8 +8144,24 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iscsiadm: No records found</code></strong> — Ensure iSCSI discovery has been performed first with <code>iscsiadm -m discovery -t sendtargets -p &lt;portal_ip&gt;</code>.
-<strong><code>iscsiadm: Could not login to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 192.168.1.50,3260]</code></strong> — Verify network connectivity to the iSCSI portal and check that the target is accessible with <code>ping 192.168.1.50</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iscsiadm: No records found</code></td>
+<td>Ensure iSCSI discovery has been performed first with <code>iscsiadm -m discovery -t sendtargets -p &lt;portal_ip&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>iscsiadm: Could not login to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 192.168.1.50,3260]</code></td>
+<td>Verify network connectivity to the iSCSI portal and check that the target is accessible with <code>ping 192.168.1.50</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ol>
 <li>Install and configure multipath:</li>
@@ -7987,8 +8197,24 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mpathconf: command not found</code></strong> — Install device-mapper-multipath first or ensure the package installation completed successfully.
-<strong><code>multipath: command not found</code></strong> — Verify device-mapper-multipath is installed with <code>rpm -q device-mapper-multipath</code> and check your PATH environment variable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mpathconf: command not found</code></td>
+<td>Install device-mapper-multipath first or ensure the package installation completed successfully.</td>
+</tr>
+<tr>
+<td><code>multipath: command not found</code></td>
+<td>Verify device-mapper-multipath is installed with <code>rpm -q device-mapper-multipath</code> and check your PATH environment variable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Map the LUN to the host:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Create an igroup (initiator group) with the host&#39;s IQN</span>
@@ -8015,9 +8241,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>igroup create: entry already exists</code></strong> — Use a unique igroup name or verify the igroup doesn't already exist with <code>igroup show -vserver svm_iscsi01</code>.
-<strong><code>lun map: LUN is already mapped to igroup</code></strong> — Check existing mappings with <code>lun mapping show -vserver svm_iscsi01 -path /vol/vol_lun_sql01/lun_sql01_data</code> and use a different LUN ID or igroup.
-<strong><code>rescan-scsi-bus.sh: command not found</code></strong> — Install the sg3-utils package with <code>apt-get install sg3-utils</code> (Debian/Ubuntu) or <code>yum install sg3-utils</code> (RHEL/CentOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>igroup create: entry already exists</code></td>
+<td>Use a unique igroup name or verify the igroup doesn't already exist with <code>igroup show -vserver svm_iscsi01</code>.</td>
+</tr>
+<tr>
+<td><code>lun map: LUN is already mapped to igroup</code></td>
+<td>Check existing mappings with <code>lun mapping show -vserver svm_iscsi01 -path /vol/vol_lun_sql01/lun_sql01_data</code> and use a different LUN ID or igroup.</td>
+</tr>
+<tr>
+<td><code>rescan-scsi-bus.sh: command not found</code></td>
+<td>Install the sg3-utils package with <code>apt-get install sg3-utils</code> (Debian/Ubuntu) or <code>yum install sg3-utils</code> (RHEL/CentOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="snapmirror">SnapMirror<a class="headerlink" href="#snapmirror" title="Permanent link">&para;</a></h2>
@@ -8037,9 +8282,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: EINVALIDARGUMENT: Invalid home port e0f on node &lt;node1&gt;</code></strong> — Verify the physical port name exists on the node using <code>network port show -node &lt;node1&gt;</code> and correct the home-port parameter.
-<strong><code>Error: command failed: EOBJECTNOTFOUND: Vserver &lt;cluster_name&gt; does not exist</code></strong> — Replace <code>&lt;cluster_name&gt;</code> with the actual cluster name obtained from <code>cluster show</code> or use the correct vserver name from <code>vserver show</code>.
-<strong><code>Error: command failed: EADDRINUSE: IP address 10.0.20.50 is already in use</code></strong> — Verify the IP addresses are not already assigned to another interface using <code>network interface show -address 10.0.20.50</code> and select unused addresses.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: EINVALIDARGUMENT: Invalid home port e0f on node &lt;node1&gt;</code></td>
+<td>Verify the physical port name exists on the node using <code>network port show -node &lt;node1&gt;</code> and correct the home-port parameter.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: EOBJECTNOTFOUND: Vserver &lt;cluster_name&gt; does not exist</code></td>
+<td>Replace <code>&lt;cluster_name&gt;</code> with the actual cluster name obtained from <code>cluster show</code> or use the correct vserver name from <code>vserver show</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: EADDRINUSE: IP address 10.0.20.50 is already in use</code></td>
+<td>Verify the IP addresses are not already assigned to another interface using <code>network interface show -address 10.0.20.50</code> and select unused addresses.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Peer the clusters (run from source):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-peer-addrs<span class="w"> </span><span class="m">10</span>.0.20.60,10.0.20.61
@@ -8052,9 +8316,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: cluster peer create: command not found</code></strong> — Ensure you are connected to the NetApp cluster CLI (ssh to cluster management IP) rather than running from a local shell.
-<strong><code>Error: Failed to authenticate with peer cluster at 10.0.20.60</code></strong> — Verify the peer cluster IP addresses are reachable and the passphrase matches exactly what was configured on the destination cluster.
-<strong><code>Error: Cluster peering already exists with peer address 10.0.20.60</code></strong> — Check existing peer relationships with <code>cluster peer show</code> and remove the duplicate before retrying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: cluster peer create: command not found</code></td>
+<td>Ensure you are connected to the NetApp cluster CLI (ssh to cluster management IP) rather than running from a local shell.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to authenticate with peer cluster at 10.0.20.60</code></td>
+<td>Verify the peer cluster IP addresses are reachable and the passphrase matches exactly what was configured on the destination cluster.</td>
+</tr>
+<tr>
+<td><code>Error: Cluster peering already exists with peer address 10.0.20.60</code></td>
+<td>Check existing peer relationships with <code>cluster peer show</code> and remove the duplicate before retrying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Create a SnapMirror relationship:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>snapmirror<span class="w"> </span>create<span class="w"> </span>-source-path<span class="w"> </span>svm_nfs01:vol_nfs_data01<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr01:vol_nfs_dr01<span class="w"> </span>-type<span class="w"> </span>DP<span class="w"> </span>-schedule<span class="w"> </span>hourly
@@ -8074,9 +8357,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Relationship already exists.</code></strong> — Verify the destination volume doesn't already have an existing SnapMirror relationship using <code>snapmirror show -destination-path svm_dr01:vol_nfs_dr01</code>.
-<strong><code>Error: command failed: Destination volume is not empty.</code></strong> — Ensure the destination volume is initialized as an empty DP volume; if needed, destroy and recreate it with <code>volume destroy -vserver svm_dr01 -volume vol_nfs_dr01</code> then <code>volume create -vserver svm_dr01 -volume vol_nfs_dr01 -aggregate aggr_dr01 -size 1TB -type DP</code>.
-<strong><code>Error: command failed: Source path does not exist.</code></strong> — Confirm the source volume exists and the SVM name is correct by running <code>volume show -vserver svm_nfs01</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Relationship already exists.</code></td>
+<td>Verify the destination volume doesn't already have an existing SnapMirror relationship using <code>snapmirror show -destination-path svm_dr01:vol_nfs_dr01</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Destination volume is not empty.</code></td>
+<td>Ensure the destination volume is initialized as an empty DP volume; if needed, destroy and recreate it with <code>volume destroy -vserver svm_dr01 -volume vol_nfs_dr01</code> then <code>volume create -vserver svm_dr01 -volume vol_nfs_dr01 -aggregate aggr_dr01 -size 1TB -type DP</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Source path does not exist.</code></td>
+<td>Confirm the source volume exists and the SVM name is correct by running <code>volume show -vserver svm_nfs01</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Monitor the initial baseline transfer:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dr01:vol_nfs_dr01
@@ -8086,9 +8388,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are logged into the NetApp cluster CLI (via SSH or console) and not a local shell; snapmirror commands are only available in ONTAP.
-<strong><code>Error: Invalid destination path format</code></strong> — Use the correct SVM and volume name format (svm_name:volume_name) and verify both exist with <code>volume show</code> and <code>svm show</code>.
-<strong><code>Error: Access denied for snapmirror command</code></strong> — Confirm your user role has SnapMirror permissions; contact your cluster administrator to grant the appropriate RBAC role.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: snapmirror</code></td>
+<td>Ensure you are logged into the NetApp cluster CLI (via SSH or console) and not a local shell; snapmirror commands are only available in ONTAP.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid destination path format</code></td>
+<td>Use the correct SVM and volume name format (svm_name:volume_name) and verify both exist with <code>volume show</code> and <code>svm show</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Access denied for snapmirror command</code></td>
+<td>Confirm your user role has SnapMirror permissions; contact your cluster administrator to grant the appropriate RBAC role.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="monitoring-setup">Monitoring Setup<a class="headerlink" href="#monitoring-setup" title="Permanent link">&para;</a></h2>
@@ -8103,9 +8424,28 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: SNMP is already initialized</code></strong> — Run <code>snmp status</code> to verify current state; if already initialized, skip the <code>snmp init 1</code> command.
-<strong><code>Error: Community 'public' already exists</code></strong> — Use <code>system snmp community modify</code> instead, or choose a different community name.
-<strong><code>Error: Invalid peer address &lt;snmp_manager_ip&gt;</code></strong> — Replace <code>&lt;snmp_manager_ip&gt;</code> with a valid IPv4 address (e.g., 192.168.1.50) and verify network connectivity to that host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: SNMP is already initialized</code></td>
+<td>Run <code>snmp status</code> to verify current state; if already initialized, skip the <code>snmp init 1</code> command.</td>
+</tr>
+<tr>
+<td><code>Error: Community 'public' already exists</code></td>
+<td>Use <code>system snmp community modify</code> instead, or choose a different community name.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid peer address &lt;snmp_manager_ip&gt;</code></td>
+<td>Replace <code>&lt;snmp_manager_ip&gt;</code> with a valid IPv4 address (e.g., 192.168.1.50) and verify network connectivity to that host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Configure SMTP alerts:</strong></p>
 <ol>
@@ -8139,8 +8479,24 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: destination snmp-traphost does not exist</code></strong> — Create the SNMP trap destination first using <code>event notification destination create -name snmp-traphost -type snmp</code>.
-<strong><code>Error: filter-name important-events already exists</code></strong> — Use a unique filter name or delete the existing rule with <code>event notification delete -filter-name important-events</code> before recreating it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: destination snmp-traphost does not exist</code></td>
+<td>Create the SNMP trap destination first using <code>event notification destination create -name snmp-traphost -type snmp</code>.</td>
+</tr>
+<tr>
+<td><code>Error: filter-name important-events already exists</code></td>
+<td>Use a unique filter name or delete the existing rule with <code>event notification delete -filter-name important-events</code> before recreating it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Enable Active IQ integration (Call Home):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>modify<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-state<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-transport<span class="w"> </span>https<span class="w"> </span>-support<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-to<span class="w"> </span>admin@example.com
@@ -8158,8 +8514,24 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid email address "admin@example.com"</code></strong> — Verify the email address format and ensure it is a valid recipient configured in your support contract.
-<strong><code>Error: AutoSupport transport https is not supported on this cluster</code></strong> — Check cluster ONTAP version compatibility; use <code>system node autosupport show</code> to verify current transport settings and upgrade if necessary.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid email address "admin@example.com"</code></td>
+<td>Verify the email address format and ensure it is a valid recipient configured in your support contract.</td>
+</tr>
+<tr>
+<td><code>Error: AutoSupport transport https is not supported on this cluster</code></td>
+<td>Check cluster ONTAP version compatibility; use <code>system node autosupport show</code> to verify current transport settings and upgrade if necessary.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Verify the test AutoSupport was received by NetApp Active IQ (check the Active IQ portal for the array).</p>
 <hr />
@@ -8202,7 +8574,7 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

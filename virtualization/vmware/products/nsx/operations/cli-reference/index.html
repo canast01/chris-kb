@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="NSX — CLI Reference · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — CLI Reference", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — CLI Reference", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-06"}</script>
   
 
   </head>
@@ -9162,9 +9162,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Not connected to NSX Manager</code></strong> — Run <code>connect &lt;nsx-manager-ip&gt;</code> before executing get commands.
-<strong><code>Error: Service 'controller' not found</code></strong> — Verify the service name is correct; use <code>get services</code> to list available services.
-<strong><code>Error: Cluster status unavailable - quorum lost</code></strong> — Check network connectivity between cluster nodes and ensure at least 2 of 3 managers are reachable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Not connected to NSX Manager</code></td>
+<td>Run <code>connect &lt;nsx-manager-ip&gt;</code> before executing get commands.</td>
+</tr>
+<tr>
+<td><code>Error: Service 'controller' not found</code></td>
+<td>Verify the service name is correct; use <code>get services</code> to list available services.</td>
+</tr>
+<tr>
+<td><code>Error: Cluster status unavailable - quorum lost</code></td>
+<td>Check network connectivity between cluster nodes and ensure at least 2 of 3 managers are reachable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check NTP status</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>service<span class="w"> </span>ntp
@@ -9185,8 +9204,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: NTP service is not running</code></strong> — Start the NTP service with <code>start service ntp</code> before configuring servers.
-<strong><code>error: invalid NTP server address</code></strong> — Verify the NTP server IP is reachable and properly formatted (e.g., <code>set service ntp server 10.45.128.1</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: NTP service is not running</code></td>
+<td>Start the NTP service with <code>start service ntp</code> before configuring servers.</td>
+</tr>
+<tr>
+<td><code>error: invalid NTP server address</code></td>
+<td>Verify the NTP server IP is reachable and properly formatted (e.g., <code>set service ntp server 10.45.128.1</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List installed certificates</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>get<span class="w"> </span>certificate<span class="w"> </span>api
@@ -9212,8 +9247,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: certificate not found</code></strong> — Verify the NSX Manager is fully initialized and the certificate API service is responding with <code>get certificate api status</code>.
-<strong><code>error: permission denied</code></strong> — Ensure your user account has admin or certificate-read privileges; check permissions with <code>get user</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: certificate not found</code></td>
+<td>Verify the NSX Manager is fully initialized and the certificate API service is responding with <code>get certificate api status</code>.</td>
+</tr>
+<tr>
+<td><code>error: permission denied</code></td>
+<td>Ensure your user account has admin or certificate-read privileges; check permissions with <code>get user</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show configured syslog exporters</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>get<span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporters
@@ -9235,9 +9286,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Exporter '&lt;name&gt;' already exists</code></strong> — Use <code>del service syslog exporter &lt;name&gt;</code> first, then re-add with a unique name or modify the existing configuration.
-<strong><code>Error: Invalid server IP address '&lt;syslog_ip&gt;'</code></strong> — Verify the syslog server IP is reachable and correctly formatted (e.g., 192.168.1.50, not 192.168.1.500).
-<strong><code>Error: Exporter '&lt;name&gt;' not found</code></strong> — Confirm the exporter name exists by running <code>get service syslog exporters</code> and use the exact name from the list.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Exporter '&lt;name&gt;' already exists</code></td>
+<td>Use <code>del service syslog exporter &lt;name&gt;</code> first, then re-add with a unique name or modify the existing configuration.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid server IP address '&lt;syslog_ip&gt;'</code></td>
+<td>Verify the syslog server IP is reachable and correctly formatted (e.g., 192.168.1.50, not 192.168.1.500).</td>
+</tr>
+<tr>
+<td><code>Error: Exporter '&lt;name&gt;' not found</code></td>
+<td>Confirm the exporter name exists by running <code>get service syslog exporters</code> and use the exact name from the list.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View backup configuration</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>get<span class="w"> </span>service<span class="w"> </span>manager<span class="w"> </span>backup
@@ -9259,9 +9329,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Connection refused to NSX Manager API</code></strong> — Verify NSX Manager is running and accessible at the configured IP/hostname, and check network connectivity.
-<strong><code>Error: Insufficient permissions to view backup configuration</code></strong> — Ensure your user account has admin or backup operator role assigned in NSX Manager.
-<strong><code>Error: Backup location unreachable: nfs://backup-server.corp.local/nsx-backups</code></strong> — Verify NFS mount is accessible from NSX Manager and check firewall rules and NFS server availability.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Connection refused to NSX Manager API</code></td>
+<td>Verify NSX Manager is running and accessible at the configured IP/hostname, and check network connectivity.</td>
+</tr>
+<tr>
+<td><code>Error: Insufficient permissions to view backup configuration</code></td>
+<td>Ensure your user account has admin or backup operator role assigned in NSX Manager.</td>
+</tr>
+<tr>
+<td><code>Error: Backup location unreachable: nfs://backup-server.corp.local/nsx-backups</code></td>
+<td>Verify NFS mount is accessible from NSX Manager and check firewall rules and NFS server availability.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>nsxcli
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
@@ -9321,9 +9410,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Transport node &lt;id&gt; not found</code></strong> — Verify the node ID exists by running <code>get transport-nodes</code> and copy the exact ID string.
-<strong><code>Error: NSX Manager unreachable (connection timeout)</code></strong> — Confirm NSX Manager IP/hostname is reachable with <code>ping</code> and that your nsxcli session credentials are still valid.
-<strong><code>Error: Permission denied - insufficient privileges</code></strong> — Ensure your NSX user account has the appropriate role assigned (e.g., Enterprise Admin or Network Admin) in NSX.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Transport node &lt;id&gt; not found</code></td>
+<td>Verify the node ID exists by running <code>get transport-nodes</code> and copy the exact ID string.</td>
+</tr>
+<tr>
+<td><code>Error: NSX Manager unreachable (connection timeout)</code></td>
+<td>Confirm NSX Manager IP/hostname is reachable with <code>ping</code> and that your nsxcli session credentials are still valid.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied - insufficient privileges</code></td>
+<td>Ensure your NSX user account has the appropriate role assigned (e.g., Enterprise Admin or Network Admin) in NSX.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List transport zones (overlay and VLAN backed)</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>get<span class="w"> </span>transport-zone
@@ -9359,9 +9467,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>get: command not found</code></strong> — Ensure you are logged into the NSX Manager CLI or use the full API endpoint path (e.g., <code>curl -u admin:password https://nsx-manager/api/v1/transport-zones</code>).
-<strong><code>No transport zones found</code></strong> — Verify that transport zones have been created in NSX Manager and that your user account has sufficient permissions to view them.
-<strong><code>grep: (standard input) is empty</code></strong> — The specified zone name does not exist or no transport nodes are assigned to that zone; verify the zone name spelling and check zone membership in the NSX UI.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get: command not found</code></td>
+<td>Ensure you are logged into the NSX Manager CLI or use the full API endpoint path (e.g., <code>curl -u admin:password https://nsx-manager/api/v1/transport-zones</code>).</td>
+</tr>
+<tr>
+<td><code>No transport zones found</code></td>
+<td>Verify that transport zones have been created in NSX Manager and that your user account has sufficient permissions to view them.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>The specified zone name does not exist or no transport nodes are assigned to that zone; verify the zone name spelling and check zone membership in the NSX UI.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List all TEP IPs and associated hosts</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>get<span class="w"> </span>tunnel<span class="w"> </span>endpoints
@@ -9393,9 +9520,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>command not found: get tunnel endpoints</code></strong> — Verify you are running this command from the NSX Manager CLI or ensure the NSX CLI tools are properly installed and in your PATH.
-<strong><code>Error: Unable to retrieve tunnel status - Connection timeout</code></strong> — Check network connectivity between TEPs and verify NSX Manager is reachable on port 443.
-<strong><code>Error: Invalid TEP IP address &lt;remote_tep_ip&gt;</code></strong> — Confirm the remote TEP IP exists in your transport zone by running <code>get tunnel endpoints</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found: get tunnel endpoints</code></td>
+<td>Verify you are running this command from the NSX Manager CLI or ensure the NSX CLI tools are properly installed and in your PATH.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to retrieve tunnel status - Connection timeout</code></td>
+<td>Check network connectivity between TEPs and verify NSX Manager is reachable on port 443.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid TEP IP address &lt;remote_tep_ip&gt;</code></td>
+<td>Confirm the remote TEP IP exists in your transport zone by running <code>get tunnel endpoints</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># NSX VIBs installed</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
@@ -9428,9 +9574,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: vmk: No such file or directory</code></strong> — Ensure the grep filter matches your actual VMkernel interface naming convention (vmk10, vmk11, etc.) or remove the filter to see all interfaces.
-<strong><code>(Standard Switch) is not a valid VDS</code></strong> — Verify NSX is properly installed and the VDS is configured; run <code>esxcli network vswitch standard list</code> to confirm you're using a distributed switch, not a standard vSwitch.
-<strong><code>net-vdl2: command not found</code></strong> — Load the net-vdl2 module with <code>esxcli system module load -m net-vdl2</code> or verify NSX VIBs are fully installed with <code>esxcli software vib list | grep nsx</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: vmk: No such file or directory</code></td>
+<td>Ensure the grep filter matches your actual VMkernel interface naming convention (vmk10, vmk11, etc.) or remove the filter to see all interfaces.</td>
+</tr>
+<tr>
+<td><code>(Standard Switch) is not a valid VDS</code></td>
+<td>Verify NSX is properly installed and the VDS is configured; run <code>esxcli network vswitch standard list</code> to confirm you're using a distributed switch, not a standard vSwitch.</td>
+</tr>
+<tr>
+<td><code>net-vdl2: command not found</code></td>
+<td>Load the net-vdl2 module with <code>esxcli system module load -m net-vdl2</code> or verify NSX VIBs are fully installed with <code>esxcli software vib list | grep nsx</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Edge interfaces (uplinks + overlay)</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>get<span class="w"> </span>interfaces
@@ -9467,8 +9632,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Interface fp-eth1 not found</code></strong> — Verify the uplink interface name matches your NSX Edge configuration with <code>get interfaces</code> and check physical NIC connectivity.
-<strong><code>nsx-geneve: State down, MTU mismatch detected</code></strong> — Ensure the Geneve overlay MTU (typically 1600) is configured on upstream switches and that the NSX Controller cluster is reachable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Interface fp-eth1 not found</code></td>
+<td>Verify the uplink interface name matches your NSX Edge configuration with <code>get interfaces</code> and check physical NIC connectivity.</td>
+</tr>
+<tr>
+<td><code>nsx-geneve: State down, MTU mismatch detected</code></td>
+<td>Ensure the Geneve overlay MTU (typically 1600) is configured on upstream switches and that the NSX Controller cluster is reachable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Before putting ESXi host in maintenance mode:</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># 1. Check no active vSAN resync</span>
@@ -9502,8 +9683,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>transport-node &lt;id&gt; status: Unknown command</code></strong> — Ensure you are in the nsxcli shell context and use the correct syntax <code>get transport-node &lt;id&gt; status</code> without extra parameters.
-<strong><code>vsan debug resync list: Unknown command or namespace</code></strong> — Verify the ESXi host has vSAN enabled and the command should be <code>esxcli vsan debug resync list</code> run directly on the host, not through vCenter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>transport-node &lt;id&gt; status: Unknown command</code></td>
+<td>Ensure you are in the nsxcli shell context and use the correct syntax <code>get transport-node &lt;id&gt; status</code> without extra parameters.</td>
+</tr>
+<tr>
+<td><code>vsan debug resync list: Unknown command or namespace</code></td>
+<td>Verify the ESXi host has vSAN enabled and the command should be <code>esxcli vsan debug resync list</code> run directly on the host, not through vCenter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>nsxcli
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
@@ -9554,8 +9751,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Logical switch &lt;id&gt; not found</code></strong> — Verify the segment ID exists by running <code>get logical-switches</code> and confirm the exact ID spelling.
-<strong><code>Error: nsxcli: command not found</code></strong> — Ensure you are connected to an NSX Manager node and have the NSX CLI tools installed in your PATH.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Logical switch &lt;id&gt; not found</code></td>
+<td>Verify the segment ID exists by running <code>get logical-switches</code> and confirm the exact ID spelling.</td>
+</tr>
+<tr>
+<td><code>Error: nsxcli: command not found</code></td>
+<td>Ensure you are connected to an NSX Manager node and have the NSX CLI tools installed in your PATH.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># List all logical ports</span>
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>get<span class="w"> </span>logical-ports
@@ -9610,9 +9823,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: logical port &lt;id&gt; not found</code></strong> — Verify the port ID exists by running <code>get logical-ports</code> and confirm the exact UUID format.
-<strong><code>error: unable to connect to NSX manager</code></strong> — Check network connectivity to the NSX Manager appliance and verify credentials are still valid.
-<strong><code>error: insufficient permissions for this operation</code></strong> — Ensure your NSX user account has the Enterprise Administrator or Network Administrator role assigned.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: logical port &lt;id&gt; not found</code></td>
+<td>Verify the port ID exists by running <code>get logical-ports</code> and confirm the exact UUID format.</td>
+</tr>
+<tr>
+<td><code>error: unable to connect to NSX manager</code></td>
+<td>Check network connectivity to the NSX Manager appliance and verify credentials are still valid.</td>
+</tr>
+<tr>
+<td><code>error: insufficient permissions for this operation</code></td>
+<td>Ensure your NSX user account has the Enterprise Administrator or Network Administrator role assigned.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># List tunnel endpoints (TEPs) — shows VTEP IPs and state</span>
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>get<span class="w"> </span>tunnel<span class="w"> </span>endpoints
@@ -9646,9 +9878,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: invalid TEP IP format</code></strong> — Verify the remote TEP IP address is valid and reachable in your NSX fabric.
-<strong><code>error: tunnel endpoint not found</code></strong> — Confirm the TEP IP exists in your NSX deployment by running <code>get tunnel endpoints</code> first.
-<strong><code>error: command not supported in this context</code></strong> — Ensure you are executing these commands from the NSX Manager CLI or appropriate management interface, not a hypervisor shell.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: invalid TEP IP format</code></td>
+<td>Verify the remote TEP IP address is valid and reachable in your NSX fabric.</td>
+</tr>
+<tr>
+<td><code>error: tunnel endpoint not found</code></td>
+<td>Confirm the TEP IP exists in your NSX deployment by running <code>get tunnel endpoints</code> first.</td>
+</tr>
+<tr>
+<td><code>error: command not supported in this context</code></td>
+<td>Ensure you are executing these commands from the NSX Manager CLI or appropriate management interface, not a hypervisor shell.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Is the segment UP?</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>&lt;id&gt;<span class="w"> </span>status
@@ -9702,9 +9953,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>logical-switch &lt;id&gt; not found</code></strong> — Verify the segment ID exists in NSX Manager and use the correct UUID format.
-<strong><code>Unable to reach TEP 192.168.100.12: timeout</code></strong> — Confirm the transport node is UP and the TEP subnet routing is configured on all hosts.
-<strong><code>vmk10: no such interface</code></strong> — Ensure the VXLAN/Geneve vmkernel adapter is created and bound to the transport zone on the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logical-switch &lt;id&gt; not found</code></td>
+<td>Verify the segment ID exists in NSX Manager and use the correct UUID format.</td>
+</tr>
+<tr>
+<td><code>Unable to reach TEP 192.168.100.12: timeout</code></td>
+<td>Confirm the transport node is UP and the TEP subnet routing is configured on all hosts.</td>
+</tr>
+<tr>
+<td><code>vmk10: no such interface</code></td>
+<td>Ensure the VXLAN/Geneve vmkernel adapter is created and bound to the transport zone on the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Check replication mode for a segment</span>
 <a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>replication
@@ -9717,8 +9987,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>get: command not found</code></strong> — Source the NSX CLI environment or use the full path to the NSX management API client tool.
-<strong><code>grep: (standard input) is empty</code></strong> — Verify the logical switch ID exists and is accessible by running <code>get logical-switch &lt;id&gt;</code> without grep to confirm the segment is present.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get: command not found</code></td>
+<td>Source the NSX CLI environment or use the full path to the NSX management API client tool.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>Verify the logical switch ID exists and is accessible by running <code>get logical-switch &lt;id&gt;</code> without grep to confirm the segment is present.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>nsxcli
 <a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>get<span class="w"> </span>logical-routers
@@ -9740,8 +10026,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: not authenticated to NSX Manager</code></strong> — Run <code>nsxcli connect &lt;manager-ip&gt;</code> and provide valid credentials before executing commands.
-<strong><code>error: edge-cluster not found or unreachable</code></strong> — Verify the edge cluster is deployed and healthy using <code>get edge-clusters</code> and check network connectivity to edge nodes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: not authenticated to NSX Manager</code></td>
+<td>Run <code>nsxcli connect &lt;manager-ip&gt;</code> and provide valid credentials before executing commands.</td>
+</tr>
+<tr>
+<td><code>error: edge-cluster not found or unreachable</code></td>
+<td>Verify the edge cluster is deployed and healthy using <code>get edge-clusters</code> and check network connectivity to edge nodes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># List all router VRFs on this Edge</span>
 <a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>get<span class="w"> </span>logical-routers
@@ -9766,8 +10068,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unknown command: get logical-routers</code></strong> — Ensure you are in the correct NSX Edge CLI context (not in a sub-menu like <code>vrf</code> or <code>routing</code>); use <code>exit</code> to return to the main prompt first.
-<strong><code>Invalid VRF ID: lr-99</code></strong> — Verify the VRF ID exists by running <code>get logical-routers</code> and use the exact ID from the "Logical Router ID" column.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unknown command: get logical-routers</code></td>
+<td>Ensure you are in the correct NSX Edge CLI context (not in a sub-menu like <code>vrf</code> or <code>routing</code>); use <code>exit</code> to return to the main prompt first.</td>
+</tr>
+<tr>
+<td><code>Invalid VRF ID: lr-99</code></td>
+<td>Verify the VRF ID exists by running <code>get logical-routers</code> and use the exact ID from the "Logical Router ID" column.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Show routing table (all protocols)</span>
 <a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>vrf<span class="w"> </span>&lt;vrf_id&gt;
@@ -9827,8 +10145,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid VRF &lt;vrf_id&gt;</code></strong> — Verify the VRF ID exists with <code>get vrf</code> and use the correct numeric identifier.
-<strong><code>% Unknown command: get route detail</code></strong> — Ensure you are in the correct NSX routing context; some platforms require <code>show route detail</code> instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid VRF &lt;vrf_id&gt;</code></td>
+<td>Verify the VRF ID exists with <code>get vrf</code> and use the correct numeric identifier.</td>
+</tr>
+<tr>
+<td><code>% Unknown command: get route detail</code></td>
+<td>Ensure you are in the correct NSX routing context; some platforms require <code>show route detail</code> instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># BGP neighbor summary (all peers, state, prefixes)</span>
 <a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
@@ -9880,9 +10214,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the NSX Edge or BGP process is running with <code>show bgp summary</code> and confirm you have BGP enabled in the routing configuration.
-<strong><code>% Unknown neighbor &lt;neighbor_ip&gt;</code></strong> — Ensure the neighbor IP address is correctly formatted and exists in the BGP configuration; use <code>get bgp neighbor summary</code> to list all configured peers.
-<strong><code>% BGP is not running</code></strong> — Enable BGP on the NSX Edge by configuring it in the NSX Manager UI or via API, then retry the command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the NSX Edge or BGP process is running with <code>show bgp summary</code> and confirm you have BGP enabled in the routing configuration.</td>
+</tr>
+<tr>
+<td><code>% Unknown neighbor &lt;neighbor_ip&gt;</code></td>
+<td>Ensure the neighbor IP address is correctly formatted and exists in the BGP configuration; use <code>get bgp neighbor summary</code> to list all configured peers.</td>
+</tr>
+<tr>
+<td><code>% BGP is not running</code></td>
+<td>Enable BGP on the NSX Edge by configuring it in the NSX Manager UI or via API, then retry the command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># Static routes on this gateway</span>
 <a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>get<span class="w"> </span>route<span class="w"> </span>static
@@ -9899,8 +10252,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unknown command 'get route static'</code></strong> — Verify you are in the correct NSX CLI context (use <code>configure</code> or <code>show route static</code> depending on your NSX version).
-<strong><code>error: permission denied</code></strong> — Ensure your user account has read permissions for routing configuration; contact your NSX administrator to grant the necessary role.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unknown command 'get route static'</code></td>
+<td>Verify you are in the correct NSX CLI context (use <code>configure</code> or <code>show route static</code> depending on your NSX version).</td>
+</tr>
+<tr>
+<td><code>error: permission denied</code></td>
+<td>Ensure your user account has read permissions for routing configuration; contact your NSX administrator to grant the necessary role.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="c1"># All interfaces (uplinks, downlinks, loopback)</span>
 <a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>get<span class="w"> </span>interfaces
@@ -9959,8 +10328,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Interface &lt;name&gt; not found</code></strong> — Verify the interface name matches output from <code>get interfaces</code> and check for typos.
-<strong><code>Command not available in current context</code></strong> — Ensure you are connected to the NSX manager or edge node CLI and have appropriate permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Interface &lt;name&gt; not found</code></td>
+<td>Verify the interface name matches output from <code>get interfaces</code> and check for typos.</td>
+</tr>
+<tr>
+<td><code>Command not available in current context</code></td>
+<td>Ensure you are connected to the NSX manager or edge node CLI and have appropriate permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># HA state (Active/Standby)</span>
 <a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
@@ -10002,9 +10387,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Cannot execute failover on Standby node</code></strong> — Run the failover command only on the currently Active Edge node, not the Standby.
-<strong><code>Error: HA channels DOWN - failover blocked</code></strong> — Verify all HA channel connectivity (VLAN trunks, MTU settings) between Edge nodes before attempting failover.
-<strong><code>Error: Nodes out of sync - failover unsafe</code></strong> — Wait for cluster synchronization to complete (check <code>get high-availability status</code> for Sync Status: IN_SYNC) before forcing failover.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Cannot execute failover on Standby node</code></td>
+<td>Run the failover command only on the currently Active Edge node, not the Standby.</td>
+</tr>
+<tr>
+<td><code>Error: HA channels DOWN - failover blocked</code></td>
+<td>Verify all HA channel connectivity (VLAN trunks, MTU settings) between Edge nodes before attempting failover.</td>
+</tr>
+<tr>
+<td><code>Error: Nodes out of sync - failover unsafe</code></td>
+<td>Wait for cluster synchronization to complete (check <code>get high-availability status</code> for Sync Status: IN_SYNC) before forcing failover.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="c1"># Connect to Edge Node via SSH (admin) and run:</span>
 <a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>
@@ -10147,8 +10551,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to connect to NSX Manager at 192.168.1.50</code></strong> — Verify NSX Manager is running and reachable with <code>ping</code> and check network connectivity.
-<strong><code>Error: Authentication failed - invalid credentials</code></strong> — Ensure you are logged in with valid NSX admin credentials using <code>nsxcli login</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to connect to NSX Manager at 192.168.1.50</code></td>
+<td>Verify NSX Manager is running and reachable with <code>ping</code> and check network connectivity.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed - invalid credentials</code></td>
+<td>Ensure you are logged in with valid NSX admin credentials using <code>nsxcli login</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="c1"># List all DFW filters attached to VMs on this host</span>
 <a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>summarize-dvfilter
@@ -10173,8 +10593,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>summarize-dvfilter: command not found</code></strong> — Ensure you are running this command on an ESXi host with NSX installed, or source the NSX environment setup script first.
-<strong><code>Permission denied</code></strong> — Run the command with root privileges using <code>sudo summarize-dvfilter</code> or log in as root.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>summarize-dvfilter: command not found</code></td>
+<td>Ensure you are running this command on an ESXi host with NSX installed, or source the NSX environment setup script first.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with root privileges using <code>sudo summarize-dvfilter</code> or log in as root.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="c1"># Get DFW rules applied to a specific filter</span>
 <a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter_name&gt;
@@ -10212,8 +10648,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Filter '&lt;filter_name&gt;' not found in kernel</code></strong> — Verify the filter name matches an active DFW rule set using <code>vsipioctl listfilters</code>.
-<strong><code>Error: vsipioctl: command not found</code></strong> — Ensure you are running this command on an NSX Edge or hypervisor with vsipioctl installed; it is not available on management nodes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Filter '&lt;filter_name&gt;' not found in kernel</code></td>
+<td>Verify the filter name matches an active DFW rule set using <code>vsipioctl listfilters</code>.</td>
+</tr>
+<tr>
+<td><code>Error: vsipioctl: command not found</code></td>
+<td>Ensure you are running this command on an NSX Edge or hypervisor with vsipioctl installed; it is not available on management nodes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a><span class="c1"># Step 1 — find the VM&#39;s world ID</span>
 <a id="__codelineno-54-2" name="__codelineno-54-2" href="#__codelineno-54-2"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>&lt;vm_name&gt;
@@ -10247,8 +10699,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: (standard input) is empty</code></strong> — Verify the VM name matches exactly (case-sensitive) and the VM has DFW rules applied; run <code>summarize-dvfilter | head</code> to confirm the command works.
-<strong><code>vsipioctl: command not found</code></strong> — Ensure you are running this command on the ESXi host where the VM resides, not from NSX Manager or a remote system.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>Verify the VM name matches exactly (case-sensitive) and the VM has DFW rules applied; run <code>summarize-dvfilter | head</code> to confirm the command works.</td>
+</tr>
+<tr>
+<td><code>vsipioctl: command not found</code></td>
+<td>Ensure you are running this command on the ESXi host where the VM resides, not from NSX Manager or a remote system.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>vrf<span class="w"> </span>&lt;lr_id&gt;
 <a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a>
@@ -10297,9 +10765,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: invalid logical router id</code></strong> — Verify the logical router ID exists with <code>get logical-routers</code> and use the correct UUID or numeric identifier.
-<strong><code>error: nat rules not found</code></strong> — Ensure NAT rules are configured on the logical router; check that the logical router is in the correct VRF context.
-<strong><code>error: permission denied</code></strong> — Confirm your NSX user account has the required NAT management role assigned in the NSX security policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: invalid logical router id</code></td>
+<td>Verify the logical router ID exists with <code>get logical-routers</code> and use the correct UUID or numeric identifier.</td>
+</tr>
+<tr>
+<td><code>error: nat rules not found</code></td>
+<td>Ensure NAT rules are configured on the logical router; check that the logical router is in the correct VRF context.</td>
+</tr>
+<tr>
+<td><code>error: permission denied</code></td>
+<td>Confirm your NSX user account has the required NAT management role assigned in the NSX security policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a><span class="c1"># Confirm rule exists for expected source</span>
 <a id="__codelineno-60-2" name="__codelineno-60-2" href="#__codelineno-60-2"></a>get<span class="w"> </span>nat<span class="w"> </span>rules<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;source_ip&gt;
@@ -10324,8 +10811,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: (standard input): No such file or directory</code></strong> — Verify the <code>get nat rules</code> command syntax is correct for your NSX version and that you have sufficient permissions.
-<strong><code>No matching translation entries found</code></strong> — Confirm the internal IP address is currently active and generating traffic; idle connections may have aged out of the translation table.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: (standard input): No such file or directory</code></td>
+<td>Verify the <code>get nat rules</code> command syntax is correct for your NSX version and that you have sufficient permissions.</td>
+</tr>
+<tr>
+<td><code>No matching translation entries found</code></td>
+<td>Confirm the internal IP address is currently active and generating traffic; idle connections may have aged out of the translation table.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a><span class="c1"># Overall load balancer status</span>
 <a id="__codelineno-62-2" name="__codelineno-62-2" href="#__codelineno-62-2"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>status
@@ -10381,9 +10884,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: load-balancer command not found</code></strong> — Verify you are connected to the NSX Manager or load balancer appliance with appropriate CLI access; use <code>show system version</code> to confirm connectivity.
-<strong><code>error: pool &lt;pool_id&gt; does not exist</code></strong> — Run <code>get load-balancer pools</code> first to list valid pool IDs and use the exact ID from the output.
-<strong><code>error: insufficient permissions to execute command</code></strong> — Confirm your NSX user account has the "Load Balancer Admin" or equivalent role assigned in NSX role-based access control.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: load-balancer command not found</code></td>
+<td>Verify you are connected to the NSX Manager or load balancer appliance with appropriate CLI access; use <code>show system version</code> to confirm connectivity.</td>
+</tr>
+<tr>
+<td><code>error: pool &lt;pool_id&gt; does not exist</code></td>
+<td>Run <code>get load-balancer pools</code> first to list valid pool IDs and use the exact ID from the output.</td>
+</tr>
+<tr>
+<td><code>error: insufficient permissions to execute command</code></td>
+<td>Confirm your NSX user account has the "Load Balancer Admin" or equivalent role assigned in NSX role-based access control.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="c1"># Are pool members passing health checks?</span>
 <a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>pools
@@ -10421,8 +10943,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: pool member 192.168.10.46:8080 health check timeout after 5s</code></strong> — Verify the DFW rule allows inbound traffic on port 8080 from the Edge appliance management IP and confirm the application is listening on that port.
-<strong><code>error: unable to retrieve dataplane stats — edge service unavailable</code></strong> — Restart the NSX Edge service or check that the Edge appliance is in a healthy state using <code>get edge status</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: pool member 192.168.10.46:8080 health check timeout after 5s</code></td>
+<td>Verify the DFW rule allows inbound traffic on port 8080 from the Edge appliance management IP and confirm the application is listening on that port.</td>
+</tr>
+<tr>
+<td><code>error: unable to retrieve dataplane stats — edge service unavailable</code></td>
+<td>Restart the NSX Edge service or check that the Edge appliance is in a healthy state using <code>get edge status</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a><span class="c1"># Interactive CLI</span>
 <a id="__codelineno-66-2" name="__codelineno-66-2" href="#__codelineno-66-2"></a>nsxcli
@@ -10443,9 +10981,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nsxcli: command not found</code></strong> — Ensure NSX Manager is installed and the nsxcli binary path is in your $PATH, or run with the full path <code>/opt/vmware/nsx-cli/bin/nsxcli</code>.
-<strong><code>Error: Unable to connect to manager at 192.168.1.10:443</code></strong> — Verify network connectivity to the NSX Manager IP and confirm the management interface is up with <code>ping</code> and <code>nc -zv</code>.
-<strong><code>Authentication failed for user 'admin'</code></strong> — Check your NSX Manager credentials and ensure the user account has CLI access permissions in the NSX Manager UI.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nsxcli: command not found</code></td>
+<td>Ensure NSX Manager is installed and the nsxcli binary path is in your $PATH, or run with the full path <code>/opt/vmware/nsx-cli/bin/nsxcli</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to manager at 192.168.1.10:443</code></td>
+<td>Verify network connectivity to the NSX Manager IP and confirm the management interface is up with <code>ping</code> and <code>nc -zv</code>.</td>
+</tr>
+<tr>
+<td><code>Authentication failed for user 'admin'</code></td>
+<td>Check your NSX Manager credentials and ensure the user account has CLI access permissions in the NSX Manager UI.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a><span class="c1"># List active traceflows</span>
 <a id="__codelineno-68-2" name="__codelineno-68-2" href="#__codelineno-68-2"></a>get<span class="w"> </span>traceflows
@@ -10475,8 +11032,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: No active traceflows found</code></strong> — Ensure traceflows have been initiated from the NSX Manager UI or via API before querying results.
-<strong><code>error: Permission denied - insufficient privileges</code></strong> — Verify your NSX Manager user account has the required "Traceflow" permission in the role assignment.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: No active traceflows found</code></td>
+<td>Ensure traceflows have been initiated from the NSX Manager UI or via API before querying results.</td>
+</tr>
+<tr>
+<td><code>error: Permission denied - insufficient privileges</code></td>
+<td>Verify your NSX Manager user account has the required "Traceflow" permission in the role assignment.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a><span class="c1"># Capture on uplink (physical interface)</span>
 <a id="__codelineno-70-2" name="__codelineno-70-2" href="#__codelineno-70-2"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>count<span class="w"> </span><span class="m">500</span>
@@ -10519,9 +11092,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Interface fp-eth0 not found or not available</code></strong> — Verify the physical uplink interface name with <code>show interface</code> and confirm the NSX host transport node is properly configured.
-<strong><code>Error: Invalid BPF filter syntax "host 10.0.0.1"</code></strong> — Use valid tcpdump/BPF syntax such as <code>"src host 10.0.0.1"</code> or <code>"dst host 10.0.0.1"</code> instead.
-<strong><code>Error: Permission denied writing to /tmp/cap.pcap</code></strong> — Ensure the NSX manager or host process has write permissions to the target directory, or use a path like <code>/var/log/</code> instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Interface fp-eth0 not found or not available</code></td>
+<td>Verify the physical uplink interface name with <code>show interface</code> and confirm the NSX host transport node is properly configured.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid BPF filter syntax "host 10.0.0.1"</code></td>
+<td>Use valid tcpdump/BPF syntax such as <code>"src host 10.0.0.1"</code> or <code>"dst host 10.0.0.1"</code> instead.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied writing to /tmp/cap.pcap</code></td>
+<td>Ensure the NSX manager or host process has write permissions to the target directory, or use a path like <code>/var/log/</code> instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a><span class="c1"># View recent logs</span>
 <a id="__codelineno-72-2" name="__codelineno-72-2" href="#__codelineno-72-2"></a>get<span class="w"> </span>logs
@@ -10560,9 +11152,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unknown command 'get logs'</code></strong> — Use the correct NSX CLI syntax: <code>show log</code> or access logs via SSH to <code>/var/log/vmware/nsx-*/</code> directories instead.
-<strong><code>tail: cannot open '/var/log/vmware/nsx-manager/manager.log' for reading: Permission denied</code></strong> — Ensure you have SSH access to the NSX node and sufficient privileges; use <code>sudo tail -f</code> if available or request elevated credentials.
-<strong><code>Connection refused</code></strong> — Verify the NSX Manager node is running and accessible on the network; check connectivity with <code>ping</code> or <code>ssh</code> to the management IP address first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unknown command 'get logs'</code></td>
+<td>Use the correct NSX CLI syntax: <code>show log</code> or access logs via SSH to <code>/var/log/vmware/nsx-*/</code> directories instead.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/nsx-manager/manager.log' for reading: Permission denied</code></td>
+<td>Ensure you have SSH access to the NSX node and sufficient privileges; use <code>sudo tail -f</code> if available or request elevated credentials.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify the NSX Manager node is running and accessible on the network; check connectivity with <code>ping</code> or <code>ssh</code> to the management IP address first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a><span class="c1"># Ping from NSX Manager node</span>
 <a id="__codelineno-74-2" name="__codelineno-74-2" href="#__codelineno-74-2"></a>vrf<span class="w"> </span>&lt;lr_id&gt;
@@ -10605,9 +11216,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vrf &lt;lr_id&gt;: command not found</code></strong> — Ensure you are logged into the NSX Edge or Manager CLI (use <code>ssh admin@&lt;nsx-manager-ip&gt;</code> and authenticate first).
-<strong><code>PING 192.168.100.50: sendto: No route to host</code></strong> — Verify the logical router is connected to the correct segment and check routing table with <code>get logical-router &lt;lr_id&gt; route</code>.
-<strong><code>Server can't find &lt;hostname&gt;: NXDOMAIN</code></strong> — Confirm DNS forwarder is configured on the Edge with <code>get dns</code> and verify upstream DNS servers are reachable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vrf &lt;lr_id&gt;: command not found</code></td>
+<td>Ensure you are logged into the NSX Edge or Manager CLI (use <code>ssh admin@&lt;nsx-manager-ip&gt;</code> and authenticate first).</td>
+</tr>
+<tr>
+<td><code>PING 192.168.100.50: sendto: No route to host</code></td>
+<td>Verify the logical router is connected to the correct segment and check routing table with <code>get logical-router &lt;lr_id&gt; route</code>.</td>
+</tr>
+<tr>
+<td><code>Server can't find &lt;hostname&gt;: NXDOMAIN</code></td>
+<td>Confirm DNS forwarder is configured on the Edge with <code>get dns</code> and verify upstream DNS servers are reachable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a><span class="c1"># Check BGP session state (run on Edge in gateway VRF)</span>
 <a id="__codelineno-76-2" name="__codelineno-76-2" href="#__codelineno-76-2"></a>vrf<span class="w"> </span>&lt;lr_id&gt;
@@ -10747,9 +11377,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: connection refused on 192.168.1.10:443</code></strong> — Verify NSX Manager is running and accessible; check firewall rules and network connectivity to the management IP.
-<strong><code>error: cluster consensus not achieved - quorum lost</code></strong> — Restart the NSX Manager cluster or restore from backup if multiple nodes are down; ensure all three managers are reachable on the network.
-<strong><code>error: transport node connection timeout after 30s</code></strong> — Check ESXi host connectivity to NSX Manager, verify NSX VIBs are installed, and confirm firewall rules allow port 5671 between hosts and managers.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: connection refused on 192.168.1.10:443</code></td>
+<td>Verify NSX Manager is running and accessible; check firewall rules and network connectivity to the management IP.</td>
+</tr>
+<tr>
+<td><code>error: cluster consensus not achieved - quorum lost</code></td>
+<td>Restart the NSX Manager cluster or restore from backup if multiple nodes are down; ensure all three managers are reachable on the network.</td>
+</tr>
+<tr>
+<td><code>error: transport node connection timeout after 30s</code></td>
+<td>Check ESXi host connectivity to NSX Manager, verify NSX VIBs are installed, and confirm firewall rules allow port 5671 between hosts and managers.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>get<span class="w"> </span>ip-pools
 <a id="__codelineno-80-2" name="__codelineno-80-2" href="#__codelineno-80-2"></a>get<span class="w"> </span>ip-pool<span class="w"> </span>&lt;id&gt;
@@ -10780,8 +11429,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: IP pool not found: &lt;id&gt;</code></strong> — Verify the pool ID is correct by running <code>get ip-pools</code> to list all available pools.
-<strong><code>Error: Authentication failed or insufficient permissions</code></strong> — Ensure your NSX credentials are valid and your user account has IP pool read permissions in the NSX role-based access control policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: IP pool not found: &lt;id&gt;</code></td>
+<td>Verify the pool ID is correct by running <code>get ip-pools</code> to list all available pools.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed or insufficient permissions</code></td>
+<td>Ensure your NSX credentials are valid and your user account has IP pool read permissions in the NSX role-based access control policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a>get<span class="w"> </span>certificates
 <a id="__codelineno-82-2" name="__codelineno-82-2" href="#__codelineno-82-2"></a>get<span class="w"> </span>certificate<span class="w"> </span>&lt;id&gt;
@@ -10813,8 +11478,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: certificate not found: &lt;id&gt;</code></strong> — Verify the certificate ID exists by running <code>get certificates</code> first and copy the exact ID string.
-<strong><code>error: trust-objects: permission denied</code></strong> — Ensure your NSX user account has the appropriate role assigned (typically NSX Administrator or equivalent).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: certificate not found: &lt;id&gt;</code></td>
+<td>Verify the certificate ID exists by running <code>get certificates</code> first and copy the exact ID string.</td>
+</tr>
+<tr>
+<td><code>error: trust-objects: permission denied</code></td>
+<td>Ensure your NSX user account has the appropriate role assigned (typically NSX Administrator or equivalent).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-84-1" name="__codelineno-84-1" href="#__codelineno-84-1"></a>get<span class="w"> </span>backup<span class="w"> </span>status
 <a id="__codelineno-84-2" name="__codelineno-84-2" href="#__codelineno-84-2"></a><span class="nb">set</span><span class="w"> </span>backup<span class="w"> </span>schedule<span class="w"> </span>daily<span class="w"> </span><span class="nb">time</span><span class="w"> </span><span class="m">02</span>:00
@@ -10843,9 +11524,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Backup location /mnt/nsx-backups is not accessible</code></strong> — Verify the backup storage mount point exists and has read-write permissions for the NSX service account.
-<strong><code>Error: Manual backup failed - insufficient disk space (required: 3.5 GB, available: 1.2 GB)</code></strong> — Free up disk space on the backup destination or configure an alternate backup location with adequate capacity.
-<strong><code>Error: Backup schedule time format invalid - use HH:MM in 24-hour format</code></strong> — Correct the time parameter to valid 24-hour format (e.g., <code>set backup schedule daily time 14:30</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Backup location /mnt/nsx-backups is not accessible</code></td>
+<td>Verify the backup storage mount point exists and has read-write permissions for the NSX service account.</td>
+</tr>
+<tr>
+<td><code>Error: Manual backup failed - insufficient disk space (required: 3.5 GB, available: 1.2 GB)</code></td>
+<td>Free up disk space on the backup destination or configure an alternate backup location with adequate capacity.</td>
+</tr>
+<tr>
+<td><code>Error: Backup schedule time format invalid - use HH:MM in 24-hour format</code></td>
+<td>Correct the time parameter to valid 24-hour format (e.g., <code>set backup schedule daily time 14:30</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -10890,7 +11590,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

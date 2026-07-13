@@ -7697,9 +7697,28 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: [web-prod-02.example.com]: FAILED! =&gt; {"msg": "The conditional check 'lb_token is defined' failed because one of the variables is undefined: lb_token"}</code></strong> — Replace <code>YOUR_TOKEN</code> with an actual token value or pass it via <code>-e "lb_token=&lt;actual_token&gt;"</code>.
-<strong><code>[WARNING]: Unable to parse inventory/hosts.yml as an inventory source</code></strong> — Verify the inventory file path is correct relative to the current directory and the YAML syntax is valid.
-<strong><code>fatal: [web-prod-01.example.com]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}</code></strong> — Ensure SSH keys are configured correctly and the ansible user has passwordless SSH access to all target hosts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: [web-prod-02.example.com]: FAILED! =&gt; {"msg": "The conditional check 'lb_token is defined' failed because one of the variables is undefined: lb_token"}</code></td>
+<td>Replace <code>YOUR_TOKEN</code> with an actual token value or pass it via <code>-e "lb_token=&lt;actual_token&gt;"</code>.</td>
+</tr>
+<tr>
+<td><code>[WARNING]: Unable to parse inventory/hosts.yml as an inventory source</code></td>
+<td>Verify the inventory file path is correct relative to the current directory and the YAML syntax is valid.</td>
+</tr>
+<tr>
+<td><code>fatal: [web-prod-01.example.com]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}</code></td>
+<td>Ensure SSH keys are configured correctly and the ansible user has passwordless SSH access to all target hosts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>What you should see</strong></p>
 <p>Ansible processes one server at a time. For each server you see: drain request, wait for connections to drop, service stop, package update, service start, health check (retries until 200 OK), then re-add to LB. If any step fails the playbook stops completely — no other servers are touched.</p>
@@ -7897,9 +7916,28 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>[Errno 2] No such file or directory: 'inventory/hosts.yml'</code></strong> — Verify the inventory file path is correct relative to your current working directory or use an absolute path with <code>-i</code>.
-<strong><code>ERROR! Syntax Error while loading YAML from 'inventory-validate.yml'</code></strong> — Check the playbook YAML syntax for indentation errors or invalid key-value pairs using <code>ansible-playbook --syntax-check inventory-validate.yml</code>.
-<strong><code>fatal: [web-prod-01.internal]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh"}</code></strong> — Ensure SSH keys are configured correctly and the target hosts are reachable; verify with <code>ssh -v &lt;hostname&gt;</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[Errno 2] No such file or directory: 'inventory/hosts.yml'</code></td>
+<td>Verify the inventory file path is correct relative to your current working directory or use an absolute path with <code>-i</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR! Syntax Error while loading YAML from 'inventory-validate.yml'</code></td>
+<td>Check the playbook YAML syntax for indentation errors or invalid key-value pairs using <code>ansible-playbook --syntax-check inventory-validate.yml</code>.</td>
+</tr>
+<tr>
+<td><code>fatal: [web-prod-01.internal]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh"}</code></td>
+<td>Ensure SSH keys are configured correctly and the target hosts are reachable; verify with <code>ssh -v &lt;hostname&gt;</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>What you should see</strong></p>
 <p>For each host in your inventory, a table is printed showing PASS or FAIL for each check: SSH, Python, sudo, required packages, hostname, NTP, and DNS. At the end, a list of non-compliant hosts is shown. The playbook fails (exits non-zero) if any hosts fail the SSH check.</p>
@@ -8011,9 +8049,28 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>VAULT_PASSWORD_FILE is required</code></strong> — Set the environment variable before running: <code>export VAULT_PASSWORD_FILE=/path/to/vault/password</code>
-<strong><code>No such file or directory: vars/db_secrets.yml</code></strong> — Verify the DB_VARS_FILE path exists or set it explicitly: <code>DB_VARS_FILE=path/to/file ./rotate-db-secret.sh</code>
-<strong><code>ERROR! the playbook: playbooks/push-db-secret.yml could not be found</code></strong> — Confirm the PLAYBOOK path is correct and relative to your working directory, or set it explicitly: <code>PLAYBOOK=correct/path.yml ./rotate-db-secret.sh</code></p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VAULT_PASSWORD_FILE is required</code></td>
+<td>Set the environment variable before running: <code>export VAULT_PASSWORD_FILE=/path/to/vault/password</code></td>
+</tr>
+<tr>
+<td><code>No such file or directory: vars/db_secrets.yml</code></td>
+<td>Verify the DB_VARS_FILE path exists or set it explicitly: <code>DB_VARS_FILE=path/to/file ./rotate-db-secret.sh</code></td>
+</tr>
+<tr>
+<td><code>ERROR! the playbook: playbooks/push-db-secret.yml could not be found</code></td>
+<td>Confirm the PLAYBOOK path is correct and relative to your working directory, or set it explicitly: <code>PLAYBOOK=correct/path.yml ./rotate-db-secret.sh</code></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="how-to-run-this-script-step-by-step_2">How to run this script — step by step<a class="headerlink" href="#how-to-run-this-script-step-by-step_2" title="Permanent link">&para;</a></h3>
 <p><strong>Before you start — what you need</strong>
@@ -8088,9 +8145,28 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>No such file or directory</code></strong> — Verify the vault password file path exists and is readable with <code>ls -l /path/to/vault-password.txt</code>.
-<strong><code>vars/db_secrets.yml: No such file or directory</code></strong> — Ensure you are running the script from the correct working directory (typically the Ansible project root) where the vars/ subdirectory exists.
-<strong><code>ERROR! Decryption failed</code></strong> — Check that the vault password file contains the correct decryption key and matches the vault ID used to encrypt the secrets file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Verify the vault password file path exists and is readable with <code>ls -l /path/to/vault-password.txt</code>.</td>
+</tr>
+<tr>
+<td><code>vars/db_secrets.yml: No such file or directory</code></td>
+<td>Ensure you are running the script from the correct working directory (typically the Ansible project root) where the vars/ subdirectory exists.</td>
+</tr>
+<tr>
+<td><code>ERROR! Decryption failed</code></td>
+<td>Check that the vault password file contains the correct decryption key and matches the vault ID used to encrypt the secrets file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>What you should see</strong></p>
 <p>Step-by-step log messages showing: backup created, new password generated, password encrypted with Ansible Vault, vars file updated, playbook running. If the playbook succeeds you see a success message. If the playbook fails, the old vars file is automatically restored from backup and the script exits with an error so you can investigate.</p>
@@ -8222,9 +8298,28 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>[FAIL] Inventory valid</code></strong> — Verify the inventory file path in <code>INVENTORY_FILE</code> environment variable or <code>/etc/ansible/hosts</code> exists and has correct syntax.
-<strong><code>ansible: command not found</code></strong> — Install Ansible with <code>pip install ansible</code> or <code>apt-get install ansible</code> depending on your package manager.
-<strong><code>Permission denied: '/var/log/ansible.log'</code></strong> — Ensure the script runs with sufficient privileges or adjust <code>ANSIBLE_LOG_PATH</code> to a readable log location.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[FAIL] Inventory valid</code></td>
+<td>Verify the inventory file path in <code>INVENTORY_FILE</code> environment variable or <code>/etc/ansible/hosts</code> exists and has correct syntax.</td>
+</tr>
+<tr>
+<td><code>ansible: command not found</code></td>
+<td>Install Ansible with <code>pip install ansible</code> or <code>apt-get install ansible</code> depending on your package manager.</td>
+</tr>
+<tr>
+<td><code>Permission denied: '/var/log/ansible.log'</code></td>
+<td>Ensure the script runs with sufficient privileges or adjust <code>ANSIBLE_LOG_PATH</code> to a readable log location.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="incident-triage-script">Incident Triage Script<a class="headerlink" href="#incident-triage-script" title="Permanent link">&para;</a></h2>
@@ -8430,9 +8525,28 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR! the playbook: /opt/ansible/playbooks/deploy-webservers.yml could not be found</code></strong> — Verify the PLAYBOOK variable is set to an absolute path and the file exists.
-<strong><code>fatal: [web-prod-02.internal]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Connection refused"}</code></strong> — Ensure SSH is running on the target host, firewall rules allow port 22, and the ansible user has valid credentials configured.
-<strong><code>[FAIL] Collection missing: community.general (run: ansible-galaxy collection install community.general)</code></strong> — Run <code>ansible-galaxy collection install community.general</code> on the control node before executing the playbook.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR! the playbook: /opt/ansible/playbooks/deploy-webservers.yml could not be found</code></td>
+<td>Verify the PLAYBOOK variable is set to an absolute path and the file exists.</td>
+</tr>
+<tr>
+<td><code>fatal: [web-prod-02.internal]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Connection refused"}</code></td>
+<td>Ensure SSH is running on the target host, firewall rules allow port 22, and the ansible user has valid credentials configured.</td>
+</tr>
+<tr>
+<td><code>[FAIL] Collection missing: community.general (run: ansible-galaxy collection install community.general)</code></td>
+<td>Run <code>ansible-galaxy collection install community.general</code> on the control node before executing the playbook.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="post-change-validation-script">Post-Change Validation Script<a class="headerlink" href="#post-change-validation-script" title="Permanent link">&para;</a></h2>
@@ -8520,9 +8634,28 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>[Errno 2] No such file or directory: '/etc/ansible/hosts'</code></strong> — Set the INVENTORY_FILE environment variable or verify the inventory path exists with <code>ls -la /etc/ansible/hosts</code>.
-<strong><code>fatal: [web-01.prod]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}</code></strong> — Ensure SSH keys are properly configured and the ansible_user has passwordless SSH access to all inventory hosts.
-<strong><code>ERROR! Unexpected Exception: No inventory was parsed</code></strong> — Verify the inventory file format is valid YAML/INI and contains at least one host or group definition.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[Errno 2] No such file or directory: '/etc/ansible/hosts'</code></td>
+<td>Set the INVENTORY_FILE environment variable or verify the inventory path exists with <code>ls -la /etc/ansible/hosts</code>.</td>
+</tr>
+<tr>
+<td><code>fatal: [web-01.prod]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}</code></td>
+<td>Ensure SSH keys are properly configured and the ansible_user has passwordless SSH access to all inventory hosts.</td>
+</tr>
+<tr>
+<td><code>ERROR! Unexpected Exception: No inventory was parsed</code></td>
+<td>Verify the inventory file format is valid YAML/INI and contains at least one host or group definition.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="health-check-script">Health Check Script<a class="headerlink" href="#health-check-script" title="Permanent link">&para;</a></h2>
@@ -8583,9 +8716,28 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ansible: command not found</code></strong> — Install Ansible via <code>pip install ansible</code> or your system package manager.
-<strong><code>[Errno 2] No such file or directory: '/etc/ansible/hosts'</code></strong> — Set the <code>INVENTORY_FILE</code> environment variable or create the default inventory file at <code>/etc/ansible/hosts</code>.
-<strong><code>awk: fatal: cannot open file /var/log/ansible.log for reading (No such file or directory)</code></strong> — Create the log directory with <code>mkdir -p /var/log &amp;&amp; touch /var/log/ansible.log</code> or set <code>ANSIBLE_LOG_PATH</code> to an existing file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ansible: command not found</code></td>
+<td>Install Ansible via <code>pip install ansible</code> or your system package manager.</td>
+</tr>
+<tr>
+<td><code>[Errno 2] No such file or directory: '/etc/ansible/hosts'</code></td>
+<td>Set the <code>INVENTORY_FILE</code> environment variable or create the default inventory file at <code>/etc/ansible/hosts</code>.</td>
+</tr>
+<tr>
+<td><code>awk: fatal: cannot open file /var/log/ansible.log for reading (No such file or directory)</code></td>
+<td>Create the log directory with <code>mkdir -p /var/log &amp;&amp; touch /var/log/ansible.log</code> or set <code>ANSIBLE_LOG_PATH</code> to an existing file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8623,7 +8775,7 @@ Ansible automation scripts: wrapper scripts for playbook execution, dynamic inve
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

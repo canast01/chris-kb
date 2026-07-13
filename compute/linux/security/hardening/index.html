@@ -7587,8 +7587,24 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sysctl: cannot stat /etc/sysctl.d/99-hardening.conf: No such file or directory</code></strong> — Verify the hardening configuration file exists in /etc/sysctl.d/ or create it before running <code>sysctl --system</code>.
-<strong><code>error: "net.ipv4.ip_forward" is an unknown key</code></strong> — Ensure the kernel module supporting the parameter is loaded, or check that the parameter name is correct with <code>sysctl -a | grep ip_forward</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sysctl: cannot stat /etc/sysctl.d/99-hardening.conf: No such file or directory</code></td>
+<td>Verify the hardening configuration file exists in /etc/sysctl.d/ or create it before running <code>sysctl --system</code>.</td>
+</tr>
+<tr>
+<td><code>error: "net.ipv4.ip_forward" is an unknown key</code></td>
+<td>Ensure the kernel module supporting the parameter is loaded, or check that the parameter name is correct with <code>sysctl -a | grep ip_forward</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="auditd-system-call-and-file-auditing">auditd — System Call and File Auditing<a class="headerlink" href="#auditd-system-call-and-file-auditing" title="Permanent link">&para;</a></h2>
 <p>auditd records privileged operations, file access, and authentication events. Logs go to <code>/var/log/audit/audit.log</code>.</p>
@@ -7626,8 +7642,24 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to find a match: audit auditd</code></strong> — Verify the repository is enabled with <code>dnf repolist</code> and run <code>dnf clean all &amp;&amp; dnf makecache</code> to refresh metadata.
-<strong><code>Failed to enable unit: Unit file /usr/lib/systemd/system/auditd.service not found.</code></strong> — Ensure the auditd package installed successfully and check <code>/usr/lib/systemd/system/</code> for the service file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to find a match: audit auditd</code></td>
+<td>Verify the repository is enabled with <code>dnf repolist</code> and run <code>dnf clean all &amp;&amp; dnf makecache</code> to refresh metadata.</td>
+</tr>
+<tr>
+<td><code>Failed to enable unit: Unit file /usr/lib/systemd/system/auditd.service not found.</code></td>
+<td>Ensure the auditd package installed successfully and check <code>/usr/lib/systemd/system/</code> for the service file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="audit-rules-etcauditrulesd">Audit Rules — /etc/audit/rules.d/<a class="headerlink" href="#audit-rules-etcauditrulesd" title="Permanent link">&para;</a></h3>
 <p>Place rules in <code>/etc/audit/rules.d/99-hardening.rules</code>. Loaded by <code>augenrules --load</code>.</p>
@@ -7666,9 +7698,28 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: audit rules directory does not exist</code></strong> — Create the directory with <code>mkdir -p /etc/audit/rules.d/</code> and ensure audit.rules file exists.
-<strong><code>Error: kauditd is not running</code></strong> — Start the audit daemon with <code>systemctl start auditd</code> before loading rules.
-<strong><code>No rules loaded.</code></strong> — Verify that <code>/etc/audit/rules.d/audit.rules</code> contains rules and is not empty, then run <code>augenrules --load</code> again.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: audit rules directory does not exist</code></td>
+<td>Create the directory with <code>mkdir -p /etc/audit/rules.d/</code> and ensure audit.rules file exists.</td>
+</tr>
+<tr>
+<td><code>Error: kauditd is not running</code></td>
+<td>Start the audit daemon with <code>systemctl start auditd</code> before loading rules.</td>
+</tr>
+<tr>
+<td><code>No rules loaded.</code></td>
+<td>Verify that <code>/etc/audit/rules.d/audit.rules</code> contains rules and is not empty, then run <code>augenrules --load</code> again.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="querying-audit-logs">Querying Audit Logs<a class="headerlink" href="#querying-audit-logs" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Authentication failures today</span>
@@ -7745,8 +7796,24 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>login.defs: line 15: ENCRYPT_METHOD: unknown variable</code></strong> — Verify the syntax is correct and the line is not commented out; check for trailing whitespace or typos in the variable name.
-<strong><code>Permission denied</code></strong> — Ensure you are editing /etc/login.defs with root privileges (use <code>sudo vi /etc/login.defs</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>login.defs: line 15: ENCRYPT_METHOD: unknown variable</code></td>
+<td>Verify the syntax is correct and the line is not commented out; check for trailing whitespace or typos in the variable name.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure you are editing /etc/login.defs with root privileges (use <code>sudo vi /etc/login.defs</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="pam-password-policy">PAM Password Policy<a class="headerlink" href="#pam-password-policy" title="Permanent link">&para;</a></h2>
 <p><img alt="Linux — Hardening — Diagram" src="../../../../assets/compute-linux-security-hardening-d3.svg" /></p>
@@ -7762,9 +7829,28 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount: /tmp: mount point does not exist.</code></strong> — Create the mount point directory with <code>mkdir -p /tmp</code> before applying fstab changes.
-<strong><code>mount: /var/tmp: unknown filesystem type 'xfs'.</code></strong> — Install XFS tools with <code>apt-get install xfsprogs</code> or <code>yum install xfsprogs</code> and ensure the kernel module is loaded.
-<strong><code>systemd-fstab-generator[...]: Failed to parse mount options in /etc/fstab:[...] Unknown option "noexec".</code></strong> — Verify the filesystem type supports the mount option (e.g., tmpfs does not support <code>noexec</code>; use <code>nodev,nosuid</code> only).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount: /tmp: mount point does not exist.</code></td>
+<td>Create the mount point directory with <code>mkdir -p /tmp</code> before applying fstab changes.</td>
+</tr>
+<tr>
+<td><code>mount: /var/tmp: unknown filesystem type 'xfs'.</code></td>
+<td>Install XFS tools with <code>apt-get install xfsprogs</code> or <code>yum install xfsprogs</code> and ensure the kernel module is loaded.</td>
+</tr>
+<tr>
+<td><code>systemd-fstab-generator[...]: Failed to parse mount options in /etc/fstab:[...] Unknown option "noexec".</code></td>
+<td>Verify the filesystem type supports the mount option (e.g., tmpfs does not support <code>noexec</code>; use <code>nodev,nosuid</code> only).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify mount options</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;/tmp|/home|/var/tmp|/dev/shm&quot;</span>
@@ -7780,9 +7866,28 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount: /tmp: not mounted or mount point not found</code></strong> — Verify the mount point exists and is actually mounted with <code>mount | grep /tmp</code> before attempting remount.
-<strong><code>mount: only root can do that</code></strong> — Run the remount command with <code>sudo</code> or as the root user.
-<strong><code>mount: /tmp: device or resource busy</code></strong> — Close any open files or processes using /tmp (check with <code>lsof /tmp</code>), or use lazy unmount with <code>umount -l /tmp</code> before remounting.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount: /tmp: not mounted or mount point not found</code></td>
+<td>Verify the mount point exists and is actually mounted with <code>mount | grep /tmp</code> before attempting remount.</td>
+</tr>
+<tr>
+<td><code>mount: only root can do that</code></td>
+<td>Run the remount command with <code>sudo</code> or as the root user.</td>
+</tr>
+<tr>
+<td><code>mount: /tmp: device or resource busy</code></td>
+<td>Close any open files or processes using /tmp (check with <code>lsof /tmp</code>), or use lazy unmount with <code>umount -l /tmp</code> before remounting.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="disable-unused-filesystems">Disable Unused Filesystems<a class="headerlink" href="#disable-unused-filesystems" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># /etc/modprobe.d/hardening.conf — prevent loading unused filesystem modules</span>
@@ -7799,8 +7904,24 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>modprobe: FATAL: Module usb-storage not found.</code></strong> — Remove or comment out the usb-storage line if the module doesn't exist on your kernel version, or verify the module name with <code>lsmod | grep usb</code>.
-<strong><code>Permission denied</code></strong> — Ensure you are editing <code>/etc/modprobe.d/hardening.conf</code> with root privileges using <code>sudo</code> or as the root user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>modprobe: FATAL: Module usb-storage not found.</code></td>
+<td>Remove or comment out the usb-storage line if the module doesn't exist on your kernel version, or verify the module name with <code>lsmod | grep usb</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure you are editing <code>/etc/modprobe.d/hardening.conf</code> with root privileges using <code>sudo</code> or as the root user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="secure-boot-and-kernel">Secure Boot and Kernel<a class="headerlink" href="#secure-boot-and-kernel" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Verify GRUB password is set (RHEL)</span>
@@ -7827,9 +7948,28 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grub2-setpasswd: command not found</code></strong> — Install grub2-tools package with <code>yum install grub2-tools</code> or <code>dnf install grub2-tools</code>.
-<strong><code>ERROR: mokutil not found</code></strong> — Install efibootmgr or mokutil package with <code>yum install mokutil</code> on UEFI systems.
-<strong><code>modinfo: ERROR: Module &lt;module-name&gt; not found</code></strong> — Replace <code>&lt;module-name&gt;</code> with an actual loaded module name from <code>lsmod</code> output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grub2-setpasswd: command not found</code></td>
+<td>Install grub2-tools package with <code>yum install grub2-tools</code> or <code>dnf install grub2-tools</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: mokutil not found</code></td>
+<td>Install efibootmgr or mokutil package with <code>yum install mokutil</code> on UEFI systems.</td>
+</tr>
+<tr>
+<td><code>modinfo: ERROR: Module &lt;module-name&gt; not found</code></td>
+<td>Replace <code>&lt;module-name&gt;</code> with an actual loaded module name from <code>lsmod</code> output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cron-and-scheduled-tasks">Cron and Scheduled Tasks<a class="headerlink" href="#cron-and-scheduled-tasks" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Restrict cron access to root and wheel</span>
@@ -7848,8 +7988,24 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>chmod: cannot access '/etc/at.allow': No such file or directory</code></strong> — Create the file first with <code>touch /etc/at.allow</code> before setting permissions, or verify the <code>at</code> daemon package is installed.
-<strong><code>Permission denied</code></strong> — Run all commands with <code>sudo</code> or as root, since modifying <code>/etc/cron.*</code> and <code>/etc/at.allow</code> requires elevated privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chmod: cannot access '/etc/at.allow': No such file or directory</code></td>
+<td>Create the file first with <code>touch /etc/at.allow</code> before setting permissions, or verify the <code>at</code> daemon package is installed.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run all commands with <code>sudo</code> or as root, since modifying <code>/etc/cron.*</code> and <code>/etc/at.allow</code> requires elevated privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cis-control-reference">CIS Control Reference<a class="headerlink" href="#cis-control-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -7974,9 +8130,28 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: INVALID_ZONE: drop</code></strong> — Verify the zone exists with <code>firewall-cmd --get-zones</code> and use a valid zone name like <code>public</code> or <code>internal</code>.
-<strong><code>ERROR: Could not find a matching rule</code></strong> — Ensure the service name is correct by checking <code>firewall-cmd --get-services</code> or use port numbers instead (e.g., <code>--add-port=22/tcp</code>).
-<strong><code>Command 'ufw' not found</code></strong> — Install UFW with <code>apt-get install ufw</code> on Ubuntu/Debian systems before running ufw commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: INVALID_ZONE: drop</code></td>
+<td>Verify the zone exists with <code>firewall-cmd --get-zones</code> and use a valid zone name like <code>public</code> or <code>internal</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: Could not find a matching rule</code></td>
+<td>Ensure the service name is correct by checking <code>firewall-cmd --get-services</code> or use port numbers instead (e.g., <code>--add-port=22/tcp</code>).</td>
+</tr>
+<tr>
+<td><code>Command 'ufw' not found</code></td>
+<td>Install UFW with <code>apt-get install ufw</code> on Ubuntu/Debian systems before running ufw commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="post-hardening-verification">Post-Hardening Verification<a class="headerlink" href="#post-hardening-verification" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Run lynis after hardening to compare baseline</span>
@@ -8012,9 +8187,28 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>command not found: lynis</code></strong> — Install lynis with <code>apt-get install lynis</code> (Debian/Ubuntu) or <code>yum install lynis</code> (RHEL/CentOS).
-<strong><code>sshd: no hostkeys available -- exiting</code></strong> — Run <code>sshd -T</code> only on systems with SSH daemon running; if testing config syntax, use <code>sshd -t</code> instead.
-<strong><code>stat: cannot stat '/etc/gshadow': No such file or directory</code></strong> — This file may not exist on all systems; check file permissions individually with <code>stat /etc/shadow</code> if gshadow is absent.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found: lynis</code></td>
+<td>Install lynis with <code>apt-get install lynis</code> (Debian/Ubuntu) or <code>yum install lynis</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>sshd: no hostkeys available -- exiting</code></td>
+<td>Run <code>sshd -T</code> only on systems with SSH daemon running; if testing config syntax, use <code>sshd -t</code> instead.</td>
+</tr>
+<tr>
+<td><code>stat: cannot stat '/etc/gshadow': No such file or directory</code></td>
+<td>This file may not exist on all systems; check file permissions individually with <code>stat /etc/shadow</code> if gshadow is absent.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8045,7 +8239,7 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

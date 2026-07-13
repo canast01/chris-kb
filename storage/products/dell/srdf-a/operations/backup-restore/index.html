@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="SRDF/A — Backup &amp; Restore · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "SRDF/A — Backup &amp; Restore", "url": "https://chrisanastasiadis.com/storage/products/dell/srdf-a/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "SRDF/A — Backup &amp; Restore", "url": "https://chrisanastasiadis.com/storage/products/dell/srdf-a/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -9017,9 +9017,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMCLI_SID not set or invalid</code></strong> — Export the correct Symmetrix SID with <code>export SYMCLI_SID=000123456789</code> before running symrdf commands.
-<strong><code>RDF group &lt;rdf_group&gt; not found</code></strong> — Verify the RDF group number exists on the array by running <code>symrdf -sid 000123456789 list</code> to display all configured groups.
-<strong><code>Cannot connect to Symmetrix 000123456789</code></strong> — Ensure the Solutions Enabler daemon is running with <code>sudo /opt/emc/SYMCLI/bin/stordaemon start</code> and the array is reachable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMCLI_SID not set or invalid</code></td>
+<td>Export the correct Symmetrix SID with <code>export SYMCLI_SID=000123456789</code> before running symrdf commands.</td>
+</tr>
+<tr>
+<td><code>RDF group &lt;rdf_group&gt; not found</code></td>
+<td>Verify the RDF group number exists on the array by running <code>symrdf -sid 000123456789 list</code> to display all configured groups.</td>
+</tr>
+<tr>
+<td><code>Cannot connect to Symmetrix 000123456789</code></td>
+<td>Ensure the Solutions Enabler daemon is running with <code>sudo /opt/emc/SYMCLI/bin/stordaemon start</code> and the array is reachable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Re-establish SRDF from R2 (current production) back to R1 (recovered site)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># This syncs changes made on R2 back to R1</span>
@@ -9048,8 +9067,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SRDF group PROD_RDF_GROUP is not in a valid state for establish operation</code></strong> — Verify the group is in Suspended or Failed state using <code>symrdf query -g PROD_RDF_GROUP</code> before attempting establish.
-<strong><code>Cannot establish: R2 is currently in Write Disabled (WD) mode</code></strong> — Add the <code>-force</code> flag to the establish command to override write protection, or manually enable writes on R2 first with <code>symrdf set -g PROD_RDF_GROUP -writeenabled</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SRDF group PROD_RDF_GROUP is not in a valid state for establish operation</code></td>
+<td>Verify the group is in Suspended or Failed state using <code>symrdf query -g PROD_RDF_GROUP</code> before attempting establish.</td>
+</tr>
+<tr>
+<td><code>Cannot establish: R2 is currently in Write Disabled (WD) mode</code></td>
+<td>Add the <code>-force</code> flag to the establish command to override write protection, or manually enable writes on R2 first with <code>symrdf set -g PROD_RDF_GROUP -writeenabled</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restore re-syncs R1 from R2 in full</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>PROD_RDF_GROUP<span class="w"> </span>restore<span class="w"> </span>-force
@@ -9074,9 +9109,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Cannot perform restore while RDF pair is in Synchronized state</code></strong> — Issue a <code>symrdf -g PROD_RDF_GROUP query</code> first to verify the pair is in a restorable state (Consistent or Failed); if synchronized, break the link with <code>symrdf -g PROD_RDF_GROUP break -force</code> before restoring.
-<strong><code>symrdf: RDF group PROD_RDF_GROUP not found</code></strong> — Verify the group name matches your Symmetrix configuration by running <code>symrdf list</code> to display all available RDF groups.
-<strong><code>symrdf: Insufficient privileges to execute restore operation</code></strong> — Run the command with root privileges or ensure your user account has RDF administrative rights in the Symmetrix access control list.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Cannot perform restore while RDF pair is in Synchronized state</code></td>
+<td>Issue a <code>symrdf -g PROD_RDF_GROUP query</code> first to verify the pair is in a restorable state (Consistent or Failed); if synchronized, break the link with <code>symrdf -g PROD_RDF_GROUP break -force</code> before restoring.</td>
+</tr>
+<tr>
+<td><code>symrdf: RDF group PROD_RDF_GROUP not found</code></td>
+<td>Verify the group name matches your Symmetrix configuration by running <code>symrdf list</code> to display all available RDF groups.</td>
+</tr>
+<tr>
+<td><code>symrdf: Insufficient privileges to execute restore operation</code></td>
+<td>Run the command with root privileges or ensure your user account has RDF administrative rights in the Symmetrix access control list.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Ensure R1 site volumes are accessible and array is healthy</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># 2. Perform a &#39;failover&#39; back in the original direction (now R2→R1)</span>
@@ -9135,9 +9189,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Command not found</code></strong> — Ensure the EMC Solutions Enabler package is installed and the PATH includes the Symmetrix CLI bin directory.
-<strong><code>PROD_RDF_GROUP: Invalid RDF group name</code></strong> — Verify the RDF group name exists by running <code>symrdf list</code> and use the correct group identifier.
-<strong><code>Error: Array not responding</code></strong> — Check network connectivity to the Symmetrix array and confirm the SYMCLI_CONNECT environment variable is set correctly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Command not found</code></td>
+<td>Ensure the EMC Solutions Enabler package is installed and the PATH includes the Symmetrix CLI bin directory.</td>
+</tr>
+<tr>
+<td><code>PROD_RDF_GROUP: Invalid RDF group name</code></td>
+<td>Verify the RDF group name exists by running <code>symrdf list</code> and use the correct group identifier.</td>
+</tr>
+<tr>
+<td><code>Error: Array not responding</code></td>
+<td>Check network connectivity to the Symmetrix array and confirm the SYMCLI_CONNECT environment variable is set correctly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9183,7 +9256,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

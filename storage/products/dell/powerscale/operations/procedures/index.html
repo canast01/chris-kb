@@ -9391,9 +9391,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Export path /ifs/data/myshare does not exist</code></strong> — Verify the path exists on the cluster with <code>isi fs ls /ifs/data/myshare</code> and create it if needed.
-<strong><code>Error: Invalid client specification '10.0.0.0/33'</code></strong> — Use a valid CIDR notation with subnet mask between /1 and /32, or specify individual IP addresses.
-<strong><code>Error: Export &lt;export_id&gt; is currently mounted by 5 clients</code></strong> — Unmount all active NFS clients before deleting the export, or use <code>--force</code> flag if available.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Export path /ifs/data/myshare does not exist</code></td>
+<td>Verify the path exists on the cluster with <code>isi fs ls /ifs/data/myshare</code> and create it if needed.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid client specification '10.0.0.0/33'</code></td>
+<td>Use a valid CIDR notation with subnet mask between /1 and /32, or specify individual IP addresses.</td>
+</tr>
+<tr>
+<td><code>Error: Export &lt;export_id&gt; is currently mounted by 5 clients</code></td>
+<td>Unmount all active NFS clients before deleting the export, or use <code>--force</code> flag if available.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="export-client-access-levels">Export Client Access Levels<a class="headerlink" href="#export-client-access-levels" title="Permanent link">&para;</a></h3>
 <p><img alt="Export Client Access Levels" src="../../../../../../assets/powerscale-proc-export-client-access-levels.svg" /></p>
@@ -9450,8 +9469,24 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid access zone 'Zone1'</code></strong> — Verify the zone name exists by running <code>isi zones list</code> and use the exact name shown in the output.
-<strong><code>Error: Path /ifs/zone1/data does not exist</code></strong> — Create the directory first with <code>mkdir -p /ifs/zone1/data</code> before exporting it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid access zone 'Zone1'</code></td>
+<td>Verify the zone name exists by running <code>isi zones list</code> and use the exact name shown in the output.</td>
+</tr>
+<tr>
+<td><code>Error: Path /ifs/zone1/data does not exist</code></td>
+<td>Create the directory first with <code>mkdir -p /ifs/zone1/data</code> before exporting it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="troubleshooting-nfs">Troubleshooting NFS<a class="headerlink" href="#troubleshooting-nfs" title="Permanent link">&para;</a></h3>
 <p><img alt="Troubleshooting NFS" src="../../../../../../assets/powerscale-proc-troubleshooting-nfs.svg" /></p>
@@ -9507,9 +9542,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount.nfs: access denied by server while mounting 192.168.1.50:/ifs/data/share</code></strong> — Verify the client IP is in the NFS export allow list with <code>isi nfs exports list</code> and add it if missing.
-<strong><code>showmount: RPC: Unable to receive; errno = No route to host</code></strong> — Confirm network connectivity to the PowerScale cluster IP and that NFS service is running with <code>isi services nfs status</code>.
-<strong><code>ls: cannot open directory '/ifs/data/share': Permission denied</code></strong> — Check file permissions on the cluster with <code>isi nfs exports view /ifs/data/share</code> and verify the connecting user has appropriate access rights.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting 192.168.1.50:/ifs/data/share</code></td>
+<td>Verify the client IP is in the NFS export allow list with <code>isi nfs exports list</code> and add it if missing.</td>
+</tr>
+<tr>
+<td><code>showmount: RPC: Unable to receive; errno = No route to host</code></td>
+<td>Confirm network connectivity to the PowerScale cluster IP and that NFS service is running with <code>isi services nfs status</code>.</td>
+</tr>
+<tr>
+<td><code>ls: cannot open directory '/ifs/data/share': Permission denied</code></td>
+<td>Check file permissions on the cluster with <code>isi nfs exports view /ifs/data/share</code> and verify the connecting user has appropriate access rights.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="smb-share-management">SMB Share Management<a class="headerlink" href="#smb-share-management" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all SMB shares</span>
@@ -9570,9 +9624,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Share 'project1' already exists</code></strong> — Use <code>isi smb shares modify</code> instead of create, or choose a different share name.
-<strong><code>Error: Path '/ifs/data/project1' does not exist</code></strong> — Create the directory first with <code>mkdir -p /ifs/data/project1</code> before creating the share.
-<strong><code>Error: Permission denied</code></strong> — Run the command with appropriate cluster admin privileges or use <code>sudo isi</code> if configured.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Share 'project1' already exists</code></td>
+<td>Use <code>isi smb shares modify</code> instead of create, or choose a different share name.</td>
+</tr>
+<tr>
+<td><code>Error: Path '/ifs/data/project1' does not exist</code></td>
+<td>Create the directory first with <code>mkdir -p /ifs/data/project1</code> before creating the share.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Run the command with appropriate cluster admin privileges or use <code>sudo isi</code> if configured.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="smb-permissions">SMB Permissions<a class="headerlink" href="#smb-permissions" title="Permanent link">&para;</a></h3>
 <p><img alt="SMB Permissions" src="../../../../../../assets/powerscale-proc-smb-permissions.svg" /></p>
@@ -9609,9 +9682,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to resolve user 'CORP\jsmith': User not found</code></strong> — Verify the username exists in Active Directory and use the correct domain\username format with proper escaping.
-<strong><code>Error: Permission entry already exists for user:CORP\jsmith:allow:read</code></strong> — Remove the duplicate entry first using <code>--remove-permissions</code> before re-adding with different permissions.
-<strong><code>Error: Access denied: Insufficient privileges to modify share permissions</code></strong> — Run the command as root or a user with administrative privileges on the PowerScale cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to resolve user 'CORP\jsmith': User not found</code></td>
+<td>Verify the username exists in Active Directory and use the correct domain\username format with proper escaping.</td>
+</tr>
+<tr>
+<td><code>Error: Permission entry already exists for user:CORP\jsmith:allow:read</code></td>
+<td>Remove the duplicate entry first using <code>--remove-permissions</code> before re-adding with different permissions.</td>
+</tr>
+<tr>
+<td><code>Error: Access denied: Insufficient privileges to modify share permissions</code></td>
+<td>Run the command as root or a user with administrative privileges on the PowerScale cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="smb-sessions-and-open-files">SMB Sessions and Open Files<a class="headerlink" href="#smb-sessions-and-open-files" title="Permanent link">&para;</a></h3>
 <p><img alt="SMB Sessions and Open Files" src="../../../../../../assets/powerscale-proc-smb-sessions-and-open-files.svg" /></p>
@@ -9640,8 +9732,24 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid session ID format</code></strong> — Ensure the session ID is enclosed in quotes and matches the exact format shown in the sessions list output.
-<strong><code>Error: Session not found or already disconnected</code></strong> — Verify the session ID is still active by running <code>isi smb sessions list</code> again before attempting deletion.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid session ID format</code></td>
+<td>Ensure the session ID is enclosed in quotes and matches the exact format shown in the sessions list output.</td>
+</tr>
+<tr>
+<td><code>Error: Session not found or already disconnected</code></td>
+<td>Verify the session ID is still active by running <code>isi smb sessions list</code> again before attempting deletion.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="troubleshooting-smb">Troubleshooting SMB<a class="headerlink" href="#troubleshooting-smb" title="Permanent link">&para;</a></h3>
 <p><img alt="Troubleshooting SMB" src="../../../../../../assets/powerscale-proc-troubleshooting-smb.svg" /></p>
@@ -9705,9 +9813,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>isi: command not found</code></strong> — Ensure you are running commands on the PowerScale cluster directly or via SSH, not from a remote workstation without the OneFS CLI installed.
-<strong><code>Error: Invalid username &lt;username&gt;</code></strong> — Replace <code>&lt;username&gt;</code> with an actual AD user in the format <code>DOMAIN\username</code> (e.g., <code>CORP\jsmith</code>).
-<strong><code>Error: Active Directory is not joined</code></strong> — Run <code>isi auth ads create</code> to join the cluster to Active Directory before querying authentication status.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>isi: command not found</code></td>
+<td>Ensure you are running commands on the PowerScale cluster directly or via SSH, not from a remote workstation without the OneFS CLI installed.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid username &lt;username&gt;</code></td>
+<td>Replace <code>&lt;username&gt;</code> with an actual AD user in the format <code>DOMAIN\username</code> (e.g., <code>CORP\jsmith</code>).</td>
+</tr>
+<tr>
+<td><code>Error: Active Directory is not joined</code></td>
+<td>Run <code>isi auth ads create</code> to join the cluster to Active Directory before querying authentication status.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="snapshot-management">Snapshot Management<a class="headerlink" href="#snapshot-management" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Create a snapshot of a directory</span>
@@ -9748,9 +9875,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Snapshot not found: &lt;snap_id&gt;</code></strong> — Verify the snapshot ID or name exists with <code>isi snapshot snapshots list</code> before attempting deletion.
-<strong><code>Error: Permission denied</code></strong> — Ensure your user account has snapshot management privileges; contact your OneFS administrator to grant appropriate roles.
-<strong><code>Error: Snapshot is locked and cannot be deleted</code></strong> — Wait for any active replication or backup jobs to complete, or use <code>isi snapshot snapshots view &lt;snap_id&gt;</code> to check the lock status.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Snapshot not found: &lt;snap_id&gt;</code></td>
+<td>Verify the snapshot ID or name exists with <code>isi snapshot snapshots list</code> before attempting deletion.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Ensure your user account has snapshot management privileges; contact your OneFS administrator to grant appropriate roles.</td>
+</tr>
+<tr>
+<td><code>Error: Snapshot is locked and cannot be deleted</code></td>
+<td>Wait for any active replication or backup jobs to complete, or use <code>isi snapshot snapshots view &lt;snap_id&gt;</code> to check the lock status.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="snapshot-schedules">Snapshot Schedules<a class="headerlink" href="#snapshot-schedules" title="Permanent link">&para;</a></h3>
 <p><img alt="Snapshot Schedules" src="../../../../../../assets/powerscale-proc-snapshot-schedules.svg" /></p>
@@ -9790,9 +9936,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Path does not exist: /ifs/data/project1</code></strong> — Verify the target path exists and is accessible with <code>isi ls /ifs/data/project1</code> before creating the schedule.
-<strong><code>Error: Invalid retention format '&lt;value&gt;'</code></strong> — Use valid retention syntax like <code>7D</code>, <code>2W</code>, <code>1M</code>, or <code>1Y</code> (days, weeks, months, or years).
-<strong><code>Error: Schedule '&lt;schedule_name&gt;' not found</code></strong> — Run <code>isi snapshot schedules list</code> to confirm the exact schedule name before modifying or deleting.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Path does not exist: /ifs/data/project1</code></td>
+<td>Verify the target path exists and is accessible with <code>isi ls /ifs/data/project1</code> before creating the schedule.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid retention format '&lt;value&gt;'</code></td>
+<td>Use valid retention syntax like <code>7D</code>, <code>2W</code>, <code>1M</code>, or <code>1Y</code> (days, weeks, months, or years).</td>
+</tr>
+<tr>
+<td><code>Error: Schedule '&lt;schedule_name&gt;' not found</code></td>
+<td>Run <code>isi snapshot schedules list</code> to confirm the exact schedule name before modifying or deleting.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="recovering-files-from-a-snapshot">Recovering Files from a Snapshot<a class="headerlink" href="#recovering-files-from-a-snapshot" title="Permanent link">&para;</a></h3>
 <p><img alt="Recovering Files from a Snapshot" src="../../../../../../assets/powerscale-proc-recovering-files-from-a-snapshot.svg" /></p>
@@ -9831,9 +9996,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cp: cannot create regular file '/ifs/data/project1/report.xlsx': Permission denied</code></strong> — Verify the user running the command has write permissions on <code>/ifs/data/project1/</code> using <code>isi auth access list /ifs/data/project1/</code>.
-<strong><code>rsync: change_dir "/ifs/data/project1/.snapshot/project1-20260101" failed: No such file or directory (2)</code></strong> — Confirm the snapshot name exists by running <code>isi snapshot snapshots list</code> and verify the exact snapshot directory path.
-<strong><code>Error: Invalid snapshot ID format</code></strong> — Use <code>isi snapshot snapshots list</code> to retrieve the correct snapshot ID and ensure it is a valid UUID.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cp: cannot create regular file '/ifs/data/project1/report.xlsx': Permission denied</code></td>
+<td>Verify the user running the command has write permissions on <code>/ifs/data/project1/</code> using <code>isi auth access list /ifs/data/project1/</code>.</td>
+</tr>
+<tr>
+<td><code>rsync: change_dir "/ifs/data/project1/.snapshot/project1-20260101" failed: No such file or directory (2)</code></td>
+<td>Confirm the snapshot name exists by running <code>isi snapshot snapshots list</code> and verify the exact snapshot directory path.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid snapshot ID format</code></td>
+<td>Use <code>isi snapshot snapshots list</code> to retrieve the correct snapshot ID and ensure it is a valid UUID.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h3 id="smartconnect-zone-configuration">SmartConnect Zone Configuration<a class="headerlink" href="#smartconnect-zone-configuration" title="Permanent link">&para;</a></h3>
@@ -9864,9 +10048,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: subnet0 does not exist</code></strong> — Verify the subnet name with <code>isi network subnets list</code> and use the correct subnet identifier.
-<strong><code>Error: Interface 1:ext-1 not found</code></strong> — Confirm the interface exists and is properly configured with <code>isi network interfaces list</code>.
-<strong><code>Error: SmartConnect is not licensed</code></strong> — Enable SmartConnect licensing on the cluster or remove the <code>--sc-dns-zone</code> parameter to create a standard pool.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: subnet0 does not exist</code></td>
+<td>Verify the subnet name with <code>isi network subnets list</code> and use the correct subnet identifier.</td>
+</tr>
+<tr>
+<td><code>Error: Interface 1:ext-1 not found</code></td>
+<td>Confirm the interface exists and is properly configured with <code>isi network interfaces list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: SmartConnect is not licensed</code></td>
+<td>Enable SmartConnect licensing on the cluster or remove the <code>--sc-dns-zone</code> parameter to create a standard pool.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Delegate the SmartConnect zone FQDN (<code>pool1.cluster.domain.com</code>) in your DNS infrastructure to the cluster's SmartConnect service IP. Test: <code>nslookup pool1.cluster.domain.com</code> — it should return multiple node IPs in rotation across successive lookups.</p>
 <h3 id="smartquotas-create-and-monitor-quotas">SmartQuotas — Create and Monitor Quotas<a class="headerlink" href="#smartquotas-create-and-monitor-quotas" title="Permanent link">&para;</a></h3>
@@ -9913,9 +10116,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Path /ifs/data/project1 does not exist</code></strong> — Create the directory first with <code>mkdir -p /ifs/data/project1</code> before applying the quota.
-<strong><code>Error: Invalid threshold value: hard-threshold must be greater than soft-threshold</code></strong> — Ensure hard-threshold (10T) is larger than soft-threshold (8T) and advisory-threshold (9T).
-<strong><code>Error: Permission denied: insufficient privileges to create quotas</code></strong> — Run the command as root or a user with cluster admin privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Path /ifs/data/project1 does not exist</code></td>
+<td>Create the directory first with <code>mkdir -p /ifs/data/project1</code> before applying the quota.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid threshold value: hard-threshold must be greater than soft-threshold</code></td>
+<td>Ensure hard-threshold (10T) is larger than soft-threshold (8T) and advisory-threshold (9T).</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied: insufficient privileges to create quotas</code></td>
+<td>Run the command as root or a user with cluster admin privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Quota events appear in <code>isi event events list</code> when thresholds are crossed. Review reports regularly and adjust thresholds before directories approach the hard limit.</p>
 <h3 id="synciq-configure-replication-policy">SyncIQ — Configure Replication Policy<a class="headerlink" href="#synciq-configure-replication-policy" title="Permanent link">&para;</a></h3>
@@ -9954,9 +10176,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid target host '192.168.100.45' - host unreachable</code></strong> — Verify network connectivity to the remote cluster IP and ensure the firewall rules permit SyncIQ traffic on port 8080.
-<strong><code>Error: Source path '/ifs/data' does not exist</code></strong> — Confirm the source path exists on the local cluster using <code>isi ls /ifs/data</code> before creating the policy.
-<strong><code>Error: Policy 'DR-Policy' already exists</code></strong> — Use a unique policy name or delete the existing policy with <code>isi sync policies delete DR-Policy</code> before recreating it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid target host '192.168.100.45' - host unreachable</code></td>
+<td>Verify network connectivity to the remote cluster IP and ensure the firewall rules permit SyncIQ traffic on port 8080.</td>
+</tr>
+<tr>
+<td><code>Error: Source path '/ifs/data' does not exist</code></td>
+<td>Confirm the source path exists on the local cluster using <code>isi ls /ifs/data</code> before creating the policy.</td>
+</tr>
+<tr>
+<td><code>Error: Policy 'DR-Policy' already exists</code></td>
+<td>Use a unique policy name or delete the existing policy with <code>isi sync policies delete DR-Policy</code> before recreating it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Confirm the job completes with status SUCCESS. Check <code>isi sync reports list --policy=DR-Policy</code> for transfer statistics and any errors from previous runs.</p>
 <h3 id="synciq-failover-and-failback">SyncIQ — Failover and Failback<a class="headerlink" href="#synciq-failover-and-failback" title="Permanent link">&para;</a></h3>
@@ -9996,9 +10237,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Policy 'DR-Policy' not found or is not in a failed state</code></strong> — Verify the policy name matches exactly and that the primary cluster has actually failed before running allow-write.
-<strong><code>Error: Resync-prep failed: replication is still active</code></strong> — Run <code>isi sync recovery allow-write --policy=DR-Policy</code> first to break the replication relationship before attempting resync-prep.
-<strong><code>Error: Commit failed: target cluster is not in resync-prep state</code></strong> — Ensure resync-prep completed successfully on the target cluster and no other sync operations are in progress.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Policy 'DR-Policy' not found or is not in a failed state</code></td>
+<td>Verify the policy name matches exactly and that the primary cluster has actually failed before running allow-write.</td>
+</tr>
+<tr>
+<td><code>Error: Resync-prep failed: replication is still active</code></td>
+<td>Run <code>isi sync recovery allow-write --policy=DR-Policy</code> first to break the replication relationship before attempting resync-prep.</td>
+</tr>
+<tr>
+<td><code>Error: Commit failed: target cluster is not in resync-prep state</code></td>
+<td>Ensure resync-prep completed successfully on the target cluster and no other sync operations are in progress.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After failback, trigger a manual run with <code>isi sync policies run DR-Policy</code> and confirm SUCCESS before updating client mount points back to the primary cluster.</p>
 <h3 id="access-zone-management">Access Zone Management<a class="headerlink" href="#access-zone-management" title="Permanent link">&para;</a></h3>
@@ -10027,9 +10287,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: zone 'Zone-DMZ' already exists</code></strong> — Use <code>isi zone zones view Zone-DMZ</code> to verify the zone exists, then skip creation or use a different zone name.
-<strong><code>Error: path '/ifs/dmz' does not exist and --create-path not specified</code></strong> — Add the <code>--create-path</code> flag to the create command to automatically create the directory structure.
-<strong><code>Error: authentication provider 'lsa-local-provider:System' not found</code></strong> — Verify the provider name with <code>isi auth providers list</code> and use the exact provider name from the output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: zone 'Zone-DMZ' already exists</code></td>
+<td>Use <code>isi zone zones view Zone-DMZ</code> to verify the zone exists, then skip creation or use a different zone name.</td>
+</tr>
+<tr>
+<td><code>Error: path '/ifs/dmz' does not exist and --create-path not specified</code></td>
+<td>Add the <code>--create-path</code> flag to the create command to automatically create the directory structure.</td>
+</tr>
+<tr>
+<td><code>Error: authentication provider 'lsa-local-provider:System' not found</code></td>
+<td>Verify the provider name with <code>isi auth providers list</code> and use the exact provider name from the output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After creating the zone, create a dedicated IP pool and SmartConnect zone scoped to <code>Zone-DMZ</code> so that clients connecting to the zone's IP are isolated from other zones. Verify NFS exports and SMB shares in the zone are reachable from the correct client subnet.</p>
 <h3 id="node-pool-and-tier-management">Node Pool and Tier Management<a class="headerlink" href="#node-pool-and-tier-management" title="Permanent link">&para;</a></h3>
@@ -10068,9 +10347,28 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid node pool name '&lt;pool-name&gt;'</code></strong> — Replace <code>&lt;pool-name&gt;</code> with an actual pool name from the <code>isi storagepool nodepools list</code> output.
-<strong><code>Error: One or more nodes in the list are invalid or offline</code></strong> — Verify node numbers exist and are online using <code>isi nodes list</code> before assigning them to a pool.
-<strong><code>Error: File pool policy 'Archive' already exists</code></strong> — Use <code>isi filepool policies modify Archive</code> to update an existing policy instead of creating a duplicate.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid node pool name '&lt;pool-name&gt;'</code></td>
+<td>Replace <code>&lt;pool-name&gt;</code> with an actual pool name from the <code>isi storagepool nodepools list</code> output.</td>
+</tr>
+<tr>
+<td><code>Error: One or more nodes in the list are invalid or offline</code></td>
+<td>Verify node numbers exist and are online using <code>isi nodes list</code> before assigning them to a pool.</td>
+</tr>
+<tr>
+<td><code>Error: File pool policy 'Archive' already exists</code></td>
+<td>Use <code>isi filepool policies modify Archive</code> to update an existing policy instead of creating a duplicate.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Run <code>isi job list</code> after modifying pool assignments — a Restripe job will start automatically to redistribute data. Monitor it to completion before making further pool changes.</p>
 <hr />
@@ -10109,7 +10407,7 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

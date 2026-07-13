@@ -7438,9 +7438,28 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>authentication required</code></strong> — Run <code>gh auth login</code> first to authenticate with GitHub.
-<strong><code>HTTP 404: Not Found</code></strong> — Verify the run ID exists and you have access to the repository with <code>gh run list</code>.
-<strong><code>permission denied while trying to connect to the Docker daemon</code></strong> — This is a workflow runtime issue, not a CLI issue; check the run logs with <code>gh run view &lt;run-id&gt; --log</code> to see the actual failure in the Actions environment.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>authentication required</code></td>
+<td>Run <code>gh auth login</code> first to authenticate with GitHub.</td>
+</tr>
+<tr>
+<td><code>HTTP 404: Not Found</code></td>
+<td>Verify the run ID exists and you have access to the repository with <code>gh run list</code>.</td>
+</tr>
+<tr>
+<td><code>permission denied while trying to connect to the Docker daemon</code></td>
+<td>This is a workflow runtime issue, not a CLI issue; check the run logs with <code>gh run view &lt;run-id&gt; --log</code> to see the actual failure in the Actions environment.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-collect-self-hosted-runner-diagnostics">2. Collect self-hosted runner diagnostics<a class="headerlink" href="#2-collect-self-hosted-runner-diagnostics" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Runner diagnostics are in _diag/ under the runner install directory</span>
@@ -7486,9 +7505,28 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cat: /opt/actions-runner/.runner: No such file or directory</code></strong> — Verify the runner is installed in /opt/actions-runner and re-run the installation script if the directory is missing.
-<strong><code>sudo: systemctl: command not found</code></strong> — Use <code>launchctl list | grep actions.runner</code> on macOS instead, or verify systemd is available on Linux systems.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Ensure /opt/actions-runner/package.json exists and is valid JSON; reinstall the runner if the file is corrupted.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat: /opt/actions-runner/.runner: No such file or directory</code></td>
+<td>Verify the runner is installed in /opt/actions-runner and re-run the installation script if the directory is missing.</td>
+</tr>
+<tr>
+<td><code>sudo: systemctl: command not found</code></td>
+<td>Use <code>launchctl list | grep actions.runner</code> on macOS instead, or verify systemd is available on Linux systems.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></td>
+<td>Ensure /opt/actions-runner/package.json exists and is valid JSON; reinstall the runner if the file is corrupted.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="3-collect-oidc-configuration-for-oidccloud-auth-issues">3. Collect OIDC configuration (for OIDC/cloud auth issues)<a class="headerlink" href="#3-collect-oidc-configuration-for-oidccloud-auth-issues" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check OIDC subject customization for the repo</span>
@@ -7519,8 +7557,24 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HTTP 404: Not Found</code></strong> — Verify the repository slug format is correct and the repo exists with <code>gh repo view {owner}/{repo}</code>.
-<strong><code>Error: Not enough permissions to access this endpoint</code></strong> — Ensure your GitHub token has <code>admin:org_hook</code> and <code>repo</code> scopes by running <code>gh auth status</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HTTP 404: Not Found</code></td>
+<td>Verify the repository slug format is correct and the repo exists with <code>gh repo view {owner}/{repo}</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Not enough permissions to access this endpoint</code></td>
+<td>Ensure your GitHub token has <code>admin:org_hook</code> and <code>repo</code> scopes by running <code>gh auth status</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="4-export-audit-log-enterprise-only">4. Export audit log (Enterprise only)<a class="headerlink" href="#4-export-audit-log-enterprise-only" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Export last 100 audit log entries (requires org admin or enterprise admin)</span>
@@ -7537,9 +7591,28 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: Unauthorized (HTTP 403)</code></strong> — Verify your GitHub token has <code>admin:org_hook</code> and <code>read:org</code> scopes, or request org admin to grant audit log access.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Remove the <code>python3</code> JSON processor and use <code>gh api --jq '.[] | @json'</code> instead for cleaner parsing.
-<strong><code>No such file or directory</code></strong> — Ensure the output directory exists and you have write permissions; create it with <code>mkdir -p logs/</code> before running the command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: Unauthorized (HTTP 403)</code></td>
+<td>Verify your GitHub token has <code>admin:org_hook</code> and <code>read:org</code> scopes, or request org admin to grant audit log access.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Remove the <code>python3</code> JSON processor and use <code>gh api --jq '.[] | @json'</code> instead for cleaner parsing.</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Ensure the output directory exists and you have write permissions; create it with <code>mkdir -p logs/</code> before running the command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
 <p>Create a plain text file:</p>
@@ -7744,9 +7817,28 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: command not found</code></strong> — Install GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.
-<strong><code>HTTP 401: Bad credentials</code></strong> — Verify your GitHub token is valid and has <code>repo</code> and <code>admin:org_hook</code> scopes by running <code>gh auth status</code>.
-<strong><code>jq: command not found</code></strong> — Install jq with <code>brew install jq</code> (macOS) or <code>apt-get install jq</code> (Linux) for JSON filtering support.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: command not found</code></td>
+<td>Install GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.</td>
+</tr>
+<tr>
+<td><code>HTTP 401: Bad credentials</code></td>
+<td>Verify your GitHub token is valid and has <code>repo</code> and <code>admin:org_hook</code> scopes by running <code>gh auth status</code>.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install jq with <code>brew install jq</code> (macOS) or <code>apt-get install jq</code> (Linux) for JSON filtering support.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -7784,7 +7876,7 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

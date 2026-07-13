@@ -7480,9 +7480,28 @@ Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "certificates"</code></strong> — Ensure cert-manager CRDs are installed with <code>kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.x.x/cert-manager.crds.yaml</code>.
-<strong><code>Error from server (NotFound): certificates.cert-manager.io "&lt;name&gt;" not found</code></strong> — Verify the certificate name and namespace are correct, and check that the certificate resource exists in the specified namespace.
-<strong><code>Unable to connect to the server: dial tcp: lookup cert-manager on &lt;IP&gt;: no such host</code></strong> — Confirm cert-manager pod is running with <code>kubectl get pods -n cert-manager</code> and that the cluster context is set correctly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "certificates"</code></td>
+<td>Ensure cert-manager CRDs are installed with <code>kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.x.x/cert-manager.crds.yaml</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): certificates.cert-manager.io "&lt;name&gt;" not found</code></td>
+<td>Verify the certificate name and namespace are correct, and check that the certificate resource exists in the specified namespace.</td>
+</tr>
+<tr>
+<td><code>Unable to connect to the server: dial tcp: lookup cert-manager on &lt;IP&gt;: no such host</code></td>
+<td>Confirm cert-manager pod is running with <code>kubectl get pods -n cert-manager</code> and that the cluster context is set correctly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="lets-encrypt-acme-dns-01-challenge">Let's Encrypt ACME (DNS-01 Challenge)<a class="headerlink" href="#lets-encrypt-acme-dns-01-challenge" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Using certbot with Route53 DNS-01 challenge</span>
@@ -7512,9 +7531,28 @@ Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error while running dns-route53 for corp.example.com: Unable to locate credentials</code></strong> — Ensure AWS credentials are configured via <code>aws configure</code> or IAM role is attached to the instance.
-<strong><code>PluginError: dns-route53: Unexpected error determining Route53 hosted zone for corp.example.com</code></strong> — Verify the Route53 hosted zone exists and the IAM user/role has <code>route53:ListHostedZones</code> and <code>route53:ChangeResourceRecordSets</code> permissions.
-<strong><code>Error creating new order :: too many certificates already issued for exact set of domains</code></strong> — Wait 7 days before retrying the same domain, or use <code>--force-renewal</code> only if certificate is expiring within 7 days.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error while running dns-route53 for corp.example.com: Unable to locate credentials</code></td>
+<td>Ensure AWS credentials are configured via <code>aws configure</code> or IAM role is attached to the instance.</td>
+</tr>
+<tr>
+<td><code>PluginError: dns-route53: Unexpected error determining Route53 hosted zone for corp.example.com</code></td>
+<td>Verify the Route53 hosted zone exists and the IAM user/role has <code>route53:ListHostedZones</code> and <code>route53:ChangeResourceRecordSets</code> permissions.</td>
+</tr>
+<tr>
+<td><code>Error creating new order :: too many certificates already issued for exact set of domains</code></td>
+<td>Wait 7 days before retrying the same domain, or use <code>--force-renewal</code> only if certificate is expiring within 7 days.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="servicenow-approval-workflow">ServiceNow Approval Workflow<a class="headerlink" href="#servicenow-approval-workflow" title="Permanent link">&para;</a></h2>
 <p>Venafi TPP can trigger a ServiceNow workflow for certificates that require business approval:</p>
@@ -7545,9 +7583,28 @@ Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to get local issuer certificate</code></strong> — Add the issuer's CA certificate to your system trust store or use <code>openssl s_client -connect host:443 -CAfile /path/to/ca.crt</code> to specify it explicitly.
-<strong><code>connect: Connection refused</code></strong> — Verify the host is reachable and HTTPS is listening on port 443 with <code>nc -zv host.example.local 443</code> before retrying.
-<strong><code>(stdin) 1:error:0A000126:SSL routines:tls_choose_sigalg:no shared signature algorithms</code></strong> — The remote host's TLS configuration is incompatible with your OpenSSL version; try adding <code>-tls1_2</code> flag to force a specific protocol version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to get local issuer certificate</code></td>
+<td>Add the issuer's CA certificate to your system trust store or use <code>openssl s_client -connect host:443 -CAfile /path/to/ca.crt</code> to specify it explicitly.</td>
+</tr>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the host is reachable and HTTPS is listening on port 443 with <code>nc -zv host.example.local 443</code> before retrying.</td>
+</tr>
+<tr>
+<td><code>(stdin) 1:error:0A000126:SSL routines:tls_choose_sigalg:no shared signature algorithms</code></td>
+<td>The remote host's TLS configuration is incompatible with your OpenSSL version; try adding <code>-tls1_2</code> flag to force a specific protocol version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Venafi TPP / Aria Operations integrations provide dashboard-level expiry visibility — raw CLI checks above are for ad-hoc verification.</p>
 
@@ -7572,7 +7629,7 @@ Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

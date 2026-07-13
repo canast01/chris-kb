@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Cisco MDS — Troubleshooting Diagnostics · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco MDS — Troubleshooting Diagnostics", "url": "https://chrisanastasiadis.com/san/cisco/mds/troubleshooting/diagnostics/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco MDS — Troubleshooting Diagnostics", "url": "https://chrisanastasiadis.com/san/cisco/mds/troubleshooting/diagnostics/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7561,8 +7561,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the interface exists with <code>show interface brief</code> and use correct syntax <code>show interface fc&lt;slot&gt;/&lt;port&gt;</code>.
-<strong><code>% Interface fc1/1 is administratively down</code></strong> — Enable the interface with <code>no shutdown</code> under the interface configuration mode.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the interface exists with <code>show interface brief</code> and use correct syntax <code>show interface fc&lt;slot&gt;/&lt;port&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>% Interface fc1/1 is administratively down</code></td>
+<td>Enable the interface with <code>no shutdown</code> under the interface configuration mode.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All line cards and supervisor modules — confirm all status is &#39;ok&#39;</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>module
@@ -7606,9 +7622,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Module 1 is not present</code></strong> — Verify the module is physically installed and the switch has completed its boot cycle; check <code>show module</code> to confirm the slot is populated.
-<strong><code>Diagnostics cannot run while module is in use</code></strong> — Schedule the diagnostic during a maintenance window or use <code>diagnostic start module 1 test all online</code> to run non-disruptive tests without impacting traffic.
-<strong><code>Test failed: Port Loopback Test FAIL</code></strong> — Check for faulty transceivers, cable issues, or port configuration errors; replace the SFP/QSFP module and rerun diagnostics.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Module 1 is not present</code></td>
+<td>Verify the module is physically installed and the switch has completed its boot cycle; check <code>show module</code> to confirm the slot is populated.</td>
+</tr>
+<tr>
+<td><code>Diagnostics cannot run while module is in use</code></td>
+<td>Schedule the diagnostic during a maintenance window or use <code>diagnostic start module 1 test all online</code> to run non-disruptive tests without impacting traffic.</td>
+</tr>
+<tr>
+<td><code>Test failed: Port Loopback Test FAIL</code></td>
+<td>Check for faulty transceivers, cable issues, or port configuration errors; replace the SFP/QSFP module and rerun diagnostics.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View on-board flash log (persistent across reloads)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>logging<span class="w"> </span>onboard
@@ -7651,9 +7686,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the switch model supports onboard logging (MDS9000 series with recent firmware); older models use <code>show logging</code> instead.
-<strong><code>% Onboard logging is disabled</code></strong> — Enable onboard logging with <code>logging onboard enable</code> in configuration mode.
-<strong><code>% Onboard log buffer full</code></strong> — Clear the onboard log with <code>clear logging onboard</code> to free space and resume logging.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the switch model supports onboard logging (MDS9000 series with recent firmware); older models use <code>show logging</code> instead.</td>
+</tr>
+<tr>
+<td><code>% Onboard logging is disabled</code></td>
+<td>Enable onboard logging with <code>logging onboard enable</code> in configuration mode.</td>
+</tr>
+<tr>
+<td><code>% Onboard log buffer full</code></td>
+<td>Clear the onboard log with <code>clear logging onboard</code> to free space and resume logging.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Full environment summary (fans, power, temperature)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>environment
@@ -7700,8 +7754,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the switch model supports these commands; older MDS models may require <code>show system resources</code> instead.
-<strong><code>% Incomplete command</code></strong> — Add a valid subcommand like <code>fan</code>, <code>power</code>, or <code>temperature</code> after <code>show environment</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the switch model supports these commands; older MDS models may require <code>show system resources</code> instead.</td>
+</tr>
+<tr>
+<td><code>% Incomplete command</code></td>
+<td>Add a valid subcommand like <code>fan</code>, <code>power</code>, or <code>temperature</code> after <code>show environment</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># All registered devices per VSAN</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7744,9 +7814,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>VSAN &lt;vsan-id&gt; does not exist</code></strong> — Verify the VSAN ID is configured and active using <code>show vsan</code> command.
-<strong><code>% Invalid command</code></strong> — Ensure you are in the correct mode (exec or config); use <code>show version</code> to confirm device type is MDS.
-<strong><code>grep: (standard input): No such file or directory</code></strong> — Pipe the full <code>show fcns database vsan 10</code> output to grep instead of using <code>show fcns database</code> without VSAN specification.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VSAN &lt;vsan-id&gt; does not exist</code></td>
+<td>Verify the VSAN ID is configured and active using <code>show vsan</code> command.</td>
+</tr>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Ensure you are in the correct mode (exec or config); use <code>show version</code> to confirm device type is MDS.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): No such file or directory</code></td>
+<td>Pipe the full <code>show fcns database vsan 10</code> output to grep instead of using <code>show fcns database</code> without VSAN specification.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># FSPF link state database</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>show<span class="w"> </span>fspf<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7781,8 +7870,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct mode (enable mode required) and the VSAN exists with <code>show vsan</code>.
-<strong><code>% FSPF is not enabled on this switch</code></strong> — Enable FSPF globally with <code>fspf enable</code> and ensure the VSAN is active with <code>vsan database</code> configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct mode (enable mode required) and the VSAN exists with <code>show vsan</code>.</td>
+</tr>
+<tr>
+<td><code>% FSPF is not enabled on this switch</code></td>
+<td>Enable FSPF globally with <code>fspf enable</code> and ensure the VSAN is active with <code>vsan database</code> configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Domain information for all VSANs</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>show<span class="w"> </span>fcdomain
@@ -7826,8 +7931,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Domain conflict detected on VSAN 10</code></strong> — Run <code>show fcdomain vsan 10</code> to identify conflicting domain IDs, then resolve duplicate IDs before executing the disruptive restart.
-<strong><code>fcdomain restart: command rejected, fabric reconfiguration in progress</code></strong> — Wait for the current fabric reconfiguration to complete (check with <code>show fcdomain vsan 10</code>) before attempting another restart.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Domain conflict detected on VSAN 10</code></td>
+<td>Run <code>show fcdomain vsan 10</code> to identify conflicting domain IDs, then resolve duplicate IDs before executing the disruptive restart.</td>
+</tr>
+<tr>
+<td><code>fcdomain restart: command rejected, fabric reconfiguration in progress</code></td>
+<td>Wait for the current fabric reconfiguration to complete (check with <code>show fcdomain vsan 10</code>) before attempting another restart.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Full zone database for a VSAN (pending + committed)</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>show<span class="w"> </span>zone<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7886,9 +8007,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the switch supports enhanced mode with <code>show zone mode vsan 10</code>; <code>show zone pending-diff</code> requires enhanced mode enabled.
-<strong><code>% Invalid VSAN ID</code></strong> — Confirm VSAN 10 exists and is active with <code>show vsan id 10</code>; create it if needed with <code>vsan database</code> configuration mode.
-<strong><code>% Invalid PWWN format</code></strong> — Use 16 hexadecimal characters in format <code>50:00:xx:xx:xx:xx:xx:xx</code> and verify the device is logged in with <code>show flogi database vsan 10</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the switch supports enhanced mode with <code>show zone mode vsan 10</code>; <code>show zone pending-diff</code> requires enhanced mode enabled.</td>
+</tr>
+<tr>
+<td><code>% Invalid VSAN ID</code></td>
+<td>Confirm VSAN 10 exists and is active with <code>show vsan id 10</code>; create it if needed with <code>vsan database</code> configuration mode.</td>
+</tr>
+<tr>
+<td><code>% Invalid PWWN format</code></td>
+<td>Use 16 hexadecimal characters in format <code>50:00:xx:xx:xx:xx:xx:xx</code> and verify the device is logged in with <code>show flogi database vsan 10</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># IVR overall status</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>show<span class="w"> </span>ivr
@@ -7932,8 +8072,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>IVR database inconsistency detected</code></strong> — Run <code>clear ivr database</code> followed by <code>config terminal</code> and <code>ivr enable</code> to resynchronize the database across the fabric.
-<strong><code>Zone activation failed: conflicting zone definitions</code></strong> — Resolve naming conflicts in <code>show ivr zone</code> output and reactivate the zoneset with <code>zoneset activate name &lt;zoneset-name&gt; vsan &lt;vsan-id&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IVR database inconsistency detected</code></td>
+<td>Run <code>clear ivr database</code> followed by <code>config terminal</code> and <code>ivr enable</code> to resynchronize the database across the fabric.</td>
+</tr>
+<tr>
+<td><code>Zone activation failed: conflicting zone definitions</code></td>
+<td>Resolve naming conflicts in <code>show ivr zone</code> output and reactivate the zoneset with <code>zoneset activate name &lt;zoneset-name&gt; vsan &lt;vsan-id&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Create SPAN session</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>monitor<span class="w"> </span>session<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w"> </span>rx
@@ -7972,9 +8128,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the switch model supports SPAN (MDS 9000 series required) and use <code>show feature-set</code> to confirm Fabric Services are licensed.
-<strong><code>% Interface fc1/1 does not exist</code></strong> — Confirm the source interface is valid and online with <code>show interface fc1/1</code> before configuring SPAN.
-<strong><code>% Cannot configure monitor session: destination interface is in use</code></strong> — Ensure the destination port (fc2/48) is not already assigned to another session or in-use; use <code>show monitor session all</code> to verify availability.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the switch model supports SPAN (MDS 9000 series required) and use <code>show feature-set</code> to confirm Fabric Services are licensed.</td>
+</tr>
+<tr>
+<td><code>% Interface fc1/1 does not exist</code></td>
+<td>Confirm the source interface is valid and online with <code>show interface fc1/1</code> before configuring SPAN.</td>
+</tr>
+<tr>
+<td><code>% Cannot configure monitor session: destination interface is in use</code></td>
+<td>Ensure the destination port (fc2/48) is not already assigned to another session or in-use; use <code>show monitor session all</code> to verify availability.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>interface<span class="w"> </span>fc2/48
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>SD
@@ -7984,8 +8159,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the interface exists with <code>show interface fc2/48</code> and confirm you are in config mode with <code>config t</code>.
-<strong><code>% Incomplete command</code></strong> — Use <code>switchport mode sd-target</code> or <code>switchport mode sd-initiator</code> instead of <code>switchport mode SD</code> (SD alone is incomplete).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the interface exists with <code>show interface fc2/48</code> and confirm you are in config mode with <code>config t</code>.</td>
+</tr>
+<tr>
+<td><code>% Incomplete command</code></td>
+<td>Use <code>switchport mode sd-target</code> or <code>switchport mode sd-initiator</code> instead of <code>switchport mode SD</code> (SD alone is incomplete).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>no<span class="w"> </span>monitor<span class="w"> </span>session<span class="w"> </span><span class="m">1</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
@@ -7999,8 +8190,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (should be <code>config t</code> for <code>no monitor session</code>) before running the command.
-<strong><code>% Incomplete command</code></strong> — Ensure the full syntax <code>no monitor session 1</code> is entered; the session number is required.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct configuration mode (should be <code>config t</code> for <code>no monitor session</code>) before running the command.</td>
+</tr>
+<tr>
+<td><code>% Incomplete command</code></td>
+<td>Ensure the full syntax <code>no monitor session 1</code> is entered; the session number is required.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Capture 200 packets matching a specific host</span>
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>ethanalyzer<span class="w"> </span><span class="nb">local</span><span class="w"> </span>interface<span class="w"> </span>mgmt<span class="w"> </span>capture-filter<span class="w"> </span><span class="s2">&quot;host 192.168.1.50&quot;</span><span class="w"> </span>limit-captured-frames<span class="w"> </span><span class="m">200</span>
@@ -8030,9 +8237,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid capture filter syntax</code></strong> — Verify the filter expression is valid tcpdump syntax and properly quoted.
-<strong><code>Error: Insufficient space on bootflash</code></strong> — Check available bootflash space with <code>dir bootflash:</code> and reduce capture size or delete old files.
-<strong><code>Permission denied (publickey,password)</code></strong> — Ensure SSH credentials are correct and the remote server's SSH key is accepted, or use <code>copy bootflash:mgmt-capture.pcap ftp://&lt;user&gt;:&lt;pass&gt;@&lt;server&gt;/&lt;path&gt;/</code> as an alternative.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid capture filter syntax</code></td>
+<td>Verify the filter expression is valid tcpdump syntax and properly quoted.</td>
+</tr>
+<tr>
+<td><code>Error: Insufficient space on bootflash</code></td>
+<td>Check available bootflash space with <code>dir bootflash:</code> and reduce capture size or delete old files.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Ensure SSH credentials are correct and the remote server's SSH key is accepted, or use <code>copy bootflash:mgmt-capture.pcap ftp://&lt;user&gt;:&lt;pass&gt;@&lt;server&gt;/&lt;path&gt;/</code> as an alternative.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Most recent entries</span>
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">50</span>
@@ -8063,8 +8289,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the switch is in the correct mode (use <code>config terminal</code> or ensure you're in exec mode); some log filters may require piping to <code>grep</code> rather than <code>include</code>.
-<strong><code>% No matching output</code></strong> — The filter pattern is case-sensitive; use <code>grep -i</code> for case-insensitive matching or verify the event type exists in the buffer.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the switch is in the correct mode (use <code>config terminal</code> or ensure you're in exec mode); some log filters may require piping to <code>grep</code> rather than <code>include</code>.</td>
+</tr>
+<tr>
+<td><code>% No matching output</code></td>
+<td>The filter pattern is case-sensitive; use <code>grep -i</code> for case-insensitive matching or verify the event type exists in the buffer.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Enable zone debug</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>debug<span class="w"> </span>zone<span class="w"> </span>all<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -8095,9 +8337,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Invalid VSAN ID 10</code></strong> — Verify the VSAN exists with <code>show vsan</code> and use a valid VSAN ID (1-4094).
-<strong><code>% Invalid command</code></strong> — Ensure you are in the correct mode (config mode for some debug commands); use <code>configure terminal</code> if needed.
-<strong><code>Zone debugging is already enabled for VSAN 10</code></strong> — This is informational; proceed with your troubleshooting or use <code>undebug all</code> to clear and restart.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Invalid VSAN ID 10</code></td>
+<td>Verify the VSAN exists with <code>show vsan</code> and use a valid VSAN ID (1-4094).</td>
+</tr>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Ensure you are in the correct mode (config mode for some debug commands); use <code>configure terminal</code> if needed.</td>
+</tr>
+<tr>
+<td><code>Zone debugging is already enabled for VSAN 10</code></td>
+<td>This is informational; proceed with your troubleshooting or use <code>undebug all</code> to clear and restart.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>terminal<span class="w"> </span>monitor<span class="w">     </span><span class="c1"># send log to this terminal</span>
 <a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>debug<span class="w"> </span>zone<span class="w"> </span>all<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -8115,8 +8376,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Ensure you are in the correct mode (config-zone or exec); use <code>configure terminal</code> first if needed.
-<strong><code>% VSAN 10 does not exist</code></strong> — Create the VSAN first with <code>vsan 10</code> command before attempting to debug it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Ensure you are in the correct mode (config-zone or exec); use <code>configure terminal</code> first if needed.</td>
+</tr>
+<tr>
+<td><code>% VSAN 10 does not exist</code></td>
+<td>Create the VSAN first with <code>vsan 10</code> command before attempting to debug it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Redirect to bootflash (takes 5-10 minutes)</span>
 <a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>show<span class="w"> </span>tech-support<span class="w"> </span>&gt;<span class="w"> </span>bootflash:tech-support-&lt;hostname&gt;-&lt;date&gt;.txt
@@ -8170,7 +8447,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -7132,9 +7132,28 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to establish IPMI v1 / IPMI v2 / IPMI v1.5 session</code></strong> — Verify the IPMI IP address is correct, the IPMI interface is powered on, and the network path is reachable with <code>ping &lt;ipmi-ip&gt;</code>.
-<strong><code>Error: Authentication failed</code></strong> — Confirm the ADMIN username and password are correct; reset IPMI credentials via the node's physical interface or BMC if locked out.
-<strong><code>Error: Unable to establish LAN session</code></strong> — Ensure the IPMI network interface is configured with a valid IP address and that your deployment workstation has network connectivity to the IPMI subnet.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to establish IPMI v1 / IPMI v2 / IPMI v1.5 session</code></td>
+<td>Verify the IPMI IP address is correct, the IPMI interface is powered on, and the network path is reachable with <code>ping &lt;ipmi-ip&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed</code></td>
+<td>Confirm the ADMIN username and password are correct; reset IPMI credentials via the node's physical interface or BMC if locked out.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to establish LAN session</code></td>
+<td>Ensure the IPMI network interface is configured with a valid IP address and that your deployment workstation has network connectivity to the IPMI subnet.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Each node must have a unique IPMI IP on a dedicated OOB network.</p>
 <h3 id="network-pre-flight">Network Pre-flight<a class="headerlink" href="#network-pre-flight" title="Permanent link">&para;</a></h3>
@@ -7156,9 +7175,28 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: sendmsg: Message too long</code></strong> — Verify MTU is set to 9000 on the storage VLAN interface with <code>ip link show</code> and adjust with <code>ip link set dev &lt;interface&gt; mtu 9000</code> if needed.
-<strong><code>100% packet loss</code></strong> — Confirm the storage VLAN is correctly tagged on the switch port and the CVM IP is reachable by checking switch trunk configuration and VLAN membership.
-<strong><code>connect: Network is unreachable</code></strong> — Ensure the storage VLAN routing is configured and the target CVM IP is on the same subnet as the source node's storage interface.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: sendmsg: Message too long</code></td>
+<td>Verify MTU is set to 9000 on the storage VLAN interface with <code>ip link show</code> and adjust with <code>ip link set dev &lt;interface&gt; mtu 9000</code> if needed.</td>
+</tr>
+<tr>
+<td><code>100% packet loss</code></td>
+<td>Confirm the storage VLAN is correctly tagged on the switch port and the CVM IP is reachable by checking switch trunk configuration and VLAN membership.</td>
+</tr>
+<tr>
+<td><code>connect: Network is unreachable</code></td>
+<td>Ensure the storage VLAN routing is configured and the target CVM IP is on the same subnet as the source node's storage interface.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-2-foundation-imaging">Phase 2 — Foundation Imaging<a class="headerlink" href="#phase-2-foundation-imaging" title="Permanent link">&para;</a></h2>
@@ -7207,8 +7245,24 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password)</code></strong> — Verify the CVM IP is correct and the default nutanix/4u credentials are still active; if changed, use the correct password or SSH key.
-<strong><code>Command 'genesis' not found</code></strong> — Ensure you are logged in as the nutanix user (not root) and the PATH includes /home/nutanix/bin; run <code>source ~/.bashrc</code> if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Verify the CVM IP is correct and the default nutanix/4u credentials are still active; if changed, use the correct password or SSH key.</td>
+</tr>
+<tr>
+<td><code>Command 'genesis' not found</code></td>
+<td>Ensure you are logged in as the nutanix user (not root) and the PATH includes /home/nutanix/bin; run <code>source ~/.bashrc</code> if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-3-cluster-creation">Phase 3 — Cluster Creation<a class="headerlink" href="#phase-3-cluster-creation" title="Permanent link">&para;</a></h2>
@@ -7236,9 +7290,28 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cluster: command not found</code></strong> — Ensure you are logged in as the nutanix user on a CVM and the cluster binary is in your PATH; try <code>/home/nutanix/cluster -s ...</code> if needed.
-<strong><code>Error: Node 10.0.1.13 is unreachable</code></strong> — Verify network connectivity between CVMs and that all three nodes are powered on and have completed their boot sequence.
-<strong><code>Error: Cluster already exists on this node</code></strong> — Run <code>cluster destroy</code> on all nodes first, or use a different set of CVMs that have not been previously clustered.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cluster: command not found</code></td>
+<td>Ensure you are logged in as the nutanix user on a CVM and the cluster binary is in your PATH; try <code>/home/nutanix/cluster -s ...</code> if needed.</td>
+</tr>
+<tr>
+<td><code>Error: Node 10.0.1.13 is unreachable</code></td>
+<td>Verify network connectivity between CVMs and that all three nodes are powered on and have completed their boot sequence.</td>
+</tr>
+<tr>
+<td><code>Error: Cluster already exists on this node</code></td>
+<td>Run <code>cluster destroy</code> on all nodes first, or use a different set of CVMs that have not been previously clustered.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output:</strong> Cluster creation takes 5–10 minutes. Watch for <code>Cluster successfully created</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Set the cluster name</span>
@@ -7271,9 +7344,28 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ncli: command not found</code></strong> — Ensure you are running this command on a Nutanix cluster node or install the Nutanix CLI tools on your management workstation.
-<strong><code>Error: Cluster is not in a valid state for this operation</code></strong> — Wait for any ongoing cluster operations to complete before attempting to modify cluster parameters.
-<strong><code>Error: Invalid IP address format for external-ip-address</code></strong> — Verify the IP address is valid and reachable on your management network before applying the configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ncli: command not found</code></td>
+<td>Ensure you are running this command on a Nutanix cluster node or install the Nutanix CLI tools on your management workstation.</td>
+</tr>
+<tr>
+<td><code>Error: Cluster is not in a valid state for this operation</code></td>
+<td>Wait for any ongoing cluster operations to complete before attempting to modify cluster parameters.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid IP address format for external-ip-address</code></td>
+<td>Verify the IP address is valid and reachable on your management network before applying the configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-4-initial-configuration">Phase 4 — Initial Configuration<a class="headerlink" href="#phase-4-initial-configuration" title="Permanent link">&para;</a></h2>
@@ -7308,9 +7400,28 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid IP address format</code></strong> — Ensure DNS and NTP server IPs are comma-separated without spaces (e.g., <code>10.0.0.1,10.0.0.2</code>).
-<strong><code>Error: Unable to reach NTP server &lt;ntp1&gt;</code></strong> — Verify NTP server IPs are reachable from the cluster and firewall allows UDP port 123 outbound.
-<strong><code>Error: allssh: command not found</code></strong> — Run the ntpq command directly on a CVM using <code>ssh nutanix@&lt;cvm-ip&gt;</code> or ensure you are executing from a Nutanix cluster node.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid IP address format</code></td>
+<td>Ensure DNS and NTP server IPs are comma-separated without spaces (e.g., <code>10.0.0.1,10.0.0.2</code>).</td>
+</tr>
+<tr>
+<td><code>Error: Unable to reach NTP server &lt;ntp1&gt;</code></td>
+<td>Verify NTP server IPs are reachable from the cluster and firewall allows UDP port 123 outbound.</td>
+</tr>
+<tr>
+<td><code>Error: allssh: command not found</code></td>
+<td>Run the ntpq command directly on a CVM using <code>ssh nutanix@&lt;cvm-ip&gt;</code> or ensure you are executing from a Nutanix cluster node.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="admin-password">Admin Password<a class="headerlink" href="#admin-password" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Change default admin password immediately</span>
@@ -7321,8 +7432,24 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid credentials for user admin</code></strong> — Verify the current password matches the default "Nutanix/4u" and that the admin user exists on the cluster.
-<strong><code>Error: Password does not meet complexity requirements</code></strong> — Ensure the new password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid credentials for user admin</code></td>
+<td>Verify the current password matches the default "Nutanix/4u" and that the admin user exists on the cluster.</td>
+</tr>
+<tr>
+<td><code>Error: Password does not meet complexity requirements</code></td>
+<td>Ensure the new password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="smtp-alerts">SMTP Alerts<a class="headerlink" href="#smtp-alerts" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Prism Element → Settings → SMTP Server
@@ -7379,9 +7506,28 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Storage pool 'default-storage-pool' not found</code></strong> — Verify the pool name with <code>ncli sp list</code> and use the exact name from the output.
-<strong><code>Error: Container name 'VMs' already exists</code></strong> — Use a unique container name or delete the existing container with <code>ncli ctr delete name=VMs</code> first.
-<strong><code>Error: Erasure coding not supported on this cluster</code></strong> — Verify cluster supports EC-X by checking <code>ncli cluster info</code> and ensure you have sufficient nodes (minimum 4 for EC-X).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Storage pool 'default-storage-pool' not found</code></td>
+<td>Verify the pool name with <code>ncli sp list</code> and use the exact name from the output.</td>
+</tr>
+<tr>
+<td><code>Error: Container name 'VMs' already exists</code></td>
+<td>Use a unique container name or delete the existing container with <code>ncli ctr delete name=VMs</code> first.</td>
+</tr>
+<tr>
+<td><code>Error: Erasure coding not supported on this cluster</code></td>
+<td>Verify cluster supports EC-X by checking <code>ncli cluster info</code> and ensure you have sufficient nodes (minimum 4 for EC-X).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-5-post-deploy-validation">Phase 5 — Post-Deploy Validation<a class="headerlink" href="#phase-5-post-deploy-validation" title="Permanent link">&para;</a></h2>
@@ -7417,9 +7563,28 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ncc: command not found</code></strong> — Verify you are logged into a Nutanix CVM (not a hypervisor host) and that ncc is in the PATH by running <code>which ncc</code>.
-<strong><code>Connection refused</code> or <code>timeout connecting to cluster</code></strong> — Ensure the CVM is fully booted, the cluster is online, and all three nodes are reachable via <code>ping &lt;cvm-ip&gt;</code>.
-<strong><code>Permission denied</code> or <code>Authentication failed</code></strong> — Confirm you are using the correct nutanix user credentials and that SSH key-based auth is configured, or use <code>ssh -u nutanix@&lt;cvm-ip&gt;</code> with a password prompt.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ncc: command not found</code></td>
+<td>Verify you are logged into a Nutanix CVM (not a hypervisor host) and that ncc is in the PATH by running <code>which ncc</code>.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code> or <code>timeout connecting to cluster</code></td>
+<td>Ensure the CVM is fully booted, the cluster is online, and all three nodes are reachable via <code>ping &lt;cvm-ip&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code> or <code>Authentication failed</code></td>
+<td>Confirm you are using the correct nutanix user credentials and that SSH key-based auth is configured, or use <code>ssh -u nutanix@&lt;cvm-ip&gt;</code> with a password prompt.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected result:</strong> All checks PASS. Any FAIL must be resolved before going production.</p>
 <h3 id="cluster-resilience-check">Cluster Resilience Check<a class="headerlink" href="#cluster-resilience-check" title="Permanent link">&para;</a></h3>
@@ -7440,8 +7605,24 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Connection refused (127.0.0.1:9440)</code></strong> — Verify the Nutanix cluster is reachable and ncli service is running with <code>ncli cluster info</code>.
-<strong><code>Error: Invalid credentials for user admin</code></strong> — Authenticate with valid Nutanix cluster credentials using <code>ncli -username &lt;user&gt; -password &lt;pass&gt;</code> or configure default credentials in ~/.ncli/config.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Connection refused (127.0.0.1:9440)</code></td>
+<td>Verify the Nutanix cluster is reachable and ncli service is running with <code>ncli cluster info</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid credentials for user admin</code></td>
+<td>Authenticate with valid Nutanix cluster credentials using <code>ncli -username &lt;user&gt; -password &lt;pass&gt;</code> or configure default credentials in ~/.ncli/config.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="vm-creation-test">VM Creation Test<a class="headerlink" href="#vm-creation-test" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Create a test VM via acli (AHV CLI)</span>
@@ -7471,9 +7652,28 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Image &lt;AHV-tools-ISO&gt; not found</code></strong> — Replace <code>&lt;AHV-tools-ISO&gt;</code> with the actual image name from <code>acli image.list</code>.
-<strong><code>Error: Network &lt;vm-network-name&gt; not found</code></strong> — Replace <code>&lt;vm-network-name&gt;</code> with a valid network name from <code>acli net.list</code>.
-<strong><code>Error: VM TestVM is powered on and cannot be deleted</code></strong> — Ensure <code>acli vm.off TestVM</code> completes before running <code>acli vm.delete TestVM</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Image &lt;AHV-tools-ISO&gt; not found</code></td>
+<td>Replace <code>&lt;AHV-tools-ISO&gt;</code> with the actual image name from <code>acli image.list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Network &lt;vm-network-name&gt; not found</code></td>
+<td>Replace <code>&lt;vm-network-name&gt;</code> with a valid network name from <code>acli net.list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: VM TestVM is powered on and cannot be deleted</code></td>
+<td>Ensure <code>acli vm.off TestVM</code> completes before running <code>acli vm.delete TestVM</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="network-reachability">Network Reachability<a class="headerlink" href="#network-reachability" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Ping cluster VIP from client workstation</span>
@@ -7507,9 +7707,28 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: unknown host &lt;cluster-vip&gt;</code></strong> — Replace <code>&lt;cluster-vip&gt;</code> with the actual cluster virtual IP address (e.g., 10.20.30.40).
-<strong><code>curl: (7) Failed to connect to &lt;cluster-vip&gt; port 9440: Connection refused</code></strong> — Verify Prism Element is running with <code>allssh "systemctl status prism-gw"</code> and check network connectivity to port 9440.
-<strong><code>ping: invalid argument -- 's': option requires an argument</code></strong> — Ensure the MTU test packet size (8972) is less than your network MTU; use <code>ip link show</code> to verify interface MTU supports jumbo frames.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: unknown host &lt;cluster-vip&gt;</code></td>
+<td>Replace <code>&lt;cluster-vip&gt;</code> with the actual cluster virtual IP address (e.g., 10.20.30.40).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;cluster-vip&gt; port 9440: Connection refused</code></td>
+<td>Verify Prism Element is running with <code>allssh "systemctl status prism-gw"</code> and check network connectivity to port 9440.</td>
+</tr>
+<tr>
+<td><code>ping: invalid argument -- 's': option requires an argument</code></td>
+<td>Ensure the MTU test packet size (8972) is less than your network MTU; use <code>ip link show</code> to verify interface MTU supports jumbo frames.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="prism-central-registration-optional">Prism Central Registration (Optional)<a class="headerlink" href="#prism-central-registration-optional" title="Permanent link">&para;</a></h2>
@@ -7549,7 +7768,7 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

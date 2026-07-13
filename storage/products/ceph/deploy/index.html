@@ -7556,8 +7556,24 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>FirewallD is not running.</code></strong> — Start the firewall service with <code>systemctl start firewalld</code> before running firewall-cmd commands.
-<strong><code>unit chrony.service could not be found.</code></strong> — Install chrony with <code>dnf install chrony</code> and enable it with <code>systemctl enable --now chronyd</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FirewallD is not running.</code></td>
+<td>Start the firewall service with <code>systemctl start firewalld</code> before running firewall-cmd commands.</td>
+</tr>
+<tr>
+<td><code>unit chrony.service could not be found.</code></td>
+<td>Install chrony with <code>dnf install chrony</code> and enable it with <code>systemctl enable --now chronyd</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ssh-key-distribution">SSH Key Distribution<a class="headerlink" href="#ssh-key-distribution" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate keypair on bootstrap node (if not present)</span>
@@ -7593,9 +7609,28 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey).</code></strong> — Ensure the bootstrap node's public key is in <code>/root/.ssh/authorized_keys</code> on each target node, or use password authentication for the initial <code>ssh-copy-id</code> command.
-<strong><code>ssh-copy-id: INFO: Source of key(s) to be installed: "/home/ceph-admin/.ssh/ceph_deploy.pub" ... ssh: connect to host ceph-node1 port 22: Connection refused</code></strong> — Verify that SSH is running on the target nodes and that the hostname/IP is correct and reachable from the bootstrap node.
-<strong><code>Host key verification failed.</code></strong> — Add the target hosts to <code>~/.ssh/known_hosts</code> by running <code>ssh-keyscan -H ceph-node1 ceph-node2 ceph-node3 &gt;&gt; ~/.ssh/known_hosts</code> before deploying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Ensure the bootstrap node's public key is in <code>/root/.ssh/authorized_keys</code> on each target node, or use password authentication for the initial <code>ssh-copy-id</code> command.</td>
+</tr>
+<tr>
+<td><code>ssh-copy-id: INFO: Source of key(s) to be installed: "/home/ceph-admin/.ssh/ceph_deploy.pub" ... ssh: connect to host ceph-node1 port 22: Connection refused</code></td>
+<td>Verify that SSH is running on the target nodes and that the hostname/IP is correct and reachable from the bootstrap node.</td>
+</tr>
+<tr>
+<td><code>Host key verification failed.</code></td>
+<td>Add the target hosts to <code>~/.ssh/known_hosts</code> by running <code>ssh-keyscan -H ceph-node1 ceph-node2 ceph-node3 &gt;&gt; ~/.ssh/known_hosts</code> before deploying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="bootstrap">Bootstrap<a class="headerlink" href="#bootstrap" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On the first host (becomes initial MON + MGR)</span>
@@ -7648,9 +7683,28 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to github.com port 443: Connection timed out</code></strong> — Verify network connectivity and DNS resolution; if behind a proxy, configure curl with <code>--proxy [proxy-url]</code>.
-<strong><code>Error: MON bind address 10.0.1.10 is not local to this host</code></strong> — Ensure the <code>--mon-ip</code> address is assigned to an active network interface on the bootstrap host (verify with <code>ip addr</code>).
-<strong><code>Error: public and cluster networks cannot overlap</code></strong> — Assign non-overlapping CIDR ranges for <code>--mon-ip</code> network and <code>--cluster-network</code> (e.g., 10.0.1.0/24 and 10.0.2.0/24).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to github.com port 443: Connection timed out</code></td>
+<td>Verify network connectivity and DNS resolution; if behind a proxy, configure curl with <code>--proxy [proxy-url]</code>.</td>
+</tr>
+<tr>
+<td><code>Error: MON bind address 10.0.1.10 is not local to this host</code></td>
+<td>Ensure the <code>--mon-ip</code> address is assigned to an active network interface on the bootstrap host (verify with <code>ip addr</code>).</td>
+</tr>
+<tr>
+<td><code>Error: public and cluster networks cannot overlap</code></td>
+<td>Assign non-overlapping CIDR ranges for <code>--mon-ip</code> network and <code>--cluster-network</code> (e.g., 10.0.1.0/24 and 10.0.2.0/24).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="add-hosts">Add Hosts<a class="headerlink" href="#add-hosts" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Copy the cluster&#39;s SSH public key to each new node</span>
@@ -7689,9 +7743,28 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh-copy-id: ERROR: ssh: connect to host ceph-node2 port 22: No route to host</code></strong> — Verify network connectivity and that the target node's IP address is correct and reachable from the orchestrator node.
-<strong><code>Error EACCES: permission denied</code></strong> — Ensure the SSH key file <code>/etc/ceph/ceph.pub</code> exists and is readable, and that passwordless SSH is configured or you have root credentials available.
-<strong><code>Error EINVAL: invalid placement spec</code></strong> — Use the exact hostname format matching the output of <code>ceph orch host ls</code> and ensure all specified hosts have already been added with <code>ceph orch host add</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh-copy-id: ERROR: ssh: connect to host ceph-node2 port 22: No route to host</code></td>
+<td>Verify network connectivity and that the target node's IP address is correct and reachable from the orchestrator node.</td>
+</tr>
+<tr>
+<td><code>Error EACCES: permission denied</code></td>
+<td>Ensure the SSH key file <code>/etc/ceph/ceph.pub</code> exists and is readable, and that passwordless SSH is configured or you have root credentials available.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: invalid placement spec</code></td>
+<td>Use the exact hostname format matching the output of <code>ceph orch host ls</code> and ensure all specified hosts have already been added with <code>ceph orch host add</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="add-osds">Add OSDs<a class="headerlink" href="#add-osds" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Option A — auto-detect and claim all available (empty, unpartitioned) devices</span>
@@ -7747,8 +7820,24 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EINVAL: osd.X: OSD does not have bluestore backend</code></strong> — Ensure devices are unpartitioned and empty; run <code>ceph-volume lvm zap /dev/sdX</code> to clear any existing LVM metadata before deployment.
-<strong><code>Error: device /dev/sdb is not available on ceph-node1</code></strong> — Verify the device exists and is visible to cephadm by running <code>ceph orch device ls</code> and confirm the device is marked as `avail:</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EINVAL: osd.X: OSD does not have bluestore backend</code></td>
+<td>Ensure devices are unpartitioned and empty; run <code>ceph-volume lvm zap /dev/sdX</code> to clear any existing LVM metadata before deployment.</td>
+</tr>
+<tr>
+<td><code>Error: device /dev/sdb is not available on ceph-node1</code></td>
+<td>Verify the device exists and is visible to cephadm by running <code>ceph orch device ls</code> and confirm the device is marked as `avail:</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="enable-rbd-pool">Enable RBD Pool<a class="headerlink" href="#enable-rbd-pool" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Create dedicated RBD block storage pool</span>
@@ -7771,9 +7860,28 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EEXIST: pool 'rbd' already exists</code></strong> — Drop the existing pool with <code>ceph osd pool delete rbd rbd --yes-i-really-really-mean-it</code> before recreating it.
-<strong><code>Error EINVAL: pg_num 128 invalid, must be power of 2</code></strong> — Use a power-of-2 value for PG count such as 64, 128, or 256 instead of 128 if your cluster rejects it due to autoscale rules.
-<strong><code>Error ENOENT: pool 'rbd' does not exist</code></strong> — Ensure the pool creation command completed successfully and check cluster quorum with <code>ceph status</code> before running pool stats.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EEXIST: pool 'rbd' already exists</code></td>
+<td>Drop the existing pool with <code>ceph osd pool delete rbd rbd --yes-i-really-really-mean-it</code> before recreating it.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: pg_num 128 invalid, must be power of 2</code></td>
+<td>Use a power-of-2 value for PG count such as 64, 128, or 256 instead of 128 if your cluster rejects it due to autoscale rules.</td>
+</tr>
+<tr>
+<td><code>Error ENOENT: pool 'rbd' does not exist</code></td>
+<td>Ensure the pool creation command completed successfully and check cluster quorum with <code>ceph status</code> before running pool stats.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="enable-cephfs">Enable CephFS<a class="headerlink" href="#enable-cephfs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create a CephFS volume (creates data + metadata pools automatically)</span>
@@ -7822,9 +7930,28 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: error connecting to cluster</code></strong> — Verify the monitor address (10.0.1.10:6789) is correct and reachable with <code>ceph -s</code> from the client node.
-<strong><code>error: unable to open /etc/ceph/ceph.client.admin.keyring: No such file or directory</code></strong> — Copy the keyring from the Ceph admin node with <code>scp ceph-admin:/etc/ceph/ceph.client.admin.keyring /etc/ceph/</code> and set permissions to 600.
-<strong><code>error: mds.myfs.ceph-node1: spawn failed</code></strong> — Ensure all three nodes have the ceph-mds package installed and the OSD/monitor services are healthy with <code>ceph health detail</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: error connecting to cluster</code></td>
+<td>Verify the monitor address (10.0.1.10:6789) is correct and reachable with <code>ceph -s</code> from the client node.</td>
+</tr>
+<tr>
+<td><code>error: unable to open /etc/ceph/ceph.client.admin.keyring: No such file or directory</code></td>
+<td>Copy the keyring from the Ceph admin node with <code>scp ceph-admin:/etc/ceph/ceph.client.admin.keyring /etc/ceph/</code> and set permissions to 600.</td>
+</tr>
+<tr>
+<td><code>error: mds.myfs.ceph-node1: spawn failed</code></td>
+<td>Ensure all three nodes have the ceph-mds package installed and the OSD/monitor services are healthy with <code>ceph health detail</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="enable-rgw-object-gateway">Enable RGW (Object Gateway)<a class="headerlink" href="#enable-rgw-object-gateway" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Deploy RGW daemons — two for HA</span>
@@ -7881,9 +8008,28 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: invalid placement spec "2 ceph-node1 ceph-node2"</code></strong> — Use correct syntax: <code>--placement "count=2 label=rgw"</code> or list nodes as <code>--placement "2 ceph-node1,ceph-node2"</code> with comma separator.
-<strong><code>ERROR: S3 error: 403 (SignatureDoesNotMatch)</code></strong> — Verify RGW endpoint is reachable with <code>curl http://10.0.1.10:8080/</code> and confirm access/secret keys match the radosgw-admin output exactly.
-<strong><code>error: pool 'default.rgw.buckets.data' does not exist</code></strong> — Wait 30–60 seconds for RGW to auto-create pools after daemon startup, then retry <code>ceph osd lspools</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: invalid placement spec "2 ceph-node1 ceph-node2"</code></td>
+<td>Use correct syntax: <code>--placement "count=2 label=rgw"</code> or list nodes as <code>--placement "2 ceph-node1,ceph-node2"</code> with comma separator.</td>
+</tr>
+<tr>
+<td><code>ERROR: S3 error: 403 (SignatureDoesNotMatch)</code></td>
+<td>Verify RGW endpoint is reachable with <code>curl http://10.0.1.10:8080/</code> and confirm access/secret keys match the radosgw-admin output exactly.</td>
+</tr>
+<tr>
+<td><code>error: pool 'default.rgw.buckets.data' does not exist</code></td>
+<td>Wait 30–60 seconds for RGW to auto-create pools after daemon startup, then retry <code>ceph osd lspools</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="post-deploy-validation">Post-Deploy Validation<a class="headerlink" href="#post-deploy-validation" title="Permanent link">&para;</a></h2>
 <table>
@@ -7993,9 +8139,28 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: pool does not exist</code></strong> — Ensure the rbd pool exists by running <code>ceph osd pool create rbd 128 128</code> before running rados bench.
-<strong><code>rbd: error: image still has watchers</code></strong> — Wait 10–15 seconds after the rbd bench completes before attempting <code>rbd rm</code>, or force removal with <code>rbd rm --force</code>.
-<strong><code>HEALTH_WARN: 1 pg incomplete</code></strong> — Verify all OSDs are up and in with <code>ceph osd tree</code> and wait for recovery to complete before running benchmarks.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: pool does not exist</code></td>
+<td>Ensure the rbd pool exists by running <code>ceph osd pool create rbd 128 128</code> before running rados bench.</td>
+</tr>
+<tr>
+<td><code>rbd: error: image still has watchers</code></td>
+<td>Wait 10–15 seconds after the rbd bench completes before attempting <code>rbd rm</code>, or force removal with <code>rbd rm --force</code>.</td>
+</tr>
+<tr>
+<td><code>HEALTH_WARN: 1 pg incomplete</code></td>
+<td>Verify all OSDs are up and in with <code>ceph osd tree</code> and wait for recovery to complete before running benchmarks.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8032,7 +8197,7 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

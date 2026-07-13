@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Windows Server — Scripts · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Windows Server — Scripts", "url": "https://chrisanastasiadis.com/compute/windows-server/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Windows Server — Scripts", "url": "https://chrisanastasiadis.com/compute/windows-server/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-06"}</script>
   
 
   </head>
@@ -7852,9 +7852,11 @@ Reports installed and missing patches for a list of servers.
 </code></pre></div>
 
 !!! warning "Common errors"
-    **`cd : The term 'cd' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Use `Set-Location C:\Users\YourName\Desktop` instead of `cd`, or run the script with its full path.
-    **`.\ad-user-audit.ps1 : File cannot be loaded because running scripts is disabled on this system.`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable script execution.
-    **`Access to the path 'C:\Reports' is denied.`** — Ensure the C:\Reports directory exists and your user account has write permissions, or create it with `New-Item -ItemType Directory -Path C:\Reports -Force`.
+    | Error | Fix |
+    |---|---|
+    | `cd : The term 'cd' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Use `Set-Location C:\Users\YourName\Desktop` instead of `cd`, or run the script with its full path. |
+    | `.\ad-user-audit.ps1 : File cannot be loaded because running scripts is disabled on this system.` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable script execution. |
+    | `Access to the path 'C:\Reports' is denied.` | Ensure the C:\Reports directory exists and your user account has write permissions, or create it with `New-Item -ItemType Directory -Path C:\Reports -Force`. |
 **What you should see**
 
 Five numbered checks run in sequence. Each prints how many accounts were found. At the end a summary table shows counts for each category. Five CSV files are saved in your output folder — open them in Excel to review the details.
@@ -8065,9 +8067,11 @@ Parameters are passed on the command line:
 </code></pre></div>
 
 !!! warning "Common errors"
-    **`Cannot find a certificate on the remote server. Ensure WinRM is enabled and credentials are valid.`** — Enable WinRM on target servers with `Enable-PSRemoting -Force` and verify network connectivity.
-    **`Failed to send email: The SMTP server rejected the connection.`** — Verify SMTP server address, port (typically 25/587), and firewall rules allow outbound SMTP traffic.
-    **`The term '.\cert-expiry-monitor.ps1' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Ensure the script exists in the current directory and run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` if execution policy blocks the script.
+    | Error | Fix |
+    |---|---|
+    | `Cannot find a certificate on the remote server. Ensure WinRM is enabled and credentials are valid.` | Enable WinRM on target servers with `Enable-PSRemoting -Force` and verify network connectivity. |
+    | `Failed to send email: The SMTP server rejected the connection.` | Verify SMTP server address, port (typically 25/587), and firewall rules allow outbound SMTP traffic. |
+    | `The term '.\cert-expiry-monitor.ps1' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Ensure the script exists in the current directory and run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` if execution policy blocks the script. |
 **What you should see**
 
 A table showing every certificate found on each server, sorted by days remaining. CRITICAL certificates (expiring soon) appear first. The summary line shows counts of CRITICAL vs WARNING. If any alerts are found and SMTP is configured, an email is sent.
@@ -8260,9 +8264,11 @@ Edit the `$ServiceMap` section inside the script to match your environment:
 </code></pre></div>
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable script execution.
-    **`The term '.\service-health-monitor.ps1' is not recognized`** — Verify the script file exists in the current directory with `dir *.ps1` and check the filename spelling.
-    **`Access Denied`** — Run PowerShell as Administrator or ensure your user account has read permissions on the script file.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable script execution. |
+    | `The term '.\service-health-monitor.ps1' is not recognized` | Verify the script file exists in the current directory with `dir *.ps1` and check the filename spelling. |
+    | `Access Denied` | Run PowerShell as Administrator or ensure your user account has read permissions on the script file. |
 To also try restarting any stopped automatic services:
 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>.\service-health-monitor.ps1 -AttemptRestart $true
@@ -8366,9 +8372,11 @@ Open the saved file and update these values near the top:
 </code></pre></div>
 
 !!! warning "Common errors"
-    **`Access is denied`** — Run Command Prompt or PowerShell as Administrator before executing the batch file.
-    **`The system cannot find the file specified`** — Verify ps-runner.bat exists in the current directory with `dir ps-runner.bat` and check the file path is correct.
-    **`'powershell' is not recognized as an internal or external command`** — Ensure PowerShell is installed and added to the system PATH environment variable, or use the full path to powershell.exe.
+    | Error | Fix |
+    |---|---|
+    | `Access is denied` | Run Command Prompt or PowerShell as Administrator before executing the batch file. |
+    | `The system cannot find the file specified` | Verify ps-runner.bat exists in the current directory with `dir ps-runner.bat` and check the file path is correct. |
+    | `'powershell' is not recognized as an internal or external command` | Ensure PowerShell is installed and added to the system PATH environment variable, or use the full path to powershell.exe. |
 Or just double-click the file from your Desktop.
 
 **What you should see**
@@ -8527,9 +8535,11 @@ The `$RequiredModules` list near the top can be edited to add or remove modules:
 </code></pre></div>
 
 !!! warning "Common errors"
-    **`cd : The term 'cd' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Use `Set-Location C:\Users\YourName\Desktop` instead, or run the script with its full path: `C:\Users\YourName\Desktop\Install-InfraModules.ps1`
-    **`File C:\Users\YourName\Desktop\Install-InfraModules.ps1 cannot be loaded because running scripts is disabled on this system.`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to allow local script execution.
-    **`Access Denied`** — Run PowerShell as Administrator (right-click PowerShell and select "Run as administrator") before executing the installation script.
+    | Error | Fix |
+    |---|---|
+    | `cd : The term 'cd' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Use `Set-Location C:\Users\YourName\Desktop` instead, or run the script with its full path: `C:\Users\YourName\Desktop\Install-InfraModules.ps1` |
+    | `File C:\Users\YourName\Desktop\Install-InfraModules.ps1 cannot be loaded because running scripts is disabled on this system.` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to allow local script execution. |
+    | `Access Denied` | Run PowerShell as Administrator (right-click PowerShell and select "Run as administrator") before executing the installation script. |
 **What you should see**
 
 A table showing each module with its required version, currently installed version, and status (OK, Outdated, or Missing). Any missing or outdated modules are automatically downloaded and installed. At the end, an example snippet shows how to use Posh-SSH to connect to a Linux server directly from PowerShell.
@@ -8573,7 +8583,7 @@ A table showing each module with its required version, currently installed versi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

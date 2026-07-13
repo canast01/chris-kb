@@ -7476,9 +7476,28 @@ Nutanix diagnostic commands: run NCC health checks across the cluster, inspect n
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ncc: command not found</code></strong> — Ensure you are logged into a Nutanix CVM (Controller VM) and not a hypervisor host; NCC is only available on CVMs.
-<strong><code>Error: Check '&lt;check_name&gt;' not found in registry</code></strong> — Verify the check name spelling and run <code>ncc health_checks list_checks</code> to see all available check names.
-<strong><code>Connection refused: Unable to connect to Prism Central</code></strong> — Confirm Prism Central is reachable from the CVM by running <code>ping &lt;prism-central-ip&gt;</code> and verify network connectivity.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ncc: command not found</code></td>
+<td>Ensure you are logged into a Nutanix CVM (Controller VM) and not a hypervisor host; NCC is only available on CVMs.</td>
+</tr>
+<tr>
+<td><code>Error: Check '&lt;check_name&gt;' not found in registry</code></td>
+<td>Verify the check name spelling and run <code>ncc health_checks list_checks</code> to see all available check names.</td>
+</tr>
+<tr>
+<td><code>Connection refused: Unable to connect to Prism Central</code></td>
+<td>Confirm Prism Central is reachable from the CVM by running <code>ping &lt;prism-central-ip&gt;</code> and verify network connectivity.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-2-check-cluster-and-host-health">Step 2 — Check cluster and host health<a class="headerlink" href="#step-2-check-cluster-and-host-health" title="Permanent link">&para;</a></h2>
@@ -7542,9 +7561,28 @@ Nutanix diagnostic commands: run NCC health checks across the cluster, inspect n
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Service &lt;service_name&gt; is in NOT_RUNNING state</code></strong> — SSH to the CVM and run <code>service &lt;service_name&gt; start</code> to restart the service, then verify with <code>cluster status</code>.
-<strong><code>Host &lt;hostname&gt; has HealthStatus=WARNING or NodeStatus=DOWN</code></strong> — Check the host's physical connectivity and hardware health via IPMI, then reboot the node if necessary.
-<strong><code>Disk &lt;disk_id&gt; is in MARKED_FOR_REMOVAL or FAILED state</code></strong> — Run <code>ncli disk remove disk-id=&lt;disk_id&gt;</code> to decommission the failed disk and monitor rebuild progress with <code>ncli disk ls</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Service &lt;service_name&gt; is in NOT_RUNNING state</code></td>
+<td>SSH to the CVM and run <code>service &lt;service_name&gt; start</code> to restart the service, then verify with <code>cluster status</code>.</td>
+</tr>
+<tr>
+<td><code>Host &lt;hostname&gt; has HealthStatus=WARNING or NodeStatus=DOWN</code></td>
+<td>Check the host's physical connectivity and hardware health via IPMI, then reboot the node if necessary.</td>
+</tr>
+<tr>
+<td><code>Disk &lt;disk_id&gt; is in MARKED_FOR_REMOVAL or FAILED state</code></td>
+<td>Run <code>ncli disk remove disk-id=&lt;disk_id&gt;</code> to decommission the failed disk and monitor rebuild progress with <code>ncli disk ls</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-3-check-alerts-and-events">Step 3 — Check alerts and events<a class="headerlink" href="#step-3-check-alerts-and-events" title="Permanent link">&para;</a></h2>
@@ -7606,9 +7644,28 @@ Nutanix diagnostic commands: run NCC health checks across the cluster, inspect n
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid alert id format</code></strong> — Verify the alert ID exists by running <code>ncli alert ls</code> first and copy the exact UUID from the id column.
-<strong><code>Error: Connection refused to cluster (10.20.30.x:9440)</code></strong> — Ensure the Nutanix cluster is reachable and the ncli tool is configured with correct cluster credentials via <code>ncli -h &lt;cluster-ip&gt; -u &lt;username&gt;</code>.
-**</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid alert id format</code></td>
+<td>Verify the alert ID exists by running <code>ncli alert ls</code> first and copy the exact UUID from the id column.</td>
+</tr>
+<tr>
+<td><code>Error: Connection refused to cluster (10.20.30.x:9440)</code></td>
+<td>Ensure the Nutanix cluster is reachable and the ncli tool is configured with correct cluster credentials via <code>ncli -h &lt;cluster-ip&gt; -u &lt;username&gt;</code>.</td>
+</tr>
+<tr>
+<td>**</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-4-run-allssh-for-cluster-wide-cvm-diagnostics">Step 4 — Run allssh for cluster-wide CVM diagnostics<a class="headerlink" href="#step-4-run-allssh-for-cluster-wide-cvm-diagnostics" title="Permanent link">&para;</a></h2>
@@ -7708,8 +7765,24 @@ Nutanix diagnostic commands: run NCC health checks across the cluster, inspect n
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Connection refused (Connection refused)</code></strong> — Verify ncli is installed and Nutanix services are running with <code>systemctl status nutanix-cluster-init</code>.
-<strong><code>Error: Unknown command 'allssh'</code> or <code>command not found</code></strong> — Ensure you are running this command on a Nutanix cluster node where allssh is available in the PATH, or use full path <code>/opt/nutanix/bin/allssh</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Connection refused (Connection refused)</code></td>
+<td>Verify ncli is installed and Nutanix services are running with <code>systemctl status nutanix-cluster-init</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Unknown command 'allssh'</code> or <code>command not found</code></td>
+<td>Ensure you are running this command on a Nutanix cluster node where allssh is available in the PATH, or use full path <code>/opt/nutanix/bin/allssh</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-6-advanced-service-diagnostics">Step 6 — Advanced service diagnostics<a class="headerlink" href="#step-6-advanced-service-diagnostics" title="Permanent link">&para;</a></h2>
@@ -7822,9 +7895,28 @@ Nutanix diagnostic commands: run NCC health checks across the cluster, inspect n
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Ensure the nutanix user SSH key is configured or use <code>ssh-keyscan</code> to add the CVM host key to your known_hosts file.
-<strong><code>ncc: command not found</code></strong> — Verify you are SSH'd into a CVM (not a hypervisor host); NCC is only available on Nutanix Controller VMs.
-<strong><code>/home/nutanix/send: No such file or directory</code></strong> — Wait for the ncc log_collector command to complete fully before attempting SCP; the output directory is created during collection.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Ensure the nutanix user SSH key is configured or use <code>ssh-keyscan</code> to add the CVM host key to your known_hosts file.</td>
+</tr>
+<tr>
+<td><code>ncc: command not found</code></td>
+<td>Verify you are SSH'd into a CVM (not a hypervisor host); NCC is only available on Nutanix Controller VMs.</td>
+</tr>
+<tr>
+<td><code>/home/nutanix/send: No such file or directory</code></td>
+<td>Wait for the ncc log_collector command to complete fully before attempting SCP; the output directory is created during collection.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
@@ -7905,7 +7997,7 @@ Nutanix diagnostic commands: run NCC health checks across the cluster, inspect n
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

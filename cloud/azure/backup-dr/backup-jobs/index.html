@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Azure — Backup Jobs · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Azure — Backup Jobs", "url": "https://chrisanastasiadis.com/cloud/azure/backup-dr/backup-jobs/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-05"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Azure — Backup Jobs", "url": "https://chrisanastasiadis.com/cloud/azure/backup-dr/backup-jobs/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-05"}</script>
   
 
   </head>
@@ -8396,9 +8396,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceGroupNotFound</code></strong> — Verify the resource group name with <code>az group list</code> and ensure it exists in your subscription.
-<strong><code>VaultNotFound</code></strong> — Confirm the vault name and resource group are correct using <code>az backup vault list --resource-group &lt;rg&gt;</code>.
-<strong><code>InvalidDateFormat</code></strong> — Use ISO 8601 format (YYYY-MM-DDTHH:MM:SS) for <code>--start-date</code> and <code>--end-date</code> parameters.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceGroupNotFound</code></td>
+<td>Verify the resource group name with <code>az group list</code> and ensure it exists in your subscription.</td>
+</tr>
+<tr>
+<td><code>VaultNotFound</code></td>
+<td>Confirm the vault name and resource group are correct using <code>az backup vault list --resource-group &lt;rg&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidDateFormat</code></td>
+<td>Use ISO 8601 format (YYYY-MM-DDTHH:MM:SS) for <code>--start-date</code> and <code>--end-date</code> parameters.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">## Show full details for a job (job ID from list output)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
@@ -8437,9 +8456,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/backupJobs/&lt;job-id&gt;' under resource group '&lt;rg&gt;' was not found.</code></strong> — Verify the job ID exists by running <code>az backup job list</code> and confirm the vault name and resource group are correct.</p>
-<p><strong><code>InvalidResourceGroup: The resource group '&lt;rg&gt;' could not be found.</code></strong> — Ensure the resource group name is spelled correctly and exists in your subscription using <code>az group list</code>.</p>
-<p><strong><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupJobs/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'.</code></strong> — Grant the user or service principal the "Backup Reader" or "Backup Operator" role on the Recovery Services vault.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/backupJobs/&lt;job-id&gt;' under resource group '&lt;rg&gt;' was not found.</code></td>
+<td>Verify the job ID exists by running <code>az backup job list</code> and confirm the vault name and resource group are correct.</td>
+</tr>
+<tr>
+<td><code>InvalidResourceGroup: The resource group '&lt;rg&gt;' could not be found.</code></td>
+<td>Ensure the resource group name is spelled correctly and exists in your subscription using <code>az group list</code>.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupJobs/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'.</code></td>
+<td>Grant the user or service principal the "Backup Reader" or "Backup Operator" role on the Recovery Services vault.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">## Wait for a specific job to complete (polls every 30 seconds)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span><span class="nb">wait</span><span class="w"> </span><span class="se">\</span>
@@ -8489,9 +8527,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The specified backup item could not be found.</code></strong> — Verify the container-name and item-name match the protected VM exactly using <code>az backup container list</code> and <code>az backup item list</code>.
-<strong><code>InvalidParameterValue: The value of parameter 'retain-until' is invalid.</code></strong> — Ensure the retain-until date is in YYYY-MM-DD format and is at least 7 days in the future.
-<strong><code>JobNotFound: The job with ID '&lt;job-id&gt;' was not found in the vault.</code></strong> — Confirm the job ID exists and belongs to the specified vault; check recent jobs with <code>az backup job list --resource-group &lt;rg&gt; --vault-name &lt;vault-name&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The specified backup item could not be found.</code></td>
+<td>Verify the container-name and item-name match the protected VM exactly using <code>az backup container list</code> and <code>az backup item list</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidParameterValue: The value of parameter 'retain-until' is invalid.</code></td>
+<td>Ensure the retain-until date is in YYYY-MM-DD format and is at least 7 days in the future.</td>
+</tr>
+<tr>
+<td><code>JobNotFound: The job with ID '&lt;job-id&gt;' was not found in the vault.</code></td>
+<td>Confirm the job ID exists and belongs to the specified vault; check recent jobs with <code>az backup job list --resource-group &lt;rg&gt; --vault-name &lt;vault-name&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">## List all failed jobs with error messages</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
@@ -8520,9 +8577,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;' could not be found.</code></strong> — Verify the vault name and resource group name are correct and the vault exists in the specified region.
-<strong><code>InvalidParameterValue: The container name '&lt;container-name&gt;' is not valid for this vault.</code></strong> — List available containers with <code>az backup container list --resource-group &lt;rg&gt; --vault-name &lt;vault-name&gt;</code> and use the exact container name.
-<strong><code>BadRequest: The item '&lt;vm-name&gt;' is not protected or the protection policy is not configured.</code></strong> — Enable backup protection for the VM first using <code>az backup protection enable-for-vm</code> before attempting to trigger a backup.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;' could not be found.</code></td>
+<td>Verify the vault name and resource group name are correct and the vault exists in the specified region.</td>
+</tr>
+<tr>
+<td><code>InvalidParameterValue: The container name '&lt;container-name&gt;' is not valid for this vault.</code></td>
+<td>List available containers with <code>az backup container list --resource-group &lt;rg&gt; --vault-name &lt;vault-name&gt;</code> and use the exact container name.</td>
+</tr>
+<tr>
+<td><code>BadRequest: The item '&lt;vm-name&gt;' is not protected or the protection policy is not configured.</code></td>
+<td>Enable backup protection for the VM first using <code>az backup protection enable-for-vm</code> before attempting to trigger a backup.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">## Cancel a job that is currently in progress</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>az<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>stop<span class="w"> </span><span class="se">\</span>
@@ -8539,9 +8615,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>(ResourceNotFound) The resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/backupJobs/&lt;job-id&gt;' does not exist.</code></strong> — Verify the job ID exists by running <code>az backup job list --resource-group &lt;rg&gt; --vault-name &lt;vault-name&gt;</code> and use the correct job ID from the output.</p>
-<p><strong><code>(AuthorizationFailed) The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupJobs/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'.</code></strong> — Ensure your user account has the "Backup Operator" or "Backup Administrator" role assigned on the Recovery Services vault.</p>
-<p><strong><code>(InvalidOperation) Cannot cancel job in state 'Completed'.</code></strong> — Only jobs in "InProgress" or "Waiting" states can be cancelled; check the job status with <code>az backup job show</code> before attempting cancellation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(ResourceNotFound) The resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/backupJobs/&lt;job-id&gt;' does not exist.</code></td>
+<td>Verify the job ID exists by running <code>az backup job list --resource-group &lt;rg&gt; --vault-name &lt;vault-name&gt;</code> and use the correct job ID from the output.</td>
+</tr>
+<tr>
+<td><code>(AuthorizationFailed) The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupJobs/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'.</code></td>
+<td>Ensure your user account has the "Backup Operator" or "Backup Administrator" role assigned on the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>(InvalidOperation) Cannot cancel job in state 'Completed'.</code></td>
+<td>Only jobs in "InProgress" or "Waiting" states can be cancelled; check the job status with <code>az backup job show</code> before attempting cancellation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">## Query backup job alerts in Azure Monitor (requires diagnostic settings enabled)</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>query<span class="w"> </span><span class="se">\</span>
@@ -8567,8 +8662,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: (ResourceNotFound) The resource '&lt;vault-resource-id&gt;' could not be found.</code></strong> — Verify the vault resource ID is correct and the vault exists in the current subscription using <code>az backup vault list</code>.
-<strong><code>ERROR: The workspace '&lt;workspace-id&gt;' does not exist or you do not have permission to access it.</code></strong> — Confirm the workspace ID is valid and your user account has Reader permissions on the Log Analytics workspace using <code>az role assignment list --scope &lt;workspace-id&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: (ResourceNotFound) The resource '&lt;vault-resource-id&gt;' could not be found.</code></td>
+<td>Verify the vault resource ID is correct and the vault exists in the current subscription using <code>az backup vault list</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: The workspace '&lt;workspace-id&gt;' does not exist or you do not have permission to access it.</code></td>
+<td>Confirm the workspace ID is valid and your user account has Reader permissions on the Log Analytics workspace using <code>az role assignment list --scope &lt;workspace-id&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8592,7 +8703,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:56:55 UTC"><span class="timeago" datetime="2026-06-29T06:56:55+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:56:55 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

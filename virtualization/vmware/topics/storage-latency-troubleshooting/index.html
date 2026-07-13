@@ -8186,9 +8186,28 @@ Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unknown command or namespace esxcli storage</code></strong> — Verify esxcli is available and you are running commands directly on an ESXi host (not vCenter); SSH to the ESXi management IP and try again.
-<strong><code>State: dead</code> paths persist after reboot</strong> — Run <code>esxcli storage core path set --path=&lt;path_id&gt; --state=active</code> to manually recover the path, or check array-side LUN masking and fabric connectivity.
-<strong><code>grep: (standard input) is empty</code></strong> — The storage subsystem may not have detected any paths; verify LUN presentation with <code>esxcli storage core device list</code> and rescan HBAs using <code>esxcli storage core adapter rescan --adapter=vmhba0</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unknown command or namespace esxcli storage</code></td>
+<td>Verify esxcli is available and you are running commands directly on an ESXi host (not vCenter); SSH to the ESXi management IP and try again.</td>
+</tr>
+<tr>
+<td><code>State: dead</code> paths persist after reboot<code>| Run</code>esxcli storage core path set --path=<path_id> --state=active` to manually recover the path, or check array-side LUN masking and fabric connectivity.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>The storage subsystem may not have detected any paths; verify LUN presentation with <code>esxcli storage core device list</code> and rescan HBAs using <code>esxcli storage core adapter rescan --adapter=vmhba0</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="step-3-check-for-vsan-resync-or-rebuild">Step 3: Check for vSAN Resync or Rebuild<a class="headerlink" href="#step-3-check-for-vsan-resync-or-rebuild" title="Permanent link">&para;</a></h2>
 <p>vSAN resync heavily consumes storage backend IOPS:</p>
@@ -8215,8 +8234,24 @@ Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>VSAN is not enabled on this host</code></strong> — Run <code>esxcli vsan cluster get</code> to verify VSAN is enabled; if not, enable it via vSphere Client or <code>esxcli vsan cluster new</code>.
-<strong><code>grep: (standard input): No such file or directory</code></strong> — Ensure the first <code>esxcli vsan debug resync list</code> command completes successfully before piping; check host connectivity and VSAN service status with <code>systemctl status vsanvpd</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VSAN is not enabled on this host</code></td>
+<td>Run <code>esxcli vsan cluster get</code> to verify VSAN is enabled; if not, enable it via vSphere Client or <code>esxcli vsan cluster new</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): No such file or directory</code></td>
+<td>Ensure the first <code>esxcli vsan debug resync list</code> command completes successfully before piping; check host connectivity and VSAN service status with <code>systemctl status vsanvpd</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="step-4-queue-depth-and-congestion">Step 4: Queue Depth and Congestion<a class="headerlink" href="#step-4-queue-depth-and-congestion" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Device queue depth</span>
@@ -8242,9 +8277,28 @@ Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option --device</code></strong> — Use the correct flag format <code>--device=&lt;naa.xxx&gt;</code> or check esxcli storage core device set --help for valid parameters.
-<strong><code>Error: Device naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m not found</code></strong> — Verify the NAA identifier is correct by running <code>esxcli storage core device list</code> and copying the exact device name.
-<strong><code>Permission denied: /var/log/vmkernel.log</code></strong> — Run the grep command with <code>sudo</code> or as root user to access vmkernel logs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option --device</code></td>
+<td>Use the correct flag format <code>--device=&lt;naa.xxx&gt;</code> or check esxcli storage core device set --help for valid parameters.</td>
+</tr>
+<tr>
+<td><code>Error: Device naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m not found</code></td>
+<td>Verify the NAA identifier is correct by running <code>esxcli storage core device list</code> and copying the exact device name.</td>
+</tr>
+<tr>
+<td><code>Permission denied: /var/log/vmkernel.log</code></td>
+<td>Run the grep command with <code>sudo</code> or as root user to access vmkernel logs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="step-5-datastores-on-the-same-lunvolume">Step 5: Datastores on the Same LUN/Volume<a class="headerlink" href="#step-5-datastores-on-the-same-lunvolume" title="Permanent link">&para;</a></h2>
 <p>Multiple datastores sharing an underlying volume compete for IOPS:</p>
@@ -8270,8 +8324,24 @@ Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Device naa.60a98000572d534b4e6d396f59386b41 not found</code></strong> — Verify the NAA identifier is correct by running <code>esxcli storage core device list</code> without the <code>-d</code> flag to list all available devices.
-<strong><code>Unknown command or namespace</code></strong> — Ensure you are running this command on an ESXi host with VAAI-capable storage; older ESXi versions may not support the <code>vaai status get</code> subcommand.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Device naa.60a98000572d534b4e6d396f59386b41 not found</code></td>
+<td>Verify the NAA identifier is correct by running <code>esxcli storage core device list</code> without the <code>-d</code> flag to list all available devices.</td>
+</tr>
+<tr>
+<td><code>Unknown command or namespace</code></td>
+<td>Ensure you are running this command on an ESXi host with VAAI-capable storage; older ESXi versions may not support the <code>vaai status get</code> subcommand.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="step-6-esxtop-storage-analysis">Step 6: esxtop Storage Analysis<a class="headerlink" href="#step-6-esxtop-storage-analysis" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Launch esxtop, switch to storage view</span>
@@ -8295,8 +8365,24 @@ Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxtop: command not found</code></strong> — Ensure you are logged into an ESXi host directly (SSH) or use vSphere Client; esxtop only runs on ESXi, not vCenter.
-<strong><code>DAVG/cmd column not visible</code></strong> — Press 'f' to customize fields and enable DAVG, KAVG, and QAVG columns in the storage device view.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxtop: command not found</code></td>
+<td>Ensure you are logged into an ESXi host directly (SSH) or use vSphere Client; esxtop only runs on ESXi, not vCenter.</td>
+</tr>
+<tr>
+<td><code>DAVG/cmd column not visible</code></td>
+<td>Press 'f' to customize fields and enable DAVG, KAVG, and QAVG columns in the storage device view.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="common-causes-reference">Common Causes Reference<a class="headerlink" href="#common-causes-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -8367,7 +8453,7 @@ Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

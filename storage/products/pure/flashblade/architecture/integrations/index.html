@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="FlashBlade — Integrations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "FlashBlade — Integrations", "url": "https://chrisanastasiadis.com/storage/products/pure/flashblade/architecture/integrations/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "FlashBlade — Integrations", "url": "https://chrisanastasiadis.com/storage/products/pure/flashblade/architecture/integrations/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-06"}</script>
   
 
   </head>
@@ -8291,8 +8291,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid credentials or unable to connect to management IP</code></strong> — Verify the FlashBlade management IP is reachable and your API token is valid via <code>purefb list --help</code> to confirm authentication setup.
-<strong><code>Error: Command 'purefb' not found</code></strong> — Install the Pure Storage Python SDK with <code>pip install purestorage</code> and ensure it is in your system PATH.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid credentials or unable to connect to management IP</code></td>
+<td>Verify the FlashBlade management IP is reachable and your API token is valid via <code>purefb list --help</code> to confirm authentication setup.</td>
+</tr>
+<tr>
+<td><code>Error: Command 'purefb' not found</code></td>
+<td>Install the Pure Storage Python SDK with <code>pip install purestorage</code> and ensure it is in your system PATH.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">## Log in and obtain a session token</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;fb_ip&gt;/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -8326,9 +8342,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in examples, but ensure it's not removed).
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the API endpoint is correct and the authentication token/cookie is valid; test with <code>curl -s -k -X GET "https://&lt;fb_ip&gt;/api/2.x/arrays" -H "x-auth-token: &lt;api_token&gt;"</code> without piping to jq first.
-<strong><code>curl: (401) Unauthorized</code></strong> — Confirm the API token or username/password credentials are correct and the user has sufficient permissions on the FlashBlade system.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in examples, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Verify the API endpoint is correct and the authentication token/cookie is valid; test with <code>curl -s -k -X GET "https://&lt;fb_ip&gt;/api/2.x/arrays" -H "x-auth-token: &lt;api_token&gt;"</code> without piping to jq first.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Confirm the API token or username/password credentials are correct and the user has sufficient permissions on the FlashBlade system.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">## On the array CLI</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>&lt;username&gt;
@@ -8339,8 +8374,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: User '&lt;username&gt;' does not exist</code></strong> — Verify the username exists on the array with <code>purefb admin list</code> before creating a token.
-<strong><code>Error: API token limit reached for user</code></strong> — Delete an existing token with <code>purefb admin apitoken delete &lt;username&gt; --token=&lt;token_id&gt;</code> before creating a new one.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: User '&lt;username&gt;' does not exist</code></td>
+<td>Verify the username exists on the array with <code>purefb admin list</code> before creating a token.</td>
+</tr>
+<tr>
+<td><code>Error: API token limit reached for user</code></td>
+<td>Delete an existing token with <code>purefb admin apitoken delete &lt;username&gt; --token=&lt;token_id&gt;</code> before creating a new one.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">## Get array status and version</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>GET<span class="w"> </span>/api/2.x/arrays
@@ -8435,8 +8486,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>401 Unauthorized</code></strong> — Verify API token is valid and included in the Authorization header with format <code>Authorization: Bearer &lt;token&gt;</code>.
-<strong><code>404 Not Found</code></strong> — Confirm the FlashBlade API version matches your array version; use <code>/api/2.x/</code> for 4.x firmware or adjust the endpoint path accordingly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Verify API token is valid and included in the Authorization header with format <code>Authorization: Bearer &lt;token&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>Confirm the FlashBlade API version matches your array version; use <code>/api/2.x/</code> for 4.x firmware or adjust the endpoint path accordingly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8466,7 +8533,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

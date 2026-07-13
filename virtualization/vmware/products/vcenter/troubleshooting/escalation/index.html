@@ -9257,9 +9257,28 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the root account is enabled in vCenter and the SSH service is running; check <code>/etc/ssh/sshd_config</code> for <code>PermitRootLogin yes</code>.
-<strong><code>cat: /etc/applmgmt/appliance/update_status.json: No such file or directory</code></strong> — This file path is specific to vCenter appliance deployments; if using a Windows vCenter Server installation, SSH into the appliance management interface or use the vSphere Client GUI instead.
-<strong><code>python3: command not found</code></strong> — Use <code>python</code> instead of <code>python3</code>, or pipe to <code>jq</code> if available: <code>cat /etc/applmgmt/appliance/update_status.json | jq '.version'</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify the root account is enabled in vCenter and the SSH service is running; check <code>/etc/ssh/sshd_config</code> for <code>PermitRootLogin yes</code>.</td>
+</tr>
+<tr>
+<td><code>cat: /etc/applmgmt/appliance/update_status.json: No such file or directory</code></td>
+<td>This file path is specific to vCenter appliance deployments; if using a Windows vCenter Server installation, SSH into the appliance management interface or use the vSphere Client GUI instead.</td>
+</tr>
+<tr>
+<td><code>python3: command not found</code></td>
+<td>Use <code>python</code> instead of <code>python3</code>, or pipe to <code>jq</code> if available: <code>cat /etc/applmgmt/appliance/update_status.json | jq '.version'</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-collect-the-vcsa-support-bundle-takes-520-minutes">2. Collect the VCSA support bundle (takes 5–20 minutes)<a class="headerlink" href="#2-collect-the-vcsa-support-bundle-takes-520-minutes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate support bundle — run from VCSA shell</span>
@@ -9286,9 +9305,28 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: /var/core/ filesystem is full (0% available)</code></strong> — Run <code>vc-support -w /tmp/</code> to write the bundle to an alternate location with available space.
-<strong><code>ERROR: Permission denied writing to /tmp/</code></strong> — Ensure you are running the command as root or with sudo, and verify /tmp has write permissions with <code>chmod 1777 /tmp</code>.
-<strong><code>ERROR: Database connection failed — vCenter services may be down</code></strong> — Wait 2–3 minutes for vCenter services to fully initialize, then retry with <code>vc-support</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: /var/core/ filesystem is full (0% available)</code></td>
+<td>Run <code>vc-support -w /tmp/</code> to write the bundle to an alternate location with available space.</td>
+</tr>
+<tr>
+<td><code>ERROR: Permission denied writing to /tmp/</code></td>
+<td>Ensure you are running the command as root or with sudo, and verify /tmp has write permissions with <code>chmod 1777 /tmp</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: Database connection failed — vCenter services may be down</code></td>
+<td>Wait 2–3 minutes for vCenter services to fully initialize, then retry with <code>vc-support</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Upload this .tgz file to the Broadcom case. It contains all VCSA service logs, database state, and configuration.</p>
 <h3 id="3-collect-the-vpxd-log-the-primary-vcenter-daemon-log">3. Collect the vpxd log (the primary vCenter daemon log)<a class="headerlink" href="#3-collect-the-vpxd-log-the-primary-vcenter-daemon-log" title="Permanent link">&para;</a></h3>
@@ -9318,9 +9356,28 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cp: cannot create regular file '/tmp/vpxd-20250115.log': No space left on device</code></strong> — Check available disk space with <code>df -h /tmp</code> and either clean up /tmp or redirect to a partition with sufficient space.
-<strong><code>cp: /var/log/vmware/sso/vmware-sts-idmd.log: No such file or directory</code></strong> — Verify the SSO service is installed and running with <code>systemctl status vmware-sts-idmd</code>, or check the correct log path for your vCenter version.
-<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or as root, since /var/log/vmware files are typically readable only by root.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cp: cannot create regular file '/tmp/vpxd-20250115.log': No space left on device</code></td>
+<td>Check available disk space with <code>df -h /tmp</code> and either clean up /tmp or redirect to a partition with sufficient space.</td>
+</tr>
+<tr>
+<td><code>cp: /var/log/vmware/sso/vmware-sts-idmd.log: No such file or directory</code></td>
+<td>Verify the SSO service is installed and running with <code>systemctl status vmware-sts-idmd</code>, or check the correct log path for your vCenter version.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the commands with <code>sudo</code> or as root, since /var/log/vmware files are typically readable only by root.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="4-check-vcsa-disk-space-a-common-cause-of-vcsa-service-failures">4. Check VCSA disk space (a common cause of VCSA service failures)<a class="headerlink" href="#4-check-vcsa-disk-space-a-common-cause-of-vcsa-service-failures" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Full disk space check — flag any partition at or near 100%</span>
@@ -9350,8 +9407,24 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>du: cannot access '/storage/db/': Permission denied</code></strong> — Run the command with <code>sudo</code> or as root to access the database directory.
-<strong><code>ls: cannot open directory '/var/log/vmware/': No such file or directory</code></strong> — Verify the correct vCenter log path with <code>find /var/log -type d -name vmware</code> or check your vCenter installation directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>du: cannot access '/storage/db/': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root to access the database directory.</td>
+</tr>
+<tr>
+<td><code>ls: cannot open directory '/var/log/vmware/': No such file or directory</code></td>
+<td>Verify the correct vCenter log path with <code>find /var/log -type d -name vmware</code> or check your vCenter installation directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="5-check-service-status-and-recent-errors">5. Check service status and recent errors<a class="headerlink" href="#5-check-service-status-and-recent-errors" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all VCSA services and their state</span>
@@ -9389,9 +9462,28 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: could not connect to server: No such file or directory</code></strong> — Verify PostgreSQL is running with <code>service-control --status vmware-vpostgres</code> and restart if needed.
-<strong><code>grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory</code></strong> — Check log directory exists and VCSA services are initialized; if fresh install, wait 5 minutes for services to fully start.
-<strong><code>ERROR: role "vc" does not exist</code></strong> — Ensure the VCDB database user exists by running <code>/usr/lib/vmware-vpostgres/bin/psql -U postgres -c "SELECT * FROM pg_user WHERE usename='vc';"</code> to verify.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: could not connect to server: No such file or directory</code></td>
+<td>Verify PostgreSQL is running with <code>service-control --status vmware-vpostgres</code> and restart if needed.</td>
+</tr>
+<tr>
+<td><code>grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory</code></td>
+<td>Check log directory exists and VCSA services are initialized; if fresh install, wait 5 minutes for services to fully start.</td>
+</tr>
+<tr>
+<td><code>ERROR: role "vc" does not exist</code></td>
+<td>Ensure the VCDB database user exists by running <code>/usr/lib/vmware-vpostgres/bin/psql -U postgres -c "SELECT * FROM pg_user WHERE usename='vc';"</code> to verify.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="6-write-the-timeline">6. Write the timeline<a class="headerlink" href="#6-write-the-timeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vCenter version: 8.0 U2c build 23477823
@@ -9593,7 +9685,20 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory</code></strong> — Verify vpxd service is running with</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory</code></td>
+<td>Verify vpxd service is running with</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="support-portal-and-sla-reference">Support Portal and SLA Reference<a class="headerlink" href="#support-portal-and-sla-reference" title="Permanent link">&para;</a></h2>
@@ -9667,7 +9772,7 @@ How to escalate vCenter Server issues to Broadcom support: what data to collect,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

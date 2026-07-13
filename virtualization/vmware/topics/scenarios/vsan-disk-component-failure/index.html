@@ -9403,8 +9403,24 @@ on HCI deployments.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxcli: Unknown command or namespace vsan</code></strong> — Verify vSAN is licensed and enabled on the host by running <code>esxcli vsan cluster get</code>.
-<strong><code>grep: (standard input) is empty</code></strong> — Confirm the host is part of a vSAN cluster and has vSAN enabled with <code>esxcli vsan cluster get</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxcli: Unknown command or namespace vsan</code></td>
+<td>Verify vSAN is licensed and enabled on the host by running <code>esxcli vsan cluster get</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>Confirm the host is part of a vSAN cluster and has vSAN enabled with <code>esxcli vsan cluster get</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: note which host the absent component lives on, which disk group it belongs to, and whether the state is <code>Absent</code> (disk gone) or <code>Degraded</code> (disk present but component needs rebuild).</p>
 <hr />
@@ -9506,8 +9522,24 @@ on HCI deployments.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Could not retrieve SMART data for device naa.&lt;device-id&gt;</code></strong> — Verify the NAA identifier is correct by copying it directly from the device list output and ensure the device supports SMART queries.
-<strong><code>Error: Unknown option or syntax error in esxcli command</code></strong> — Check your ESXi version supports the <code>esxcli storage core device smart</code> command (requires ESXi 6.5+); use <code>esxcli storage core device list</code> alone if unavailable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Could not retrieve SMART data for device naa.&lt;device-id&gt;</code></td>
+<td>Verify the NAA identifier is correct by copying it directly from the device list output and ensure the device supports SMART queries.</td>
+</tr>
+<tr>
+<td><code>Error: Unknown option or syntax error in esxcli command</code></td>
+<td>Check your ESXi version supports the <code>esxcli storage core device smart</code> command (requires ESXi 6.5+); use <code>esxcli storage core device list</code> alone if unavailable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>For VxRail deployments, check iDRAC before acting — OMIVV surfaces hardware events as vCenter alarms:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to iDRAC (or use web UI at https://&lt;idrac-ip&gt;)</span>
@@ -9522,8 +9554,24 @@ on HCI deployments.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>racadm: command not found</code></strong> — Install Dell OMECLI tools or use the iDRAC web UI at https://<idrac-ip> instead.
-<strong><code>DRAC001: Authentication failed</code></strong> — Verify iDRAC credentials and ensure your user account has sufficient permissions to query system event logs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>racadm: command not found</code></td>
+<td>Install Dell OMECLI tools or use the iDRAC web UI at https://<idrac-ip> instead.</td>
+</tr>
+<tr>
+<td><code>DRAC001: Authentication failed</code></td>
+<td>Verify iDRAC credentials and ensure your user account has sufficient permissions to query system event logs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: cross-reference <strong>vCenter → Alarms → Triggered Alarms</strong> for any Dell OMIVV alarm correlated with the vSAN alert to confirm the physical disk identity.</p>
 <hr />
@@ -9550,8 +9598,24 @@ on HCI deployments.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown command or namespace path vsan/debug/resync/summary.</code></strong> — Verify VSAN is licensed and enabled on the cluster; run <code>esxcli vsan cluster get</code> to confirm VSAN status first.
-<strong><code>Error: Permission denied.</code></strong> — Ensure you are logged in with root or an account with VSAN administration privileges; use <code>esxcli system permission list</code> to verify your role.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown command or namespace path vsan/debug/resync/summary.</code></td>
+<td>Verify VSAN is licensed and enabled on the cluster; run <code>esxcli vsan cluster get</code> to confirm VSAN status first.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied.</code></td>
+<td>Ensure you are logged in with root or an account with VSAN administration privileges; use <code>esxcli system permission list</code> to verify your role.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: <code>ResyncType = REPAIR</code> with decreasing <code>BytesToResync</code> confirms rebuild is in progress. For VxRail, use <strong>VxRail Manager → Maintenance → Disk Replacement</strong> wizard — it verifies cluster capacity before removal and monitors rebuild post-replacement.</p>
 <hr />
@@ -9671,7 +9735,7 @@ on HCI deployments.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

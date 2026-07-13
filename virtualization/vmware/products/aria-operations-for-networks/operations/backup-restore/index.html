@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="vRNI Backup &amp; Restore · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vRNI Backup &amp; Restore", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/aria-operations-for-networks/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-16"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vRNI Backup &amp; Restore", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/aria-operations-for-networks/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-16"}</script>
   
 
   </head>
@@ -9100,9 +9100,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip SSL verification (already present in the example, but ensure it's not removed).
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Verify the platform URL is correct and the authentication service is responding; check credentials and ensure the API endpoint <code>/api/ni/auth/token</code> is accessible.
-<strong><code>command not found: python3</code></strong> — Install Python 3 or replace <code>python3</code> with <code>python</code> if only Python 2 is available on the system.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to curl to skip SSL verification (already present in the example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></td>
+<td>Verify the platform URL is correct and the authentication service is responding; check credentials and ensure the API endpoint <code>/api/ni/auth/token</code> is accessible.</td>
+</tr>
+<tr>
+<td><code>command not found: python3</code></td>
+<td>Install Python 3 or replace <code>python3</code> with <code>python</code> if only Python 2 is available on the system.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># crontab entry — runs daily at 02:00</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="m">0</span><span class="w"> </span><span class="m">2</span><span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>/usr/local/bin/aon-backup.sh<span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/aon-backup.log<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
@@ -9111,8 +9130,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>command not found: /usr/local/bin/aon-backup.sh</code></strong> — Verify the backup script exists at the specified path and is executable with <code>ls -la /usr/local/bin/aon-backup.sh &amp;&amp; chmod +x /usr/local/bin/aon-backup.sh</code>.
-<strong><code>Permission denied</code></strong> — Ensure the crontab user (typically root or aria-ops service account) has execute permissions on the script and read/write access to <code>/var/log/aon-backup.log</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found: /usr/local/bin/aon-backup.sh</code></td>
+<td>Verify the backup script exists at the specified path and is executable with <code>ls -la /usr/local/bin/aon-backup.sh &amp;&amp; chmod +x /usr/local/bin/aon-backup.sh</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure the crontab user (typically root or aria-ops service account) has execute permissions on the script and read/write access to <code>/var/log/aon-backup.log</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">PLATFORM</span><span class="o">=</span><span class="s2">&quot;https://aon-new.example.local&quot;</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/auth/token&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -9131,9 +9166,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip SSL verification (already present in the example, but ensure it's not removed).
-<strong><code>jq: command not found</code> or <code>python3: command not found</code></strong> — Install the required JSON parser with <code>apt-get install python3</code> or <code>yum install python3</code> on the Aria Operations for Networks appliance.
-<strong><code>{"status":"error","message":"Invalid or expired token","code":"AUTH_FAILED"}</code></strong> — Verify the admin credentials are correct and the authentication endpoint is reachable with <code>curl -sk https://aon-new.example.local/api/ni/auth/token</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to curl to skip SSL verification (already present in the example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code> or <code>python3: command not found</code></td>
+<td>Install the required JSON parser with <code>apt-get install python3</code> or <code>yum install python3</code> on the Aria Operations for Networks appliance.</td>
+</tr>
+<tr>
+<td><code>{"status":"error","message":"Invalid or expired token","code":"AUTH_FAILED"}</code></td>
+<td>Verify the admin credentials are correct and the authentication endpoint is reachable with <code>curl -sk https://aon-new.example.local/api/ni/auth/token</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>ubuntu@10.10.10.51<span class="w">    </span><span class="c1"># Collector VM</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
@@ -9157,9 +9211,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: /home/ubuntu/support/pairing.sh: command not found</code></strong> — Verify the pairing.sh script exists at /home/ubuntu/support/ or check if the support directory path differs in your deployment.
-<strong><code>Connection refused: Unable to reach platform.aria.local on port 443</code></strong> — Ensure the Platform VM FQDN is correct and reachable from the Collector VM, and verify network connectivity and firewall rules allow port 443.
-<strong><code>Current pairing key: [key] - Error: Invalid pairing key format</code></strong> — Enter a valid UUID-format pairing key (8-4-4-4-12 hexadecimal characters separated by hyphens).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: /home/ubuntu/support/pairing.sh: command not found</code></td>
+<td>Verify the pairing.sh script exists at /home/ubuntu/support/ or check if the support directory path differs in your deployment.</td>
+</tr>
+<tr>
+<td><code>Connection refused: Unable to reach platform.aria.local on port 443</code></td>
+<td>Ensure the Platform VM FQDN is correct and reachable from the Collector VM, and verify network connectivity and firewall rules allow port 443.</td>
+</tr>
+<tr>
+<td><code>Current pairing key: [key] - Error: Invalid pairing key format</code></td>
+<td>Enter a valid UUID-format pairing key (8-4-4-4-12 hexadecimal characters separated by hyphens).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
@@ -9221,8 +9294,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Job for cassandra.service failed because the control process exited with error code.</code></strong> — Run <code>sudo find /var/lib/cassandra -name "*.tmp" -delete &amp;&amp; sudo systemctl start cassandra</code> to clear corrupted temp files from an unclean shutdown.
-<strong><code>Unit postgres.service not found.</code></strong> — Verify the correct service name with `sudo systemctl list-units --type</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Job for cassandra.service failed because the control process exited with error code.</code></td>
+<td>Run <code>sudo find /var/lib/cassandra -name "*.tmp" -delete &amp;&amp; sudo systemctl start cassandra</code> to clear corrupted temp files from an unclean shutdown.</td>
+</tr>
+<tr>
+<td><code>Unit postgres.service not found.</code></td>
+<td>Verify the correct service name with `sudo systemctl list-units --type</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9267,7 +9356,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -9356,9 +9356,28 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect to localhost:443 failed: Connection refused</code></strong> — Ensure SSH is enabled on the ESXi host and the firewall rule for SSH is active in the ESXi security profile.
-<strong><code>The term 'Get-VMHost' is not recognized</code></strong> — Install VMware PowerCLI module using <code>Install-Module -Name VMware.PowerCLI -Force</code> and import it with <code>Import-Module VMware.PowerCLI</code>.
-<strong><code>Permission denied</code></strong> — Verify you are logged in as root or a user with administrative privileges; use <code>whoami</code> to confirm your current user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect to localhost:443 failed: Connection refused</code></td>
+<td>Ensure SSH is enabled on the ESXi host and the firewall rule for SSH is active in the ESXi security profile.</td>
+</tr>
+<tr>
+<td><code>The term 'Get-VMHost' is not recognized</code></td>
+<td>Install VMware PowerCLI module using <code>Install-Module -Name VMware.PowerCLI -Force</code> and import it with <code>Import-Module VMware.PowerCLI</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Verify you are logged in as root or a user with administrative privileges; use <code>whoami</code> to confirm your current user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="add-a-local-account">Add a Local Account<a class="headerlink" href="#add-a-local-account" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
@@ -9374,9 +9393,28 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The account already exists</code></strong> — Delete the existing account with <code>esxcli system account remove -i "breakglass"</code> before recreating it.
-<strong><code>Error: Password does not meet complexity requirements</code></strong> — Use a password with at least 8 characters including uppercase, lowercase, numbers, and special characters.
-<strong><code>Error: Unknown role name Admin</code></strong> — Replace <code>Admin</code> with the correct role identifier <code>admin</code> (lowercase).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The account already exists</code></td>
+<td>Delete the existing account with <code>esxcli system account remove -i "breakglass"</code> before recreating it.</td>
+</tr>
+<tr>
+<td><code>Error: Password does not meet complexity requirements</code></td>
+<td>Use a password with at least 8 characters including uppercase, lowercase, numbers, and special characters.</td>
+</tr>
+<tr>
+<td><code>Error: Unknown role name Admin</code></td>
+<td>Replace <code>Admin</code> with the correct role identifier <code>admin</code> (lowercase).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="delete-an-unused-local-account">Delete an Unused Local Account<a class="headerlink" href="#delete-an-unused-local-account" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;
@@ -9385,8 +9423,24 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The object has invalid or missing key member 'key'.</code></strong> — Verify the username exists by running <code>esxcli system account list</code> before attempting removal.
-<strong><code>Error: Permission denied.</code></strong> — Ensure you are logged in as root or a user with Administrator privileges on the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The object has invalid or missing key member 'key'.</code></td>
+<td>Verify the username exists by running <code>esxcli system account list</code> before attempting removal.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied.</code></td>
+<td>Ensure you are logged in as root or a user with Administrator privileges on the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="set-root-password">Set Root Password<a class="headerlink" href="#set-root-password" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Interactively</span>
@@ -9413,9 +9467,28 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>passwd: Authentication token manipulation error</code></strong> — Ensure the root account is unlocked with <code>pam_unix(passwd:chauthtok): authentication token lock busy</code> and retry after a few seconds.
-<strong><code>You do not have permission to run this command</code></strong> — Verify your PowerCLI session has Administrator privileges on the vCenter Server with <code>Get-VIPrivilege -Role Admin</code>.
-<strong><code>Unable to cast object of type 'System.String' to type 'VMware.Vim.HostAccountSpec'</code></strong> — Ensure you are connected to vCenter with <code>Connect-VIServer</code> before running the ForEach-Object loop.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>passwd: Authentication token manipulation error</code></td>
+<td>Ensure the root account is unlocked with <code>pam_unix(passwd:chauthtok): authentication token lock busy</code> and retry after a few seconds.</td>
+</tr>
+<tr>
+<td><code>You do not have permission to run this command</code></td>
+<td>Verify your PowerCLI session has Administrator privileges on the vCenter Server with <code>Get-VIPrivilege -Role Admin</code>.</td>
+</tr>
+<tr>
+<td><code>Unable to cast object of type 'System.String' to type 'VMware.Vim.HostAccountSpec'</code></td>
+<td>Ensure you are connected to vCenter with <code>Connect-VIServer</code> before running the ForEach-Object loop.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="vcenter-role-based-access-control">vCenter Role-Based Access Control<a class="headerlink" href="#vcenter-role-based-access-control" title="Permanent link">&para;</a></h2>
@@ -9494,9 +9567,28 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vim-cmd: Unknown command</code></strong> — Ensure you are running vim-cmd directly on the ESXi host console or via SSH, not from a vCenter server.
-<strong><code>The term 'Get-VMHost' is not recognized</code></strong> — Install VMware PowerCLI module using <code>Install-Module -Name VMware.PowerCLI -Force</code> and import it with <code>Import-Module VMware.PowerCLI</code>.
-<strong><code>Connect-VIServer : The server certificate could not be validated</code></strong> — Add <code>-SkipCertificateCheck</code> to your <code>Connect-VIServer</code> command or set <code>Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false</code> before connecting.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vim-cmd: Unknown command</code></td>
+<td>Ensure you are running vim-cmd directly on the ESXi host console or via SSH, not from a vCenter server.</td>
+</tr>
+<tr>
+<td><code>The term 'Get-VMHost' is not recognized</code></td>
+<td>Install VMware PowerCLI module using <code>Install-Module -Name VMware.PowerCLI -Force</code> and import it with <code>Import-Module VMware.PowerCLI</code>.</td>
+</tr>
+<tr>
+<td><code>Connect-VIServer : The server certificate could not be validated</code></td>
+<td>Add <code>-SkipCertificateCheck</code> to your <code>Connect-VIServer</code> command or set <code>Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false</code> before connecting.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="set-shell-timeout">Set Shell Timeout<a class="headerlink" href="#set-shell-timeout" title="Permanent link">&para;</a></h3>
 <p>If ESXi Shell or SSH must remain enabled temporarily:</p>
@@ -9511,8 +9603,24 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option or setting '/UserVars/ESXiShellTimeOut'</code></strong> — Verify the parameter name is correct; use <code>esxcli system settings advanced list | grep -i timeout</code> to confirm available timeout settings.
-<strong><code>Error: Permission denied</code></strong> — Run the commands as root or with appropriate ESXi administrative privileges; non-root users cannot modify system settings.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option or setting '/UserVars/ESXiShellTimeOut'</code></td>
+<td>Verify the parameter name is correct; use <code>esxcli system settings advanced list | grep -i timeout</code> to confirm available timeout settings.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Run the commands as root or with appropriate ESXi administrative privileges; non-root users cannot modify system settings.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="restrict-ssh-access-by-ip">Restrict SSH Access by IP<a class="headerlink" href="#restrict-ssh-access-by-ip" title="Permanent link">&para;</a></h3>
 <p>Use the ESXi built-in firewall to limit SSH access to specific source IPs:</p>
@@ -9529,8 +9637,24 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option or flag '--ruleset-id sshServer'</code></strong> — Use the correct flag syntax: <code>esxcli network firewall ruleset set --rulesetid sshServer</code> (no hyphen between ruleset and id).
-<strong><code>Error: The IP address 10.0.1.0/24 is invalid</code></strong> — Verify the CIDR notation is correct and the network address matches the subnet (e.g., use <code>10.0.1.0/24</code> not <code>10.0.1.5/24</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option or flag '--ruleset-id sshServer'</code></td>
+<td>Use the correct flag syntax: <code>esxcli network firewall ruleset set --rulesetid sshServer</code> (no hyphen between ruleset and id).</td>
+</tr>
+<tr>
+<td><code>Error: The IP address 10.0.1.0/24 is invalid</code></td>
+<td>Verify the CIDR notation is correct and the network address matches the subnet (e.g., use <code>10.0.1.0/24</code> not <code>10.0.1.5/24</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="firewall-ruleset-management">Firewall Ruleset Management<a class="headerlink" href="#firewall-ruleset-management" title="Permanent link">&para;</a></h2>
@@ -9575,8 +9699,24 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option or malformed command</code></strong> — Verify the exact ruleset name with <code>esxcli network firewall ruleset list</code> and use the correct spelling (case-sensitive).
-<strong><code>Error: Unable to connect to the host</code></strong> — Ensure you are connected to the ESXi host via SSH or have proper credentials configured in your vSphere client.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option or malformed command</code></td>
+<td>Verify the exact ruleset name with <code>esxcli network firewall ruleset list</code> and use the correct spelling (case-sensitive).</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to the host</code></td>
+<td>Ensure you are connected to the ESXi host via SSH or have proper credentials configured in your vSphere client.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="minimum-required-rulesets-production">Minimum Required Rulesets (Production)<a class="headerlink" href="#minimum-required-rulesets-production" title="Permanent link">&para;</a></h3>
 <table>
@@ -9628,8 +9768,24 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option or flag '--ruleset-id'.</code></strong> — Use the correct flag name <code>--ruleset-id</code> or check your ESXi version; some versions use <code>--rulesetid</code> without the hyphen.
-<strong><code>Error: Ruleset 'ftpClient' not found.</code></strong> — Verify the exact ruleset name with <code>esxcli network firewall ruleset list</code> before disabling, as ruleset IDs are case-sensitive.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option or flag '--ruleset-id'.</code></td>
+<td>Use the correct flag name <code>--ruleset-id</code> or check your ESXi version; some versions use <code>--rulesetid</code> without the hyphen.</td>
+</tr>
+<tr>
+<td><code>Error: Ruleset 'ftpClient' not found.</code></td>
+<td>Verify the exact ruleset name with <code>esxcli network firewall ruleset list</code> before disabling, as ruleset IDs are case-sensitive.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="host-profile-enforcement">Host Profile Enforcement<a class="headerlink" href="#host-profile-enforcement" title="Permanent link">&para;</a></h3>
 <p>Firewall ruleset configuration is captured in Host Profiles. Changes on individual hosts that drift from the profile are flagged as non-compliant. Use <strong>Check Compliance</strong> after any firewall change to confirm the host profile still matches.</p>
@@ -9706,9 +9862,28 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect to syslog.example.local failed</code></strong> — Verify the syslog server hostname/IP is reachable and listening on port 514 with <code>ping syslog.example.local</code> and <code>nc -zv syslog.example.local 514</code>.
-<strong><code>Unknown option loghost</code></strong> — Ensure you're running this command on ESXi 6.0 or later; older versions use different syslog configuration syntax.
-<strong><code>Permission denied</code></strong> — Run the command as root or with appropriate ESXi administrative privileges via SSH or vSphere Client.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect to syslog.example.local failed</code></td>
+<td>Verify the syslog server hostname/IP is reachable and listening on port 514 with <code>ping syslog.example.local</code> and <code>nc -zv syslog.example.local 514</code>.</td>
+</tr>
+<tr>
+<td><code>Unknown option loghost</code></td>
+<td>Ensure you're running this command on ESXi 6.0 or later; older versions use different syslog configuration syntax.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command as root or with appropriate ESXi administrative privileges via SSH or vSphere Client.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Configure via Host Profile to enforce consistently across all cluster hosts.</p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9738,7 +9913,7 @@ ESXi Access Control reference covering Exception Users, Local Account Management
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

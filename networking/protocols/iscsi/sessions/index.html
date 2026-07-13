@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="iSCSI — Sessions · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "iSCSI — Sessions", "url": "https://chrisanastasiadis.com/networking/protocols/iscsi/sessions/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-05"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "iSCSI — Sessions", "url": "https://chrisanastasiadis.com/networking/protocols/iscsi/sessions/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-05"}</script>
   
 
   </head>
@@ -8021,9 +8021,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iscsiadm: No active sessions.</code></strong> — Verify iSCSI initiator service is running with <code>systemctl status iscsid</code> and sessions are logged in with <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;</code> followed by login.
-<strong><code>iscsiadm: Cannot find record for sid 1</code></strong> — Ensure the session exists before querying; use <code>iscsiadm -m session</code> first to list valid session IDs.
-<strong><code>iscsiadm: command requires root privileges</code></strong> — Run the command with <code>sudo</code> or as the root user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iscsiadm: No active sessions.</code></td>
+<td>Verify iSCSI initiator service is running with <code>systemctl status iscsid</code> and sessions are logged in with <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;</code> followed by login.</td>
+</tr>
+<tr>
+<td><code>iscsiadm: Cannot find record for sid 1</code></td>
+<td>Ensure the session exists before querying; use <code>iscsiadm -m session</code> first to list valid session IDs.</td>
+</tr>
+<tr>
+<td><code>iscsiadm: command requires root privileges</code></td>
+<td>Run the command with <code>sudo</code> or as the root user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">## Login to all discovered targets (persistent)</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--login
@@ -8059,9 +8078,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iscsiadm: No records found</code></strong> — Run <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;:3260</code> to discover targets before attempting login.
-<strong><code>iscsiadm: cannot login to target</code></strong> — Verify the target IP is reachable with <code>ping</code>, the iSCSI daemon is running with <code>systemctl status iscsid</code>, and credentials are correct if CHAP is enabled.
-<strong><code>iscsiadm: No active session found</code></strong> — Confirm the target is currently logged in using <code>iscsiadm -m session</code> before attempting logout.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iscsiadm: No records found</code></td>
+<td>Run <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;:3260</code> to discover targets before attempting login.</td>
+</tr>
+<tr>
+<td><code>iscsiadm: cannot login to target</code></td>
+<td>Verify the target IP is reachable with <code>ping</code>, the iSCSI daemon is running with <code>systemctl status iscsid</code>, and credentials are correct if CHAP is enabled.</td>
+</tr>
+<tr>
+<td><code>iscsiadm: No active session found</code></td>
+<td>Confirm the target is currently logged in using <code>iscsiadm -m session</code> before attempting logout.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">## /etc/iscsi/iscsid.conf</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>node.session.nr_sessions<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
@@ -8073,8 +8111,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iscsiadm: No records found</code></strong> — Ensure the target IQN and portal IP are already discovered; run <code>iscsiadm -m discovery -t st -p &lt;ip&gt;</code> first to populate the node database.
-<strong><code>iscsiadm: cannot open /etc/iscsi/iscsid.conf: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root, since iSCSI configuration requires elevated privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iscsiadm: No records found</code></td>
+<td>Ensure the target IQN and portal IP are already discovered; run <code>iscsiadm -m discovery -t st -p &lt;ip&gt;</code> first to populate the node database.</td>
+</tr>
+<tr>
+<td><code>iscsiadm: cannot open /etc/iscsi/iscsid.conf: Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root, since iSCSI configuration requires elevated privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">## Check session state during recovery</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>state
@@ -8093,9 +8147,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iscsiadm: No records found</code></strong> — Verify the target IQN and portal IP are correct and exist in the node database with <code>iscsiadm -m node -o show</code>.
-<strong><code>iscsiadm: cannot connect to iSCSI daemon</code></strong> — Ensure the iscsid service is running with <code>systemctl start iscsid</code> and <code>systemctl start iscsi</code>.
-<strong><code>Login to [iface: default, target: iqn.1991-05.com.example:storage.disk1, portal: 192.168.1.50,3260] failed</code></strong> — Check network connectivity to the target portal and verify the target is accepting connections with <code>iscsiadm -m discovery -t st -p &lt;ip&gt;:3260</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iscsiadm: No records found</code></td>
+<td>Verify the target IQN and portal IP are correct and exist in the node database with <code>iscsiadm -m node -o show</code>.</td>
+</tr>
+<tr>
+<td><code>iscsiadm: cannot connect to iSCSI daemon</code></td>
+<td>Ensure the iscsid service is running with <code>systemctl start iscsid</code> and <code>systemctl start iscsi</code>.</td>
+</tr>
+<tr>
+<td><code>Login to [iface: default, target: iqn.1991-05.com.example:storage.disk1, portal: 192.168.1.50,3260] failed</code></td>
+<td>Check network connectivity to the target portal and verify the target is accepting connections with <code>iscsiadm -m discovery -t st -p &lt;ip&gt;:3260</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8119,7 +8192,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

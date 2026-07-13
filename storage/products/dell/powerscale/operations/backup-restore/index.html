@@ -9396,9 +9396,28 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Snapshot not found</code></strong> — Verify the snapshot ID or name exists with <code>isi snapshot snapshots list</code> before attempting deletion.
-<strong><code>Error: Path does not exist or is not accessible</code></strong> — Ensure the path <code>/ifs/data/project1</code> exists and the user has read permissions on the parent filesystem.
-<strong><code>Error: Invalid date format for --expires parameter</code></strong> — Use Unix timestamp format (seconds since epoch) or ensure the date command output matches the expected format.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Snapshot not found</code></td>
+<td>Verify the snapshot ID or name exists with <code>isi snapshot snapshots list</code> before attempting deletion.</td>
+</tr>
+<tr>
+<td><code>Error: Path does not exist or is not accessible</code></td>
+<td>Ensure the path <code>/ifs/data/project1</code> exists and the user has read permissions on the parent filesystem.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid date format for --expires parameter</code></td>
+<td>Use Unix timestamp format (seconds since epoch) or ensure the date command output matches the expected format.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="snapshot-schedules">Snapshot Schedules<a class="headerlink" href="#snapshot-schedules" title="Permanent link">&para;</a></h3>
 <p>Schedule automated snapshots per directory with retention periods:</p>
@@ -9458,9 +9477,28 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Path '/ifs/data/project1' does not exist</code></strong> — Verify the path exists on the cluster and use the correct absolute path starting with /ifs.
-<strong><code>Error: Invalid retention format 'retention_value'</code></strong> — Use valid retention syntax such as '14D', '2W', or '30D' (days, weeks, or days only).
-<strong><code>Error: Schedule 'daily-project1' not found</code></strong> — Confirm the schedule name is correct by running <code>isi snapshot schedules list</code> to view all existing schedules.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Path '/ifs/data/project1' does not exist</code></td>
+<td>Verify the path exists on the cluster and use the correct absolute path starting with /ifs.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid retention format 'retention_value'</code></td>
+<td>Use valid retention syntax such as '14D', '2W', or '30D' (days, weeks, or days only).</td>
+</tr>
+<tr>
+<td><code>Error: Schedule 'daily-project1' not found</code></td>
+<td>Confirm the schedule name is correct by running <code>isi snapshot schedules list</code> to view all existing schedules.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="accessing-snapshots">Accessing Snapshots<a class="headerlink" href="#accessing-snapshots" title="Permanent link">&para;</a></h3>
 <p>Snapshots are visible within the live filesystem under the <code>.snapshot</code> directory at the root of the snapshotted path:</p>
@@ -9499,8 +9537,24 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ls: cannot open directory '/ifs/data/project1/.snapshot/': Permission denied</code></strong> — Run the command from the cluster shell with appropriate credentials, or verify the user has read access to the snapshot directory.
-<strong><code>allow-snapshot-dirs: (not found)</code></strong> — The NFS export does not have snapshot visibility enabled; run <code>isi nfs exports modify &lt;export_id&gt; --allow-snapshot-dirs true</code> to enable it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ls: cannot open directory '/ifs/data/project1/.snapshot/': Permission denied</code></td>
+<td>Run the command from the cluster shell with appropriate credentials, or verify the user has read access to the snapshot directory.</td>
+</tr>
+<tr>
+<td><code>allow-snapshot-dirs: (not found)</code></td>
+<td>The NFS export does not have snapshot visibility enabled; run <code>isi nfs exports modify &lt;export_id&gt; --allow-snapshot-dirs true</code> to enable it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="restoring-files-from-a-snapshot">Restoring Files from a Snapshot<a class="headerlink" href="#restoring-files-from-a-snapshot" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Restore a single file from a snapshot</span>
@@ -9541,9 +9595,28 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cp: cannot stat '/ifs/data/project1/.snapshot/project1-20260101/report.xlsx': No such file or directory</code></strong> — Verify the snapshot name and file path exist using <code>isi snapshot snapshots list</code> and <code>ls -la /ifs/data/project1/.snapshot/</code>.
-<strong><code>rsync: [Receiver] mkdir "/ifs/data/project1" failed: Permission denied (13)</code></strong> — Ensure the user running rsync has write permissions on the target directory with <code>chmod</code> or check SMB/NFS share ACLs.
-<strong><code>Error: Invalid snapshot ID format</code></strong> — Use the full snapshot UUID from <code>isi snapshot snapshots list</code> instead of a partial or human-readable name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cp: cannot stat '/ifs/data/project1/.snapshot/project1-20260101/report.xlsx': No such file or directory</code></td>
+<td>Verify the snapshot name and file path exist using <code>isi snapshot snapshots list</code> and <code>ls -la /ifs/data/project1/.snapshot/</code>.</td>
+</tr>
+<tr>
+<td><code>rsync: [Receiver] mkdir "/ifs/data/project1" failed: Permission denied (13)</code></td>
+<td>Ensure the user running rsync has write permissions on the target directory with <code>chmod</code> or check SMB/NFS share ACLs.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid snapshot ID format</code></td>
+<td>Use the full snapshot UUID from <code>isi snapshot snapshots list</code> instead of a partial or human-readable name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>Snapshot revert is destructive. All changes made after the snapshot timestamp are permanently discarded. Always confirm with the application and data owner before reverting.</p>
@@ -9576,8 +9649,24 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>isi: command not found</code></strong> — Ensure the OneFS CLI tools are installed and the system PATH includes the OneFS SDK bin directory.
-<strong><code>Error: Invalid reserve value. Must be between 0 and 50.</code></strong> — Specify a reserve percentage between 0 and 50; values above 50% are not permitted.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>isi: command not found</code></td>
+<td>Ensure the OneFS CLI tools are installed and the system PATH includes the OneFS SDK bin directory.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid reserve value. Must be between 0 and 50.</code></td>
+<td>Specify a reserve percentage between 0 and 50; values above 50% are not permitted.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="synciq-replication-based-recovery">SyncIQ — Replication-Based Recovery<a class="headerlink" href="#synciq-replication-based-recovery" title="Permanent link">&para;</a></h2>
@@ -9618,9 +9707,28 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid target host '&lt;dr-cluster-ip&gt;'</code></strong> — Replace <code>&lt;dr-cluster-ip&gt;</code> with the actual IP address or hostname of your DR cluster (e.g., <code>192.168.1.50</code>).
-<strong><code>Error: Source path '/ifs/data/project1' does not exist</code></strong> — Verify the source path exists on the local cluster using <code>isi ls /ifs/data/project1</code> before creating the policy.
-<strong><code>Error: Policy 'backup-project1' already exists</code></strong> — Use a unique policy name or delete the existing policy with <code>isi sync policies delete backup-project1</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid target host '&lt;dr-cluster-ip&gt;'</code></td>
+<td>Replace <code>&lt;dr-cluster-ip&gt;</code> with the actual IP address or hostname of your DR cluster (e.g., <code>192.168.1.50</code>).</td>
+</tr>
+<tr>
+<td><code>Error: Source path '/ifs/data/project1' does not exist</code></td>
+<td>Verify the source path exists on the local cluster using <code>isi ls /ifs/data/project1</code> before creating the policy.</td>
+</tr>
+<tr>
+<td><code>Error: Policy 'backup-project1' already exists</code></td>
+<td>Use a unique policy name or delete the existing policy with <code>isi sync policies delete backup-project1</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="synciq-restore-failback-to-primary">SyncIQ Restore (Failback to Primary)<a class="headerlink" href="#synciq-restore-failback-to-primary" title="Permanent link">&para;</a></h3>
 <p>When recovering from a DR failover, replicate data back from the DR cluster to the primary:</p>
@@ -9668,9 +9776,28 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Policy 'restore-project1' already exists</code></strong> — Delete the existing policy with <code>isi sync policies delete restore-project1</code> before recreating it.
-<strong><code>Error: Unable to connect to target host 192.168.45.22</code></strong> — Verify the target cluster IP is correct and reachable by running <code>ping &lt;primary-cluster-ip&gt;</code> and confirm network connectivity.
-<strong><code>Error: Job ID not found</code></strong> — Use <code>isi sync jobs list</code> to retrieve the correct job ID before running the view command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Policy 'restore-project1' already exists</code></td>
+<td>Delete the existing policy with <code>isi sync policies delete restore-project1</code> before recreating it.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to target host 192.168.45.22</code></td>
+<td>Verify the target cluster IP is correct and reachable by running <code>ping &lt;primary-cluster-ip&gt;</code> and confirm network connectivity.</td>
+</tr>
+<tr>
+<td><code>Error: Job ID not found</code></td>
+<td>Use <code>isi sync jobs list</code> to retrieve the correct job ID before running the view command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="ndmp-network-data-management-protocol">NDMP — Network Data Management Protocol<a class="headerlink" href="#ndmp-network-data-management-protocol" title="Permanent link">&para;</a></h2>
@@ -9702,8 +9829,24 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: NDMP service is not licensed on this cluster</code></strong> — Verify NDMP licensing is enabled via OneFS WebUI under Cluster &gt; Licensing or contact Dell support for a license key.
-<strong><code>Error: Invalid port number 10000: port already in use</code></strong> — Change the NDMP port to an available port (e.g., <code>--port 10001</code>) or stop the conflicting service using <code>netstat -tlnp | grep 10000</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: NDMP service is not licensed on this cluster</code></td>
+<td>Verify NDMP licensing is enabled via OneFS WebUI under Cluster &gt; Licensing or contact Dell support for a license key.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid port number 10000: port already in use</code></td>
+<td>Change the NDMP port to an available port (e.g., <code>--port 10001</code>) or stop the conflicting service using <code>netstat -tlnp | grep 10000</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ndmp-users">NDMP Users<a class="headerlink" href="#ndmp-users" title="Permanent link">&para;</a></h3>
 <p>NDMP requires a dedicated backup account separate from the admin account:</p>
@@ -9736,9 +9879,28 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: User 'backup_user' already exists</code></strong> — Use <code>isi ndmp users delete backup_user</code> first, or choose a different username.
-<strong><code>Error: Invalid password. Password must be at least 8 characters</code></strong> — Provide a password meeting minimum length and complexity requirements.
-<strong><code>Error: User 'backup_user' is currently in use by an active NDMP session</code></strong> — Wait for active backup jobs to complete or disconnect sessions before deleting the user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: User 'backup_user' already exists</code></td>
+<td>Use <code>isi ndmp users delete backup_user</code> first, or choose a different username.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid password. Password must be at least 8 characters</code></td>
+<td>Provide a password meeting minimum length and complexity requirements.</td>
+</tr>
+<tr>
+<td><code>Error: User 'backup_user' is currently in use by an active NDMP session</code></td>
+<td>Wait for active backup jobs to complete or disconnect sessions before deleting the user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ndmp-sessions-and-diagnostics">NDMP Sessions and Diagnostics<a class="headerlink" href="#ndmp-sessions-and-diagnostics" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># List active NDMP sessions (shows backup jobs in progress)</span>
@@ -9781,9 +9943,28 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>isi: command not found</code></strong> — Ensure you are logged into the PowerScale cluster CLI or that the isi command is in your PATH.
-<strong><code>Session &lt;session_id&gt; not found</code></strong> — Verify the session ID exists by running <code>isi ndmp sessions list</code> first before attempting to view or delete it.
-<strong><code>Permission denied: NDMP operations require admin privileges</code></strong> — Run the command with appropriate admin credentials or use <code>sudo isi</code> if configured.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>isi: command not found</code></td>
+<td>Ensure you are logged into the PowerScale cluster CLI or that the isi command is in your PATH.</td>
+</tr>
+<tr>
+<td><code>Session &lt;session_id&gt; not found</code></td>
+<td>Verify the session ID exists by running <code>isi ndmp sessions list</code> first before attempting to view or delete it.</td>
+</tr>
+<tr>
+<td><code>Permission denied: NDMP operations require admin privileges</code></td>
+<td>Run the command with appropriate admin credentials or use <code>sudo isi</code> if configured.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ndmp-configuration-reference">NDMP Configuration Reference<a class="headerlink" href="#ndmp-configuration-reference" title="Permanent link">&para;</a></h3>
 <table>
@@ -9905,9 +10086,28 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>isi: command not found</code></strong> — Ensure the OneFS CLI tools are installed and the system PATH includes the OneFS bin directory (typically <code>/usr/local/bin</code>).
-<strong><code>ls: cannot access '/ifs/data/project1/.snapshot/': No such file or directory</code></strong> — Verify that snapshots are enabled on the dataset and that the snapshot name extracted from the list command is correct; check with <code>isi snapshot snapshots list --path /ifs/data/project1</code> manually.
-<strong><code>cp: /ifs/data/restore-test/project1/: Permission denied</code></strong> — Ensure the restore-test directory and parent paths have write permissions for the executing user (run as root or adjust ACLs).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>isi: command not found</code></td>
+<td>Ensure the OneFS CLI tools are installed and the system PATH includes the OneFS bin directory (typically <code>/usr/local/bin</code>).</td>
+</tr>
+<tr>
+<td><code>ls: cannot access '/ifs/data/project1/.snapshot/': No such file or directory</code></td>
+<td>Verify that snapshots are enabled on the dataset and that the snapshot name extracted from the list command is correct; check with <code>isi snapshot snapshots list --path /ifs/data/project1</code> manually.</td>
+</tr>
+<tr>
+<td><code>cp: /ifs/data/restore-test/project1/: Permission denied</code></td>
+<td>Ensure the restore-test directory and parent paths have write permissions for the executing user (run as root or adjust ACLs).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="synciq-validation">SyncIQ Validation<a class="headerlink" href="#synciq-validation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Confirm the last replication completed successfully</span>
@@ -9937,9 +10137,28 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>isi: command not found</code></strong> — Ensure you are running this command on the PowerScale cluster or have the OneFS CLI tools installed and in your PATH.
-<strong><code>Error: Policy '&lt;policy_name&gt;' not found</code></strong> — Replace <code>&lt;policy_name&gt;</code> with the actual replication policy name; verify it exists with <code>isi sync policies list</code>.
-<strong><code>Permission denied</code></strong> — Confirm your user account has read permissions on the replicated path and that the target cluster's firewall allows SSH access from your source cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>isi: command not found</code></td>
+<td>Ensure you are running this command on the PowerScale cluster or have the OneFS CLI tools installed and in your PATH.</td>
+</tr>
+<tr>
+<td><code>Error: Policy '&lt;policy_name&gt;' not found</code></td>
+<td>Replace <code>&lt;policy_name&gt;</code> with the actual replication policy name; verify it exists with <code>isi sync policies list</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Confirm your user account has read permissions on the replicated path and that the target cluster's firewall allows SSH access from your source cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ndmp-veeam-validation">NDMP / Veeam Validation<a class="headerlink" href="#ndmp-veeam-validation" title="Permanent link">&para;</a></h3>
 <table>
@@ -10092,7 +10311,7 @@ Backup configuration, restore procedures, and validation for Dell PowerScale.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

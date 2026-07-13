@@ -7245,9 +7245,28 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit ollama.service not found.</code></strong> — Verify the service is installed with <code>systemctl list-unit-files | grep ollama</code> and reinstall if missing.
-<strong><code>Failed to start ollama.service: Unit ollama.service is masked.</code></strong> — Unmask the service with <code>systemctl unmask ollama</code> before attempting to stop it.
-<strong><code>error: listen tcp 127.0.0.1:11434: bind: address already in use</code></strong> — Kill the existing Ollama process with <code>pkill -f "ollama serve"</code> or change the port with <code>OLLAMA_HOST=127.0.0.1:11435 ollama serve</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit ollama.service not found.</code></td>
+<td>Verify the service is installed with <code>systemctl list-unit-files | grep ollama</code> and reinstall if missing.</td>
+</tr>
+<tr>
+<td><code>Failed to start ollama.service: Unit ollama.service is masked.</code></td>
+<td>Unmask the service with <code>systemctl unmask ollama</code> before attempting to stop it.</td>
+</tr>
+<tr>
+<td><code>error: listen tcp 127.0.0.1:11434: bind: address already in use</code></td>
+<td>Kill the existing Ollama process with <code>pkill -f "ollama serve"</code> or change the port with <code>OLLAMA_HOST=127.0.0.1:11435 ollama serve</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="gpu-not-detected">GPU Not Detected<a class="headerlink" href="#gpu-not-detected" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm driver is installed</span>
@@ -7281,8 +7300,24 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver</code></strong> — Reinstall the NVIDIA driver with <code>sudo apt install --reinstall nvidia-driver-550</code> and reboot.
-<strong><code>msg="no NVIDIA GPUs detected"</code></strong> — Verify the GPU is visible with <code>lspci | grep NVIDIA</code> and check that CUDA_VISIBLE_DEVICES is not restricting access with <code>echo $CUDA_VISIBLE_DEVICES</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver</code></td>
+<td>Reinstall the NVIDIA driver with <code>sudo apt install --reinstall nvidia-driver-550</code> and reboot.</td>
+</tr>
+<tr>
+<td><code>msg="no NVIDIA GPUs detected"</code></td>
+<td>Verify the GPU is visible with <code>lspci | grep NVIDIA</code> and check that CUDA_VISIBLE_DEVICES is not restricting access with <code>echo $CUDA_VISIBLE_DEVICES</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>For Docker deployments, ensure <code>--gpus all</code> is passed and the NVIDIA Container Toolkit is installed:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Install NVIDIA Container Toolkit</span>
@@ -7312,9 +7347,28 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to nvidia.github.io port 443: Connection timed out</code></strong> — Verify network connectivity and check if the NVIDIA repository is accessible; try again after confirming DNS resolution with <code>nslookup nvidia.github.io</code>.
-<strong><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></strong> — Run the entire script with <code>sudo</code> or as the root user.
-<strong><code>Error response from daemon: could not select device driver "" with capabilities: [[gpu]]</code></strong> — Verify NVIDIA GPU is present with <code>lspci | grep -i nvidia</code> and ensure the NVIDIA driver is installed with <code>nvidia-smi</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to nvidia.github.io port 443: Connection timed out</code></td>
+<td>Verify network connectivity and check if the NVIDIA repository is accessible; try again after confirming DNS resolution with <code>nslookup nvidia.github.io</code>.</td>
+</tr>
+<tr>
+<td><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></td>
+<td>Run the entire script with <code>sudo</code> or as the root user.</td>
+</tr>
+<tr>
+<td><code>Error response from daemon: could not select device driver "" with capabilities: [[gpu]]</code></td>
+<td>Verify NVIDIA GPU is present with <code>lspci | grep -i nvidia</code> and ensure the NVIDIA driver is installed with <code>nvidia-smi</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="model-load-failures">Model Load Failures<a class="headerlink" href="#model-load-failures" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Symptom: &quot;error loading model&quot; or model hangs at 0%</span>
@@ -7353,9 +7407,28 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: pull model manifest: not found</code></strong> — Verify the model name is correct (e.g., <code>ollama list</code> to see available models) and check your internet connection.
-<strong><code>CUDA out of memory: tried to allocate X.XXGiB</code></strong> — Reduce model size further with a lower quantization (e.g., <code>q3_K_S</code>) or increase available VRAM by closing other GPU applications.
-<strong><code>connection refused</code></strong> — Ensure the Ollama daemon is running with <code>ollama serve</code> in another terminal before executing <code>ollama run</code> commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: pull model manifest: not found</code></td>
+<td>Verify the model name is correct (e.g., <code>ollama list</code> to see available models) and check your internet connection.</td>
+</tr>
+<tr>
+<td><code>CUDA out of memory: tried to allocate X.XXGiB</code></td>
+<td>Reduce model size further with a lower quantization (e.g., <code>q3_K_S</code>) or increase available VRAM by closing other GPU applications.</td>
+</tr>
+<tr>
+<td><code>connection refused</code></td>
+<td>Ensure the Ollama daemon is running with <code>ollama serve</code> in another terminal before executing <code>ollama run</code> commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Common load error causes:</p>
 <table>
@@ -7422,9 +7495,28 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to port 11434: Connection refused</code></strong> — Ensure Ollama service is running with <code>systemctl start ollama</code> or <code>ollama serve</code> in another terminal.
-<strong><code>jq: parse error: Cannot index number with string "models"</code></strong> — The API endpoint returned an empty response; verify the model is loaded with <code>ollama list</code> and restart with <code>ollama run &lt;model-name&gt;</code>.
-<strong><code>Error: model not found</code></strong> — Pull the model first using <code>ollama pull llama3.1:8b</code> before attempting to run it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to port 11434: Connection refused</code></td>
+<td>Ensure Ollama service is running with <code>systemctl start ollama</code> or <code>ollama serve</code> in another terminal.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index number with string "models"</code></td>
+<td>The API endpoint returned an empty response; verify the model is loaded with <code>ollama list</code> and restart with <code>ollama run &lt;model-name&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: model not found</code></td>
+<td>Pull the model first using <code>ollama pull llama3.1:8b</code> before attempting to run it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="port-conflicts">Port Conflicts<a class="headerlink" href="#port-conflicts" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check if port 11434 is already in use</span>
@@ -7454,9 +7546,28 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ss: command not found</code></strong> — Install iproute2 with <code>apt install iproute2</code> or <code>yum install iproute2</code>.
-<strong><code>Failed to open /etc/systemd/system/ollama.service.d/override.conf: Permission denied</code></strong> — Run <code>systemctl edit ollama</code> with sudo or as root user.
-<strong><code>Job for ollama.service failed because the control process exited with error code</code></strong> — Verify the OLLAMA_HOST syntax is correct (e.g., <code>0.0.0.0:11435</code> without quotes in the Environment line) and check logs with <code>journalctl -u ollama -n 20</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ss: command not found</code></td>
+<td>Install iproute2 with <code>apt install iproute2</code> or <code>yum install iproute2</code>.</td>
+</tr>
+<tr>
+<td><code>Failed to open /etc/systemd/system/ollama.service.d/override.conf: Permission denied</code></td>
+<td>Run <code>systemctl edit ollama</code> with sudo or as root user.</td>
+</tr>
+<tr>
+<td><code>Job for ollama.service failed because the control process exited with error code</code></td>
+<td>Verify the OLLAMA_HOST syntax is correct (e.g., <code>0.0.0.0:11435</code> without quotes in the Environment line) and check logs with <code>journalctl -u ollama -n 20</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="service-wont-start">Service Won't Start<a class="headerlink" href="#service-wont-start" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check for permission issues on model directory</span>
@@ -7497,9 +7608,28 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>chown: changing ownership of '/usr/share/ollama/.ollama/': No such file or directory</code></strong> — Create the directory first with <code>mkdir -p /usr/share/ollama/.ollama/</code> before running chown.
-<strong><code>getenforce: command not found</code></strong> — Install SELinux tools with <code>apt install selinux-utils</code> on Debian/Ubuntu or <code>yum install policycoreutils</code> on RHEL/CentOS.
-<strong><code>Permission denied</code></strong> when starting ollama service after chmod — Ensure the ollama user exists with <code>useradd -r -s /bin/false ollama</code> and owns the binary's parent directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chown: changing ownership of '/usr/share/ollama/.ollama/': No such file or directory</code></td>
+<td>Create the directory first with <code>mkdir -p /usr/share/ollama/.ollama/</code> before running chown.</td>
+</tr>
+<tr>
+<td><code>getenforce: command not found</code></td>
+<td>Install SELinux tools with <code>apt install selinux-utils</code> on Debian/Ubuntu or <code>yum install policycoreutils</code> on RHEL/CentOS.</td>
+</tr>
+<tr>
+<td><strong><code>Permission denied</code></strong> when starting ollama service after chmod — Ensure the ollama user exists with <code>useradd -r -s /bin/false ollama</code> and owns the binary's parent directory.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="connectivity-from-remote-hosts">Connectivity from Remote Hosts<a class="headerlink" href="#connectivity-from-remote-hosts" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Test from a remote host</span>
@@ -7533,9 +7663,28 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to 192.168.1.50 port 11434: Connection refused</code></strong> — Verify Ollama is running with <code>systemctl status ollama</code> and restart if needed.
-<strong><code>Error: INVALID_ARGUMENT: 'ufw' not found</code></strong> — Check your firewall tool with <code>sudo firewall-cmd --version</code> or <code>sudo ufw version</code> and use the appropriate command for your distribution.
-<strong><code>LISTEN     0      4096      127.0.0.1:11434            0.0.0.0:*</code></strong> — Set <code>OLLAMA_HOST=0.0.0.0:11434</code> in <code>/etc/systemd/system/ollama.service</code> environment and run <code>systemctl daemon-reload &amp;&amp; systemctl restart ollama</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to 192.168.1.50 port 11434: Connection refused</code></td>
+<td>Verify Ollama is running with <code>systemctl status ollama</code> and restart if needed.</td>
+</tr>
+<tr>
+<td><code>Error: INVALID_ARGUMENT: 'ufw' not found</code></td>
+<td>Check your firewall tool with <code>sudo firewall-cmd --version</code> or <code>sudo ufw version</code> and use the appropriate command for your distribution.</td>
+</tr>
+<tr>
+<td><code>LISTEN     0      4096      127.0.0.1:11434            0.0.0.0:*</code></td>
+<td>Set <code>OLLAMA_HOST=0.0.0.0:11434</code> in <code>/etc/systemd/system/ollama.service</code> environment and run <code>systemctl daemon-reload &amp;&amp; systemctl restart ollama</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
@@ -7575,7 +7724,7 @@ Common Ollama issues include model load failures, slow inference, GPU not being 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

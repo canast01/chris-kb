@@ -8529,9 +8529,28 @@ Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: unknown host &lt;esxi-management-ip&gt;</code></strong> — Replace the placeholder with the actual ESXi management IP address (e.g., <code>ping -c 4 172.16.10.42</code>).
-<strong><code>PING &lt;esxi-management-ip&gt; (PING: sendto: Operation not permitted)</code></strong> — Verify firewall rules allow ICMP traffic to the ESXi host and check that the management network is reachable from your current network segment.
-<strong><code>100% packet loss</code></strong> — Confirm the ESXi host is powered on, the management IP is correct, and the network cable is connected to the management vmnic.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: unknown host &lt;esxi-management-ip&gt;</code></td>
+<td>Replace the placeholder with the actual ESXi management IP address (e.g., <code>ping -c 4 172.16.10.42</code>).</td>
+</tr>
+<tr>
+<td><code>PING &lt;esxi-management-ip&gt; (PING: sendto: Operation not permitted)</code></td>
+<td>Verify firewall rules allow ICMP traffic to the ESXi host and check that the management network is reachable from your current network segment.</td>
+</tr>
+<tr>
+<td><code>100% packet loss</code></td>
+<td>Confirm the ESXi host is powered on, the management IP is correct, and the network cable is connected to the management vmnic.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>No response:</strong>
 → Check physical network switch — port enabled? VLAN correct?
@@ -8553,9 +8572,28 @@ Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: Could not resolve hostname &lt;esxi-management-ip&gt;: Name or service not known</code></strong> — Replace <code>&lt;esxi-management-ip&gt;</code> with the actual ESXi host IP address (e.g., 192.168.1.42).
-<strong><code>Permission denied (publickey,password).</code></strong> — Verify the root password is correct and the ESXi host has SSH enabled (Configuration &gt; Security Profile &gt; Services &gt; SSH).
-<strong><code>ssh: connect to host 192.168.1.42 port 22: Connection refused</code></strong> — Enable SSH on the ESXi host via vCenter or DCUI, as the SSH service is disabled by default.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: Could not resolve hostname &lt;esxi-management-ip&gt;: Name or service not known</code></td>
+<td>Replace <code>&lt;esxi-management-ip&gt;</code> with the actual ESXi host IP address (e.g., 192.168.1.42).</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify the root password is correct and the ESXi host has SSH enabled (Configuration &gt; Security Profile &gt; Services &gt; SSH).</td>
+</tr>
+<tr>
+<td><code>ssh: connect to host 192.168.1.42 port 22: Connection refused</code></td>
+<td>Enable SSH on the ESXi host via vCenter or DCUI, as the SSH service is disabled by default.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>SSH fails:</strong>
 → vSphere management agents may be down
@@ -8589,9 +8627,28 @@ Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>hostd is stopped.</code></strong> — Run <code>/etc/init.d/hostd start</code> to bring the service online.
-<strong><code>/var/log/hostd.log: No such file or directory</code></strong> — Verify the ESXi host is accessible via SSH and the log file exists; check <code>/var/log/</code> directory contents with <code>ls -la /var/log/</code>.
-<strong><code>Permission denied</code></strong> — Ensure you are logged in as root or have sudo privileges; use <code>sudo -i</code> to escalate if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hostd is stopped.</code></td>
+<td>Run <code>/etc/init.d/hostd start</code> to bring the service online.</td>
+</tr>
+<tr>
+<td><code>/var/log/hostd.log: No such file or directory</code></td>
+<td>Verify the ESXi host is accessible via SSH and the log file exists; check <code>/var/log/</code> directory contents with <code>ls -la /var/log/</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure you are logged in as root or have sudo privileges; use <code>sudo -i</code> to escalate if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After restart: wait 2–3 minutes and check if vCenter shows the host as Connected.</p>
 <h2 id="step-4-psod-purple-screen-of-death">Step 4 — PSOD (Purple Screen of Death)?<a class="headerlink" href="#step-4-psod-purple-screen-of-death" title="Permanent link">&para;</a></h2>
@@ -8643,8 +8700,24 @@ Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown command or namespace esxcli hardware</code></strong> — Verify ESXi version supports the hardware namespace (6.5+) and run from ESXi shell, not vCenter.
-<strong><code>Error: Could not find device &lt;device_id&gt;</code></strong> — Use <code>esxcli storage core device list</code> first to get the exact naa device identifier and replace <code>&lt;device_id&gt;</code> with the full device name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown command or namespace esxcli hardware</code></td>
+<td>Verify ESXi version supports the hardware namespace (6.5+) and run from ESXi shell, not vCenter.</td>
+</tr>
+<tr>
+<td><code>Error: Could not find device &lt;device_id&gt;</code></td>
+<td>Use <code>esxcli storage core device list</code> first to get the exact naa device identifier and replace <code>&lt;device_id&gt;</code> with the full device name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Review iDRAC/iLO system event log for hardware faults.</p>
 <h2 id="escalation">Escalation<a class="headerlink" href="#escalation" title="Permanent link">&para;</a></h2>
@@ -8674,7 +8747,7 @@ Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

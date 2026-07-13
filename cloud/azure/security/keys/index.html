@@ -8810,8 +8810,24 @@ Key Vault keys are cryptographic keys used for encryption, signing, and wrapping
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The specified vault &lt;vault-name&gt; does not exist or you do not have permission to access it.</code></strong> — Verify the vault name is correct and you have <code>Microsoft.KeyVault/vaults/read</code> permissions on the Key Vault resource.
-<strong><code>The specified key version &lt;version-id&gt; does not exist.</code></strong> — Run <code>az keyvault key list-versions</code> to confirm the version ID exists before referencing it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The specified vault &lt;vault-name&gt; does not exist or you do not have permission to access it.</code></td>
+<td>Verify the vault name is correct and you have <code>Microsoft.KeyVault/vaults/read</code> permissions on the Key Vault resource.</td>
+</tr>
+<tr>
+<td><code>The specified key version &lt;version-id&gt; does not exist.</code></td>
+<td>Run <code>az keyvault key list-versions</code> to confirm the version ID exists before referencing it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="byok-bring-your-own-key">BYOK — Bring Your Own Key<a class="headerlink" href="#byok-bring-your-own-key" title="Permanent link">&para;</a></h2>
 <p>Import externally generated key material into Key Vault (HSM-backed vaults only for HSM-protected keys).</p>
@@ -8846,9 +8862,28 @@ Key Vault keys are cryptographic keys used for encryption, signing, and wrapping
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The key 'byok-kek' does not exist in vault 'prod-vault-001'.</code></strong> — Verify the KEK key name matches exactly and exists in the specified vault using <code>az keyvault key list --vault-name &lt;vault-name&gt;</code>.
-<strong><code>InvalidKeyFormat: The BYOK file format is invalid or corrupted.</code></strong> — Ensure the wrapped-key.byok file was generated correctly by your HSM vendor's BYOK tool and has not been modified or truncated during transfer.
-<strong><code>Forbidden: The user does not have permission to import keys.</code></strong> — Grant the user the "Key Vault Crypto Officer" or "Key Vault Administrator" role on the vault using <code>az role assignment create</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The key 'byok-kek' does not exist in vault 'prod-vault-001'.</code></td>
+<td>Verify the KEK key name matches exactly and exists in the specified vault using <code>az keyvault key list --vault-name &lt;vault-name&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidKeyFormat: The BYOK file format is invalid or corrupted.</code></td>
+<td>Ensure the wrapped-key.byok file was generated correctly by your HSM vendor's BYOK tool and has not been modified or truncated during transfer.</td>
+</tr>
+<tr>
+<td><code>Forbidden: The user does not have permission to import keys.</code></td>
+<td>Grant the user the "Key Vault Crypto Officer" or "Key Vault Administrator" role on the vault using <code>az role assignment create</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="using-keys-for-crypto-operations">Using Keys for Crypto Operations<a class="headerlink" href="#using-keys-for-crypto-operations" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Encrypt a value (base64 plaintext input)</span>
@@ -8928,9 +8963,28 @@ Key Vault keys are cryptographic keys used for encryption, signing, and wrapping
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>KeyVault key 'cmk-storage' not found in vault 'prod-vault'</code></strong> — Verify the key exists in the Key Vault using <code>az keyvault key list --vault-name &lt;vault-name&gt;</code> and confirm the name matches exactly.
-<strong><code>The user, group or application does not have the 'get', 'wrapKey', 'unwrapKey' permission(s) on the key</code></strong> — Grant the storage account's managed identity Key Vault permissions using <code>az keyvault set-policy --name &lt;vault-name&gt; --object-id &lt;storage-mi-object-id&gt; --key-permissions get wrapKey unwrapKey</code>.
-<strong><code>Storage account '&lt;storage-account&gt;' not found in resource group '&lt;rg&gt;'</code></strong> — Confirm the storage account name and resource group are correct with <code>az storage account list --resource-group &lt;rg&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KeyVault key 'cmk-storage' not found in vault 'prod-vault'</code></td>
+<td>Verify the key exists in the Key Vault using <code>az keyvault key list --vault-name &lt;vault-name&gt;</code> and confirm the name matches exactly.</td>
+</tr>
+<tr>
+<td><code>The user, group or application does not have the 'get', 'wrapKey', 'unwrapKey' permission(s) on the key</code></td>
+<td>Grant the storage account's managed identity Key Vault permissions using <code>az keyvault set-policy --name &lt;vault-name&gt; --object-id &lt;storage-mi-object-id&gt; --key-permissions get wrapKey unwrapKey</code>.</td>
+</tr>
+<tr>
+<td><code>Storage account '&lt;storage-account&gt;' not found in resource group '&lt;rg&gt;'</code></td>
+<td>Confirm the storage account name and resource group are correct with <code>az storage account list --resource-group &lt;rg&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
@@ -8991,7 +9045,7 @@ Key Vault keys are cryptographic keys used for encryption, signing, and wrapping
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

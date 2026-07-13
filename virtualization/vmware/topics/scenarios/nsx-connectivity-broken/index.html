@@ -9458,9 +9458,28 @@ exact commands and UI paths to isolate and resolve each layer.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vsipioctl: command not found</code></strong> — Verify you are running this command directly on the ESXi host (not vCenter) and that DFW is enabled on the cluster.
-<strong><code>No such file or directory: /&lt;world-id&gt;/0</code></strong> — Replace <code>&lt;world-id&gt;</code> with the actual numeric World ID from the <code>esxcli vm process list</code> output (e.g., <code>/2147483648/0</code>).
-<strong><code>Permission denied</code></strong> — Run the command as root or with appropriate ESXi host privileges; use <code>su -</code> to elevate if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vsipioctl: command not found</code></td>
+<td>Verify you are running this command directly on the ESXi host (not vCenter) and that DFW is enabled on the cluster.</td>
+</tr>
+<tr>
+<td><code>No such file or directory: /&lt;world-id&gt;/0</code></td>
+<td>Replace <code>&lt;world-id&gt;</code> with the actual numeric World ID from the <code>esxcli vm process list</code> output (e.g., <code>/2147483648/0</code>).</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command as root or with appropriate ESXi host privileges; use <code>su -</code> to elevate if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get hit count for a specific DFW rule — confirms if rule is actively matching traffic</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
@@ -9485,9 +9504,28 @@ exact commands and UI paths to isolate and resolve each layer.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; if still failing, verify NSX Manager hostname matches certificate CN).
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt;: Name or service not known</code></strong> — Confirm NSX Manager hostname/IP is correct and resolvable from your network location.
-<strong><code>{"error_code": 401, "error_message": "Unauthorized"}</code></strong> — Verify admin credentials are correct and the user has API access permissions in NSX Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present; if still failing, verify NSX Manager hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt;: Name or service not known</code></td>
+<td>Confirm NSX Manager hostname/IP is correct and resolvable from your network location.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 401, "error_message": "Unauthorized"}</code></td>
+<td>Verify admin credentials are correct and the user has API access permissions in NSX Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: a high-hit-count deny rule in a higher category (Emergency/Infrastructure) that matches the source or destination — this shadows any allow rule lower in the list.</p>
 <hr />
@@ -9520,9 +9558,28 @@ exact commands and UI paths to isolate and resolve each layer.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already in the command above) or import the NSX Manager CA certificate into your system trust store.
-<strong><code>curl: (401) Unauthorized</code></strong> — Verify the admin password is correct and the user has API access permissions in NSX Manager.
-<strong><code>jq: command not found</code></strong> — Replace <code>python3 -m json.tool</code> with <code>jq '.'</code> if jq is installed, or ensure python3 is available on your system.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already in the command above) or import the NSX Manager CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Verify the admin password is correct and the user has API access permissions in NSX Manager.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Replace <code>python3 -m json.tool</code> with <code>jq '.'</code> if jq is installed, or ensure python3 is available on your system.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>From vCenter, go to <strong>NSX → System → Fabric → Nodes → Host Transport Nodes</strong> and check configuration state. If the host shows "Failed" or "Pending":</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check NSX VIBs installed on the host — all should match the same version</span>
@@ -9537,8 +9594,24 @@ exact commands and UI paths to isolate and resolve each layer.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect to localhost failed. Error: Unable to connect to the local hostd agent.</code></strong> — Ensure the ESXi host is in maintenance mode or restart the hostd service with <code>services.sh restart</code>.
-<strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with root privileges using <code>sudo</code> or execute it directly in an ESXi SSH session where you already have elevated permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect to localhost failed. Error: Unable to connect to the local hostd agent.</code></td>
+<td>Ensure the ESXi host is in maintenance mode or restart the hostd service with <code>services.sh restart</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): Permission denied</code></td>
+<td>Run the command with root privileges using <code>sudo</code> or execute it directly in an ESXi SSH session where you already have elevated permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: any NSX VIB at a different version than the rest indicates a partial upgrade or failed re-apply — re-apply the transport node profile from NSX Manager.</p>
 <hr />
@@ -9582,8 +9655,24 @@ exact commands and UI paths to isolate and resolve each layer.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vrf: invalid VRF ID</code></strong> — Verify the VRF ID from <code>get logical-routers</code> output matches your T1 router and use the correct numeric ID.
-<strong><code>get route: command not found</code></strong> — Ensure you are in the correct VRF context using <code>vrf &lt;id&gt;</code> before running route commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vrf: invalid VRF ID</code></td>
+<td>Verify the VRF ID from <code>get logical-routers</code> output matches your T1 router and use the correct numeric ID.</td>
+</tr>
+<tr>
+<td><code>get route: command not found</code></td>
+<td>Ensure you are in the correct VRF context using <code>vrf &lt;id&gt;</code> before running route commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Check the T1 → T0 uplink and BGP state:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enter the T0 VRF</span>
@@ -9620,9 +9709,28 @@ exact commands and UI paths to isolate and resolve each layer.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the correct VRF ID syntax for your NSX-T or vSphere environment (use <code>show vrf</code> to list available VRFs).
-<strong><code>Neighbor 10.200.1.5: connect to peer failed (Connection refused)</code></strong> — Check that BGP is enabled on the upstream router and that the neighbor relationship is configured with matching AS numbers and timers.
-<strong><code>PING: sendto: No route to host</code></strong> — Verify the source IP address is assigned to an active interface on the T0 uplink and that a route exists to the upstream router IP.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the correct VRF ID syntax for your NSX-T or vSphere environment (use <code>show vrf</code> to list available VRFs).</td>
+</tr>
+<tr>
+<td><code>Neighbor 10.200.1.5: connect to peer failed (Connection refused)</code></td>
+<td>Check that BGP is enabled on the upstream router and that the neighbor relationship is configured with matching AS numbers and timers.</td>
+</tr>
+<tr>
+<td><code>PING: sendto: No route to host</code></td>
+<td>Verify the source IP address is assigned to an active interface on the T0 uplink and that a route exists to the upstream router IP.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: <code>State = Active</code> or <code>Connect</code> on any BGP neighbor means the session is down — check IP reachability and AS/password configuration on both sides.</p>
 <hr />
@@ -9667,9 +9775,28 @@ exact commands and UI paths to isolate and resolve each layer.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to resolve TEP interface — tunnel port not configured</code></strong> — Configure the tunnel endpoint (TEP) on the edge node using the appropriate network configuration command before attempting connectivity checks.
-<strong><code>PING: sendto: No route to host</code></strong> — Verify that the ESXi host TEP IP is reachable and that routing/firewall rules permit traffic between the edge TEP subnet and ESXi TEP subnet.
-<strong><code>Error: Command 'get tunnel-port interface' not found</code></strong> — Ensure you are running this command from the NSX edge node CLI context, not a standard ESXi or Linux shell.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to resolve TEP interface — tunnel port not configured</code></td>
+<td>Configure the tunnel endpoint (TEP) on the edge node using the appropriate network configuration command before attempting connectivity checks.</td>
+</tr>
+<tr>
+<td><code>PING: sendto: No route to host</code></td>
+<td>Verify that the ESXi host TEP IP is reachable and that routing/firewall rules permit traffic between the edge TEP subnet and ESXi TEP subnet.</td>
+</tr>
+<tr>
+<td><code>Error: Command 'get tunnel-port interface' not found</code></td>
+<td>Ensure you are running this command from the NSX edge node CLI context, not a standard ESXi or Linux shell.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># If edge TEP has a stale ARP entry after a recent migration or network event:</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>clear<span class="w"> </span>arp
@@ -9692,9 +9819,28 @@ exact commands and UI paths to isolate and resolve each layer.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>command not found: clear arp</code></strong> — Use <code>ip neigh flush all</code> or <code>arp -d -a</code> depending on your OS, or consult your hypervisor's CLI documentation for the correct ARP flush command.
-<strong><code>RTNETLINK answers: Operation not permitted</code></strong> — Run the command with sudo or as root, since ARP cache manipulation requires elevated privileges.
-<strong><code>BGP session down: Neighbor 10.240.1.1 not responding</code></strong> — Verify network connectivity to the BGP neighbor and check that the BGP daemon is running with <code>systemctl status bgpd</code> or equivalent.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found: clear arp</code></td>
+<td>Use <code>ip neigh flush all</code> or <code>arp -d -a</code> depending on your OS, or consult your hypervisor's CLI documentation for the correct ARP flush command.</td>
+</tr>
+<tr>
+<td><code>RTNETLINK answers: Operation not permitted</code></td>
+<td>Run the command with sudo or as root, since ARP cache manipulation requires elevated privileges.</td>
+</tr>
+<tr>
+<td><code>BGP session down: Neighbor 10.240.1.1 not responding</code></td>
+<td>Verify network connectivity to the BGP neighbor and check that the BGP daemon is running with <code>systemctl status bgpd</code> or equivalent.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="7-tep-tunnel-endpoint-connectivity-from-esxi">7. TEP (Tunnel Endpoint) Connectivity from ESXi<a class="headerlink" href="#7-tep-tunnel-endpoint-connectivity-from-esxi" title="Permanent link">&para;</a></h2>
@@ -9731,8 +9877,24 @@ exact commands and UI paths to isolate and resolve each layer.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vmkping: Unknown host 192.168.100.67</code></strong> — Verify the remote TEP IP address is correct and reachable on the underlay network.
-<strong><code>100% packet loss</code></strong> — Check that MTU is set to at least 1600 on vmk10 and the physical switch allows UDP 6081; verify GENEVE firewall rule is enabled with <code>esxcli network firewall ruleset set -r geneveClient -e true</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vmkping: Unknown host 192.168.100.67</code></td>
+<td>Verify the remote TEP IP address is correct and reachable on the underlay network.</td>
+</tr>
+<tr>
+<td><code>100% packet loss</code></td>
+<td>Check that MTU is set to at least 1600 on vmk10 and the physical switch allows UDP 6081; verify GENEVE firewall rule is enabled with <code>esxcli network firewall ruleset set -r geneveClient -e true</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: <code>vmkping -I vmk10 -d -s 1572</code> success to all remote TEPs confirms the GENEVE underlay is healthy; failure points to VLAN, MTU, or routing issues in the physical network.</p>
 <hr />
@@ -9832,7 +9994,7 @@ exact commands and UI paths to isolate and resolve each layer.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

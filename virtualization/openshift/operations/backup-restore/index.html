@@ -7611,9 +7611,28 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/usr/local/bin/cluster-backup.sh: No such file or directory</code></strong> — Verify the OCP version includes the backup script; on older versions use <code>oc debug node/&lt;master-node&gt;</code> to access the script or manually back up etcd using <code>etcdctl</code>.
-<strong><code>scp: /backup/etcd/: No such file or directory</code></strong> — Create the destination directory on your workstation with <code>mkdir -p /backup/etcd/</code> before running the scp command.
-<strong><code>Permission denied (publickey,gssapi-keyexchange)</code></strong> — Ensure your SSH key is added to the ssh-agent (<code>ssh-add ~/.ssh/id_rsa</code>) and the core user's authorized_keys includes your public key.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/usr/local/bin/cluster-backup.sh: No such file or directory</code></td>
+<td>Verify the OCP version includes the backup script; on older versions use <code>oc debug node/&lt;master-node&gt;</code> to access the script or manually back up etcd using <code>etcdctl</code>.</td>
+</tr>
+<tr>
+<td><code>scp: /backup/etcd/: No such file or directory</code></td>
+<td>Create the destination directory on your workstation with <code>mkdir -p /backup/etcd/</code> before running the scp command.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,gssapi-keyexchange)</code></td>
+<td>Ensure your SSH key is added to the ssh-agent (<code>ssh-add ~/.ssh/id_rsa</code>) and the core user's authorized_keys includes your public key.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="automate-etcd-backup-with-cronjob">Automate etcd Backup with CronJob<a class="headerlink" href="#automate-etcd-backup-with-cronjob" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">batch/v1</span>
@@ -7760,9 +7779,28 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to connect to etcd: context deadline exceeded</code></strong> — Verify the healthy master pod is running with <code>oc get pod -n openshift-etcd</code> and use the correct pod name in the rsh command.
-<strong><code>Error from server (NotFound): machines.machine.openshift.io "&lt;machine-name&gt;" not found</code></strong> — Confirm the exact machine name with <code>oc get machine -n openshift-machine-api -o wide</code> before deletion.
-<strong><code>error: certificate request csr-xxxx is not pending</code></strong> — Wait for the CSR to appear in Pending state (may take 1-2 minutes after machine creation) before attempting approval.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to connect to etcd: context deadline exceeded</code></td>
+<td>Verify the healthy master pod is running with <code>oc get pod -n openshift-etcd</code> and use the correct pod name in the rsh command.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): machines.machine.openshift.io "&lt;machine-name&gt;" not found</code></td>
+<td>Confirm the exact machine name with <code>oc get machine -n openshift-machine-api -o wide</code> before deletion.</td>
+</tr>
+<tr>
+<td><code>error: certificate request csr-xxxx is not pending</code></td>
+<td>Wait for the CSR to appear in Pending state (may take 1-2 minutes after machine creation) before attempting approval.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="oadp-application-backup">OADP Application Backup<a class="headerlink" href="#oadp-application-backup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Install OADP operator from OperatorHub</span>
@@ -7851,9 +7889,28 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to recognize "STDIN": no matches for kind "BackupStorageLocation" in version "velero.io/v1"</code></strong> — Verify the OADP operator is fully installed and the velero.io API is registered with <code>oc api-resources | grep velero</code>.
-<strong><code>error validating data: data[spec.credential.name]: Invalid value: "cloud-credentials": secret not found</code></strong> — Create the AWS credentials secret in the openshift-adp namespace using <code>oc create secret generic cloud-credentials --from-file=cloud=&lt;path-to-aws-creds&gt; -n openshift-adp</code>.
-<strong><code>backup.velero.io "my-app-backup" is invalid: spec.storageLocation: Invalid value: "s3-backup": BackupStorageLocation not found</code></strong> — Ensure the BackupStorageLocation resource is created and in Completed phase before creating backups with <code>oc get bsl -n openshift-adp</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to recognize "STDIN": no matches for kind "BackupStorageLocation" in version "velero.io/v1"</code></td>
+<td>Verify the OADP operator is fully installed and the velero.io API is registered with <code>oc api-resources | grep velero</code>.</td>
+</tr>
+<tr>
+<td><code>error validating data: data[spec.credential.name]: Invalid value: "cloud-credentials": secret not found</code></td>
+<td>Create the AWS credentials secret in the openshift-adp namespace using <code>oc create secret generic cloud-credentials --from-file=cloud=&lt;path-to-aws-creds&gt; -n openshift-adp</code>.</td>
+</tr>
+<tr>
+<td><code>backup.velero.io "my-app-backup" is invalid: spec.storageLocation: Invalid value: "s3-backup": BackupStorageLocation not found</code></td>
+<td>Ensure the BackupStorageLocation resource is created and in Completed phase before creating backups with <code>oc get bsl -n openshift-adp</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="pv-snapshot-backup-csi">PV Snapshot Backup (CSI)<a class="headerlink" href="#pv-snapshot-backup-csi" title="Permanent link">&para;</a></h2>
 <p>CSI-based snapshots are independent of OADP and operate at the storage driver level. Use alongside OADP for complete application protection.</p>
@@ -7911,9 +7968,28 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: resource mapping not found for "snapshot.storage.k8s.io/v1/VolumeSnapshot"</code></strong> — Install the snapshot controller with <code>oc apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml</code>.
-<strong><code>VolumeSnapshot "myapp-data-snap-2024-01-15" is not ready for use</code></strong> — Wait for the snapshot to reach <code>READYTOUSE: true</code> status before attempting restore, or check CSI driver logs with <code>oc logs -n openshift-cluster-csi-drivers -l app=ebs-csi-controller</code>.
-<strong><code>error: PersistentVolumeClaim in version "v1" cannot be handled as a PersistentVolumeClaim: no kind "PersistentVolumeClaim" is registered for version "snapshot.storage.k8s.io/v1"</code></strong> — Replace <code>&lt;date&gt;</code> placeholder with actual snapshot name (e.g., <code>myapp-data-snap-2024-01-15</code>) in the restore PVC manifest.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: resource mapping not found for "snapshot.storage.k8s.io/v1/VolumeSnapshot"</code></td>
+<td>Install the snapshot controller with <code>oc apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml</code>.</td>
+</tr>
+<tr>
+<td><code>VolumeSnapshot "myapp-data-snap-2024-01-15" is not ready for use</code></td>
+<td>Wait for the snapshot to reach <code>READYTOUSE: true</code> status before attempting restore, or check CSI driver logs with <code>oc logs -n openshift-cluster-csi-drivers -l app=ebs-csi-controller</code>.</td>
+</tr>
+<tr>
+<td><code>error: PersistentVolumeClaim in version "v1" cannot be handled as a PersistentVolumeClaim: no kind "PersistentVolumeClaim" is registered for version "snapshot.storage.k8s.io/v1"</code></td>
+<td>Replace <code>&lt;date&gt;</code> placeholder with actual snapshot name (e.g., <code>myapp-data-snap-2024-01-15</code>) in the restore PVC manifest.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -7950,7 +8026,7 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

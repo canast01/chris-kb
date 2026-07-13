@@ -7564,9 +7564,28 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>id: 'jsmith@corp.local': no such user</code></strong> — Verify SSSD is running with <code>systemctl status sssd</code> and check domain name matches your AD configuration in <code>/etc/sssd/sssd.conf</code>.
-<strong><code>Error: SSSD must be running to query users</code></strong> — Start SSSD with <code>systemctl start sssd</code> and wait 10–15 seconds for it to establish LDAP connections.
-<strong><code>kinit: krb5_get_init_creds: Client not found in Kerberos database</code></strong> — Ensure the user exists in Active Directory and the Kerberos realm in <code>/etc/krb5.conf</code> matches your AD domain exactly (case-sensitive).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id: 'jsmith@corp.local': no such user</code></td>
+<td>Verify SSSD is running with <code>systemctl status sssd</code> and check domain name matches your AD configuration in <code>/etc/sssd/sssd.conf</code>.</td>
+</tr>
+<tr>
+<td><code>Error: SSSD must be running to query users</code></td>
+<td>Start SSSD with <code>systemctl start sssd</code> and wait 10–15 seconds for it to establish LDAP connections.</td>
+</tr>
+<tr>
+<td><code>kinit: krb5_get_init_creds: Client not found in Kerberos database</code></td>
+<td>Ensure the user exists in Active Directory and the Kerberos realm in <code>/etc/krb5.conf</code> matches your AD domain exactly (case-sensitive).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="sudo-configuration-for-ad-groups">Sudo Configuration for AD Groups<a class="headerlink" href="#sudo-configuration-for-ad-groups" title="Permanent link">&para;</a></h2>
@@ -7580,9 +7599,28 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudoers:1 syntax error near line 1</code></strong> — Verify the file was edited with <code>visudo</code> instead of a text editor, and check for trailing whitespace or missing spaces around the <code>@</code> symbol.
-<strong><code>sudo: unable to resolve host &lt;hostname&gt;</code></strong> — Ensure the system's hostname is correctly set in <code>/etc/hostname</code> and <code>/etc/hosts</code>, and that DNS or local name resolution can reach the domain controller.
-<strong><code>sudo: user is not in the sudoers file</code></strong> — Confirm the AD group membership with <code>id -G &lt;username&gt;</code> and verify the group name in sudoers matches exactly (including escaping spaces as <code>\</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudoers:1 syntax error near line 1</code></td>
+<td>Verify the file was edited with <code>visudo</code> instead of a text editor, and check for trailing whitespace or missing spaces around the <code>@</code> symbol.</td>
+</tr>
+<tr>
+<td><code>sudo: unable to resolve host &lt;hostname&gt;</code></td>
+<td>Ensure the system's hostname is correctly set in <code>/etc/hostname</code> and <code>/etc/hosts</code>, and that DNS or local name resolution can reach the domain controller.</td>
+</tr>
+<tr>
+<td><code>sudo: user is not in the sudoers file</code></td>
+<td>Confirm the AD group membership with <code>id -G &lt;username&gt;</code> and verify the group name in sudoers matches exactly (including escaping spaces as <code>\</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Note: AD group names with spaces require escaping the space with a backslash.</p>
 <hr />
@@ -7632,9 +7670,28 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Failed to download metadata for repo 'veeam': Cannot prepare internal mirrorlist: No URLs in mirrorlist.</code></strong> — Verify the baseurl in <code>/etc/yum.repos.d/veeam.repo</code> matches your RHEL version and check network connectivity to repository.veeam.com.
-<strong><code>error: unpacking of archive failed on file /opt/veeam/agent: cpio: mkdir</code></strong> — Ensure <code>/opt/veeam</code> directory exists with proper permissions or run the installer with <code>sudo</code>.
-<strong><code>veeam: command not found</code></strong> — Add <code>/opt/veeam/bin</code> to your PATH or use the full path <code>/opt/veeam/bin/veeam status</code> after installation completes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Failed to download metadata for repo 'veeam': Cannot prepare internal mirrorlist: No URLs in mirrorlist.</code></td>
+<td>Verify the baseurl in <code>/etc/yum.repos.d/veeam.repo</code> matches your RHEL version and check network connectivity to repository.veeam.com.</td>
+</tr>
+<tr>
+<td><code>error: unpacking of archive failed on file /opt/veeam/agent: cpio: mkdir</code></td>
+<td>Ensure <code>/opt/veeam</code> directory exists with proper permissions or run the installer with <code>sudo</code>.</td>
+</tr>
+<tr>
+<td><code>veeam: command not found</code></td>
+<td>Add <code>/opt/veeam/bin</code> to your PATH or use the full path <code>/opt/veeam/bin/veeam status</code> after installation completes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Registration to the Veeam Backup &amp; Replication server is done from the VBR console: Protection Groups → Add Group → select the server by hostname.</p>
 <hr />
@@ -7676,9 +7733,28 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to find a match: golang-github-prometheus-node-exporter</code></strong> — Enable the EPEL repository first with <code>dnf install epel-release</code> before running the install command.
-<strong><code>curl: (22) The requested URL returned error: 404</code></strong> — The release URL pattern may have changed; verify the correct download link at https://github.com/prometheus/node_exporter/releases and update the curl command accordingly.
-<strong><code>Job for node_exporter.service failed because the control process exited with error code.</code></strong> — Check service logs with <code>journalctl -u node_exporter -n 20</code> to identify permission or configuration issues, then restart with <code>systemctl restart node_exporter</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to find a match: golang-github-prometheus-node-exporter</code></td>
+<td>Enable the EPEL repository first with <code>dnf install epel-release</code> before running the install command.</td>
+</tr>
+<tr>
+<td><code>curl: (22) The requested URL returned error: 404</code></td>
+<td>The release URL pattern may have changed; verify the correct download link at https://github.com/prometheus/node_exporter/releases and update the curl command accordingly.</td>
+</tr>
+<tr>
+<td><code>Job for node_exporter.service failed because the control process exited with error code.</code></td>
+<td>Check service logs with <code>journalctl -u node_exporter -n 20</code> to identify permission or configuration issues, then restart with <code>systemctl restart node_exporter</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Verify Prometheus can scrape the node:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>http://&lt;server-ip&gt;:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
@@ -7703,9 +7779,28 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to &lt;server-ip&gt; port 9100: Connection refused</code></strong> — Verify the Prometheus Node Exporter is running on the target host with <code>systemctl status node_exporter</code> and confirm port 9100 is listening.
-<strong><code>curl: (6) Could not resolve host: &lt;server-ip&gt;</code></strong> — Replace <code>&lt;server-ip&gt;</code> with the actual IP address or hostname of the target server.
-<strong><code>curl: (28) Operation timeout. The timeout was reached</code></strong> — Increase the timeout with <code>curl --max-time 10</code> or check network connectivity and firewall rules blocking port 9100.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;server-ip&gt; port 9100: Connection refused</code></td>
+<td>Verify the Prometheus Node Exporter is running on the target host with <code>systemctl status node_exporter</code> and confirm port 9100 is listening.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host: &lt;server-ip&gt;</code></td>
+<td>Replace <code>&lt;server-ip&gt;</code> with the actual IP address or hostname of the target server.</td>
+</tr>
+<tr>
+<td><code>curl: (28) Operation timeout. The timeout was reached</code></td>
+<td>Increase the timeout with <code>curl --max-time 10</code> or check network connectivity and firewall rules blocking port 9100.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="iscsi-storage-connectivity">iSCSI Storage Connectivity<a class="headerlink" href="#iscsi-storage-connectivity" title="Permanent link">&para;</a></h2>
@@ -7769,8 +7864,24 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iscsiadm: No portals found</code></strong> — Verify the storage portal IP is reachable and the iSCSI target service is running on the storage array.
-<strong><code>iscsiadm: initiator reported error (19 - encountered non-retryable iSCSI login failure)</code></strong> — Confirm the target IQN is correct and the initiator has network connectivity to the storage portal on port 3260.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iscsiadm: No portals found</code></td>
+<td>Verify the storage portal IP is reachable and the iSCSI target service is running on the storage array.</td>
+</tr>
+<tr>
+<td><code>iscsiadm: initiator reported error (19 - encountered non-retryable iSCSI login failure)</code></td>
+<td>Confirm the target IQN is correct and the initiator has network connectivity to the storage portal on port 3260.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="san-multipath-data-path">SAN Multipath Data Path<a class="headerlink" href="#san-multipath-data-path" title="Permanent link">&para;</a></h2>
@@ -7819,9 +7930,28 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>multipathd.service does not have install section in [Install] block. Refusing.</code></strong> — Add <code>WantedBy=multi-user.target</code> to the multipathd unit file or use <code>systemctl enable multipathd</code> before <code>--now</code>.
-<strong><code>multipath: command not found</code></strong> — Install the device-mapper-multipath package with <code>dnf install device-mapper-multipath</code> before running multipath commands.
-<strong><code>sysfs: cannot open /etc/multipath.conf: Permission denied</code></strong> — Run mpathconf and multipath commands with <code>sudo</code> or as root user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>multipathd.service does not have install section in [Install] block. Refusing.</code></td>
+<td>Add <code>WantedBy=multi-user.target</code> to the multipathd unit file or use <code>systemctl enable multipathd</code> before <code>--now</code>.</td>
+</tr>
+<tr>
+<td><code>multipath: command not found</code></td>
+<td>Install the device-mapper-multipath package with <code>dnf install device-mapper-multipath</code> before running multipath commands.</td>
+</tr>
+<tr>
+<td><code>sysfs: cannot open /etc/multipath.conf: Permission denied</code></td>
+<td>Run mpathconf and multipath commands with <code>sudo</code> or as root user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Key <code>/etc/multipath.conf</code> settings for Dell/EMC and Pure Storage:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>defaults {
@@ -7860,7 +7990,7 @@ Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

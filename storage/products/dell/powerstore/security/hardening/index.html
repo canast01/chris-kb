@@ -9166,8 +9166,24 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to the curl command to skip SSL certificate verification, or import the PowerStore certificate into your system's CA bundle.
-<strong><code>{"error":"Invalid token or token expired","error_code":"UNAUTHENTICATED"}</code></strong> — Regenerate the DELL-EMC-TOKEN by authenticating first with valid credentials, or verify the token has not exceeded its session timeout.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to the curl command to skip SSL certificate verification, or import the PowerStore certificate into your system's CA bundle.</td>
+</tr>
+<tr>
+<td><code>{"error":"Invalid token or token expired","error_code":"UNAUTHENTICATED"}</code></td>
+<td>Regenerate the DELL-EMC-TOKEN by authenticating first with valid credentials, or verify the token has not exceeded its session timeout.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="tls-hardening">TLS Hardening<a class="headerlink" href="#tls-hardening" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify TLS 1.0 and 1.1 are disabled</span>
@@ -9208,9 +9224,28 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify the management IP is correct and the array's HTTPS port 443 is accessible from your client (check firewall rules and network connectivity).
-<strong><code>Name or service not known</code></strong> — Replace <code>&lt;mgmt-ip&gt;</code> with the actual PowerStore management IP address (e.g., 192.168.1.45).
-<strong><code>Nmap: command not found</code></strong> — Install nmap using your package manager (e.g., <code>apt-get install nmap</code> on Ubuntu or <code>yum install nmap</code> on RHEL).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the management IP is correct and the array's HTTPS port 443 is accessible from your client (check firewall rules and network connectivity).</td>
+</tr>
+<tr>
+<td><code>Name or service not known</code></td>
+<td>Replace <code>&lt;mgmt-ip&gt;</code> with the actual PowerStore management IP address (e.g., 192.168.1.45).</td>
+</tr>
+<tr>
+<td><code>Nmap: command not found</code></td>
+<td>Install nmap using your package manager (e.g., <code>apt-get install nmap</code> on Ubuntu or <code>yum install nmap</code> on RHEL).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>PowerStore Manager → <strong>Settings → Security → TLS Configuration</strong>:</p>
 <table>
@@ -9285,9 +9320,28 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error:0900006e:PEM routines:PEM_read_bio:no start line</code></strong> — Ensure the base64-encoded certificate and key are properly formatted without line breaks; use <code>cat cert.pem | base64 -w 0</code> to encode without wrapping.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Remove the <code>-k</code> flag only after certificate import completes; the flag bypasses verification during the import process itself.
-<strong><code>unable to load Private Key</code></strong> — Verify the private key is in PKCS#8 format and matches the certificate; convert with <code>openssl pkey -in powerstore.key -out powerstore_pkcs8.key</code> if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error:0900006e:PEM routines:PEM_read_bio:no start line</code></td>
+<td>Ensure the base64-encoded certificate and key are properly formatted without line breaks; use <code>cat cert.pem | base64 -w 0</code> to encode without wrapping.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Remove the <code>-k</code> flag only after certificate import completes; the flag bypasses verification during the import process itself.</td>
+</tr>
+<tr>
+<td><code>unable to load Private Key</code></td>
+<td>Verify the private key is in PKCS#8 format and matches the certificate; convert with <code>openssl pkey -in powerstore.key -out powerstore_pkcs8.key</code> if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Set a calendar reminder to renew the certificate 30 days before expiry. A monitoring script checking certificate expiry should be part of the daily health check.</p>
 <h3 id="network-access-hardening">Network Access Hardening<a class="headerlink" href="#network-access-hardening" title="Permanent link">&para;</a></h3>
@@ -9312,8 +9366,24 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: INVALID_RULE</code></strong> — Verify the rich rule syntax matches firewalld format (check for mismatched quotes or missing family attribute).
-<strong><code>nc: getaddrinfo failed</code></strong> — Ensure the hostname or IP address is resolvable and reachable from the jump host; check DNS or network connectivity.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: INVALID_RULE</code></td>
+<td>Verify the rich rule syntax matches firewalld format (check for mismatched quotes or missing family attribute).</td>
+</tr>
+<tr>
+<td><code>nc: getaddrinfo failed</code></td>
+<td>Ensure the hostname or IP address is resolvable and reachable from the jump host; check DNS or network connectivity.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>The PowerStore management IP should only be reachable from:</p>
 <ul>
@@ -9399,9 +9469,28 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to the curl command to skip certificate verification (already present in the example).
-<strong><code>401 Unauthorized</code></strong> — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the PowerStore management API.
-<strong><code>404 Not Found</code></strong> — Confirm the management IP address is correct and the PowerStore REST API endpoint is accessible on port 443.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to the curl command to skip certificate verification (already present in the example).</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the PowerStore management API.</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>Confirm the management IP address is correct and the PowerStore REST API endpoint is accessible on port 443.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="iscsi-security">iSCSI Security<a class="headerlink" href="#iscsi-security" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Enforce CHAP on all iSCSI hosts</span>
@@ -9432,9 +9521,28 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed in production deployments).
-<strong><code>{"error_code": "INVALID_CHAP_PASSWORD", "message": "CHAP password must be at least 12 characters"}</code></strong> — Ensure the <code>&lt;chap-password-min-12&gt;</code> placeholder is replaced with a password of minimum 12 characters.
-<strong><code>curl: (401) Unauthorized</code></strong> — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the PowerStore management API.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed in production deployments).</td>
+</tr>
+<tr>
+<td><code>{"error_code": "INVALID_CHAP_PASSWORD", "message": "CHAP password must be at least 12 characters"}</code></td>
+<td>Ensure the <code>&lt;chap-password-min-12&gt;</code> placeholder is replaced with a password of minimum 12 characters.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the PowerStore management API.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="nfs-security">NFS Security<a class="headerlink" href="#nfs-security" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Harden NFS exports: restrict access to specific subnets</span>
@@ -9473,9 +9581,28 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the PowerStore management certificate into your CA bundle.
-<strong><code>{"error":"Unauthorized","error_code":"401"}</code></strong> — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
-<strong><code>jq: command not found</code></strong> — Install <code>jq</code> package or use the inline Python JSON parser shown in the example instead of piping to jq.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or import the PowerStore management certificate into your CA bundle.</td>
+</tr>
+<tr>
+<td><code>{"error":"Unauthorized","error_code":"401"}</code></td>
+<td>Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>jq</code> package or use the inline Python JSON parser shown in the example instead of piping to jq.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="supportassist-hardening">SupportAssist Hardening<a class="headerlink" href="#supportassist-hardening" title="Permanent link">&para;</a></h2>
 <p>SupportAssist enables Dell to proactively monitor the array and create automated service requests.</p>
@@ -9552,9 +9679,28 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the PowerStore certificate into your system's CA bundle.
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Verify the DELL-EMC-TOKEN is valid and not expired by regenerating it in the PowerStore management console.
-<strong><code>curl: (7) Failed to connect to &lt;mgmt-ip&gt; port 443: Connection refused</code></strong> — Confirm the management IP is correct and the PowerStore API service is running with <code>systemctl status powerstore-api</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already present) or import the PowerStore certificate into your system's CA bundle.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Verify the DELL-EMC-TOKEN is valid and not expired by regenerating it in the PowerStore management console.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;mgmt-ip&gt; port 443: Connection refused</code></td>
+<td>Confirm the management IP is correct and the PowerStore API service is running with <code>systemctl status powerstore-api</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Audit events to monitor in the SIEM:</p>
 <table>
@@ -9747,7 +9893,7 @@ Hardening reference covering Overview, Management Plane Hardening, Host Connecti
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

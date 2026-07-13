@@ -9141,9 +9141,28 @@ Integrations reference covering VMware vSphere, Dell Backup and Recovery (Data D
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but ensure it's included if removed).
-<strong><code>{"error_code": 401, "message": "Invalid or expired token"}</code></strong> — Regenerate the DELL-EMC-TOKEN via the PowerStore management UI or API authentication endpoint and update the header.
-<strong><code>{"error_code": 400, "message": "Invalid volume_group_id"}</code></strong> — Verify the volume group exists and the UUID is correct by listing volume groups with <code>curl -k -H "DELL-EMC-TOKEN: &lt;token&gt;" https://&lt;mgmt-ip&gt;/api/rest/volume_groups</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>{"error_code": 401, "message": "Invalid or expired token"}</code></td>
+<td>Regenerate the DELL-EMC-TOKEN via the PowerStore management UI or API authentication endpoint and update the header.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 400, "message": "Invalid volume_group_id"}</code></td>
+<td>Verify the volume group exists and the UUID is correct by listing volume groups with <code>curl -k -H "DELL-EMC-TOKEN: &lt;token&gt;" https://&lt;mgmt-ip&gt;/api/rest/volume_groups</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After mapping, rescan storage in vSphere and present the volume as a new VMFS datastore via <strong>vCenter → Storage → New Datastore</strong>.</p>
 <h3 id="nfs-datastores">NFS Datastores<a class="headerlink" href="#nfs-datastores" title="Permanent link">&para;</a></h3>
@@ -9186,9 +9205,28 @@ Integrations reference covering VMware vSphere, Dell Backup and Recovery (Data D
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code":"INVALID_FIELD","message":"preferred_node 'node-a' does not exist"}</code></strong> — Verify the correct node name using <code>curl -k -H "DELL-EMC-TOKEN: &lt;token&gt;" https://&lt;mgmt-ip&gt;/api/rest/node</code> and update the preferred_node value.
-<strong><code>{"error_code":"UNAUTHORIZED","message":"Invalid or expired token"}</code></strong> — Regenerate the authentication token and ensure it is passed correctly in the DELL-EMC-TOKEN header.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification (already present) or import the management IP's certificate into your CA bundle.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code":"INVALID_FIELD","message":"preferred_node 'node-a' does not exist"}</code></td>
+<td>Verify the correct node name using <code>curl -k -H "DELL-EMC-TOKEN: &lt;token&gt;" https://&lt;mgmt-ip&gt;/api/rest/node</code> and update the preferred_node value.</td>
+</tr>
+<tr>
+<td><code>{"error_code":"UNAUTHORIZED","message":"Invalid or expired token"}</code></td>
+<td>Regenerate the authentication token and ensure it is passed correctly in the DELL-EMC-TOKEN header.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification (already present) or import the management IP's certificate into your CA bundle.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="virtual-volumes-vvols">Virtual Volumes (vVols)<a class="headerlink" href="#virtual-volumes-vvols" title="Permanent link">&para;</a></h3>
 <p>vVols are the recommended storage model for VMware environments requiring per-VM storage policy management. Each virtual disk becomes an individual object on PowerStore rather than a file in a shared VMFS.</p>
@@ -9273,9 +9311,28 @@ Integrations reference covering VMware vSphere, Dell Backup and Recovery (Data D
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to bypass certificate verification (already present in the example, but ensure it's included if removed).
-<strong><code>{"error_code": 401, "message": "Invalid or expired token"}</code></strong> — Regenerate the DELL-EMC-TOKEN via the PowerStore management API authentication endpoint and verify it hasn't exceeded its TTL.
-<strong><code>curl: (7) Failed to connect to &lt;mgmt-ip&gt; port 443: Connection refused</code></strong> — Verify the management IP is correct, the PowerStore array is online, and port 443 is accessible from your client network.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to bypass certificate verification (already present in the example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>{"error_code": 401, "message": "Invalid or expired token"}</code></td>
+<td>Regenerate the DELL-EMC-TOKEN via the PowerStore management API authentication endpoint and verify it hasn't exceeded its TTL.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;mgmt-ip&gt; port 443: Connection refused</code></td>
+<td>Verify the management IP is correct, the PowerStore array is online, and port 443 is accessible from your client network.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="vmware-site-recovery-manager-srm">VMware Site Recovery Manager (SRM)<a class="headerlink" href="#vmware-site-recovery-manager-srm" title="Permanent link">&para;</a></h3>
 <p>PowerStore integrates with VMware SRM via the <strong>Storage Replication Adapter (SRA)</strong>. The SRA is a plugin installed on the SRM server that allows SRM to orchestrate PowerStore async replication failover.</p>
@@ -9470,9 +9527,28 @@ Integrations reference covering VMware vSphere, Dell Backup and Recovery (Data D
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the PowerStore certificate into your CA bundle.
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating via the login endpoint.
-<strong><code>curl: (7) Failed to connect to &lt;mgmt-ip&gt; port 443: Connection refused</code></strong> — Confirm the management IP is correct and the PowerStore REST API service is running with <code>systemctl status dell-rest-service</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification, or import the PowerStore certificate into your CA bundle.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating via the login endpoint.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;mgmt-ip&gt; port 443: Connection refused</code></td>
+<td>Confirm the management IP is correct and the PowerStore REST API service is running with <code>systemctl status dell-rest-service</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="active-directory-ldap">Active Directory / LDAP<a class="headerlink" href="#active-directory-ldap" title="Permanent link">&para;</a></h2>
 <p>PowerStore integrates with Active Directory for:</p>
@@ -9512,9 +9588,28 @@ Integrations reference covering VMware vSphere, Dell Backup and Recovery (Data D
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to the curl command to skip SSL verification (already present in the example, but ensure it's not removed in production without proper CA certificate configuration).
-<strong><code>{"error": "Invalid token", "error_code": 401}</code></strong> — Regenerate the DELL-EMC-TOKEN by authenticating to the management API first using valid credentials.
-<strong><code>{"error": "LDAP server unreachable", "error_code": 400}</code></strong> — Verify network connectivity to the LDAP servers (192.168.1.10 and 192.168.1.11) and confirm firewall rules allow port 389 from the PowerStore management network.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to the curl command to skip SSL verification (already present in the example, but ensure it's not removed in production without proper CA certificate configuration).</td>
+</tr>
+<tr>
+<td><code>{"error": "Invalid token", "error_code": 401}</code></td>
+<td>Regenerate the DELL-EMC-TOKEN by authenticating to the management API first using valid credentials.</td>
+</tr>
+<tr>
+<td><code>{"error": "LDAP server unreachable", "error_code": 400}</code></td>
+<td>Verify network connectivity to the LDAP servers (192.168.1.10 and 192.168.1.11) and confirm firewall rules allow port 389 from the PowerStore management network.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="ansible">Ansible<a class="headerlink" href="#ansible" title="Permanent link">&para;</a></h2>
 <p>The Dell PowerStore Ansible collection (<code>dellemc.powerstore</code>) is available on Ansible Galaxy and provides modules for all major provisioning and management operations.</p>
@@ -9555,9 +9650,28 @@ Integrations reference covering VMware vSphere, Dell Backup and Recovery (Data D
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR! the role 'dellemc.powerstore' was not found</code></strong> — Run <code>ansible-galaxy collection install dellemc.powerstore</code> before executing the playbook.
-<strong><code>fatal: [localhost]: FAILED! =&gt; {"msg": "Unsupported parameters for module: dellemc.powerstore.volume: 'cap_unit'"}</code></strong> — Replace <code>cap_unit: "GB"</code> with <code>size_unit: "GB"</code> to match the correct parameter name for this module version.
-<strong><code>fatal: [localhost]: FAILED! =&gt; {"msg": "authentication failed"}</code></strong> — Verify the array IP address is reachable and the admin credentials are correct; check <code>validate_certs: false</code> is set if using self-signed certificates.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR! the role 'dellemc.powerstore' was not found</code></td>
+<td>Run <code>ansible-galaxy collection install dellemc.powerstore</code> before executing the playbook.</td>
+</tr>
+<tr>
+<td><code>fatal: [localhost]: FAILED! =&gt; {"msg": "Unsupported parameters for module: dellemc.powerstore.volume: 'cap_unit'"}</code></td>
+<td>Replace <code>cap_unit: "GB"</code> with <code>size_unit: "GB"</code> to match the correct parameter name for this module version.</td>
+</tr>
+<tr>
+<td><code>fatal: [localhost]: FAILED! =&gt; {"msg": "authentication failed"}</code></td>
+<td>Verify the array IP address is reachable and the admin credentials are correct; check <code>validate_certs: false</code> is set if using self-signed certificates.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="terraform">Terraform<a class="headerlink" href="#terraform" title="Permanent link">&para;</a></h2>
 <p>The Dell PowerStore Terraform provider (<code>registry.terraform.io/dell/powerstore</code>) supports infrastructure-as-code for PowerStore resources:</p>
@@ -9612,7 +9726,7 @@ Integrations reference covering VMware vSphere, Dell Backup and Recovery (Data D
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

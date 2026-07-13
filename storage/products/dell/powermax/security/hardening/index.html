@@ -9235,9 +9235,28 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account is not locked in Active Directory.
-<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm the LDAP server hostname/IP is resolvable and port 636 is open from the Unisphere management network.
-<strong><code>No such object (32)</code></strong> — Ensure the base DN "DC=corp,DC=example,DC=com" matches your Active Directory domain structure exactly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldap_bind: Invalid credentials (49)</code></td>
+<td>Verify the service account password is correct and the account is not locked in Active Directory.</td>
+</tr>
+<tr>
+<td><code>Can't contact LDAP server (-1)</code></td>
+<td>Confirm the LDAP server hostname/IP is resolvable and port 636 is open from the Unisphere management network.</td>
+</tr>
+<tr>
+<td><code>No such object (32)</code></td>
+<td>Ensure the base DN "DC=corp,DC=example,DC=com" matches your Active Directory domain structure exactly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="tls-hardening">TLS Hardening<a class="headerlink" href="#tls-hardening" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify TLS 1.0 and 1.1 are disabled (both should fail)</span>
@@ -9290,9 +9309,28 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SSL_ERROR_SSL:14094410:SSL routines:SSL_CTX_set_cipher_list:sslv3 alert handshake failure</code></strong> — Verify the Unisphere host is reachable on port 8443 and the hostname resolves correctly with <code>nslookup &lt;unisphere-host&gt;</code>.
-<strong><code>unable to get local issuer certificate</code></strong> — Add the Unisphere CA certificate to your system's trusted store with <code>sudo cp unisphere-ca.pem /etc/ssl/certs/ &amp;&amp; sudo update-ca-certificates</code>.
-<strong><code>Nmap done; 0 hosts up</code></strong> — Ensure the Unisphere host is online and firewall rules permit outbound connections to port 8443 from your scanning host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SSL_ERROR_SSL:14094410:SSL routines:SSL_CTX_set_cipher_list:sslv3 alert handshake failure</code></td>
+<td>Verify the Unisphere host is reachable on port 8443 and the hostname resolves correctly with <code>nslookup &lt;unisphere-host&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>unable to get local issuer certificate</code></td>
+<td>Add the Unisphere CA certificate to your system's trusted store with <code>sudo cp unisphere-ca.pem /etc/ssl/certs/ &amp;&amp; sudo update-ca-certificates</code>.</td>
+</tr>
+<tr>
+<td><code>Nmap done; 0 hosts up</code></td>
+<td>Ensure the Unisphere host is online and firewall rules permit outbound connections to port 8443 from your scanning host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="certificate-hardening">Certificate Hardening<a class="headerlink" href="#certificate-hardening" title="Permanent link">&para;</a></h3>
 <p>Replace the factory-installed self-signed certificate before going into production:</p>
@@ -9332,9 +9370,28 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: /tmp/unisphere.key: No such file or directory</code></strong> — Ensure /tmp has write permissions and sufficient disk space; run <code>ls -ld /tmp</code> to verify.
-<strong><code>unable to load certificate</code></strong> — Verify the certificate file is in PEM format and the CA chain is appended in correct order (leaf → intermediate → root) using <code>openssl x509 -in &lt;cert&gt; -text -noout</code>.
-<strong><code>Connection refused</code></strong> — Wait 30–60 seconds after service restart for Unisphere to fully initialize, then retry the s_client command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: /tmp/unisphere.key: No such file or directory</code></td>
+<td>Ensure /tmp has write permissions and sufficient disk space; run <code>ls -ld /tmp</code> to verify.</td>
+</tr>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Verify the certificate file is in PEM format and the CA chain is appended in correct order (leaf → intermediate → root) using <code>openssl x509 -in &lt;cert&gt; -text -noout</code>.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Wait 30–60 seconds after service restart for Unisphere to fully initialize, then retry the s_client command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -9388,8 +9445,24 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: INVALID_RULE</code></strong> — Verify the rich rule syntax matches firewalld XML format and escape special characters correctly with backslashes.
-<strong><code>nc: connect to &lt;management-host-ip&gt; port 8443 (tcp) failed: Connection refused</code></strong> — Confirm Unisphere service is running on the target host with <code>systemctl status unisphere</code> and that port 8443 is listening via <code>netstat -tlnp | grep 8443</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: INVALID_RULE</code></td>
+<td>Verify the rich rule syntax matches firewalld XML format and escape special characters correctly with backslashes.</td>
+</tr>
+<tr>
+<td><code>nc: connect to &lt;management-host-ip&gt; port 8443 (tcp) failed: Connection refused</code></td>
+<td>Confirm Unisphere service is running on the target host with <code>systemctl status unisphere</code> and that port 8443 is listening via <code>netstat -tlnp | grep 8443</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="solutions-enabler-hardening">Solutions Enabler Hardening<a class="headerlink" href="#solutions-enabler-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="symapi-daemon-hardening">SYMAPI Daemon Hardening<a class="headerlink" href="#symapi-daemon-hardening" title="Permanent link">&para;</a></h3>
@@ -9425,9 +9498,28 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/symapi/config/daemon_users: No such file or directory</code></strong> — Ensure the netcnfg file is written first and the /var/symapi/config directory exists; create it with <code>mkdir -p /var/symapi/config</code> if needed.
-<strong><code>Failed to restart storsrvd: Unit storsrvd.service not found.</code></strong> — Verify the correct daemon name with <code>systemctl list-units | grep stor</code> and use the actual service name (may be <code>Symmetrix</code> or <code>emc-storsrvd</code> depending on version).
-<strong><code>netstat: command not found</code></strong> — Install net-tools with <code>apt-get install net-tools</code> or use <code>ss -tlnp | grep 2707</code> as a modern alternative.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/symapi/config/daemon_users: No such file or directory</code></td>
+<td>Ensure the netcnfg file is written first and the /var/symapi/config directory exists; create it with <code>mkdir -p /var/symapi/config</code> if needed.</td>
+</tr>
+<tr>
+<td><code>Failed to restart storsrvd: Unit storsrvd.service not found.</code></td>
+<td>Verify the correct daemon name with <code>systemctl list-units | grep stor</code> and use the actual service name (may be <code>Symmetrix</code> or <code>emc-storsrvd</code> depending on version).</td>
+</tr>
+<tr>
+<td><code>netstat: command not found</code></td>
+<td>Install net-tools with <code>apt-get install net-tools</code> or use <code>ss -tlnp | grep 2707</code> as a modern alternative.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="se-host-os-hardening">SE Host OS Hardening<a class="headerlink" href="#se-host-os-hardening" title="Permanent link">&para;</a></h3>
 <p>The Solutions Enabler host (typically a Linux VM) requires its own OS hardening:</p>
@@ -9454,9 +9546,28 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /etc/sudoers.d/*: No such file or directory</code></strong> — Create the <code>/etc/sudoers.d/</code> directory with <code>mkdir -p /etc/sudoers.d/</code> if it does not exist, or adjust the grep pattern to <code>grep -r "storadm\|symcli" /etc/sudoers* 2&gt;/dev/null</code>.
-<strong><code>chown: changing ownership of '/usr/symcli/bin/sym*': No such file or directory</code></strong> — Verify the SYMCLI package is installed with <code>rpm -qa | grep symcli</code> and install it if missing before applying ownership changes.
-<strong><code>chmod: cannot access '/var/symapi/config/daemon_users': No such file or directory</code></strong> — Ensure the Symmetrix SE daemon is installed and initialized with <code>symcfg discover</code> to create the required configuration files.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /etc/sudoers.d/*: No such file or directory</code></td>
+<td>Create the <code>/etc/sudoers.d/</code> directory with <code>mkdir -p /etc/sudoers.d/</code> if it does not exist, or adjust the grep pattern to <code>grep -r "storadm\|symcli" /etc/sudoers* 2&gt;/dev/null</code>.</td>
+</tr>
+<tr>
+<td><code>chown: changing ownership of '/usr/symcli/bin/sym*': No such file or directory</code></td>
+<td>Verify the SYMCLI package is installed with <code>rpm -qa | grep symcli</code> and install it if missing before applying ownership changes.</td>
+</tr>
+<tr>
+<td><code>chmod: cannot access '/var/symapi/config/daemon_users': No such file or directory</code></td>
+<td>Ensure the Symmetrix SE daemon is installed and initialized with <code>symcfg discover</code> to create the required configuration files.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="logging-and-audit-on-se-host">Logging and Audit on SE Host<a class="headerlink" href="#logging-and-audit-on-se-host" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enable auditd on the SE host to track SYMCLI execution</span>
@@ -9486,9 +9597,28 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>augenrules: No such file or directory</code></strong> — Install audit-libs package with <code>yum install audit-libs</code> or use <code>auditctl -R /etc/audit/rules.d/powermax.rules</code> directly instead.
-<strong><code>Error: audit rules directory does not exist: /etc/audit/rules.d</code></strong> — Create the directory with <code>mkdir -p /etc/audit/rules.d</code> before appending rules.
-<strong><code>No rules loaded</code></strong> — Restart auditd with <code>systemctl restart auditd</code> after loading rules to activate them in the kernel.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>augenrules: No such file or directory</code></td>
+<td>Install audit-libs package with <code>yum install audit-libs</code> or use <code>auditctl -R /etc/audit/rules.d/powermax.rules</code> directly instead.</td>
+</tr>
+<tr>
+<td><code>Error: audit rules directory does not exist: /etc/audit/rules.d</code></td>
+<td>Create the directory with <code>mkdir -p /etc/audit/rules.d</code> before appending rules.</td>
+</tr>
+<tr>
+<td><code>No rules loaded</code></td>
+<td>Restart auditd with <code>systemctl restart auditd</code> after loading rules to activate them in the kernel.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="host-connectivity-hardening">Host Connectivity Hardening<a class="headerlink" href="#host-connectivity-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="zoning-and-initiator-group-isolation">Zoning and Initiator Group Isolation<a class="headerlink" href="#zoning-and-initiator-group-isolation" title="Permanent link">&para;</a></h3>
@@ -9543,8 +9673,24 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMCLI_ERROR (5): The specified Symmetrix does not exist</code></strong> — Verify the SID value matches your array's actual Symmetrix ID using <code>symcfg list -v</code>.
-<strong><code>awk: syntax error: unexpected newline or statement</code></strong> — Correct the awk syntax; use <code>awk 'NR&gt;2 &amp;&amp; $NF &gt; 4 {print $0}'</code> with proper field separator if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMCLI_ERROR (5): The specified Symmetrix does not exist</code></td>
+<td>Verify the SID value matches your array's actual Symmetrix ID using <code>symcfg list -v</code>.</td>
+</tr>
+<tr>
+<td><code>awk: syntax error: unexpected newline or statement</code></td>
+<td>Correct the awk syntax; use <code>awk 'NR&gt;2 &amp;&amp; $NF &gt; 4 {print $0}'</code> with proper field separator if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="port-group-isolation">Port Group Isolation<a class="headerlink" href="#port-group-isolation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Separate port groups for different security zones (e.g., production vs dev/test)</span>
@@ -9587,8 +9733,24 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symaccess: Error: Invalid Symmetrix ID &lt;SID&gt;</code></strong> — Replace <code>&lt;SID&gt;</code> with the actual Symmetrix serial number (e.g., <code>000297900001</code>) or use <code>-sid all</code> to query all arrays.
-<strong><code>symaccess: Error: Port group &lt;name&gt; not found</code></strong> — Verify the port group name exists with <code>symaccess list -sid &lt;SID&gt; -type port</code> and check for typos or case sensitivity.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symaccess: Error: Invalid Symmetrix ID &lt;SID&gt;</code></td>
+<td>Replace <code>&lt;SID&gt;</code> with the actual Symmetrix serial number (e.g., <code>000297900001</code>) or use <code>-sid all</code> to query all arrays.</td>
+</tr>
+<tr>
+<td><code>symaccess: Error: Port group &lt;name&gt; not found</code></td>
+<td>Verify the port group name exists with <code>symaccess list -sid &lt;SID&gt; -type port</code> and check for typos or case sensitivity.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="unused-object-cleanup">Unused Object Cleanup<a class="headerlink" href="#unused-object-cleanup" title="Permanent link">&para;</a></h3>
 <p>Regularly remove stale masking views, initiator groups, and port groups from decommissioned hosts:</p>
@@ -9619,9 +9781,28 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symaccess: Command not found</code></strong> — Ensure the PowerMax CLI tools are installed and the <code>$PATH</code> includes the Symantec/Dell EMC bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
-<strong><code>Error: Masking view MV_legacy_db_02_prod is still in use by active host connections</code></strong> — Verify the host is truly decommissioned by checking fabric logins with <code>symaccess list logins -sid &lt;SID&gt;</code> before deletion.
-<strong><code>Error: Initiator group IG_legacy_db_02 not found</code></strong> — Confirm the exact initiator group name using <code>symaccess list -sid &lt;SID&gt; -name IG_legacy_db_02 -type initiator</code> before attempting deletion.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symaccess: Command not found</code></td>
+<td>Ensure the PowerMax CLI tools are installed and the <code>$PATH</code> includes the Symantec/Dell EMC bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).</td>
+</tr>
+<tr>
+<td><code>Error: Masking view MV_legacy_db_02_prod is still in use by active host connections</code></td>
+<td>Verify the host is truly decommissioned by checking fabric logins with <code>symaccess list logins -sid &lt;SID&gt;</code> before deletion.</td>
+</tr>
+<tr>
+<td><code>Error: Initiator group IG_legacy_db_02 not found</code></td>
+<td>Confirm the exact initiator group name using <code>symaccess list -sid &lt;SID&gt; -name IG_legacy_db_02 -type initiator</code> before attempting deletion.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="supportassist-and-remote-access-hardening">SupportAssist and Remote Access Hardening<a class="headerlink" href="#supportassist-and-remote-access-hardening" title="Permanent link">&para;</a></h2>
 <p>SupportAssist enables Dell to proactively monitor the array and create automated service requests for hardware faults. It also enables remote support sessions.</p>
@@ -9853,7 +10034,7 @@ Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Ha
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

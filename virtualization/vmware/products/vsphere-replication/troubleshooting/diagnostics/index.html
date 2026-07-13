@@ -9178,9 +9178,28 @@ vSphere Replication (VR) diagnostic commands: check VRA service status with syst
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit hms.service not found.</code></strong> — Verify the VRA appliance version and confirm hms.service exists with <code>systemctl list-unit-files | grep hms</code>.
-<strong><code>Failed to start vrms.service: Unit vrms.service is masked.</code></strong> — Unmask the service with <code>systemctl unmask vrms</code> before attempting to start it.
-<strong><code>Filesystem is 95% full; cannot start services</code></strong> — Free disk space immediately by removing old logs with <code>journalctl --vacuum=500M</code> or clearing replication cache directories.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit hms.service not found.</code></td>
+<td>Verify the VRA appliance version and confirm hms.service exists with <code>systemctl list-unit-files | grep hms</code>.</td>
+</tr>
+<tr>
+<td><code>Failed to start vrms.service: Unit vrms.service is masked.</code></td>
+<td>Unmask the service with <code>systemctl unmask vrms</code> before attempting to start it.</td>
+</tr>
+<tr>
+<td><code>Filesystem is 95% full; cannot start services</code></td>
+<td>Free disk space immediately by removing old logs with <code>journalctl --vacuum=500M</code> or clearing replication cache directories.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-2-check-vra-rest-api-health">Step 2 — Check VRA REST API health<a class="headerlink" href="#step-2-check-vra-rest-api-health" title="Permanent link">&para;</a></h2>
@@ -9218,9 +9237,28 @@ vSphere Replication (VR) diagnostic commands: check VRA service status with syst
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the VRA's certificate into your system trust store.
-<strong><code>jq: command not found</code> or <code>python3: command not found</code></strong> — Install the required JSON parser (<code>apt install python3</code> or <code>brew install jq</code>) before running the script.
-<strong><code>{"error":"Invalid credentials","code":401}</code></strong> — Verify the username and password are correct and the admin account is not locked; check VRA audit logs for failed login attempts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the VRA's certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code> or <code>python3: command not found</code></td>
+<td>Install the required JSON parser (<code>apt install python3</code> or <code>brew install jq</code>) before running the script.</td>
+</tr>
+<tr>
+<td><code>{"error":"Invalid credentials","code":401}</code></td>
+<td>Verify the username and password are correct and the admin account is not locked; check VRA audit logs for failed login attempts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-3-read-vra-logs">Step 3 — Read VRA logs<a class="headerlink" href="#step-3-read-vra-logs" title="Permanent link">&para;</a></h2>
@@ -9311,9 +9349,28 @@ vSphere Replication (VR) diagnostic commands: check VRA service status with syst
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nc: connect to 192.168.45.120 port 31031 (tcp) failed: Connection refused</code></strong> — Verify the target VRA is running with <code>systemctl status vmware-hbrsvc</code> and confirm the firewall rule allows port 31031 from the source ESXi host.
-<strong><code>PING 192.168.45.120 (192.168.45.120): sendto: No route to host</code></strong> — Check that the replication network is properly routed between sites and that the target VRA IP is reachable from the source ESXi management network.
-<strong><code>vmkping: Unknown option -I vmk0</code></strong> — Use the correct syntax <code>vmkping -I vmk0 &lt;target-vra-ip&gt;</code> or verify the VMkernel adapter name with <code>esxcli network ip interface list</code> if vmk0 does not exist.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nc: connect to 192.168.45.120 port 31031 (tcp) failed: Connection refused</code></td>
+<td>Verify the target VRA is running with <code>systemctl status vmware-hbrsvc</code> and confirm the firewall rule allows port 31031 from the source ESXi host.</td>
+</tr>
+<tr>
+<td><code>PING 192.168.45.120 (192.168.45.120): sendto: No route to host</code></td>
+<td>Check that the replication network is properly routed between sites and that the target VRA IP is reachable from the source ESXi management network.</td>
+</tr>
+<tr>
+<td><code>vmkping: Unknown option -I vmk0</code></td>
+<td>Use the correct syntax <code>vmkping -I vmk0 &lt;target-vra-ip&gt;</code> or verify the VMkernel adapter name with <code>esxcli network ip interface list</code> if vmk0 does not exist.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If TCP 31031 test fails:
 1. Check firewall rules between the source and target networks
@@ -9364,9 +9421,28 @@ vSphere Replication (VR) diagnostic commands: check VRA service status with syst
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>hbrsvc is stopped.</code></strong> — Run <code>/etc/init.d/hbrsvc start</code> to restart the replication daemon.
-<strong><code>ERROR: Failed to connect to target host &lt;IP&gt;:&lt;port&gt; (Connection timeout)</code></strong> — Verify network connectivity between source and target ESXi hosts, check firewall rules for port 31031, and confirm the target host is reachable and running vSphere Replication.
-<strong><code>/var/log/hbr.log: No such file or directory</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hbrsvc is stopped.</code></td>
+<td>Run <code>/etc/init.d/hbrsvc start</code> to restart the replication daemon.</td>
+</tr>
+<tr>
+<td><code>ERROR: Failed to connect to target host &lt;IP&gt;:&lt;port&gt; (Connection timeout)</code></td>
+<td>Verify network connectivity between source and target ESXi hosts, check firewall rules for port 31031, and confirm the target host is reachable and running vSphere Replication.</td>
+</tr>
+<tr>
+<td><strong><code>/var/log/hbr.log: No such file or directory</code></strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-6-verify-vra-certificate">Step 6 — Verify VRA certificate<a class="headerlink" href="#step-6-verify-vra-certificate" title="Permanent link">&para;</a></h2>
@@ -9416,9 +9492,28 @@ vSphere Replication (VR) diagnostic commands: check VRA service status with syst
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>openssl: connect: Connection refused</code></strong> — Verify the VRA service is running and the FQDN/port is correct with <code>netstat -tlnp | grep 443</code> on the VRA appliance.
-<strong><code>notAfter=&lt;date&gt; GMT</code> (where date is in the past)</strong> — Renew the certificate immediately via VAMI at <code>https://&lt;vra-ip&gt;:5480</code> under Certificate Management to restore replication connectivity.
-<strong><code>Permission denied</code> (when running pktcap-uw)</strong> — Execute the packet capture command with root privileges or add your user to the appropriate group with <code>sudo pktcap-uw</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>openssl: connect: Connection refused</code></td>
+<td>Verify the VRA service is running and the FQDN/port is correct with <code>netstat -tlnp | grep 443</code> on the VRA appliance.</td>
+</tr>
+<tr>
+<td><code>notAfter=&lt;date&gt; GMT</code> (where date is in the past)<code>| Renew the certificate immediately via VAMI at</code>https://<vra-ip>:5480` under Certificate Management to restore replication connectivity.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>Permission denied</code> (when running pktcap-uw)<code>| Execute the packet capture command with root privileges or add your user to the appropriate group with</code>sudo pktcap-uw`.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-7-collect-vra-support-bundle-for-vmware-sr">Step 7 — Collect VRA support bundle for VMware SR<a class="headerlink" href="#step-7-collect-vra-support-bundle-for-vmware-sr" title="Permanent link">&para;</a></h2>
@@ -9463,9 +9558,28 @@ vSphere Replication (VR) diagnostic commands: check VRA service status with syst
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials and ensure the admin account is enabled on the VRA appliance via VAMI.
-<strong><code>Connection refused</code></strong> — Confirm network connectivity between source and target VRA sites and verify firewall rules allow ports 31031 and 44046.
-<strong><code>No such file or directory: /tmp/vr-support-*.tar.gz</code></strong> — Run the support-bundle.sh script first and verify the output path exists before attempting SCP transfer.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify SSH credentials and ensure the admin account is enabled on the VRA appliance via VAMI.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Confirm network connectivity between source and target VRA sites and verify firewall rules allow ports 31031 and 44046.</td>
+</tr>
+<tr>
+<td><code>No such file or directory: /tmp/vr-support-*.tar.gz</code></td>
+<td>Run the support-bundle.sh script first and verify the output path exists before attempting SCP transfer.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
@@ -9541,7 +9655,7 @@ vSphere Replication (VR) diagnostic commands: check VRA service status with syst
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

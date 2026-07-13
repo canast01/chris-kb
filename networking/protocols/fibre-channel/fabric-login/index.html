@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Fibre Channel — Fabric Login · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Fibre Channel — Fabric Login", "url": "https://chrisanastasiadis.com/networking/protocols/fibre-channel/fabric-login/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-05"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Fibre Channel — Fabric Login", "url": "https://chrisanastasiadis.com/networking/protocols/fibre-channel/fabric-login/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-05"}</script>
   
 
   </head>
@@ -7956,9 +7956,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>portlogshow: Invalid slot/port format</code></strong> — Use correct syntax like <code>portlogshow 0/0</code> with slot and port numbers separated by a forward slash.
-<strong><code>nsshow: Command not found</code></strong> — Verify you are logged into a Brocade/Fibre Channel switch; this command does not exist on standard Linux hosts.
-<strong><code>portlogshow: Port offline or not present</code></strong> — Confirm the port is in Online state using <code>switchshow</code> before querying FLOGI details.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>portlogshow: Invalid slot/port format</code></td>
+<td>Use correct syntax like <code>portlogshow 0/0</code> with slot and port numbers separated by a forward slash.</td>
+</tr>
+<tr>
+<td><code>nsshow: Command not found</code></td>
+<td>Verify you are logged into a Brocade/Fibre Channel switch; this command does not exist on standard Linux hosts.</td>
+</tr>
+<tr>
+<td><code>portlogshow: Port offline or not present</code></td>
+<td>Confirm the port is in Online state using <code>switchshow</code> before querying FLOGI details.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">## FLOGI database — who is logged in to the fabric</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -8001,9 +8020,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the switch model supports these commands (some older switches use different syntax like <code>show flogi</code> without <code>database</code>).
-<strong><code>VSAN 10 is suspended</code></strong> — Enable the VSAN with <code>vsan 10</code> followed by <code>no suspend</code> in config mode.
-<strong><code>Port fc1/1 is down</code></strong> — Check physical cable connections and run <code>no shutdown</code> on the port interface.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the switch model supports these commands (some older switches use different syntax like <code>show flogi</code> without <code>database</code>).</td>
+</tr>
+<tr>
+<td><code>VSAN 10 is suspended</code></td>
+<td>Enable the VSAN with <code>vsan 10</code> followed by <code>no suspend</code> in config mode.</td>
+</tr>
+<tr>
+<td><code>Port fc1/1 is down</code></td>
+<td>Check physical cable connections and run <code>no shutdown</code> on the port interface.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">## Brocade — port error counters (CRC, loss-of-sync)</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>porterrshow
@@ -8046,9 +8084,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>porterrshow: command not found</code></strong> — Verify you are logged into a Brocade switch (not a Cisco MDS) and have admin privileges.
-<strong><code>show interface fc1/1 counters: % Invalid command</code></strong> — Confirm the interface name is correct (e.g., <code>fc1/1</code> not <code>Fc1/1</code>) and the port exists on your MDS switch.
-<strong><code>nsshow: command not found</code></strong> — Run this command only on Brocade switches; use <code>show fcns database</code> on Cisco MDS instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>porterrshow: command not found</code></td>
+<td>Verify you are logged into a Brocade switch (not a Cisco MDS) and have admin privileges.</td>
+</tr>
+<tr>
+<td><code>show interface fc1/1 counters: % Invalid command</code></td>
+<td>Confirm the interface name is correct (e.g., <code>fc1/1</code> not <code>Fc1/1</code>) and the port exists on your MDS switch.</td>
+</tr>
+<tr>
+<td><code>nsshow: command not found</code></td>
+<td>Run this command only on Brocade switches; use <code>show fcns database</code> on Cisco MDS instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8072,7 +8129,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Dell CloudIQ CLI Reference · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Dell CloudIQ CLI Reference", "url": "https://chrisanastasiadis.com/storage/products/dell/cloudiq/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Dell CloudIQ CLI Reference", "url": "https://chrisanastasiadis.com/storage/products/dell/cloudiq/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-06"}</script>
   
 
   </head>
@@ -9140,9 +9140,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (6) Could not resolve host: cloudiq.apis.dell.com</code></strong> — Verify network connectivity and DNS resolution; check that the CloudIQ API endpoint is accessible from your environment.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Confirm CLIENT_ID and CLIENT_SECRET are correct and valid; check the token endpoint response with <code>curl -v</code> to see the actual error message from the API.
-<strong><code>curl: (35) error:1400D102:SSL routines:SSL_CTX_use_certificate:unsupported certificate type</code></strong> — Ensure your system's CA certificates are up-to-date with <code>update-ca-certificates</code> or equivalent for your OS.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (6) Could not resolve host: cloudiq.apis.dell.com</code></td>
+<td>Verify network connectivity and DNS resolution; check that the CloudIQ API endpoint is accessible from your environment.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></td>
+<td>Confirm CLIENT_ID and CLIENT_SECRET are correct and valid; check the token endpoint response with <code>curl -v</code> to see the actual error message from the API.</td>
+</tr>
+<tr>
+<td><code>curl: (35) error:1400D102:SSL routines:SSL_CTX_use_certificate:unsupported certificate type</code></td>
+<td>Ensure your system's CA certificates are up-to-date with <code>update-ca-certificates</code> or equivalent for your OS.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># --- Current capacity utilisation for a system ---</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -9210,9 +9229,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to api.cloudiq.dell.com port 443: Connection refused</code></strong> — Verify BASE URL is correct and CloudIQ API endpoint is reachable; check firewall rules and VPN connectivity.
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Ensure AUTH header contains valid bearer token and hasn't expired; regenerate credentials in CloudIQ console if needed.
-<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Confirm the API response is valid JSON by testing with <code>curl -s ... | head -c 200</code> to inspect raw output; check for HTML error pages instead of JSON.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to api.cloudiq.dell.com port 443: Connection refused</code></td>
+<td>Verify BASE URL is correct and CloudIQ API endpoint is reachable; check firewall rules and VPN connectivity.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Ensure AUTH header contains valid bearer token and hasn't expired; regenerate credentials in CloudIQ console if needed.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON at line 1</code></td>
+<td>Confirm the API response is valid JSON by testing with <code>curl -s ... | head -c 200</code> to inspect raw output; check for HTML error pages instead of JSON.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># --- Get available performance metric types for a system ---</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/metrics/query&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -9279,9 +9317,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to cloudiq.example.com port 443: Connection refused</code></strong> — Verify BASE URL is correct and CloudIQ API endpoint is accessible; check firewall rules and service status.
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Ensure AUTH header contains valid API token and hasn't expired; regenerate token in CloudIQ console if needed.
-<strong><code>{"error": "Invalid metric type", "code": 400}</code></strong> — Verify metric names match available types from the first query (iops, throughput_mb, latency_ms, etc.) and check JSON syntax for typos.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to cloudiq.example.com port 443: Connection refused</code></td>
+<td>Verify BASE URL is correct and CloudIQ API endpoint is accessible; check firewall rules and service status.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Ensure AUTH header contains valid API token and hasn't expired; regenerate token in CloudIQ console if needed.</td>
+</tr>
+<tr>
+<td><code>{"error": "Invalid metric type", "code": 400}</code></td>
+<td>Verify metric names match available types from the first query (iops, throughput_mb, latency_ms, etc.) and check JSON syntax for typos.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># --- List all existing tags ---</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/tags&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -9370,9 +9427,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to api.cloudiq.dell.com port 443: Connection refused</code></strong> — Verify BASE URL is correct and CloudIQ API endpoint is accessible; check network connectivity and firewall rules.
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Ensure AUTH header contains valid API token and has not expired; regenerate credentials in CloudIQ console if needed.
-<strong><code>{"error": "Tag not found", "code": 404}</code></strong> — Confirm TAG_ID variable is set correctly from the create response and the tag has not already been deleted.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to api.cloudiq.dell.com port 443: Connection refused</code></td>
+<td>Verify BASE URL is correct and CloudIQ API endpoint is accessible; check network connectivity and firewall rules.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Ensure AUTH header contains valid API token and has not expired; regenerate credentials in CloudIQ console if needed.</td>
+</tr>
+<tr>
+<td><code>{"error": "Tag not found", "code": 404}</code></td>
+<td>Confirm TAG_ID variable is set correctly from the create response and the tag has not already been deleted.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9418,7 +9494,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

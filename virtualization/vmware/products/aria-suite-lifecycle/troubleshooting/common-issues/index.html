@@ -9125,9 +9125,28 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount: mount point /data does not exist</code></strong> — Create the mount point with <code>mkdir -p /data</code> before attempting to mount.
-<strong><code>mount.nfs: access denied by server while mounting nfs-server:/lcm-repo</code></strong> — Verify NFS export permissions on the server and ensure the client IP is listed in <code>/etc/exports</code> with appropriate read-write flags.
-<strong><code>touch: cannot touch '/data/.write-test': Read-only file system</code></strong> — Remount with write permissions using <code>mount -o remount,rw /data</code> or check NFS server export settings for <code>ro</code> restrictions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount: mount point /data does not exist</code></td>
+<td>Create the mount point with <code>mkdir -p /data</code> before attempting to mount.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting nfs-server:/lcm-repo</code></td>
+<td>Verify NFS export permissions on the server and ensure the client IP is listed in <code>/etc/exports</code> with appropriate read-write flags.</td>
+</tr>
+<tr>
+<td><code>touch: cannot touch '/data/.write-test': Read-only file system</code></td>
+<td>Remount with write permissions using <code>mount -o remount,rw /data</code> or check NFS server export settings for <code>ro</code> restrictions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After restoring the NFS mount, any in-progress upgrade will need to be resumed or retried via LCM. If the upgrade failed due to missing binaries, re-map the product binaries in <strong>Lifecycle Operations → Settings → Binary Mapping</strong> before retrying.</p>
 <hr />
@@ -9157,9 +9176,28 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>leaf.pem: CN = aria-lcm.internal.corp, error 20 at 0 depth lookup: unable to get local issuer certificate</code></strong> — Ensure the intermediate CA certificate is included in chain.pem in the correct order (root last).
-<strong><code>8f7c2d9e1a4b5c6f3e2d1a9b8c7f6e5d  - (certificate hash)</code> does not match private key hash</strong> — Regenerate the certificate and private key pair together, or verify you are using the correct matching files.
-<strong><code>Enter PEM pass phrase:</code></strong> — Remove the passphrase from the private key using <code>openssl rsa -in private.key -out private.key.nopass</code> before importing into LCM.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>leaf.pem: CN = aria-lcm.internal.corp, error 20 at 0 depth lookup: unable to get local issuer certificate</code></td>
+<td>Ensure the intermediate CA certificate is included in chain.pem in the correct order (root last).</td>
+</tr>
+<tr>
+<td><code>8f7c2d9e1a4b5c6f3e2d1a9b8c7f6e5d  - (certificate hash)</code> does not match private key hash`</td>
+<td>Regenerate the certificate and private key pair together, or verify you are using the correct matching files.</td>
+</tr>
+<tr>
+<td><code>Enter PEM pass phrase:</code></td>
+<td>Remove the passphrase from the private key using <code>openssl rsa -in private.key -out private.key.nopass</code> before importing into LCM.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="vidm-authentication-failure-after-password-change">VIDM Authentication Failure After Password Change<a class="headerlink" href="#vidm-authentication-failure-after-password-change" title="Permanent link">&para;</a></h2>
@@ -9183,9 +9221,28 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's lowercase <code>-sk</code> not <code>-Sk</code>).
-<strong><code>curl: (7) Failed to connect to vidm.example.local port 443: Connection refused</code></strong> — Verify VIDM appliance is running and network connectivity exists; check firewall rules and DNS resolution with <code>nslookup vidm.example.local</code>.
-<strong><code>{"error":"Unauthorized","code":401}</code></strong> — Ensure the LCM appliance service account has valid credentials and VIDM trust relationship is intact; re-register VIDM in LCM as indicated in the documentation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's lowercase <code>-sk</code> not <code>-Sk</code>).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vidm.example.local port 443: Connection refused</code></td>
+<td>Verify VIDM appliance is running and network connectivity exists; check firewall rules and DNS resolution with <code>nslookup vidm.example.local</code>.</td>
+</tr>
+<tr>
+<td><code>{"error":"Unauthorized","code":401}</code></td>
+<td>Ensure the LCM appliance service account has valid credentials and VIDM trust relationship is intact; re-register VIDM in LCM as indicated in the documentation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Re-register VIDM: <strong>LCM → Settings → Identity Manager → Edit → update credentials → Save</strong>.</p>
 <p>After re-registration, verify that all AD-backed users can still log into LCM via the VIDM login button.</p>
@@ -9230,8 +9287,24 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection timeout after 30 seconds</code></strong> — Verify database connectivity from the Aria appliance with <code>telnet db-cluster-01.corp.local 5432</code> and confirm the PostgreSQL service is running on the database host.
-<strong><code>vra-dsc-service.service: Main process exited, code=exited, status=1/FAILURE</code></strong> — Check the service configuration file at <code>/etc/systemd/system/vra-dsc-service.service</code> for correct environment variables and restart with <code>systemctl restart vra-dsc-service</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection timeout after 30 seconds</code></td>
+<td>Verify database connectivity from the Aria appliance with <code>telnet db-cluster-01.corp.local 5432</code> and confirm the PostgreSQL service is running on the database host.</td>
+</tr>
+<tr>
+<td><code>vra-dsc-service.service: Main process exited, code=exited, status=1/FAILURE</code></td>
+<td>Check the service configuration file at <code>/etc/systemd/system/vra-dsc-service.service</code> for correct environment variables and restart with <code>systemctl restart vra-dsc-service</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ol>
 <li>Common causes: disk full on the product appliance, internal service crash, or expired certificate</li>
@@ -9280,9 +9353,28 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed).
-<strong><code>jq: parse error: Cannot index string with string "token"</code></strong> — Verify the login credentials are correct and the LCM service is responding with valid JSON; check the password doesn't contain special characters that need escaping.
-<strong><code>curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Connection refused</code></strong> — Confirm the LCM appliance hostname/IP is correct and the service is running with <code>systemctl status lcm</code> on the LCM host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index string with string "token"</code></td>
+<td>Verify the login credentials are correct and the LCM service is responding with valid JSON; check the password doesn't contain special characters that need escaping.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Connection refused</code></td>
+<td>Confirm the LCM appliance hostname/IP is correct and the service is running with <code>systemctl status lcm</code> on the LCM host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9320,7 +9412,7 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

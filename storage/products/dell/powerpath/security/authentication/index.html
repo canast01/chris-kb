@@ -9077,9 +9077,28 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>powermt: Command not found</code></strong> — Install EMC PowerPath package with <code>apt-get install emc-powerpath</code> or <code>yum install EMCpower.LINUX</code> depending on your distribution.
-<strong><code>Permission denied (publickey,password)</code></strong> — Verify SSH key is loaded with <code>ssh-add</code> or use password authentication; check that root login is enabled in <code>/etc/ssh/sshd_config</code>.
-<strong><code>powermt: Unable to connect to Symmetrix</code></strong> — Confirm the storage array is reachable and PowerPath daemon is running with <code>systemctl status powerpath</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>powermt: Command not found</code></td>
+<td>Install EMC PowerPath package with <code>apt-get install emc-powerpath</code> or <code>yum install EMCpower.LINUX</code> depending on your distribution.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Verify SSH key is loaded with <code>ssh-add</code> or use password authentication; check that root login is enabled in <code>/etc/ssh/sshd_config</code>.</td>
+</tr>
+<tr>
+<td><code>powermt: Unable to connect to Symmetrix</code></td>
+<td>Confirm the storage array is reachable and PowerPath daemon is running with <code>systemctl status powerpath</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="sudo-based-access-recommended">Sudo-Based Access (Recommended)<a class="headerlink" href="#sudo-based-access-recommended" title="Permanent link">&para;</a></h3>
 <p>The recommended model for Linux: create a named storage administration account and grant it sudo access only to specific <code>powermt</code> commands. This provides auditability (sudo logs the caller's real username) while restricting blast radius.</p>
@@ -9092,8 +9111,24 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudoers:1 syntax error near line 1</code></strong> — Verify the file is edited only with <code>visudo</code> and check for trailing whitespace or missing spaces around operators.
-<strong><code>sudo: /etc/sudoers.d/powermt: command not found</code></strong> — The sudoers.d file is a configuration file, not executable; verify it's in <code>/etc/sudoers.d/</code> with correct permissions (0440) and owned by root:root.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudoers:1 syntax error near line 1</code></td>
+<td>Verify the file is edited only with <code>visudo</code> and check for trailing whitespace or missing spaces around operators.</td>
+</tr>
+<tr>
+<td><code>sudo: /etc/sudoers.d/powermt: command not found</code></td>
+<td>The sudoers.d file is a configuration file, not executable; verify it's in <code>/etc/sudoers.d/</code> with correct permissions (0440) and owned by root:root.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>This grants the <code>svc-storage</code> account the ability to run any <code>powermt</code> subcommand. If tighter restriction is needed, specify individual commands:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/sudoers.d/powerpath-monitoring</span>
@@ -9109,8 +9144,24 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudoers: parse error near line 5</code></strong> — Ensure each command line ends with a comma and there are no trailing spaces after the final backslash.
-<strong><code>svc-monitoring is not in the sudoers file. This incident will be reported.</code></strong> — Verify the sudoers.d file is owned by root:root with 0440 permissions and the user account svc-monitoring exists.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudoers: parse error near line 5</code></td>
+<td>Ensure each command line ends with a comma and there are no trailing spaces after the final backslash.</td>
+</tr>
+<tr>
+<td><code>svc-monitoring is not in the sudoers file. This incident will be reported.</code></td>
+<td>Verify the sudoers.d file is owned by root:root with 0440 permissions and the user account svc-monitoring exists.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Validate the sudoers file syntax before applying:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>visudo<span class="w"> </span>-c<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.d/powerpath-monitoring
@@ -9119,8 +9170,24 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>visudo: /etc/sudoers.d/powerpath-monitoring: No such file or directory</code></strong> — Create the sudoers file first with <code>touch /etc/sudoers.d/powerpath-monitoring</code> and appropriate permissions before validating.
-<strong><code>visudo: /etc/sudoers.d/powerpath-monitoring: bad permissions, should be 0440</code></strong> — Fix file permissions with <code>chmod 0440 /etc/sudoers.d/powerpath-monitoring</code> to match sudoers security requirements.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>visudo: /etc/sudoers.d/powerpath-monitoring: No such file or directory</code></td>
+<td>Create the sudoers file first with <code>touch /etc/sudoers.d/powerpath-monitoring</code> and appropriate permissions before validating.</td>
+</tr>
+<tr>
+<td><code>visudo: /etc/sudoers.d/powerpath-monitoring: bad permissions, should be 0440</code></td>
+<td>Fix file permissions with <code>chmod 0440 /etc/sudoers.d/powerpath-monitoring</code> to match sudoers security requirements.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="pam-integration">PAM Integration<a class="headerlink" href="#pam-integration" title="Permanent link">&para;</a></h3>
 <p>PowerPath itself does not integrate with PAM. Host SSH authentication via PAM (including LDAP, Active Directory via SSSD, or MFA via PAM RADIUS) applies normally — PAM controls who can log into the host; once logged in, sudo controls what they can run.</p>
@@ -9138,8 +9205,24 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>id: 'svc-storage': no such user</code></strong> — Verify the service account exists in AD and has synced to the host via LDAP/SSSD with <code>getent passwd svc-storage</code>.
-<strong><code>storage-admins:x:1003:(empty)</code></strong> — Confirm AD group members are syncing by checking SSSD logs (<code>journalctl -u sssd -n 50</code>) and verifying group membership in Active Directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id: 'svc-storage': no such user</code></td>
+<td>Verify the service account exists in AD and has synced to the host via LDAP/SSSD with <code>getent passwd svc-storage</code>.</td>
+</tr>
+<tr>
+<td><code>storage-admins:x:1003:(empty)</code></td>
+<td>Confirm AD group members are syncing by checking SSSD logs (<code>journalctl -u sssd -n 50</code>) and verifying group membership in Active Directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ssh-key-management">SSH Key Management<a class="headerlink" href="#ssh-key-management" title="Permanent link">&para;</a></h3>
 <p>Hosts running PowerPath should enforce SSH key authentication and disable password-based SSH login for root:</p>
@@ -9151,8 +9234,24 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sshd[12345]: error: Permissions denied (publickey).</code></strong> — Ensure your public key is added to <code>/root/.ssh/authorized_keys</code> before disabling password authentication.
-<strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Generate SSH host keys with <code>ssh-keygen -A</code> before restarting sshd.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd[12345]: error: Permissions denied (publickey).</code></td>
+<td>Ensure your public key is added to <code>/root/.ssh/authorized_keys</code> before disabling password authentication.</td>
+</tr>
+<tr>
+<td><code>sshd: no hostkeys available -- exiting.</code></td>
+<td>Generate SSH host keys with <code>ssh-keygen -A</code> before restarting sshd.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>This ensures that interactive root access requires a managed SSH key, reducing the risk of credential-based attacks on hosts with privileged PowerPath access.</p>
 <hr />
@@ -9195,8 +9294,24 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mkrole: 0551-102 Cannot access the /etc/security/roles file.</code></strong> — Ensure you are running as root and the /etc/security directory has proper permissions (typically 755).
-<strong><code>chuser: 0551-101 User storage_admin_user does not exist.</code></strong> — Create the user first with <code>useradd storage_admin_user</code> before assigning roles.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mkrole: 0551-102 Cannot access the /etc/security/roles file.</code></td>
+<td>Ensure you are running as root and the /etc/security directory has proper permissions (typically 755).</td>
+</tr>
+<tr>
+<td><code>chuser: 0551-101 User storage_admin_user does not exist.</code></td>
+<td>Create the user first with <code>useradd storage_admin_user</code> before assigning roles.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>For most AIX environments, the simpler approach is a named shared account in the <code>system</code> group that is permitted to run <code>powermt</code>, with sudo configured via the IBM AIX sudo package.</p>
 <hr />
@@ -9222,9 +9337,28 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudoedit: /etc/sudoers.d/powerpath-svc-monitor: syntax error near line 3</code></strong> — Verify the sudoers file syntax with <code>visudo -cf /etc/sudoers.d/powerpath-svc-monitor</code> before applying.
-<strong><code>svc-monitor is not in the sudoers file.  This incident will be reported.</code></strong> — Ensure the service account <code>svc-monitor</code> exists with <code>id svc-monitor</code> and the sudoers file is in <code>/etc/sudoers.d/</code> with mode 0440.
-<strong><code>powermt: command not found</code></strong> — Install or verify the PowerPath package is installed with <code>rpm -qa | grep powerpath</code> or <code>apt list --installed | grep powerpath</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudoedit: /etc/sudoers.d/powerpath-svc-monitor: syntax error near line 3</code></td>
+<td>Verify the sudoers file syntax with <code>visudo -cf /etc/sudoers.d/powerpath-svc-monitor</code> before applying.</td>
+</tr>
+<tr>
+<td><code>svc-monitor is not in the sudoers file.  This incident will be reported.</code></td>
+<td>Ensure the service account <code>svc-monitor</code> exists with <code>id svc-monitor</code> and the sudoers file is in <code>/etc/sudoers.d/</code> with mode 0440.</td>
+</tr>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Install or verify the PowerPath package is installed with <code>rpm -qa | grep powerpath</code> or <code>apt list --installed | grep powerpath</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="audit-trail">Audit Trail<a class="headerlink" href="#audit-trail" title="Permanent link">&para;</a></h2>
@@ -9333,7 +9467,7 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

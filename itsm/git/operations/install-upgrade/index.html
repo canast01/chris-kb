@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Git — Install and Upgrade · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Git — Install and Upgrade", "url": "https://chrisanastasiadis.com/itsm/git/operations/install-upgrade/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Git — Install and Upgrade", "url": "https://chrisanastasiadis.com/itsm/git/operations/install-upgrade/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7562,9 +7562,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>dpkg: error processing package gitlab-ee (--configure): dependency problem - will not configure</code></strong> — Run <code>sudo apt-get install -f</code> to fix broken dependencies before retrying the upgrade.
-<strong><code>FATAL: Ident authentication failed for user "gitlab"</code></strong> — Ensure PostgreSQL is running with <code>sudo systemctl restart postgresql</code> and verify the gitlab database user credentials in <code>/etc/gitlab/gitlab.rb</code>.
-<strong><code>ActiveRecord::MigrationError: An error has occurred this migration does not permit transactions</code></strong> — Check for incomplete batched migrations with <code>sudo gitlab-rails runner "puts Gitlab::Database::BackgroundMigration::BatchedMigration.incomplete.count"</code> and wait for them to finish before proceeding.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dpkg: error processing package gitlab-ee (--configure): dependency problem - will not configure</code></td>
+<td>Run <code>sudo apt-get install -f</code> to fix broken dependencies before retrying the upgrade.</td>
+</tr>
+<tr>
+<td><code>FATAL: Ident authentication failed for user "gitlab"</code></td>
+<td>Ensure PostgreSQL is running with <code>sudo systemctl restart postgresql</code> and verify the gitlab database user credentials in <code>/etc/gitlab/gitlab.rb</code>.</td>
+</tr>
+<tr>
+<td><code>ActiveRecord::MigrationError: An error has occurred this migration does not permit transactions</code></td>
+<td>Check for incomplete batched migrations with <code>sudo gitlab-rails runner "puts Gitlab::Database::BackgroundMigration::BatchedMigration.incomplete.count"</code> and wait for them to finish before proceeding.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check for in-progress background migrations (must be 0 before major upgrade)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;</span>
@@ -7625,9 +7644,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error response from daemon: container gitlab is not running</code></strong> — Verify the container started successfully with <code>docker compose ps</code> and check logs with <code>docker compose logs gitlab</code> for startup errors.
-<strong><code>FATAL: remaining connection slots are reserved for non-replication superuser connections</code></strong> — Wait 2-3 minutes for the database to fully initialize before running the check, or increase <code>max_connections</code> in the PostgreSQL configuration.
-<strong><code>Errno::ECONNREFUSED — Connection refused</code></strong> — Ensure GitLab has fully started by waiting for the "GitLab is ready" message in logs before running the rake check command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error response from daemon: container gitlab is not running</code></td>
+<td>Verify the container started successfully with <code>docker compose ps</code> and check logs with <code>docker compose logs gitlab</code> for startup errors.</td>
+</tr>
+<tr>
+<td><code>FATAL: remaining connection slots are reserved for non-replication superuser connections</code></td>
+<td>Wait 2-3 minutes for the database to fully initialize before running the check, or increase <code>max_connections</code> in the PostgreSQL configuration.</td>
+</tr>
+<tr>
+<td><code>Errno::ECONNREFUSED — Connection refused</code></td>
+<td>Ensure GitLab has fully started by waiting for the "GitLab is ready" message in logs before running the rake check command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Add / update GitLab Helm repo</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>gitlab<span class="w"> </span>https://charts.gitlab.io
@@ -7690,9 +7728,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: release not found</code></strong> — Ensure the release name "gitlab" matches your existing deployment with <code>helm list -n gitlab</code>.
-<strong><code>Error: timed out waiting for the condition</code></strong> — Increase the <code>--timeout</code> value (e.g., <code>--timeout 1200s</code>) or check pod logs with <code>kubectl logs -n gitlab &lt;pod-name&gt;</code> for blocking issues.
-<strong><code>Error: UPGRADE FAILED: values don't meet the requirements of the schema</code></strong> — Validate your <code>values.yaml</code> against the chart schema by running <code>helm template gitlab gitlab/gitlab -f values.yaml</code> to identify schema violations.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: release not found</code></td>
+<td>Ensure the release name "gitlab" matches your existing deployment with <code>helm list -n gitlab</code>.</td>
+</tr>
+<tr>
+<td><code>Error: timed out waiting for the condition</code></td>
+<td>Increase the <code>--timeout</code> value (e.g., <code>--timeout 1200s</code>) or check pod logs with <code>kubectl logs -n gitlab &lt;pod-name&gt;</code> for blocking issues.</td>
+</tr>
+<tr>
+<td><code>Error: UPGRADE FAILED: values don't meet the requirements of the schema</code></td>
+<td>Validate your <code>values.yaml</code> against the chart schema by running <code>helm template gitlab gitlab/gitlab -f values.yaml</code> to identify schema violations.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Enable maintenance mode</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -7719,9 +7776,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (6) Could not resolve host: github.example.com</code></strong> — Verify DNS resolution and network connectivity to the GitHub Enterprise Server hostname.
-<strong><code>{"message":"Bad credentials","documentation_url":"https://docs.github.com/rest"}</code></strong> — Ensure <code>$GHES_TOKEN</code> is set to a valid personal access token with admin:enterprise scope.
-<strong><code>ghe-backup: command not found</code></strong> — Confirm backup-utils is installed at <code>/opt/github-backup-utils/</code> and the PATH includes its bin directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (6) Could not resolve host: github.example.com</code></td>
+<td>Verify DNS resolution and network connectivity to the GitHub Enterprise Server hostname.</td>
+</tr>
+<tr>
+<td><code>{"message":"Bad credentials","documentation_url":"https://docs.github.com/rest"}</code></td>
+<td>Ensure <code>$GHES_TOKEN</code> is set to a valid personal access token with admin:enterprise scope.</td>
+</tr>
+<tr>
+<td><code>ghe-backup: command not found</code></td>
+<td>Confirm backup-utils is installed at <code>/opt/github-backup-utils/</code> and the PATH includes its bin directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Upload upgrade package to appliance</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>scp<span class="w"> </span>-P<span class="w"> </span><span class="m">122</span><span class="w"> </span>ghes-3.13.0.pkg<span class="w"> </span>admin@github.example.com:
@@ -7767,9 +7843,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>scp: command not found</code></strong> — Install OpenSSH client tools or use <code>brew install openssh</code> on macOS.
-<strong><code>ghe-upgrade: command not found</code></strong> — SSH directly into the appliance as root or a user with sudo privileges; the command is only available in the GHES shell environment.
-<strong><code>curl: (7) Failed to connect to github.example.com port 443: Connection refused</code></strong> — Wait 2–3 minutes after the appliance reboots for services to fully initialize before retrying the API call.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scp: command not found</code></td>
+<td>Install OpenSSH client tools or use <code>brew install openssh</code> on macOS.</td>
+</tr>
+<tr>
+<td><code>ghe-upgrade: command not found</code></td>
+<td>SSH directly into the appliance as root or a user with sudo privileges; the command is only available in the GHES shell environment.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to github.example.com port 443: Connection refused</code></td>
+<td>Wait 2–3 minutes after the appliance reboots for services to fully initialize before retrying the API call.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Upgrade replica</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-replica.example.com<span class="w"> </span><span class="s2">&quot;ghe-upgrade /home/admin/ghes-3.13.0.pkg&quot;</span>
@@ -7816,9 +7911,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ghe-upgrade: command not found</code></strong> — Verify the upgrade package path is correct and the file exists on the target appliance with <code>ssh -p 122 admin@github-replica.example.com "ls -la /home/admin/ghes-3.13.0.pkg"</code>.
-<strong><code>Replication failed: Connection refused on github-replica.example.com:122</code></strong> — Ensure network connectivity between appliances and that SSH port 122 is open; test with <code>ssh -p 122 admin@github-replica.example.com "echo ok"</code>.
-<strong><code>ghe-repl-status: Replication Status: UNHEALTHY</code></strong> — Run <code>ghe-repl-start</code> on the primary and check logs with <code>ghe-support-bundle</code> to diagnose sync failures.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ghe-upgrade: command not found</code></td>
+<td>Verify the upgrade package path is correct and the file exists on the target appliance with <code>ssh -p 122 admin@github-replica.example.com "ls -la /home/admin/ghes-3.13.0.pkg"</code>.</td>
+</tr>
+<tr>
+<td><code>Replication failed: Connection refused on github-replica.example.com:122</code></td>
+<td>Ensure network connectivity between appliances and that SSH port 122 is open; test with <code>ssh -p 122 admin@github-replica.example.com "echo ok"</code>.</td>
+</tr>
+<tr>
+<td><code>ghe-repl-status: Replication Status: UNHEALTHY</code></td>
+<td>Run <code>ghe-repl-start</code> on the primary and check logs with <code>ghe-support-bundle</code> to diagnose sync failures.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># 1. Stop GitLab</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>stop
@@ -7883,9 +7997,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>BACKUP=&lt;timestamp_label&gt; does not exist</code></strong> — Verify the backup filename exists in /var/opt/gitlab/backups/ using <code>ls -la /var/opt/gitlab/backups/</code> and use the correct timestamp.
-<strong><code>FATAL: permission denied for database "gitlabhq_production"</code></strong> — Ensure the postgres user has proper permissions by running <code>sudo gitlab-ctl reconfigure</code> before restore, or check that the backup was created from the same GitLab version.
-<strong><code>ERROR: pg_restore: [archiver] unsupported version number in file header</code></strong> — Confirm the backup file is not corrupted and matches the target GitLab version; download a fresh backup if necessary.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BACKUP=&lt;timestamp_label&gt; does not exist</code></td>
+<td>Verify the backup filename exists in /var/opt/gitlab/backups/ using <code>ls -la /var/opt/gitlab/backups/</code> and use the correct timestamp.</td>
+</tr>
+<tr>
+<td><code>FATAL: permission denied for database "gitlabhq_production"</code></td>
+<td>Ensure the postgres user has proper permissions by running <code>sudo gitlab-ctl reconfigure</code> before restore, or check that the backup was created from the same GitLab version.</td>
+</tr>
+<tr>
+<td><code>ERROR: pg_restore: [archiver] unsupported version number in file header</code></td>
+<td>Confirm the backup file is not corrupted and matches the target GitLab version; download a fresh backup if necessary.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># GHES supports rollback to previous upgrade package if within the same minor version</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github.example.com<span class="w"> </span><span class="s2">&quot;ghe-upgrade --allow-downgrade /home/admin/ghes-3.12.5.pkg&quot;</span>
@@ -7936,7 +8069,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

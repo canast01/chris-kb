@@ -9297,9 +9297,28 @@ Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryp
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Authentication failed for user administrator@vsphere.local</code></strong> — Verify the password is correct and the user account is not locked; reset credentials via DCUI if needed.
-<strong><code>Certificate replacement failed: Certificate chain validation error</code></strong> — Ensure VMCA root certificate is valid and not expired by checking <code>/etc/vmware-vpx/ssl/vmca_issued_certs.pem</code>.
-<strong><code>Service restart timeout: vmware-vpxd did not respond within 120 seconds</code></strong> — Wait 2-3 minutes for services to stabilize, then manually restart with <code>service-control --restart --all</code> if the issue persists.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Authentication failed for user administrator@vsphere.local</code></td>
+<td>Verify the password is correct and the user account is not locked; reset credentials via DCUI if needed.</td>
+</tr>
+<tr>
+<td><code>Certificate replacement failed: Certificate chain validation error</code></td>
+<td>Ensure VMCA root certificate is valid and not expired by checking <code>/etc/vmware-vpx/ssl/vmca_issued_certs.pem</code>.</td>
+</tr>
+<tr>
+<td><code>Service restart timeout: vmware-vpxd did not respond within 120 seconds</code></td>
+<td>Wait 2-3 minutes for services to stabilize, then manually restart with <code>service-control --restart --all</code> if the issue persists.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After renewal:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify new certificate dates</span>
@@ -9322,8 +9341,24 @@ Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryp
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error in x509 lookup v3 extensions</code></strong> — Ensure the certificate chain is complete; use <code>openssl s_client -connect vcenter.example.local:443 -showcerts</code> to verify all intermediate certificates are present.
-<strong><code>Service vpxd is stopped</code></strong> — Restart the vCenter service with <code>service-control --start --all</code> and wait 2–3 minutes for dependent services to initialize.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error in x509 lookup v3 extensions</code></td>
+<td>Ensure the certificate chain is complete; use <code>openssl s_client -connect vcenter.example.local:443 -showcerts</code> to verify all intermediate certificates are present.</td>
+</tr>
+<tr>
+<td><code>Service vpxd is stopped</code></td>
+<td>Restart the vCenter service with <code>service-control --start --all</code> and wait 2–3 minutes for dependent services to initialize.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="machine-ssl-certificate-custom-ca">Machine SSL Certificate (Custom CA)<a class="headerlink" href="#machine-ssl-certificate-custom-ca" title="Permanent link">&para;</a></h3>
 <p>When your organisation uses an enterprise CA (Microsoft CA, DigiCert, etc.):</p>
@@ -9396,9 +9431,28 @@ Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryp
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Certificate file not found at /tmp/vcenter.crt</code></strong> — Verify the signed certificate file path is correct and readable by the root user.
-<strong><code>Error: Private key does not match certificate</code></strong> — Ensure the key file corresponds to the CSR that was signed by your CA.
-<strong><code>Error: Certificate chain validation failed: untrusted root</code></strong> — Include the complete CA chain from intermediate to root CA in the chain file, in order from leaf to root.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Certificate file not found at /tmp/vcenter.crt</code></td>
+<td>Verify the signed certificate file path is correct and readable by the root user.</td>
+</tr>
+<tr>
+<td><code>Error: Private key does not match certificate</code></td>
+<td>Ensure the key file corresponds to the CSR that was signed by your CA.</td>
+</tr>
+<tr>
+<td><code>Error: Certificate chain validation failed: untrusted root</code></td>
+<td>Include the complete CA chain from intermediate to root CA in the chain file, in order from leaf to root.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="sts-signing-certificate">STS Signing Certificate<a class="headerlink" href="#sts-signing-certificate" title="Permanent link">&para;</a></h3>
 <p>The STS (Security Token Service) signing certificate is the most impactful — its expiry causes complete login failure for all vSphere accounts. It has a 10-year validity by default but may have been set shorter on older installations.</p>
@@ -9455,9 +9509,28 @@ Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryp
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vecs-cli: command not found</code></strong> — Verify you are running this command on the vCenter Server appliance (not a remote host) and that VMware vSphere Authentication Daemon is installed.
-<strong><code>Error: Failed to stop service — timeout waiting for service to stop</code></strong> — Increase the timeout or manually kill lingering processes with <code>pkill -9 vmware</code> before retrying service-control.
-<strong><code>certificate-manager: Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user, as certificate operations require elevated privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vecs-cli: command not found</code></td>
+<td>Verify you are running this command on the vCenter Server appliance (not a remote host) and that VMware vSphere Authentication Daemon is installed.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to stop service — timeout waiting for service to stop</code></td>
+<td>Increase the timeout or manually kill lingering processes with <code>pkill -9 vmware</code> before retrying service-control.</td>
+</tr>
+<tr>
+<td><code>certificate-manager: Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root user, as certificate operations require elevated privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Warning</strong>: If the STS certificate is already expired, the <code>certificate-manager</code> may not be able to authenticate. In this case, use the <code>fix_sts_cert.py</code> script from VMware KB 79248 or engage VMware Support directly.</p>
 <hr />
@@ -9521,7 +9594,7 @@ Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryp
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -8409,9 +8409,28 @@ Failback is the process of returning protected workloads from the DR (recovery) 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;asr-vault-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the vault name and DR resource group name match your deployment, and confirm the vault exists in the correct subscription.</p>
-<p><strong><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'.</code></strong> — Ensure your Azure account has Reader or Contributor role assigned to the DR resource group or subscription.</p>
-<p><strong><code>InvalidResourceId: The provided URI is not valid.</code></strong> — Replace <code>&lt;sub-id&gt;</code>, <code>&lt;dr-rg&gt;</code>, and <code>&lt;vault-name&gt;</code> placeholders with actual values; do not include angle brackets in the final command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;asr-vault-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></td>
+<td>Verify the vault name and DR resource group name match your deployment, and confirm the vault exists in the correct subscription.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client '&lt;user-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'.</code></td>
+<td>Ensure your Azure account has Reader or Contributor role assigned to the DR resource group or subscription.</td>
+</tr>
+<tr>
+<td><code>InvalidResourceId: The provided URI is not valid.</code></td>
+<td>Replace <code>&lt;sub-id&gt;</code>, <code>&lt;dr-rg&gt;</code>, and <code>&lt;vault-name&gt;</code> placeholders with actual values; do not include angle brackets in the final command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-1-re-protect-reverse-replication">Phase 1 — Re-Protect (Reverse Replication)<a class="headerlink" href="#phase-1-re-protect-reverse-replication" title="Permanent link">&para;</a></h2>
@@ -8454,9 +8473,28 @@ Failback is the process of returning protected workloads from the DR (recovery) 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>AuthorizationFailed: The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/reProtect/action'</code></strong> — Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.
-<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found</code></strong> — Verify the item name, vault name, and resource group are correct, and that the replicated item exists in the DR fabric.
-<strong><code>BadRequest: The failover direction 'RecoveryToPrimary' is invalid for the current replication state of the protected item</code></strong> — Ensure the VM has completed initial replication and is in a "Protected" state before attempting re-protect.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AuthorizationFailed: The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/reProtect/action'</code></td>
+<td>Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found</code></td>
+<td>Verify the item name, vault name, and resource group are correct, and that the replicated item exists in the DR fabric.</td>
+</tr>
+<tr>
+<td><code>BadRequest: The failover direction 'RecoveryToPrimary' is invalid for the current replication state of the protected item</code></td>
+<td>Ensure the VM has completed initial replication and is in a "Protected" state before attempting re-protect.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-2-validate-replication-health-before-failback">Phase 2 — Validate Replication Health Before Failback<a class="headerlink" href="#phase-2-validate-replication-health-before-failback" title="Permanent link">&para;</a></h2>
@@ -8474,9 +8512,28 @@ Failback is the process of returning protected workloads from the DR (recovery) 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;'</code></strong> — Ensure your Azure account has Reader or Site Recovery Contributor role assigned on the Recovery Services vault.
-<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the vault name, resource group name, and protected item name match exactly; check they exist in the correct subscription.
-<strong><code>InvalidApiVersionParameter: The api-version '2022-10-01' is invalid.</code></strong> — Update the api-version parameter to a currently supported version such as '2023-08-01' or later.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;'</code></td>
+<td>Ensure your Azure account has Reader or Site Recovery Contributor role assigned on the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></td>
+<td>Verify the vault name, resource group name, and protected item name match exactly; check they exist in the correct subscription.</td>
+</tr>
+<tr>
+<td><code>InvalidApiVersionParameter: The api-version '2022-10-01' is invalid.</code></td>
+<td>Update the api-version parameter to a currently supported version such as '2023-08-01' or later.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -8533,9 +8590,28 @@ Failback is the process of returning protected workloads from the DR (recovery) 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/plannedFailover/action' over scope</code></strong> — Assign the Site Recovery Contributor role to your service principal or user account on the Recovery Services vault.
-<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;dr-fabric&gt;/replicationProtectionContainers/&lt;dr-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found</code></strong> — Verify the subscription ID, resource group name, vault name, fabric name, container name, and protected item name are correct and exist in the specified region.
-<strong><code>BadRequest: The failover operation cannot be performed because the replication state is not 'Protected'</code></strong> — Ensure the protected item has completed initial replication and is in a Protected state before attempting planned failover.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/plannedFailover/action' over scope</code></td>
+<td>Assign the Site Recovery Contributor role to your service principal or user account on the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;dr-fabric&gt;/replicationProtectionContainers/&lt;dr-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found</code></td>
+<td>Verify the subscription ID, resource group name, vault name, fabric name, container name, and protected item name are correct and exist in the specified region.</td>
+</tr>
+<tr>
+<td><code>BadRequest: The failover operation cannot be performed because the replication state is not 'Protected'</code></td>
+<td>Ensure the protected item has completed initial replication and is in a Protected state before attempting planned failover.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-4-commit-failback">Phase 4 — Commit Failback<a class="headerlink" href="#phase-4-commit-failback" title="Permanent link">&para;</a></h2>
@@ -8561,9 +8637,28 @@ Failback is the process of returning protected workloads from the DR (recovery) 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The provided URI is invalid or the resource does not exist.</code></strong> — Verify the subscription ID, resource group name, vault name, fabric name, container name, and item name are correct and exist in your subscription.
-<strong><code>Authorization failed for request. Caller was not authorized to perform 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/failoverCommit/action' action over scope.</code></strong> — Ensure your Azure account has the Site Recovery Contributor role or equivalent permissions on the Recovery Services vault.
-<strong><code>The failover commit operation cannot be performed because the item is not in a committed failover state.</code></strong> — Run the failover operation first before attempting to commit; verify the item status is in "Failover Committed" state using <code>az rest --method GET</code> on the same URI.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The provided URI is invalid or the resource does not exist.</code></td>
+<td>Verify the subscription ID, resource group name, vault name, fabric name, container name, and item name are correct and exist in your subscription.</td>
+</tr>
+<tr>
+<td><code>Authorization failed for request. Caller was not authorized to perform 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/failoverCommit/action' action over scope.</code></td>
+<td>Ensure your Azure account has the Site Recovery Contributor role or equivalent permissions on the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>The failover commit operation cannot be performed because the item is not in a committed failover state.</code></td>
+<td>Run the failover operation first before attempting to commit; verify the item status is in "Failover Committed" state using <code>az rest --method GET</code> on the same URI.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-5-re-enable-dr-replication-primary-dr">Phase 5 — Re-Enable DR Replication (Primary → DR)<a class="headerlink" href="#phase-5-re-enable-dr-replication-primary-dr" title="Permanent link">&para;</a></h2>
@@ -8597,8 +8692,24 @@ Failback is the process of returning protected workloads from the DR (recovery) 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>AuthorizationFailed: The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d' does not have permission to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/reProtect/action'</code></strong> — Ensure the user or service principal has the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.
-<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;primary-fabric&gt;/replicationProtectionContainers/&lt;primary-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;primary-rg&gt;' was not found.</code></strong> — Verify the subscription ID, resource group name, vault name, fabric name, container name, and protected item name are correct and exist in the target region.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AuthorizationFailed: The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d' does not have permission to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/reProtect/action'</code></td>
+<td>Ensure the user or service principal has the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;primary-fabric&gt;/replicationProtectionContainers/&lt;primary-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;primary-rg&gt;' was not found.</code></td>
+<td>Verify the subscription ID, resource group name, vault name, fabric name, container name, and protected item name are correct and exist in the target region.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="failback-checklist">Failback Checklist<a class="headerlink" href="#failback-checklist" title="Permanent link">&para;</a></h2>
@@ -8680,7 +8791,7 @@ Failback is the process of returning protected workloads from the DR (recovery) 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

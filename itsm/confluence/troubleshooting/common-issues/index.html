@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Confluence — Common Issues · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Confluence — Common Issues", "url": "https://chrisanastasiadis.com/itsm/confluence/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Confluence — Common Issues", "url": "https://chrisanastasiadis.com/itsm/confluence/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7340,9 +7340,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></strong> — Verify the Confluence data directory path matches your installation; check <code>confluence.home</code> in <code>confluence.cfg.xml</code> or use <code>find / -name atlassian-confluence.log 2&gt;/dev/null</code>.
-<strong><code>pgrep: command not found</code></strong> — Install <code>procps</code> package (<code>apt install procps</code> on Debian/Ubuntu or <code>yum install procps-ng</code> on RHEL/CentOS) or replace with <code>ps aux | grep confluence | grep -v grep | awk '{print $2}'</code>.
-<strong><code>jstat: command not found</code></strong> — Ensure the JDK (not just JR</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></td>
+<td>Verify the Confluence data directory path matches your installation; check <code>confluence.home</code> in <code>confluence.cfg.xml</code> or use <code>find / -name atlassian-confluence.log 2&gt;/dev/null</code>.</td>
+</tr>
+<tr>
+<td><code>pgrep: command not found</code></td>
+<td>Install <code>procps</code> package (<code>apt install procps</code> on Debian/Ubuntu or <code>yum install procps-ng</code> on RHEL/CentOS) or replace with <code>ps aux | grep confluence | grep -v grep | awk '{print $2}'</code>.</td>
+</tr>
+<tr>
+<td><code>jstat: command not found</code></td>
+<td>Ensure the JDK (not just JR</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Run VACUUM ANALYZE on the Confluence database</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7363,9 +7382,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "$DB_HOST" to address: Name or service not known</code></strong> — Replace <code>$DB_HOST</code> with the actual PostgreSQL hostname or IP address (e.g., <code>psql -h postgres.internal -U confluence_user -d confluence</code>).
-<strong><code>psql: error: FATAL: role "confluence_user" does not exist</code></strong> — Verify the database user exists and <code>$DB_USER</code> is set correctly; check with <code>psql -h $DB_HOST -U postgres -c "\du"</code> to list available roles.
-<strong><code>psql: error: FATAL: database "confluence" does not exist</code></strong> — Confirm the database name in <code>$DB_NAME</code> matches an existing Confluence database; list databases with <code>psql -h $DB_HOST -U $DB_USER -l</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "$DB_HOST" to address: Name or service not known</code></td>
+<td>Replace <code>$DB_HOST</code> with the actual PostgreSQL hostname or IP address (e.g., <code>psql -h postgres.internal -U confluence_user -d confluence</code>).</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: role "confluence_user" does not exist</code></td>
+<td>Verify the database user exists and <code>$DB_USER</code> is set correctly; check with <code>psql -h $DB_HOST -U postgres -c "\du"</code> to list available roles.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: database "confluence" does not exist</code></td>
+<td>Confirm the database name in <code>$DB_NAME</code> matches an existing Confluence database; list databases with <code>psql -h $DB_HOST -U $DB_USER -l</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check index errors</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(IndexException|LuceneIndex|index corrupt|Lucene)&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7395,9 +7433,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>IndexException: write.lock held by another process</code></strong> — Stop the Confluence service, remove <code>/mnt/confluence-shared/index/write.lock</code>, then restart the service.
-<strong><code>Filesystem ... 98% /mnt/confluence-shared</code></strong> — Increase the mount point capacity or archive old index segments to free at least 50GB of space.
-<strong><code>Index corruption detected in segment_42</code></strong> — Trigger a manual index rebuild via Confluence Administration &gt; Troubleshooting &gt; Rebuild Search Index.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IndexException: write.lock held by another process</code></td>
+<td>Stop the Confluence service, remove <code>/mnt/confluence-shared/index/write.lock</code>, then restart the service.</td>
+</tr>
+<tr>
+<td><code>Filesystem ... 98% /mnt/confluence-shared</code></td>
+<td>Increase the mount point capacity or archive old index segments to free at least 50GB of space.</td>
+</tr>
+<tr>
+<td><code>Index corruption detected in segment_42</code></td>
+<td>Trigger a manual index rebuild via Confluence Administration &gt; Troubleshooting &gt; Rebuild Search Index.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Option A: Partial re-index (faster; recovers without full rebuild)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Admin &gt; General Configuration &gt; Content Indexing &gt; Re-index</span>
@@ -7425,9 +7482,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to host.example.com port 8090: Connection refused</code></strong> — Verify Confluence is running with <code>systemctl status confluence</code> and check <code>CF_URL</code> environment variable is set correctly.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure <code>CF_TOKEN</code> is valid and has search API permissions; test with <code>curl -s -H "Authorization: Bearer $CF_TOKEN" "${CF_URL}/rest/api/search/index"</code> without jq first.
-<strong><code>mv: cannot stat '/mnt/confluence-shared/index': No such file or directory</code></strong> — Confirm the shared index path matches your Confluence installation; check <code>confluence.cfg.xml</code> for the actual <code>confluence.home</code> or index location.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to host.example.com port 8090: Connection refused</code></td>
+<td>Verify Confluence is running with <code>systemctl status confluence</code> and check <code>CF_URL</code> environment variable is set correctly.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure <code>CF_TOKEN</code> is valid and has search API permissions; test with <code>curl -s -H "Authorization: Bearer $CF_TOKEN" "${CF_URL}/rest/api/search/index"</code> without jq first.</td>
+</tr>
+<tr>
+<td><code>mv: cannot stat '/mnt/confluence-shared/index': No such file or directory</code></td>
+<td>Confirm the shared index path matches your Confluence installation; check <code>confluence.cfg.xml</code> for the actual <code>confluence.home</code> or index location.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable LDAP debug logging</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Admin &gt; Logging and Profiling:</span>
@@ -7491,8 +7567,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify the LDAP server hostname and port 636 are correct, and that the firewall allows outbound connections to that port.
-<strong><code>verify error:num=20:unable to get local issuer certificate</code></strong> — Import the LDAP server's CA certificate into Confluence's truststore or disable certificate verification if using a self-signed cert in a test environment.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the LDAP server hostname and port 636 are correct, and that the firewall allows outbound connections to that port.</td>
+</tr>
+<tr>
+<td><code>verify error:num=20:unable to get local issuer certificate</code></td>
+<td>Import the LDAP server's CA certificate into Confluence's truststore or disable certificate verification if using a self-signed cert in a test environment.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Find plugin errors in the log</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(PluginException|BundleException|OSGi)&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7520,9 +7612,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the CF_URL environment variable is set correctly and the Confluence instance is running with <code>systemctl status confluence</code>.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Remove the <code>-s</code> flag temporarily to see the actual HTTP response, or check that the Bearer token in CF_TOKEN is valid and has API permissions.
-<strong><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></strong> — Verify the Confluence installation path with <code>find / -name atlassian-confluence.log 2&gt;/dev/null</code> or check the CONFLUENCE_HOME environment variable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify the CF_URL environment variable is set correctly and the Confluence instance is running with <code>systemctl status confluence</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Remove the <code>-s</code> flag temporarily to see the actual HTTP response, or check that the Bearer token in CF_TOKEN is valid and has API permissions.</td>
+</tr>
+<tr>
+<td><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></td>
+<td>Verify the Confluence installation path with <code>find / -name atlassian-confluence.log 2&gt;/dev/null</code> or check the CONFLUENCE_HOME environment variable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Disable the conflicting plugin via REST</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
@@ -7551,9 +7662,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to host</code></strong> — Verify <code>$CF_URL</code> is set correctly and the Confluence instance is reachable on the network.
-<strong><code>Permission denied</code></strong> — Run the curl command and cache removal as the Confluence service user (typically <code>confluence</code>) or with <code>sudo</code>.
-<strong><code>{"statusCode":401,"message":"Unauthorized"}</code></strong> — Ensure <code>$CF_TOKEN</code> is a valid bearer token with admin permissions in Confluence.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to host</code></td>
+<td>Verify <code>$CF_URL</code> is set correctly and the Confluence instance is reachable on the network.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the curl command and cache removal as the Confluence service user (typically <code>confluence</code>) or with <code>sudo</code>.</td>
+</tr>
+<tr>
+<td><code>{"statusCode":401,"message":"Unauthorized"}</code></td>
+<td>Ensure <code>$CF_TOKEN</code> is a valid bearer token with admin permissions in Confluence.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check security log for failed auth events</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence-security.log
@@ -7579,8 +7709,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tail: cannot open '/var/atlassian/application-data/confluence/logs/atlassian-confluence-security.log' for reading: No such file or directory</code></strong> — Verify the Confluence data directory path with <code>echo $CONFLUENCE_HOME</code> and adjust the path accordingly, or check if the security log is in a different location like <code>/opt/atlassian/confluence/logs/</code>.
-<strong><code>grep: /opt/atlassian/confluence/conf/server.xml: No such file or directory</code></strong> — Confirm the Confluence installation directory by running <code>find / -name server.xml -path "*/confluence/*" 2&gt;/dev/null</code> and update the path in the grep command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tail: cannot open '/var/atlassian/application-data/confluence/logs/atlassian-confluence-security.log' for reading: No such file or directory</code></td>
+<td>Verify the Confluence data directory path with <code>echo $CONFLUENCE_HOME</code> and adjust the path accordingly, or check if the security log is in a different location like <code>/opt/atlassian/confluence/logs/</code>.</td>
+</tr>
+<tr>
+<td><code>grep: /opt/atlassian/confluence/conf/server.xml: No such file or directory</code></td>
+<td>Confirm the Confluence installation directory by running <code>find / -name server.xml -path "*/confluence/*" 2&gt;/dev/null</code> and update the path in the grep command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Reset admin password via database (emergency access)</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># 1. Generate a bcrypt hash of the new password</span>
@@ -7609,9 +7755,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "db.internal.local" (10.42.1.15), port 5432 failed</code></strong> — Verify <code>$DB_HOST</code>, <code>$DB_USER</code>, and <code>$DB_NAME</code> environment variables are set correctly and the database is accessible from this host.
-<strong><code>ERROR: column "credential" does not exist</code></strong> — Confirm the Confluence database schema version; use <code>\d cwd_user</code> in psql to verify the correct column name (may be <code>password_hash</code> in newer versions).
-<strong><code>ERROR: more than one row returned by subquery used as an expression</code></strong> — Multiple internal directories exist; specify the exact directory ID in the WHERE clause or filter by <code>directory_type = 'INTERNAL'</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "db.internal.local" (10.42.1.15), port 5432 failed</code></td>
+<td>Verify <code>$DB_HOST</code>, <code>$DB_USER</code>, and <code>$DB_NAME</code> environment variables are set correctly and the database is accessible from this host.</td>
+</tr>
+<tr>
+<td><code>ERROR: column "credential" does not exist</code></td>
+<td>Confirm the Confluence database schema version; use <code>\d cwd_user</code> in psql to verify the correct column name (may be <code>password_hash</code> in newer versions).</td>
+</tr>
+<tr>
+<td><code>ERROR: more than one row returned by subquery used as an expression</code></td>
+<td>Multiple internal directories exist; specify the exact directory ID in the WHERE clause or filter by <code>directory_type = 'INTERNAL'</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check NFS mount status</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>confluence
@@ -7656,9 +7821,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount | grep confluence: command not found</code></strong> — Ensure you're running this on the Confluence server itself, not a client machine; if using a container, verify the NFS mount exists in the pod spec.
-<strong><code>Write FAILED</code></strong> — Check NFS mount permissions with <code>ls -ld /mnt/confluence-shared</code> and verify the Confluence process user (typically <code>confluence</code>) has write access via <code>sudo -u confluence touch /mnt/confluence-shared/test</code>.
-<strong><code>jq: command not found</code></strong> — Install jq with <code>apt-get install jq</code> (Debian/Ubuntu) or <code>yum install jq</code> (RHEL/CentOS), or pipe the curl output to <code>python3 -m json.tool</code> instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount | grep confluence: command not found</code></td>
+<td>Ensure you're running this on the Confluence server itself, not a client machine; if using a container, verify the NFS mount exists in the pod spec.</td>
+</tr>
+<tr>
+<td><code>Write FAILED</code></td>
+<td>Check NFS mount permissions with <code>ls -ld /mnt/confluence-shared</code> and verify the Confluence process user (typically <code>confluence</code>) has write access via <code>sudo -u confluence touch /mnt/confluence-shared/test</code>.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install jq with <code>apt-get install jq</code> (Debian/Ubuntu) or <code>yum install jq</code> (RHEL/CentOS), or pipe the curl output to <code>python3 -m json.tool</code> instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># 1. Increase attachment size limit</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># Admin &gt; General Configuration &gt; Further Configuration &gt; Attachment Size</span>
@@ -7684,9 +7868,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to host: Name or service not known</code></strong> — Verify <code>$CF_URL</code> is set correctly and the Confluence server is reachable via <code>ping</code> or <code>curl -v</code>.
-<strong><code>umount: /mnt/confluence-shared: target is busy</code></strong> — Close all open files on the mount point with <code>lsof /mnt/confluence-shared</code> and kill processes, or use <code>umount -l</code> for lazy unmount.
-<strong><code>mount.nfs: access denied by server while mounting nfs-server:/confluence-shared</code></strong> — Check NFS server exports with <code>showmount -e nfs-server</code> and verify the client IP is authorized in <code>/etc/exports</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to host: Name or service not known</code></td>
+<td>Verify <code>$CF_URL</code> is set correctly and the Confluence server is reachable via <code>ping</code> or <code>curl -v</code>.</td>
+</tr>
+<tr>
+<td><code>umount: /mnt/confluence-shared: target is busy</code></td>
+<td>Close all open files on the mount point with <code>lsof /mnt/confluence-shared</code> and kill processes, or use <code>umount -l</code> for lazy unmount.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting nfs-server:/confluence-shared</code></td>
+<td>Check NFS server exports with <code>showmount -e nfs-server</code> and verify the client IP is authorized in <code>/etc/exports</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Current connection count vs maximum</span>
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7716,9 +7919,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "db-prod-01.internal" (10.24.8.15), port 5432 failed: Connection refused</code></strong> — Verify the PostgreSQL service is running on the target host with <code>systemctl status postgresql</code> and confirm <code>$DB_HOST</code> is correct.
-<strong><code>psql: error: FATAL: Ident authentication failed for user "confluence_user"</code></strong> — Check that the PostgreSQL <code>pg_hba.conf</code> allows the connection method for your user and host, or use password authentication with a <code>.pgpass</code> file.
-<strong><code>psql: error: FATAL: database "confluence_prod" does not exist</code></strong> — Confirm the database name in <code>$DB_NAME</code> matches an existing database by running <code>psql -l</code> on the target host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "db-prod-01.internal" (10.24.8.15), port 5432 failed: Connection refused</code></td>
+<td>Verify the PostgreSQL service is running on the target host with <code>systemctl status postgresql</code> and confirm <code>$DB_HOST</code> is correct.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: Ident authentication failed for user "confluence_user"</code></td>
+<td>Check that the PostgreSQL <code>pg_hba.conf</code> allows the connection method for your user and host, or use password authentication with a <code>.pgpass</code> file.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: database "confluence_prod" does not exist</code></td>
+<td>Confirm the database name in <code>$DB_NAME</code> matches an existing database by running <code>psql -l</code> on the target host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. Kill long-running/stuck queries</span>
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7749,8 +7971,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: FATAL: Ident authentication failed for user "postgres"</code></strong> — Ensure the postgres system user can connect without a password by using <code>sudo -u postgres psql</code> or configure <code>.pgpass</code> with proper permissions (600).
-<strong><code>ERROR: must be superuser to execute ALTER SYSTEM</code></strong> — Connect as the actual postgres superuser account; if using a service account, grant superuser privileges with <code>ALTER USER "$DB_USER" SUPERUSER;</code> or use the postgres system user directly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: FATAL: Ident authentication failed for user "postgres"</code></td>
+<td>Ensure the postgres system user can connect without a password by using <code>sudo -u postgres psql</code> or configure <code>.pgpass</code> with proper permissions (600).</td>
+</tr>
+<tr>
+<td><code>ERROR: must be superuser to execute ALTER SYSTEM</code></td>
+<td>Connect as the actual postgres superuser account; if using a service account, grant superuser privileges with <code>ALTER USER "$DB_USER" SUPERUSER;</code> or use the postgres system user directly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Check cluster membership on each node</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7779,9 +8017,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify Confluence is running with <code>systemctl status confluence</code> and check firewall rules allow port 443 inbound.
-<strong><code>nc: getaddrinfo: Name or service not known</code></strong> — Ensure the hostname/IP 10.0.1.12 is correct and resolvable; verify network connectivity with <code>ping 10.0.1.12</code>.
-<strong><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></strong> — Confirm the Confluence installation path and log location; check with <code>find / -name atlassian-confluence.log 2&gt;/dev/null</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify Confluence is running with <code>systemctl status confluence</code> and check firewall rules allow port 443 inbound.</td>
+</tr>
+<tr>
+<td><code>nc: getaddrinfo: Name or service not known</code></td>
+<td>Ensure the hostname/IP 10.0.1.12 is correct and resolvable; verify network connectivity with <code>ping 10.0.1.12</code>.</td>
+</tr>
+<tr>
+<td><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></td>
+<td>Confirm the Confluence installation path and log location; check with <code>find / -name atlassian-confluence.log 2&gt;/dev/null</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># 1. Confirm firewall rules allow TCP 5801 between all cluster node IPs</span>
 <a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">5801</span>
@@ -7817,9 +8074,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount: /mnt/confluence-shared: special device /mnt/confluence-shared does not exist</code></strong> — Verify the NFS export path exists on the server and check /etc/fstab for correct mount point definition.
-<strong><code>iptables: No chain/target/match by that name</code></strong> — Ensure iptables is installed and running; on systems using nftables, convert rules or check with <code>nft list ruleset | grep 5801</code> instead.
-<strong><code>Connection refused</code> (when Confluence fails to start)</strong> — Check that port 5801 is not already in use with <code>lsof -i :5801</code> and verify sufficient disk space with <code>df -h /opt/atlassian</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount: /mnt/confluence-shared: special device /mnt/confluence-shared does not exist</code></td>
+<td>Verify the NFS export path exists on the server and check /etc/fstab for correct mount point definition.</td>
+</tr>
+<tr>
+<td><code>iptables: No chain/target/match by that name</code></td>
+<td>Ensure iptables is installed and running; on systems using nftables, convert rules or check with <code>nft list ruleset | grep 5801</code> instead.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code> (when Confluence fails to start)<code>| Check that port 5801 is not already in use with</code>lsof -i :5801<code>and verify sufficient disk space with</code>df -h /opt/atlassian`.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Check mail queue and error queue</span>
 <a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7878,9 +8154,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SMTPException: 550 Relay access denied</code></strong> — Verify the SMTP server allows relay from the Confluence server IP or check authentication credentials in Confluence mail settings.
-<strong><code>Connection timeout to smtp.example.com:587 after 30000ms</code></strong> — Confirm the SMTP server hostname/port is correct and the firewall allows outbound connections on port 587 from the Confluence server.
-<strong><code>curl: (7) Failed to connect to host</code></strong> — Ensure <code>$CF_URL</code> and <code>$CF_TOKEN</code> environment variables are set correctly and the Confluence API is accessible.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SMTPException: 550 Relay access denied</code></td>
+<td>Verify the SMTP server allows relay from the Confluence server IP or check authentication credentials in Confluence mail settings.</td>
+</tr>
+<tr>
+<td><code>Connection timeout to smtp.example.com:587 after 30000ms</code></td>
+<td>Confirm the SMTP server hostname/port is correct and the firewall allows outbound connections on port 587 from the Confluence server.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to host</code></td>
+<td>Ensure <code>$CF_URL</code> and <code>$CF_TOKEN</code> environment variables are set correctly and the Confluence API is accessible.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># 1. Flush the error queue</span>
 <a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="c1"># Admin &gt; Mail &gt; Mail Error Queue &gt; Resend All</span>
@@ -7944,7 +8239,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

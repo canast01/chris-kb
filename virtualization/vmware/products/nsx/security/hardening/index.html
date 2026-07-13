@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="NSX — Hardening · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Hardening", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Hardening", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -9016,9 +9016,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-<strong><code>jq: command not found</code></strong> — Use <code>python3 -c</code> with json module as shown, or install <code>jq</code> package; the example already uses Python which is more portable.
-<strong><code>No JSON object could be decoded</code></strong> — Verify NSX Manager is responding with valid JSON by testing the curl command alone without piping to Python, and confirm authentication credentials are correct.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Use <code>python3 -c</code> with json module as shown, or install <code>jq</code> package; the example already uses Python which is more portable.</td>
+</tr>
+<tr>
+<td><code>No JSON object could be decoded</code></td>
+<td>Verify NSX Manager is responding with valid JSON by testing the curl command alone without piping to Python, and confirm authentication credentials are correct.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to Edge node — list services</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>services
@@ -9046,8 +9065,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: service load-balancer does not exist</code></strong> — Verify the exact service name using <code>get services</code> and check for typos or version-specific naming differences.
-<strong><code>error: cannot stop service manager — required service</code></strong> — Do not attempt to stop critical services; only stop optional services like load-balancer, dhcp, or dns if unused.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: service load-balancer does not exist</code></td>
+<td>Verify the exact service name using <code>get services</code> and check for typos or version-specific naming differences.</td>
+</tr>
+<tr>
+<td><code>error: cannot stop service manager — required service</code></td>
+<td>Do not attempt to stop critical services; only stop optional services like load-balancer, dhcp, or dns if unused.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to Active Edge</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">set</span><span class="w"> </span>edge-cluster<span class="w"> </span>failover
@@ -9083,8 +9118,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>BGP neighbor 10.50.1.1 state: Connect</code></strong> — Wait 30–45 seconds for graceful restart to complete; if persists, verify BGP timers match upstream router configuration.
-<strong><code>vrf &lt;tier0-vrf&gt;: VRF not found</code></strong> — Replace <code>&lt;tier0-vrf&gt;</code> with the actual VRF ID (typically <code>0</code> for default or check <code>get vrf list</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BGP neighbor 10.50.1.1 state: Connect</code></td>
+<td>Wait 30–45 seconds for graceful restart to complete; if persists, verify BGP timers match upstream router configuration.</td>
+</tr>
+<tr>
+<td><code>vrf &lt;tier0-vrf&gt;: VRF not found</code></td>
+<td>Replace <code>&lt;tier0-vrf&gt;</code> with the actual VRF ID (typically <code>0</code> for default or check <code>get vrf list</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm BGP neighbor has password set</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9103,9 +9154,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).
-<strong><code>jq: command not found</code> or <code>python3: command not found</code></strong> — Install Python 3 (<code>apt-get install python3</code> on Ubuntu/Debian or <code>yum install python3</code> on RHEL) and verify the NSX Manager hostname/IP is resolvable.
-<strong><code>"error":"Unauthorized"</code></strong> — Verify the admin credentials are correct and the user has API access permissions in NSX Manager's role-based access control settings.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code> or <code>python3: command not found</code></td>
+<td>Install Python 3 (<code>apt-get install python3</code> on Ubuntu/Debian or <code>yum install python3</code> on RHEL) and verify the NSX Manager hostname/IP is resolvable.</td>
+</tr>
+<tr>
+<td><code>"error":"Unauthorized"</code></td>
+<td>Verify the admin credentials are correct and the user has API access permissions in NSX Manager's role-based access control settings.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On ESXi host</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $4}&#39;</span>
@@ -9118,8 +9188,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: (standard input) No such file or directory</code></strong> — Verify the ESXi host is accessible and esxcli is properly configured by running <code>esxcli system version get</code> first.
-<strong><code>awk: syntax error in pattern near line 1</code></strong> — Correct the awk field separator if output format differs; use <code>esxcli software vib list --format=csv</code> and adjust the column numbers accordingly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: (standard input) No such file or directory</code></td>
+<td>Verify the ESXi host is accessible and esxcli is properly configured by running <code>esxcli system version get</code> first.</td>
+</tr>
+<tr>
+<td><code>awk: syntax error in pattern near line 1</code></td>
+<td>Correct the awk field separator if output format differs; use <code>esxcli software vib list --format=csv</code> and adjust the column numbers accordingly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># On each ESXi host — confirm DFW filters exist</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;vmware-sfw&quot;</span>
@@ -9130,8 +9216,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>summarize-dvfilter: command not found</code></strong> — Ensure you are running this command directly on an ESXi host (SSH access), not from vCenter; the tool is ESXi-local only.
-<strong><code>grep: (standard input) is empty</code></strong> — Verify DFW is enabled in NSX Manager under Security &gt; Distributed Firewall and that at least one rule is published to this cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>summarize-dvfilter: command not found</code></td>
+<td>Ensure you are running this command directly on an ESXi host (SSH access), not from vCenter; the tool is ESXi-local only.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>Verify DFW is enabled in NSX Manager under Security &gt; Distributed Firewall and that at least one rule is published to this cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9169,7 +9271,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

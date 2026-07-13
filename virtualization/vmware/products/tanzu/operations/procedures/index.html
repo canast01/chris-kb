@@ -9476,9 +9476,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: Unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host</code></strong> — Verify the Supervisor Cluster hostname/IP is correct and resolvable from your network, or add it to <code>/etc/hosts</code>.
-<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Confirm the vSphere credentials are correct and the user has appropriate permissions on the Supervisor Cluster.
-<strong><code>error: namespaces "team-alpha" is forbidden: User "administrator@vsphere.local" cannot create resource "namespaces"</code></strong> — Grant the user the required vSphere role (e.g., Namespace Creator) on the Supervisor Cluster via vCenter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: Unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host</code></td>
+<td>Verify the Supervisor Cluster hostname/IP is correct and resolvable from your network, or add it to <code>/etc/hosts</code>.</td>
+</tr>
+<tr>
+<td><code>error: You must be logged in to the server (Unauthorized)</code></td>
+<td>Confirm the vSphere credentials are correct and the user has appropriate permissions on the Supervisor Cluster.</td>
+</tr>
+<tr>
+<td><code>error: namespaces "team-alpha" is forbidden: User "administrator@vsphere.local" cannot create resource "namespaces"</code></td>
+<td>Grant the user the required vSphere role (e.g., Namespace Creator) on the Supervisor Cluster via vCenter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Configure namespace in vCenter UI:
 - Storage: assign storage policy
@@ -9525,9 +9544,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: context "team-alpha" does not exist</code></strong> — Verify the context name with <code>kubectl config get-contexts</code> and ensure the Supervisor cluster is configured.
-<strong><code>error: resource mapping not found for name: "team-alpha-cluster" namespace: "team-alpha" with kind TanzuKubernetesCluster</code></strong> — Confirm Tanzu Kubernetes Grid is installed on the Supervisor cluster and the CRD is available via <code>kubectl get crd | grep tanzukubernetescluster</code>.
-<strong><code>error: namespaces "team-alpha" not found</code></strong> — Create the namespace first with <code>kubectl create namespace team-alpha</code> before applying the TanzuKubernetesCluster manifest.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: context "team-alpha" does not exist</code></td>
+<td>Verify the context name with <code>kubectl config get-contexts</code> and ensure the Supervisor cluster is configured.</td>
+</tr>
+<tr>
+<td><code>error: resource mapping not found for name: "team-alpha-cluster" namespace: "team-alpha" with kind TanzuKubernetesCluster</code></td>
+<td>Confirm Tanzu Kubernetes Grid is installed on the Supervisor cluster and the CRD is available via <code>kubectl get crd | grep tanzukubernetescluster</code>.</td>
+</tr>
+<tr>
+<td><code>error: namespaces "team-alpha" not found</code></td>
+<td>Create the namespace first with <code>kubectl create namespace team-alpha</code> before applying the TanzuKubernetesCluster manifest.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="grant-namespace-access-to-a-team">Grant Namespace Access to a Team<a class="headerlink" href="#grant-namespace-access-to-a-team" title="Permanent link">&para;</a></h2>
@@ -9563,9 +9601,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: Unable to connect to the supervisor cluster at https://supervisor.example.local</code></strong> — Verify the supervisor endpoint is reachable and the hostname resolves correctly with <code>nslookup supervisor.example.local</code>.
-<strong><code>error: invalid credentials provided</code></strong> — Confirm the vSphere credentials are correct and the user has permission to access the Tanzu Kubernetes cluster in that namespace.
-<strong><code>error: the server doesn't have a resource type "tanzukubernetesclusters"</code></strong> — Ensure the Tanzu Kubernetes Grid extension is installed on the vSphere Supervisor Cluster and the workload cluster exists in the specified namespace.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: Unable to connect to the supervisor cluster at https://supervisor.example.local</code></td>
+<td>Verify the supervisor endpoint is reachable and the hostname resolves correctly with <code>nslookup supervisor.example.local</code>.</td>
+</tr>
+<tr>
+<td><code>error: invalid credentials provided</code></td>
+<td>Confirm the vSphere credentials are correct and the user has permission to access the Tanzu Kubernetes cluster in that namespace.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "tanzukubernetesclusters"</code></td>
+<td>Ensure the Tanzu Kubernetes Grid extension is installed on the vSphere Supervisor Cluster and the workload cluster exists in the specified namespace.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configure-harbor-project-with-vulnerability-scanning">Configure Harbor Project with Vulnerability Scanning<a class="headerlink" href="#configure-harbor-project-with-vulnerability-scanning" title="Permanent link">&para;</a></h2>
@@ -9597,9 +9654,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the Harbor CA certificate into your system trust store.
-<strong><code>{"errors":[{"code":"CONFLICT","message":"project team-alpha already exists"}]}</code></strong> — The project name already exists in Harbor; use a different project name or delete the existing project first.
-<strong><code>{"errors":[{"code":"UNAUTHORIZED","message":"user does not have permission to the project"}]}</code></strong> — Ensure the admin user credentials are correct and the user has project admin role permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification, or import the Harbor CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"errors":[{"code":"CONFLICT","message":"project team-alpha already exists"}]}</code></td>
+<td>The project name already exists in Harbor; use a different project name or delete the existing project first.</td>
+</tr>
+<tr>
+<td><code>{"errors":[{"code":"UNAUTHORIZED","message":"user does not have permission to the project"}]}</code></td>
+<td>Ensure the admin user credentials are correct and the user has project admin role permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configure-pull-through-cache-in-harbor">Configure Pull-Through Cache in Harbor<a class="headerlink" href="#configure-pull-through-cache-in-harbor" title="Permanent link">&para;</a></h2>
@@ -9648,9 +9724,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: release name "my-postgres" already exists</code></strong> — Use <code>helm upgrade</code> instead of <code>helm install</code>, or delete the existing release with <code>helm uninstall my-postgres -n production</code> first.
-<strong><code>Error: namespace "production" not found</code></strong> — Remove the <code>--create-namespace</code> flag if the namespace must be pre-created, or ensure your RBAC permissions allow namespace creation.
-<strong><code>Error: failed to create resource: storageclass.storage.k8s.io "vsan-default" not found</code></strong> — Verify the storage class exists with <code>kubectl get storageclass</code> and update the <code>--set primary.persistence.storageClass</code> value accordingly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: release name "my-postgres" already exists</code></td>
+<td>Use <code>helm upgrade</code> instead of <code>helm install</code>, or delete the existing release with <code>helm uninstall my-postgres -n production</code> first.</td>
+</tr>
+<tr>
+<td><code>Error: namespace "production" not found</code></td>
+<td>Remove the <code>--create-namespace</code> flag if the namespace must be pre-created, or ensure your RBAC permissions allow namespace creation.</td>
+</tr>
+<tr>
+<td><code>Error: failed to create resource: storageclass.storage.k8s.io "vsan-default" not found</code></td>
+<td>Verify the storage class exists with <code>kubectl get storageclass</code> and update the <code>--set primary.persistence.storageClass</code> value accordingly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configure-ingress-contour-httpproxy">Configure Ingress (Contour / HTTPProxy)<a class="headerlink" href="#configure-ingress-contour-httpproxy" title="Permanent link">&para;</a></h2>
@@ -9676,9 +9771,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: resource mapping not found for kind "HTTPProxy"... ensure CRDs are installed first</code></strong> — Install Contour CRDs with <code>kubectl apply -f https://projectcontour.io/quickstart/contour.yaml</code> or verify the projectcontour.io API group is registered via <code>kubectl api-resources | grep httpproxy</code>.
-<strong><code>The HTTPProxy "myapp" is invalid: spec.virtualhost.tls.secretName: Invalid value: "myapp-tls": secret not found</code></strong> — Create the TLS secret in the production namespace using <code>kubectl create secret tls myapp-tls --cert=cert.pem --key=key.pem -n production</code> or verify cert-manager has issued the certificate.
-<strong><code>error: unable to recognize stdin: no matches for kind "HTTPProxy" in version "projectcontour.io/v1"</code></strong> — Confirm Contour is installed in the cluster with <code>kubectl get deployment -n projectcontour</code> and that the API version matches your Contour version via <code>kubectl api-versions | grep projectcontour</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: resource mapping not found for kind "HTTPProxy"... ensure CRDs are installed first</code></td>
+<td>Install Contour CRDs with <code>kubectl apply -f https://projectcontour.io/quickstart/contour.yaml</code> or verify the projectcontour.io API group is registered via <code>kubectl api-resources | grep httpproxy</code>.</td>
+</tr>
+<tr>
+<td><code>The HTTPProxy "myapp" is invalid: spec.virtualhost.tls.secretName: Invalid value: "myapp-tls": secret not found</code></td>
+<td>Create the TLS secret in the production namespace using <code>kubectl create secret tls myapp-tls --cert=cert.pem --key=key.pem -n production</code> or verify cert-manager has issued the certificate.</td>
+</tr>
+<tr>
+<td><code>error: unable to recognize stdin: no matches for kind "HTTPProxy" in version "projectcontour.io/v1"</code></td>
+<td>Confirm Contour is installed in the cluster with <code>kubectl get deployment -n projectcontour</code> and that the API version matches your Contour version via <code>kubectl api-versions | grep projectcontour</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="scale-worker-nodes">Scale Worker Nodes<a class="headerlink" href="#scale-worker-nodes" title="Permanent link">&para;</a></h2>
@@ -9701,8 +9815,24 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: tanzukubernetescluster.run.tanzu.vmware.com "team-alpha-cluster" not found</code></strong> — Verify the cluster name and namespace with <code>kubectl get tanzukubernetescluster -A</code>.
-<strong><code>Error: cluster 'team-alpha-cluster' not found in current management cluster context</code></strong> — Ensure you are logged into the correct management cluster context with <code>tanzu context list</code> and <code>tanzu context use &lt;context-name&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: tanzukubernetescluster.run.tanzu.vmware.com "team-alpha-cluster" not found</code></td>
+<td>Verify the cluster name and namespace with <code>kubectl get tanzukubernetescluster -A</code>.</td>
+</tr>
+<tr>
+<td><code>Error: cluster 'team-alpha-cluster' not found in current management cluster context</code></td>
+<td>Ensure you are logged into the correct management cluster context with <code>tanzu context list</code> and <code>tanzu context use &lt;context-name&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="rotate-cluster-kubeconfig">Rotate Cluster Kubeconfig<a class="headerlink" href="#rotate-cluster-kubeconfig" title="Permanent link">&para;</a></h2>
@@ -9729,9 +9859,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: cluster 'my-cluster' not found</code></strong> — Verify the cluster name matches output from <code>tanzu cluster list</code> and you have permissions to access it.
-<strong><code>Error: invalid credentials provided</code></strong> — Ensure your vSphere SSO credentials are correct and your user account has cluster admin role assigned in the Supervisor namespace.
-<strong><code>Unable to connect to supervisor.example.local</code></strong> — Confirm the Supervisor hostname/IP is correct, network connectivity exists, and the Supervisor cluster API is accessible on port 443.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: cluster 'my-cluster' not found</code></td>
+<td>Verify the cluster name matches output from <code>tanzu cluster list</code> and you have permissions to access it.</td>
+</tr>
+<tr>
+<td><code>Error: invalid credentials provided</code></td>
+<td>Ensure your vSphere SSO credentials are correct and your user account has cluster admin role assigned in the Supervisor namespace.</td>
+</tr>
+<tr>
+<td><code>Unable to connect to supervisor.example.local</code></td>
+<td>Confirm the Supervisor hostname/IP is correct, network connectivity exists, and the Supervisor cluster API is accessible on port 443.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Kubeconfigs embed a token with a limited TTL — users need to re-login after expiry.</p>
 <h2 id="upgrade-a-tkg-workload-cluster">Upgrade a TKG Workload Cluster<a class="headerlink" href="#upgrade-a-tkg-workload-cluster" title="Permanent link">&para;</a></h2>
@@ -9784,9 +9933,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "tanzukubernetesrelease"</code></strong> — Verify the Supervisor cluster is properly initialized and the Tanzu Kubernetes Grid extension is installed with <code>kubectl get crd | grep tanzukubernetesrelease</code>.
-<strong><code>error: the server doesn't have a resource type "tkc"</code></strong> — Ensure you are connected to the Supervisor cluster (not a workload cluster) and the TKC CRD is available with <code>kubectl api-resources | grep tanzukubernetescluster</code>.
-<strong><code>error: timed out waiting for the condition</code></strong> — Check node resource availability and vSphere storage capacity; monitor upgrade progress with <code>kubectl describe tkc my-cluster -n my-namespace</code> to identify stuck phases.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "tanzukubernetesrelease"</code></td>
+<td>Verify the Supervisor cluster is properly initialized and the Tanzu Kubernetes Grid extension is installed with <code>kubectl get crd | grep tanzukubernetesrelease</code>.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "tkc"</code></td>
+<td>Ensure you are connected to the Supervisor cluster (not a workload cluster) and the TKC CRD is available with <code>kubectl api-resources | grep tanzukubernetescluster</code>.</td>
+</tr>
+<tr>
+<td><code>error: timed out waiting for the condition</code></td>
+<td>Check node resource availability and vSphere storage capacity; monitor upgrade progress with <code>kubectl describe tkc my-cluster -n my-namespace</code> to identify stuck phases.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Do not skip Kubernetes minor versions</p>
@@ -9824,8 +9992,24 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "tkc"</code></strong> — Verify the Tanzu Kubernetes Grid extension is installed on the Supervisor cluster with <code>kubectl get crds | grep tanzu</code>.
-<strong><code>Error from server (Conflict): Operation cannot be fulfilled on namespace "my-namespace": namespace has a finalizer [kubernetes]</code></strong> — Wait for all workloads and PVCs to fully drain before deleting the namespace, or manually remove the finalizer with <code>kubectl patch namespace my-namespace -p '{"metadata":{"finalizers":null}}'</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "tkc"</code></td>
+<td>Verify the Tanzu Kubernetes Grid extension is installed on the Supervisor cluster with <code>kubectl get crds | grep tanzu</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (Conflict): Operation cannot be fulfilled on namespace "my-namespace": namespace has a finalizer [kubernetes]</code></td>
+<td>Wait for all workloads and PVCs to fully drain before deleting the namespace, or manually remove the finalizer with <code>kubectl patch namespace my-namespace -p '{"metadata":{"finalizers":null}}'</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Deletion is irreversible — confirm data backup and workload migration before deleting.</p>
 <h2 id="configure-resource-quotas-on-a-namespace">Configure Resource Quotas on a Namespace<a class="headerlink" href="#configure-resource-quotas-on-a-namespace" title="Permanent link">&para;</a></h2>
@@ -9877,9 +10061,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to recognize "": no matches for kind "ResourceQuota" in version "v1"</code></strong> — Ensure you're patching the namespace object directly with <code>spec.resourceQuotas</code> syntax supported by your Tanzu version; verify with <code>kubectl api-resources | grep quota</code>.
-<strong><code>Error from server (Forbidden): namespaces "my-namespace" is forbidden: User "user@example.com" does not have permission to patch namespaces</code></strong> — Request Supervisor cluster admin privileges or have an admin apply the patch on your behalf.
-<strong><code>error: the server doesn't have a resource type "storagePolicies"</code></strong> — Storage policy limits are managed through the vSphere UI under Workload Management → Namespaces, not via kubectl patch; remove the <code>storagePolicies</code> section from the patch command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to recognize "": no matches for kind "ResourceQuota" in version "v1"</code></td>
+<td>Ensure you're patching the namespace object directly with <code>spec.resourceQuotas</code> syntax supported by your Tanzu version; verify with <code>kubectl api-resources | grep quota</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (Forbidden): namespaces "my-namespace" is forbidden: User "user@example.com" does not have permission to patch namespaces</code></td>
+<td>Request Supervisor cluster admin privileges or have an admin apply the patch on your behalf.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "storagePolicies"</code></td>
+<td>Storage policy limits are managed through the vSphere UI under Workload Management → Namespaces, not via kubectl patch; remove the <code>storagePolicies</code> section from the patch command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="backup-and-restore-a-tkg-cluster-with-velero">Backup and Restore a TKG Cluster with Velero<a class="headerlink" href="#backup-and-restore-a-tkg-cluster-with-velero" title="Permanent link">&para;</a></h2>
 <p>Velero backs up Kubernetes resources and persistent volumes to object storage.</p>
@@ -9947,9 +10150,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: error getting backup location: BackupStorageLocation default is not available</code></strong> — Verify the S3/MinIO credentials in the secret file and ensure the backup location is accessible with <code>velero backup-location get</code>.
-<strong><code>error: timed out waiting for backup to complete</code></strong> — Check cluster resources with <code>kubectl top nodes</code> and increase the wait timeout, or review Velero logs with <code>kubectl logs -n velero deployment/velero</code> for plugin failures.
-<strong><code>Error: error restoring PersistentVolumeClaim: error creating PersistentVolumeClaim: PersistentVolumeClaim "app-data-pvc" is invalid: spec.storageClassName: Invalid value</code></strong> — Ensure the storage class referenced in the backup exists on the target cluster, or use <code>velero restore create --modify-namespace-mappings</code> to remap storage classes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: error getting backup location: BackupStorageLocation default is not available</code></td>
+<td>Verify the S3/MinIO credentials in the secret file and ensure the backup location is accessible with <code>velero backup-location get</code>.</td>
+</tr>
+<tr>
+<td><code>error: timed out waiting for backup to complete</code></td>
+<td>Check cluster resources with <code>kubectl top nodes</code> and increase the wait timeout, or review Velero logs with <code>kubectl logs -n velero deployment/velero</code> for plugin failures.</td>
+</tr>
+<tr>
+<td><code>Error: error restoring PersistentVolumeClaim: error creating PersistentVolumeClaim: PersistentVolumeClaim "app-data-pvc" is invalid: spec.storageClassName: Invalid value</code></td>
+<td>Ensure the storage class referenced in the backup exists on the target cluster, or use <code>velero restore create --modify-namespace-mappings</code> to remap storage classes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="troubleshoot-node-notready">Troubleshoot Node NotReady<a class="headerlink" href="#troubleshoot-node-notready" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 1. Identify NotReady node</span>
@@ -10008,9 +10230,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Failed to load kubelet config file: open /etc/kubernetes/kubelet/kubelet-config.yaml: no such file or directory</code></strong> — Restore the kubelet config from a backup or redeploy the node using the Tanzu CLI with <code>tanzu machine delete</code> and <code>tanzu machine create</code>.
-<strong><code>disk pressure detected: 98% used</code></strong> — Run <code>crictl rmi --prune</code> to remove unused images, or expand the root volume in vSphere and resize the filesystem with <code>growpart /dev/sda 1 &amp;&amp; resize2fs /dev/sda1</code>.
-<strong><code>Unable to connect to the server: dial tcp: lookup supervisor-control-plane-1: no such host</code></strong> — Verify DNS resolution on the node with <code>nslookup supervisor-control-plane-1</code> and check <code>/etc/resolv.conf</code> points to the correct cluster DNS server.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Failed to load kubelet config file: open /etc/kubernetes/kubelet/kubelet-config.yaml: no such file or directory</code></td>
+<td>Restore the kubelet config from a backup or redeploy the node using the Tanzu CLI with <code>tanzu machine delete</code> and <code>tanzu machine create</code>.</td>
+</tr>
+<tr>
+<td><code>disk pressure detected: 98% used</code></td>
+<td>Run <code>crictl rmi --prune</code> to remove unused images, or expand the root volume in vSphere and resize the filesystem with <code>growpart /dev/sda 1 &amp;&amp; resize2fs /dev/sda1</code>.</td>
+</tr>
+<tr>
+<td><code>Unable to connect to the server: dial tcp: lookup supervisor-control-plane-1: no such host</code></td>
+<td>Verify DNS resolution on the node with <code>nslookup supervisor-control-plane-1</code> and check <code>/etc/resolv.conf</code> points to the correct cluster DNS server.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">--delete-emptydir-data causes data loss for pods using emptyDir volumes</p>
@@ -10033,9 +10274,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to drain node "worker-node-03", aborting command [DaemonSet-managed Pods (use --ignore-daemonsets to ignore)</code></strong> — Add the <code>--ignore-daemonsets</code> flag to the drain command to skip system pods.
-<strong><code>error: node "worker-node-03" not found</code></strong> — Verify the exact node name with <code>kubectl get nodes</code> before attempting deletion.
-<strong><code>error: timed out waiting for pod eviction after 5m0s</code></strong> — Increase the timeout with <code>--timeout=10m</code> or use <code>--force</code> to forcefully terminate stubborn pods.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to drain node "worker-node-03", aborting command [DaemonSet-managed Pods (use --ignore-daemonsets to ignore)</code></td>
+<td>Add the <code>--ignore-daemonsets</code> flag to the drain command to skip system pods.</td>
+</tr>
+<tr>
+<td><code>error: node "worker-node-03" not found</code></td>
+<td>Verify the exact node name with <code>kubectl get nodes</code> before attempting deletion.</td>
+</tr>
+<tr>
+<td><code>error: timed out waiting for pod eviction after 5m0s</code></td>
+<td>Increase the timeout with <code>--timeout=10m</code> or use <code>--force</code> to forcefully terminate stubborn pods.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="configure-persistent-storage-vsan-cnscsi">Configure Persistent Storage (vSAN CNS/CSI)<a class="headerlink" href="#configure-persistent-storage-vsan-cnscsi" title="Permanent link">&para;</a></h2>
 <p>TKG uses the vSphere CSI driver to provision persistent volumes backed by vSAN datastores.</p>
@@ -10086,9 +10346,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "storageclass"</code></strong> — Verify you are connected to a Tanzu Supervisor cluster (not a guest cluster) with <code>kubectl cluster-info</code>.
-<strong><code>PersistentVolumeClaim does not exist</code></strong> — Ensure the namespace <code>app-namespace</code> exists by running <code>kubectl create namespace app-namespace</code> before applying the PVC.
-<strong><code>ProvisioningFailed: error getting credentials</code></strong> — Confirm the vSAN cluster has network connectivity to the Supervisor control plane and CSI driver credentials are valid in the <code>vmware-system-csi</code> namespace.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "storageclass"</code></td>
+<td>Verify you are connected to a Tanzu Supervisor cluster (not a guest cluster) with <code>kubectl cluster-info</code>.</td>
+</tr>
+<tr>
+<td><code>PersistentVolumeClaim does not exist</code></td>
+<td>Ensure the namespace <code>app-namespace</code> exists by running <code>kubectl create namespace app-namespace</code> before applying the PVC.</td>
+</tr>
+<tr>
+<td><code>ProvisioningFailed: error getting credentials</code></td>
+<td>Confirm the vSAN cluster has network connectivity to the Supervisor control plane and CSI driver credentials are valid in the <code>vmware-system-csi</code> namespace.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="enable-vsphere-with-tanzu-on-a-cluster-supervisor">Enable vSphere with Tanzu on a Cluster (Supervisor)<a class="headerlink" href="#enable-vsphere-with-tanzu-on-a-cluster-supervisor" title="Permanent link">&para;</a></h2>
@@ -10138,9 +10417,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unable to connect to the server: dial tcp 192.168.1.200:6443: i/o timeout</code></strong> — Verify the supervisor cluster IP is reachable and the kubeconfig points to the correct supervisor endpoint; check network connectivity and firewall rules.
-<strong><code>error: the server doesn't have a resource type "svc"</code></strong> — Ensure you are using a valid kubeconfig for the supervisor cluster, not a guest cluster kubeconfig.
-<strong><code>error: open &lt;supervisor-kubeconfig&gt;: no such file or directory</code></strong> — Replace <code>&lt;supervisor-kubeconfig&gt;</code> with the actual path to your downloaded supervisor kubeconfig file from vCenter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unable to connect to the server: dial tcp 192.168.1.200:6443: i/o timeout</code></td>
+<td>Verify the supervisor cluster IP is reachable and the kubeconfig points to the correct supervisor endpoint; check network connectivity and firewall rules.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "svc"</code></td>
+<td>Ensure you are using a valid kubeconfig for the supervisor cluster, not a guest cluster kubeconfig.</td>
+</tr>
+<tr>
+<td><code>error: open &lt;supervisor-kubeconfig&gt;: no such file or directory</code></td>
+<td>Replace <code>&lt;supervisor-kubeconfig&gt;</code> with the actual path to your downloaded supervisor kubeconfig file from vCenter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-3-download-the-supervisor-kubeconfig">Step 3 — Download the Supervisor kubeconfig<a class="headerlink" href="#step-3-download-the-supervisor-kubeconfig" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Download the Supervisor kubeconfig" src="../../../../../../assets/tanzu-proc-step-3-download-the-supervisor-kubeconfig.svg" /></p>
@@ -10158,9 +10456,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to access the server: dial tcp: lookup supervisor-node-01.vmware.local: no such host</code></strong> — Verify the kubeconfig file points to a valid Supervisor Cluster endpoint and DNS resolution is working from your admin machine.
-<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Re-authenticate to the Supervisor Cluster using <code>kubectl vsphere login</code> with valid vSphere credentials.
-<strong><code>NotReady</code></strong> — Check node health with <code>kubectl describe node &lt;node-name&gt;</code> and review kubelet logs on the affected Supervisor node for resource or networking issues.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to access the server: dial tcp: lookup supervisor-node-01.vmware.local: no such host</code></td>
+<td>Verify the kubeconfig file points to a valid Supervisor Cluster endpoint and DNS resolution is working from your admin machine.</td>
+</tr>
+<tr>
+<td><code>error: You must be logged in to the server (Unauthorized)</code></td>
+<td>Re-authenticate to the Supervisor Cluster using <code>kubectl vsphere login</code> with valid vSphere credentials.</td>
+</tr>
+<tr>
+<td><code>NotReady</code></td>
+<td>Check node health with <code>kubectl describe node &lt;node-name&gt;</code> and review kubelet logs on the affected Supervisor node for resource or networking issues.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-4-post-enablement-validation">Step 4 — Post-Enablement Validation<a class="headerlink" href="#step-4-post-enablement-validation" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 4 — Post-Enablement Validation" src="../../../../../../assets/tanzu-proc-step-4-post-enablement-validation.svg" /></p>
@@ -10209,8 +10526,24 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: error validating "network-policy.yaml": error validating data: ValidationError(NetworkPolicy.spec.ingress[0].from[0]): invalid type for io.k8s.api.networking.v1.NetworkPolicyPeer: got "string", expected "object"</code></strong> — Verify the YAML indentation and structure of the <code>from</code> field, ensuring it contains objects not strings.
-<strong><code>Error from server (Forbidden): networkpolicies.networking.k8s.io is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "networkpolicies" in API group "networking.k8s.io" in the namespace "prod"</code></strong> — Grant the service account or user the <code>create</code> permission for networkpolicies using a ClusterRole or Role binding.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: error validating "network-policy.yaml": error validating data: ValidationError(NetworkPolicy.spec.ingress[0].from[0]): invalid type for io.k8s.api.networking.v1.NetworkPolicyPeer: got "string", expected "object"</code></td>
+<td>Verify the YAML indentation and structure of the <code>from</code> field, ensuring it contains objects not strings.</td>
+</tr>
+<tr>
+<td><code>Error from server (Forbidden): networkpolicies.networking.k8s.io is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "networkpolicies" in API group "networking.k8s.io" in the namespace "prod"</code></td>
+<td>Grant the service account or user the <code>create</code> permission for networkpolicies using a ClusterRole or Role binding.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="antrea-clusternetworkpolicy-cluster-wide-higher-priority">Antrea ClusterNetworkPolicy (Cluster-Wide, Higher Priority)<a class="headerlink" href="#antrea-clusternetworkpolicy-cluster-wide-higher-priority" title="Permanent link">&para;</a></h3>
 <p><img alt="Antrea ClusterNetworkPolicy (Cluster-Wide, Higher Priority)" src="../../../../../../assets/tanzu-proc-antrea-clusternetworkpolicy-cluster-wide-higher-priority.svg" /></p>
@@ -10243,8 +10576,24 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: resource mapping not found for name: "clusternetworkpolicy" namespace: "" from "cluster-network-policy.yaml": no matches for kind "ClusterNetworkPolicy" in version "networking.tanzu.vmware.com/v1alpha1"</code></strong> — Ensure the Tanzu networking extension is installed on the cluster with <code>kubectl apply -f https://...tanzu-networking-extension.yaml</code>.
-<strong><code>The ClusterNetworkPolicy "default-deny" is invalid: spec.rules: Invalid value: []uint8(nil): rules must be specified</code></strong> — Add at least one ingress or egress rule to the spec.rules field in your YAML manifest.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: resource mapping not found for name: "clusternetworkpolicy" namespace: "" from "cluster-network-policy.yaml": no matches for kind "ClusterNetworkPolicy" in version "networking.tanzu.vmware.com/v1alpha1"</code></td>
+<td>Ensure the Tanzu networking extension is installed on the cluster with <code>kubectl apply -f https://...tanzu-networking-extension.yaml</code>.</td>
+</tr>
+<tr>
+<td><code>The ClusterNetworkPolicy "default-deny" is invalid: spec.rules: Invalid value: []uint8(nil): rules must be specified</code></td>
+<td>Add at least one ingress or egress rule to the spec.rules field in your YAML manifest.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="test-policy-enforcement">Test Policy Enforcement<a class="headerlink" href="#test-policy-enforcement" title="Permanent link">&para;</a></h3>
 <p><img alt="Test Policy Enforcement" src="../../../../../../assets/tanzu-proc-test-policy-enforcement.svg" /></p>
@@ -10277,8 +10626,24 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to upgrade connection: container not found ("frontend-app")</code></strong> — Specify the correct container name with <code>-c &lt;container-name&gt;</code> flag or verify the pod exists with <code>kubectl get pods -n prod</code>.
-<strong><code>error: unable to find "frontend-pod" in namespace "prod"</code></strong> — Use the full pod name from <code>kubectl get pods -n prod</code> instead of a partial name; traceflow requires exact pod identifiers.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to upgrade connection: container not found ("frontend-app")</code></td>
+<td>Specify the correct container name with <code>-c &lt;container-name&gt;</code> flag or verify the pod exists with <code>kubectl get pods -n prod</code>.</td>
+</tr>
+<tr>
+<td><code>error: unable to find "frontend-pod" in namespace "prod"</code></td>
+<td>Use the full pod name from <code>kubectl get pods -n prod</code> instead of a partial name; traceflow requires exact pod identifiers.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="decommission-a-vsphere-namespace">Decommission a vSphere Namespace<a class="headerlink" href="#decommission-a-vsphere-namespace" title="Permanent link">&para;</a></h2>
@@ -10316,9 +10681,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "tanzukubernetescluster"</code></strong> — Verify the Tanzu operator is installed with <code>kubectl get deployment -n tanzu-system</code> and check your cluster has the correct API extensions.
-<strong><code>Error from server (NotFound): namespaces "&lt;namespace&gt;" not found</code></strong> — Confirm the namespace exists with <code>kubectl get ns</code> and use the correct namespace name in the <code>-n</code> flag.
-<strong><code>error: timed out waiting for the condition</code></strong> — If deletion hangs beyond 5 minutes, check vCenter for orphaned VMs and manually remove them, then retry the delete command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "tanzukubernetescluster"</code></td>
+<td>Verify the Tanzu operator is installed with <code>kubectl get deployment -n tanzu-system</code> and check your cluster has the correct API extensions.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): namespaces "&lt;namespace&gt;" not found</code></td>
+<td>Confirm the namespace exists with <code>kubectl get ns</code> and use the correct namespace name in the <code>-n</code> flag.</td>
+</tr>
+<tr>
+<td><code>error: timed out waiting for the condition</code></td>
+<td>If deletion hangs beyond 5 minutes, check vCenter for orphaned VMs and manually remove them, then retry the delete command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-2-release-persistent-volumes">Step 2 — Release Persistent Volumes<a class="headerlink" href="#step-2-release-persistent-volumes" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 2 — Release Persistent Volumes" src="../../../../../../assets/tanzu-proc-step-2-release-persistent-volumes.svg" /></p>
@@ -10338,8 +10722,24 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "pvc" in API group ""</code></strong> — Verify the cluster is running and <code>kubectl</code> is configured correctly with <code>kubectl cluster-info</code>.
-<strong><code>Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:default" cannot delete resource "persistentvolumeclaims"</code></strong> — Ensure your service account or user has RBAC permissions to delete PVCs in the target namespace.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "pvc" in API group ""</code></td>
+<td>Verify the cluster is running and <code>kubectl</code> is configured correctly with <code>kubectl cluster-info</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:default" cannot delete resource "persistentvolumeclaims"</code></td>
+<td>Ensure your service account or user has RBAC permissions to delete PVCs in the target namespace.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-3-delete-the-namespace-via-vcenter">Step 3 — Delete the Namespace via vCenter<a class="headerlink" href="#step-3-delete-the-namespace-via-vcenter" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Delete the Namespace via vCenter" src="../../../../../../assets/tanzu-proc-step-3-delete-the-namespace-via-vcenter.svg" /></p>
@@ -10355,9 +10755,28 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "namespace"</code></strong> — Verify the kubeconfig points to a valid Supervisor cluster and that your user has API server access.
-<strong><code>Error from server (NotFound): namespaces "&lt;namespace&gt;" not found</code></strong> — Confirm the namespace name is spelled correctly and exists before attempting deletion.
-<strong><code>error: unable to read client certificate ... (no such file or directory)</code></strong> — Ensure the supervisor.kubeconfig file path is correct and the certificate files it references are accessible.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "namespace"</code></td>
+<td>Verify the kubeconfig points to a valid Supervisor cluster and that your user has API server access.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): namespaces "&lt;namespace&gt;" not found</code></td>
+<td>Confirm the namespace name is spelled correctly and exists before attempting deletion.</td>
+</tr>
+<tr>
+<td><code>error: unable to read client certificate ... (no such file or directory)</code></td>
+<td>Ensure the supervisor.kubeconfig file path is correct and the certificate files it references are accessible.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-4-post-deletion-validation">Step 4 — Post-Deletion Validation<a class="headerlink" href="#step-4-post-deletion-validation" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 4 — Post-Deletion Validation" src="../../../../../../assets/tanzu-proc-step-4-post-deletion-validation.svg" /></p>
@@ -10403,7 +10822,7 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

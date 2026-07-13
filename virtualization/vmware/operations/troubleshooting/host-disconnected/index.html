@@ -7873,9 +7873,28 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: unknown host &lt;esxi-mgmt-ip&gt;</code></strong> — Verify the IP address is correct and the host is reachable on the network; check firewall rules blocking ICMP.
-<strong><code>ssh: connect to host 192.168.1.42 port 22: Connection refused</code></strong> — Confirm SSH is enabled on the ESXi host (Configuration &gt; Security Profile &gt; Services &gt; SSH) and the management network is properly configured.
-<strong><code>** server can't find &lt;esxi-fqdn&gt;: NXDOMAIN</code></strong> — Add the ESXi host FQDN to your DNS server or /etc/hosts file on the jump host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: unknown host &lt;esxi-mgmt-ip&gt;</code></td>
+<td>Verify the IP address is correct and the host is reachable on the network; check firewall rules blocking ICMP.</td>
+</tr>
+<tr>
+<td><code>ssh: connect to host 192.168.1.42 port 22: Connection refused</code></td>
+<td>Confirm SSH is enabled on the ESXi host (Configuration &gt; Security Profile &gt; Services &gt; SSH) and the management network is properly configured.</td>
+</tr>
+<tr>
+<td><code>** server can't find &lt;esxi-fqdn&gt;: NXDOMAIN</code></td>
+<td>Add the ESXi host FQDN to your DNS server or /etc/hosts file on the jump host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If ping works but vCenter shows "Not Responding", skip to <a href="#management-agent-reset">Management Agent Reset</a>.</p>
 <p>If ping fails entirely, skip to <a href="#management-network-down">Management Network Down</a>.</p>
@@ -7913,9 +7932,28 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vpxa (pid XXXX) is not running</code></strong> — Run <code>/etc/init.d/vpxa start</code> to restart the service, then check <code>/var/log/vpxa.log</code> for startup errors.
-<strong><code>hostd (pid XXXX) is not running</code></strong> — Run <code>/etc/init.d/hostd start</code> and verify the service started with <code>/etc/init.d/hostd status</code>.
-<strong><code>tail: cannot open '/var/log/vpxa.log' for reading: Permission denied</code></strong> — Run the tail commands with <code>sudo</code> or as root user to access ESXi system logs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vpxa (pid XXXX) is not running</code></td>
+<td>Run <code>/etc/init.d/vpxa start</code> to restart the service, then check <code>/var/log/vpxa.log</code> for startup errors.</td>
+</tr>
+<tr>
+<td><code>hostd (pid XXXX) is not running</code></td>
+<td>Run <code>/etc/init.d/hostd start</code> and verify the service started with <code>/etc/init.d/hostd status</code>.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/vpxa.log' for reading: Permission denied</code></td>
+<td>Run the tail commands with <code>sudo</code> or as root user to access ESXi system logs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Step 3 — Re-add the host in vCenter</strong> if the agent restart does not help. In vCenter, right-click the host → Disconnect → Remove from Inventory → Re-add with Add Host wizard.</p>
 <hr />
@@ -7957,8 +7995,24 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>hostd stopped (timeout)</code></strong> — Increase the timeout or check for hung processes with <code>lsof -p &lt;PID&gt;</code> before forcing a kill.
-<strong><code>vpxa: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file</code></strong> — Install the missing OpenSSL library with <code>esxcli software vib install -d /path/to/openssl-vib.zip</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hostd stopped (timeout)</code></td>
+<td>Increase the timeout or check for hung processes with <code>lsof -p &lt;PID&gt;</code> before forcing a kill.</td>
+</tr>
+<tr>
+<td><code>vpxa: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file</code></td>
+<td>Install the missing OpenSSL library with <code>esxcli software vib install -d /path/to/openssl-vib.zip</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If hostd is repeatedly crashing, check disk space — a full <code>/</code> or <code>/scratch</code> partition prevents hostd from writing its state file:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>df<span class="w"> </span>-h
@@ -7975,8 +8029,24 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vdf: command not found</code></strong> — Replace <code>vdf</code> with <code>df</code> (the correct command for disk free space); if you need VMware-specific storage info, use <code>esxcli storage filesystem list</code> on ESXi hosts instead.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo df -h</code> if you lack read permissions on mounted filesystems.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vdf: command not found</code></td>
+<td>Replace <code>vdf</code> with <code>df</code> (the correct command for disk free space); if you need VMware-specific storage info, use <code>esxcli storage filesystem list</code> on ESXi hosts instead.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo df -h</code> if you lack read permissions on mounted filesystems.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="management-network-down">Management Network Down<a class="headerlink" href="#management-network-down" title="Permanent link">&para;</a></h2>
@@ -8023,9 +8093,28 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Network error: Unable to resolve host &lt;vcenter-ip&gt;</code></strong> — Verify vCenter IP is correct and DNS resolution is working with <code>esxcli network ip dns server list</code>.
-<strong><code>PING: sendto: No route to host</code></strong> — Confirm the default gateway in the route table matches your network configuration and vmk0 is on the correct VLAN.
-<strong><code>Interface vmk0 is not enabled</code></strong> — Enable vmk0 with <code>esxcli network ip interface set -i vmk0 -e true</code> if it shows <code>Enabled: false</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Network error: Unable to resolve host &lt;vcenter-ip&gt;</code></td>
+<td>Verify vCenter IP is correct and DNS resolution is working with <code>esxcli network ip dns server list</code>.</td>
+</tr>
+<tr>
+<td><code>PING: sendto: No route to host</code></td>
+<td>Confirm the default gateway in the route table matches your network configuration and vmk0 is on the correct VLAN.</td>
+</tr>
+<tr>
+<td><code>Interface vmk0 is not enabled</code></td>
+<td>Enable vmk0 with <code>esxcli network ip interface set -i vmk0 -e true</code> if it shows <code>Enabled: false</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ol>
 <li><strong>Firewall</strong> — Confirm the management VLAN firewall rules allow TCP 443, 902, and 8080 from vCenter to the host.</li>
@@ -8053,8 +8142,24 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vm-support: error writing to /tmp: No space left on device</code></strong> — Free up disk space on the host or specify an alternate writable directory with sufficient capacity (e.g., <code>/var/log</code> or a mounted datastore).
-<strong><code>vm-support: Permission denied</code></strong> — Run the command with root privileges using <code>sudo</code> or ensure your user account has write permissions to the target directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vm-support: error writing to /tmp: No space left on device</code></td>
+<td>Free up disk space on the host or specify an alternate writable directory with sufficient capacity (e.g., <code>/var/log</code> or a mounted datastore).</td>
+</tr>
+<tr>
+<td><code>vm-support: Permission denied</code></td>
+<td>Run the command with root privileges using <code>sudo</code> or ensure your user account has write permissions to the target directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ol>
 <li>Review <code>/var/log/vmkernel.log</code> and <code>/var/log/vobd.log</code> for hardware errors preceding the crash.</li>
@@ -8146,8 +8251,24 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vim-cmd: Unknown command 'hostsvc/firmware/sync_config'</code></strong> — Verify the correct vim-cmd syntax with <code>vim-cmd hostsvc/firmware/sync_config</code> or use <code>esxcli system firmware get</code> instead for firmware information.
-<strong><code>esxcli: Unknown command or namespace 'hardware platform'</code></strong> — Use <code>esxcli hardware platform get</code> only on ESXi 6.5+; for older versions, use <code>esxcli system hardware get</code> instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vim-cmd: Unknown command 'hostsvc/firmware/sync_config'</code></td>
+<td>Verify the correct vim-cmd syntax with <code>vim-cmd hostsvc/firmware/sync_config</code> or use <code>esxcli system firmware get</code> instead for firmware information.</td>
+</tr>
+<tr>
+<td><code>esxcli: Unknown command or namespace 'hardware platform'</code></td>
+<td>Use <code>esxcli hardware platform get</code> only on ESXi 6.5+; for older versions, use <code>esxcli system hardware get</code> instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>From iDRAC/iLO, review:
 - PSU status
@@ -8196,9 +8317,28 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection refused</code></strong> — Verify the NTP server IP is reachable from the ESXi host using <code>ping &lt;ntp-server-ip&gt;</code> and check firewall rules allowing UDP port 123.
-<strong><code>ntpq: read: Connection refused</code></strong> — Restart the NTP daemon with <code>/etc/init.d/ntpd restart</code> and wait 10-15 seconds before running <code>ntpq -p</code> again.
-<strong><code>Error: Unable to set NTP server</code></strong> — Ensure you have root privileges and the NTP server parameter uses valid IP format without extra spaces.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify the NTP server IP is reachable from the ESXi host using <code>ping &lt;ntp-server-ip&gt;</code> and check firewall rules allowing UDP port 123.</td>
+</tr>
+<tr>
+<td><code>ntpq: read: Connection refused</code></td>
+<td>Restart the NTP daemon with <code>/etc/init.d/ntpd restart</code> and wait 10-15 seconds before running <code>ntpq -p</code> again.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to set NTP server</code></td>
+<td>Ensure you have root privileges and the NTP server parameter uses valid IP format without extra spaces.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Hosts more than 5 minutes out of sync with vCenter will trigger authentication errors and HA isolation warnings.</p>
 <hr />
@@ -8237,7 +8377,7 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -9181,9 +9181,28 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Restore SSH host keys from backup or regenerate them with <code>sudo ssh-keygen -A</code> before restarting sshd.
-<strong><code>Permission denied (publickey).</code></strong> — Ensure your public key is added to <code>~/.ssh/authorized_keys</code> on the VRA before disabling password authentication.
-<strong><code>sudo: vim: command not found</code></strong> — Use <code>sudo nano /etc/ssh/sshd_config</code> or install vim with <code>sudo apt-get install vim</code> if nano is unavailable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd: no hostkeys available -- exiting.</code></td>
+<td>Restore SSH host keys from backup or regenerate them with <code>sudo ssh-keygen -A</code> before restarting sshd.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Ensure your public key is added to <code>~/.ssh/authorized_keys</code> on the VRA before disabling password authentication.</td>
+</tr>
+<tr>
+<td><code>sudo: vim: command not found</code></td>
+<td>Use <code>sudo nano /etc/ssh/sshd_config</code> or install vim with <code>sudo apt-get install vim</code> if nano is unavailable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Firewall rule: allow SSH (TCP 22) to VRA only from jump host IPs.</p>
 <hr />
@@ -9203,9 +9222,28 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iptables: No chain/target/match by that name</code></strong> — Ensure iptables is installed and the kernel module is loaded with <code>sudo modprobe iptable_filter</code>.
-<strong><code>cannot open /etc/iptables/rules.v4: No such file or directory</code></strong> — Create the directory first with <code>sudo mkdir -p /etc/iptables</code> before running iptables-save.
-<strong><code>Operation not permitted</code></strong> — Run all iptables commands with sudo or as root; standard user accounts cannot modify firewall rules.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iptables: No chain/target/match by that name</code></td>
+<td>Ensure iptables is installed and the kernel module is loaded with <code>sudo modprobe iptable_filter</code>.</td>
+</tr>
+<tr>
+<td><code>cannot open /etc/iptables/rules.v4: No such file or directory</code></td>
+<td>Create the directory first with <code>sudo mkdir -p /etc/iptables</code> before running iptables-save.</td>
+</tr>
+<tr>
+<td><code>Operation not permitted</code></td>
+<td>Run all iptables commands with sudo or as root; standard user accounts cannot modify firewall rules.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Port 31031 (replication data receiver) should only accept connections from source site ESXi management IPs:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Allow replication traffic from source ESXi subnet only:</span>
@@ -9217,8 +9255,24 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iptables: No chain/target/match by that name</code></strong> — Ensure iptables is installed and the kernel module is loaded with <code>sudo modprobe iptables_filter</code>.
-<strong><code>iptables: Permission denied (you must be root)</code></strong> — Run the commands with <code>sudo</code> or switch to root user with <code>su -</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iptables: No chain/target/match by that name</code></td>
+<td>Ensure iptables is installed and the kernel module is loaded with <code>sudo modprobe iptables_filter</code>.</td>
+</tr>
+<tr>
+<td><code>iptables: Permission denied (you must be root)</code></td>
+<td>Run the commands with <code>sudo</code> or switch to root user with <code>su -</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="least-privilege-vr-service-account">Least-Privilege VR Service Account<a class="headerlink" href="#least-privilege-vr-service-account" title="Permanent link">&para;</a></h2>
@@ -9265,8 +9319,24 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load certificate</code></strong> — Ensure the VRA hostname resolves correctly and port 443 is accessible; verify DNS or add an entry to <code>/etc/hosts</code> if needed.
-<strong><code>error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed</code></strong> — This is expected for self-signed certs; the command still extracts the expiry date successfully, so verify the <code>notAfter</code> field in the output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Ensure the VRA hostname resolves correctly and port 443 is accessible; verify DNS or add an entry to <code>/etc/hosts</code> if needed.</td>
+</tr>
+<tr>
+<td><code>error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed</code></td>
+<td>This is expected for self-signed certs; the command still extracts the expiry date successfully, so verify the <code>notAfter</code> field in the output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After rotating VRA certificate at either site:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
@@ -9308,7 +9378,7 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

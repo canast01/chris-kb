@@ -7712,9 +7712,28 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error initializing cluster client: ('error calling remote procedure server', -5)</code></strong> — Verify ceph.conf exists in /etc/ceph/ and cluster name matches; run <code>ceph --version</code> to confirm connectivity.
-<strong><code>HEALTH_ERR: 3 osds down; 24 pg degraded</code></strong> — Check OSD daemon status with <code>systemctl status ceph-osd@*</code> and OSD logs at <code>/var/log/ceph/ceph-osd.*.log</code> to identify disk or network failures.
-<strong><code>HEALTH_CRITICAL: 1 mon down; quorum lost</code></strong> — Restart the downed monitor daemon with <code>systemctl restart ceph-mon@&lt;hostname&gt;</code> and verify NTP sync across all monitor nodes with <code>chronyc sources</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error initializing cluster client: ('error calling remote procedure server', -5)</code></td>
+<td>Verify ceph.conf exists in /etc/ceph/ and cluster name matches; run <code>ceph --version</code> to confirm connectivity.</td>
+</tr>
+<tr>
+<td><code>HEALTH_ERR: 3 osds down; 24 pg degraded</code></td>
+<td>Check OSD daemon status with <code>systemctl status ceph-osd@*</code> and OSD logs at <code>/var/log/ceph/ceph-osd.*.log</code> to identify disk or network failures.</td>
+</tr>
+<tr>
+<td><code>HEALTH_CRITICAL: 1 mon down; quorum lost</code></td>
+<td>Restart the downed monitor daemon with <code>systemctl restart ceph-mon@&lt;hostname&gt;</code> and verify NTP sync across all monitor nodes with <code>chronyc sources</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="crash-collection">Crash Collection<a class="headerlink" href="#crash-collection" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ceph<span class="w"> </span>crash<span class="w"> </span>ls<span class="w">                          </span><span class="c1"># list crashes with timestamp and ID</span>
@@ -7753,8 +7772,24 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: crash id not found</code></strong> — Verify the crash ID exists with <code>ceph crash ls</code> and ensure you're using the exact ID from the output.
-<strong><code>Error: EACCES: permission denied, open '/var/lib/ceph/crash/'</code></strong> — Run the command with <code>sudo</code> or ensure your user is in the <code>ceph</code> group with <code>sudo usermod -aG ceph $USER</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: crash id not found</code></td>
+<td>Verify the crash ID exists with <code>ceph crash ls</code> and ensure you're using the exact ID from the output.</td>
+</tr>
+<tr>
+<td><code>Error: EACCES: permission denied, open '/var/lib/ceph/crash/'</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user is in the <code>ceph</code> group with <code>sudo usermod -aG ceph $USER</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="osd-daemon-diagnostics">OSD Daemon Diagnostics<a class="headerlink" href="#osd-daemon-diagnostics" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Performance counters (all metrics the OSD tracks internally)</span>
@@ -7811,9 +7846,28 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error connecting to daemon: (2) No such file or directory</code></strong> — Verify the OSD is running with <code>systemctl status ceph-osd@&lt;id&gt;</code> and confirm the correct socket path exists in <code>/var/run/ceph/</code>.
-<strong><code>command not found: python3</code></strong> — Install Python 3 with <code>apt install python3</code> or <code>yum install python3</code>, or pipe to <code>jq</code> instead if available.
-<strong><code>No such file or directory</code></strong> — Replace <code>&lt;id&gt;</code> with an actual OSD number (e.g., <code>osd.0</code>) and verify it exists with <code>ceph osd tree</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error connecting to daemon: (2) No such file or directory</code></td>
+<td>Verify the OSD is running with <code>systemctl status ceph-osd@&lt;id&gt;</code> and confirm the correct socket path exists in <code>/var/run/ceph/</code>.</td>
+</tr>
+<tr>
+<td><code>command not found: python3</code></td>
+<td>Install Python 3 with <code>apt install python3</code> or <code>yum install python3</code>, or pipe to <code>jq</code> instead if available.</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Replace <code>&lt;id&gt;</code> with an actual OSD number (e.g., <code>osd.0</code>) and verify it exists with <code>ceph osd tree</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="osd-log-analysis">OSD Log Analysis<a class="headerlink" href="#osd-log-analysis" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Ceph OSD logs (cephadm-managed clusters use container logs)</span>
@@ -7852,9 +7906,28 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: No such daemon osd.5</code></strong> — Verify the OSD exists with <code>ceph osd tree</code> and confirm the correct OSD ID.
-<strong><code>error: unable to connect to the cluster</code></strong> — Ensure you have valid Ceph credentials in <code>/etc/ceph/ceph.client.admin.keyring</code> and the monitor addresses are reachable.
-<strong><code>jq: command not found</code></strong> — Install <code>jq</code> with <code>apt install jq</code> or <code>yum install jq</code>, or use <code>python3 -m json.tool</code> instead for pretty-printing JSON.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: No such daemon osd.5</code></td>
+<td>Verify the OSD exists with <code>ceph osd tree</code> and confirm the correct OSD ID.</td>
+</tr>
+<tr>
+<td><code>error: unable to connect to the cluster</code></td>
+<td>Ensure you have valid Ceph credentials in <code>/etc/ceph/ceph.client.admin.keyring</code> and the monitor addresses are reachable.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>jq</code> with <code>apt install jq</code> or <code>yum install jq</code>, or use <code>python3 -m json.tool</code> instead for pretty-printing JSON.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="log-levels-debugging">Log Levels (Debugging)<a class="headerlink" href="#log-levels-debugging" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Increase OSD log verbosity for debugging (reset after use — very verbose)</span>
@@ -7891,9 +7964,28 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: osd not found</code></strong> — Verify the OSD ID exists with <code>ceph osd tree</code> and use the correct numeric ID in place of <code>&lt;id&gt;</code>.
-<strong><code>Error: EACCES: permission denied</code></strong> — Run journalctl commands with <code>sudo</code> or as root, or add your user to the <code>systemd-journal</code> group.
-<strong><code>Error: unrecognized config option 'debug_osd'</code></strong> — Ensure you are running a compatible Ceph version; use <code>ceph config help osd</code></p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: osd not found</code></td>
+<td>Verify the OSD ID exists with <code>ceph osd tree</code> and use the correct numeric ID in place of <code>&lt;id&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: EACCES: permission denied</code></td>
+<td>Run journalctl commands with <code>sudo</code> or as root, or add your user to the <code>systemd-journal</code> group.</td>
+</tr>
+<tr>
+<td><code>Error: unrecognized config option 'debug_osd'</code></td>
+<td>Ensure you are running a compatible Ceph version; use <code>ceph config help osd</code></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="crash-dump-analysis">Crash Dump Analysis<a class="headerlink" href="#crash-dump-analysis" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># View specific crash detail</span>
@@ -7937,8 +8029,24 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: crash_id not found</code></strong> — Verify the crash ID exists with <code>ceph crash ls</code> before attempting to archive.
-<strong><code>Error: EACCES: permission denied, open '/var/lib/ceph/crash/'</code></strong> — Run the command with appropriate privileges (sudo) or ensure your user is in the ceph group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: crash_id not found</code></td>
+<td>Verify the crash ID exists with <code>ceph crash ls</code> before attempting to archive.</td>
+</tr>
+<tr>
+<td><code>Error: EACCES: permission denied, open '/var/lib/ceph/crash/'</code></td>
+<td>Run the command with appropriate privileges (sudo) or ensure your user is in the ceph group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="network-diagnostics">Network Diagnostics<a class="headerlink" href="#network-diagnostics" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Test cluster network bandwidth between OSD nodes</span>
@@ -7995,9 +8103,28 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iperf3: error - unable to connect to server</code></strong> — Verify the receiver is listening on the correct interface with <code>iperf3 -s -B 10.0.1.11</code> and check firewall rules allow port 5201.
-<strong><code>connect: Network is unreachable</code></strong> — Confirm both nodes are on the same cluster network subnet and routing is configured with <code>ip route show</code>.
-<strong><code>ping: sendmsg: No route to host</code></strong> — Verify the cluster network interface is up with <code>ip link show</code> and check that 10.0.1.11 is reachable from the sender's network segment.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iperf3: error - unable to connect to server</code></td>
+<td>Verify the receiver is listening on the correct interface with <code>iperf3 -s -B 10.0.1.11</code> and check firewall rules allow port 5201.</td>
+</tr>
+<tr>
+<td><code>connect: Network is unreachable</code></td>
+<td>Confirm both nodes are on the same cluster network subnet and routing is configured with <code>ip route show</code>.</td>
+</tr>
+<tr>
+<td><code>ping: sendmsg: No route to host</code></td>
+<td>Verify the cluster network interface is up with <code>ip link show</code> and check that 10.0.1.11 is reachable from the sender's network segment.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="pg-inconsistency-deep-dive">PG Inconsistency Deep Dive<a class="headerlink" href="#pg-inconsistency-deep-dive" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Full PG state JSON (useful for support cases)</span>
@@ -8060,8 +8187,24 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: pg 12.4a not found</code></strong> — Verify the PG ID format is correct (e.g., <code>12.4a</code>) and the pool exists with <code>ceph osd pool ls</code>.
-<strong><code>Error ENOENT: error code 2</code></strong> — Ensure the pool name is valid and contains data by running <code>rados ls -p &lt;pool&gt;</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: pg 12.4a not found</code></td>
+<td>Verify the PG ID format is correct (e.g., <code>12.4a</code>) and the pool exists with <code>ceph osd pool ls</code>.</td>
+</tr>
+<tr>
+<td><code>Error ENOENT: error code 2</code></td>
+<td>Ensure the pool name is valid and contains data by running <code>rados ls -p &lt;pool&gt;</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="sosreport-for-red-hat-ceph-storage">sosreport for Red Hat Ceph Storage<a class="headerlink" href="#sosreport-for-red-hat-ceph-storage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Collect sos report on any RHCS node (includes all Ceph-specific diagnostics)</span>
@@ -8097,9 +8240,28 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sosreport: command not found</code></strong> — Install sos package with <code>yum install sos</code> or <code>dnf install sos</code>.
-<strong><code>ERROR: insufficient permissions to run sosreport, root access is required</code></strong> — Run the command with <code>sudo</code> or as the root user.
-<strong><code>ERROR: plugin ceph not found</code></strong> — Install ceph-common package with <code>yum install ceph-common</code> to enable Ceph plugin support.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sosreport: command not found</code></td>
+<td>Install sos package with <code>yum install sos</code> or <code>dnf install sos</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: insufficient permissions to run sosreport, root access is required</code></td>
+<td>Run the command with <code>sudo</code> or as the root user.</td>
+</tr>
+<tr>
+<td><code>ERROR: plugin ceph not found</code></td>
+<td>Install ceph-common package with <code>yum install ceph-common</code> to enable Ceph plugin support.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="gather-support-data">Gather Support Data<a class="headerlink" href="#gather-support-data" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># 1. Full cluster status</span>
@@ -8163,9 +8325,28 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: error connecting to the cluster</code></strong> — Verify CEPH_CONF environment variable points to a valid ceph.conf and the user has read permissions on /etc/ceph/ceph.client.admin.keyring.
-<strong><code>ssh: Could not resolve hostname mon0: Name or service not known</code></strong> — Replace the hostname extraction logic with explicit mon hostnames: <code>for mon in mon0 mon1 mon2; do</code> instead of parsing <code>ceph mon dump</code>.
-<strong><code>ceph orch daemon logs osd.5: No such daemon</code></strong> — Verify the OSD exists and is registered with ceph-orch by running <code>ceph orch ps | grep osd.5</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: error connecting to the cluster</code></td>
+<td>Verify CEPH_CONF environment variable points to a valid ceph.conf and the user has read permissions on /etc/ceph/ceph.client.admin.keyring.</td>
+</tr>
+<tr>
+<td><code>ssh: Could not resolve hostname mon0: Name or service not known</code></td>
+<td>Replace the hostname extraction logic with explicit mon hostnames: <code>for mon in mon0 mon1 mon2; do</code> instead of parsing <code>ceph mon dump</code>.</td>
+</tr>
+<tr>
+<td><code>ceph orch daemon logs osd.5: No such daemon</code></td>
+<td>Verify the OSD exists and is registered with ceph-orch by running <code>ceph orch ps | grep osd.5</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -8201,7 +8382,7 @@ Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump r
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -9165,8 +9165,24 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: (standard input): No such file or directory</code></strong> — Verify the ESXi host is vSAN-enabled and the vSAN service is running with <code>systemctl status vsanvpd</code>.
-<strong><code>Error: Unknown command or namespace vsan.debug</code></strong> — Ensure you are running the command on a vSAN cluster member; this command is not available on non-vSAN hosts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: (standard input): No such file or directory</code></td>
+<td>Verify the ESXi host is vSAN-enabled and the vSAN service is running with <code>systemctl status vsanvpd</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Unknown command or namespace vsan.debug</code></td>
+<td>Ensure you are running the command on a vSAN cluster member; this command is not available on non-vSAN hosts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Risk during ABSENT:</strong> The object is running with reduced redundancy but is fully accessible. One more failure of a different component means data loss (for FTT=1 objects). For FTT=2, one absent + one degraded still leaves the object accessible.</p>
 <hr />
@@ -9204,9 +9220,28 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: (standard input): No such file or directory</code></strong> — Ensure vSAN is enabled on the cluster and the ESXi host is part of a vSAN cluster; run <code>esxcli vsan cluster get</code> to verify.
-<strong><code>Error: Unknown command or namespace</code></strong> — Update ESXi to a supported version that includes the vsan debug command set, or verify vSAN license is active.
-<strong><code>Resync Queue Summary: (empty)</code></strong> — This is normal if no objects are degraded; check actual object health with <code>esxcli vsan object list</code> to confirm cluster state.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: (standard input): No such file or directory</code></td>
+<td>Ensure vSAN is enabled on the cluster and the ESXi host is part of a vSAN cluster; run <code>esxcli vsan cluster get</code> to verify.</td>
+</tr>
+<tr>
+<td><code>Error: Unknown command or namespace</code></td>
+<td>Update ESXi to a supported version that includes the vsan debug command set, or verify vSAN license is active.</td>
+</tr>
+<tr>
+<td><code>Resync Queue Summary: (empty)</code></td>
+<td>This is normal if no objects are degraded; check actual object health with <code>esxcli vsan object list</code> to confirm cluster state.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Risk during DEGRADED:</strong> The object has zero redundancy for FTT=1. Any further failure of the remaining component causes data loss and the object becomes INACCESSIBLE. Treat all DEGRADED objects as P1 until rebuild completes.</p>
 <hr />
@@ -9265,8 +9300,24 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vsan cluster is not healthy</code></strong> — Verify all hosts are online and network connectivity is stable with <code>esxcli vsan cluster get</code>.
-<strong><code>Permission denied</code></strong> — Run the command with root privileges or ensure your vSphere user has the required VSAN administrator role.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vsan cluster is not healthy</code></td>
+<td>Verify all hosts are online and network connectivity is stable with <code>esxcli vsan cluster get</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with root privileges or ensure your vSphere user has the required VSAN administrator role.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Throttle rebuild during business hours:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Limit rebuild to 500 IOPS (reduce VM impact)</span>
@@ -9280,8 +9331,24 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown command or namespace vsan debug resync</code></strong> — Verify vSAN is licensed and enabled on the cluster; this command requires vSAN to be active on the host.
-<strong><code>Error: The object or item could not be found</code></strong> — Ensure the ESXi host is part of a vSAN cluster; standalone hosts do not support vSAN resync throttling commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown command or namespace vsan debug resync</code></td>
+<td>Verify vSAN is licensed and enabled on the cluster; this command requires vSAN to be active on the host.</td>
+</tr>
+<tr>
+<td><code>Error: The object or item could not be found</code></td>
+<td>Ensure the ESXi host is part of a vSAN cluster; standalone hosts do not support vSAN resync throttling commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Risk during REBUILDING:</strong> Same as DEGRADED — the object still has only one copy until the rebuild completes. Do not perform any maintenance on other hosts during a rebuild unless it is unavoidable.</p>
 <hr />
@@ -9338,8 +9405,24 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown command or namespace vsan</code></strong> — Ensure vSAN is licensed and enabled on the cluster, and run the command on an ESXi host that is part of the vSAN cluster.
-<strong><code>Error: Could not connect to the vSAN cluster</code></strong> — Verify the host has network connectivity to other cluster members and that vSAN clustering is properly initialized with <code>esxcli vsan cluster list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown command or namespace vsan</code></td>
+<td>Ensure vSAN is licensed and enabled on the cluster, and run the command on an ESXi host that is part of the vSAN cluster.</td>
+</tr>
+<tr>
+<td><code>Error: Could not connect to the vSAN cluster</code></td>
+<td>Verify the host has network connectivity to other cluster members and that vSAN clustering is properly initialized with <code>esxcli vsan cluster list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="when-objects-become-inaccessible">When Objects Become INACCESSIBLE<a class="headerlink" href="#when-objects-become-inaccessible" title="Permanent link">&para;</a></h2>
@@ -9370,8 +9453,24 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: (standard input): No such file or directory</code></strong> — Verify the VSAN cluster is healthy and the ESXi host has VSAN enabled by running <code>esxcli vsan cluster get</code>.
-<strong><code>Unknown command or namespace</code></strong> — Ensure you are running this command on a VSAN-enabled ESXi host with VSAN service running; check with <code>esxcli vsan cluster get</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: (standard input): No such file or directory</code></td>
+<td>Verify the VSAN cluster is healthy and the ESXi host has VSAN enabled by running <code>esxcli vsan cluster get</code>.</td>
+</tr>
+<tr>
+<td><code>Unknown command or namespace</code></td>
+<td>Ensure you are running this command on a VSAN-enabled ESXi host with VSAN service running; check with <code>esxcli vsan cluster get</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Escalate immediately to VMware GSS for any inaccessible object state — see Troubleshooting → Escalation.</p>
 
@@ -9396,7 +9495,7 @@ How vSAN classifies each object component's health — from the initial ABSENT s
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

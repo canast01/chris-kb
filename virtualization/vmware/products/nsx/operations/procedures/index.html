@@ -9533,9 +9533,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification (already present in the example, but ensure it's not removed).
-<strong><code>{"error_code":400,"error_message":"Invalid transport_zone_path"}</code></strong> — Verify the transport zone path exists by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/policy/api/v1/infra/sites/default/enforcement-points/default/transport-zones | jq</code>.
-<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Confirm NSX Manager credentials are correct and the admin user has API access permissions in NSX.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification (already present in the example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>{"error_code":400,"error_message":"Invalid transport_zone_path"}</code></td>
+<td>Verify the transport zone path exists by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/policy/api/v1/infra/sites/default/enforcement-points/default/transport-zones | jq</code>.</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Unauthorized"}</code></td>
+<td>Confirm NSX Manager credentials are correct and the admin user has API access permissions in NSX.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After creation, attach the segment to a VM vNIC via vCenter (Edit Settings &gt; Network Adapter). To delete the segment later:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9546,9 +9565,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Verify the NSX Manager hostname/IP is correct and the management interface is reachable on port 443.
-<strong><code>{"error_code":403,"error_message":"User does not have permission to perform DELETE on /policy/api/v1/infra/segments/seg-prod-app"}</code></strong> — Ensure the admin user account has the required policy administrator or segment delete permissions in NSX.
-<strong><code>{"error_code":404,"error_message":"Segment seg-prod-app not found"}</code></strong> — Confirm the segment name is correct and exists before attempting deletion; use a GET request to list segments first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Verify the NSX Manager hostname/IP is correct and the management interface is reachable on port 443.</td>
+</tr>
+<tr>
+<td><code>{"error_code":403,"error_message":"User does not have permission to perform DELETE on /policy/api/v1/infra/segments/seg-prod-app"}</code></td>
+<td>Ensure the admin user account has the required policy administrator or segment delete permissions in NSX.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"Segment seg-prod-app not found"}</code></td>
+<td>Confirm the segment name is correct and exists before attempting deletion; use a GET request to list segments first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify-segment-health">Verify Segment Health<a class="headerlink" href="#verify-segment-health" title="Permanent link">&para;</a></h2>
@@ -9578,8 +9616,24 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: logical-switch not found</code></strong> — Verify the logical switch ID exists with <code>get logical-switches</code> and copy the exact UUID.
-<strong><code>error: connection refused to nsx-manager</code></strong> — Ensure NSX Manager is reachable and nsxcli is authenticated with valid credentials.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: logical-switch not found</code></td>
+<td>Verify the logical switch ID exists with <code>get logical-switches</code> and copy the exact UUID.</td>
+</tr>
+<tr>
+<td><code>error: connection refused to nsx-manager</code></td>
+<td>Ensure NSX Manager is reachable and nsxcli is authenticated with valid credentials.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>get<span class="w"> </span>logical-switch<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>VNI
 </code></pre></div>
@@ -9587,8 +9641,24 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unknown command 'get'</code></strong> — Ensure you are in the NSX Manager CLI context; if using a shell script, prefix with <code>nsxcli</code> or connect to NSX Manager first via SSH.
-<strong><code>error: logical-switch not found</code></strong> — Verify the logical switch ID exists by running <code>list logical-switches</code> first to confirm the correct ID.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unknown command 'get'</code></td>
+<td>Ensure you are in the NSX Manager CLI context; if using a shell script, prefix with <code>nsxcli</code> or connect to NSX Manager first via SSH.</td>
+</tr>
+<tr>
+<td><code>error: logical-switch not found</code></td>
+<td>Verify the logical switch ID exists by running <code>list logical-switches</code> first to confirm the correct ID.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/logical-ports?logical_switch_id=&lt;segment-id&gt;&amp;attachment_type=VIF&quot;</span>
@@ -9643,9 +9713,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.
-<strong><code>{"httpStatus":401,"error_code":60013,"module_name":"api_common","error_message":"The credentials were invalid"}</code></strong> — Verify the NSX Manager admin username and password are correct and the account has not been locked after failed login attempts.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm the NSX Manager hostname/IP is correct, the system is reachable on port 443, and the NSX Manager service is running.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":401,"error_code":60013,"module_name":"api_common","error_message":"The credentials were invalid"}</code></td>
+<td>Verify the NSX Manager admin username and password are correct and the account has not been locked after failed login attempts.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct, the system is reachable on port 443, and the NSX Manager service is running.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configure-a-t1-gateway">Configure a T1 Gateway<a class="headerlink" href="#configure-a-t1-gateway" title="Permanent link">&para;</a></h2>
@@ -9693,9 +9782,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in the example, but ensure it's included if removed).
-<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Verify NSX Manager credentials and ensure the admin user has API access permissions.
-<strong><code>{"error_code":404,"error_message":"The Tier-1 &lt;t1-id&gt; was not found"}</code></strong> — Confirm the Tier-1 gateway ID exists by running <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-1s"</code> to list available gateways.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in the example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Unauthorized"}</code></td>
+<td>Verify NSX Manager credentials and ensure the admin user has API access permissions.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"The Tier-1 &lt;t1-id&gt; was not found"}</code></td>
+<td>Confirm the Tier-1 gateway ID exists by running <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-1s"</code> to list available gateways.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configure-a-t0-gateway-bgp-peering">Configure a T0 Gateway (BGP Peering)<a class="headerlink" href="#configure-a-t0-gateway-bgp-peering" title="Permanent link">&para;</a></h2>
@@ -9744,9 +9852,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code":403,"error_message":"User does not have permission to modify BGP configuration"}</code></strong> — Ensure the admin user has the NSX-T Policy Admin or equivalent role assigned.
-<strong><code>{"error_code":404,"error_message":"Tier-0 &lt;t0-id&gt; not found"}</code></strong> — Replace <code>&lt;t0-id&gt;</code> with the actual Tier-0 gateway ID (verify with <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-0s</code>).
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code":403,"error_message":"User does not have permission to modify BGP configuration"}</code></td>
+<td>Ensure the admin user has the NSX-T Policy Admin or equivalent role assigned.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"Tier-0 &lt;t0-id&gt; not found"}</code></td>
+<td>Replace <code>&lt;t0-id&gt;</code> with the actual Tier-0 gateway ID (verify with <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-0s</code>).</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vrf<span class="w"> </span>&lt;tier0-vrf&gt;
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">10</span>.0.0.5
@@ -9774,9 +9901,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the correct syntax is <code>get bgp neighbor &lt;neighbor-ip&gt; summary</code> or use <code>show bgp neighbors</code> depending on your NSX version.
-<strong><code>BGP neighbor 10.0.0.5 not found</code></strong> — Confirm the neighbor IP address is correct and the BGP session has been configured on this Tier-0 VRF.
-<strong><code>% Incomplete command</code></strong> — Ensure you are in the correct VRF context by running <code>show vrf</code> first to list available Tier-0 VRFs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the correct syntax is <code>get bgp neighbor &lt;neighbor-ip&gt; summary</code> or use <code>show bgp neighbors</code> depending on your NSX version.</td>
+</tr>
+<tr>
+<td><code>BGP neighbor 10.0.0.5 not found</code></td>
+<td>Confirm the neighbor IP address is correct and the BGP session has been configured on this Tier-0 VRF.</td>
+</tr>
+<tr>
+<td><code>% Incomplete command</code></td>
+<td>Ensure you are in the correct VRF context by running <code>show vrf</code> first to list available Tier-0 VRFs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="trigger-edge-node-failover">Trigger Edge Node Failover<a class="headerlink" href="#trigger-edge-node-failover" title="Permanent link">&para;</a></h2>
@@ -9817,9 +9963,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Cannot failover — both nodes in FAILED state</code></strong> — Check node connectivity and hardware status with <code>get edge-cluster health-check</code> before attempting failover.
-<strong><code>Error: BGP session timeout — neighbor 192.168.1.1 DOWN</code></strong> — Verify BGP configuration and network connectivity on the newly active node with <code>get bgp neighbor 192.168.1.1 detail</code>.
-<strong><code>Error: Failover not permitted — cluster has only 1 node</code></strong> — Deploy a second Edge node to the cluster before initiating failover operations.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Cannot failover — both nodes in FAILED state</code></td>
+<td>Check node connectivity and hardware status with <code>get edge-cluster health-check</code> before attempting failover.</td>
+</tr>
+<tr>
+<td><code>Error: BGP session timeout — neighbor 192.168.1.1 DOWN</code></td>
+<td>Verify BGP configuration and network connectivity on the newly active node with <code>get bgp neighbor 192.168.1.1 detail</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Failover not permitted — cluster has only 1 node</code></td>
+<td>Deploy a second Edge node to the cluster before initiating failover operations.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="create-a-dfw-security-policy">Create a DFW Security Policy<a class="headerlink" href="#create-a-dfw-security-policy" title="Permanent link">&para;</a></h2>
@@ -9862,9 +10027,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, so ensure it's not removed).
-<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Verify NSX Manager credentials in the <code>-u</code> parameter match an admin account with API access.
-<strong><code>{"error_code":404,"error_message":"The requested resource could not be found"}</code></strong> — Confirm the security policy <code>policy-web-tier</code> exists and the NSX Manager hostname in the URL is correct and reachable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the example, so ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Unauthorized"}</code></td>
+<td>Verify NSX Manager credentials in the <code>-u</code> parameter match an admin account with API access.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"The requested resource could not be found"}</code></td>
+<td>Confirm the security policy <code>policy-web-tier</code> exists and the NSX Manager hostname in the URL is correct and reachable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="add-a-rule-to-a-security-policy">Add a Rule to a Security Policy<a class="headerlink" href="#add-a-rule-to-a-security-policy" title="Permanent link">&para;</a></h2>
@@ -9915,9 +10099,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify NSX Manager certificate chain).
-<strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Verify admin username and password are correct and the user has API access permissions in NSX Manager.
-<strong><code>{"error_code":404,"error_message":"Policy not found"}</code></strong> — Confirm the security policy <code>policy-web-tier</code> exists and the source/destination group paths are correct using <code>GET /infra/domains/default/security-policies</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify NSX Manager certificate chain).</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Invalid credentials"}</code></td>
+<td>Verify admin username and password are correct and the user has API access permissions in NSX Manager.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"Policy not found"}</code></td>
+<td>Confirm the security policy <code>policy-web-tier</code> exists and the source/destination group paths are correct using <code>GET /infra/domains/default/security-policies</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After adding rules, publish the policy:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9948,9 +10151,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's included if removed).
-<strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Verify the NSX Manager admin username and password are correct and the user has API access permissions.
-<strong><code>{"error_code":404,"error_message":"Policy not found"}</code></strong> — Confirm the security policy <code>policy-web-tier</code> exists in the <code>default</code> domain using a GET request first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Invalid credentials"}</code></td>
+<td>Verify the NSX Manager admin username and password are correct and the user has API access permissions.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"Policy not found"}</code></td>
+<td>Confirm the security policy <code>policy-web-tier</code> exists in the <code>default</code> domain using a GET request first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="delete-a-dfw-rule-via-api">Delete a DFW Rule via API<a class="headerlink" href="#delete-a-dfw-rule-via-api" title="Permanent link">&para;</a></h2>
@@ -9969,9 +10191,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.
-<strong><code>{"error_code":403,"error_message":"User admin does not have permission to perform DELETE on /policy/api/v1/infra/domains/default/security-policies/&lt;policy-id&gt;/rules/&lt;rule-id&gt;"}</code></strong> — Verify the admin user has the "Security Administrator" or equivalent role assigned in NSX Manager's role-based access control settings.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm the NSX Manager hostname/IP is correct and reachable on port 443, and that the NSX Manager service is running.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error_code":403,"error_message":"User admin does not have permission to perform DELETE on /policy/api/v1/infra/domains/default/security-policies/&lt;policy-id&gt;/rules/&lt;rule-id&gt;"}</code></td>
+<td>Verify the admin user has the "Security Administrator" or equivalent role assigned in NSX Manager's role-based access control settings.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct and reachable on port 443, and that the NSX Manager service is running.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>To confirm the rule has been removed:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9988,9 +10229,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Verify the NSX Manager hostname/IP is correct and reachable on port 443 using <code>ping</code> or <code>nc -zv</code>.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></strong> — Confirm authentication credentials are correct and the policy ID exists by testing with <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/security-policies" | head -20</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Verify the NSX Manager hostname/IP is correct and reachable on port 443 using <code>ping</code> or <code>nc -zv</code>.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></td>
+<td>Confirm authentication credentials are correct and the policy ID exists by testing with <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/security-policies" | head -20</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="create-a-security-group-tag-based">Create a Security Group (Tag-Based)<a class="headerlink" href="#create-a-security-group-tag-based" title="Permanent link">&para;</a></h2>
@@ -10043,9 +10303,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify NSX Manager certificate or use <code>--cacert</code> with proper CA bundle).
-<strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Verify NSX Manager admin credentials and ensure the user has API access permissions.
-<strong><code>{"error_code":404,"error_message":"The requested resource could not be found"}</code></strong> — Confirm the NSX Manager hostname/IP is correct and the policy API endpoint is accessible on the target NSX version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify NSX Manager certificate or use <code>--cacert</code> with proper CA bundle).</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Invalid credentials"}</code></td>
+<td>Verify NSX Manager admin credentials and ensure the user has API access permissions.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"The requested resource could not be found"}</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct and the policy API endpoint is accessible on the target NSX version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Verify membership after tagging VMs:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10089,9 +10368,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.
-<strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Verify the admin username and password are correct and the account has not been locked after failed login attempts.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Name or service not known</code></strong> — Ensure the NSX Manager hostname or IP address is correct and resolvable from your network, and that port 443 is accessible.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Invalid credentials"}</code></td>
+<td>Verify the admin username and password are correct and the account has not been locked after failed login attempts.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Name or service not known</code></td>
+<td>Ensure the NSX Manager hostname or IP address is correct and resolvable from your network, and that port 443 is accessible.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="apply-nsx-tags-to-a-vm-powercli-and-api">Apply NSX Tags to a VM (PowerCLI and API)<a class="headerlink" href="#apply-nsx-tags-to-a-vm-powercli-and-api" title="Permanent link">&para;</a></h2>
@@ -10130,9 +10428,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; if still failing, verify NSX Manager certificate is valid or use <code>--cacert</code> with proper CA bundle).
-<strong><code>{"httpStatus":"UNAUTHORIZED","error_code":401,"module_name":"api.framework","error_message":"Invalid credentials"}</code></strong> — Verify the admin username and password are correct and the user has API access permissions in NSX Manager.
-<strong><code>{"httpStatus":"NOT_FOUND","error_code":404,"module_name":"api.framework","error_message":"Virtual machine not found"}</code></strong> — Confirm the <code>external_id</code> (VM moref) is valid and the VM is registered in vCenter and synced to NSX Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present; if still failing, verify NSX Manager certificate is valid or use <code>--cacert</code> with proper CA bundle).</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":"UNAUTHORIZED","error_code":401,"module_name":"api.framework","error_message":"Invalid credentials"}</code></td>
+<td>Verify the admin username and password are correct and the user has API access permissions in NSX Manager.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":"NOT_FOUND","error_code":404,"module_name":"api.framework","error_message":"Virtual machine not found"}</code></td>
+<td>Confirm the <code>external_id</code> (VM moref) is valid and the VM is registered in vCenter and synced to NSX Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After tagging, verify the VM appears in the target group:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10168,9 +10485,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example; ensure it's not removed).
-<strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Verify the NSX Manager admin username and password are correct and the account has API access permissions.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm the NSX Manager hostname/IP is correct and reachable on port 443 from your network location.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in example; ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Invalid credentials"}</code></td>
+<td>Verify the NSX Manager admin username and password are correct and the account has API access permissions.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct and reachable on port 443 from your network location.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="test-dfw-rules-with-traceflow">Test DFW Rules with Traceflow<a class="headerlink" href="#test-dfw-rules-with-traceflow" title="Permanent link">&para;</a></h2>
@@ -10208,9 +10544,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to 192.168.100.45 port 443: Connection refused</code></strong> — Verify the destination VM is running and the service is listening on port 443 using <code>netstat -tlnp | grep 443</code> on the target.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip certificate verification, or import the VM's certificate into your trust store.
-<strong><code>curl: (6) Could not resolve host name</code></strong> — Verify the IP address is correct and that DNS resolution or network connectivity to the destination VM is working.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to 192.168.100.45 port 443: Connection refused</code></td>
+<td>Verify the destination VM is running and the service is listening on port 443 using <code>netstat -tlnp | grep 443</code> on the target.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to curl to skip certificate verification, or import the VM's certificate into your trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host name</code></td>
+<td>Verify the IP address is correct and that DNS resolution or network connectivity to the destination VM is working.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>For automated traceflow via API:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10261,9 +10616,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; ensure curl supports SSL).
-<strong><code>{"httpStatus":400,"error_code":65506,"module_name":"common","error_message":"Invalid port_id"}</code></strong> — Verify the source logical port ID exists by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/api/v1/logical-ports</code> and copy a valid UUID.
-<strong><code>{"httpStatus":401,"error_code":65507,"module_name":"common","error_message":"Invalid credentials"}</code></strong> — Confirm NSX Manager admin credentials are correct and the user has API access permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; ensure curl supports SSL).</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":400,"error_code":65506,"module_name":"common","error_message":"Invalid port_id"}</code></td>
+<td>Verify the source logical port ID exists by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/api/v1/logical-ports</code> and copy a valid UUID.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":401,"error_code":65507,"module_name":"common","error_message":"Invalid credentials"}</code></td>
+<td>Confirm NSX Manager admin credentials are correct and the user has API access permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configure-snat-dnat">Configure SNAT / DNAT<a class="headerlink" href="#configure-snat-dnat" title="Permanent link">&para;</a></h2>
@@ -10308,9 +10682,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code":403,"error_message":"User admin does not have permission to modify NAT rules"}</code></strong> — Ensure the admin user has the NSX Policy Admin or equivalent role assigned in NSX Manager.
-<strong><code>{"error_code":404,"error_message":"Tier-1 &lt;t1-id&gt; not found"}</code></strong> — Verify the Tier-1 gateway ID exists by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-1s</code> and confirm the correct ID.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager certificate into your system's trusted store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code":403,"error_message":"User admin does not have permission to modify NAT rules"}</code></td>
+<td>Ensure the admin user has the NSX Policy Admin or equivalent role assigned in NSX Manager.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"Tier-1 &lt;t1-id&gt; not found"}</code></td>
+<td>Verify the Tier-1 gateway ID exists by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-1s</code> and confirm the correct ID.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager certificate into your system's trusted store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>DNAT — redirect inbound traffic from a public IP to a private VM:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10346,9 +10739,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code":403,"error_message":"User admin does not have permission to modify NAT rules"}</code></strong> — Ensure the admin user has the NSX-T Policy Admin or equivalent role assigned in the NSX Manager.
-<strong><code>{"error_code":404,"error_message":"Tier-1 &lt;t1-id&gt; not found"}</code></strong> — Replace <code>&lt;t1-id&gt;</code> with the actual Tier-1 gateway ID (e.g., <code>tier1-prod-01</code>) and verify it exists via <code>GET /policy/api/v1/infra/tier-1s</code>.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification or import the NSX Manager's CA certificate into your system trust store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code":403,"error_message":"User admin does not have permission to modify NAT rules"}</code></td>
+<td>Ensure the admin user has the NSX-T Policy Admin or equivalent role assigned in the NSX Manager.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"Tier-1 &lt;t1-id&gt; not found"}</code></td>
+<td>Replace <code>&lt;t1-id&gt;</code> with the actual Tier-1 gateway ID (e.g., <code>tier1-prod-01</code>) and verify it exists via <code>GET /policy/api/v1/infra/tier-1s</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Verify NAT rules are active:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10382,9 +10794,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify NSX Manager certificate is valid).
-<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Verify admin credentials are correct and the user has API access permissions in NSX Manager.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm the NSX Manager hostname/IP is correct and reachable on port 443 from your network.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify NSX Manager certificate is valid).</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Unauthorized"}</code></td>
+<td>Verify admin credentials are correct and the user has API access permissions in NSX Manager.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct and reachable on port 443 from your network.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="renew-nsx-manager-certificate-api">Renew NSX Manager Certificate (API)<a class="headerlink" href="#renew-nsx-manager-certificate-api" title="Permanent link">&para;</a></h2>
@@ -10440,9 +10871,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl to skip SSL verification, or use <code>--cacert</code> with the NSX Manager's CA certificate.
-<strong><code>{"error_code":400,"error_message":"Invalid subject attributes"}</code></strong> — Ensure all required subject attributes (CN, O, C) are present and use valid ISO country codes.
-<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Verify the admin credentials are correct and the user has certificate management permissions in NSX Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl to skip SSL verification, or use <code>--cacert</code> with the NSX Manager's CA certificate.</td>
+</tr>
+<tr>
+<td><code>{"error_code":400,"error_message":"Invalid subject attributes"}</code></td>
+<td>Ensure all required subject attributes (CN, O, C) are present and use valid ISO country codes.</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Unauthorized"}</code></td>
+<td>Verify the admin credentials are correct and the user has certificate management permissions in NSX Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="c1"># Step 2 — Import the signed certificate (PEM format)</span>
 <a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a><span class="nv">CERT_PEM</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span>/path/to/signed.crt<span class="k">)</span>
@@ -10476,9 +10926,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or use <code>--cacert /path/to/ca-bundle.crt</code> to provide the CA certificate.
-<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Ensure the certificate and key PEM files contain valid content without line breaks; use <code>cat -A</code> to check for hidden characters and re-export if needed.
-<strong><code>{"error_code": 400, "error_message": "Invalid certificate format"}</code></strong> — Verify the PEM file starts with <code>-----BEGIN CERTIFICATE-----</code> and ends with <code>-----END CERTIFICATE-----</code> with no extra whitespace or encoding issues.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification, or use <code>--cacert /path/to/ca-bundle.crt</code> to provide the CA certificate.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON at line 1</code></td>
+<td>Ensure the certificate and key PEM files contain valid content without line breaks; use <code>cat -A</code> to check for hidden characters and re-export if needed.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 400, "error_message": "Invalid certificate format"}</code></td>
+<td>Verify the PEM file starts with <code>-----BEGIN CERTIFICATE-----</code> and ends with <code>-----END CERTIFICATE-----</code> with no extra whitespace or encoding issues.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="c1"># Step 3 — Apply the certificate to the NSX Manager node</span>
 <a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a><span class="c1"># Obtain the certificate ID from the import response, then:</span>
@@ -10506,9 +10975,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.
-<strong><code>{"httpStatus":401,"errorCode":401,"message":"Invalid credentials"}</code></strong> — Verify the admin username and password are correct and the account has not been locked after failed login attempts.
-<strong><code>{"httpStatus":404,"errorCode":404,"message":"Certificate not found"}</code></strong> — Confirm the certificate_id value matches exactly from the import response and the certificate exists in NSX Manager's certificate store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":401,"errorCode":401,"message":"Invalid credentials"}</code></td>
+<td>Verify the admin username and password are correct and the account has not been locked after failed login attempts.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":404,"errorCode":404,"message":"Certificate not found"}</code></td>
+<td>Confirm the certificate_id value matches exactly from the import response and the certificate exists in NSX Manager's certificate store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="c1"># Step 4 — Verify the new certificate is live</span>
 <a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;nsx-manager&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject
@@ -10519,9 +11007,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load certificate</code></strong> — Ensure the NSX Manager API is responding on port 443 by running <code>curl -k https://&lt;nsx-manager&gt;:443/api/v1/cluster</code> first.
-<strong><code>connect: Connection refused</code></strong> — Verify NSX Manager hostname resolves and is reachable; check firewall rules and confirm the management interface IP with <code>show interface management0</code>.
-<strong><code>certificate verify failed</code></strong> — This is expected behavior with self-signed certificates; the command uses <code>-noout</code> to display dates without validation, so re-run the exact command above.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Ensure the NSX Manager API is responding on port 443 by running <code>curl -k https://&lt;nsx-manager&gt;:443/api/v1/cluster</code> first.</td>
+</tr>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify NSX Manager hostname resolves and is reachable; check firewall rules and confirm the management interface IP with <code>show interface management0</code>.</td>
+</tr>
+<tr>
+<td><code>certificate verify failed</code></td>
+<td>This is expected behavior with self-signed certificates; the command uses <code>-noout</code> to display dates without validation, so re-run the exact command above.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configure-nsx-backup">Configure NSX Backup<a class="headerlink" href="#configure-nsx-backup" title="Permanent link">&para;</a></h2>
@@ -10575,9 +11082,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or use a valid certificate on the NSX Manager.
-<strong><code>{"httpStatus":401,"error_code":401,"module_name":"api_client","error_message":"Invalid credentials"}</code></strong> — Verify the NSX Manager admin username and password are correct and the account has backup configuration privileges.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm the NSX Manager hostname/IP is correct and reachable, and that the API service is running with <code>nsxcli -c "get service api"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or use a valid certificate on the NSX Manager.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":401,"error_code":401,"module_name":"api_client","error_message":"Invalid credentials"}</code></td>
+<td>Verify the NSX Manager admin username and password are correct and the account has backup configuration privileges.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct and reachable, and that the API service is running with <code>nsxcli -c "get service api"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a><span class="c1"># Set backup schedule — daily at 02:00</span>
 <a id="__codelineno-57-2" name="__codelineno-57-2" href="#__codelineno-57-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10611,9 +11137,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.
-<strong><code>{"httpStatus":"UNAUTHORIZED","error_code":401,"module_name":"common-services","error_message":"Invalid credentials"}</code></strong> — Verify the admin username and password are correct and the user has backup configuration privileges.
-<strong><code>{"httpStatus":"NOT_FOUND","error_code":404,"module_name":"api-common","error_message":"The requested resource could not be found"}</code></strong> — Confirm the NSX Manager hostname/IP is correct and the cluster backups API endpoint is available on this NSX version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":"UNAUTHORIZED","error_code":401,"module_name":"common-services","error_message":"Invalid credentials"}</code></td>
+<td>Verify the admin username and password are correct and the user has backup configuration privileges.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":"NOT_FOUND","error_code":404,"module_name":"api-common","error_message":"The requested resource could not be found"}</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct and the cluster backups API endpoint is available on this NSX version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a><span class="c1"># Trigger an on-demand backup immediately</span>
 <a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10632,9 +11177,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the NSX Manager's certificate into your trusted store.
-<strong><code>{"httpStatus":401,"errorCode":"UNAUTHORIZED","message":"Invalid credentials"}</code></strong> — Verify the admin username and password are correct and URL-encoded if they contain special characters.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm the NSX Manager hostname/IP is correct, reachable from your network, and the management service is running.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification, or import the NSX Manager's certificate into your trusted store.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":401,"errorCode":"UNAUTHORIZED","message":"Invalid credentials"}</code></td>
+<td>Verify the admin username and password are correct and URL-encoded if they contain special characters.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct, reachable from your network, and the management service is running.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a><span class="c1"># List available backups to confirm success</span>
 <a id="__codelineno-61-2" name="__codelineno-61-2" href="#__codelineno-61-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10668,9 +11232,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the NSX Manager's CA certificate into your system trust store.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Verify the NSX Manager hostname/IP is correct and the management plane is reachable on port 443 using <code>ping</code> or <code>nc -zv</code>.
-<strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Confirm the admin username and password are correct; check NSX Manager audit logs for failed authentication attempts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already present) or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Verify the NSX Manager hostname/IP is correct and the management plane is reachable on port 443 using <code>ping</code> or <code>nc -zv</code>.</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Invalid credentials"}</code></td>
+<td>Confirm the admin username and password are correct; check NSX Manager audit logs for failed authentication attempts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <div class="admonition danger">
@@ -10708,9 +11291,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify NSX Manager HTTPS is responding on port 443).
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm NSX Manager hostname/IP is correct and the appliance is fully booted; check <code>ssh &lt;nsx-manager&gt; "systemctl status nsx-manager"</code> to verify service status.
-<strong><code>{"httpStatus":401,"error_code":6001,"module_name":"common","error_message":"Invalid credentials"}</code></strong> — Verify the admin password is correct and the user account has not been locked; reset credentials via NSX Manager console if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in example; if error persists, verify NSX Manager HTTPS is responding on port 443).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Confirm NSX Manager hostname/IP is correct and the appliance is fully booted; check <code>ssh &lt;nsx-manager&gt; "systemctl status nsx-manager"</code> to verify service status.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":401,"error_code":6001,"module_name":"common","error_message":"Invalid credentials"}</code></td>
+<td>Verify the admin password is correct and the user account has not been locked; reset credentials via NSX Manager console if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a><span class="c1"># Step 3 — Start the restore (use the timestamp from the listing)</span>
 <a id="__codelineno-65-2" name="__codelineno-65-2" href="#__codelineno-65-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10732,9 +11334,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code": 400, "error_message": "Invalid timestamp format"}</code></strong> — Verify the timestamp from the backup listing matches the exact format (e.g., <code>1705329138456</code>) and is wrapped in quotes in the JSON payload.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager's certificate into your system's CA bundle.
-<strong><code>{"error_code": 403, "error_message": "User admin is not authorized"}</code></strong> — Confirm the admin credentials are correct and the user has cluster restore permissions in NSX Manager's role-based access control settings.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code": 400, "error_message": "Invalid timestamp format"}</code></td>
+<td>Verify the timestamp from the backup listing matches the exact format (e.g., <code>1705329138456</code>) and is wrapped in quotes in the JSON payload.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager's certificate into your system's CA bundle.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 403, "error_message": "User admin is not authorized"}</code></td>
+<td>Confirm the admin credentials are correct and the user has cluster restore permissions in NSX Manager's role-based access control settings.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a><span class="c1"># Step 4 — Poll restore status</span>
 <a id="__codelineno-67-2" name="__codelineno-67-2" href="#__codelineno-67-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10756,9 +11377,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX Manager hostname matches certificate CN).
-<strong><code>{"httpStatus":401,"error_code":"UNAUTHORIZED","message":"Invalid credentials"}</code></strong> — Verify admin credentials are correct and the user has restore permissions in NSX Manager.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm NSX Manager IP/hostname is correct and reachable on port 443, and that NSX Manager services are running.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX Manager hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":401,"error_code":"UNAUTHORIZED","message":"Invalid credentials"}</code></td>
+<td>Verify admin credentials are correct and the user has restore permissions in NSX Manager.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Confirm NSX Manager IP/hostname is correct and reachable on port 443, and that NSX Manager services are running.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a><span class="c1"># Step 5 — Verify cluster health after restore</span>
 <a id="__codelineno-69-2" name="__codelineno-69-2" href="#__codelineno-69-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10785,9 +11425,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example; if still occurring, verify the NSX Manager hostname matches the certificate CN).
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Verify the NSX Manager IP/hostname is correct and the management interface is reachable; check network connectivity and firewall rules.
-<strong><code>{"error_code":401,"error_message":"Invalid credentials"}</code></strong> — Confirm the admin password is correct and has not been changed since the restore operation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the example; if still occurring, verify the NSX Manager hostname matches the certificate CN).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Verify the NSX Manager IP/hostname is correct and the management interface is reachable; check network connectivity and firewall rules.</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Invalid credentials"}</code></td>
+<td>Confirm the admin password is correct and has not been changed since the restore operation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="collect-nsx-support-bundle">Collect NSX Support Bundle<a class="headerlink" href="#collect-nsx-support-bundle" title="Permanent link">&para;</a></h2>
@@ -10827,9 +11486,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).
-<strong><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></strong> — Verify the NSX Manager admin username and password are correct and the account has not been locked.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt;: Name or service not known</code></strong> — Replace <code>&lt;nsx-manager&gt;</code> with the actual NSX Manager hostname or IP address (e.g., <code>nsx-mgr.example.com</code> or <code>192.168.1.100</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></td>
+<td>Verify the NSX Manager admin username and password are correct and the account has not been locked.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt;: Name or service not known</code></td>
+<td>Replace <code>&lt;nsx-manager&gt;</code> with the actual NSX Manager hostname or IP address (e.g., <code>nsx-mgr.example.com</code> or <code>192.168.1.100</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a><span class="c1"># Poll collection status</span>
 <a id="__codelineno-73-2" name="__codelineno-73-2" href="#__codelineno-73-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10849,9 +11527,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX Manager certificate is valid).
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt;: Name or service not known</code></strong> — Replace <code>&lt;nsx-manager&gt;</code> with the actual NSX Manager hostname or IP address (e.g., <code>192.168.1.50</code> or <code>nsx-mgr.example.com</code>).
-<strong><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></strong> — Verify the admin username and password are correct and the account has API access permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX Manager certificate is valid).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt;: Name or service not known</code></td>
+<td>Replace <code>&lt;nsx-manager&gt;</code> with the actual NSX Manager hostname or IP address (e.g., <code>192.168.1.50</code> or <code>nsx-mgr.example.com</code>).</td>
+</tr>
+<tr>
+<td><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></td>
+<td>Verify the admin username and password are correct and the account has API access permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a><span class="c1"># Download completed bundle (file_id returned in status response)</span>
 <a id="__codelineno-75-2" name="__codelineno-75-2" href="#__codelineno-75-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -10865,9 +11562,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present in example, but ensure it's not removed).
-<strong><code>curl: (401) Unauthorized</code></strong> — Verify admin credentials are correct and the user has support bundle download permissions in NSX Manager.
-<strong><code>curl: (404) Not Found</code></strong> — Confirm the file_id is valid and the bundle generation completed successfully by checking the status endpoint first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present in example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Verify admin credentials are correct and the user has support bundle download permissions in NSX Manager.</td>
+</tr>
+<tr>
+<td><code>curl: (404) Not Found</code></td>
+<td>Confirm the file_id is valid and the bundle generation completed successfully by checking the status endpoint first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="change-control-record-pre-and-post-verification">Change Control Record — Pre and Post Verification<a class="headerlink" href="#change-control-record-pre-and-post-verification" title="Permanent link">&para;</a></h2>
@@ -10916,9 +11632,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command (already present in example; if error persists, verify NSX Manager certificate or use <code>--cacert</code> with proper CA bundle).
-<strong><code>jq: command not found</code></strong> — Install python3-json or use the provided <code>python3 -c</code> JSON parser instead of jq.
-<strong><code>HTTP 401 Unauthorized</code></strong> — Verify admin credentials are correct and the user has API access permissions in NSX Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command (already present in example; if error persists, verify NSX Manager certificate or use <code>--cacert</code> with proper CA bundle).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install python3-json or use the provided <code>python3 -c</code> JSON parser instead of jq.</td>
+</tr>
+<tr>
+<td><code>HTTP 401 Unauthorized</code></td>
+<td>Verify admin credentials are correct and the user has API access permissions in NSX Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>After the change:</strong></p>
 <ol>
@@ -10977,9 +11712,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip certificate verification (already present in example, but ensure it's not removed).
-<strong><code>401 Unauthorized</code></strong> — Verify NSX Manager credentials in the <code>-u 'admin:password'</code> parameter match current admin account and are URL-encoded if they contain special characters.
-<strong><code>vrf: command not found</code></strong> — Execute this command from the NSX Edge CLI (SSH to edge node IP), not from the NSX Manager appliance shell.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip certificate verification (already present in example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Verify NSX Manager credentials in the <code>-u 'admin:password'</code> parameter match current admin account and are URL-encoded if they contain special characters.</td>
+</tr>
+<tr>
+<td><code>vrf: command not found</code></td>
+<td>Execute this command from the NSX Edge CLI (SSH to edge node IP), not from the NSX Manager appliance shell.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Connectivity test from a workload VM:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-81-1" name="__codelineno-81-1" href="#__codelineno-81-1"></a>curl<span class="w"> </span>-v<span class="w"> </span>https://&lt;dest-vm-ip&gt;/
@@ -11008,9 +11762,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to 192.168.100.45 port 443: Connection refused</code></strong> — Verify the destination VM is powered on and the service listening on port 443 is running; check NSX firewall rules allow traffic from your source IP.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (<code>curl -k https://&lt;dest-vm-ip&gt;/</code>) or import the VM's certificate into your trusted store.
-<strong><code>curl: (7) Failed to connect to 192.168.100.45 port 443: No route to host</code></strong> — Confirm network connectivity and NSX logical routing/switching is configured correctly; verify the destination VM's network segment is reachable from your management network.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to 192.168.100.45 port 443: Connection refused</code></td>
+<td>Verify the destination VM is powered on and the service listening on port 443 is running; check NSX firewall rules allow traffic from your source IP.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification (<code>curl -k https://&lt;dest-vm-ip&gt;/</code>) or import the VM's certificate into your trusted store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to 192.168.100.45 port 443: No route to host</code></td>
+<td>Confirm network connectivity and NSX logical routing/switching is configured correctly; verify the destination VM's network segment is reachable from your management network.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="configure-a-load-balancer">Configure a Load Balancer<a class="headerlink" href="#configure-a-load-balancer" title="Permanent link">&para;</a></h2>
 <p>NSX-T load balancer supports L4 (TCP/UDP) and L7 (HTTP/HTTPS) with virtual servers, server pools, and health monitors.</p>
@@ -11098,9 +11871,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></strong> — Verify NSX Manager hostname, username, and password are correct in the curl command.
-<strong><code>{"error_code": 400, "error_message": "pool_id not found"}</code></strong> — Ensure the pool was created successfully in step 1 and use the returned pool ID in the virtual server creation request.
-<strong><code>{"error_code": 409, "error_message": "IP address 10.20.40.50 already in use"}</code></strong> — Choose a different VIP address that is not already assigned to another virtual server or resource.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></td>
+<td>Verify NSX Manager hostname, username, and password are correct in the curl command.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 400, "error_message": "pool_id not found"}</code></td>
+<td>Ensure the pool was created successfully in step 1 and use the returned pool ID in the virtual server creation request.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 409, "error_message": "IP address 10.20.40.50 already in use"}</code></td>
+<td>Choose a different VIP address that is not already assigned to another virtual server or resource.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Health monitor for HTTPS:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -11146,9 +11938,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX Manager certificate is valid).
-<strong><code>{"httpStatus":400,"error_code":107,"module_name":"common","error_message":"Invalid request body"}</code></strong> — Validate JSON syntax and ensure all required fields match the NSX API schema version for your release.
-<strong><code>{"httpStatus":401,"error_code":401,"module_name":"common","error_message":"Unauthorized"}</code></strong> — Verify admin credentials are correct and the user has API access permissions in NSX Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX Manager certificate is valid).</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":400,"error_code":107,"module_name":"common","error_message":"Invalid request body"}</code></td>
+<td>Validate JSON syntax and ensure all required fields match the NSX API schema version for your release.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":401,"error_code":401,"module_name":"common","error_message":"Unauthorized"}</code></td>
+<td>Verify admin credentials are correct and the user has API access permissions in NSX Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="configure-ipsec-vpn">Configure IPsec VPN<a class="headerlink" href="#configure-ipsec-vpn" title="Permanent link">&para;</a></h2>
 <p>Policy-based IPsec VPN between NSX T0 and a remote peer (on-prem firewall or cloud gateway).</p>
@@ -11341,9 +12152,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"httpStatus":401,"error_code":6001,"module_name":"api_service","error_message":"Invalid credentials"}</code></strong> — Verify the NSX Manager hostname is correct and admin credentials are accurate in the curl command.
-<strong><code>{"httpStatus":400,"error_code":6002,"error_message":"host_switch_name 'nsxHostSwitch' does not exist"}</code></strong> — Ensure the host switch has been created on transport nodes before creating transport zones, or use the correct existing host switch name.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"httpStatus":401,"error_code":6001,"module_name":"api_service","error_message":"Invalid credentials"}</code></td>
+<td>Verify the NSX Manager hostname is correct and admin credentials are accurate in the curl command.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":400,"error_code":6002,"error_message":"host_switch_name 'nsxHostSwitch' does not exist"}</code></td>
+<td>Ensure the host switch has been created on transport nodes before creating transport zones, or use the correct existing host switch name.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After adding a transport zone, add it to the host switch profile of the transport node profile, then re-apply to affected clusters.</p>
 <h2 id="put-an-edge-node-into-maintenance-mode">Put an Edge Node into Maintenance Mode<a class="headerlink" href="#put-an-edge-node-into-maintenance-mode" title="Permanent link">&para;</a></h2>
@@ -11423,9 +12253,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; verify NSX Manager hostname matches certificate CN).
-<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "results"</code></strong> — Verify NSX Manager credentials and URL are correct, and that the API endpoint is accessible from your client.
-<strong><code>"error_code": 400, "error_message": "Transport node is not in a valid state for maintenance mode"</code></strong> — Confirm the peer Edge Node status is UP and no other maintenance operations are in progress before retrying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present; verify NSX Manager hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "results"</code></td>
+<td>Verify NSX Manager credentials and URL are correct, and that the API endpoint is accessible from your client.</td>
+</tr>
+<tr>
+<td><code>"error_code": 400, "error_message": "Transport node is not in a valid state for maintenance mode"</code></td>
+<td>Confirm the peer Edge Node status is UP and no other maintenance operations are in progress before retrying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="nsx-manager-cluster-health-and-pre-upgrade-validation">NSX Manager Cluster Health and Pre-Upgrade Validation<a class="headerlink" href="#nsx-manager-cluster-health-and-pre-upgrade-validation" title="Permanent link">&para;</a></h2>
 <p>Run before any NSX upgrade or major change to confirm the cluster is in a clean state.</p>
@@ -11507,9 +12356,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the block, but ensure your NSX manager certificate is trusted or use the flag).
-<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "control_cluster_status"</code></strong> — Verify the NSX manager API endpoint is reachable and responding with valid JSON; check credentials and network connectivity to <code>https://&lt;nsx-manager&gt;</code>.
-<strong><code>HTTP/2 401</code></strong> — Confirm the admin credentials are correct and the user has API access permissions in NSX Manager role-based access control.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the block, but ensure your NSX manager certificate is trusted or use the flag).</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Cannot index null with string "control_cluster_status"</code></td>
+<td>Verify the NSX manager API endpoint is reachable and responding with valid JSON; check credentials and network connectivity to <code>https://&lt;nsx-manager&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>HTTP/2 401</code></td>
+<td>Confirm the admin credentials are correct and the user has API access permissions in NSX Manager role-based access control.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="upgrade-nsx">Upgrade NSX<a class="headerlink" href="#upgrade-nsx" title="Permanent link">&para;</a></h2>
@@ -11546,9 +12414,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.
-<strong><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></strong> — Verify the admin username and password are correct and the user has bundle upload permissions.
-<strong><code>{"error_code": 400, "error_message": "Invalid URL provided"}</code></strong> — Ensure the depot URL is reachable from the NSX Manager and the .mub file exists at that location.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></td>
+<td>Verify the admin username and password are correct and the user has bundle upload permissions.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 400, "error_message": "Invalid URL provided"}</code></td>
+<td>Ensure the depot URL is reachable from the NSX Manager and the .mub file exists at that location.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-2-upgrade-nsx-manager-cluster">Step 2 — Upgrade NSX Manager Cluster<a class="headerlink" href="#step-2-upgrade-nsx-manager-cluster" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 2 — Upgrade NSX Manager Cluster" src="../../../../../../assets/nsx-proc-step-2-upgrade-nsx-manager-cluster.svg" /></p>
@@ -11578,9 +12465,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX Manager hostname matches certificate CN).
-<strong><code>jq: parse error: Cannot index string with string "fqdn"</code></strong> — Verify the API response structure matches your NSX version by running <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/cluster/nodes"</code> without jq to inspect raw JSON.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm NSX Manager is running and accessible by testing basic connectivity with <code>ping</code> or <code>nc -zv &lt;nsx-manager&gt; 443</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify NSX Manager hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index string with string "fqdn"</code></td>
+<td>Verify the API response structure matches your NSX version by running <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/cluster/nodes"</code> without jq to inspect raw JSON.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Confirm NSX Manager is running and accessible by testing basic connectivity with <code>ping</code> or <code>nc -zv &lt;nsx-manager&gt; 443</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-3-upgrade-edge-nodes">Step 3 — Upgrade Edge Nodes<a class="headerlink" href="#step-3-upgrade-edge-nodes" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 3 — Upgrade Edge Nodes" src="../../../../../../assets/nsx-proc-step-3-upgrade-edge-nodes.svg" /></p>
@@ -11613,9 +12519,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's not removed).
-<strong><code>jq: parse error: Cannot index number with string "display_name"</code></strong> — Verify the API response structure matches your NSX version; use <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/fabric/nodes?resource_type=EdgeNode" | jq '.'</code> to inspect raw output first.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Confirm the NSX Manager hostname/IP is correct and the management API service is running with <code>ssh admin@&lt;nsx-manager&gt;</code> and checking service status.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index number with string "display_name"</code></td>
+<td>Verify the API response structure matches your NSX version; use <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/fabric/nodes?resource_type=EdgeNode" | jq '.'</code> to inspect raw output first.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct and the management API service is running with <code>ssh admin@&lt;nsx-manager&gt;</code> and checking service status.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-4-upgrade-esxi-transport-nodes">Step 4 — Upgrade ESXi Transport Nodes<a class="headerlink" href="#step-4-upgrade-esxi-transport-nodes" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 4 — Upgrade ESXi Transport Nodes" src="../../../../../../assets/nsx-proc-step-4-upgrade-esxi-transport-nodes.svg" /></p>
@@ -11652,9 +12577,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag (already present) or import the NSX Manager CA certificate into your system trust store.
-<strong><code>jq: parse error: Cannot index number with string "display_name"</code></strong> — Verify the upgrade_run_id is valid and the API response contains a <code>results</code> array; check with <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/upgrade/nodes?upgrade_run_id=&lt;run-id&gt;"</code> first.
-<strong><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></strong> — Verify the NSX Manager hostname/IP is correct and the management service is running with <code>ssh admin@&lt;nsx-manager&gt; "get service"</code></p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag (already present) or import the NSX Manager CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index number with string "display_name"</code></td>
+<td>Verify the upgrade_run_id is valid and the API response contains a <code>results</code> array; check with <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/upgrade/nodes?upgrade_run_id=&lt;run-id&gt;"</code> first.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;nsx-manager&gt; port 443: Connection refused</code></td>
+<td>Verify the NSX Manager hostname/IP is correct and the management service is running with <code>ssh admin@&lt;nsx-manager&gt; "get service"</code></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-5-post-upgrade-validation">Step 5 — Post-Upgrade Validation<a class="headerlink" href="#step-5-post-upgrade-validation" title="Permanent link">&para;</a></h3>
 <p><img alt="Step 5 — Post-Upgrade Validation" src="../../../../../../assets/nsx-proc-step-5-post-upgrade-validation.svg" /></p>
@@ -11697,9 +12641,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the NSX Manager certificate into your trust store.
-<strong><code>jq: parse error: Invalid JSON</code></strong> — Verify NSX Manager is responding with valid JSON by testing <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/fabric/nodes"</code> without piping to jq first.
-<strong><code>401 Unauthorized</code></strong> — Confirm the admin credentials are correct and the user account has API access permissions in NSX Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or import the NSX Manager certificate into your trust store.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON</code></td>
+<td>Verify NSX Manager is responding with valid JSON by testing <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/fabric/nodes"</code> without piping to jq first.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Confirm the admin credentials are correct and the user account has API access permissions in NSX Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ul>
 <li>[ ] All NSX Manager nodes on target version</li>
@@ -11738,8 +12701,24 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>PING: sendto: No route to host</code></strong> — Verify the NSX Manager IP is correct and the ESXi host has a route to the management network via <code>esxcli network ip route ipv4 list</code>.
-<strong><code>Name                                 Version                 Vendor   Acceptance Level</code></strong> (no VIBs listed) — This is expected output showing no leftover NSX VIBs; if VIBs from a previous version are present, remove them with <code>esxcli software vib remove -n &lt;vib-name&gt;</code> before installing the new version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PING: sendto: No route to host</code></td>
+<td>Verify the NSX Manager IP is correct and the ESXi host has a route to the management network via <code>esxcli network ip route ipv4 list</code>.</td>
+</tr>
+<tr>
+<td><strong><code>Name                                 Version                 Vendor   Acceptance Level</code></strong> (no VIBs listed) — This is expected output showing no leftover NSX VIBs; if VIBs from a previous version are present, remove them with <code>esxcli software vib remove -n &lt;vib-name&gt;</code> before installing the new version.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>The host must be in the target vSphere cluster and visible in vCenter before proceeding.</p>
 <h3 id="step-2-add-as-a-transport-node-via-nsx-manager-ui">Step 2 — Add as a Transport Node via NSX Manager UI<a class="headerlink" href="#step-2-add-as-a-transport-node-via-nsx-manager-ui" title="Permanent link">&para;</a></h3>
@@ -11774,9 +12753,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's not removed).
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the NSX Manager API endpoint is correct and the transport node ID exists; check with <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/transport-nodes" | jq '.results[] | .id'</code> to list valid node IDs.
-<strong><code>curl: (401) Unauthorized</code></strong> — Confirm NSX Manager credentials are correct and the admin user has API access permissions in NSX Manager's role-based access control settings.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Verify the NSX Manager API endpoint is correct and the transport node ID exists; check with <code>curl -sk -u 'admin:password' "https://&lt;nsx-manager&gt;/api/v1/transport-nodes" | jq '.results[] | .id'</code> to list valid node IDs.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Confirm NSX Manager credentials are correct and the admin user has API access permissions in NSX Manager's role-based access control settings.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Or monitor in UI: <strong>System → Fabric → Hosts</strong> — host status changes from "In Progress" to "Success".</p>
 <h3 id="step-4-validate-transport-node">Step 4 — Validate Transport Node<a class="headerlink" href="#step-4-validate-transport-node" title="Permanent link">&para;</a></h3>
@@ -11809,9 +12807,28 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the NSX Manager certificate into your trusted store.
-<strong><code>vmk10: No such file or directory</code></strong> — Verify the host is registered in NSX and transport node profile has been applied; check <code>esxcli network ip interface list</code> to confirm vmk10 exists.
-<strong><code>jq: command not found</code></strong> — Install jq on the ESXi host or pipe the curl output to a different parser like <code>grep</code> or <code>python</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the NSX Manager certificate into your trusted store.</td>
+</tr>
+<tr>
+<td><code>vmk10: No such file or directory</code></td>
+<td>Verify the host is registered in NSX and transport node profile has been applied; check <code>esxcli network ip interface list</code> to confirm vmk10 exists.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install jq on the ESXi host or pipe the curl output to a different parser like <code>grep</code> or <code>python</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ul>
 <li>[ ] Host shows <strong>Success</strong> in NSX Manager → System → Fabric → Hosts</li>
@@ -11854,7 +12871,7 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

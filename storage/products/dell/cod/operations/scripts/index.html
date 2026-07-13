@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Dell COD Scripts · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Dell COD Scripts", "url": "https://chrisanastasiadis.com/storage/products/dell/cod/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Dell COD Scripts", "url": "https://chrisanastasiadis.com/storage/products/dell/cod/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-06"}</script>
   
 
   </head>
@@ -9021,9 +9021,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cannot find path 'C:\Users\YourName\Desktop\cod_license_query.ps1' because it does not exist</code></strong> — Replace <code>YourName</code> with your actual Windows username or verify the script exists in that directory.
-<strong><code>File C:\Users\...\cod_license_query.ps1 cannot be loaded because running scripts is disabled on this system</code></strong> — Run <code>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</code> to allow local script execution.
-<strong><code>Unable to connect to isilon-prod-01.corp.local: Name or service not known</code></strong> — Verify the Isilon cluster hostname is correct and reachable from your network, or check your DNS configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cannot find path 'C:\Users\YourName\Desktop\cod_license_query.ps1' because it does not exist</code></td>
+<td>Replace <code>YourName</code> with your actual Windows username or verify the script exists in that directory.</td>
+</tr>
+<tr>
+<td><code>File C:\Users\...\cod_license_query.ps1 cannot be loaded because running scripts is disabled on this system</code></td>
+<td>Run <code>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</code> to allow local script execution.</td>
+</tr>
+<tr>
+<td><code>Unable to connect to isilon-prod-01.corp.local: Name or service not known</code></td>
+<td>Verify the Isilon cluster hostname is correct and reachable from your network, or check your DNS configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># cod_daily_check.sh — Daily capacity check via Unisphere REST API</span>
@@ -9112,9 +9131,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: Could not reach Unisphere at 192.168.1.100</code></strong> — Verify UNISPHERE_HOST is correct, Unisphere service is running on port 8443, and network connectivity exists with <code>ping</code> or <code>curl -sk https://${UNISPHERE_HOST}:8443/univmax/restapi/100/system/symmetrix</code>.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the Unisphere certificate into your system's CA bundle with <code>curl -k</code> or configure <code>~/.curlrc</code> with <code>insecure</code>.
-<strong><code>jq: command not found</code> or <code>python3: command not found</code></strong> — Install the missing dependency (<code>apt-get install python3</code> or <code>yum install python3</code>) or verify the interpreter path matches your system's installation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: Could not reach Unisphere at 192.168.1.100</code></td>
+<td>Verify UNISPHERE_HOST is correct, Unisphere service is running on port 8443, and network connectivity exists with <code>ping</code> or <code>curl -sk https://${UNISPHERE_HOST}:8443/univmax/restapi/100/system/symmetrix</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already present) or import the Unisphere certificate into your system's CA bundle with <code>curl -k</code> or configure <code>~/.curlrc</code> with <code>insecure</code>.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code> or <code>python3: command not found</code></td>
+<td>Install the missing dependency (<code>apt-get install python3</code> or <code>yum install python3</code>) or verify the interpreter path matches your system's installation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># cod_triage.sh — Capture COD capacity and license state to timestamped file</span>
@@ -9220,9 +9258,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl (already present) or import the Unisphere certificate into your system CA bundle.
-<strong><code>Authorization: Basic: command not found</code></strong> — Ensure <code>UNISPHERE_USER</code> and <code>UNISPHERE_PASS</code> environment variables are set before running the script.
-<strong><code>SYMCLI not available</code></strong> — Install Unisphere CLI tools or set <code>SYMCLI_PATH</code> to the correct installation directory (e.g., <code>export SYMCLI_PATH=/opt/emc/SYMCLI/bin</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl (already present) or import the Unisphere certificate into your system CA bundle.</td>
+</tr>
+<tr>
+<td><code>Authorization: Basic: command not found</code></td>
+<td>Ensure <code>UNISPHERE_USER</code> and <code>UNISPHERE_PASS</code> environment variables are set before running the script.</td>
+</tr>
+<tr>
+<td><code>SYMCLI not available</code></td>
+<td>Install Unisphere CLI tools or set <code>SYMCLI_PATH</code> to the correct installation directory (e.g., <code>export SYMCLI_PATH=/opt/emc/SYMCLI/bin</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># cod_precheck.sh — Pre-check before COD activation request</span>
@@ -9310,9 +9367,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to unisphere.prod.local port 8443: Connection refused</code></strong> — Verify UNISPHERE_HOST is correct and Unisphere service is running on the target system.
-<strong><code>[FAIL] Unisphere not reachable (HTTP 000)</code></strong> — Check network connectivity to the Unisphere host and confirm UNISPHERE_USER and UNISPHERE_PASS credentials are valid.
-<strong><code>[FAIL] Capacity utilisation is only 45.2% (below 80% — COD activation may not be needed yet)</code></strong> — Confirm the array actually requires COD activation or adjust ACTIVATION_THRESHOLD if business requirements warrant lower utilization.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to unisphere.prod.local port 8443: Connection refused</code></td>
+<td>Verify UNISPHERE_HOST is correct and Unisphere service is running on the target system.</td>
+</tr>
+<tr>
+<td><code>[FAIL] Unisphere not reachable (HTTP 000)</code></td>
+<td>Check network connectivity to the Unisphere host and confirm UNISPHERE_USER and UNISPHERE_PASS credentials are valid.</td>
+</tr>
+<tr>
+<td><code>[FAIL] Capacity utilisation is only 45.2% (below 80% — COD activation may not be needed yet)</code></td>
+<td>Confirm the array actually requires COD activation or adjust ACTIVATION_THRESHOLD if business requirements warrant lower utilization.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># cod_postcheck.sh — Post-change validation after COD activation</span>
@@ -9405,9 +9481,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl (already present) or import the Unisphere certificate into your system CA bundle.
-<strong><code>No storage groups returned — verify array connectivity and COD activation status</code></strong> — Verify UNISPHERE_HOST is reachable on port 8443, credentials are correct, and the SID matches an active array in Unisphere.
-<strong><code>command not found: python3</code></strong> — Install Python 3 or replace <code>python3</code> with <code>python</code> if only Python 2 is available on the system.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl (already present) or import the Unisphere certificate into your system CA bundle.</td>
+</tr>
+<tr>
+<td><code>No storage groups returned — verify array connectivity and COD activation status</code></td>
+<td>Verify UNISPHERE_HOST is reachable on port 8443, credentials are correct, and the SID matches an active array in Unisphere.</td>
+</tr>
+<tr>
+<td><code>command not found: python3</code></td>
+<td>Install Python 3 or replace <code>python3</code> with <code>python</code> if only Python 2 is available on the system.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># cod_health.sh — Cron-safe COD health check</span>
@@ -9457,9 +9552,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl (already present in script) or import the Unisphere CA certificate into your system trust store.
-<strong><code>jq: command not found</code></strong> — The script uses <code>python3</code> for JSON parsing; ensure Python 3 is installed with <code>apt install python3</code> or <code>yum install python3</code>.
-<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index number with string "system_capacity"</code></strong> — Verify the SID is correct and the Unisphere API endpoint is reachable; test with <code>curl -sk https://${UNISPHERE_HOST}:8443/univmax/restapi/100/system/symmetrix/${SID}/system_capacity</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to curl (already present in script) or import the Unisphere CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>The script uses <code>python3</code> for JSON parsing; ensure Python 3 is installed with <code>apt install python3</code> or <code>yum install python3</code>.</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Cannot index number with string "system_capacity"</code></td>
+<td>Verify the SID is correct and the Unisphere API endpoint is reachable; test with <code>curl -sk https://${UNISPHERE_HOST}:8443/univmax/restapi/100/system/symmetrix/${SID}/system_capacity</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9505,7 +9619,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

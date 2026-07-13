@@ -9278,9 +9278,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid credentials for user 'svc-isilon-join'</code></strong> — Verify the service account password is correct and the account is not locked in Active Directory.
-<strong><code>Error: Cannot resolve domain name CORP.EXAMPLE.COM</code></strong> — Ensure DNS is properly configured on the PowerScale cluster and can resolve the AD domain name.
-<strong><code>Error: Zone 'ProdZone' does not exist</code></strong> — Confirm the access zone name exists by running <code>isi zones list</code> before attempting to join.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid credentials for user 'svc-isilon-join'</code></td>
+<td>Verify the service account password is correct and the account is not locked in Active Directory.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot resolve domain name CORP.EXAMPLE.COM</code></td>
+<td>Ensure DNS is properly configured on the PowerScale cluster and can resolve the AD domain name.</td>
+</tr>
+<tr>
+<td><code>Error: Zone 'ProdZone' does not exist</code></td>
+<td>Confirm the access zone name exists by running <code>isi zones list</code> before attempting to join.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p>Use a dedicated service account for the AD join. The account only needs permissions to join computers to the specified OU. Revoke the password after the join is complete — the cluster uses the machine account for ongoing Kerberos operations.</p>
@@ -9337,9 +9356,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: AD provider CORP.EXAMPLE.COM not found in zone ProdZone</code></strong> — Verify the AD provider exists in the specified zone using <code>isi auth ads list --zone ProdZone</code>.
-<strong><code>Error: Cannot delete AD provider - still in use by authentication policies</code></strong> — Remove all authentication policies referencing this AD provider before deletion.
-<strong><code>Error: Domain controller unreachable - connection timeout</code></strong> — Verify network connectivity to the domain controller and confirm firewall rules allow LDAP/Kerberos traffic on ports 389/636 and 88.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: AD provider CORP.EXAMPLE.COM not found in zone ProdZone</code></td>
+<td>Verify the AD provider exists in the specified zone using <code>isi auth ads list --zone ProdZone</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot delete AD provider - still in use by authentication policies</code></td>
+<td>Remove all authentication policies referencing this AD provider before deletion.</td>
+</tr>
+<tr>
+<td><code>Error: Domain controller unreachable - connection timeout</code></td>
+<td>Verify network connectivity to the domain controller and confirm firewall rules allow LDAP/Kerberos traffic on ports 389/636 and 88.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ad-provider-settings">AD Provider Settings<a class="headerlink" href="#ad-provider-settings" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View current AD provider configuration</span>
@@ -9387,9 +9425,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: AD provider 'CORP.EXAMPLE.COM' not found</code></strong> — Verify the AD provider name matches exactly (case-sensitive) using <code>isi auth ads list</code>.
-<strong><code>Error: Invalid zone 'ProdZone': zone does not exist</code></strong> — Create the zone first with <code>isi zone zones create --name ProdZone</code> or use an existing zone name.
-<strong><code>Error: Cannot resolve domain controller 'dc01.corp.example.com'</code></strong> — Ensure DNS resolution is working and the DC hostname is reachable from the cluster using <code>nslookup dc01.corp.example.com</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: AD provider 'CORP.EXAMPLE.COM' not found</code></td>
+<td>Verify the AD provider name matches exactly (case-sensitive) using <code>isi auth ads list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid zone 'ProdZone': zone does not exist</code></td>
+<td>Create the zone first with <code>isi zone zones create --name ProdZone</code> or use an existing zone name.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot resolve domain controller 'dc01.corp.example.com'</code></td>
+<td>Ensure DNS resolution is working and the DC hostname is reachable from the cluster using <code>nslookup dc01.corp.example.com</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ad-troubleshooting">AD Troubleshooting<a class="headerlink" href="#ad-troubleshooting" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test AD authentication for a specific user</span>
@@ -9437,9 +9494,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to resolve user CORP\\testuser in zone ProdZone</code></strong> — Verify the user exists in Active Directory and that the AD provider is configured for the ProdZone using <code>isi auth providers view --zone ProdZone</code>.
-<strong><code>Error: AD domain check failed - UNHEALTHY status detected</code></strong> — Reset the machine account password with <code>isi auth ads update CORP.EXAMPLE.COM --update-password yes</code> and verify network connectivity to domain controllers.
-<strong><code>Error: Kerberos ticket not found for user</code></strong> — Ensure the user's password is synchronized and run <code>isi auth ads update CORP.EXAMPLE.COM --update-password yes</code> to refresh the machine account credentials.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to resolve user CORP\\testuser in zone ProdZone</code></td>
+<td>Verify the user exists in Active Directory and that the AD provider is configured for the ProdZone using <code>isi auth providers view --zone ProdZone</code>.</td>
+</tr>
+<tr>
+<td><code>Error: AD domain check failed - UNHEALTHY status detected</code></td>
+<td>Reset the machine account password with <code>isi auth ads update CORP.EXAMPLE.COM --update-password yes</code> and verify network connectivity to domain controllers.</td>
+</tr>
+<tr>
+<td><code>Error: Kerberos ticket not found for user</code></td>
+<td>Ensure the user's password is synchronized and run <code>isi auth ads update CORP.EXAMPLE.COM --update-password yes</code> to refresh the machine account credentials.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -9531,9 +9607,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: LDAP server ldap.example.com is unreachable on port 389</code></strong> — Verify network connectivity to the LDAP server and confirm the hostname/IP and port are correct.
-<strong><code>Error: Invalid bind credentials for cn=isilon-svc,ou=service-accounts,dc=example,dc=com</code></strong> — Confirm the bind DN and password are correct and the service account has permission to query the LDAP directory.
-<strong><code>Error: Certificate verification failed for ldaps://ldap.example.com:636</code></strong> — Import the LDAP server's CA certificate into the PowerScale cluster trust store or set <code>--tls-revocation-check-level none</code> if appropriate for your environment.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: LDAP server ldap.example.com is unreachable on port 389</code></td>
+<td>Verify network connectivity to the LDAP server and confirm the hostname/IP and port are correct.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid bind credentials for cn=isilon-svc,ou=service-accounts,dc=example,dc=com</code></td>
+<td>Confirm the bind DN and password are correct and the service account has permission to query the LDAP directory.</td>
+</tr>
+<tr>
+<td><code>Error: Certificate verification failed for ldaps://ldap.example.com:636</code></td>
+<td>Import the LDAP server's CA certificate into the PowerScale cluster trust store or set <code>--tls-revocation-check-level none</code> if appropriate for your environment.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ldap-configuration-options">LDAP Configuration Options<a class="headerlink" href="#ldap-configuration-options" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># View LDAP provider configuration</span>
@@ -9583,9 +9678,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: LDAP provider 'ldap-prod' not found in zone 'ProdZone'</code></strong> — Verify the LDAP provider name matches exactly and exists in the specified zone using <code>isi auth ldap list --zone ProdZone</code>.
-<strong><code>Error: User 'ldap-prod\testuser' not found</code></strong> — Confirm the user exists in LDAP, the search base is correct, and LDAP connectivity is working by checking <code>isi auth ldap view ldap-prod --zone ProdZone</code> for connection status.
-<strong><code>Error: Invalid search scope 'subtree': valid values are 'base', 'onelevel', 'subtree'</code></strong> — Use one of the valid search scope values; 'subtree' is typically correct for most LDAP configurations.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: LDAP provider 'ldap-prod' not found in zone 'ProdZone'</code></td>
+<td>Verify the LDAP provider name matches exactly and exists in the specified zone using <code>isi auth ldap list --zone ProdZone</code>.</td>
+</tr>
+<tr>
+<td><code>Error: User 'ldap-prod\testuser' not found</code></td>
+<td>Confirm the user exists in LDAP, the search base is correct, and LDAP connectivity is working by checking <code>isi auth ldap view ldap-prod --zone ProdZone</code> for connection status.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid search scope 'subtree': valid values are 'base', 'onelevel', 'subtree'</code></td>
+<td>Use one of the valid search scope values; 'subtree' is typically correct for most LDAP configurations.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ldap-troubleshooting">LDAP Troubleshooting<a class="headerlink" href="#ldap-troubleshooting" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check provider status</span>
@@ -9624,9 +9738,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldapsearch: No such object</code></strong> — Verify the base DN (dc=example,dc=com) matches your directory structure and that the bind user has search permissions.
-<strong><code>ldapsearch: Can't contact LDAP server</code></strong> — Confirm the LDAP server hostname/IP is correct, the service is running on port 389 (or 636 for LDAPS), and cluster network connectivity is not blocked by firewall rules.
-<strong><code>isi: command not found</code></strong> — Run commands directly on a PowerScale cluster node (SSH as root); these commands are not available on external management stations.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldapsearch: No such object</code></td>
+<td>Verify the base DN (dc=example,dc=com) matches your directory structure and that the bind user has search permissions.</td>
+</tr>
+<tr>
+<td><code>ldapsearch: Can't contact LDAP server</code></td>
+<td>Confirm the LDAP server hostname/IP is correct, the service is running on port 389 (or 636 for LDAPS), and cluster network connectivity is not blocked by firewall rules.</td>
+</tr>
+<tr>
+<td><code>isi: command not found</code></td>
+<td>Run commands directly on a PowerScale cluster node (SSH as root); these commands are not available on external management stations.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="nis">NIS<a class="headerlink" href="#nis" title="Permanent link">&para;</a></h2>
@@ -9664,9 +9797,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: NIS provider 'nis-prod' already exists</code></strong> — Use <code>isi auth nis delete nis-prod --zone ProdZone</code> first, or choose a different provider name.
-<strong><code>Error: Server 'nis.example.com' is not reachable</code></strong> — Verify network connectivity to the NIS server and ensure the hostname resolves correctly with <code>nslookup nis.example.com</code>.
-<strong><code>Error: Zone 'ProdZone' does not exist</code></strong> — Confirm the zone name with <code>isi zone list</code> and use the correct zone identifier in the <code>--zone</code> parameter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: NIS provider 'nis-prod' already exists</code></td>
+<td>Use <code>isi auth nis delete nis-prod --zone ProdZone</code> first, or choose a different provider name.</td>
+</tr>
+<tr>
+<td><code>Error: Server 'nis.example.com' is not reachable</code></td>
+<td>Verify network connectivity to the NIS server and ensure the hostname resolves correctly with <code>nslookup nis.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Zone 'ProdZone' does not exist</code></td>
+<td>Confirm the zone name with <code>isi zone list</code> and use the correct zone identifier in the <code>--zone</code> parameter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>NIS is not recommended for new deployments. Use LDAP or Active Directory instead; maintain NIS only if existing Unix clients rely on it.</p>
 <hr />
@@ -9759,9 +9911,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: User 'backupadmin' already exists</code></strong> — Use <code>isi auth users modify</code> instead of <code>create</code>, or delete the existing user first with <code>isi auth users delete backupadmin</code>.
-<strong><code>Error: Invalid zone 'ProdZone': zone not found</code></strong> — Verify the zone name exists by running <code>isi zones list</code> and use the correct zone name.
-<strong><code>Error: User 'backupadmin' is not found</code></strong> — Ensure the user was created successfully and check spelling; list all users with <code>isi auth users list</code> to confirm.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: User 'backupadmin' already exists</code></td>
+<td>Use <code>isi auth users modify</code> instead of <code>create</code>, or delete the existing user first with <code>isi auth users delete backupadmin</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid zone 'ProdZone': zone not found</code></td>
+<td>Verify the zone name exists by running <code>isi zones list</code> and use the correct zone name.</td>
+</tr>
+<tr>
+<td><code>Error: User 'backupadmin' is not found</code></td>
+<td>Ensure the user was created successfully and check spelling; list all users with <code>isi auth users list</code> to confirm.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="local-account-security-practices">Local Account Security Practices<a class="headerlink" href="#local-account-security-practices" title="Permanent link">&para;</a></h3>
 <table>
@@ -9849,9 +10020,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid zone 'ProdZone'. Valid zones are: System, Zone1, Zone2</code></strong> — Verify the zone name exists by running <code>isi auth zones list</code> and use the correct zone identifier.
-<strong><code>Error: User 'CORP\jsmith' not found in authentication provider</code></strong> — Ensure the user exists in the configured Active Directory or LDAP provider and that the domain prefix matches the authentication source configuration.
-<strong><code>Error: Mapping rule already exists for source 'CORP\jsmith'</code></strong> — Delete the existing rule with <code>isi auth mappings rules delete &lt;rule_id&gt;</code> before creating a duplicate mapping.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid zone 'ProdZone'. Valid zones are: System, Zone1, Zone2</code></td>
+<td>Verify the zone name exists by running <code>isi auth zones list</code> and use the correct zone identifier.</td>
+</tr>
+<tr>
+<td><code>Error: User 'CORP\jsmith' not found in authentication provider</code></td>
+<td>Ensure the user exists in the configured Active Directory or LDAP provider and that the domain prefix matches the authentication source configuration.</td>
+</tr>
+<tr>
+<td><code>Error: Mapping rule already exists for source 'CORP\jsmith'</code></td>
+<td>Delete the existing rule with <code>isi auth mappings rules delete &lt;rule_id&gt;</code> before creating a duplicate mapping.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="identity-mapping-modes">Identity Mapping Modes<a class="headerlink" href="#identity-mapping-modes" title="Permanent link">&para;</a></h3>
 <table>
@@ -9889,8 +10079,24 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid zone name 'ProdZone'</code></strong> — Verify the zone exists with <code>isi zone zones list</code> and use the correct zone name.
-<strong><code>Error: Permission denied</code></strong> — Ensure your user account has administrative privileges or is part of the appropriate role group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid zone name 'ProdZone'</code></td>
+<td>Verify the zone exists with <code>isi zone zones list</code> and use the correct zone name.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Ensure your user account has administrative privileges or is part of the appropriate role group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="kerberos-nfsv4-and-smb">Kerberos — NFSv4 and SMB<a class="headerlink" href="#kerberos-nfsv4-and-smb" title="Permanent link">&para;</a></h2>
@@ -9927,9 +10133,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Export &lt;export_id&gt; not found</code></strong> — Verify the export ID exists with <code>isi nfs exports list</code> and use the correct numeric ID.
-<strong><code>Error: Authentication provider CORP.EXAMPLE.COM is not configured</code></strong> — Ensure the Active Directory provider is joined and enabled with <code>isi auth ads view</code>.
-<strong><code>Error: Cannot modify export while it is in use</code></strong> — Unmount all clients from the export before applying security flavor changes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Export &lt;export_id&gt; not found</code></td>
+<td>Verify the export ID exists with <code>isi nfs exports list</code> and use the correct numeric ID.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication provider CORP.EXAMPLE.COM is not configured</code></td>
+<td>Ensure the Active Directory provider is joined and enabled with <code>isi auth ads view</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot modify export while it is in use</code></td>
+<td>Unmount all clients from the export before applying security flavor changes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>NFS client requirements for Kerberos:
 - Client must have a valid Kerberos ticket (<code>kinit user@CORP.EXAMPLE.COM</code>).
@@ -9956,9 +10181,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid value for --server-signing. Valid values are: disabled, enabled, required</code></strong> — Use only <code>disabled</code>, <code>enabled</code>, or <code>required</code> as the signing parameter value.
-<strong><code>Error: Share '&lt;share_name&gt;' does not exist</code></strong> — Verify the exact share name with <code>isi smb shares list</code> before running the modify command.
-<strong><code>Error: Zone 'ProdZone' not found</code></strong> — Confirm the zone name exists by running <code>isi zones list</code> and use the correct zone identifier.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid value for --server-signing. Valid values are: disabled, enabled, required</code></td>
+<td>Use only <code>disabled</code>, <code>enabled</code>, or <code>required</code> as the signing parameter value.</td>
+</tr>
+<tr>
+<td><code>Error: Share '&lt;share_name&gt;' does not exist</code></td>
+<td>Verify the exact share name with <code>isi smb shares list</code> before running the modify command.</td>
+</tr>
+<tr>
+<td><code>Error: Zone 'ProdZone' not found</code></td>
+<td>Confirm the zone name exists by running <code>isi zones list</code> and use the correct zone identifier.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="authentication-provider-order">Authentication Provider Order<a class="headerlink" href="#authentication-provider-order" title="Permanent link">&para;</a></h2>
@@ -9987,8 +10231,24 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid zone name 'ProdZone'</code></strong> — Verify the zone exists with <code>isi zone zones list</code> and use the correct zone name.
-<strong><code>Error: Provider 'lsa-activedirectory-provider:CORP.EXAMPLE.COM' not found</code></strong> — Ensure the provider is created and available before assigning it with <code>isi auth providers list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid zone name 'ProdZone'</code></td>
+<td>Verify the zone exists with <code>isi zone zones list</code> and use the correct zone name.</td>
+</tr>
+<tr>
+<td><code>Error: Provider 'lsa-activedirectory-provider:CORP.EXAMPLE.COM' not found</code></td>
+<td>Ensure the provider is created and available before assigning it with <code>isi auth providers list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="multi-zone-authentication-reference">Multi-Zone Authentication Reference<a class="headerlink" href="#multi-zone-authentication-reference" title="Permanent link">&para;</a></h2>
@@ -10059,9 +10319,28 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: NTP server 'ntp.example.com' already exists</code></strong> — Use <code>isi ntp servers list</code> to verify the server isn't already configured, or use a different hostname.
-<strong><code>Error: ntpq: command not found</code></strong> — Install the ntp client package with <code>apt-get install ntp</code> or <code>yum install ntp</code> depending on your OS.
-<strong><code>Error: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user account has cluster administrator privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: NTP server 'ntp.example.com' already exists</code></td>
+<td>Use <code>isi ntp servers list</code> to verify the server isn't already configured, or use a different hostname.</td>
+</tr>
+<tr>
+<td><code>Error: ntpq: command not found</code></td>
+<td>Install the ntp client package with <code>apt-get install ntp</code> or <code>yum install ntp</code> depending on your OS.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user account has cluster administrator privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="ensure-all-nfs-clients-with-kerberos-mounts-also-use-the-same-ntp-source-as-the-cluster-and-the-domain-controllers">Ensure all NFS clients with Kerberos mounts also use the same NTP source as the cluster and the domain controllers.<a class="headerlink" href="#ensure-all-nfs-clients-with-kerberos-mounts-also-use-the-same-ntp-source-as-the-cluster-and-the-domain-controllers" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
@@ -10098,7 +10377,7 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

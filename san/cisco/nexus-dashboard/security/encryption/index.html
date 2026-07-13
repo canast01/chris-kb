@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Cisco Nexus Dashboard — Security Encryption · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco Nexus Dashboard — Security Encryption", "url": "https://chrisanastasiadis.com/san/cisco/nexus-dashboard/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco Nexus Dashboard — Security Encryption", "url": "https://chrisanastasiadis.com/san/cisco/nexus-dashboard/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7555,9 +7555,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load client cert</code></strong> — Verify the Nexus Dashboard certificate is valid and the hostname resolves correctly with <code>nslookup nd-dc1.corp.example.com</code>.
-<strong><code>nmap: command not found</code></strong> — Install nmap with <code>apt-get install nmap</code> (Ubuntu/Debian) or <code>yum install nmap</code> (RHEL/CentOS).
-<strong><code>Connection refused</code></strong> — Confirm the Nexus Dashboard is running and port 443 is accessible from your host using <code>telnet nd-dc1.corp.example.com 443</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load client cert</code></td>
+<td>Verify the Nexus Dashboard certificate is valid and the hostname resolves correctly with <code>nslookup nd-dc1.corp.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>nmap: command not found</code></td>
+<td>Install nmap with <code>apt-get install nmap</code> (Ubuntu/Debian) or <code>yum install nmap</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Confirm the Nexus Dashboard is running and port 443 is accessible from your host using <code>telnet nd-dc1.corp.example.com 443</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># The passphrase can also be set via CLI</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>acs<span class="w"> </span>backup<span class="w"> </span>settings<span class="w"> </span>--encryption-passphrase-file<span class="w"> </span>/home/ndadmin/.nd-backup-pass
@@ -7570,9 +7589,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Passphrase file not found: /home/ndadmin/.nd-backup-pass</code></strong> — Verify the file path exists and run <code>ls -la /home/ndadmin/.nd-backup-pass</code> to confirm permissions and location.
-<strong><code>Error: Permission denied reading passphrase file</code></strong> — Ensure the ndadmin user has read permissions on the file with <code>chmod 600 /home/ndadmin/.nd-backup-pass</code> and verify ownership.
-<strong><code>Error: Passphrase file is empty or invalid format</code></strong> — Confirm the passphrase file contains at least 8 characters and no trailing newlines by running <code>cat /home/ndadmin/.nd-backup-pass | wc -c</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Passphrase file not found: /home/ndadmin/.nd-backup-pass</code></td>
+<td>Verify the file path exists and run <code>ls -la /home/ndadmin/.nd-backup-pass</code> to confirm permissions and location.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied reading passphrase file</code></td>
+<td>Ensure the ndadmin user has read permissions on the file with <code>chmod 600 /home/ndadmin/.nd-backup-pass</code> and verify ownership.</td>
+</tr>
+<tr>
+<td><code>Error: Passphrase file is empty or invalid format</code></td>
+<td>Confirm the passphrase file contains at least 8 characters and no trailing newlines by running <code>cat /home/ndadmin/.nd-backup-pass | wc -c</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check certificate expiry</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>nd-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
@@ -7599,9 +7637,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to connect to nd-dc1.corp.example.com:443</code></strong> — Verify the hostname resolves and the Nexus Dashboard is reachable on port 443 using <code>ping</code> or <code>nc -zv</code>.
-<strong><code>error:0900006e:PEM routines:PEM_read_bio:no start line</code></strong> — Ensure the openssl s_client connection succeeded; add <code>2&gt;&amp;1</code> to stderr capture to diagnose TLS handshake failures.
-<strong><code>ValueError: time data does not match format</code></strong> — The certificate date format may differ on your system; run the openssl command standalone first to verify the exact date string format.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to connect to nd-dc1.corp.example.com:443</code></td>
+<td>Verify the hostname resolves and the Nexus Dashboard is reachable on port 443 using <code>ping</code> or <code>nc -zv</code>.</td>
+</tr>
+<tr>
+<td><code>error:0900006e:PEM routines:PEM_read_bio:no start line</code></td>
+<td>Ensure the openssl s_client connection succeeded; add <code>2&gt;&amp;1</code> to stderr capture to diagnose TLS handshake failures.</td>
+</tr>
+<tr>
+<td><code>ValueError: time data does not match format</code></td>
+<td>The certificate date format may differ on your system; run the openssl command standalone first to verify the exact date string format.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7640,7 +7697,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

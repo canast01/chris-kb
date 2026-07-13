@@ -9414,9 +9414,28 @@ vSAN does not have its own authentication system. All access to vSAN management 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl commands to skip certificate verification (already present in example, but ensure it's not removed).
-<strong><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"args":[],"default_message":"Invalid session."}]}}</code></strong> — Verify the TOKEN variable is populated correctly by checking <code>echo $TOKEN</code> before the second curl call; re-authenticate if empty.
-<strong><code>curl: (7) Failed to connect to vcenter port 443: Connection refused</code></strong> — Confirm vCenter hostname/IP is correct and accessible on port 443 with <code>ping vcenter</code> or <code>nc -zv vcenter 443</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl commands to skip certificate verification (already present in example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"args":[],"default_message":"Invalid session."}]}}</code></td>
+<td>Verify the TOKEN variable is populated correctly by checking <code>echo $TOKEN</code> before the second curl call; re-authenticate if empty.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vcenter port 443: Connection refused</code></td>
+<td>Confirm vCenter hostname/IP is correct and accessible on port 443 with <code>ping vcenter</code> or <code>nc -zv vcenter 443</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="esxi-host-authentication">ESXi Host Authentication<a class="headerlink" href="#esxi-host-authentication" title="Permanent link">&para;</a></h2>
@@ -9439,8 +9458,24 @@ vSAN does not have its own authentication system. All access to vSAN management 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vim-cmd: Unknown command 'hostsvc/enable_ssh'</code></strong> — Use the correct vim-cmd syntax: <code>vim-cmd hostsvc/enable_ssh</code> requires the ESXi host to be accessible via vSphere API; run these commands directly in the ESXi local console or SSH session, not remotely.
-<strong><code>Error: The object or item could not be found on the server</code></strong> — Ensure you are running vim-cmd on the ESXi host itself (via SSH or local console), not from a vCenter Server or remote management station.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vim-cmd: Unknown command 'hostsvc/enable_ssh'</code></td>
+<td>Use the correct vim-cmd syntax: <code>vim-cmd hostsvc/enable_ssh</code> requires the ESXi host to be accessible via vSphere API; run these commands directly in the ESXi local console or SSH session, not remotely.</td>
+</tr>
+<tr>
+<td><code>Error: The object or item could not be found on the server</code></td>
+<td>Ensure you are running vim-cmd on the ESXi host itself (via SSH or local console), not from a vCenter Server or remote management station.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Or from vCenter UI:</strong>
 Host → Configure → Services → SSH → Start / Stop</p>
@@ -9465,8 +9500,24 @@ Host → Configure → Services → SSH → Start / Stop</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option or flag '-o'</code></strong> — Use the correct esxcli syntax: <code>esxcli system settings advanced set --option=/Config/HostAgent/plugins/hostsvc/esxAdminsGroup --string-value="vSphere Admins"</code>.
-<strong><code>Error: Permission denied</code></strong> — Ensure you are logged into the ESXi shell with root or equivalent administrative credentials, not a standard user account.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option or flag '-o'</code></td>
+<td>Use the correct esxcli syntax: <code>esxcli system settings advanced set --option=/Config/HostAgent/plugins/hostsvc/esxAdminsGroup --string-value="vSphere Admins"</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Ensure you are logged into the ESXi shell with root or equivalent administrative credentials, not a standard user account.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>When joined to AD, members of the <code>ESX Admins</code> group (or the configured group) receive Administrator access to the ESXi host.</p>
 <p><strong>Post-join verification:</strong></p>
@@ -9495,9 +9546,28 @@ Host → Configure → Services → SSH → Start / Stop</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Service 'lsass' (Local Security Authority) Status: stopped</code></strong> — Restart the lsass service with <code>/opt/likewise/bin/lwsm start lsass</code> and verify domain connectivity.
-<strong><code>bash: /opt/likewise/bin/lwsm: No such file or directory</code></strong> — Verify Likewise Open is installed with <code>rpm -qa | grep likewise</code> and reinstall if missing.
-<strong><code>Error: Failed to query service status</code></strong> — Check that the Likewise daemon is running with <code>/opt/likewise/bin/lwsm list</code> and restart the service with <code>/opt/likewise/bin/lwsm restart</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Service 'lsass' (Local Security Authority) Status: stopped</code></td>
+<td>Restart the lsass service with <code>/opt/likewise/bin/lwsm start lsass</code> and verify domain connectivity.</td>
+</tr>
+<tr>
+<td><code>bash: /opt/likewise/bin/lwsm: No such file or directory</code></td>
+<td>Verify Likewise Open is installed with <code>rpm -qa | grep likewise</code> and reinstall if missing.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to query service status</code></td>
+<td>Check that the Likewise daemon is running with <code>/opt/likewise/bin/lwsm list</code> and restart the service with <code>/opt/likewise/bin/lwsm restart</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Add AD groups to vCenter permissions after joining:</strong></p>
 <p>vSphere Client → vCenter → Permissions → Add → select identity source → search AD group → assign role</p>
@@ -9530,9 +9600,28 @@ Host → Configure → Services → SSH → Start / Stop</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to connect to localhost:443</code></strong> — Verify the ESXi host management network is reachable and the certificate service is running with <code>systemctl status vmware-vpxd</code>.
-<strong><code>Certificate has expired</code></strong> — Regenerate the host certificate using <code>esxcli system certificate install</code> or request a new signed certificate from your VMCA.
-<strong><code>VMCA service is not running</code></strong> — Start the VMCA service with <code>/etc/init.d/vmware-vpxd restart</code> or check logs in <code>/var/log/vmware/vpxd/vpxd.log</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to connect to localhost:443</code></td>
+<td>Verify the ESXi host management network is reachable and the certificate service is running with <code>systemctl status vmware-vpxd</code>.</td>
+</tr>
+<tr>
+<td><code>Certificate has expired</code></td>
+<td>Regenerate the host certificate using <code>esxcli system certificate install</code> or request a new signed certificate from your VMCA.</td>
+</tr>
+<tr>
+<td><code>VMCA service is not running</code></td>
+<td>Start the VMCA service with <code>/etc/init.d/vmware-vpxd restart</code> or check logs in <code>/var/log/vmware/vpxd/vpxd.log</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Custom CA certificates:</strong> Replace VMCA-issued certificates with certificates from an enterprise CA (Microsoft CA, HashiCorp Vault PKI) if your security policy requires it. vSAN continues to function after certificate replacement — vCenter orchestrates the replacement rolling.</p>
 <p>vSphere Client → vCenter → Administration → Certificate Management → Replace VMCA Root Certificate</p>
@@ -9555,8 +9644,24 @@ Host → Configure → Services → SSH → Start / Stop</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Could not connect to certificate store</code></strong> — Ensure the vmafd service is running with <code>systemctl status vmafd</code> and restart if needed.
-<strong><code>Error: Access denied</code></strong> — Run the command with elevated privileges using <code>sudo</code> or directly as root user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Could not connect to certificate store</code></td>
+<td>Ensure the vmafd service is running with <code>systemctl status vmafd</code> and restart if needed.</td>
+</tr>
+<tr>
+<td><code>Error: Access denied</code></td>
+<td>Run the command with elevated privileges using <code>sudo</code> or directly as root user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Configure minimum TLS version in vCenter:
 vSphere Client → vCenter → Configure → Advanced Settings → <code>config.tls.minVersion</code> = <code>TLSv1.2</code></p>
@@ -9593,7 +9698,7 @@ vSphere Client → vCenter → Configure → Advanced Settings → <code>config.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

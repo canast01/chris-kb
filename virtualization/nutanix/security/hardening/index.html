@@ -7483,9 +7483,28 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid value for failed-login-attempts. Must be between 1 and 10.</code></strong> — Reduce the failed-login-attempts value to a maximum of 10 or check your Nutanix version's supported range.
-<strong><code>Error: ncli: command not found</code></strong> — Ensure you are running this command on a Nutanix cluster node with ncli installed, not a remote management workstation.
-<strong><code>Error: Permission denied. User does not have cluster admin privileges.</code></strong> — Execute the command as a cluster administrator or use an account with full cluster permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid value for failed-login-attempts. Must be between 1 and 10.</code></td>
+<td>Reduce the failed-login-attempts value to a maximum of 10 or check your Nutanix version's supported range.</td>
+</tr>
+<tr>
+<td><code>Error: ncli: command not found</code></td>
+<td>Ensure you are running this command on a Nutanix cluster node with ncli installed, not a remote management workstation.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied. User does not have cluster admin privileges.</code></td>
+<td>Execute the command as a cluster administrator or use an account with full cluster permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="ssh-hardening">SSH Hardening<a class="headerlink" href="#ssh-hardening" title="Permanent link">&para;</a></h2>
@@ -7505,8 +7524,24 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ncli: command not found</code></strong> — Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI tools installed and in your PATH.
-<strong><code>Error: Unable to connect to cluster</code></strong> — Verify cluster connectivity and that your user account has appropriate permissions to query security configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ncli: command not found</code></td>
+<td>Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI tools installed and in your PATH.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to cluster</code></td>
+<td>Verify cluster connectivity and that your user account has appropriate permissions to query security configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="cvm-ssh-key-management">CVM SSH Key Management<a class="headerlink" href="#cvm-ssh-key-management" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Add an authorized key to all CVMs</span>
@@ -7529,9 +7564,28 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey).</code></strong> — Verify the CVM SSH service is running with <code>allssh "systemctl status sshd"</code> and that your current SSH key is already in authorized_keys.
-<strong><code>sed: can't read ~/.ssh/authorized_keys: No such file or directory</code></strong> — Create the ~/.ssh directory and authorized_keys file first with <code>allssh "mkdir -p ~/.ssh &amp;&amp; touch ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys"</code>.
-<strong><code>allssh: command not found</code></strong> — Ensure you are running this from a Nutanix cluster node or Prism Element host where allssh is available in the PATH.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Verify the CVM SSH service is running with <code>allssh "systemctl status sshd"</code> and that your current SSH key is already in authorized_keys.</td>
+</tr>
+<tr>
+<td><code>sed: can't read ~/.ssh/authorized_keys: No such file or directory</code></td>
+<td>Create the ~/.ssh directory and authorized_keys file first with <code>allssh "mkdir -p ~/.ssh &amp;&amp; touch ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys"</code>.</td>
+</tr>
+<tr>
+<td><code>allssh: command not found</code></td>
+<td>Ensure you are running this from a Nutanix cluster node or Prism Element host where allssh is available in the PATH.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ssh-server-config-ahv-hypervisor">SSH Server Config (AHV Hypervisor)<a class="headerlink" href="#ssh-server-config-ahv-hypervisor" title="Permanent link">&para;</a></h3>
 <p>Apply on each AHV host (requires root access — only via Prism Element → Hardware → host console):</p>
@@ -7548,9 +7602,28 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sshd[12345]: error: /etc/ssh/sshd_config line 1: unsupported option "PermitRootLogin no"</code></strong> — Ensure you are editing the actual sshd_config file with a text editor (e.g., <code>sudo nano /etc/ssh/sshd_config</code>) rather than pasting into the shell directly.
-<strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Verify SSH host keys exist in <code>/etc/ssh/</code> with <code>ls -la /etc/ssh/ssh_host_*</code> and regenerate them if missing using <code>ssh-keygen -A</code>.
-<strong><code>Permission denied (publickey).</code></strong> — Confirm the nutanix user has a valid public key in <code>~nutanix/.ssh/authorized_keys</code> and restart sshd with <code>sudo systemctl restart sshd</code> after making config changes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd[12345]: error: /etc/ssh/sshd_config line 1: unsupported option "PermitRootLogin no"</code></td>
+<td>Ensure you are editing the actual sshd_config file with a text editor (e.g., <code>sudo nano /etc/ssh/sshd_config</code>) rather than pasting into the shell directly.</td>
+</tr>
+<tr>
+<td><code>sshd: no hostkeys available -- exiting.</code></td>
+<td>Verify SSH host keys exist in <code>/etc/ssh/</code> with <code>ls -la /etc/ssh/ssh_host_*</code> and regenerate them if missing using <code>ssh-keygen -A</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Confirm the nutanix user has a valid public key in <code>~nutanix/.ssh/authorized_keys</code> and restart sshd with <code>sudo systemctl restart sshd</code> after making config changes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="tls-ssl-configuration">TLS / SSL Configuration<a class="headerlink" href="#tls-ssl-configuration" title="Permanent link">&para;</a></h2>
@@ -7582,9 +7655,28 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid key-type value. Supported types: RSA_2048, RSA_4096</code></strong> — Verify the key-type parameter matches one of the supported values exactly.
-<strong><code>Error: Certificate chain validation failed: Intermediate certificate not in PEM format</code></strong> — Ensure the intermediate certificate is PEM-encoded (-----BEGIN CERTIFICATE-----) and concatenated in the correct order (leaf → intermediate → root).
-<strong><code>Error: Private key does not match certificate: Key mismatch detected</code></strong> — Confirm the private key file corresponds to the certificate being imported by comparing their modulus values.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid key-type value. Supported types: RSA_2048, RSA_4096</code></td>
+<td>Verify the key-type parameter matches one of the supported values exactly.</td>
+</tr>
+<tr>
+<td><code>Error: Certificate chain validation failed: Intermediate certificate not in PEM format</code></td>
+<td>Ensure the intermediate certificate is PEM-encoded (-----BEGIN CERTIFICATE-----) and concatenated in the correct order (leaf → intermediate → root).</td>
+</tr>
+<tr>
+<td><code>Error: Private key does not match certificate: Key mismatch detected</code></td>
+<td>Confirm the private key file corresponds to the certificate being imported by comparing their modulus values.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="port-exposure-lockdown">Port Exposure Lockdown<a class="headerlink" href="#port-exposure-lockdown" title="Permanent link">&para;</a></h2>
@@ -7665,8 +7757,24 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: iptables: command not found</code></strong> — Install iptables with <code>sudo yum install iptables-services</code> or verify the CVM is running a supported OS.
-<strong><code>allssh: command not found</code></strong> — Run this command from a Nutanix cluster node where allssh is available in the PATH, or source the Nutanix environment setup script.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: iptables: command not found</code></td>
+<td>Install iptables with <code>sudo yum install iptables-services</code> or verify the CVM is running a supported OS.</td>
+</tr>
+<tr>
+<td><code>allssh: command not found</code></td>
+<td>Run this command from a Nutanix cluster node where allssh is available in the PATH, or source the Nutanix environment setup script.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="prism-element-security-settings">Prism Element Security Settings<a class="headerlink" href="#prism-element-security-settings" title="Permanent link">&para;</a></h2>
@@ -7784,7 +7892,7 @@ CVM OS hardening, AHV hypervisor hardening, Prism Element/Central security confi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

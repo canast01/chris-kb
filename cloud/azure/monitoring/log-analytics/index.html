@@ -8398,8 +8398,24 @@ Azure Log Analytics is the primary platform for collecting, querying, and alerti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>(ResourceNotFound) Resource 'myWorkspace' does not exist in resource group 'myRG'.</code></strong> — Verify the workspace name and resource group name are correct with <code>az monitor log-analytics workspace list</code>.
-<strong><code>(InvalidSkuName) The provided SKU 'PerGB2018' is invalid or deprecated.</code></strong> — Use a valid SKU such as <code>PerGB2018</code>, <code>Standard</code>, or <code>Premium</code> by checking available SKUs with <code>az monitor log-analytics workspace list --query "[].sku.name" -o tsv</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(ResourceNotFound) Resource 'myWorkspace' does not exist in resource group 'myRG'.</code></td>
+<td>Verify the workspace name and resource group name are correct with <code>az monitor log-analytics workspace list</code>.</td>
+</tr>
+<tr>
+<td><code>(InvalidSkuName) The provided SKU 'PerGB2018' is invalid or deprecated.</code></td>
+<td>Use a valid SKU such as <code>PerGB2018</code>, <code>Standard</code>, or <code>Premium</code> by checking available SKUs with <code>az monitor log-analytics workspace list --query "[].sku.name" -o tsv</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="running-kql-queries">Running KQL Queries<a class="headerlink" href="#running-kql-queries" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run a KQL query from CLI</span>
@@ -8441,9 +8457,28 @@ Azure Log Analytics is the primary platform for collecting, querying, and alerti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>BadRequest: The workspace ID is invalid or the workspace does not exist.</code></strong> — Verify the subscription ID, resource group name, and workspace name are correct by running <code>az monitor log-analytics workspace list --resource-group myRG</code>.
-<strong><code>AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.OperationalInsights/workspaces/query/read' on resource.</code></strong> — Ensure your Azure account has the Log Analytics Reader or Contributor role assigned to the workspace using <code>az role assignment create --assignee &lt;user-id&gt; --role "Log Analytics Reader" --scope &lt;workspace-resource-id&gt;</code>.
-<strong><code>BadRequest: The KQL query syntax is invalid.</code></strong> — Test the KQL query in the Azure Portal's Log Analytics Query Editor first to validate syntax before running via CLI.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BadRequest: The workspace ID is invalid or the workspace does not exist.</code></td>
+<td>Verify the subscription ID, resource group name, and workspace name are correct by running <code>az monitor log-analytics workspace list --resource-group myRG</code>.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.OperationalInsights/workspaces/query/read' on resource.</code></td>
+<td>Ensure your Azure account has the Log Analytics Reader or Contributor role assigned to the workspace using <code>az role assignment create --assignee &lt;user-id&gt; --role "Log Analytics Reader" --scope &lt;workspace-resource-id&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>BadRequest: The KQL query syntax is invalid.</code></td>
+<td>Test the KQL query in the Azure Portal's Log Analytics Query Editor first to validate syntax before running via CLI.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="common-kql-patterns">Common KQL Patterns<a class="headerlink" href="#common-kql-patterns" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c">// Top 10 VMs by CPU (requires AzureMetrics table)</span>
@@ -8495,8 +8530,24 @@ Azure Log Analytics is the primary platform for collecting, querying, and alerti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The resource 'myWorkspace' does not exist in resource group 'myRG'.</code></strong> — Verify the workspace name and resource group name match exactly using <code>az monitor log-analytics workspace list --resource-group myRG</code>.
-<strong><code>InvalidArgument: Table 'SecurityEvent' does not exist in workspace 'myWorkspace'.</code></strong> — Check available tables with <code>az monitor log-analytics workspace table list --resource-group myRG --workspace-name myWorkspace</code> and use the correct table name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The resource 'myWorkspace' does not exist in resource group 'myRG'.</code></td>
+<td>Verify the workspace name and resource group name match exactly using <code>az monitor log-analytics workspace list --resource-group myRG</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidArgument: Table 'SecurityEvent' does not exist in workspace 'myWorkspace'.</code></td>
+<td>Check available tables with <code>az monitor log-analytics workspace table list --resource-group myRG --workspace-name myWorkspace</code> and use the correct table name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="retention-tiers">Retention Tiers<a class="headerlink" href="#retention-tiers" title="Permanent link">&para;</a></h2>
 <table>
@@ -8556,9 +8607,28 @@ Azure Log Analytics is the primary platform for collecting, querying, and alerti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound : The Resource 'Microsoft.OperationalInsights/queryPacks/myQueryPack' under resource group 'myRG' was not found.</code></strong> — Create the query pack first using <code>az monitor log-analytics query-pack create --resource-group myRG --name myQueryPack</code>.
-<strong><code>InvalidTemplateDeployment : The template deployment 'queryDeploy' is not valid according to the schema.</code></strong> — Escape special characters in the KQL query body or wrap it in single quotes to prevent shell interpretation.
-<strong><code>AuthorizationFailed : The client 'user@contoso.com' with object id '98765432-4321-4321-4321-210987654321' does not have authorization to perform action 'Microsoft.OperationalInsights/queryPacks/queries/write' over scope '/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.OperationalInsights/queryPacks/myQueryPack'.</code></strong> — Ensure your Azure account has the Log Analytics Contributor role assigned to the resource group or subscription.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound : The Resource 'Microsoft.OperationalInsights/queryPacks/myQueryPack' under resource group 'myRG' was not found.</code></td>
+<td>Create the query pack first using <code>az monitor log-analytics query-pack create --resource-group myRG --name myQueryPack</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidTemplateDeployment : The template deployment 'queryDeploy' is not valid according to the schema.</code></td>
+<td>Escape special characters in the KQL query body or wrap it in single quotes to prevent shell interpretation.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed : The client 'user@contoso.com' with object id '98765432-4321-4321-4321-210987654321' does not have authorization to perform action 'Microsoft.OperationalInsights/queryPacks/queries/write' over scope '/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.OperationalInsights/queryPacks/myQueryPack'.</code></td>
+<td>Ensure your Azure account has the Log Analytics Contributor role assigned to the resource group or subscription.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="log-search-alerts">Log Search Alerts<a class="headerlink" href="#log-search-alerts" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Create a log alert for failed logins</span>
@@ -8607,9 +8677,28 @@ Azure Log Analytics is the primary platform for collecting, querying, and alerti
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The resource 'Microsoft.OperationalInsights/workspaces/myWorkspace' could not be found.</code></strong> — Verify the workspace name and subscription ID are correct, and that the workspace exists in the specified resource group.
-<strong><code>InvalidResourceId: The provided scope is invalid or malformed.</code></strong> — Ensure all resource IDs follow the exact format <code>/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/...</code> with no extra slashes or typos.
-<strong><code>ActionGroupNotFound: The action group at the specified resource ID does not exist.</code></strong> — Confirm the action group name and resource group are correct, and create the action group if it doesn't exist.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The resource 'Microsoft.OperationalInsights/workspaces/myWorkspace' could not be found.</code></td>
+<td>Verify the workspace name and subscription ID are correct, and that the workspace exists in the specified resource group.</td>
+</tr>
+<tr>
+<td><code>InvalidResourceId: The provided scope is invalid or malformed.</code></td>
+<td>Ensure all resource IDs follow the exact format <code>/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/...</code> with no extra slashes or typos.</td>
+</tr>
+<tr>
+<td><code>ActionGroupNotFound: The action group at the specified resource ID does not exist.</code></td>
+<td>Confirm the action group name and resource group are correct, and create the action group if it doesn't exist.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8633,7 +8722,7 @@ Azure Log Analytics is the primary platform for collecting, querying, and alerti
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

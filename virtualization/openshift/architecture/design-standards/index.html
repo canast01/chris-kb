@@ -7477,9 +7477,28 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: node "&lt;node&gt;" not found</code></strong> — Replace <code>&lt;node&gt;</code> with the actual node hostname (e.g., <code>worker-infra-01</code>).
-<strong><code>Error from server (NotFound): ingresscontrollers.operator.openshift.io "default" not found</code></strong> — Verify the ingress operator is installed with <code>oc get ingresscontroller -n openshift-ingress-operator</code>.
-<strong><code>error: error validating "STDIN": error validating data: ValidationError(ConfigMap.data.config.yaml): invalid type for io.openshift.config.v1.ClusterMonitoringConfig: got "string", expected "object"</code></strong> — Remove the <code>config.yaml:</code> key and pipe the YAML object directly as the ConfigMap data value.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: node "&lt;node&gt;" not found</code></td>
+<td>Replace <code>&lt;node&gt;</code> with the actual node hostname (e.g., <code>worker-infra-01</code>).</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): ingresscontrollers.operator.openshift.io "default" not found</code></td>
+<td>Verify the ingress operator is installed with <code>oc get ingresscontroller -n openshift-ingress-operator</code>.</td>
+</tr>
+<tr>
+<td><code>error: error validating "STDIN": error validating data: ValidationError(ConfigMap.data.config.yaml): invalid type for io.openshift.config.v1.ClusterMonitoringConfig: got "string", expected "object"</code></td>
+<td>Remove the <code>config.yaml:</code> key and pipe the YAML object directly as the ConfigMap data value.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="etcd-disk-sizing-and-validation">etcd Disk Sizing and Validation<a class="headerlink" href="#etcd-disk-sizing-and-validation" title="Permanent link">&para;</a></h2>
 <p>etcd is the most I/O-sensitive component. Slow disk causes fsync latency, leader elections, and cluster instability.</p>
@@ -7557,9 +7576,28 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>etcd-fio: IO Error: ENOSPC (No space left on device)</code></strong> — Ensure /var/lib/etcd has at least 50GB free space before running the test.
-<strong><code>fio: command not found</code></strong> — Install fio with <code>yum install fio</code> (RHEL/CentOS) or <code>apt-get install fio</code> (Ubuntu).
-<strong><code>Permission denied</code></strong> — Run the fio command with <code>sudo</code> or as root user since /var/lib/etcd requires elevated privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>etcd-fio: IO Error: ENOSPC (No space left on device)</code></td>
+<td>Ensure /var/lib/etcd has at least 50GB free space before running the test.</td>
+</tr>
+<tr>
+<td><code>fio: command not found</code></td>
+<td>Install fio with <code>yum install fio</code> (RHEL/CentOS) or <code>apt-get install fio</code> (Ubuntu).</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the fio command with <code>sudo</code> or as root user since /var/lib/etcd requires elevated privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="network-cidr-planning">Network CIDR Planning<a class="headerlink" href="#network-cidr-planning" title="Permanent link">&para;</a></h2>
 <p>Set at install time — cannot change after cluster creation without reinstalling.</p>
@@ -7649,8 +7687,24 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "network.operator"</code></strong> — Verify the cluster-network-operator is installed with <code>oc get clusteroperator cluster-network-operator</code>.
-<strong><code>Error from server (NotFound): nodes "&lt;node&gt;" not found</code></strong> — Replace <code>&lt;node&gt;</code> with an actual node name from <code>oc get nodes</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "network.operator"</code></td>
+<td>Verify the cluster-network-operator is installed with <code>oc get clusteroperator cluster-network-operator</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): nodes "&lt;node&gt;" not found</code></td>
+<td>Replace <code>&lt;node&gt;</code> with an actual node name from <code>oc get nodes</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>VLAN segmentation recommendation:</strong></p>
 <p>Separate VLANs for: (1) machine/node network, (2) storage network (iSCSI/NFS/ODF replication), (3) cluster API/management. Avoids broadcast domain pollution and simplifies firewall rules.</p>
@@ -7754,8 +7808,24 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to recognize "STDIN": no kind "PersistentVolumeClaim" in version "v1"</code></strong> — Verify the API group is correct and the cluster supports the v1 API version for PVCs.
-<strong><code>Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "persistentvolumeclaims"</code></strong> — Grant the service account or user the <code>create</code> verb on <code>persistentvolumeclaims</code> via a ClusterRole or Role binding.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to recognize "STDIN": no kind "PersistentVolumeClaim" in version "v1"</code></td>
+<td>Verify the API group is correct and the cluster supports the v1 API version for PVCs.</td>
+</tr>
+<tr>
+<td><code>Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "persistentvolumeclaims"</code></td>
+<td>Grant the service account or user the <code>create</code> verb on <code>persistentvolumeclaims</code> via a ClusterRole or Role binding.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="machineset-design">MachineSet Design<a class="headerlink" href="#machineset-design" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># MachineSet template (vSphere example)</span>
@@ -7808,9 +7878,28 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "machineset"</code></strong> — Verify the machine-api-operator is running with <code>oc get pods -n openshift-machine-api</code> and check your cluster version supports MachineSets.
-<strong><code>Error from server (NotFound): machinesets.machine.openshift.io "cluster-worker-0" not found</code></strong> — Confirm the exact MachineSet name with <code>oc get machineset -n openshift-machine-api</code> and use the correct namespace.
-<strong><code>error: error validating "machineautoscaler.yaml": error validating data: ValidationError(MachineAutoscaler): unknown field "replicaCount"</code></strong> — Use correct field names <code>minReplicas</code> and <code>maxReplicas</code> in the MachineAutoscaler spec, not <code>replicaCount</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "machineset"</code></td>
+<td>Verify the machine-api-operator is running with <code>oc get pods -n openshift-machine-api</code> and check your cluster version supports MachineSets.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): machinesets.machine.openshift.io "cluster-worker-0" not found</code></td>
+<td>Confirm the exact MachineSet name with <code>oc get machineset -n openshift-machine-api</code> and use the correct namespace.</td>
+</tr>
+<tr>
+<td><code>error: error validating "machineautoscaler.yaml": error validating data: ValidationError(MachineAutoscaler): unknown field "replicaCount"</code></td>
+<td>Use correct field names <code>minReplicas</code> and <code>maxReplicas</code> in the MachineAutoscaler spec, not <code>replicaCount</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7839,7 +7928,7 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

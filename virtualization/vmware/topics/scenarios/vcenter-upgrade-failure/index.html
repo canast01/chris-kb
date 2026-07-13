@@ -9450,9 +9450,28 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vim-cmd: command not found</code></strong> — SSH directly to the ESXi host (not vCenter) where the VCSA VM is running, as vim-cmd is only available on ESXi.
-<strong><code>Error: The object has already been deleted or has not been completely created</code></strong> — Wait 30-60 seconds after reverting the snapshot before attempting to power on, as the VM state may not have fully synchronized.
-<strong><code>Snapshot not found: &lt;snapshot-id&gt;</code></strong> — Verify the snapshot ID exists by running <code>vim-cmd vmsvc/snapshot.get &lt;vmid&gt;</code> and use the exact Snapshot ID from the output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vim-cmd: command not found</code></td>
+<td>SSH directly to the ESXi host (not vCenter) where the VCSA VM is running, as vim-cmd is only available on ESXi.</td>
+</tr>
+<tr>
+<td><code>Error: The object has already been deleted or has not been completely created</code></td>
+<td>Wait 30-60 seconds after reverting the snapshot before attempting to power on, as the VM state may not have fully synchronized.</td>
+</tr>
+<tr>
+<td><code>Snapshot not found: &lt;snapshot-id&gt;</code></td>
+<td>Verify the snapshot ID exists by running <code>vim-cmd vmsvc/snapshot.get &lt;vmid&gt;</code> and use the exact Snapshot ID from the output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After rollback, SSH to the source VCSA and confirm all services are running:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stopped
@@ -9463,8 +9482,24 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>service-control: command not found</code></strong> — Ensure you are running this command on a vCenter Server or ESXi host where VMware service control tools are installed, or use the full path <code>/usr/lib/vmware-vise/bin/service-control</code>.
-<strong><code>grep: (standard input) is empty</code></strong> — This occurs when all services are running; the grep filter returns no matches, which is normal and not an error condition.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Ensure you are running this command on a vCenter Server or ESXi host where VMware service control tools are installed, or use the full path <code>/usr/lib/vmware-vise/bin/service-control</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>This occurs when all services are running; the grep filter returns no matches, which is normal and not an error condition.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="5-stage-2-failure-read-the-upgrade-logs">5. Stage 2 Failure — Read the Upgrade Logs<a class="headerlink" href="#5-stage-2-failure-read-the-upgrade-logs" title="Permanent link">&para;</a></h2>
@@ -9500,9 +9535,28 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tail: cannot open '/var/log/vmware/upgrade/vcsa-upgrade.log' for reading: No such file or directory</code></strong> — SSH to the VCSA management interface instead of the appliance shell, or verify the upgrade process actually started by checking <code>/var/log/firstboot/</code> for pre-upgrade logs.
-<strong><code>Permission denied</code></strong> — Ensure you are logged in as root or a user with sudo privileges; use <code>sudo -i</code> to escalate if needed.
-<strong><code>/var/log/vmware/upgrade/: No such file or directory</code></strong> — The upgrade may not have been initiated yet or the VCSA is still in pre-upgrade state; check <code>/var/log/firstboot/firstboot.log</code> to confirm upgrade stage.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/upgrade/vcsa-upgrade.log' for reading: No such file or directory</code></td>
+<td>SSH to the VCSA management interface instead of the appliance shell, or verify the upgrade process actually started by checking <code>/var/log/firstboot/</code> for pre-upgrade logs.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure you are logged in as root or a user with sudo privileges; use <code>sudo -i</code> to escalate if needed.</td>
+</tr>
+<tr>
+<td><code>/var/log/vmware/upgrade/: No such file or directory</code></td>
+<td>The upgrade may not have been initiated yet or the VCSA is still in pre-upgrade state; check <code>/var/log/firstboot/firstboot.log</code> to confirm upgrade stage.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Common Stage 2 failure patterns:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>&quot;Database migration failed: out of disk space&quot;
@@ -9571,9 +9625,28 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Could not connect to service-control</code></strong> — Ensure you are running this command as root or with sudo on the VCSA appliance.
-<strong><code>command not found: /usr/lib/vmware-vmafd/bin/vmafd-cli</code></strong> — Verify the VCSA installation is complete and the vmafd service is running with <code>service-control --status --all | grep vmafd</code>.
-<strong><code>Error: Connection refused</code></strong> — Wait 2–3 minutes after VCSA boot for all services to fully initialize, then retry the vmafd-cli commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Could not connect to service-control</code></td>
+<td>Ensure you are running this command as root or with sudo on the VCSA appliance.</td>
+</tr>
+<tr>
+<td><code>command not found: /usr/lib/vmware-vmafd/bin/vmafd-cli</code></td>
+<td>Verify the VCSA installation is complete and the vmafd service is running with <code>service-control --status --all | grep vmafd</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Connection refused</code></td>
+<td>Wait 2–3 minutes after VCSA boot for all services to fully initialize, then retry the vmafd-cli commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If the new VCSA boots but hosts are not reconnecting within 15 minutes:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Re-trigger reconnect for all hosts via PowerCLI on the new vCenter</span>
@@ -9589,8 +9662,24 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect-VIServer : The specified item could not be found on the server.</code></strong> — Ensure you are connected to the correct vCenter instance with <code>Connect-VIServer</code> before running the command.
-<strong><code>Set-VMHost : The object 'VMHost' cannot be modified because it is being accessed by a different user or the connection to the server has been lost.</code></strong> — Verify network connectivity between vCenter and ESXi hosts, and check that no other administrators are performing concurrent operations on those hosts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect-VIServer : The specified item could not be found on the server.</code></td>
+<td>Ensure you are connected to the correct vCenter instance with <code>Connect-VIServer</code> before running the command.</td>
+</tr>
+<tr>
+<td><code>Set-VMHost : The object 'VMHost' cannot be modified because it is being accessed by a different user or the connection to the server has been lost.</code></td>
+<td>Verify network connectivity between vCenter and ESXi hosts, and check that no other administrators are performing concurrent operations on those hosts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="7-aria-suitelc-upgrade-path">7. Aria SuiteLC Upgrade Path<a class="headerlink" href="#7-aria-suitelc-upgrade-path" title="Permanent link">&para;</a></h2>
@@ -9702,7 +9791,7 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

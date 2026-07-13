@@ -8675,9 +8675,28 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>purearray: command not found</code></strong> — Ensure you are logged into the FlashArray management interface or source the Pure CLI environment variables.
-<strong><code>Connection Status: Disconnected</code></strong> — Verify network connectivity from the array to phonehome.purestorage.com on port 443 and check firewall rules allowing outbound HTTPS.
-<strong><code>Error: Phonehome disabled on this array</code></strong> — Enable phonehome support using <code>purearray set --phonehome=true</code> on the affected array.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>purearray: command not found</code></td>
+<td>Ensure you are logged into the FlashArray management interface or source the Pure CLI environment variables.</td>
+</tr>
+<tr>
+<td><code>Connection Status: Disconnected</code></td>
+<td>Verify network connectivity from the array to phonehome.purestorage.com on port 443 and check firewall rules allowing outbound HTTPS.</td>
+</tr>
+<tr>
+<td><code>Error: Phonehome disabled on this array</code></td>
+<td>Enable phonehome support using <code>purearray set --phonehome=true</code> on the affected array.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If phonehome is disconnected, Pure cannot monitor SLA compliance and cannot proactively manage the hardware. Treat phonehome connectivity as a critical dependency.</p>
 <h3 id="pure1-rest-api-access">Pure1 REST API Access<a class="headerlink" href="#pure1-rest-api-access" title="Permanent link">&para;</a></h3>
@@ -8749,9 +8768,28 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (6) Could not resolve host: api.pure1.purestorage.com</code></strong> — Verify network connectivity and DNS resolution; check if your firewall allows HTTPS outbound to Pure1 API endpoints.
-<strong><code>{"error_code":"401","message":"Invalid authorization token"}</code></strong> — Regenerate your API token in the Pure1 portal and ensure it is not expired or revoked.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Update your CA certificate bundle or use <code>curl -k</code> only in non-production testing environments.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (6) Could not resolve host: api.pure1.purestorage.com</code></td>
+<td>Verify network connectivity and DNS resolution; check if your firewall allows HTTPS outbound to Pure1 API endpoints.</td>
+</tr>
+<tr>
+<td><code>{"error_code":"401","message":"Invalid authorization token"}</code></td>
+<td>Regenerate your API token in the Pure1 portal and ensure it is not expired or revoked.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Update your CA certificate bundle or use <code>curl -k</code> only in non-production testing environments.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="vsphere-esxi-host-connectivity">vSphere / ESXi Host Connectivity<a class="headerlink" href="#vsphere-esxi-host-connectivity" title="Permanent link">&para;</a></h2>
@@ -8797,9 +8835,28 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option --adapter vmhba64</code></strong> — Verify the iSCSI adapter name with <code>esxcli iscsi adapter list</code> and use the correct adapter identifier.
-<strong><code>SATP rule add: Rule already exists for vendor PURE model FlashArray</code></strong> — Remove the existing rule first with <code>esxcli storage nmp satp rule remove --satp VMW_SATP_ALUA --vendor PURE --model FlashArray</code> before re-adding.
-<strong><code>No devices matched for grep pattern 'pure'</code></strong> — Rescan the adapter again and wait 30 seconds for LUN discovery to complete, then verify FlashArray targets are reachable on the iSCSI network.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option --adapter vmhba64</code></td>
+<td>Verify the iSCSI adapter name with <code>esxcli iscsi adapter list</code> and use the correct adapter identifier.</td>
+</tr>
+<tr>
+<td><code>SATP rule add: Rule already exists for vendor PURE model FlashArray</code></td>
+<td>Remove the existing rule first with <code>esxcli storage nmp satp rule remove --satp VMW_SATP_ALUA --vendor PURE --model FlashArray</code> before re-adding.</td>
+</tr>
+<tr>
+<td><code>No devices matched for grep pattern 'pure'</code></td>
+<td>Rescan the adapter again and wait 30 seconds for LUN discovery to complete, then verify FlashArray targets are reachable on the iSCSI network.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="fibre-channel">Fibre Channel<a class="headerlink" href="#fibre-channel" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check FC HBA status on ESXi host</span>
@@ -8834,9 +8891,28 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Could not find a matching vmhba</code></strong> — Verify FC HBAs are properly detected with <code>esxcli storage san fc list</code> and check vSphere client for hardware errors.
-<strong><code>No matching devices found</code></strong> — Confirm FC zoning is complete on the SAN switch and LUNs are presented to the ESXi host with <code>esxcli storage core device list</code>.
-<strong><code>Path Policy: VMW_PSP_FIXED</code></strong> — Change the path selection policy to Round Robin using <code>esxcli storage nmp device setpolicy -d &lt;device-naa&gt; -P VMW_PSP_RR</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Could not find a matching vmhba</code></td>
+<td>Verify FC HBAs are properly detected with <code>esxcli storage san fc list</code> and check vSphere client for hardware errors.</td>
+</tr>
+<tr>
+<td><code>No matching devices found</code></td>
+<td>Confirm FC zoning is complete on the SAN switch and LUNs are presented to the ESXi host with <code>esxcli storage core device list</code>.</td>
+</tr>
+<tr>
+<td><code>Path Policy: VMW_PSP_FIXED</code></td>
+<td>Change the path selection policy to Round Robin using <code>esxcli storage nmp device setpolicy -d &lt;device-naa&gt; -P VMW_PSP_RR</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="nvme-over-fibre-channel-nvmefc">NVMe over Fibre Channel (NVMe/FC)<a class="headerlink" href="#nvme-over-fibre-channel-nvmefc" title="Permanent link">&para;</a></h3>
 <p>Supported on FlashArray //X and //C with NVMe-enabled controllers:</p>
@@ -8869,9 +8945,28 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unknown command or namespace nvme</code></strong> — Verify NVMe drivers are installed with <code>esxcli software vib list | grep nvme</code> and install if missing.
-<strong><code>Error: Could not get adapter list</code></strong> — Ensure the ESXi host has NVMe-capable hardware and check <code>esxcli hardware pci list</code> to confirm NVMe controllers are detected.
-<strong><code>Permission denied</code></strong> — Run commands as root or with appropriate ESXi host privileges; use <code>esxcli system permission list</code> to verify user permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unknown command or namespace nvme</code></td>
+<td>Verify NVMe drivers are installed with <code>esxcli software vib list | grep nvme</code> and install if missing.</td>
+</tr>
+<tr>
+<td><code>Error: Could not get adapter list</code></td>
+<td>Ensure the ESXi host has NVMe-capable hardware and check <code>esxcli hardware pci list</code> to confirm NVMe controllers are detected.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run commands as root or with appropriate ESXi host privileges; use <code>esxcli system permission list</code> to verify user permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="vmware-vasa-provider-vvols">VMware VASA Provider (vVols)<a class="headerlink" href="#vmware-vasa-provider-vvols" title="Permanent link">&para;</a></h2>
@@ -8922,9 +9017,28 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>purereplicationlink list: error: connection refused</code></strong> — Verify the FlashArray CLI is authenticated and the management network is reachable with <code>purepod list</code> first.
-<strong><code>purepod list --connection: error: invalid option '--connection'</code></strong> — Use the correct flag <code>purepod list --mediator</code> or check your Pure OS version supports the connection flag.
-<strong><code>Mediator connection status: Disconnected</code></strong> — Confirm the Mediator VM is running and network connectivity exists between pods and Mediator on port 8888.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>purereplicationlink list: error: connection refused</code></td>
+<td>Verify the FlashArray CLI is authenticated and the management network is reachable with <code>purepod list</code> first.</td>
+</tr>
+<tr>
+<td><code>purepod list --connection: error: invalid option '--connection'</code></td>
+<td>Use the correct flag <code>purepod list --mediator</code> or check your Pure OS version supports the connection flag.</td>
+</tr>
+<tr>
+<td><code>Mediator connection status: Disconnected</code></td>
+<td>Confirm the Mediator VM is running and network connectivity exists between pods and Mediator on port 8888.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>The two arrays must have network connectivity on the replication port (TCP 8081). Mediator VM can run on-premises or in a cloud VPC (GCP/Azure/AWS).</p>
 <hr />
@@ -8946,8 +9060,24 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid address format</code></strong> — Verify the IP address is valid and reachable from the FlashArray management network.
-<strong><code>Error: Syslog server already exists</code></strong> — Use <code>puresyslog remove --name siem-server</code> before re-adding with a different configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid address format</code></td>
+<td>Verify the IP address is valid and reachable from the FlashArray management network.</td>
+</tr>
+<tr>
+<td><code>Error: Syslog server already exists</code></td>
+<td>Use <code>puresyslog remove --name siem-server</code> before re-adding with a different configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Key events to alert on:
 - Admin login from unexpected IP
@@ -8982,7 +9112,7 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

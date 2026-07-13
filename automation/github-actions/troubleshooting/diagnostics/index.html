@@ -7371,9 +7371,28 @@ GitHub Actions diagnostic commands: enable step-level debug logging, inspect run
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: authentication required</code></strong> — Run <code>gh auth login</code> to authenticate with GitHub CLI before running workflow commands.
-<strong><code>Error: HTTP 404: Not Found</code></strong> — Verify the repository owner/name is correct and you have access; check with <code>gh repo view &lt;owner&gt;/&lt;repo&gt;</code>.
-<strong><code>Error: run not found</code></strong> — Confirm the run ID exists by listing recent runs with <code>gh run list --repo &lt;owner&gt;/&lt;repo&gt;</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: authentication required</code></td>
+<td>Run <code>gh auth login</code> to authenticate with GitHub CLI before running workflow commands.</td>
+</tr>
+<tr>
+<td><code>Error: HTTP 404: Not Found</code></td>
+<td>Verify the repository owner/name is correct and you have access; check with <code>gh repo view &lt;owner&gt;/&lt;repo&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: run not found</code></td>
+<td>Confirm the run ID exists by listing recent runs with <code>gh run list --repo &lt;owner&gt;/&lt;repo&gt;</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-2-enable-debug-logging">Step 2 — Enable debug logging<a class="headerlink" href="#step-2-enable-debug-logging" title="Permanent link">&para;</a></h2>
@@ -7448,9 +7467,28 @@ GitHub Actions diagnostic commands: enable step-level debug logging, inspect run
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (AccessDenied) when calling the GetCallerIdentity operation: User: arn:aws:iam::123456789012:role/github-actions-role is not authorized to perform: sts:GetCallerIdentity</code></strong> — Add <code>sts:GetCallerIdentity</code> permission to the IAM role's trust policy or inline policy.
-<strong><code>ERROR: The subscription of account 'example@contoso.com' has been disabled.</code></strong> — Verify the Azure subscription is active and the service principal has the correct role assignment in that subscription.
-<strong><code>InvalidParameterValue: Invalid OIDC request provided to STS AssumeRoleWithWebIdentity</code></strong> — Ensure the OIDC trust policy's <code>Subject</code> claim matches the exact GitHub token <code>sub</code> value (e.g., <code>repo:owner/repo:ref:refs/heads/main</code>), including branch or environment name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the GetCallerIdentity operation: User: arn:aws:iam::123456789012:role/github-actions-role is not authorized to perform: sts:GetCallerIdentity</code></td>
+<td>Add <code>sts:GetCallerIdentity</code> permission to the IAM role's trust policy or inline policy.</td>
+</tr>
+<tr>
+<td><code>ERROR: The subscription of account 'example@contoso.com' has been disabled.</code></td>
+<td>Verify the Azure subscription is active and the service principal has the correct role assignment in that subscription.</td>
+</tr>
+<tr>
+<td><code>InvalidParameterValue: Invalid OIDC request provided to STS AssumeRoleWithWebIdentity</code></td>
+<td>Ensure the OIDC trust policy's <code>Subject</code> claim matches the exact GitHub token <code>sub</code> value (e.g., <code>repo:owner/repo:ref:refs/heads/main</code>), including branch or environment name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>If OIDC fails with "AccessDenied" or "InvalidIdentityToken":</strong>
 1. Verify the workflow has <code>permissions: id-token: write</code>
@@ -7490,9 +7528,28 @@ GitHub Actions diagnostic commands: enable step-level debug logging, inspect run
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: HTTP 404: Not Found (https://api.github.com/repos/owner/repo/actions/secrets)</code></strong> — Verify the repository name is correct and you have push access to the repository.
-<strong><code>Error: authentication required</code></strong> — Ensure you are authenticated with <code>gh auth login</code> and have the appropriate token scopes (repo or org).
-<strong><code>Error: HTTP 422: Validation Failed</code></strong> — Check that the secret name contains only alphanumeric characters and underscores, and does not start with a number.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: HTTP 404: Not Found (https://api.github.com/repos/owner/repo/actions/secrets)</code></td>
+<td>Verify the repository name is correct and you have push access to the repository.</td>
+</tr>
+<tr>
+<td><code>Error: authentication required</code></td>
+<td>Ensure you are authenticated with <code>gh auth login</code> and have the appropriate token scopes (repo or org).</td>
+</tr>
+<tr>
+<td><code>Error: HTTP 422: Validation Failed</code></td>
+<td>Check that the secret name contains only alphanumeric characters and underscores, and does not start with a number.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Secret scope troubleshooting:</strong>
 - If a secret is set at org level but the job uses it via an environment, confirm the environment has the org secret listed under "Inherited secrets"
@@ -7565,9 +7622,28 @@ GitHub Actions diagnostic commands: enable step-level debug logging, inspect run
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: systemctl: command not found</code></strong> — Verify the runner is on a systemd-based Linux system; on older systems or non-Linux hosts, use the appropriate service manager (e.g., <code>launchctl</code> on macOS, <code>Get-Service</code> on Windows).
-<strong><code>curl: (7) Failed to connect to github.com port 443: Connection refused</code></strong> — Check that outbound HTTPS traffic is allowed on port 443 and no firewall/proxy is blocking access to GitHub's IP ranges.
-<strong><code>ls: cannot access '_diag/': No such file or directory</code></strong> — Ensure you are in the correct runner installation directory (<code>/path/to/actions-runner</code>) where the <code>_diag</code> folder is created after the runner starts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: systemctl: command not found</code></td>
+<td>Verify the runner is on a systemd-based Linux system; on older systems or non-Linux hosts, use the appropriate service manager (e.g., <code>launchctl</code> on macOS, <code>Get-Service</code> on Windows).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to github.com port 443: Connection refused</code></td>
+<td>Check that outbound HTTPS traffic is allowed on port 443 and no firewall/proxy is blocking access to GitHub's IP ranges.</td>
+</tr>
+<tr>
+<td><code>ls: cannot access '_diag/': No such file or directory</code></td>
+<td>Ensure you are in the correct runner installation directory (<code>/path/to/actions-runner</code>) where the <code>_diag</code> folder is created after the runner starts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Common self-hosted runner problems:</strong>
 - <code>Runner is offline</code> → runner service crashed or host rebooted without auto-start; check systemd service
@@ -7649,7 +7725,7 @@ GitHub Actions diagnostic commands: enable step-level debug logging, inspect run
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

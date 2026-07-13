@@ -8855,9 +8855,28 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>** server can't find vrli-master.example.local: NXDOMAIN</code></strong> — Verify the DNS zone is configured on your DNS server and the hostname is registered in DNS.
-<strong><code>nslookup: command not found</code></strong> — Install bind-utils (RHEL/CentOS) or dnsutils (Debian/Ubuntu) package on the management workstation.
-<strong><code>connection timed out; no servers could be reached</code></strong> — Confirm the DNS server IP (10.0.0.53) is reachable and correct in /etc/resolv.conf.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>** server can't find vrli-master.example.local: NXDOMAIN</code></td>
+<td>Verify the DNS zone is configured on your DNS server and the hostname is registered in DNS.</td>
+</tr>
+<tr>
+<td><code>nslookup: command not found</code></td>
+<td>Install bind-utils (RHEL/CentOS) or dnsutils (Debian/Ubuntu) package on the management workstation.</td>
+</tr>
+<tr>
+<td><code>connection timed out; no servers could be reached</code></td>
+<td>Confirm the DNS server IP (10.0.0.53) is reachable and correct in /etc/resolv.conf.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Required firewall ports:</p>
 <table>
@@ -8905,8 +8924,24 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nc: getaddrinfo for host "vrli-master.example.local" port 514/udp failed: Name or service not known</code></strong> — Verify DNS resolution with <code>nslookup vrli-master.example.local</code> or use the IP address directly instead of the hostname.
-<strong><code>Connection refused</code></strong> — Confirm the Aria Operations for Logs syslog receiver (port 514) and CFAPI agent (port 9543) are running on the target host with <code>netstat -tuln | grep -E '514|9543'</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nc: getaddrinfo for host "vrli-master.example.local" port 514/udp failed: Name or service not known</code></td>
+<td>Verify DNS resolution with <code>nslookup vrli-master.example.local</code> or use the IP address directly instead of the hostname.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Confirm the Aria Operations for Logs syslog receiver (port 514) and CFAPI agent (port 9543) are running on the target host with <code>netstat -tuln | grep -E '514|9543'</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Ingest sizing:</p>
 <table>
@@ -8976,8 +9011,24 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>li-admin: command not found</code></strong> — Ensure you are logged in as root and the VRLI service is running; check <code>/opt/vmware/var/log/</code> for startup errors.
-<strong><code>/storage/core: No such file or directory</code></strong> — Verify the storage mount completed successfully by running <code>mount | grep storage</code> and check <code>/etc/fstab</code> for mount configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>li-admin: command not found</code></td>
+<td>Ensure you are logged in as root and the VRLI service is running; check <code>/opt/vmware/var/log/</code> for startup errors.</td>
+</tr>
+<tr>
+<td><code>/storage/core: No such file or directory</code></td>
+<td>Verify the storage mount completed successfully by running <code>mount | grep storage</code> and check <code>/etc/fstab</code> for mount configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-3-worker-node-deployment">Phase 3 — Worker Node Deployment<a class="headerlink" href="#phase-3-worker-node-deployment" title="Permanent link">&para;</a></h2>
@@ -9016,9 +9067,28 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag (already present) or import the master's CA certificate into your system trust store.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the API endpoint is correct and the cluster service is fully started; check <code>systemctl status aria-ops-logs</code> on the master node.
-<strong><code>401 Unauthorized</code></strong> — Confirm the admin password is correct and URL-encoded if it contains special characters; test with <code>curl -sk -u 'admin:password' https://vrli-master.example.local/api/v2/cluster/nodes</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag (already present) or import the master's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Verify the API endpoint is correct and the cluster service is fully started; check <code>systemctl status aria-ops-logs</code> on the master node.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Confirm the admin password is correct and URL-encoded if it contains special characters; test with <code>curl -sk -u 'admin:password' https://vrli-master.example.local/api/v2/cluster/nodes</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Configure VIP for HA (if using a load balancer):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Administration → Cluster → Configuration → Set VIP: 10.0.1.35
@@ -9050,8 +9120,24 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to parse options.</code></strong> — Verify the syslog configuration syntax matches the format <code>udp://hostname:port</code> without extra spaces or special characters.
-<strong><code>Connection refused</code></strong> — Confirm that vrli-master.example.local is reachable on port 514 and that the Aria Operations for Logs collector is running and listening on that port.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to parse options.</code></td>
+<td>Verify the syslog configuration syntax matches the format <code>udp://hostname:port</code> without extra spaces or special characters.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Confirm that vrli-master.example.local is reachable on port 514 and that the Aria Operations for Logs collector is running and listening on that port.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="cfapi-agent-on-linux-vms">CFAPI Agent on Linux VMs<a class="headerlink" href="#cfapi-agent-on-linux-vms" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Download agent: Administration → Agents → Download Agent</span>
@@ -9073,9 +9159,28 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>./VMware-Log-Insight-Agent-&lt;version&gt;.bin: Permission denied</code></strong> — Run <code>chmod +x VMware-Log-Insight-Agent-&lt;version&gt;.bin</code> before executing the installer.
-<strong><code>Error: Unable to connect to vrli-master.example.local:9543 (Connection refused)</code></strong> — Verify the VRLI master hostname/IP is correct and the service is listening on port 9543 with <code>telnet vrli-master.example.local 9543</code>.
-<strong><code>ERROR: Agent failed to register - SSL certificate verification failed</code></strong> — Add <code>--ssl-verify=no</code> flag to the installer command or ensure the VRLI master's SSL certificate is trusted on the agent host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>./VMware-Log-Insight-Agent-&lt;version&gt;.bin: Permission denied</code></td>
+<td>Run <code>chmod +x VMware-Log-Insight-Agent-&lt;version&gt;.bin</code> before executing the installer.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to vrli-master.example.local:9543 (Connection refused)</code></td>
+<td>Verify the VRLI master hostname/IP is correct and the service is listening on port 9543 with <code>telnet vrli-master.example.local 9543</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: Agent failed to register - SSL certificate verification failed</code></td>
+<td>Add <code>--ssl-verify=no</code> flag to the installer command or ensure the VRLI master's SSL certificate is trusted on the agent host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Syslog from network devices: point switches and firewalls at the VIP on UDP 514. For TLS syslog on port 6514, download the Aria Logs CA cert from Administration → SSL and install it on each source before enabling TCP 6514.</p>
 <hr />
@@ -9130,9 +9235,28 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>li-admin: command not found</code></strong> — SSH to the correct vRealize Log Insight master node or verify the admin CLI tools are installed in the PATH.
-<strong><code>MISSING_SHARDS detected on vrli-node-2.example.local</code></strong> — Run <code>li-admin cluster repair</code> and wait for shard rebalancing to complete before proceeding.
-<strong><code>/storage/core usage: 87%</code></strong> — Increase storage capacity or implement log retention policies to reduce disk usage below 80%.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>li-admin: command not found</code></td>
+<td>SSH to the correct vRealize Log Insight master node or verify the admin CLI tools are installed in the PATH.</td>
+</tr>
+<tr>
+<td><code>MISSING_SHARDS detected on vrli-node-2.example.local</code></td>
+<td>Run <code>li-admin cluster repair</code> and wait for shard rebalancing to complete before proceeding.</td>
+</tr>
+<tr>
+<td><code>/storage/core usage: 87%</code></td>
+<td>Increase storage capacity or implement log retention policies to reduce disk usage below 80%.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Confirm version and node health via API</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9158,9 +9282,28 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the CA certificate into your system trust store.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the API endpoint is correct and the vRLI service is fully started; check logs with <code>tail -f /var/log/aria/vrli/api.log</code>.
-<strong><code>curl: (401) Unauthorized</code></strong> — Confirm the admin password is correct and URL-encoded if it contains special characters; test with <code>curl -sk -u 'admin:password' https://vrli-master.example.local/api/v2/system/info</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Verify the API endpoint is correct and the vRLI service is fully started; check logs with <code>tail -f /var/log/aria/vrli/api.log</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Confirm the admin password is correct and URL-encoded if it contains special characters; test with <code>curl -sk -u 'admin:password' https://vrli-master.example.local/api/v2/system/info</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -9263,7 +9406,7 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

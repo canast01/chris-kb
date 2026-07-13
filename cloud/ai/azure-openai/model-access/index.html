@@ -7229,9 +7229,28 @@ Azure OpenAI model availability varies by region and subscription tier. Some mod
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The resource 'my-aoai-resource' does not exist in resource group 'my-rg'</code></strong> — Verify the resource name and resource group name match your Azure deployment with <code>az cognitiveservices account list -g my-rg</code>.
-<strong><code>Authorization failed. The user does not have permission to access this resource</code></strong> — Ensure your Azure account has Cognitive Services Contributor or Reader role on the resource or subscription using <code>az role assignment list --assignee $(az account show --query user.name -o tsv)</code>.
-<strong><code>jq: parse error: Invalid numeric literal at line 1 column 7</code></strong> — Confirm the access token is valid and the REST API call succeeded by testing without jq piping first: <code>curl -s "https://management.azure.com/subscriptions/SUB_ID/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2023-05-01" -H "Authorization: Bearer $(az account get-access-token --query accessToken -o tsv)"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The resource 'my-aoai-resource' does not exist in resource group 'my-rg'</code></td>
+<td>Verify the resource name and resource group name match your Azure deployment with <code>az cognitiveservices account list -g my-rg</code>.</td>
+</tr>
+<tr>
+<td><code>Authorization failed. The user does not have permission to access this resource</code></td>
+<td>Ensure your Azure account has Cognitive Services Contributor or Reader role on the resource or subscription using <code>az role assignment list --assignee $(az account show --query user.name -o tsv)</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid numeric literal at line 1 column 7</code></td>
+<td>Confirm the access token is valid and the REST API call succeeded by testing without jq piping first: <code>curl -s "https://management.azure.com/subscriptions/SUB_ID/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2023-05-01" -H "Authorization: Bearer $(az account get-access-token --query accessToken -o tsv)"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Key models and typical regional availability (as of early 2026):</p>
 <table>
@@ -7305,9 +7324,28 @@ Azure OpenAI model availability varies by region and subscription tier. Some mod
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: The following arguments are required: --resource-group</code></strong> — Add <code>--resource-group &lt;rg-name&gt;</code> to the <code>az cognitiveservices usage list</code> command.
-<strong><code>Authorization failed. The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have permission to perform action 'Microsoft.CognitiveServices/commitmentPlans/write' over scope '/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.CognitiveServices/locations/eastus/commitmentPlans/gpt-4o-quota'.</code></strong> — Ensure your Azure account has the Cognitive Services Contributor or Owner role on the subscription.
-<strong><code>Invalid value for 'api-version': '2023-05-01'. Supported versions are: 2021-04-30, 2023-08-01, 2024-06-01.</code></strong> — Update the api-version parameter to a supported version such as <code>2024-06-01</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: The following arguments are required: --resource-group</code></td>
+<td>Add <code>--resource-group &lt;rg-name&gt;</code> to the <code>az cognitiveservices usage list</code> command.</td>
+</tr>
+<tr>
+<td><code>Authorization failed. The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have permission to perform action 'Microsoft.CognitiveServices/commitmentPlans/write' over scope '/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.CognitiveServices/locations/eastus/commitmentPlans/gpt-4o-quota'.</code></td>
+<td>Ensure your Azure account has the Cognitive Services Contributor or Owner role on the subscription.</td>
+</tr>
+<tr>
+<td><code>Invalid value for 'api-version': '2023-05-01'. Supported versions are: 2021-04-30, 2023-08-01, 2024-06-01.</code></td>
+<td>Update the api-version parameter to a supported version such as <code>2024-06-01</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rate-limit-headers">Rate Limit Headers<a class="headerlink" href="#rate-limit-headers" title="Permanent link">&para;</a></h2>
 <p>The API returns rate limit info in response headers. Log these to detect approaching limits before 429s occur.</p>
@@ -7402,7 +7440,7 @@ Azure OpenAI model availability varies by region and subscription tier. Some mod
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

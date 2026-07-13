@@ -8141,9 +8141,28 @@ PostgreSQL procedures: VACUUM and ANALYZE scheduling, extension management with 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: the database system is not ready</code></strong> — Wait 10-15 seconds after promotion completes before running verification queries, as PostgreSQL needs time to finish recovery.
-<strong><code>pg_ctl: could not open PID file "/var/lib/postgresql/data/postmaster.pid": No such file or directory</code></strong> — Ensure PostgreSQL is running on the standby with <code>systemctl start postgresql</code> before attempting promotion.
-<strong><code>permission denied</code></strong> — Run all <code>pg_ctl</code> and file operations as the <code>postgres</code> user with <code>sudo -u postgres</code> or switch to that user first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: the database system is not ready</code></td>
+<td>Wait 10-15 seconds after promotion completes before running verification queries, as PostgreSQL needs time to finish recovery.</td>
+</tr>
+<tr>
+<td><code>pg_ctl: could not open PID file "/var/lib/postgresql/data/postmaster.pid": No such file or directory</code></td>
+<td>Ensure PostgreSQL is running on the standby with <code>systemctl start postgresql</code> before attempting promotion.</td>
+</tr>
+<tr>
+<td><code>permission denied</code></td>
+<td>Run all <code>pg_ctl</code> and file operations as the <code>postgres</code> user with <code>sudo -u postgres</code> or switch to that user first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Automatic failover — check MHA status</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>masterha_check_repl<span class="w"> </span>--conf<span class="o">=</span>/etc/mha/app.conf
@@ -8197,9 +8216,28 @@ PostgreSQL procedures: VACUUM and ANALYZE scheduling, extension management with 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "&lt;new-primary&gt;" to address: Name or service not known</code></strong> — Replace <code>&lt;new-primary&gt;</code> with the actual hostname or IP address of the new primary server.
-<strong><code>ERROR 1045 (28000): Access denied for user 'appuser'@'&lt;new-primary&gt;'</code></strong> — Verify the MySQL user credentials and that the host is listed in the user's allowed hosts (check <code>mysql.user</code> table or use <code>GRANT</code> to add the host).
-<strong><code>curl: (7) Failed to connect to &lt;app-endpoint&gt; port 443: Connection refused</code></strong> — Confirm the application endpoint is running and accessible; check firewall rules and application service status with <code>systemctl status</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "&lt;new-primary&gt;" to address: Name or service not known</code></td>
+<td>Replace <code>&lt;new-primary&gt;</code> with the actual hostname or IP address of the new primary server.</td>
+</tr>
+<tr>
+<td><code>ERROR 1045 (28000): Access denied for user 'appuser'@'&lt;new-primary&gt;'</code></td>
+<td>Verify the MySQL user credentials and that the host is listed in the user's allowed hosts (check <code>mysql.user</code> table or use <code>GRANT</code> to add the host).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;app-endpoint&gt; port 443: Connection refused</code></td>
+<td>Confirm the application endpoint is running and accessible; check firewall rules and application service status with <code>systemctl status</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8237,7 +8275,7 @@ PostgreSQL procedures: VACUUM and ANALYZE scheduling, extension management with 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

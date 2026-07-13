@@ -8724,9 +8724,28 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The host has 2 remaining hosts. Minimum 3 required for vSAN cluster.</code></strong> — Verify cluster size before removal or adjust FTT policy; use <code>aws evs describe-environment --environment-id $ENV_ID</code> to confirm host count.
-<strong><code>Set-VMHost : The object 'evs-host-01.vcf.internal' cannot be found.</code></strong> — Verify the exact hostname with <code>Get-VMHost | Select Name</code> and ensure vCenter connectivity with <code>Test-VcenterConnection</code>.
-<strong><code>An error occurred (ResourceNotFound) when calling the DeleteEnvironmentHost operation: Host host-xxx not found.</code></strong> — Confirm the correct host ID from <code>aws evs list-environment-hosts</code> output and ensure the host is in maintenance mode before deletion.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The host has 2 remaining hosts. Minimum 3 required for vSAN cluster.</code></td>
+<td>Verify cluster size before removal or adjust FTT policy; use <code>aws evs describe-environment --environment-id $ENV_ID</code> to confirm host count.</td>
+</tr>
+<tr>
+<td><code>Set-VMHost : The object 'evs-host-01.vcf.internal' cannot be found.</code></td>
+<td>Verify the exact hostname with <code>Get-VMHost | Select Name</code> and ensure vCenter connectivity with <code>Test-VcenterConnection</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (ResourceNotFound) when calling the DeleteEnvironmentHost operation: Host host-xxx not found.</code></td>
+<td>Confirm the correct host ID from <code>aws evs list-environment-hosts</code> output and ensure the host is in maintenance mode before deletion.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="add-a-host">Add a Host<a class="headerlink" href="#add-a-host" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Verify current cluster capacity before adding</span>
@@ -8779,9 +8798,28 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidEnvironmentId) when calling the ListEnvironmentHosts operation: The environment ID 'env-prod-cluster-01' does not exist or you do not have access.</code></strong> — Verify the environment ID with <code>aws evs list-environments</code> and ensure your IAM role has <code>evs:ListEnvironmentHosts</code> permissions.
-<strong><code>error: watch: command not found</code></strong> — Install <code>procps</code> package with <code>apt-get install procps</code> or use <code>while true; do ... sleep 30; done</code> as an alternative.
-<strong><code>Get-VsanDiskGroup : The term 'Get-VsanDiskGroup' is not recognized</code></strong> — Load the vSAN PowerCLI module with <code>Import-Module VMware.VimAutomation.Vsan</code> before running PowerShell commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidEnvironmentId) when calling the ListEnvironmentHosts operation: The environment ID 'env-prod-cluster-01' does not exist or you do not have access.</code></td>
+<td>Verify the environment ID with <code>aws evs list-environments</code> and ensure your IAM role has <code>evs:ListEnvironmentHosts</code> permissions.</td>
+</tr>
+<tr>
+<td><code>error: watch: command not found</code></td>
+<td>Install <code>procps</code> package with <code>apt-get install procps</code> or use <code>while true; do ... sleep 30; done</code> as an alternative.</td>
+</tr>
+<tr>
+<td><code>Get-VsanDiskGroup : The term 'Get-VsanDiskGroup' is not recognized</code></td>
+<td>Load the vSAN PowerCLI module with <code>Import-Module VMware.VimAutomation.Vsan</code> before running PowerShell commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="host-replacement-aws-initiated">Host Replacement (AWS-Initiated)<a class="headerlink" href="#host-replacement-aws-initiated" title="Permanent link">&para;</a></h2>
 <p>AWS performs the physical host replacement when a bare-metal host fails a hardware health check. AWS will notify you when the replacement host is available. Your responsibility is the VMware layer.</p>
@@ -8851,9 +8889,28 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-VsanDiskGroup : The term 'Get-VsanDiskGroup' is not recognized</code></strong> — Load the VMware.VimAutomation.Vsan module with <code>Import-Module VMware.VimAutomation.Vsan</code> before running vSAN cmdlets.
-<strong><code>curl: (7) Failed to connect to nsxmgr.corp.local port 443: Connection timed out</code></strong> — Verify NSX Manager IP/hostname in <code>$NSX_URL</code> and confirm network connectivity from the jump host to the NSX Manager management interface.
-<strong><code>jq: command not found</code></strong> — Install <code>jq</code> with <code>apt-get install jq</code> or <code>yum install jq</code>, or use Python's json module as shown in the curl command for JSON parsing.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-VsanDiskGroup : The term 'Get-VsanDiskGroup' is not recognized</code></td>
+<td>Load the VMware.VimAutomation.Vsan module with <code>Import-Module VMware.VimAutomation.Vsan</code> before running vSAN cmdlets.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to nsxmgr.corp.local port 443: Connection timed out</code></td>
+<td>Verify NSX Manager IP/hostname in <code>$NSX_URL</code> and confirm network connectivity from the jump host to the NSX Manager management interface.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>jq</code> with <code>apt-get install jq</code> or <code>yum install jq</code>, or use Python's json module as shown in the curl command for JSON parsing.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="vcf-password-rotation">VCF Password Rotation<a class="headerlink" href="#vcf-password-rotation" title="Permanent link">&para;</a></h2>
 <p>Password rotation is required quarterly for most security policies. SDDC Manager manages all VCF component credentials.</p>
@@ -8907,9 +8964,28 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip SSL verification, or import the SDDC Manager certificate into your system trust store.
-<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index string with string "accessToken"</code></strong> — Verify the SDDC Manager credentials are correct and the <code>/v1/tokens</code> endpoint returned valid JSON; check the response with <code>curl -sk -X POST ... | python3 -m json.tool</code>.
-<strong><code>Authorization header missing or invalid</code></strong> — Ensure the <code>${SDDC_TOKEN}</code> variable is populated by checking <code>echo ${SDDC_TOKEN}</code> before running subsequent curl commands; re-authenticate if the token is empty or expired.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to curl to skip SSL verification, or import the SDDC Manager certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Cannot index string with string "accessToken"</code></td>
+<td>Verify the SDDC Manager credentials are correct and the <code>/v1/tokens</code> endpoint returned valid JSON; check the response with <code>curl -sk -X POST ... | python3 -m json.tool</code>.</td>
+</tr>
+<tr>
+<td><code>Authorization header missing or invalid</code></td>
+<td>Ensure the <code>${SDDC_TOKEN}</code> variable is populated by checking <code>echo ${SDDC_TOKEN}</code> before running subsequent curl commands; re-authenticate if the token is empty or expired.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After rotation completes, update any external automation or scripts that reference VCF credentials.</p>
 <h2 id="nsx-t-edge-cluster-scale-out">NSX-T Edge Cluster Scale-Out<a class="headerlink" href="#nsx-t-edge-cluster-scale-out" title="Permanent link">&para;</a></h2>
@@ -8970,9 +9046,28 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>jq: error (at &lt;stdin&gt;:0): Cannot index array with string "results"</code></strong> — Verify NSX_URL is correct and the API endpoint is returning valid JSON; test with <code>curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/edge-clusters" | head -20</code>.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command or configure NSX Manager certificate in your CA bundle; the <code>-sk</code> flags should suppress this but verify NSX_URL uses https.
-<strong><code>ValueError: No JSON object could be decoded</code></strong> — Ensure NSX_PASS is set correctly and the admin user has API permissions; test authentication with <code>curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/transport-nodes" -w "\n%{http_code}\n"</code> to check for 401 responses.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:0): Cannot index array with string "results"</code></td>
+<td>Verify NSX_URL is correct and the API endpoint is returning valid JSON; test with <code>curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/edge-clusters" | head -20</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command or configure NSX Manager certificate in your CA bundle; the <code>-sk</code> flags should suppress this but verify NSX_URL uses https.</td>
+</tr>
+<tr>
+<td><code>ValueError: No JSON object could be decoded</code></td>
+<td>Ensure NSX_PASS is set correctly and the admin user has API permissions; test authentication with <code>curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/transport-nodes" -w "\n%{http_code}\n"</code> to check for 401 responses.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="vsan-storage-policy-update">vSAN Storage Policy Update<a class="headerlink" href="#vsan-storage-policy-update" title="Permanent link">&para;</a></h2>
 <p>Storage policies (SPBM) control the data protection level for VM objects. Update policies when changing FTT, RAID type, or adding encryption requirements.</p>
@@ -9033,9 +9128,28 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-SpbmCapability : The term 'Get-SpbmCapability' is not recognized</code></strong> — Load the VMware.VimAutomation.Storage module with <code>Import-Module VMware.VimAutomation.Storage</code> before running SPBM commands.
-<strong><code>Set-SpbmEntityConfiguration : Cannot bind argument to parameter 'StoragePolicy' because it is null</code></strong> — Ensure the policy variable <code>$policy</code> was successfully created in Step 1 by running <code>$policy | Get-Member</code> to verify the object exists.
-<strong><code>Get-VM : The specified VM 'myvm' was not found</code></strong> — Verify the VM name matches exactly (case-sensitive) using <code>Get-VM | Select Name</code> to list available VMs in the connected vCenter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-SpbmCapability : The term 'Get-SpbmCapability' is not recognized</code></td>
+<td>Load the VMware.VimAutomation.Storage module with <code>Import-Module VMware.VimAutomation.Storage</code> before running SPBM commands.</td>
+</tr>
+<tr>
+<td><code>Set-SpbmEntityConfiguration : Cannot bind argument to parameter 'StoragePolicy' because it is null</code></td>
+<td>Ensure the policy variable <code>$policy</code> was successfully created in Step 1 by running <code>$policy | Get-Member</code> to verify the object exists.</td>
+</tr>
+<tr>
+<td><code>Get-VM : The specified VM 'myvm' was not found</code></td>
+<td>Verify the VM name matches exactly (case-sensitive) using <code>Get-VM | Select Name</code> to list available VMs in the connected vCenter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="nsx-t-segment-management">NSX-T Segment Management<a class="headerlink" href="#nsx-t-segment-management" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create a new logical segment (workload network)</span>
@@ -9073,9 +9187,28 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command (already present in example) or import the NSX Manager certificate into your system trust store.
-<strong><code>{"error_code":400,"error_message":"Invalid transport_zone_id"}</code></strong> — Replace <code>&lt;overlay-tz-id&gt;</code> with an actual transport zone UUID from your NSX deployment (retrieve via <code>curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/transport-zones"</code>).
-<strong><code>curl: (7) Failed to connect to $NSX_URL port 443: Connection refused</code></strong> — Verify <code>$NSX_URL</code> environment variable is set correctly (e.g., <code>export NSX_URL=https://nsx-manager.example.com</code>) and NSX Manager is reachable on the network.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command (already present in example) or import the NSX Manager certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error_code":400,"error_message":"Invalid transport_zone_id"}</code></td>
+<td>Replace <code>&lt;overlay-tz-id&gt;</code> with an actual transport zone UUID from your NSX deployment (retrieve via <code>curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/transport-zones"</code>).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to $NSX_URL port 443: Connection refused</code></td>
+<td>Verify <code>$NSX_URL</code> environment variable is set correctly (e.g., <code>export NSX_URL=https://nsx-manager.example.com</code>) and NSX Manager is reachable on the network.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="vsan-rebalance">vSAN Rebalance<a class="headerlink" href="#vsan-rebalance" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Trigger manual vSAN rebalance (PowerCLI)</span>
@@ -9110,8 +9243,24 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-VsanView : The term 'Get-VsanView' is not recognized</code></strong> — Import the VMware.VimAutomation.Vsan module with <code>Import-Module VMware.VimAutomation.Vsan</code> before running the script.
-<strong><code>Invoke-VsanCommand : Cluster 'EVS-Management-Cluster' is not vSAN enabled</code></strong> — Verify the cluster name matches exactly and that vSAN is enabled on the cluster with <code>Get-Cluster | Get-VsanClusterConfiguration</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-VsanView : The term 'Get-VsanView' is not recognized</code></td>
+<td>Import the VMware.VimAutomation.Vsan module with <code>Import-Module VMware.VimAutomation.Vsan</code> before running the script.</td>
+</tr>
+<tr>
+<td><code>Invoke-VsanCommand : Cluster 'EVS-Management-Cluster' is not vSAN enabled</code></td>
+<td>Verify the cluster name matches exactly and that vSAN is enabled on the cluster with <code>Get-Cluster | Get-VsanClusterConfiguration</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="hcx-migration-procedure">HCX Migration Procedure<a class="headerlink" href="#hcx-migration-procedure" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Pre-migration checks:</span>
@@ -9168,7 +9317,7 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

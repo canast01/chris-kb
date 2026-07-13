@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="AWS Authentication — SSO, MFA &amp; Credentials · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "AWS Authentication — SSO, MFA &amp; Credentials", "url": "https://chrisanastasiadis.com/cloud/aws/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-16"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "AWS Authentication — SSO, MFA &amp; Credentials", "url": "https://chrisanastasiadis.com/cloud/aws/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-16"}</script>
   
 
   </head>
@@ -8480,8 +8480,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the ListPermissionSets operation: 1 validation error detected: Value 'arn:aws:sso:::instance/ssoins-&lt;id&gt;' at 'instanceArn' failed to match pattern</code></strong> — Replace <code>&lt;id&gt;</code> with the actual SSO instance ID from <code>aws sso-admin list-instances</code>.
-<strong><code>An error occurred (AccessDeniedException) when calling the Login operation: User is not authorized to perform: sso:GetRoleCredentials</code></strong> — Ensure the IAM user has <code>sso:GetRoleCredentials</code> and <code>sso:ListAccounts</code> permissions attached.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the ListPermissionSets operation: 1 validation error detected: Value 'arn:aws:sso:::instance/ssoins-&lt;id&gt;' at 'instanceArn' failed to match pattern</code></td>
+<td>Replace <code>&lt;id&gt;</code> with the actual SSO instance ID from <code>aws sso-admin list-instances</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDeniedException) when calling the Login operation: User is not authorized to perform: sso:GetRoleCredentials</code></td>
+<td>Ensure the IAM user has <code>sso:GetRoleCredentials</code> and <code>sso:ListAccounts</code> permissions attached.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Attach policy that denies all actions unless MFA is present</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Apply this to IAM groups used for human console access:</span>
@@ -8533,9 +8549,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (NoSuchEntity) when calling the PutGroupPolicy operation: The group with name Operators cannot be found.</code></strong> — Create the IAM group first using <code>aws iam create-group --group-name Operators</code> before attaching the policy.
-<strong><code>An error occurred (MalformedPolicyDocument) when calling the PutGroupPolicy operation: Invalid principal in policy: "NotAction"</code></strong> — Use <code>"Action"</code> instead of <code>"NotAction"</code> in the Deny statement, or restructure the policy to explicitly list denied actions.
-**`The</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (NoSuchEntity) when calling the PutGroupPolicy operation: The group with name Operators cannot be found.</code></td>
+<td>Create the IAM group first using <code>aws iam create-group --group-name Operators</code> before attaching the policy.</td>
+</tr>
+<tr>
+<td><code>An error occurred (MalformedPolicyDocument) when calling the PutGroupPolicy operation: Invalid principal in policy: "NotAction"</code></td>
+<td>Use <code>"Action"</code> instead of <code>"NotAction"</code> in the Deny statement, or restructure the policy to explicitly list denied actions.</td>
+</tr>
+<tr>
+<td>**`The</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create OIDC provider for GitHub</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-open-id-connect-provider<span class="w"> </span><span class="se">\</span>
@@ -8654,8 +8689,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidInstanceID.NotFound) when calling the ModifyInstanceMetadataOptions operation: The instance ID 'i-0abc123' does not exist</code></strong> — Verify the instance ID exists in the target region using <code>aws ec2 describe-instances --instance-ids i-0abc123</code>.
-<strong><code>An error occurred (UnauthorizedOperation) when calling the ModifyInstanceMetadataDefaults operation: You are not authorized to perform: ec2:ModifyInstanceMetadataDefaults</code></strong> — Add the <code>ec2:ModifyInstanceMetadataDefaults</code> permission to your IAM policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidInstanceID.NotFound) when calling the ModifyInstanceMetadataOptions operation: The instance ID 'i-0abc123' does not exist</code></td>
+<td>Verify the instance ID exists in the target region using <code>aws ec2 describe-instances --instance-ids i-0abc123</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (UnauthorizedOperation) when calling the ModifyInstanceMetadataDefaults operation: You are not authorized to perform: ec2:ModifyInstanceMetadataDefaults</code></td>
+<td>Add the <code>ec2:ModifyInstanceMetadataDefaults</code> permission to your IAM policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List all access keys across all users (via credential report)</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-credential-report<span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
@@ -8685,9 +8736,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (NoSuchEntity) when calling the GetCredentialReport operation: The credential report does not exist. Please call GenerateCredentialReport.</code></strong> — Run <code>aws iam generate-credential-report</code> first, then wait 5–10 seconds before retrying the get-credential-report command.
-<strong><code>An error occurred (NoSuchEntity) when calling the DeleteAccessKey operation: The Access Key with id AKIA&lt;old-id&gt; cannot be found.</code></strong> — Verify the correct access key ID using <code>aws iam list-access-keys --user-name svc-deploy</code> before attempting deletion.
-<strong><code>An error occurred (AccessDenied) when calling the CreateAccessKey operation: User: arn:aws:iam::123456789012:user/svc-deploy is not authorized to perform: iam:CreateAccessKey</code></strong> — Ensure your IAM user has the <code>iam:CreateAccessKey</code> permission attached via an inline or managed policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (NoSuchEntity) when calling the GetCredentialReport operation: The credential report does not exist. Please call GenerateCredentialReport.</code></td>
+<td>Run <code>aws iam generate-credential-report</code> first, then wait 5–10 seconds before retrying the get-credential-report command.</td>
+</tr>
+<tr>
+<td><code>An error occurred (NoSuchEntity) when calling the DeleteAccessKey operation: The Access Key with id AKIA&lt;old-id&gt; cannot be found.</code></td>
+<td>Verify the correct access key ID using <code>aws iam list-access-keys --user-name svc-deploy</code> before attempting deletion.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the CreateAccessKey operation: User: arn:aws:iam::123456789012:user/svc-deploy is not authorized to perform: iam:CreateAccessKey</code></td>
+<td>Ensure your IAM user has the <code>iam:CreateAccessKey</code> permission attached via an inline or managed policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create a break-glass user (used only when SSO/IdP is unavailable)</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-user<span class="w"> </span>--user-name<span class="w"> </span><span class="k">break</span>-glass-admin
@@ -8741,7 +8811,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -8676,9 +8676,28 @@ vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, M
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present; if still failing, verify NSX_URL uses https://).
-<strong><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></strong> — Ensure NSX_PASSWORD environment variable is set correctly and the admin user has API access permissions.
-<strong><code>{"error_code": 400, "error_message": "Invalid bind_dn or bind_password"}</code></strong> — Verify the service account credentials and DN path match your Active Directory schema exactly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present; if still failing, verify NSX_URL uses https://).</td>
+</tr>
+<tr>
+<td><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></td>
+<td>Ensure NSX_PASSWORD environment variable is set correctly and the admin user has API access permissions.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 400, "error_message": "Invalid bind_dn or bind_password"}</code></td>
+<td>Verify the service account credentials and DN path match your Active Directory schema exactly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="aws-iam-identity-center-integration">AWS IAM Identity Center Integration<a class="headerlink" href="#aws-iam-identity-center-integration" title="Permanent link">&para;</a></h2>
 <p>For organizations using AWS IAM Identity Center (formerly AWS SSO), EVS console and API access is governed through IAM Identity Center permission sets. The vCenter and NSX-T UIs, however, maintain their own SSO — IAM Identity Center does not automatically provide access to these.</p>
@@ -8766,9 +8785,28 @@ vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, M
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; if still failing, verify SDDC Manager hostname resolves correctly).
-<strong><code>curl: (7) Failed to connect to sddc-manager.vcf.internal port 443: Name or service not known</code></strong> — Ensure DNS resolution for sddc-manager.vcf.internal is configured or add the IP to <code>/etc/hosts</code>.
-<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index string with string "status"</code></strong> — Verify the API response is valid JSON and that <code>$SDDC_USER</code> and <code>$SDDC_PASS</code> credentials are correct (401 responses return HTML error pages).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present; if still failing, verify SDDC Manager hostname resolves correctly).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to sddc-manager.vcf.internal port 443: Name or service not known</code></td>
+<td>Ensure DNS resolution for sddc-manager.vcf.internal is configured or add the IP to <code>/etc/hosts</code>.</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Cannot index string with string "status"</code></td>
+<td>Verify the API response is valid JSON and that <code>$SDDC_USER</code> and <code>$SDDC_PASS</code> credentials are correct (401 responses return HTML error pages).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>HCX credentials must be rotated separately because HCX Manager stores its own local admin password and the service mesh uses HCX-specific credentials for inter-site authentication:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Rotate HCX Manager local admin password</span>
@@ -8796,9 +8834,28 @@ vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, M
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but verify HCX_MANAGER_IP is correct if error persists).
-<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot index string with string "items"</code></strong> — Ensure the HCX API endpoint returns valid JSON and the admin credentials are correct; test with <code>curl -sk -u "admin:$NEW_HCX_PASSWORD" "https://$HCX_MANAGER_IP/hybridity/api/interconnect/links" | head -c 200</code> first.
-<strong><code>An error occurred (InvalidParameterException) when calling the PutSecretValue operation</code></strong> — Verify the secret JSON is valid by testing with <code>echo '{"username":"admin","password":"NEW_PASSWORD"}' | jq .</code> before passing to AWS Secrets Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but verify HCX_MANAGER_IP is correct if error persists).</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Cannot index string with string "items"</code></td>
+<td>Ensure the HCX API endpoint returns valid JSON and the admin credentials are correct; test with <code>curl -sk -u "admin:$NEW_HCX_PASSWORD" "https://$HCX_MANAGER_IP/hybridity/api/interconnect/links" | head -c 200</code> first.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the PutSecretValue operation</code></td>
+<td>Verify the secret JSON is valid by testing with <code>echo '{"username":"admin","password":"NEW_PASSWORD"}' | jq .</code> before passing to AWS Secrets Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="aws-console-mfa-enforcement">AWS Console MFA Enforcement<a class="headerlink" href="#aws-console-mfa-enforcement" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
@@ -8844,8 +8901,24 @@ vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, M
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (NoSuchEntity) when calling the PutUserPolicy operation: The user with name evs-operator cannot be found.</code></strong> — Verify the EVS operator user exists with <code>aws iam get-user --user-name evs-operator</code> before attaching the policy.
-<strong><code>An error occurred (MalformedPolicyDocument) when calling the PutUserPolicy operation: Invalid principal in policy: "Principal": {"AWS": "arn:aws:iam::ACCOUNT:user/evs-operator"}</code></strong> — Ensure the require-mfa.json file contains valid IAM policy syntax without a Principal element (use only for trust policies, not inline user policies).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (NoSuchEntity) when calling the PutUserPolicy operation: The user with name evs-operator cannot be found.</code></td>
+<td>Verify the EVS operator user exists with <code>aws iam get-user --user-name evs-operator</code> before attaching the policy.</td>
+</tr>
+<tr>
+<td><code>An error occurred (MalformedPolicyDocument) when calling the PutUserPolicy operation: Invalid principal in policy: "Principal": {"AWS": "arn:aws:iam::ACCOUNT:user/evs-operator"}</code></td>
+<td>Ensure the require-mfa.json file contains valid IAM policy syntax without a Principal element (use only for trust policies, not inline user policies).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>vCenter SSO cannot enforce MFA natively. The correct approach is to use AD as the identity source and enforce MFA at the AD layer (e.g., Microsoft Entra ID Conditional Access, or Okta MFA for AD-integrated login). When users authenticate to vCenter using their <code>username@corp.example.com</code> credentials, MFA is enforced by the IdP before the LDAP bind succeeds. This makes MFA coverage consistent across both AWS console and vSphere access without requiring vCenter-specific MFA configuration.</p>
 <h2 id="ssh-key-management-esxi-hosts">SSH Key Management (ESXi Hosts)<a class="headerlink" href="#ssh-key-management-esxi-hosts" title="Permanent link">&para;</a></h2>
@@ -8889,9 +8962,28 @@ vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, M
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'evs-cluster-key-new' already exists.</code></strong> — Delete the existing key with <code>aws ec2 delete-key-pair --key-name evs-cluster-key-new</code> before creating a new one.
-<strong><code>An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID: $ENV_ID</code></strong> — Set the ENV_ID variable with <code>export ENV_ID=&lt;your-environment-id&gt;</code> before running the loop.
-<strong><code>An error occurred (InvalidKeyPair.NotFound) when calling the DeleteKeyPair operation: The key pair 'evs-cluster-key' does not exist.</code></strong> — Verify the old key name exists with <code>aws ec2 describe-key-pairs</code> before attempting deletion.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'evs-cluster-key-new' already exists.</code></td>
+<td>Delete the existing key with <code>aws ec2 delete-key-pair --key-name evs-cluster-key-new</code> before creating a new one.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID: $ENV_ID</code></td>
+<td>Set the ENV_ID variable with <code>export ENV_ID=&lt;your-environment-id&gt;</code> before running the loop.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidKeyPair.NotFound) when calling the DeleteKeyPair operation: The key pair 'evs-cluster-key' does not exist.</code></td>
+<td>Verify the old key name exists with <code>aws ec2 describe-key-pairs</code> before attempting deletion.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8920,7 +9012,7 @@ vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, M
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

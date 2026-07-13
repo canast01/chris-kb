@@ -7336,8 +7336,24 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "csidriver"</code></strong> — Verify the cluster is fully initialized by running <code>oc get nodes</code> and waiting for all nodes to reach Ready status.
-<strong><code>Error from server (NotFound): configmaps "cloud-provider-config" not found</code></strong> — Confirm vSphere integration was enabled during IPI installation; re-run the installer with the correct vCenter credentials if the ConfigMap is missing.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "csidriver"</code></td>
+<td>Verify the cluster is fully initialized by running <code>oc get nodes</code> and waiting for all nodes to reach Ready status.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): configmaps "cloud-provider-config" not found</code></td>
+<td>Confirm vSphere integration was enabled during IPI installation; re-run the installer with the correct vCenter credentials if the ConfigMap is missing.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="vsphere-cloud-controller-manager-ccm">vSphere Cloud Controller Manager (CCM)<a class="headerlink" href="#vsphere-cloud-controller-manager-ccm" title="Permanent link">&para;</a></h3>
 <p>The CCM (<code>openshift-cloud-controller-manager</code> namespace) manages the node lifecycle: it provisions node objects when VMs come up, updates node addresses, and removes node objects when VMs are deleted. It also adds topology labels used by the scheduler.</p>
@@ -7408,9 +7424,28 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "node" or you've misspelled it</code></strong> — Replace <code>&lt;node&gt;</code> with an actual node name from <code>oc get nodes</code>.
-<strong><code>jq: command not found</code></strong> — Install jq on the bastion host with <code>sudo yum install -y jq</code> or use <code>grep</code> to filter labels instead.
-<strong><code>error: resource name may not be empty</code></strong> — Ensure the CCM namespace <code>openshift-cloud-controller-manager</code> exists; verify with <code>oc get ns | grep cloud-controller</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "node" or you've misspelled it</code></td>
+<td>Replace <code>&lt;node&gt;</code> with an actual node name from <code>oc get nodes</code>.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install jq on the bastion host with <code>sudo yum install -y jq</code> or use <code>grep</code> to filter labels instead.</td>
+</tr>
+<tr>
+<td><code>error: resource name may not be empty</code></td>
+<td>Ensure the CCM namespace <code>openshift-cloud-controller-manager</code> exists; verify with <code>oc get ns | grep cloud-controller</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="ldap-active-directory-identity-provider">LDAP / Active Directory Identity Provider<a class="headerlink" href="#ldap-active-directory-identity-provider" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># OAuth CR — LDAP identity provider configuration</span>
@@ -7466,9 +7501,28 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to read /path/to/ad-ca.crt: no such file or directory</code></strong> — Verify the CA certificate path exists and is readable with <code>ls -la /path/to/ad-ca.crt</code> before running the configmap command.
-<strong><code>error: groups sync failed: LDAP server unreachable or invalid credentials</code></strong> — Confirm LDAP connectivity and bindPassword secret are correct by testing with <code>ldapsearch -x -H ldap://ad-server:389 -D "cn=bind-user,dc=example,dc=com" -W</code>.
-<strong><code>Error from server (NotFound): secrets "kubeadmin" not found</code></strong> — Only delete kubeadmin after LDAP authentication is fully tested; if it's already deleted, skip this step or restore from backup if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to read /path/to/ad-ca.crt: no such file or directory</code></td>
+<td>Verify the CA certificate path exists and is readable with <code>ls -la /path/to/ad-ca.crt</code> before running the configmap command.</td>
+</tr>
+<tr>
+<td><code>error: groups sync failed: LDAP server unreachable or invalid credentials</code></td>
+<td>Confirm LDAP connectivity and bindPassword secret are correct by testing with <code>ldapsearch -x -H ldap://ad-server:389 -D "cn=bind-user,dc=example,dc=com" -W</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): secrets "kubeadmin" not found</code></td>
+<td>Only delete kubeadmin after LDAP authentication is fully tested; if it's already deleted, skip this step or restore from backup if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Recommended:</strong> Use the Red Hat <code>Group Sync Operator</code> from OperatorHub for scheduled automatic group synchronization. Install in <code>group-sync-operator</code> namespace; create a <code>GroupSync</code> CR pointing at your LDAP/AD server to run on a cron schedule (e.g. <code>*/30 * * * *</code>).</p>
 <h2 id="image-registry-integration">Image Registry Integration<a class="headerlink" href="#image-registry-integration" title="Permanent link">&para;</a></h2>
@@ -7515,9 +7569,28 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "configs" in group "imageregistry.operator.openshift.io"</code></strong> — Verify the Image Registry Operator is installed with <code>oc get operators | grep image-registry</code> and install it from OperatorHub if missing.
-<strong><code>The registry is not available</code></strong> — Ensure the storage backend (PVC or S3) is accessible and has sufficient capacity by checking <code>oc describe pvc</code> or S3 bucket permissions.
-<strong><code>invalid JSON in patch</code></strong> — Validate JSON syntax using a linter before patching; common issues are unescaped quotes or missing commas in the spec object.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "configs" in group "imageregistry.operator.openshift.io"</code></td>
+<td>Verify the Image Registry Operator is installed with <code>oc get operators | grep image-registry</code> and install it from OperatorHub if missing.</td>
+</tr>
+<tr>
+<td><code>The registry is not available</code></td>
+<td>Ensure the storage backend (PVC or S3) is accessible and has sufficient capacity by checking <code>oc describe pvc</code> or S3 bucket permissions.</td>
+</tr>
+<tr>
+<td><code>invalid JSON in patch</code></td>
+<td>Validate JSON syntax using a linter before patching; common issues are unescaped quotes or missing commas in the spec object.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="air-gap-mirror-with-oc-mirror">Air-Gap Mirror with oc mirror<a class="headerlink" href="#air-gap-mirror-with-oc-mirror" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Mirror OCP release images to internal registry (OCP 4.10+ oc-mirror plugin)</span>
@@ -7540,9 +7613,28 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to read imageset-config.yaml: no such file or directory</code></strong> — Verify the imageset-config.yaml file exists in the current directory and contains valid YAML syntax.
-<strong><code>error: failed to push image to quay.local.example.com: x509: certificate signed by unknown authority</code></strong> — Configure the registry as insecure in the imageset-config.yaml or add the registry's CA certificate to the system trust store.
-<strong><code>error: imagecontentsourcepolicy.config.openshift.io "mirror-openshift-release-images" already exists</code></strong> — Delete the existing policy with <code>oc delete imagecontentsourcepolicy mirror-openshift-release-images</code> before reapplying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to read imageset-config.yaml: no such file or directory</code></td>
+<td>Verify the imageset-config.yaml file exists in the current directory and contains valid YAML syntax.</td>
+</tr>
+<tr>
+<td><code>error: failed to push image to quay.local.example.com: x509: certificate signed by unknown authority</code></td>
+<td>Configure the registry as insecure in the imageset-config.yaml or add the registry's CA certificate to the system trust store.</td>
+</tr>
+<tr>
+<td><code>error: imagecontentsourcepolicy.config.openshift.io "mirror-openshift-release-images" already exists</code></td>
+<td>Delete the existing policy with <code>oc delete imagecontentsourcepolicy mirror-openshift-release-images</code> before reapplying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cert-manager-integration">cert-manager Integration<a class="headerlink" href="#cert-manager-integration" title="Permanent link">&para;</a></h2>
 <p>cert-manager automates TLS certificate lifecycle. Install via OperatorHub (<code>cert-manager</code> operator in <code>cert-manager</code> namespace).</p>
@@ -7595,9 +7687,28 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "ingresscontroller" in group "operator.openshift.io"</code></strong> — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with <code>oc api-resources | grep ingress</code>.
-<strong><code>Error from server (NotFound): secrets "apps-wildcard-tls" not found</code></strong> — Create the TLS secret first using <code>oc create secret tls apps-wildcard-tls --cert=cert.crt --key=key.key -n openshift-ingress</code>.
-<strong><code>certificate.cert-manager.io "apps-wildcard-tls" not found</code></strong> — Confirm the secret exists in the correct namespace with <code>oc get secret apps-wildcard-tls -n openshift-ingress</code> before patching.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "ingresscontroller" in group "operator.openshift.io"</code></td>
+<td>Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with <code>oc api-resources | grep ingress</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): secrets "apps-wildcard-tls" not found</code></td>
+<td>Create the TLS secret first using <code>oc create secret tls apps-wildcard-tls --cert=cert.crt --key=key.key -n openshift-ingress</code>.</td>
+</tr>
+<tr>
+<td><code>certificate.cert-manager.io "apps-wildcard-tls" not found</code></td>
+<td>Confirm the secret exists in the correct namespace with <code>oc get secret apps-wildcard-tls -n openshift-ingress</code> before patching.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="argocd-openshift-gitops">ArgoCD / OpenShift GitOps<a class="headerlink" href="#argocd-openshift-gitops" title="Permanent link">&para;</a></h2>
 <p>OpenShift GitOps operator installs ArgoCD. Install from OperatorHub; the operator creates an <code>ArgoCD</code> CR in <code>openshift-gitops</code> namespace automatically.</p>
@@ -7673,9 +7784,28 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "application"</code></strong> — Ensure ArgoCD is installed in the cluster with <code>oc get ns openshift-gitops</code> and verify the CRD exists via <code>oc get crd applications.argoproj.io</code>.
-<strong><code>error: unable to connect to the server: dial tcp: lookup argocd-server on 127.0.0.1:53: no such host</code></strong> — Port-forward to the ArgoCD server first with <code>oc port-forward -n openshift-gitops svc/openshift-gitops-server 8080:443</code> or use the route hostname instead.
-<strong><code>error: invalid token</code></strong> — Replace <code>&lt;token&gt;</code> with a valid ArgoCD API token obtained from <code>oc -n openshift-gitops exec deploy/openshift-gitops-server -- argocd account generate-token --account &lt;username&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "application"</code></td>
+<td>Ensure ArgoCD is installed in the cluster with <code>oc get ns openshift-gitops</code> and verify the CRD exists via <code>oc get crd applications.argoproj.io</code>.</td>
+</tr>
+<tr>
+<td><code>error: unable to connect to the server: dial tcp: lookup argocd-server on 127.0.0.1:53: no such host</code></td>
+<td>Port-forward to the ArgoCD server first with <code>oc port-forward -n openshift-gitops svc/openshift-gitops-server 8080:443</code> or use the route hostname instead.</td>
+</tr>
+<tr>
+<td><code>error: invalid token</code></td>
+<td>Replace <code>&lt;token&gt;</code> with a valid ArgoCD API token obtained from <code>oc -n openshift-gitops exec deploy/openshift-gitops-server -- argocd account generate-token --account &lt;username&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="advanced-cluster-management-acm">Advanced Cluster Management (ACM)<a class="headerlink" href="#advanced-cluster-management-acm" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Install ACM operator from OperatorHub, then create hub</span>
@@ -7704,8 +7834,24 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: resource mapping not found for name: "multiclusterhub" namespace: "open-cluster-management"</code></strong> — Ensure the ACM operator is fully installed and the CRD is available with <code>oc get crd | grep multiclusterhub</code>.
-<strong><code>The MultiClusterHub "multiclusterhub" is invalid: spec.imagePullSecret: Invalid value: "": imagePullSecret cannot be empty</code></strong> — Add a valid imagePullSecret to multiclusterhub.yaml or use <code>spec.imagePullSecret: null</code> if using default registry credentials.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: resource mapping not found for name: "multiclusterhub" namespace: "open-cluster-management"</code></td>
+<td>Ensure the ACM operator is fully installed and the CRD is available with <code>oc get crd | grep multiclusterhub</code>.</td>
+</tr>
+<tr>
+<td><code>The MultiClusterHub "multiclusterhub" is invalid: spec.imagePullSecret: Invalid value: "": imagePullSecret cannot be empty</code></td>
+<td>Add a valid imagePullSecret to multiclusterhub.yaml or use <code>spec.imagePullSecret: null</code> if using default registry credentials.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="odf-openshift-data-foundation-storage">ODF (OpenShift Data Foundation) Storage<a class="headerlink" href="#odf-openshift-data-foundation-storage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># ODF operator install via OperatorHub, then deploy StorageCluster</span>
@@ -7739,9 +7885,28 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "storagecluster"</code></strong> — Ensure the ODF operator is installed first via OperatorHub or <code>oc apply -f odf-operator.yaml</code>.
-<strong><code>pod not found with selector: app=rook-ceph-tools</code></strong> — Wait for the rook-ceph-tools pod to be ready with <code>oc wait --for=condition=Ready pod -l app=rook-ceph-tools -n openshift-storage --timeout=300s</code>.
-<strong><code>CephCluster is in a degraded state: insufficient OSDs</code></strong> — Verify that all OSD disks are properly attached and available by checking <code>oc describe storagecluster -n openshift-storage</code> for device discovery errors.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "storagecluster"</code></td>
+<td>Ensure the ODF operator is installed first via OperatorHub or <code>oc apply -f odf-operator.yaml</code>.</td>
+</tr>
+<tr>
+<td><code>pod not found with selector: app=rook-ceph-tools</code></td>
+<td>Wait for the rook-ceph-tools pod to be ready with <code>oc wait --for=condition=Ready pod -l app=rook-ceph-tools -n openshift-storage --timeout=300s</code>.</td>
+</tr>
+<tr>
+<td><code>CephCluster is in a degraded state: insufficient OSDs</code></td>
+<td>Verify that all OSD disks are properly attached and available by checking <code>oc describe storagecluster -n openshift-storage</code> for device discovery errors.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7770,7 +7935,7 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -9395,8 +9395,24 @@ recover the workflow.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: command not found</code></strong> — Ensure you are logged in as a user with sudo privileges; if using a restricted shell, request admin access.
-<strong><code>/var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory</code></strong> — Verify the LCM service is running with <code>systemctl status vmware-vcf-lcm</code> and check the correct log path for your</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: command not found</code></td>
+<td>Ensure you are logged in as a user with sudo privileges; if using a restricted shell, request admin access.</td>
+</tr>
+<tr>
+<td><code>/var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory</code></td>
+<td>Verify the LCM service is running with <code>systemctl status vmware-vcf-lcm</code> and check the correct log path for your</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: the specific exception class or error message. Common patterns:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>SshCommandException    — SDDC Manager cannot SSH to an ESXi host or NSX Manager
@@ -9436,9 +9452,28 @@ recover the workflow.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>command not found: sddc-manager-cli</code></strong> — Ensure the SDDC Manager CLI is installed and in your PATH, or run this command directly from the SDDC Manager appliance.
-<strong><code>UNREACHABLE</code></strong> — Verify the ESXi host is powered on, check network connectivity from SDDC Manager, and confirm firewall rules allow ICMP traffic.
-<strong><code>nslookup: can't resolve 'vcenter.domain.local': No answer</code></strong> — Verify DNS servers are configured correctly on SDDC Manager and that the DNS zone contains the required A records.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found: sddc-manager-cli</code></td>
+<td>Ensure the SDDC Manager CLI is installed and in your PATH, or run this command directly from the SDDC Manager appliance.</td>
+</tr>
+<tr>
+<td><code>UNREACHABLE</code></td>
+<td>Verify the ESXi host is powered on, check network connectivity from SDDC Manager, and confirm firewall rules allow ICMP traffic.</td>
+</tr>
+<tr>
+<td><code>nslookup: can't resolve 'vcenter.domain.local': No answer</code></td>
+<td>Verify DNS servers are configured correctly on SDDC Manager and that the DNS zone contains the required A records.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Certificate issue — expiry or trust:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check certificate expiry on vCenter from SDDC Manager</span>
@@ -9450,8 +9485,24 @@ recover the workflow.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load certificate</code></strong> — Ensure the vCenter FQDN is correct and the host is reachable on port 443; verify network connectivity with <code>ping &lt;vcenter-fqdn&gt;</code> first.
-<strong><code>error in x509 parsing</code></strong> — The certificate chain may not be complete; add <code>-showcerts</code> to <code>openssl s_client</code> to inspect the full chain and identify parsing issues.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Ensure the vCenter FQDN is correct and the host is reachable on port 443; verify network connectivity with <code>ping &lt;vcenter-fqdn&gt;</code> first.</td>
+</tr>
+<tr>
+<td><code>error in x509 parsing</code></td>
+<td>The certificate chain may not be complete; add <code>-showcerts</code> to <code>openssl s_client</code> to inspect the full chain and identify parsing issues.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>For certificate rotation in SDDC Manager, see the <a href="../certificate-expiry-rotation/">Certificate Expiry and Rotation</a> scenario.</p>
 <p><strong>vSAN health blocking upgrade:</strong></p>
@@ -9479,8 +9530,24 @@ recover the workflow.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown command or namespace vsan</code></strong> — Ensure you are connected to an ESXi 6.5+ host with vSAN enabled; run <code>esxcli vsan cluster get</code> to verify vSAN is active.
-<strong><code>Error: Permission denied</code></strong> — SSH to the ESXi host with root credentials or a user with vSAN admin privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown command or namespace vsan</code></td>
+<td>Ensure you are connected to an ESXi 6.5+ host with vSAN enabled; run <code>esxcli vsan cluster get</code> to verify vSAN is active.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>SSH to the ESXi host with root credentials or a user with vSAN admin privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Do not retry the upgrade workflow while a vSAN resync is in progress — the upgrade stall is protecting data integrity.</p>
 <p><strong>NSX precheck failure:</strong></p>
@@ -9531,9 +9598,28 @@ recover the workflow.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the vCenter CA certificate into your system trust store.
-<strong><code>{"error":"Unauthorized","code":401}</code></strong> — Verify the admin password is correct and URL-encoded if it contains special characters; use <code>-u admin:$(echo -n 'password' | jq -sRr @uri)</code> for special chars.
-<strong><code>{"error":"Not Found","code":404}</code></strong> — Confirm the <code>&lt;upgrade-id&gt;</code> and <code>&lt;task-id&gt;</code> values exist by running the first curl command to list active upgrades and their task IDs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the vCenter CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error":"Unauthorized","code":401}</code></td>
+<td>Verify the admin password is correct and URL-encoded if it contains special characters; use <code>-u admin:$(echo -n 'password' | jq -sRr @uri)</code> for special chars.</td>
+</tr>
+<tr>
+<td><code>{"error":"Not Found","code":404}</code></td>
+<td>Confirm the <code>&lt;upgrade-id&gt;</code> and <code>&lt;task-id&gt;</code> values exist by running the first curl command to list active upgrades and their task IDs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: some tasks cannot be retried individually and require retrying the entire upgrade operation from the beginning. If the component was partially upgraded (e.g., one NSX Manager node upgraded), check whether rollback or completion is the safer path before retrying.</p>
 <hr />
@@ -9567,9 +9653,28 @@ recover the workflow.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: /opt/vmware/sddc-support/sos: command not found</code></strong> — Verify the SOS tool is installed by running <code>ls -la /opt/vmware/sddc-support/</code> and confirm the SDDC Manager support bundle is present.
-<strong><code>Error: Domain '&lt;workload-domain-name&gt;' not found in SDDC Manager inventory</code></strong> — Replace <code>&lt;workload-domain-name&gt;</code> with the actual workload domain name from your environment (e.g., <code>workload-domain-01</code>).
-<strong><code>Permission denied</code></strong> — Ensure you are running the command with <code>sudo</code> and that your user account has sufficient privileges in the SDDC Manager appliance.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: /opt/vmware/sddc-support/sos: command not found</code></td>
+<td>Verify the SOS tool is installed by running <code>ls -la /opt/vmware/sddc-support/</code> and confirm the SDDC Manager support bundle is present.</td>
+</tr>
+<tr>
+<td><code>Error: Domain '&lt;workload-domain-name&gt;' not found in SDDC Manager inventory</code></td>
+<td>Replace <code>&lt;workload-domain-name&gt;</code> with the actual workload domain name from your environment (e.g., <code>workload-domain-01</code>).</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure you are running the command with <code>sudo</code> and that your user account has sufficient privileges in the SDDC Manager appliance.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected results:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>SOS health check output (healthy):
@@ -9665,7 +9770,7 @@ recover the workflow.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

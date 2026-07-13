@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Index · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Index", "url": "https://chrisanastasiadis.com/san/cisco/mds/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-06-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Index", "url": "https://chrisanastasiadis.com/san/cisco/mds/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-06-06"}</script>
   
 
   </head>
@@ -7398,9 +7398,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>PING: cannot find vrf management</code></strong> — Verify the management VRF exists with <code>show vrf</code> and confirm it is configured on the switch.
-<strong><code>PING: sendto: No route to host</code></strong> — Check that the management interface is up with <code>show interface mgmt0</code> and that routing to 10.0.0.1 is configured.
-<strong><code>PING: sendto: Permission denied</code></strong> — Ensure you have administrative privileges; use <code>enable</code> to enter privileged EXEC mode before running the ping command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PING: cannot find vrf management</code></td>
+<td>Verify the management VRF exists with <code>show vrf</code> and confirm it is configured on the switch.</td>
+</tr>
+<tr>
+<td><code>PING: sendto: No route to host</code></td>
+<td>Check that the management interface is up with <code>show interface mgmt0</code> and that routing to 10.0.0.1 is configured.</td>
+</tr>
+<tr>
+<td><code>PING: sendto: Permission denied</code></td>
+<td>Ensure you have administrative privileges; use <code>enable</code> to enter privileged EXEC mode before running the ping command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Apply NX-OS license:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>copy<span class="w"> </span>tftp://10.0.0.100/mds-license.lic<span class="w"> </span>bootflash:
@@ -7425,9 +7444,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>%Error opening tftp://10.0.0.100/mds-license.lic (Connection timed out)</code></strong> — Verify TFTP server is reachable and running on 10.0.0.100, and check network connectivity from the MDS switch.
-<strong><code>%License file is invalid or corrupted</code></strong> — Ensure the license file is a valid Cisco MDS .lic file and was not corrupted during transfer; re-download from Cisco if needed.
-<strong><code>%Insufficient space on bootflash</code></strong> — Free up space on bootflash using <code>delete bootflash:</code> command before copying the license file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%Error opening tftp://10.0.0.100/mds-license.lic (Connection timed out)</code></td>
+<td>Verify TFTP server is reachable and running on 10.0.0.100, and check network connectivity from the MDS switch.</td>
+</tr>
+<tr>
+<td><code>%License file is invalid or corrupted</code></td>
+<td>Ensure the license file is a valid Cisco MDS .lic file and was not corrupted during transfer; re-download from Cisco if needed.</td>
+</tr>
+<tr>
+<td><code>%Insufficient space on bootflash</code></td>
+<td>Free up space on bootflash using <code>delete bootflash:</code> command before copying the license file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configure-vsan-and-port-channels">Configure VSAN and Port Channels<a class="headerlink" href="#configure-vsan-and-port-channels" title="Permanent link">&para;</a></h2>
@@ -7451,8 +7489,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Ensure you are in the correct configuration mode (enter <code>config t</code> then <code>vsan database</code> before entering VSAN definitions).
-<strong><code>% VSAN 10 already exists</code></strong> — Delete the existing VSAN with <code>no vsan 10</code> before redefining it, or use a different VSAN ID.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Ensure you are in the correct configuration mode (enter <code>config t</code> then <code>vsan database</code> before entering VSAN definitions).</td>
+</tr>
+<tr>
+<td><code>% VSAN 10 already exists</code></td>
+<td>Delete the existing VSAN with <code>no vsan 10</code> before redefining it, or use a different VSAN ID.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Assign ports to VSANs:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vsan<span class="w"> </span>database
@@ -7463,8 +7517,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (<code>config t</code>) and that the MDS switch supports VSAN configuration.
-<strong><code>% Interface fc1/1-16 not found</code></strong> — Confirm the port range exists on your specific MDS model (e.g., MDS 9148S has fc1/1-48); adjust the range accordingly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct configuration mode (<code>config t</code>) and that the MDS switch supports VSAN configuration.</td>
+</tr>
+<tr>
+<td><code>% Interface fc1/1-16 not found</code></td>
+<td>Confirm the port range exists on your specific MDS model (e.g., MDS 9148S has fc1/1-48); adjust the range accordingly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Set the domain ID per VSAN:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>fcdomain<span class="w"> </span>domain<span class="w"> </span><span class="m">1</span><span class="w"> </span>preferred<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7474,8 +7544,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode with <code>config t</code> and that the MDS switch supports fcdomain commands.
-<strong><code>% VSAN &lt;vsan-id&gt; does not exist</code></strong> — Create the VSAN first using <code>vsan &lt;vsan-id&gt;</code> command before assigning it as preferred in fcdomain configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct configuration mode with <code>config t</code> and that the MDS switch supports fcdomain commands.</td>
+</tr>
+<tr>
+<td><code>% VSAN &lt;vsan-id&gt; does not exist</code></td>
+<td>Create the VSAN first using <code>vsan &lt;vsan-id&gt;</code> command before assigning it as preferred in fcdomain configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Configure ISL Port Channels (if multiple ISL links exist):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>interface<span class="w"> </span>port-channel<span class="w"> </span><span class="m">1</span>
@@ -7511,9 +7597,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the exact syntax for your MDS firmware version; <code>switchport mode E</code> may need to be <code>switchport mode fport</code> or configured differently depending on the context.
-<strong><code>% Port fc1/33 is already bound to a channel group</code></strong> — Remove the port from any existing channel group with <code>no channel-group</code> before assigning it to port-channel 1.
-<strong><code>% VSAN 10 does not exist</code></strong> — Create the VSAN first using <code>vsan 10</code> in configuration mode before assigning it to the trunk.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the exact syntax for your MDS firmware version; <code>switchport mode E</code> may need to be <code>switchport mode fport</code> or configured differently depending on the context.</td>
+</tr>
+<tr>
+<td><code>% Port fc1/33 is already bound to a channel group</code></td>
+<td>Remove the port from any existing channel group with <code>no channel-group</code> before assigning it to port-channel 1.</td>
+</tr>
+<tr>
+<td><code>% VSAN 10 does not exist</code></td>
+<td>Create the VSAN first using <code>vsan 10</code> in configuration mode before assigning it to the trunk.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="zone-configuration">Zone Configuration<a class="headerlink" href="#zone-configuration" title="Permanent link">&para;</a></h2>
@@ -7531,8 +7636,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (enter <code>config t</code> then <code>zone</code> submode) before entering zone member commands.
-<strong><code>% Incomplete command</code></strong> — Ensure each zone definition includes at least one <code>member pwwn</code> statement; incomplete zone configurations will be rejected.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct configuration mode (enter <code>config t</code> then <code>zone</code> submode) before entering zone member commands.</td>
+</tr>
+<tr>
+<td><code>% Incomplete command</code></td>
+<td>Ensure each zone definition includes at least one <code>member pwwn</code> statement; incomplete zone configurations will be rejected.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Create a zoneset and add zones:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>zoneset<span class="w"> </span>name<span class="w"> </span>zs_fabric_a<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7543,8 +7664,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode by entering <code>config t</code> and <code>san-device-alias database</code> context first.
-<strong><code>% Zone member not found: z_esx01_hba0_pmax_fa1_p0</code></strong> — Create the zone and its device aliases before adding them to the zoneset using <code>zone name &lt;zone_name&gt; vsan 10</code> commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct configuration mode by entering <code>config t</code> and <code>san-device-alias database</code> context first.</td>
+</tr>
+<tr>
+<td><code>% Zone member not found: z_esx01_hba0_pmax_fa1_p0</code></td>
+<td>Create the zone and its device aliases before adding them to the zoneset using <code>zone name &lt;zone_name&gt; vsan 10</code> commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Activate the zoneset:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>zs_fabric_a<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7557,8 +7694,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (use <code>config terminal</code> first if needed).
-<strong><code>% Zoneset zs_fabric_a not found</code></strong> — Create the zoneset with <code>zoneset name zs_fabric_a vsan 10</code> before attempting to activate it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct configuration mode (use <code>config terminal</code> first if needed).</td>
+</tr>
+<tr>
+<td><code>% Zoneset zs_fabric_a not found</code></td>
+<td>Create the zoneset with <code>zoneset name zs_fabric_a vsan 10</code> before attempting to activate it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Verify zones:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7588,8 +7741,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the VSAN number exists with <code>show vsan</code> and confirm you are in the correct mode (config or exec).
-<strong><code>FCNS Database for VSAN 10: (empty)</code></strong> — Check that devices are logged in and zoning is activated with <code>show zoneset active vsan 10</code>; if empty, devices have not registered with the name server yet.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the VSAN number exists with <code>show vsan</code> and confirm you are in the correct mode (config or exec).</td>
+</tr>
+<tr>
+<td><code>FCNS Database for VSAN 10: (empty)</code></td>
+<td>Check that devices are logged in and zoning is activated with <code>show zoneset active vsan 10</code>; if empty, devices have not registered with the name server yet.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="ndfc-integration">NDFC Integration<a class="headerlink" href="#ndfc-integration" title="Permanent link">&para;</a></h2>
@@ -7603,8 +7772,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (config-if or config) by checking the prompt ends with <code>(config)#</code> or <code>(config-if)#</code>.
-<strong><code>% Incomplete command</code></strong> — Ensure the SNMP community string and trap host IP are both specified; the syntax requires <code>snmp-server community &lt;string&gt; ro</code> and <code>snmp-server host &lt;ip&gt; traps version 2c &lt;community&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct configuration mode (config-if or config) by checking the prompt ends with <code>(config)#</code> or <code>(config-if)#</code>.</td>
+</tr>
+<tr>
+<td><code>% Incomplete command</code></td>
+<td>Ensure the SNMP community string and trap host IP are both specified; the syntax requires <code>snmp-server community &lt;string&gt; ro</code> and <code>snmp-server host &lt;ip&gt; traps version 2c &lt;community&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Enable CFS (Cisco Fabric Services) for zone distribution:</strong></p>
 <p>CFS automatically distributes zone changes across all switches in the VSAN when activated.</p>
@@ -7627,9 +7812,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>CFS is already enabled</code></strong> — CFS is already active; skip the <code>cfs enable</code> command or verify current state with <code>show cfs status</code> first.
-<strong><code>Distribution failed: peer switch unreachable</code></strong> — Verify all fabric switches are online and reachable using <code>show fabric status</code> before running <code>cfs distribute</code>.
-<strong><code>CFS State: disabled</code></strong> — Run <code>cfs enable</code> before attempting distribution; the feature must be activated on the switch.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CFS is already enabled</code></td>
+<td>CFS is already active; skip the <code>cfs enable</code> command or verify current state with <code>show cfs status</code> first.</td>
+</tr>
+<tr>
+<td><code>Distribution failed: peer switch unreachable</code></td>
+<td>Verify all fabric switches are online and reachable using <code>show fabric status</code> before running <code>cfs distribute</code>.</td>
+</tr>
+<tr>
+<td><code>CFS State: disabled</code></td>
+<td>Run <code>cfs enable</code> before attempting distribution; the feature must be activated on the switch.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Add the MDS switch to NDFC:</strong></p>
 <ol>
@@ -7675,8 +7879,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct mode (enable mode on MDS switch) and use <code>show fcns database detail vsan &lt;vsan-id&gt;</code> syntax.
-<strong><code>VSAN &lt;vsan-id&gt; does not exist</code></strong> — Confirm the VSAN exists with <code>show vsan</code> and verify the VSAN ID is correct and active.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct mode (enable mode on MDS switch) and use <code>show fcns database detail vsan &lt;vsan-id&gt;</code> syntax.</td>
+</tr>
+<tr>
+<td><code>VSAN &lt;vsan-id&gt; does not exist</code></td>
+<td>Confirm the VSAN exists with <code>show vsan</code> and verify the VSAN ID is correct and active.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Verify zone enforcement:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>pwwn<span class="w"> </span><span class="m">10</span>:00:00:90:fa:11:22:33<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7695,9 +7915,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct MDS CLI mode (use <code>config terminal</code> if needed) and that the VSAN exists with <code>show vsan</code>.
-<strong><code>% VSAN 10 does not exist</code></strong> — Confirm VSAN 10 is created and active using <code>show vsan id 10</code>.
-<strong><code>% No zones found containing this member</code></strong> — Verify the WWN format is correct (use colons, not hyphens) and the HBA is actually zoned in VSAN 10 with <code>show zoneset active vsan 10</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct MDS CLI mode (use <code>config terminal</code> if needed) and that the VSAN exists with <code>show vsan</code>.</td>
+</tr>
+<tr>
+<td><code>% VSAN 10 does not exist</code></td>
+<td>Confirm VSAN 10 is created and active using <code>show vsan id 10</code>.</td>
+</tr>
+<tr>
+<td><code>% No zones found containing this member</code></td>
+<td>Verify the WWN format is correct (use colons, not hyphens) and the HBA is actually zoned in VSAN 10 with <code>show zoneset active vsan 10</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>From the host (Linux):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>rescan-scsi-bus.sh
@@ -7753,7 +7992,20 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>rescan-scsi-bus.sh: command not found</code></strong> — Install sg3</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rescan-scsi-bus.sh: command not found</code></td>
+<td>Install sg3</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="validate">Validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
@@ -7791,9 +8043,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fc1/6    -- down    --    SFP    Fabric  fc1/6</code></strong> — Check SFP transceiver seating, cable connections, and run <code>show interface fc1/6</code> for detailed diagnostics including error counters.
-<strong><code>Domain ID conflict detected on VSAN 10</code></strong> — Verify domain IDs are unique across all switches in the fabric and reload the switch if a duplicate persists after reconfiguration.
-<strong><code>ISL port down: fc1/15 (mds-core-01 to mds-core-02)</code></strong> — Inspect the ISL cable for damage, reseat both SFP transceivers, and confirm speed negotiation with <code>show interface fc1/15 detail</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fc1/6    -- down    --    SFP    Fabric  fc1/6</code></td>
+<td>Check SFP transceiver seating, cable connections, and run <code>show interface fc1/6</code> for detailed diagnostics including error counters.</td>
+</tr>
+<tr>
+<td><code>Domain ID conflict detected on VSAN 10</code></td>
+<td>Verify domain IDs are unique across all switches in the fabric and reload the switch if a duplicate persists after reconfiguration.</td>
+</tr>
+<tr>
+<td><code>ISL port down: fc1/15 (mds-core-01 to mds-core-02)</code></td>
+<td>Inspect the ISL cable for damage, reseat both SFP transceivers, and confirm speed negotiation with <code>show interface fc1/15 detail</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Error counter check:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w"> </span>counters
@@ -7822,8 +8093,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the interface name matches your MDS model (e.g., <code>fc1/1</code> vs <code>Ethernet1/1</code>) and use <code>show interface</code> first to confirm the port exists.
-<strong><code>% Interface fc1/1 is down</code></strong> — Check physical cable connection and port status with <code>show interface fc1/1</code> before clearing counters on a non-operational link.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the interface name matches your MDS model (e.g., <code>fc1/1</code> vs <code>Ethernet1/1</code>) and use <code>show interface</code> first to confirm the port exists.</td>
+</tr>
+<tr>
+<td><code>% Interface fc1/1 is down</code></td>
+<td>Check physical cable connection and port status with <code>show interface fc1/1</code> before clearing counters on a non-operational link.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>End-to-end path verification:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Test FC ping from switch to a storage target port:</span>
@@ -7841,9 +8128,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>FCPING: No response from 50:00:09:73:00:1a:2b:3c</code></strong> — Verify the target PWWN is correct and the storage port is online and zoned to the initiator.
-<strong><code>FCPING: VSAN 10 is not configured</code></strong> — Create the VSAN first using <code>vsan &lt;id&gt;</code> command or confirm the VSAN number matches your fabric configuration.
-<strong><code>FCPING: Permission denied</code></strong> — Ensure you are in the correct VSAN context or have appropriate user role permissions to execute fcping commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FCPING: No response from 50:00:09:73:00:1a:2b:3c</code></td>
+<td>Verify the target PWWN is correct and the storage port is online and zoned to the initiator.</td>
+</tr>
+<tr>
+<td><code>FCPING: VSAN 10 is not configured</code></td>
+<td>Create the VSAN first using <code>vsan &lt;id&gt;</code> command or confirm the VSAN number matches your fabric configuration.</td>
+</tr>
+<tr>
+<td><code>FCPING: Permission denied</code></td>
+<td>Ensure you are in the correct VSAN context or have appropriate user role permissions to execute fcping commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Traceroute within the fabric:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>fctrace<span class="w"> </span>pwwn<span class="w"> </span><span class="m">50</span>:00:09:73:00:1a:2b:3c<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7868,9 +8174,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fctrace: PWWN not found in VSAN 10</code></strong> — Verify the PWWN is correct and the device is zoned into the specified VSAN using <code>fcping</code> or <code>zone name</code> commands.
-<strong><code>fctrace: VSAN 10 does not exist or is suspended</code></strong> — Confirm the VSAN is active with <code>show vsan</code> and ensure it is not in suspended state.
-<strong><code>fctrace: Command not found</code></strong> — Enable the fctrace feature on the MDS switch using <code>feature fctrace</code> in configuration mode.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fctrace: PWWN not found in VSAN 10</code></td>
+<td>Verify the PWWN is correct and the device is zoned into the specified VSAN using <code>fcping</code> or <code>zone name</code> commands.</td>
+</tr>
+<tr>
+<td><code>fctrace: VSAN 10 does not exist or is suspended</code></td>
+<td>Confirm the VSAN is active with <code>show vsan</code> and ensure it is not in suspended state.</td>
+</tr>
+<tr>
+<td><code>fctrace: Command not found</code></td>
+<td>Enable the fctrace feature on the MDS switch using <code>feature fctrace</code> in configuration mode.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Save configuration:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
@@ -7881,8 +8206,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Error opening tftp://255.255.255.255/network-confg (Timed out)</code></strong> — Verify TFTP server is reachable and configured; use <code>ping</code> to test connectivity to the TFTP server IP.
-<strong><code>% Invalid command</code></strong> — Ensure you are in privileged EXEC mode (prompt shows <code>#</code>); type <code>enable</code> if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Error opening tftp://255.255.255.255/network-confg (Timed out)</code></td>
+<td>Verify TFTP server is reachable and configured; use <code>ping</code> to test connectivity to the TFTP server IP.</td>
+</tr>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Ensure you are in privileged EXEC mode (prompt shows <code>#</code>); type <code>enable</code> if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -7920,7 +8261,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

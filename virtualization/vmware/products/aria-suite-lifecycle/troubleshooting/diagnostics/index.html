@@ -9244,9 +9244,28 @@ Key services and expected states:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/vmware/vrlcm/vlcm.log: No such file or directory</code></strong> — Verify the LCM service is running with <code>systemctl status vrlcm</code> and check the correct log path with <code>find /var/log -name "vlcm.log" 2&gt;/dev/null</code>.
-<strong><code>tail: cannot open '/var/log/vmware/vrlcm/installer*.log' for reading: No such file or directory</code></strong> — Run <code>ls -la /var/log/vmware/vrlcm/</code> to confirm installer logs exist, or check if the operation has actually started yet.
-<strong><code>grep: (standard input): line too long</code></strong> — Pipe through <code>sed 's/.\{1000\}/&amp;\n/g'</code> before grep to handle extremely long</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/vmware/vrlcm/vlcm.log: No such file or directory</code></td>
+<td>Verify the LCM service is running with <code>systemctl status vrlcm</code> and check the correct log path with <code>find /var/log -name "vlcm.log" 2&gt;/dev/null</code>.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/vrlcm/installer*.log' for reading: No such file or directory</code></td>
+<td>Run <code>ls -la /var/log/vmware/vrlcm/</code> to confirm installer logs exist, or check if the operation has actually started yet.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): line too long</code></td>
+<td>Pipe through <code>sed 's/.\{1000\}/&amp;\n/g'</code> before grep to handle extremely long</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-3-check-certificate-expiry">Step 3 — Check certificate expiry<a class="headerlink" href="#step-3-check-certificate-expiry" title="Permanent link">&para;</a></h2>
@@ -9278,8 +9297,24 @@ Key services and expected states:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the LCM CA certificate into your system trust store.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></strong> — Verify the LCM API endpoint is accessible and the credentials are correct by testing <code>curl -sk -u admin:&lt;password&gt; https://&lt;lcm-fqdn&gt;/lcm/api/v1/health</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the LCM CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></td>
+<td>Verify the LCM API endpoint is accessible and the credentials are correct by testing <code>curl -sk -u admin:&lt;password&gt; https://&lt;lcm-fqdn&gt;/lcm/api/v1/health</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Certificate check thresholds:</p>
 <table>
@@ -9364,8 +9399,24 @@ Key services and expected states:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>find: '/data/vmware/vrlcm/bundles/': No such file or directory</code></strong> — Create the bundles directory with <code>mkdir -p /data/vmware/vrlcm/bundles/</code> before running cleanup operations.
-<strong><code>Permission denied</code></strong> — Run the script with <code>sudo</code> or as root to access VMware system directories and delete files.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find: '/data/vmware/vrlcm/bundles/': No such file or directory</code></td>
+<td>Create the bundles directory with <code>mkdir -p /data/vmware/vrlcm/bundles/</code> before running cleanup operations.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the script with <code>sudo</code> or as root to access VMware system directories and delete files.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Disk space thresholds:</p>
 <table>
@@ -9453,9 +9504,28 @@ Key services and expected states:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the LCM certificate into your system trust store.
-<strong><code>curl: (7) Failed to connect to &lt;lcm-fqdn&gt; port 443: Connection refused</code></strong> — Verify the LCM FQDN is correct and the nginx service is running with <code>systemctl status nginx</code>.
-<strong><code>System time offset : 45.234 seconds</code></strong> — Run <code>sudo chronyc makestep</code> to force NTP synchronization, as Aria SSO requires offset under 5 seconds.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or import the LCM certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;lcm-fqdn&gt; port 443: Connection refused</code></td>
+<td>Verify the LCM FQDN is correct and the nginx service is running with <code>systemctl status nginx</code>.</td>
+</tr>
+<tr>
+<td><code>System time offset : 45.234 seconds</code></td>
+<td>Run <code>sudo chronyc makestep</code> to force NTP synchronization, as Aria SSO requires offset under 5 seconds.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-6-check-environment-and-product-status">Step 6 — Check environment and product status<a class="headerlink" href="#step-6-check-environment-and-product-status" title="Permanent link">&para;</a></h2>
@@ -9523,9 +9593,28 @@ Key services and expected states:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the LCM server's certificate into your system trust store.
-<strong><code>jq: command not found</code></strong> — Install <code>python3-json</code> or use <code>python3 -m json.tool</code> instead of piping to <code>jq</code>.
-<strong><code>401 Unauthorized</code></strong> — Verify the admin credentials are correct and URL-encoded if they contain special characters; use <code>curl -u "admin:$(cat /path/to/password)"</code>  to avoid shell interpretation issues.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification, or import the LCM server's certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>python3-json</code> or use <code>python3 -m json.tool</code> instead of piping to <code>jq</code>.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Verify the admin credentials are correct and URL-encoded if they contain special characters; use <code>curl -u "admin:$(cat /path/to/password)"</code>  to avoid shell interpretation issues.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-7-collect-logscraper-bundle-for-vmware-sr">Step 7 — Collect logscraper bundle for VMware SR<a class="headerlink" href="#step-7-collect-logscraper-bundle-for-vmware-sr" title="Permanent link">&para;</a></h2>
@@ -9564,9 +9653,28 @@ Key services and expected states:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/opt/vmware/vlcm/tools/lcm-support.sh: Permission denied</code></strong> — Run the command with sudo or ensure the admin user has execute permissions on the script.
-<strong><code>ssh: Could not resolve hostname &lt;lcm-fqdn&gt;: Name or service not known</code></strong> — Replace <code>&lt;lcm-fqdn&gt;</code> with the actual LCM appliance FQDN or IP address (e.g., <code>lcm-prod-01.corp.local</code>).
-<strong><code>tar: /tmp/lcm-support-*.tar.gz: Cannot open: No space left on device</code></strong> — Free up disk space on the LCM appliance or specify an alternate output directory with sufficient capacity.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/opt/vmware/vlcm/tools/lcm-support.sh: Permission denied</code></td>
+<td>Run the command with sudo or ensure the admin user has execute permissions on the script.</td>
+</tr>
+<tr>
+<td><code>ssh: Could not resolve hostname &lt;lcm-fqdn&gt;: Name or service not known</code></td>
+<td>Replace <code>&lt;lcm-fqdn&gt;</code> with the actual LCM appliance FQDN or IP address (e.g., <code>lcm-prod-01.corp.local</code>).</td>
+</tr>
+<tr>
+<td><code>tar: /tmp/lcm-support-*.tar.gz: Cannot open: No space left on device</code></td>
+<td>Free up disk space on the LCM appliance or specify an alternate output directory with sufficient capacity.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
@@ -9642,7 +9750,7 @@ Key services and expected states:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

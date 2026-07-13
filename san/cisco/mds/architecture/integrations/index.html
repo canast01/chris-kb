@@ -7603,8 +7603,24 @@ Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Invalid PWWN format</code></strong> — Ensure the PWWN uses valid hexadecimal characters (0-9, a-f) and follows the 16-character colon-separated format (xx:xx:xx:xx:xx:xx:xx:xx).
-<strong><code>Device-alias commit failed: Database locked</code></strong> — Wait for any ongoing configuration changes to complete or check for other admin sessions using <code>show device-alias status</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Invalid PWWN format</code></td>
+<td>Ensure the PWWN uses valid hexadecimal characters (0-9, a-f) and follows the 16-character colon-separated format (xx:xx:xx:xx:xx:xx:xx:xx).</td>
+</tr>
+<tr>
+<td><code>Device-alias commit failed: Database locked</code></td>
+<td>Wait for any ongoing configuration changes to complete or check for other admin sessions using <code>show device-alias status</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>For SRDF/A replication, the SRDF director ports on both arrays are zoned together in the replication VSAN (e.g., VSAN 20/21) — not in the production VSAN.</p>
 <hr />
@@ -7634,9 +7650,28 @@ Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>device-alias name pure-fa01_ct0.eth4 pwwn 52:4a:xx:xx:xx:xx:xx:xx</code></strong> — Ensure you are in <code>device-alias database</code> mode; if not, enter <code>config term</code> then <code>device-alias database</code> first.
-<strong><code>zone name esxi-host01_hba0-pure-fa01_ct0 vsan 10: member device-alias esxi-host01_hba0 not found</code></strong> — Verify the device-alias <code>esxi-host01_hba0</code> exists by running <code>show device-alias database</code> before adding it to the zone.
-<strong><code>device-alias commit: no changes to commit</code></strong> — Remove the standalone <code>device-alias commit</code> line outside config mode; it must run inside <code>device-alias database</code> configuration context.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>device-alias name pure-fa01_ct0.eth4 pwwn 52:4a:xx:xx:xx:xx:xx:xx</code></td>
+<td>Ensure you are in <code>device-alias database</code> mode; if not, enter <code>config term</code> then <code>device-alias database</code> first.</td>
+</tr>
+<tr>
+<td><code>zone name esxi-host01_hba0-pure-fa01_ct0 vsan 10: member device-alias esxi-host01_hba0 not found</code></td>
+<td>Verify the device-alias <code>esxi-host01_hba0</code> exists by running <code>show device-alias database</code> before adding it to the zone.</td>
+</tr>
+<tr>
+<td><code>device-alias commit: no changes to commit</code></td>
+<td>Remove the standalone <code>device-alias commit</code> line outside config mode; it must run inside <code>device-alias database</code> configuration context.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Pure recommends at least 2 target ports per host path for redundancy. Zone each host HBA to 2 Pure target ports (one zone per pair).</p>
 <hr />
@@ -7655,8 +7690,24 @@ Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Replace <code>&lt;username&gt;</code>, <code>&lt;auth-password&gt;</code>, <code>&lt;priv-password&gt;</code>, <code>&lt;monitoring-server-ip&gt;</code>, and <code>&lt;siem-ip&gt;</code> with actual values before running.
-<strong><code>% Incomplete command</code></strong> — Ensure all parameters including auth method (sha), encryption (aes-128), and facility (local7) are specified without angle brackets.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Replace <code>&lt;username&gt;</code>, <code>&lt;auth-password&gt;</code>, <code>&lt;priv-password&gt;</code>, <code>&lt;monitoring-server-ip&gt;</code>, and <code>&lt;siem-ip&gt;</code> with actual values before running.</td>
+</tr>
+<tr>
+<td><code>% Incomplete command</code></td>
+<td>Ensure all parameters including auth method (sha), encryption (aes-128), and facility (local7) are specified without angle brackets.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Verify SNMP is reachable from the monitoring server:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr
@@ -7679,9 +7730,28 @@ Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>snmpwalk: Unknown user name</code></strong> — Verify the SNMPv3 username exists on the switch with <code>show snmp user</code> and confirm the <code>-u</code> parameter matches exactly.
-<strong><code>snmpwalk: Authentication failure (incorrect password)</code></strong> — Confirm the authentication password (<code>-A</code> parameter) is correct by testing with <code>snmpget</code> on a single OID first.
-<strong><code>snmpwalk: Timeout: No Response from &lt;switch-ip&gt;</code></strong> — Verify the switch IP is reachable with <code>ping</code>, SNMPv3 is enabled on the switch, and the management interface is configured with <code>show snmp host</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>snmpwalk: Unknown user name</code></td>
+<td>Verify the SNMPv3 username exists on the switch with <code>show snmp user</code> and confirm the <code>-u</code> parameter matches exactly.</td>
+</tr>
+<tr>
+<td><code>snmpwalk: Authentication failure (incorrect password)</code></td>
+<td>Confirm the authentication password (<code>-A</code> parameter) is correct by testing with <code>snmpget</code> on a single OID first.</td>
+</tr>
+<tr>
+<td><code>snmpwalk: Timeout: No Response from &lt;switch-ip&gt;</code></td>
+<td>Verify the switch IP is reachable with <code>ping</code>, SNMPv3 is enabled on the switch, and the management interface is configured with <code>show snmp host</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -7711,7 +7781,7 @@ Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

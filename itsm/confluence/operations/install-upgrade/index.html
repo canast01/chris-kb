@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Confluence — Install and Upgrade · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Confluence — Install and Upgrade", "url": "https://chrisanastasiadis.com/itsm/confluence/operations/install-upgrade/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Confluence — Install and Upgrade", "url": "https://chrisanastasiadis.com/itsm/confluence/operations/install-upgrade/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7523,9 +7523,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence hostname/URL is correct and the service is running with <code>systemctl status confluence</code>.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure <code>$CF_TOKEN</code> is valid and the API endpoint is accessible; test with <code>curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/settings/systemInfo"</code> to see the actual response.
-<strong><code>curl: (401) Unauthorized</code></strong> — Regenerate the API token in Confluence user settings and confirm it has admin permissions for REST API access.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify the Confluence hostname/URL is correct and the service is running with <code>systemctl status confluence</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure <code>$CF_TOKEN</code> is valid and the API endpoint is accessible; test with <code>curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/settings/systemInfo"</code> to see the actual response.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Regenerate the API token in Confluence user settings and confirm it has admin permissions for REST API access.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Back up the install directory</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TIMESTAMP</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
@@ -7541,9 +7560,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cp: cannot open '/opt/atlassian/confluence' for reading: No such file or directory</code></strong> — Verify Confluence is installed at <code>/opt/atlassian/confluence</code> or adjust the path to match your installation directory.
-<strong><code>cp: cannot create directory '/opt/atlassian/confluence_backup_20240315_143827': Permission denied</code></strong> — Run the script with <code>sudo</code> or ensure the user has write permissions to <code>/opt/atlassian/</code>.
-<strong><code>cp: cannot open '/var/atlassian/application-data/confluence' for reading: No such file or directory</code></strong> — Check that the Confluence home directory exists at the specified path, or update it to match your <code>confluence.home</code> configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cp: cannot open '/opt/atlassian/confluence' for reading: No such file or directory</code></td>
+<td>Verify Confluence is installed at <code>/opt/atlassian/confluence</code> or adjust the path to match your installation directory.</td>
+</tr>
+<tr>
+<td><code>cp: cannot create directory '/opt/atlassian/confluence_backup_20240315_143827': Permission denied</code></td>
+<td>Run the script with <code>sudo</code> or ensure the user has write permissions to <code>/opt/atlassian/</code>.</td>
+</tr>
+<tr>
+<td><code>cp: cannot open '/var/atlassian/application-data/confluence' for reading: No such file or directory</code></td>
+<td>Check that the Confluence home directory exists at the specified path, or update it to match your <code>confluence.home</code> configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Make the installer executable</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>chmod<span class="w"> </span>+x<span class="w"> </span>atlassian-confluence-9.x.x-x64.bin
@@ -7602,8 +7640,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>diff: /opt/atlassian/confluence_backup_20240115_143022/bin/setenv.sh: No such file or directory</code></strong> — Verify the TIMESTAMP variable is set correctly and the backup directory exists with <code>ls -la "${BACKUP_DIR}"</code>.
-<strong><code>Permission denied</code></strong> — Run the diff commands with <code>sudo</code> or ensure the confluence system user has read access to both backup and installation directories.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>diff: /opt/atlassian/confluence_backup_20240115_143022/bin/setenv.sh: No such file or directory</code></td>
+<td>Verify the TIMESTAMP variable is set correctly and the backup directory exists with <code>ls -la "${BACKUP_DIR}"</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the diff commands with <code>sudo</code> or ensure the confluence system user has read access to both backup and installation directories.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Start the application</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/opt/atlassian/confluence/bin/start-confluence.sh
@@ -7643,9 +7697,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence service is running on the target node with <code>systemctl status confluence</code> and check network connectivity to the cluster endpoint.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the API token in <code>$CF_TOKEN</code> is valid and has cluster API permissions; test with <code>curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/cluster/nodes"</code> without piping to jq first.
-<strong><code>"state": "JOINING"</code></strong> — The node is still synchronizing with the cluster; wait 2-3 minutes and retry the curl command, as initial state synchronization can take time.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify the Confluence service is running on the target node with <code>systemctl status confluence</code> and check network connectivity to the cluster endpoint.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure the API token in <code>$CF_TOKEN</code> is valid and has cluster API permissions; test with <code>curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/cluster/nodes"</code> without piping to jq first.</td>
+</tr>
+<tr>
+<td><code>"state": "JOINING"</code></td>
+<td>The node is still synchronizing with the cluster; wait 2-3 minutes and retry the curl command, as initial state synchronization can take time.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># View upgrade task history in the database</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
@@ -7670,8 +7743,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "db.internal.example.com" (10.45.67.89), port 5432 failed: Connection refused</code></strong> — Verify the PostgreSQL service is running on the database host and the hostname/port are correct.
-<strong><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></strong> — Confirm Confluence is installed and the log directory path matches your installation; check the CONFLUENCE_HOME environment variable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "db.internal.example.com" (10.45.67.89), port 5432 failed: Connection refused</code></td>
+<td>Verify the PostgreSQL service is running on the database host and the hostname/port are correct.</td>
+</tr>
+<tr>
+<td><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></td>
+<td>Confirm Confluence is installed and the log directory path matches your installation; check the CONFLUENCE_HOME environment variable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Export current plugin list with versions</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7691,9 +7780,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence server hostname is correct and the instance is running and accessible from your network.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the API token in <code>$CF_TOKEN</code> is valid and has the <code>read:plugins</code> permission scope.
-<strong><code>curl: (401) Unauthorized</code></strong> — Regenerate the API token in Confluence and verify it's exported correctly with <code>echo $CF_TOKEN</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify the Confluence server hostname is correct and the instance is running and accessible from your network.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure the API token in <code>$CF_TOKEN</code> is valid and has the <code>read:plugins</code> permission scope.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Regenerate the API token in Confluence and verify it's exported correctly with <code>echo $CF_TOKEN</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check for plugins that failed to start post-upgrade</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(Plugin.*FAILED|PluginException|osgi.*error)&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7711,8 +7819,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></strong> — Verify the Confluence installation path and log directory location with <code>find / -name atlassian-confluence.log 2&gt;/dev/null</code>.
-<strong><code>No matches found</code></strong> — This indicates no plugin failures were detected in the logs; if plugins appear broken in the UI, check the full log with <code>tail -100 /var/atlassian/application-data/confluence/logs/atlassian-confluence.log</code> to see startup warnings.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory</code></td>
+<td>Verify the Confluence installation path and log directory location with <code>find / -name atlassian-confluence.log 2&gt;/dev/null</code>.</td>
+</tr>
+<tr>
+<td><code>No matches found</code></td>
+<td>This indicates no plugin failures were detected in the logs; if plugins appear broken in the UI, check the full log with <code>tail -100 /var/atlassian/application-data/confluence/logs/atlassian-confluence.log</code> to see startup warnings.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Disable a plugin</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7731,9 +7855,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence server is running and accessible at the correct hostname/port.
-<strong><code>{"statusCode":401,"message":"Unauthorized"}</code></strong> — Ensure <code>$CF_TOKEN</code> is set to a valid API token with plugin administration permissions.
-<strong><code>{"statusCode":404,"message":"Plugin not found"}</code></strong> — Confirm the plugin key <code>com.example.plugin</code> exists and is installed by checking the Plugins menu in Confluence.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify the Confluence server is running and accessible at the correct hostname/port.</td>
+</tr>
+<tr>
+<td><code>{"statusCode":401,"message":"Unauthorized"}</code></td>
+<td>Ensure <code>$CF_TOKEN</code> is set to a valid API token with plugin administration permissions.</td>
+</tr>
+<tr>
+<td><code>{"statusCode":404,"message":"Plugin not found"}</code></td>
+<td>Confirm the plugin key <code>com.example.plugin</code> exists and is installed by checking the Plugins menu in Confluence.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># 1. Stop Confluence on all nodes</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>/opt/atlassian/confluence/bin/stop-confluence.sh
@@ -7804,7 +7947,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

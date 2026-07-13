@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Confluence — Operations Scripts · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Confluence — Operations Scripts", "url": "https://chrisanastasiadis.com/itsm/confluence/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Confluence — Operations Scripts", "url": "https://chrisanastasiadis.com/itsm/confluence/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7501,8 +7501,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bash: CF_TOKEN: command not found</code></strong> — Ensure you're using <code>export</code> syntax correctly and that the token value is quoted if it contains special characters.
-<strong><code>bash: PGPASSWORD: Syntax error near unexpected token '&lt;'</code></strong> — Replace <code>&lt;db-password&gt;</code> and <code>&lt;personal-access-token&gt;</code> with actual values; literal angle brackets are not valid in variable assignments.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bash: CF_TOKEN: command not found</code></td>
+<td>Ensure you're using <code>export</code> syntax correctly and that the token value is quoted if it contains special characters.</td>
+</tr>
+<tr>
+<td><code>bash: PGPASSWORD: Syntax error near unexpected token '&lt;'</code></td>
+<td>Replace <code>&lt;db-password&gt;</code> and <code>&lt;personal-access-token&gt;</code> with actual values; literal angle brackets are not valid in variable assignments.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># stale-page-cleanup.sh</span>
@@ -7558,9 +7574,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to host</code></strong> — Verify <code>$CF_URL</code> is set correctly and Confluence server is reachable (e.g., <code>echo $CF_URL</code>).
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Confirm <code>$CF_TOKEN</code> is valid and has API access; an auth failure returns HTML instead of JSON.
-<strong><code>curl: (22) HTTP 403</code></strong> — Ensure the bearer token has <code>delete:content</code> permission in Confluence; request elevated access if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to host</code></td>
+<td>Verify <code>$CF_URL</code> is set correctly and Confluence server is reachable (e.g., <code>echo $CF_URL</code>).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Confirm <code>$CF_TOKEN</code> is valid and has API access; an auth failure returns HTML instead of JSON.</td>
+</tr>
+<tr>
+<td><code>curl: (22) HTTP 403</code></td>
+<td>Ensure the bearer token has <code>delete:content</code> permission in Confluence; request elevated access if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># audit-log-export.sh</span>
@@ -7600,9 +7635,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the CF_URL environment variable is set correctly and the Confluence instance is running and accessible.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure CF_TOKEN is valid and has audit API permissions; an authentication error returns HTML instead of JSON.
-<strong><code>wc: confluence_audit_20240115.csv: No such file or directory</code></strong> — Check that the script has write permissions in the current directory and sufficient disk space.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify the CF_URL environment variable is set correctly and the Confluence instance is running and accessible.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure CF_TOKEN is valid and has audit API permissions; an authentication error returns HTML instead of JSON.</td>
+</tr>
+<tr>
+<td><code>wc: confluence_audit_20240115.csv: No such file or directory</code></td>
+<td>Check that the script has write permissions in the current directory and sufficient disk space.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># disk-usage-report.sh</span>
@@ -7794,7 +7848,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

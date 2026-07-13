@@ -8009,9 +8009,28 @@ Lightweight Directory Access Protocol — directory service query and authentica
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account has not been locked out; check with <code>net user svc-ldap /domain</code> on a domain controller.
-<strong><code>ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)</code></strong> — Confirm the DC hostname resolves and port 389 is reachable; test with <code>nc -zv &lt;dc-host&gt; 389</code>.
-<strong><code>No such object (32)</code></strong> — Verify the base DN matches your Active Directory structure; run <code>ldapsearch -x -H ldap://&lt;dc-host&gt; -b "" -s base "(objectclass=*)" namingContexts</code> to confirm the correct DN.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldap_bind: Invalid credentials (49)</code></td>
+<td>Verify the service account password is correct and the account has not been locked out; check with <code>net user svc-ldap /domain</code> on a domain controller.</td>
+</tr>
+<tr>
+<td><code>ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)</code></td>
+<td>Confirm the DC hostname resolves and port 389 is reachable; test with <code>nc -zv &lt;dc-host&gt; 389</code>.</td>
+</tr>
+<tr>
+<td><code>No such object (32)</code></td>
+<td>Verify the base DN matches your Active Directory structure; run <code>ldapsearch -x -H ldap://&lt;dc-host&gt; -b "" -s base "(objectclass=*)" namingContexts</code> to confirm the correct DN.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="ldaps-verification">LDAPS Verification<a class="headerlink" href="#ldaps-verification" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test LDAPS connectivity</span>
@@ -8079,9 +8098,28 @@ Lightweight Directory Access Protocol — directory service query and authentica
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account has not been locked out on the domain controller.
-<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm the DC hostname resolves correctly with <code>nslookup &lt;dc-host&gt;</code> and port 636/389 is accessible via <code>telnet &lt;dc-host&gt; 636</code>.
-<strong><code>TLS: peer certificate cannot be authenticated with known CA certificates</code></strong> — Add the DC's CA certificate to your system's trusted store or use <code>ldapsearch -H ldaps://&lt;dc-host&gt;:636 -o LDTLS_CACERTDIR=/etc/ssl/certs</code> to specify the certificate path.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldap_bind: Invalid credentials (49)</code></td>
+<td>Verify the service account password is correct and the account has not been locked out on the domain controller.</td>
+</tr>
+<tr>
+<td><code>Can't contact LDAP server (-1)</code></td>
+<td>Confirm the DC hostname resolves correctly with <code>nslookup &lt;dc-host&gt;</code> and port 636/389 is accessible via <code>telnet &lt;dc-host&gt; 636</code>.</td>
+</tr>
+<tr>
+<td><code>TLS: peer certificate cannot be authenticated with known CA certificates</code></td>
+<td>Add the DC's CA certificate to your system's trusted store or use <code>ldapsearch -H ldaps://&lt;dc-host&gt;:636 -o LDTLS_CACERTDIR=/etc/ssl/certs</code> to specify the certificate path.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="application-ldap-integration-linux-pamsssd">Application LDAP Integration (Linux PAM/SSSD)<a class="headerlink" href="#application-ldap-integration-linux-pamsssd" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check SSSD status</span>
@@ -8121,9 +8159,28 @@ Lightweight Directory Access Protocol — directory service query and authentica
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>systemctl: command not found</code></strong> — Install systemd or use <code>service sssd status</code> on systems without systemd.
-<strong><code>sssctl: command not found</code></strong> — Install sssd-tools package with <code>apt install sssd-tools</code> or <code>yum install sssd-tools</code>.
-<strong><code>tail: cannot open '/var/log/sssd/sssd_&lt;domain&gt;.log' for reading: No such file or directory</code></strong> — Replace <code>&lt;domain&gt;</code> with your actual SSSD domain name (e.g., <code>sssd_ldap.log</code>) or check <code>/etc/sssd/sssd.conf</code> for the configured domain.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>systemctl: command not found</code></td>
+<td>Install systemd or use <code>service sssd status</code> on systems without systemd.</td>
+</tr>
+<tr>
+<td><code>sssctl: command not found</code></td>
+<td>Install sssd-tools package with <code>apt install sssd-tools</code> or <code>yum install sssd-tools</code>.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/sssd/sssd_&lt;domain&gt;.log' for reading: No such file or directory</code></td>
+<td>Replace <code>&lt;domain&gt;</code> with your actual SSSD domain name (e.g., <code>sssd_ldap.log</code>) or check <code>/etc/sssd/sssd.conf</code> for the configured domain.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
@@ -8184,7 +8241,7 @@ Lightweight Directory Access Protocol — directory service query and authentica
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

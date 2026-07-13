@@ -7857,9 +7857,28 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vecs-cli: command not found</code></strong> — Run the command directly on the VCSA appliance shell (SSH to vCenter), not from a remote host.
-<strong><code>unable to get local issuer certificate</code></strong> — Add <code>-CAfile /etc/ssl/certs/ca-bundle.crt</code> to the openssl command or use <code>-servername &lt;vcenter-fqdn&gt;</code> for SNI support on the vCenter host.
-<strong><code>Connection refused</code></strong> — Verify vCenter is running and accessible on port 443 by testing with <code>curl -k https://&lt;vcenter-fqdn&gt;</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vecs-cli: command not found</code></td>
+<td>Run the command directly on the VCSA appliance shell (SSH to vCenter), not from a remote host.</td>
+</tr>
+<tr>
+<td><code>unable to get local issuer certificate</code></td>
+<td>Add <code>-CAfile /etc/ssl/certs/ca-bundle.crt</code> to the openssl command or use <code>-servername &lt;vcenter-fqdn&gt;</code> for SNI support on the vCenter host.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify vCenter is running and accessible on port 443 by testing with <code>curl -k https://&lt;vcenter-fqdn&gt;</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="browser-certificate-warning-on-vcenter-login">Browser Certificate Warning on vCenter Login<a class="headerlink" href="#browser-certificate-warning-on-vcenter-login" title="Permanent link">&para;</a></h2>
@@ -7874,8 +7893,24 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load certificate</code></strong> — Verify the vCenter FQDN is correct and the host is reachable on port 443 with <code>nc -zv &lt;vcenter-fqdn&gt; 443</code>.
-<strong><code>error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed</code></strong> — This is expected if vCenter uses a self-signed cert; add <code>-servername &lt;vcenter-fqdn&gt;</code> to the openssl command for SNI support and ignore verification warnings for lab environments.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Verify the vCenter FQDN is correct and the host is reachable on port 443 with <code>nc -zv &lt;vcenter-fqdn&gt; 443</code>.</td>
+</tr>
+<tr>
+<td><code>error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed</code></td>
+<td>This is expected if vCenter uses a self-signed cert; add <code>-servername &lt;vcenter-fqdn&gt;</code> to the openssl command for SNI support and ignore verification warnings for lab environments.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Step 2 — Renew via VAMI if expired:</strong></p>
 <ol>
@@ -7916,9 +7951,28 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vecs-cli: command not found</code></strong> — Verify the vmafd service is running with <code>systemctl status vmware-vmafd</code> and ensure you're executing on the vCenter appliance, not a remote host.
-<strong><code>Error: Failed to start service vpxd. Check /var/log/vmware/vpxd/vpxd.log for details.</code></strong> — Review the vpxd log for startup errors (often certificate or database connectivity issues) before attempting to restart dependent services.
-<strong><code>Error: Cannot stop all services — some services are locked by running processes.</code></strong> — Wait 30–60 seconds for in-flight requests to complete, then retry <code>service-control --stop --all</code>, or use <code>service-control --stop --all --force</code> if the delay is unacceptable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vecs-cli: command not found</code></td>
+<td>Verify the vmafd service is running with <code>systemctl status vmware-vmafd</code> and ensure you're executing on the vCenter appliance, not a remote host.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to start service vpxd. Check /var/log/vmware/vpxd/vpxd.log for details.</code></td>
+<td>Review the vpxd log for startup errors (often certificate or database connectivity issues) before attempting to restart dependent services.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot stop all services — some services are locked by running processes.</code></td>
+<td>Wait 30–60 seconds for in-flight requests to complete, then retry <code>service-control --stop --all</code>, or use <code>service-control --stop --all --force</code> if the delay is unacceptable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>If STS cert is expired</strong> — this requires special remediation:</p>
 <ol>
@@ -7939,8 +7993,24 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify the vCenter FQDN is correct and the host is reachable on port 443 using <code>ping</code> or <code>nc -zv &lt;vcenter-fqdn&gt; 443</code>.
-<strong><code>unable to load certificate</code></strong> — The server is not responding with a valid SSL certificate; check that vCenter is running and accessible with <code>curl -kv https://&lt;vcenter-fqdn&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the vCenter FQDN is correct and the host is reachable on port 443 using <code>ping</code> or <code>nc -zv &lt;vcenter-fqdn&gt; 443</code>.</td>
+</tr>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>The server is not responding with a valid SSL certificate; check that vCenter is running and accessible with <code>curl -kv https://&lt;vcenter-fqdn&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Step 2 — Re-register or accept the new certificate in each product:</strong></p>
 <table>
@@ -7999,8 +8069,24 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code": 401, "error_message": "Unauthorized"}</code></strong> — Verify NSX API credentials and ensure the user account has API access permissions.
-<strong><code>{"error_code": 404, "error_message": "Not Found"}</code></strong> — Confirm the NSX Manager hostname/IP is correct and the API endpoint is accessible on port 443.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code": 401, "error_message": "Unauthorized"}</code></td>
+<td>Verify NSX API credentials and ensure the user account has API access permissions.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 404, "error_message": "Not Found"}</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct and the API endpoint is accessible on port 443.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If the thumbprint mismatch persists after resync:
 1. Remove the compute manager from NSX Manager (Infrastructure → vCenter Server → Delete).
@@ -8018,9 +8104,28 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify the ESXi host is reachable on port 443 and the management network is accessible (ping the FQDN first).
-<strong><code>unable to load certificate</code></strong> — Ensure you're piping valid SSL certificate data; replace <code>&lt;esxi-fqdn&gt;</code> with the actual ESXi hostname or IP address.
-<strong><code>Name or service not known</code></strong> — Resolve the ESXi FQDN to an IP address by checking DNS or using the IP directly instead of the hostname.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the ESXi host is reachable on port 443 and the management network is accessible (ping the FQDN first).</td>
+</tr>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Ensure you're piping valid SSL certificate data; replace <code>&lt;esxi-fqdn&gt;</code> with the actual ESXi hostname or IP address.</td>
+</tr>
+<tr>
+<td><code>Name or service not known</code></td>
+<td>Resolve the ESXi FQDN to an IP address by checking DNS or using the IP directly instead of the hostname.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Renew from vCenter UI:</strong>
 - Select host → Configure → Certificate → Renew</p>
@@ -8063,9 +8168,28 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: VMCA service is not running</code></strong> — Start the VMCA service with <code>systemctl start vmware-vmca</code> before running certificate-manager.
-<strong><code>Error: Certificate generation failed - Invalid PNID</code></strong> — Ensure the PNID matches the FQDN exactly and that DNS resolves correctly with <code>nslookup vcsa.corp.local</code>.
-<strong><code>Error: vCenter services failed to restart</code></strong> — Check service status with <code>systemctl status vmware-*</code> and manually restart critical services if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: VMCA service is not running</code></td>
+<td>Start the VMCA service with <code>systemctl start vmware-vmca</code> before running certificate-manager.</td>
+</tr>
+<tr>
+<td><code>Error: Certificate generation failed - Invalid PNID</code></td>
+<td>Ensure the PNID matches the FQDN exactly and that DNS resolves correctly with <code>nslookup vcsa.corp.local</code>.</td>
+</tr>
+<tr>
+<td><code>Error: vCenter services failed to restart</code></td>
+<td>Check service status with <code>systemctl status vmware-*</code> and manually restart critical services if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h2>
@@ -8137,7 +8261,7 @@ Diagnosing and resolving certificate errors across the VMware platform — VCSA 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

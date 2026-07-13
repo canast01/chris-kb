@@ -8676,7 +8676,20 @@ Azure access control is built on Azure Role-Based Access Control (RBAC).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: The subscription '&lt;sub-id&gt;' could not be found.</code></strong> — Verify the subscription</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: The subscription '&lt;sub-id&gt;' could not be found.</code></td>
+<td>Verify the subscription</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="create-a-role-assignment">Create a Role Assignment<a class="headerlink" href="#create-a-role-assignment" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Assign Contributor at resource group scope</span>
@@ -8731,8 +8744,24 @@ Azure access control is built on Azure Role-Based Access Control (RBAC).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The provided information does not match any role assignments.</code></strong> — Verify the exact role name with <code>az role definition list --query "[].name"</code>, assignee identity with <code>az ad user show --id &lt;upn&gt;</code>, and resource group name with <code>az group list</code>.
-<strong><code>The user does not have permission to perform action 'Microsoft.Authorization/roleAssignments/delete' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg-name&gt;'.</code></strong> — Ensure your account has Owner or User Access Administrator role on the resource group or subscription.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The provided information does not match any role assignments.</code></td>
+<td>Verify the exact role name with <code>az role definition list --query "[].name"</code>, assignee identity with <code>az ad user show --id &lt;upn&gt;</code>, and resource group name with <code>az group list</code>.</td>
+</tr>
+<tr>
+<td><code>The user does not have permission to perform action 'Microsoft.Authorization/roleAssignments/delete' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg-name&gt;'.</code></td>
+<td>Ensure your account has Owner or User Access Administrator role on the resource group or subscription.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="custom-roles">Custom Roles<a class="headerlink" href="#custom-roles" title="Permanent link">&para;</a></h2>
@@ -8771,8 +8800,24 @@ Azure access control is built on Azure Role-Based Access Control (RBAC).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: (InvalidInput) The role definition file '@custom-role.json' does not exist.</code></strong> — Verify the JSON file path is correct and exists in the current working directory using <code>ls -la custom-role.json</code>.
-<strong><code>ERROR: (Forbidden) The user does not have permission to create role definitions at scope '/subscriptions/...'.</code></strong> — Ensure your account has Owner or User Access Administrator role on the subscription using <code>az role assignment list --assignee &lt;your-email&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: (InvalidInput) The role definition file '@custom-role.json' does not exist.</code></td>
+<td>Verify the JSON file path is correct and exists in the current working directory using <code>ls -la custom-role.json</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: (Forbidden) The user does not have permission to create role definitions at scope '/subscriptions/...'.</code></td>
+<td>Ensure your account has Owner or User Access Administrator role on the subscription using <code>az role assignment list --assignee &lt;your-email&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Example <code>custom-role.json</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
@@ -8802,8 +8847,24 @@ Azure access control is built on Azure Role-Based Access Control (RBAC).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The role definition file '@custom-role-updated.json' does not exist.</code></strong> — Verify the JSON file path is correct and exists in the current working directory with <code>ls -la custom-role-updated.json</code>.
-<strong><code>Cannot delete role definition 'VM Start Stop Only'. There are still 3 role assignments using this role.</code></strong> — Remove all role assignments for this custom role using <code>az role assignment delete --role "VM Start Stop Only"</code> before attempting deletion.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The role definition file '@custom-role-updated.json' does not exist.</code></td>
+<td>Verify the JSON file path is correct and exists in the current working directory with <code>ls -la custom-role-updated.json</code>.</td>
+</tr>
+<tr>
+<td><code>Cannot delete role definition 'VM Start Stop Only'. There are still 3 role assignments using this role.</code></td>
+<td>Remove all role assignments for this custom role using <code>az role assignment delete --role "VM Start Stop Only"</code> before attempting deletion.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="managed-identities">Managed Identities<a class="headerlink" href="#managed-identities" title="Permanent link">&para;</a></h2>
@@ -8928,9 +8989,28 @@ Azure access control is built on Azure Role-Based Access Control (RBAC).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>No subscriptions found. Please run 'az login' to set up account.</code></strong> — Run <code>az login</code> and ensure you have access to the target subscription before creating the service principal.
-<strong><code>The service principal with object id '&lt;id&gt;' does not have authorization to perform action 'Microsoft.Authorization/roleAssignments/write'.</code></strong> — Ensure your user account has Owner or User Access Administrator role on the subscription or resource group before assigning roles to the service principal.
-<strong><code>Service principal '&lt;sp-app-id&gt;' not found.</code></strong> — Verify the service principal exists by running <code>az ad sp list --display-name "&lt;name&gt;"</code> and use the correct appId from the output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>No subscriptions found. Please run 'az login' to set up account.</code></td>
+<td>Run <code>az login</code> and ensure you have access to the target subscription before creating the service principal.</td>
+</tr>
+<tr>
+<td><code>The service principal with object id '&lt;id&gt;' does not have authorization to perform action 'Microsoft.Authorization/roleAssignments/write'.</code></td>
+<td>Ensure your user account has Owner or User Access Administrator role on the subscription or resource group before assigning roles to the service principal.</td>
+</tr>
+<tr>
+<td><code>Service principal '&lt;sp-app-id&gt;' not found.</code></td>
+<td>Verify the service principal exists by running <code>az ad sp list --display-name "&lt;name&gt;"</code> and use the correct appId from the output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Use certificate-based authentication for service principals in production — avoid client secrets where possible. Rotate secrets on a schedule (90 days maximum).</p>
 <hr />
@@ -9019,9 +9099,28 @@ Azure access control is built on Azure Role-Based Access Control (RBAC).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The provided information does not map to a management group.</code></strong> — Verify the management group name exists by running <code>az account management-group list</code> and use the exact DisplayName value.
-<strong><code>Principal with object id &lt;group-object-id&gt; does not exist in the directory.</code></strong> — Confirm the group object ID is correct by running <code>az ad group show --group &lt;group-name&gt; --query objectId</code> in the target Azure AD tenant.
-<strong><code>Authorization failed for template deployment.</code></strong> — Ensure your user account has Owner or User Access Administrator role on the management group scope before assigning roles to others.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The provided information does not map to a management group.</code></td>
+<td>Verify the management group name exists by running <code>az account management-group list</code> and use the exact DisplayName value.</td>
+</tr>
+<tr>
+<td><code>Principal with object id &lt;group-object-id&gt; does not exist in the directory.</code></td>
+<td>Confirm the group object ID is correct by running <code>az ad group show --group &lt;group-name&gt; --query objectId</code> in the target Azure AD tenant.</td>
+</tr>
+<tr>
+<td><code>Authorization failed for template deployment.</code></td>
+<td>Ensure your user account has Owner or User Access Administrator role on the management group scope before assigning roles to others.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Use management group scope for:
 - Security team Reader access across all subscriptions
@@ -9067,8 +9166,24 @@ Azure access control is built on Azure Role-Based Access Control (RBAC).
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: The following arguments are required: --resource-group/-g</code></strong> — Add <code>--resource-group &lt;name&gt;</code> or use <code>--all</code> flag to query across all subscriptions.
-<strong><code>KeyError: 'principalName'</code></strong> — Some role assignments may lack a principalName field; add error handling with <code>a.get("principalName", "N/A")</code> in the Python script.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: The following arguments are required: --resource-group/-g</code></td>
+<td>Add <code>--resource-group &lt;name&gt;</code> or use <code>--all</code> flag to query across all subscriptions.</td>
+</tr>
+<tr>
+<td><code>KeyError: 'principalName'</code></td>
+<td>Some role assignments may lack a principalName field; add error handling with <code>a.get("principalName", "N/A")</code> in the Python script.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Conduct quarterly access reviews:
 - Remove assignments for departed users
@@ -9104,7 +9219,7 @@ Azure access control is built on Azure Role-Based Access Control (RBAC).
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

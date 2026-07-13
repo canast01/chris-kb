@@ -7810,9 +7810,28 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: image pull backoff</code></strong> — Verify the image registry is accessible and credentials are configured with <code>oc login</code> to registry.redhat.io.
-<strong><code>error: unable to connect to the server: dial tcp: lookup api.cluster.local on [IP]: no such host</code></strong> — Ensure you are logged into the correct OpenShift cluster with <code>oc login</code> and your kubeconfig is valid.
-<strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Authenticate with cluster admin credentials using <code>oc login -u kubeadmin</code> or your service account token.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: image pull backoff</code></td>
+<td>Verify the image registry is accessible and credentials are configured with <code>oc login</code> to registry.redhat.io.</td>
+</tr>
+<tr>
+<td><code>error: unable to connect to the server: dial tcp: lookup api.cluster.local on [IP]: no such host</code></td>
+<td>Ensure you are logged into the correct OpenShift cluster with <code>oc login</code> and your kubeconfig is valid.</td>
+</tr>
+<tr>
+<td><code>error: You must be logged in to the server (Unauthorized)</code></td>
+<td>Authenticate with cluster admin credentials using <code>oc login -u kubeadmin</code> or your service account token.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="escalation-path-step-by-step">Escalation Path (Step-by-Step)<a class="headerlink" href="#escalation-path-step-by-step" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Open case at access.redhat.com (RHCS subscription required)
@@ -7888,9 +7907,28 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sed: can't read /tmp/ceph-status.txt: No such file or directory</code></strong> — Ensure the ceph status output file exists at the specified path before running sed, or generate it first with <code>ceph status &gt; /tmp/ceph-status.txt</code>.
-<strong><code>sos: command not found</code></strong> — Install the sos package with <code>apt install sosreport</code> (Debian/Ubuntu) or <code>yum install sos</code> (RHEL/CentOS).
-<strong><code>Permission denied</code></strong> — Run the grep and sed commands with sudo or as root since keyring files are typically readable only by root.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sed: can't read /tmp/ceph-status.txt: No such file or directory</code></td>
+<td>Ensure the ceph status output file exists at the specified path before running sed, or generate it first with <code>ceph status &gt; /tmp/ceph-status.txt</code>.</td>
+</tr>
+<tr>
+<td><code>sos: command not found</code></td>
+<td>Install the sos package with <code>apt install sosreport</code> (Debian/Ubuntu) or <code>yum install sos</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the grep and sed commands with sudo or as root since keyring files are typically readable only by root.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="emergency-recovery-commands">Emergency Recovery Commands<a class="headerlink" href="#emergency-recovery-commands" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Cluster completely unresponsive — emergency recovery steps:</span>
@@ -7940,8 +7978,24 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: error connecting to the cluster</code></strong> — Verify MON quorum with <code>ceph mon stat</code>; if quorum is lost, restart failed MON services with <code>systemctl restart ceph-mon@&lt;hostname&gt;</code> on down nodes.
-<strong><code>Error: ENOENT: error reading /var/lib/ceph/mon/ceph-&lt;hostname&gt;/store.db</code></strong> — The MON data directory is corrupted; restore</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: error connecting to the cluster</code></td>
+<td>Verify MON quorum with <code>ceph mon stat</code>; if quorum is lost, restart failed MON services with <code>systemctl restart ceph-mon@&lt;hostname&gt;</code> on down nodes.</td>
+</tr>
+<tr>
+<td><code>Error: ENOENT: error reading /var/lib/ceph/mon/ceph-&lt;hostname&gt;/store.db</code></td>
+<td>The MON data directory is corrupted; restore</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="pre-case-self-service-checklist">Pre-Case Self-Service Checklist<a class="headerlink" href="#pre-case-self-service-checklist" title="Permanent link">&para;</a></h2>
 <p>Before opening a support case, check the Red Hat Knowledge Base for known solutions:</p>
@@ -7988,8 +8042,24 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error connecting to cluster: [Errno 2] No such file or directory</code></strong> — Ensure the Ceph cluster is running and <code>/etc/ceph/ceph.conf</code> is properly configured with valid monitor addresses.
-<strong><code>permission denied: insufficient capabilities for user</code></strong> — Run the command with appropriate privileges (e.g., as root or with <code>sudo</code>) or ensure your user has read access to <code>/etc/ceph/ceph.client.admin.keyring</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error connecting to cluster: [Errno 2] No such file or directory</code></td>
+<td>Ensure the Ceph cluster is running and <code>/etc/ceph/ceph.conf</code> is properly configured with valid monitor addresses.</td>
+</tr>
+<tr>
+<td><code>permission denied: insufficient capabilities for user</code></td>
+<td>Run the command with appropriate privileges (e.g., as root or with <code>sudo</code>) or ensure your user has read access to <code>/etc/ceph/ceph.client.admin.keyring</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="information-to-include-in-every-case">Information to Include in Every Case<a class="headerlink" href="#information-to-include-in-every-case" title="Permanent link">&para;</a></h2>
 <p>When filing any Ceph support case, always include the following regardless of severity. Missing information adds round-trip delay.</p>
@@ -8077,7 +8147,7 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

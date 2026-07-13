@@ -8534,9 +8534,28 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: unknown host &lt;gateway-ip&gt;</code></strong> — Replace <code>&lt;gateway-ip&gt;</code> with the actual gateway IP address (e.g., 192.168.1.1) or verify the VM has network connectivity.
-<strong><code>ping: sendto: Operation not permitted</code></strong> — Check that ICMP is not blocked by the VM's firewall or security group rules; disable the firewall temporarily to test.
-<strong><code>traceroute: command not found</code></strong> — Install traceroute with <code>apt-get install traceroute</code> (Debian/Ubuntu) or <code>yum install traceroute</code> (RHEL/CentOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: unknown host &lt;gateway-ip&gt;</code></td>
+<td>Replace <code>&lt;gateway-ip&gt;</code> with the actual gateway IP address (e.g., 192.168.1.1) or verify the VM has network connectivity.</td>
+</tr>
+<tr>
+<td><code>ping: sendto: Operation not permitted</code></td>
+<td>Check that ICMP is not blocked by the VM's firewall or security group rules; disable the firewall temporarily to test.</td>
+</tr>
+<tr>
+<td><code>traceroute: command not found</code></td>
+<td>Install traceroute with <code>apt-get install traceroute</code> (Debian/Ubuntu) or <code>yum install traceroute</code> (RHEL/CentOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Cannot ping gateway</strong> → Step 2 (L2/VLAN issue)
 <strong>Can ping gateway, not destination</strong> → Step 4 (routing/firewall issue)</p>
@@ -8575,9 +8594,28 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code":400,"error_message":"Invalid display_name parameter"}</code></strong> — Verify the segment name matches exactly (case-sensitive) and is URL-encoded if it contains special characters.
-<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Ensure your NSX Manager API credentials are valid and the authentication token has not expired.
-<strong><code>{"error_code":404,"error_message":"Segment not found"}</code></strong> — Confirm the segment exists in NSX Manager and check that you are querying the correct NSX Manager instance.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code":400,"error_message":"Invalid display_name parameter"}</code></td>
+<td>Verify the segment name matches exactly (case-sensitive) and is URL-encoded if it contains special characters.</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Unauthorized"}</code></td>
+<td>Ensure your NSX Manager API credentials are valid and the authentication token has not expired.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"error_message":"Segment not found"}</code></td>
+<td>Confirm the segment exists in NSX Manager and check that you are querying the correct NSX Manager instance.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Port group/segment misconfigured</strong> → Correct assignment and re-test.</p>
 <h2 id="step-3-mtu-check">Step 3 — MTU Check<a class="headerlink" href="#step-3-mtu-check" title="Permanent link">&para;</a></h2>
@@ -8606,9 +8644,28 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: -M: unknown option</code></strong> — Use <code>ping -M do</code> on Linux; the <code>-M</code> flag is not available on macOS or older Linux versions—verify your OS and use <code>man ping</code> to confirm syntax.
-<strong><code>PING: transmit failed. General failure.</code></strong> — Ensure the gateway IP is reachable and on the same subnet; verify network connectivity with <code>ipconfig /all</code> and check firewall rules.
-<strong><code>Command 'esxcfg-nics' not found</code></strong> — Run the command directly on an ESXi host via SSH or console, not from a vCenter server or Linux VM; verify you are logged into the correct host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: -M: unknown option</code></td>
+<td>Use <code>ping -M do</code> on Linux; the <code>-M</code> flag is not available on macOS or older Linux versions—verify your OS and use <code>man ping</code> to confirm syntax.</td>
+</tr>
+<tr>
+<td><code>PING: transmit failed. General failure.</code></td>
+<td>Ensure the gateway IP is reachable and on the same subnet; verify network connectivity with <code>ipconfig /all</code> and check firewall rules.</td>
+</tr>
+<tr>
+<td><code>Command 'esxcfg-nics' not found</code></td>
+<td>Run the command directly on an ESXi host via SSH or console, not from a vCenter server or Linux VM; verify you are logged into the correct host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Packet loss on large packets</strong> → MTU mismatch on physical switch, dvSwitch, or NSX TEP VLAN.</p>
 <h2 id="step-4-routing-issue">Step 4 — Routing Issue<a class="headerlink" href="#step-4-routing-issue" title="Permanent link">&para;</a></h2>
@@ -8646,9 +8703,28 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SIOCADDRT: No such process</code></strong> — Verify the gateway IP is reachable and the network interface is up with <code>ip link show</code>.
-<strong><code>traceroute: command not found</code></strong> — Install traceroute with <code>apt-get install traceroute</code> (Debian/Ubuntu) or <code>yum install traceroute</code> (RHEL/CentOS).
-<strong><code>Network is unreachable</code></strong> — Confirm the VM's network adapter is connected to the correct vSwitch and the default gateway matches the subnet configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SIOCADDRT: No such process</code></td>
+<td>Verify the gateway IP is reachable and the network interface is up with <code>ip link show</code>.</td>
+</tr>
+<tr>
+<td><code>traceroute: command not found</code></td>
+<td>Install traceroute with <code>apt-get install traceroute</code> (Debian/Ubuntu) or <code>yum install traceroute</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>Network is unreachable</code></td>
+<td>Confirm the VM's network adapter is connected to the correct vSwitch and the default gateway matches the subnet configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If traffic drops at the tier-0 edge:
 - Check BGP peer state on the edge node:
@@ -8684,9 +8760,28 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vsipioctl: command not found</code></strong> — Ensure you are running this command directly on the ESXi host (SSH into the host), not from vCenter or a remote machine.
-<strong><code>Filter not found or invalid filter name</code></strong> — Verify the filter name matches exactly what appears in the VM's .vmx file (case-sensitive) by checking <code>/vmfs/volumes/&lt;datastore&gt;/vm-name/vm-name.vmx</code>.
-<strong><code>summarize-dvfilter: command not found</code></strong> — This command is only available on ESXi 6.0+; for older versions, use <code>net-dvs -l</code> to list distributed virtual switch filters instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vsipioctl: command not found</code></td>
+<td>Ensure you are running this command directly on the ESXi host (SSH into the host), not from vCenter or a remote machine.</td>
+</tr>
+<tr>
+<td><code>Filter not found or invalid filter name</code></td>
+<td>Verify the filter name matches exactly what appears in the VM's .vmx file (case-sensitive) by checking <code>/vmfs/volumes/&lt;datastore&gt;/vm-name/vm-name.vmx</code>.</td>
+</tr>
+<tr>
+<td><code>summarize-dvfilter: command not found</code></td>
+<td>This command is only available on ESXi 6.0+; for older versions, use <code>net-dvs -l</code> to list distributed virtual switch filters instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for DENY rules matching the traffic flow. Check in NSX Manager:
 - Policy → Security → Gateway Firewall and Distributed Firewall
@@ -8718,9 +8813,28 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pktcap-uw: command not found</code></strong> — Run the command directly on the ESXi host via SSH or console, not from a vCenter client machine.
-<strong><code>net-dvs: command not found</code></strong> — Ensure you are connected to the ESXi host shell; these tools are only available in the ESXi command line, not in vCenter.
-<strong><code>Error: Invalid port ID</code></strong> — Verify the port ID exists by running <code>net-dvs -l</code> first and confirm the VM is powered on and connected to the distributed virtual switch.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pktcap-uw: command not found</code></td>
+<td>Run the command directly on the ESXi host via SSH or console, not from a vCenter client machine.</td>
+</tr>
+<tr>
+<td><code>net-dvs: command not found</code></td>
+<td>Ensure you are connected to the ESXi host shell; these tools are only available in the ESXi command line, not in vCenter.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid port ID</code></td>
+<td>Verify the port ID exists by running <code>net-dvs -l</code> first and confirm the VM is powered on and connected to the distributed virtual switch.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Analyse with Wireshark: download from <code>/tmp/capture.pcap</code> via SCP.</p>
 
@@ -8745,7 +8859,7 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

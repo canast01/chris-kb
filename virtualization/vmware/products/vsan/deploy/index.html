@@ -8986,9 +8986,28 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: Could not resolve hostname esxi-01.example.com: Name or service not known</code></strong> — Verify the hostname is resolvable by checking DNS or using the IP address directly (ssh root@192.168.1.45).
-<strong><code>Error: NTP set failed: Unable to set NTP servers</code></strong> — Confirm the NTP server hostnames are reachable and that firewall rules allow UDP port 123 outbound from the ESXi host.
-<strong><code>Error: NTP stats not available</code></strong> — Wait 30-60 seconds after enabling NTP for the host to synchronize with the configured servers, then retry the stats command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: Could not resolve hostname esxi-01.example.com: Name or service not known</code></td>
+<td>Verify the hostname is resolvable by checking DNS or using the IP address directly (ssh root@192.168.1.45).</td>
+</tr>
+<tr>
+<td><code>Error: NTP set failed: Unable to set NTP servers</code></td>
+<td>Confirm the NTP server hostnames are reachable and that firewall rules allow UDP port 123 outbound from the ESXi host.</td>
+</tr>
+<tr>
+<td><code>Error: NTP stats not available</code></td>
+<td>Wait 30-60 seconds after enabling NTP for the host to synchronize with the configured servers, then retry the stats command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="verify-connectivity">Verify Connectivity<a class="headerlink" href="#verify-connectivity" title="Permanent link">&para;</a></h3>
 <p>From a management workstation:
@@ -9024,9 +9043,28 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: esxi-01.example.com: Name or service not known</code></strong> — Verify DNS resolution by checking /etc/resolv.conf and ensure the ESXi hostname is registered in DNS or add it to /etc/hosts.
-<strong><code>nslookup: can't resolve 'esxi-01.example.com': No address associated with hostname</code></strong> — Confirm the ESXi host's management IP is correctly registered in DNS or use the IP address directly instead of the hostname.
-<strong><code>ssh: connect to host esxi-01.example.com port 22: Connection refused</code></strong> — Verify SSH is enabled on the ESXi host via the vSphere Client and check that the management network is reachable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: esxi-01.example.com: Name or service not known</code></td>
+<td>Verify DNS resolution by checking /etc/resolv.conf and ensure the ESXi hostname is registered in DNS or add it to /etc/hosts.</td>
+</tr>
+<tr>
+<td><code>nslookup: can't resolve 'esxi-01.example.com': No address associated with hostname</code></td>
+<td>Confirm the ESXi host's management IP is correctly registered in DNS or use the IP address directly instead of the hostname.</td>
+</tr>
+<tr>
+<td><code>ssh: connect to host esxi-01.example.com port 22: Connection refused</code></td>
+<td>Verify SSH is enabled on the ESXi host via the vSphere Client and check that the management network is reachable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Repeat for every host. All must have working forward and reverse DNS before vCenter deployment.</p>
 <hr />
@@ -9074,8 +9112,24 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>506 Cannot talk to daemon</code></strong> — Ensure the chronyd service is running with <code>systemctl start chronyd</code> on the VCSA.
-<strong><code>Stratum         : 16</code></strong> — The NTP server is unreachable or misconfigured; verify network connectivity and NTP server address in <code>/etc/chrony.conf</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>506 Cannot talk to daemon</code></td>
+<td>Ensure the chronyd service is running with <code>systemctl start chronyd</code> on the VCSA.</td>
+</tr>
+<tr>
+<td><code>Stratum         : 16</code></td>
+<td>The NTP server is unreachable or misconfigured; verify network connectivity and NTP server address in <code>/etc/chrony.conf</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-4-dvswitch-and-vsan-network-setup">Phase 4 — dvSwitch and vSAN Network Setup<a class="headerlink" href="#phase-4-dvswitch-and-vsan-network-setup" title="Permanent link">&para;</a></h2>
@@ -9180,9 +9234,28 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>PING 192.168.100.12 (192.168.100.12): 56 data bytes — No response from host</code></strong> — Verify the vSAN VMkernel IP is correct and the network path between hosts is unblocked.
-<strong><code>Unknown interface vmk2</code></strong> — Confirm vmk2 exists on this host with <code>esxcli network ip interface list</code> and use the correct VMkernel interface name.
-<strong><code>4 packets transmitted, 0 packets received, 100% packet loss</code></strong> — Check that the vSAN network MTU is set to 9000 on all physical switches and VMkernel interfaces with `esxcli network ip</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PING 192.168.100.12 (192.168.100.12): 56 data bytes — No response from host</code></td>
+<td>Verify the vSAN VMkernel IP is correct and the network path between hosts is unblocked.</td>
+</tr>
+<tr>
+<td><code>Unknown interface vmk2</code></td>
+<td>Confirm vmk2 exists on this host with <code>esxcli network ip interface list</code> and use the correct VMkernel interface name.</td>
+</tr>
+<tr>
+<td><code>4 packets transmitted, 0 packets received, 100% packet loss</code></td>
+<td>Check that the vSAN network MTU is set to 9000 on all physical switches and VMkernel interfaces with `esxcli network ip</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Any packet loss means MTU 9000 is not configured somewhere in the path (switch port, trunk, uplink). Fix before enabling vSAN.</p>
 <h3 id="configure-nioc-if-sharing-nics">Configure NIOC (If Sharing NICs)<a class="headerlink" href="#configure-nioc-if-sharing-nics" title="Permanent link">&para;</a></h3>
@@ -9225,8 +9298,24 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown command or namespace vsan storage list</code></strong> — Verify vSAN is licensed and enabled on the cluster, then reconnect the ESXi host to vCenter.
-<strong><code>(empty output)</code></strong> — Run the command on each ESXi host individually using SSH; the command does not aggregate across hosts from a single execution point.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown command or namespace vsan storage list</code></td>
+<td>Verify vSAN is licensed and enabled on the cluster, then reconnect the ESXi host to vCenter.</td>
+</tr>
+<tr>
+<td><code>(empty output)</code></td>
+<td>Run the command on each ESXi host individually using SSH; the command does not aggregate across hosts from a single execution point.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="verify-vsan-cluster-formation">Verify vSAN Cluster Formation<a class="headerlink" href="#verify-vsan-cluster-formation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Confirm all hosts are cluster members</span>
@@ -9254,8 +9343,24 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Cluster UUID: &lt;unknown&gt;</code></strong> — Ensure all hosts are licensed for vSAN and the cluster has been properly initialized with <code>esxcli vsan cluster new</code>.
-<strong><code>Cluster Health Status: DEGRADED</code></strong> — Check individual host health with <code>esxcli vsan health host get</code> and verify network connectivity between cluster members.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cluster UUID: &lt;unknown&gt;</code></td>
+<td>Ensure all hosts are licensed for vSAN and the cluster has been properly initialized with <code>esxcli vsan cluster new</code>.</td>
+</tr>
+<tr>
+<td><code>Cluster Health Status: DEGRADED</code></td>
+<td>Check individual host health with <code>esxcli vsan health host get</code> and verify network connectivity between cluster members.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>From vSphere Client:</strong>
 Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before proceeding.</p>
@@ -9375,8 +9480,24 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Could not connect to the specified host. The session is not authenticated.</code></strong> — Authenticate to the ESXi host or vCenter using <code>esxcli -s &lt;host&gt; -u &lt;user&gt; -p &lt;password&gt;</code> before running vsan commands.
-<strong><code>Error: Unknown command or namespace 'vsan'.</code></strong> — Verify vSAN is licensed and enabled on the cluster; if not installed, the vsan namespace will not be available in esxcli.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Could not connect to the specified host. The session is not authenticated.</code></td>
+<td>Authenticate to the ESXi host or vCenter using <code>esxcli -s &lt;host&gt; -u &lt;user&gt; -p &lt;password&gt;</code> before running vsan commands.</td>
+</tr>
+<tr>
+<td><code>Error: Unknown command or namespace 'vsan'.</code></td>
+<td>Verify vSAN is licensed and enabled on the cluster; if not installed, the vsan namespace will not be available in esxcli.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="storage-policy-compliance">Storage Policy Compliance<a class="headerlink" href="#storage-policy-compliance" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c"># No VMs should be non-compliant</span>
@@ -9406,8 +9527,24 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>VSAN Cluster is not enabled on this host</code></strong> — Enable vSAN on the host through vCenter or run <code>esxcli vsan cluster new</code> to initialize the cluster.
-<strong><code>Unknown command or namespace vsan</code></strong> — Install or enable the vSAN license and ensure the vSAN VIB is installed with <code>esxcli software vib list | grep vsan</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VSAN Cluster is not enabled on this host</code></td>
+<td>Enable vSAN on the host through vCenter or run <code>esxcli vsan cluster new</code> to initialize the cluster.</td>
+</tr>
+<tr>
+<td><code>Unknown command or namespace vsan</code></td>
+<td>Install or enable the vSAN license and ensure the vSAN VIB is installed with <code>esxcli software vib list | grep vsan</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="mtu-verification-final-check">MTU Verification (Final Check)<a class="headerlink" href="#mtu-verification-final-check" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># From every host to every other host</span>
@@ -9434,9 +9571,28 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>PING 192.168.100.11 (192.168.100.11): 56 data bytes — 100% packet loss</code></strong> — Verify vmk2 is bound to the correct vSAN network and check physical switch connectivity between hosts.
-<strong><code>Unknown host 192.168.100.11</code></strong> — Confirm the vSAN vmk IP addresses are correct and reachable from the current host's management network.
-<strong><code>Cannot find device vmk2</code></strong> — Ensure vmk2 exists on this host by running <code>esxcli network ip interface list</code> and create it if missing.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PING 192.168.100.11 (192.168.100.11): 56 data bytes — 100% packet loss</code></td>
+<td>Verify vmk2 is bound to the correct vSAN network and check physical switch connectivity between hosts.</td>
+</tr>
+<tr>
+<td><code>Unknown host 192.168.100.11</code></td>
+<td>Confirm the vSAN vmk IP addresses are correct and reachable from the current host's management network.</td>
+</tr>
+<tr>
+<td><code>Cannot find device vmk2</code></td>
+<td>Ensure vmk2 exists on this host by running <code>esxcli network ip interface list</code> and create it if missing.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="deploy-a-test-vm">Deploy a Test VM<a class="headerlink" href="#deploy-a-test-vm" title="Permanent link">&para;</a></h3>
 <p>Provision a test VM on the vSAN datastore using the standard storage policy:</p>
@@ -9527,7 +9683,7 @@ Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

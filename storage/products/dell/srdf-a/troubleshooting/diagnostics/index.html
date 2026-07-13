@@ -9032,9 +9032,28 @@ SRDF/A diagnostic commands: check pair state with symrdf query, identify lag and
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Error: Invalid SID &lt;SID&gt;</code></strong> — Verify the array SID with <code>symcfg list</code> and ensure it matches your target array identifier.
-<strong><code>LINK_ST = "Not Ready"</code></strong> — Check RF port connectivity and WAN link status with <code>symrdf -sid &lt;SID&gt; -rdfg &lt;rdfg-number&gt; check</code> and verify network routing between sites.
-<strong><code>R2_PAIR_ST = "Partitioned"</code></strong> — Resume replication with <code>symrdf -sid &lt;SID&gt; -rdfg &lt;rdfg-number&gt; resume</code> after confirming R2 data integrity and link restoration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Error: Invalid SID &lt;SID&gt;</code></td>
+<td>Verify the array SID with <code>symcfg list</code> and ensure it matches your target array identifier.</td>
+</tr>
+<tr>
+<td><code>LINK_ST = "Not Ready"</code></td>
+<td>Check RF port connectivity and WAN link status with <code>symrdf -sid &lt;SID&gt; -rdfg &lt;rdfg-number&gt; check</code> and verify network routing between sites.</td>
+</tr>
+<tr>
+<td><code>R2_PAIR_ST = "Partitioned"</code></td>
+<td>Resume replication with <code>symrdf -sid &lt;SID&gt; -rdfg &lt;rdfg-number&gt; resume</code> after confirming R2 data integrity and link restoration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Decision flow:</strong>
 - All fields healthy but lag alert firing → proceed to Step 2 (performance check)
@@ -9073,9 +9092,28 @@ SRDF/A diagnostic commands: check pair state with symrdf query, identify lag and
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: ERROR - Invalid RDF group number &lt;rdfg-number&gt;</code></strong> — Verify the RDF group number exists with <code>symrdf list -sid &lt;SID&gt;</code> and use the correct numeric identifier.
-<strong><code>symrdf: ERROR - Symmetrix &lt;SID&gt; not found or not accessible</code></strong> — Confirm the SID is correct and the Symmetrix array is online and reachable via <code>symcfg list -v</code>.
-<strong><code>No matching SRDF groups found</code></strong> — Remove the <code>-rdfg</code> filter or specify a valid group; use <code>symrdf list -sid &lt;SID&gt;</code> to list all configured SRDF/A groups.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: ERROR - Invalid RDF group number &lt;rdfg-number&gt;</code></td>
+<td>Verify the RDF group number exists with <code>symrdf list -sid &lt;SID&gt;</code> and use the correct numeric identifier.</td>
+</tr>
+<tr>
+<td><code>symrdf: ERROR - Symmetrix &lt;SID&gt; not found or not accessible</code></td>
+<td>Confirm the SID is correct and the Symmetrix array is online and reachable via <code>symcfg list -v</code>.</td>
+</tr>
+<tr>
+<td><code>No matching SRDF groups found</code></td>
+<td>Remove the <code>-rdfg</code> filter or specify a valid group; use <code>symrdf list -sid &lt;SID&gt;</code> to list all configured SRDF/A groups.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Interpreting lag:</strong>
 - <code>DSE_LAG</code> consistently above 2× <code>CYCLE_TIME</code> → link bandwidth is saturated; verify with Step 4
@@ -9121,8 +9159,24 @@ SRDF/A diagnostic commands: check pair state with symrdf query, identify lag and
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Error: Invalid RDFG number &lt;rdfg-number&gt; for Symmetrix &lt;SID&gt;</code></strong> — Verify the RDFG number exists by running <code>symrdf list -sid &lt;SID&gt;</code> without the <code>-rdfg</code> parameter.
-<strong><code>symdg: Error: Device group '&lt;group-name&gt;' not found</code></strong> — Confirm the device group name is correct and exists on this Symmetrix by running <code>symdg list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Error: Invalid RDFG number &lt;rdfg-number&gt; for Symmetrix &lt;SID&gt;</code></td>
+<td>Verify the RDFG number exists by running <code>symrdf list -sid &lt;SID&gt;</code> without the <code>-rdfg</code> parameter.</td>
+</tr>
+<tr>
+<td><code>symdg: Error: Device group '&lt;group-name&gt;' not found</code></td>
+<td>Confirm the device group name is correct and exists on this Symmetrix by running <code>symdg list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-4-check-rf-ports-and-srdf-link-health">Step 4 — Check RF ports and SRDF link health<a class="headerlink" href="#step-4-check-rf-ports-and-srdf-link-health" title="Permanent link">&para;</a></h2>
@@ -9160,9 +9214,28 @@ SRDF/A diagnostic commands: check pair state with symrdf query, identify lag and
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symcfg: Cannot open device driver</code></strong> — Verify the Symmetrix CLI is installed and the EMC management agent is running with <code>sudo /etc/init.d/emc-management start</code>.
-<strong><code>syminq: SID &lt;SID&gt; not found in configuration</code></strong> — Confirm the SID is correct and the array is discovered by running <code>symcfg list</code> to display all available arrays.
-<strong><code>LINK_STATUS: Offline</code></strong> — Check physical FC cable connections, verify switch zoning includes both array and remote site ports, and confirm the remote array SRDF port is also online.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symcfg: Cannot open device driver</code></td>
+<td>Verify the Symmetrix CLI is installed and the EMC management agent is running with <code>sudo /etc/init.d/emc-management start</code>.</td>
+</tr>
+<tr>
+<td><code>syminq: SID &lt;SID&gt; not found in configuration</code></td>
+<td>Confirm the SID is correct and the array is discovered by running <code>symcfg list</code> to display all available arrays.</td>
+</tr>
+<tr>
+<td><code>LINK_STATUS: Offline</code></td>
+<td>Check physical FC cable connections, verify switch zoning includes both array and remote site ports, and confirm the remote array SRDF port is also online.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>If RF port shows "Offline":</strong>
 1. Check the physical FC cable on the back-end RF director
@@ -9234,9 +9307,28 @@ SRDF/A diagnostic commands: check pair state with symrdf query, identify lag and
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Error: Cannot connect to the Symmetrix</code></strong> — Verify the Symmetrix ID is correct and Solutions Enabler daemon (storsrvd) is running with <code>service storsrvd status</code>.
-<strong><code>symrdf: Error: RDF Group &lt;rdfg-number&gt; not found</code></strong> — Confirm the RDF group number exists on the array using <code>symcfg -sid &lt;SID&gt; list -rdf</code> without specifying a group.
-<strong><code>Permission denied</code> on <code>/var/symapi/log/</code></strong> — Run the diagnostic collection with <code>sudo</code> or as root user to access Solutions Enabler log files.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Error: Cannot connect to the Symmetrix</code></td>
+<td>Verify the Symmetrix ID is correct and Solutions Enabler daemon (storsrvd) is running with <code>service storsrvd status</code>.</td>
+</tr>
+<tr>
+<td><code>symrdf: Error: RDF Group &lt;rdfg-number&gt; not found</code></td>
+<td>Confirm the RDF group number exists on the array using <code>symcfg -sid &lt;SID&gt; list -rdf</code> without specifying a group.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code> on <code>/var/symapi/log/</code></td>
+<td>Run the diagnostic collection with <code>sudo</code> or as root user to access Solutions Enabler log files.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
@@ -9307,7 +9399,7 @@ SRDF/A diagnostic commands: check pair state with symrdf query, identify lag and
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

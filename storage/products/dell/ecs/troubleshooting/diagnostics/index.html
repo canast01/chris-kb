@@ -9233,9 +9233,28 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.</code></strong> — Verify the AWS profile credentials in ~/.aws/credentials are correct and the ECS user has S3 access permissions.
-<strong><code>An error occurred (NoSuchBucket) when calling the HeadBucket operation: The specified bucket does not exist.</code></strong> — Confirm the bucket name is spelled correctly and exists in the ECS cluster by listing all buckets first.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>--insecure</code> flag to curl or import the ECS CA certificate into your system trust store to bypass SSL verification.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.</code></td>
+<td>Verify the AWS profile credentials in ~/.aws/credentials are correct and the ECS user has S3 access permissions.</td>
+</tr>
+<tr>
+<td><code>An error occurred (NoSuchBucket) when calling the HeadBucket operation: The specified bucket does not exist.</code></td>
+<td>Confirm the bucket name is spelled correctly and exists in the ECS cluster by listing all buckets first.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>--insecure</code> flag to curl or import the ECS CA certificate into your system trust store to bypass SSL verification.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="workflow-s3-access-denied">Workflow: S3 Access Denied<a class="headerlink" href="#workflow-s3-access-denied" title="Permanent link">&para;</a></h3>
 <ol>
@@ -9369,9 +9388,28 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nodetool: command not found</code></strong> — Verify the ECS node is running and <code>/opt/storageos/tools/</code> exists; if missing, reinstall the ECS package or check the installation path.
-<strong><code>Connection refused</code></strong> — Ensure the Cassandra/ECS metadata service is running with <code>systemctl status storageos</code> and restart if needed.
-<strong><code>Flush operation timed out</code></strong> — Increase the nodetool timeout with <code>-Dcom.sun.jndi.rmi.factory.socket.timeout=30000</code> or reduce concurrent flushes by checking <code>nodetool compactionstats</code> for stuck operations.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nodetool: command not found</code></td>
+<td>Verify the ECS node is running and <code>/opt/storageos/tools/</code> exists; if missing, reinstall the ECS package or check the installation path.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Ensure the Cassandra/ECS metadata service is running with <code>systemctl status storageos</code> and restart if needed.</td>
+</tr>
+<tr>
+<td><code>Flush operation timed out</code></td>
+<td>Increase the nodetool timeout with <code>-Dcom.sun.jndi.rmi.factory.socket.timeout=30000</code> or reduce concurrent flushes by checking <code>nodetool compactionstats</code> for stuck operations.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="zookeeper-cluster-coordination">ZooKeeper (cluster coordination)<a class="headerlink" href="#zookeeper-cluster-coordination" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Mode should be &#39;leader&#39; on one node and &#39;follower&#39; on all others</span>
@@ -9395,9 +9433,28 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection refused</code></strong> — Verify ZooKeeper is running with <code>systemctl status zookeeper</code> and listening on port 2181.
-<strong><code>Mode: follower</code> on the expected leader node</strong> — Check cluster quorum status with <code>echo "stat" | nc localhost 2181</code> and review ZooKeeper logs at <code>/var/log/zookeeper/zookeeper.log</code> for election failures.
-<strong><code>Outstanding: &lt;high number&gt;</code> (e.g., Outstanding: 847)</strong> — Identify slow clients with <code>echo "cons" | nc localhost 2181</code> and check for network latency or client-side processing delays.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify ZooKeeper is running with <code>systemctl status zookeeper</code> and listening on port 2181.</td>
+</tr>
+<tr>
+<td><code>Mode: follower</code> on the expected leader node<code>| Check cluster quorum status with</code>echo "stat"</td>
+<td>nc localhost 2181<code>and review ZooKeeper logs at</code>/var/log/zookeeper/zookeeper.log` for election failures.</td>
+</tr>
+<tr>
+<td><code>Outstanding: &lt;high number&gt;</code> (e.g., Outstanding: 847)<code>| Identify slow clients with</code>echo "cons"</td>
+<td>nc localhost 2181` and check for network latency or client-side processing delays.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ntp-and-clock-sync">NTP and clock sync<a class="headerlink" href="#ntp-and-clock-sync" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>chronyc<span class="w"> </span>tracking
@@ -9433,9 +9490,28 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>chronyc: command not found</code></strong> — Install chrony with <code>apt-get install chrony</code> or <code>yum install chrony</code> depending on your OS.
-<strong><code>viprexec: command not found or not in PATH</code></strong> — Source the ECS environment setup script or add the viprexec binary directory to your PATH.
-<strong><code>node-02: Fri Nov 17 14:32:28 UTC 2023</code> (10+ second drift detected)</strong> — Restart the chronyd service on the drifted node with <code>systemctl restart chronyd</code> and verify NTP connectivity.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chronyc: command not found</code></td>
+<td>Install chrony with <code>apt-get install chrony</code> or <code>yum install chrony</code> depending on your OS.</td>
+</tr>
+<tr>
+<td><code>viprexec: command not found or not in PATH</code></td>
+<td>Source the ECS environment setup script or add the viprexec binary directory to your PATH.</td>
+</tr>
+<tr>
+<td><code>node-02: Fri Nov 17 14:32:28 UTC 2023</code> (10+ second drift detected)<code>| Restart the chronyd service on the drifted node with</code>systemctl restart chronyd` and verify NTP connectivity.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="network-connectivity">Network connectivity<a class="headerlink" href="#network-connectivity" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Test inter-node connectivity on the data network</span>
@@ -9461,9 +9537,28 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect to 172.16.8.92 port 9100 (tcp) failed: Connection refused</code></strong> — Verify the remote VDC node's replication service is running with <code>systemctl status ecs-replication</code> on the target node.
-<strong><code>PING: sendto: No route to host</code></strong> — Confirm the data network interface is up and the subnet routing is correct with <code>ip route show</code> and <code>ip link show</code>.
-<strong><code>connect to 203.0.113.54 port 5696 (tcp) failed: Connection timed out</code></strong> — Check firewall rules and network ACLs allow port 5696 from the ECS node to the KMIP server, and verify the KMIP server IP/hostname is correct.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect to 172.16.8.92 port 9100 (tcp) failed: Connection refused</code></td>
+<td>Verify the remote VDC node's replication service is running with <code>systemctl status ecs-replication</code> on the target node.</td>
+</tr>
+<tr>
+<td><code>PING: sendto: No route to host</code></td>
+<td>Confirm the data network interface is up and the subnet routing is correct with <code>ip route show</code> and <code>ip link show</code>.</td>
+</tr>
+<tr>
+<td><code>connect to 203.0.113.54 port 5696 (tcp) failed: Connection timed out</code></td>
+<td>Check firewall rules and network ACLs allow port 5696 from the ECS node to the KMIP server, and verify the KMIP server IP/hostname is correct.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="workflow-node-marked-degraded">Workflow: Node Marked DEGRADED<a class="headerlink" href="#workflow-node-marked-degraded" title="Permanent link">&para;</a></h3>
 <ol>
@@ -9534,9 +9629,28 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to 10.20.30.40 port 443: Connection refused</code></strong> — Verify the ECS management endpoint is running and accessible; check <code>curl -v https://$ECS:4443/</code> to confirm connectivity.
-<strong><code>error: 401 Unauthorized</code></strong> — Ensure the authentication token in <code>$TOKEN</code> is valid and not expired; regenerate it with the login endpoint.
-<strong><code>json.tool: No JSON object could be decoded</code></strong> — Confirm the API endpoint URL is correct and the response is valid JSON; test with <code>curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/geo-replication/status"</code> without piping to verify raw output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to 10.20.30.40 port 443: Connection refused</code></td>
+<td>Verify the ECS management endpoint is running and accessible; check <code>curl -v https://$ECS:4443/</code> to confirm connectivity.</td>
+</tr>
+<tr>
+<td><code>error: 401 Unauthorized</code></td>
+<td>Ensure the authentication token in <code>$TOKEN</code> is valid and not expired; regenerate it with the login endpoint.</td>
+</tr>
+<tr>
+<td><code>json.tool: No JSON object could be decoded</code></td>
+<td>Confirm the API endpoint URL is correct and the response is valid JSON; test with <code>curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/geo-replication/status"</code> without piping to verify raw output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="workflow-geo-replication-lag-growing">Workflow: Geo-Replication Lag Growing<a class="headerlink" href="#workflow-geo-replication-lag-growing" title="Permanent link">&para;</a></h3>
 <ol>
@@ -9579,9 +9693,28 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/ecs/: No such file or directory</code></strong> — Verify ECS service is running with <code>systemctl status ecs-replication-service</code> and check the correct log path with <code>find /var/log -name "*replication*" -type f</code>.
-<strong><code>viprexec: command not found</code></strong> — Source the ECS environment setup script with <code>source /opt/emc/ecs/bin/ecs-env.sh</code> or verify viprexec is in PATH with <code>which viprexec</code>.
-<strong><code>Stratum         : 16</code></strong> — NTP is not synchronized; restart chrony with <code>systemctl restart chrony</code> and verify NTP server reachability with <code>chronyc sources</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/ecs/: No such file or directory</code></td>
+<td>Verify ECS service is running with <code>systemctl status ecs-replication-service</code> and check the correct log path with <code>find /var/log -name "*replication*" -type f</code>.</td>
+</tr>
+<tr>
+<td><code>viprexec: command not found</code></td>
+<td>Source the ECS environment setup script with <code>source /opt/emc/ecs/bin/ecs-env.sh</code> or verify viprexec is in PATH with <code>which viprexec</code>.</td>
+</tr>
+<tr>
+<td><code>Stratum         : 16</code></td>
+<td>NTP is not synchronized; restart chrony with <code>systemctl restart chrony</code> and verify NTP server reachability with <code>chronyc sources</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-5-support-bundle-collection">Step 5 — Support bundle collection<a class="headerlink" href="#step-5-support-bundle-collection" title="Permanent link">&para;</a></h2>
@@ -9831,9 +9964,28 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tail: cannot open '/var/log/ecs/*.log' for reading: No such file or directory</code></strong> — Verify ECS is installed and running with <code>systemctl status storageos</code>, then check actual log path with <code>find /var/log -name "*ecs*" -o -name "*data*service*"</code>.
-<strong><code>Unit cassandra.service could not be found.</code></strong> — Confirm Cassandra is installed and enabled with <code>systemctl list-units --type=service | grep cassandra</code>, or use the correct service name for your ECS version.
-<strong><code>Permission denied</code></strong> — Run commands with <code>sudo</code> or ensure your user is in the <code>storageos</code> or <code>caspian</code> group with <code>groups $USER</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tail: cannot open '/var/log/ecs/*.log' for reading: No such file or directory</code></td>
+<td>Verify ECS is installed and running with <code>systemctl status storageos</code>, then check actual log path with <code>find /var/log -name "*ecs*" -o -name "*data*service*"</code>.</td>
+</tr>
+<tr>
+<td><code>Unit cassandra.service could not be found.</code></td>
+<td>Confirm Cassandra is installed and enabled with <code>systemctl list-units --type=service | grep cassandra</code>, or use the correct service name for your ECS version.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run commands with <code>sudo</code> or ensure your user is in the <code>storageos</code> or <code>caspian</code> group with <code>groups $USER</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9873,7 +10025,7 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

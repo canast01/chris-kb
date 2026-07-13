@@ -9057,9 +9057,28 @@ CloudIQ diagnostic commands: check SCG service health, test outbound connectivit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: connect to host 192.168.1.45 port 22: Connection refused</code></strong> — Verify the SCG appliance is powered on and the IP address is correct; check network connectivity with <code>ping &lt;scg-ip&gt;</code>.
-<strong><code>● dsagw.service - Dell Storage Gateway ... Active: failed (Result: exit-code)</code></strong> — Check the dsagw service logs with <code>journalctl -u dsagw -n 100</code> to identify the root cause, then restart with <code>systemctl restart dsagw</code>.
-<strong><code>Filesystem ... Use% Mounted on ... 95% /</code></strong> — Archive or delete old SCG logs in <code>/var/log/dsagw/</code> using <code>find /var/log/dsagw/ -mtime +30 -delete</code> to free disk space before the appliance becomes unresponsive.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: connect to host 192.168.1.45 port 22: Connection refused</code></td>
+<td>Verify the SCG appliance is powered on and the IP address is correct; check network connectivity with <code>ping &lt;scg-ip&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>● dsagw.service - Dell Storage Gateway ... Active: failed (Result: exit-code)</code></td>
+<td>Check the dsagw service logs with <code>journalctl -u dsagw -n 100</code> to identify the root cause, then restart with <code>systemctl restart dsagw</code>.</td>
+</tr>
+<tr>
+<td><code>Filesystem ... Use% Mounted on ... 95% /</code></td>
+<td>Archive or delete old SCG logs in <code>/var/log/dsagw/</code> using <code>find /var/log/dsagw/ -mtime +30 -delete</code> to free disk space before the appliance becomes unresponsive.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>If SCG service is not running:</strong>
 1. <code>systemctl start dsagw</code> to restart; wait 30 seconds and re-check <code>scg status</code>
@@ -9121,9 +9140,28 @@ CloudIQ diagnostic commands: check SCG service health, test outbound connectivit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out</code></strong> — Verify firewall rules allow outbound HTTPS on port 443 and check if a proxy is required in your environment.
-<strong><code>Server returned nothing (or only header "HTTP/1.0 407 Proxy Authentication Required")</code></strong> — Add proxy credentials to SCG via Settings → Proxy settings or configure curl with <code>-x http://user:pass@proxy:port</code>.
-<strong><code>nslookup: can't find cloudiq.dell.com: NXDOMAIN</code></strong> — Verify DNS servers are configured correctly and can reach public DNS (try <code>nslookup cloudiq.dell.com 8.8.8.8</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out</code></td>
+<td>Verify firewall rules allow outbound HTTPS on port 443 and check if a proxy is required in your environment.</td>
+</tr>
+<tr>
+<td><code>Server returned nothing (or only header "HTTP/1.0 407 Proxy Authentication Required")</code></td>
+<td>Add proxy credentials to SCG via Settings → Proxy settings or configure curl with <code>-x http://user:pass@proxy:port</code>.</td>
+</tr>
+<tr>
+<td><code>nslookup: can't find cloudiq.dell.com: NXDOMAIN</code></td>
+<td>Verify DNS servers are configured correctly and can reach public DNS (try <code>nslookup cloudiq.dell.com 8.8.8.8</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>If connectivity test fails:</strong>
 1. Verify the proxy is configured correctly in SCG UI → Settings → Proxy
@@ -9182,9 +9220,28 @@ CloudIQ diagnostic commands: check SCG service health, test outbound connectivit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Authentication: FAILED - Invalid credentials</code></strong> — Verify the SCG credentials stored in Settings match the current array admin password, or reset the array credentials in the SCG UI.
-<strong><code>Connection Status: TLS handshake failed</code></strong> — Confirm the array management interface certificate is valid and trusted by the SCG server, or disable certificate verification if using self-signed certs in a test environment.
-<strong><code>curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused</code></strong> — Verify the array management IP is correct and reachable from the SCG host using <code>ping</code> or <code>traceroute</code>, and confirm the array's management interface is running.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Authentication: FAILED - Invalid credentials</code></td>
+<td>Verify the SCG credentials stored in Settings match the current array admin password, or reset the array credentials in the SCG UI.</td>
+</tr>
+<tr>
+<td><code>Connection Status: TLS handshake failed</code></td>
+<td>Confirm the array management interface certificate is valid and trusted by the SCG server, or disable certificate verification if using self-signed certs in a test environment.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused</code></td>
+<td>Verify the array management IP is correct and reachable from the SCG host using <code>ping</code> or <code>traceroute</code>, and confirm the array's management interface is running.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-4-read-scg-log-files">Step 4 — Read SCG log files<a class="headerlink" href="#step-4-read-scg-log-files" title="Permanent link">&para;</a></h2>
@@ -9278,9 +9335,28 @@ CloudIQ diagnostic commands: check SCG service health, test outbound connectivit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>scg: command not found</code></strong> — Verify SCG is installed and in PATH, or use the full path <code>/opt/dell/scg/bin/scg</code> instead.
-<strong><code>Permission denied (publickey,password)</code></strong> — Ensure the admin user credentials are correct and SSH key-based auth is configured, or add <code>-o PubkeyAuthentication=no</code> to force password auth.
-<strong><code>No such file or directory</code></strong> — Check that the bundle file was successfully created in <code>/tmp/</code> by running <code>ls -lh /tmp/scg-bundle-*.tar.gz</code> on the SCG host first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scg: command not found</code></td>
+<td>Verify SCG is installed and in PATH, or use the full path <code>/opt/dell/scg/bin/scg</code> instead.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Ensure the admin user credentials are correct and SSH key-based auth is configured, or add <code>-o PubkeyAuthentication=no</code> to force password auth.</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Check that the bundle file was successfully created in <code>/tmp/</code> by running <code>ls -lh /tmp/scg-bundle-*.tar.gz</code> on the SCG host first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
@@ -9352,7 +9428,7 @@ CloudIQ diagnostic commands: check SCG service health, test outbound connectivit
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

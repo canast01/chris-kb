@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Jira — CLI Reference · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Jira — CLI Reference", "url": "https://chrisanastasiadis.com/itsm/jira/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Jira — CLI Reference", "url": "https://chrisanastasiadis.com/itsm/jira/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7497,8 +7497,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>command not found: base64</code></strong> — Install coreutils package (<code>apt-get install coreutils</code> on Debian/Ubuntu or <code>brew install coreutils</code> on macOS).
-<strong><code>export: not valid in this context</code></strong> — Ensure you are running these commands in a bash shell, not sh or dash; use <code>bash</code> explicitly if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found: base64</code></td>
+<td>Install coreutils package (<code>apt-get install coreutils</code> on Debian/Ubuntu or <code>brew install coreutils</code> on macOS).</td>
+</tr>
+<tr>
+<td><code>export: not valid in this context</code></td>
+<td>Ensure you are running these commands in a bash shell, not sh or dash; use <code>bash</code> explicitly if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
@@ -7537,9 +7553,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></strong> — Verify <code>$JIRA_URL</code> is correct and the Jira instance is accessible from your network.
-<strong><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."]}</code></strong> — Confirm the issue key exists and your <code>$JIRA_USER</code> account has permission to view it.
-<strong><code>curl: (401) Unauthorized</code></strong> — Ensure <code>$JIRA_TOKEN</code> is a valid API token and <code>$JIRA_USER</code> matches the token owner.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></td>
+<td>Verify <code>$JIRA_URL</code> is correct and the Jira instance is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."]}</code></td>
+<td>Confirm the issue key exists and your <code>$JIRA_USER</code> account has permission to view it.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Ensure <code>$JIRA_TOKEN</code> is a valid API token and <code>$JIRA_USER</code> matches the token owner.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123?fields=summary,status,assignee,priority&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7577,9 +7612,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is correct and the Jira instance is accessible from your network.
-<strong><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."]}</code></strong> — Confirm PROJ-123 exists and your JIRA_USER has permission to view the issue.
-<strong><code>curl: (401) Unauthorized</code></strong> — Ensure JIRA_TOKEN is a valid API token and JIRA_USER matches the token owner account.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></td>
+<td>Verify the JIRA_URL environment variable is correct and the Jira instance is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."]}</code></td>
+<td>Confirm PROJ-123 exists and your JIRA_USER has permission to view the issue.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Ensure JIRA_TOKEN is a valid API token and JIRA_USER matches the token owner account.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -7609,9 +7663,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>"errorMessages": ["Field 'assignee' cannot be set. It is not on the appropriate screen, or unknown."]</code></strong> — Remove the assignee field from the request or verify the user exists and the field is available in your Jira workflow.
-<strong><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.
-<strong><code>"errorMessages": ["Component with name 'Authentication' does not exist or you do not have permission to see it."]</code></strong> — Replace the component name with a valid component key or verify the component exists in the PROJ project.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"errorMessages": ["Field 'assignee' cannot be set. It is not on the appropriate screen, or unknown."]</code></td>
+<td>Remove the assignee field from the request or verify the user exists and the field is available in your Jira workflow.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></td>
+<td>Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>"errorMessages": ["Component with name 'Authentication' does not exist or you do not have permission to see it."]</code></td>
+<td>Replace the component name with a valid component key or verify the component exists in the PROJ project.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
@@ -7633,9 +7706,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>"errorMessages":["Field 'assignee' cannot be set. It is not on the appropriate screen, or unknown."]</code></strong> — Verify the assignee username exists and is valid in your Jira instance; use <code>/rest/api/2/user/search?username=jsmith</code> to confirm.
-<strong><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></strong> — Ensure <code>${JIRA_URL}</code> is set correctly and the Jira server is reachable; test with <code>curl -I ${JIRA_URL}</code>.
-<strong><code>"errorMessages":["You do not have permission to edit this issue"]</code></strong> — Verify that <code>${JIRA_USER}</code> has Edit permission on PROJ-123; check issue permissions in Jira or contact your Jira administrator.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"errorMessages":["Field 'assignee' cannot be set. It is not on the appropriate screen, or unknown."]</code></td>
+<td>Verify the assignee username exists and is valid in your Jira instance; use <code>/rest/api/2/user/search?username=jsmith</code> to confirm.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></td>
+<td>Ensure <code>${JIRA_URL}</code> is set correctly and the Jira server is reachable; test with <code>curl -I ${JIRA_URL}</code>.</td>
+</tr>
+<tr>
+<td><code>"errorMessages":["You do not have permission to edit this issue"]</code></td>
+<td>Verify that <code>${JIRA_USER}</code> has Edit permission on PROJ-123; check issue permissions in Jira or contact your Jira administrator.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7685,9 +7777,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.
-<strong><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}</code></strong> — Confirm PROJ-123 exists, check that JIRA_USER has browse permissions on the project, and verify JIRA_TOKEN is valid and not expired.
-<strong><code>command not found: python3</code></strong> — Install Python 3 or use <code>jq</code> instead: <code>curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" "${JIRA_URL}/rest/api/2/issue/PROJ-123/transitions" | jq .</code></p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></td>
+<td>Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}</code></td>
+<td>Confirm PROJ-123 exists, check that JIRA_USER has browse permissions on the project, and verify JIRA_TOKEN is valid and not expired.</td>
+</tr>
+<tr>
+<td><code>command not found: python3</code></td>
+<td>Install Python 3 or use <code>jq</code> instead: <code>curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" "${JIRA_URL}/rest/api/2/issue/PROJ-123/transitions" | jq .</code></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -7733,9 +7844,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"errorMessages":["User 'automation' does not have permission to transition issue"],"errors":{}}</code></strong> — Verify the JIRA_USER account has the "Transition Issues" permission in the project's permission scheme.
-<strong><code>{"errorMessages":["Field 'resolution' cannot be set. It is not on the appropriate screen, or unknown."],"errors":{}}</code></strong> — Remove the resolution field or confirm it is available on the transition screen for workflow state 31 in your JIRA configuration.
-<strong><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></strong> — Verify JIRA_URL is correct and the JIRA instance is accessible from your network (check firewall rules and VPN connectivity).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"errorMessages":["User 'automation' does not have permission to transition issue"],"errors":{}}</code></td>
+<td>Verify the JIRA_USER account has the "Transition Issues" permission in the project's permission scheme.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["Field 'resolution' cannot be set. It is not on the appropriate screen, or unknown."],"errors":{}}</code></td>
+<td>Remove the resolution field or confirm it is available on the transition screen for workflow state 31 in your JIRA configuration.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></td>
+<td>Verify JIRA_URL is correct and the JIRA instance is accessible from your network (check firewall rules and VPN connectivity).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -7770,9 +7900,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}</code></strong> — Verify PROJ-123 exists and your JIRA_USER has browse/comment permissions on that project.
-<strong><code>curl: (6) Could not resolve host: jira.company.com</code></strong> — Ensure JIRA_URL environment variable is set correctly and the Jira instance is reachable from your network.
-<strong><code>{"errorMessages":["You must provide a body."],"errors":{}}</code></strong> — Confirm the JSON payload includes a non-empty "body" field in the -d argument.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}</code></td>
+<td>Verify PROJ-123 exists and your JIRA_USER has browse/comment permissions on that project.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host: jira.company.com</code></td>
+<td>Ensure JIRA_URL environment variable is set correctly and the Jira instance is reachable from your network.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["You must provide a body."],"errors":{}}</code></td>
+<td>Confirm the JSON payload includes a non-empty "body" field in the -d argument.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -7813,9 +7962,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"errorMessages":["Authentication failed; please check you have supplied the correct credentials."],"errors":{}}</code></strong> — Verify <code>JIRA_USER</code> and <code>JIRA_TOKEN</code> environment variables are set correctly and the token has API access permissions.
-<strong><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}</code></strong> — Confirm the issue key PROJ-123 exists in your Jira instance and your user account has permission to view and log work on it.
-<strong><code>{"errorMessages":["You do not have permission to create worklog on this issue."],"errors":{}}</code></strong> — Ensure your Jira user role has the "Log Work" permission assigned in the project's permission scheme.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"errorMessages":["Authentication failed; please check you have supplied the correct credentials."],"errors":{}}</code></td>
+<td>Verify <code>JIRA_USER</code> and <code>JIRA_TOKEN</code> environment variables are set correctly and the token has API access permissions.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}</code></td>
+<td>Confirm the issue key PROJ-123 exists in your Jira instance and your user account has permission to view and log work on it.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["You do not have permission to create worklog on this issue."],"errors":{}}</code></td>
+<td>Ensure your Jira user role has the "Log Work" permission assigned in the project's permission scheme.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -7846,9 +8014,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.
-<strong><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}</code></strong> — Confirm PROJ-123 exists, the issue key is correct, and your JIRA_USER has permission to attach files to that issue.
-<strong><code>curl: (26) Failed to open/read local data from "/path/to/screenshot.png"</code></strong> — Replace <code>/path/to/screenshot.png</code> with the actual absolute path to an existing file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></td>
+<td>Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}</code></td>
+<td>Confirm PROJ-123 exists, the issue key is correct, and your JIRA_USER has permission to attach files to that issue.</td>
+</tr>
+<tr>
+<td><code>curl: (26) Failed to open/read local data from "/path/to/screenshot.png"</code></td>
+<td>Replace <code>/path/to/screenshot.png</code> with the actual absolute path to an existing file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span>-G<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7914,9 +8101,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is set correctly and the Jira server is accessible from your network.
-<strong><code>401 Unauthorized</code></strong> — Ensure JIRA_USER and JIRA_TOKEN environment variables are set with valid credentials and the token has API access permissions.
-<strong><code>jq: parse error: Invalid JSON</code></strong> — Confirm the Jira API endpoint is returning valid JSON; check that the API version (rest/api/2) matches your Jira instance version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.company.com port 443: Connection refused</code></td>
+<td>Verify the JIRA_URL environment variable is set correctly and the Jira server is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Ensure JIRA_USER and JIRA_TOKEN environment variables are set with valid credentials and the token has API access permissions.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON</code></td>
+<td>Confirm the Jira API endpoint is returning valid JSON; check that the API version (rest/api/2) matches your Jira instance version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># bulk-transition.sh — Transition all matching issues to a target status</span>
@@ -7958,9 +8164,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify <code>${JIRA_URL}</code> is correct and the Jira instance is running and accessible from this host.
-<strong><code>"errorMessages":["You do not have permission to transition this issue"]</code></strong> — Ensure <code>${JIRA_USER}</code> has the "Transition Issues" permission in the target project.
-<strong><code>"errorMessages":["Transition id 21 is invalid"]</code></strong> — Verify transition ID 21 exists for the target status by running <code>curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" "${JIRA_URL}/rest/api/2/issue/PROJ-1847/transitions" | python3 -m json.tool</code> and checking the available IDs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></td>
+<td>Verify <code>${JIRA_URL}</code> is correct and the Jira instance is running and accessible from this host.</td>
+</tr>
+<tr>
+<td><code>"errorMessages":["You do not have permission to transition this issue"]</code></td>
+<td>Ensure <code>${JIRA_USER}</code> has the "Transition Issues" permission in the target project.</td>
+</tr>
+<tr>
+<td><code>"errorMessages":["Transition id 21 is invalid"]</code></td>
+<td>Verify transition ID 21 exists for the target status by running <code>curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" "${JIRA_URL}/rest/api/2/issue/PROJ-1847/transitions" | python3 -m json.tool</code> and checking the available IDs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># macOS</span>
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>brew<span class="w"> </span>install<span class="w"> </span>atlassian/taps/atlas
@@ -7981,9 +8206,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: No available formula with the name "atlassian/taps/atlas"</code></strong> — Run <code>brew tap atlassian/taps</code> first to add the Atlassian tap repository.
-<strong><code>curl: (7) Failed to connect to deb.cli.atlassian.com port 443</code></strong> — Verify internet connectivity and check that your firewall/proxy allows HTTPS access to Atlassian's package repository.
-<strong><code>atlas: command not found</code></strong> — Ensure the installation completed without errors and that <code>/usr/local/bin</code> (macOS) or <code>/usr/local/bin</code> (Linux) is in your <code>$PATH</code> environment variable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: No available formula with the name "atlassian/taps/atlas"</code></td>
+<td>Run <code>brew tap atlassian/taps</code> first to add the Atlassian tap repository.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to deb.cli.atlassian.com port 443</code></td>
+<td>Verify internet connectivity and check that your firewall/proxy allows HTTPS access to Atlassian's package repository.</td>
+</tr>
+<tr>
+<td><code>atlas: command not found</code></td>
+<td>Ensure the installation completed without errors and that <code>/usr/local/bin</code> (macOS) or <code>/usr/local/bin</code> (Linux) is in your <code>$PATH</code> environment variable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>atlas<span class="w"> </span>login
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="c1"># Opens browser for OAuth authentication</span>
@@ -7996,8 +8240,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Failed to open browser. Please visit https://auth.atlassian.com/authorize?client_id=abc123... manually</code></strong> — Set the <code>BROWSER</code> environment variable or manually open the provided URL in your browser and paste the verification code.
-<strong><code>Error: Authentication timeout after 5 minutes</code></strong> — Re-run <code>atlas login</code> and complete the OAuth flow within the time limit, or check your network connectivity.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Failed to open browser. Please visit https://auth.atlassian.com/authorize?client_id=abc123... manually</code></td>
+<td>Set the <code>BROWSER</code> environment variable or manually open the provided URL in your browser and paste the verification code.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication timeout after 5 minutes</code></td>
+<td>Re-run <code>atlas login</code> and complete the OAuth flow within the time limit, or check your network connectivity.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># List all sites</span>
 <a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>atlas<span class="w"> </span>admin<span class="w"> </span>sites<span class="w"> </span>list
@@ -8060,9 +8320,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: authentication failed — invalid credentials</code></strong> — Verify your Jira API token is set in <code>~/.atlas/config.yml</code> or the <code>ATLAS_JIRA_TOKEN</code> environment variable.
-<strong><code>Error: project PROJ not found</code></strong> — Confirm the project key exists and you have permission to access it by running <code>atlas jira project list</code>.
-<strong><code>Error: user jdoe@example.com not found in this instance</code></strong> — Verify the email address is correct and the user account exists in your Jira instance.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: authentication failed — invalid credentials</code></td>
+<td>Verify your Jira API token is set in <code>~/.atlas/config.yml</code> or the <code>ATLAS_JIRA_TOKEN</code> environment variable.</td>
+</tr>
+<tr>
+<td><code>Error: project PROJ not found</code></td>
+<td>Confirm the project key exists and you have permission to access it by running <code>atlas jira project list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: user jdoe@example.com not found in this instance</code></td>
+<td>Verify the email address is correct and the user account exists in your Jira instance.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Start / Stop / Restart</span>
 <a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
@@ -8094,9 +8373,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Job for jira.service failed because the control process exited with error code.</code></strong> — Check <code>/var/log/jira/catalina.out</code> for Java startup errors and verify sufficient heap memory is allocated in <code>setenv.sh</code>.
-<strong><code>Failed to start jira.service: Unit jira.service not found.</code></strong> — Ensure the systemd service file exists at <code>/etc/systemd/system/jira.service</code> and run <code>systemctl daemon-reload</code> after creating or modifying it.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user is in the <code>jira</code> group with <code>groups $USER</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Job for jira.service failed because the control process exited with error code.</code></td>
+<td>Check <code>/var/log/jira/catalina.out</code> for Java startup errors and verify sufficient heap memory is allocated in <code>setenv.sh</code>.</td>
+</tr>
+<tr>
+<td><code>Failed to start jira.service: Unit jira.service not found.</code></td>
+<td>Ensure the systemd service file exists at <code>/etc/systemd/system/jira.service</code> and run <code>systemctl daemon-reload</code> after creating or modifying it.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user is in the <code>jira</code> group with <code>groups $USER</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Start full reindex (background)</span>
 <a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -8121,9 +8419,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify <code>${JIRA_URL}</code> is correct and the Jira instance is running and accessible from your network.
-<strong><code>{"errorMessages":["User does not have permission to administer Jira"]}</code></strong> — Ensure <code>${JIRA_USER}</code> has Jira System Administrator permissions.
-<strong><code>curl: (6) Could not resolve host: jira.example.com</code></strong> — Check DNS resolution and network connectivity to the Jira hostname.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></td>
+<td>Verify <code>${JIRA_URL}</code> is correct and the Jira instance is running and accessible from your network.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["User does not have permission to administer Jira"]}</code></td>
+<td>Ensure <code>${JIRA_USER}</code> has Jira System Administrator permissions.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host: jira.example.com</code></td>
+<td>Check DNS resolution and network connectivity to the Jira hostname.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/jql/autocomplete/request/data/refresh&quot;</span>
@@ -8132,9 +8449,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.
-<strong><code>curl: (401) Unauthorized</code></strong> — Ensure JIRA_USER and JIRA_TOKEN environment variables are set and the API token has appropriate permissions for the autocomplete endpoint.
-<strong><code>curl: (403) Forbidden</code></strong> — Confirm your Jira user account has the "Use REST APIs" global permission and access to the Jira instance.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></td>
+<td>Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Ensure JIRA_USER and JIRA_TOKEN environment variables are set and the API token has appropriate permissions for the autocomplete endpoint.</td>
+</tr>
+<tr>
+<td><code>curl: (403) Forbidden</code></td>
+<td>Confirm your Jira user account has the "Use REST APIs" global permission and access to the Jira instance.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Get user details</span>
 <a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -8227,7 +8563,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

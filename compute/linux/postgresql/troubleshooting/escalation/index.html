@@ -8263,9 +8263,28 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: role "postgres" does not exist</code></strong> — Create the postgres superuser role with <code>sudo -u postgres createuser -s postgres</code> or verify the role exists with <code>psql -U postgres -l</code>.
-<strong><code>psql: error: could not translate host name "localhost" to address: Name or service not known</code></strong> — Ensure PostgreSQL is running with <code>sudo systemctl status postgresql</code> and verify the connection parameters are correct.
-<strong><code>Permission denied</code> when writing to <code>/tmp/pg-config-*.txt</code></strong> — Check <code>/tmp</code> directory permissions with <code>ls -ld /tmp</code> and ensure the PostgreSQL system user has write access, or redirect to a user-writable directory like <code>~/pg-config-$(date +%Y%m%d).txt</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: role "postgres" does not exist</code></td>
+<td>Create the postgres superuser role with <code>sudo -u postgres createuser -s postgres</code> or verify the role exists with <code>psql -U postgres -l</code>.</td>
+</tr>
+<tr>
+<td><code>psql: error: could not translate host name "localhost" to address: Name or service not known</code></td>
+<td>Ensure PostgreSQL is running with <code>sudo systemctl status postgresql</code> and verify the connection parameters are correct.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code> when writing to <code>/tmp/pg-config-*.txt</code></td>
+<td>Check <code>/tmp</code> directory permissions with <code>ls -ld /tmp</code> and ensure the PostgreSQL system user has write access, or redirect to a user-writable directory like <code>~/pg-config-$(date +%Y%m%d).txt</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-save-the-postgresql-error-log">2. Save the PostgreSQL error log<a class="headerlink" href="#2-save-the-postgresql-error-log" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Log directory (varies by distribution)</span>
@@ -8289,8 +8308,24 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /tmp/pg-error-202401151234.log: No such file or directory</code></strong> — Run the tail command first or use a fixed timestamp variable: <code>TS=$(date +%Y%m%d%H%M); sudo tail -500 /var/log/postgresql/postgresql-*.log &gt; /tmp/pg-error-$TS.log; grep -E "PANIC|FATAL|ERROR" /tmp/pg-error-$TS.log | tail -100</code>
-<strong><code>tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory</code></strong> — Check your PostgreSQL log directory location with <code>sudo -u postgres psql -c "SHOW log_directory;"</code> and adjust the path accordingly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /tmp/pg-error-202401151234.log: No such file or directory</code></td>
+<td>Run the tail command first or use a fixed timestamp variable: <code>TS=$(date +%Y%m%d%H%M); sudo tail -500 /var/log/postgresql/postgresql-*.log &gt; /tmp/pg-error-$TS.log; grep -E "PANIC|FATAL|ERROR" /tmp/pg-error-$TS.log | tail -100</code></td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory</code></td>
+<td>Check your PostgreSQL log directory location with <code>sudo -u postgres psql -c "SHOW log_directory;"</code> and adjust the path accordingly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="3-capture-active-sessions-and-lock-waits">3. Capture active sessions and lock waits<a class="headerlink" href="#3-capture-active-sessions-and-lock-waits" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Active sessions with duration and query</span>
@@ -8332,9 +8367,28 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"</code></strong> — Ensure the postgres user has proper ident authentication configured in pg_hba.conf or use <code>psql -h localhost -U postgres</code> with password authentication.
-<strong><code>ERROR: permission denied for schema pg_catalog</code></strong> — Grant necessary privileges with <code>GRANT USAGE ON SCHEMA pg_catalog TO postgres;</code> or run the query as a superuser.
-<strong><code>ERROR: column "granted" does not exist</code></strong> — This query requires PostgreSQL 13+; for earlier versions, use <code>pg_locks</code> view instead of <code>pg_blocking_pids()</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"</code></td>
+<td>Ensure the postgres user has proper ident authentication configured in pg_hba.conf or use <code>psql -h localhost -U postgres</code> with password authentication.</td>
+</tr>
+<tr>
+<td><code>ERROR: permission denied for schema pg_catalog</code></td>
+<td>Grant necessary privileges with <code>GRANT USAGE ON SCHEMA pg_catalog TO postgres;</code> or run the query as a superuser.</td>
+</tr>
+<tr>
+<td><code>ERROR: column "granted" does not exist</code></td>
+<td>This query requires PostgreSQL 13+; for earlier versions, use <code>pg_locks</code> view instead of <code>pg_blocking_pids()</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="4-capture-replication-state-if-primary-with-replicas">4. Capture replication state (if primary with replicas)<a class="headerlink" href="#4-capture-replication-state-if-primary-with-replicas" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the primary server</span>
@@ -8364,9 +8418,28 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></strong> — Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check <code>postgresql.conf</code> for the correct listen_addresses.
-<strong><code>ERROR: permission denied for schema pg_catalog</code></strong> — Ensure the postgres user has superuser privileges or grant explicit SELECT permissions on <code>pg_stat_replication</code> and <code>pg_replication_slots</code> views.
-<strong><code>ERROR: relation "pg_stat_replication" does not exist</code></strong> — Confirm this is a primary server with replication enabled; check <code>wal_level = replica</code> in <code>postgresql.conf</code> and restart if changed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></td>
+<td>Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check <code>postgresql.conf</code> for the correct listen_addresses.</td>
+</tr>
+<tr>
+<td><code>ERROR: permission denied for schema pg_catalog</code></td>
+<td>Ensure the postgres user has superuser privileges or grant explicit SELECT permissions on <code>pg_stat_replication</code> and <code>pg_replication_slots</code> views.</td>
+</tr>
+<tr>
+<td><code>ERROR: relation "pg_stat_replication" does not exist</code></td>
+<td>Confirm this is a primary server with replication enabled; check <code>wal_level = replica</code> in <code>postgresql.conf</code> and restart if changed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="5-capture-disk-usage-and-vacuum-state">5. Capture disk usage and vacuum state<a class="headerlink" href="#5-capture-disk-usage-and-vacuum-state" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Disk space on PGDATA and WAL</span>
@@ -8417,9 +8490,28 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory</code></strong> — Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check PGHOST/PGPORT environment variables.
-<strong><code>ERROR: permission denied for schema public</code></strong> — Grant necessary privileges with <code>psql -U postgres -c "GRANT USAGE ON SCHEMA public TO postgres;"</code> or run the query as a superuser.
-<strong><code>Disk space on PGDATA is critically low (&gt;95% used)</code></strong> — Immediately run <code>VACUUM FULL;</code> on the largest tables or add storage; autovacuum may not keep pace with write-heavy workloads.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory</code></td>
+<td>Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check PGHOST/PGPORT environment variables.</td>
+</tr>
+<tr>
+<td><code>ERROR: permission denied for schema public</code></td>
+<td>Grant necessary privileges with <code>psql -U postgres -c "GRANT USAGE ON SCHEMA public TO postgres;"</code> or run the query as a superuser.</td>
+</tr>
+<tr>
+<td><code>Disk space on PGDATA is critically low (&gt;95% used)</code></td>
+<td>Immediately run <code>VACUUM FULL;</code> on the largest tables or add storage; autovacuum may not keep pace with write-heavy workloads.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="6-write-the-timeline">6. Write the timeline<a class="headerlink" href="#6-write-the-timeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>PostgreSQL version: 16.2 (Ubuntu 16.2-1.pgdg22.04+1)
@@ -8586,9 +8678,28 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed</code></strong> — Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check socket permissions with <code>ls -la /var/run/postgresql/</code>.
-<strong><code>ERROR: permission denied for schema public</code></strong> — Run the psql commands as the postgres user with <code>sudo -u postgres psql</code> or ensure your user has CONNECT privileges on the database.
-<strong><code>tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory</code></strong> — Check the actual log file location with <code>find /var/log -name "postgresql*.log" 2&gt;/dev/null</code> as the path varies by distribution.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed</code></td>
+<td>Verify PostgreSQL is running with <code>systemctl status postgresql</code> and check socket permissions with <code>ls -la /var/run/postgresql/</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: permission denied for schema public</code></td>
+<td>Run the psql commands as the postgres user with <code>sudo -u postgres psql</code> or ensure your user has CONNECT privileges on the database.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory</code></td>
+<td>Check the actual log file location with <code>find /var/log -name "postgresql*.log" 2&gt;/dev/null</code> as the path varies by distribution.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="wraparound-emergency-procedure">Wraparound Emergency Procedure<a class="headerlink" href="#wraparound-emergency-procedure" title="Permanent link">&para;</a></h2>
@@ -8628,9 +8739,28 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vacuumdb: error: could not connect to database app_prod: FATAL: the database system is in recovery mode</code></strong> — Wait for the standby/replica to finish recovery or run the command on the primary server only.
-<strong><code>vacuumdb: error: permission denied for schema public</code></strong> — Ensure you are connected as a PostgreSQL superuser (postgres) using <code>sudo -u postgres vacuumdb</code> or set PGUSER environment variable.
-<strong><code>psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections</code></strong> — The database is nearly out of connection slots; kill idle sessions with <code>SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle';</code> before retrying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vacuumdb: error: could not connect to database app_prod: FATAL: the database system is in recovery mode</code></td>
+<td>Wait for the standby/replica to finish recovery or run the command on the primary server only.</td>
+</tr>
+<tr>
+<td><code>vacuumdb: error: permission denied for schema public</code></td>
+<td>Ensure you are connected as a PostgreSQL superuser (postgres) using <code>sudo -u postgres vacuumdb</code> or set PGUSER environment variable.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections</code></td>
+<td>The database is nearly out of connection slots; kill idle sessions with <code>SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle';</code> before retrying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
@@ -8705,7 +8835,7 @@ How to escalate PostgreSQL issues to vendor support (EDB, Percona, or Crunchy Da
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

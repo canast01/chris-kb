@@ -9208,9 +9208,28 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to connect to VPLEX management server at localhost:443</code></strong> — Verify the VPLEX cluster is reachable and vplexcli credentials are configured via <code>vplexcli --setup</code>.
-<strong><code>Error: Storage volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001 not found</code></strong> — Run <code>vplexcli -q -e "ls /storage-elements/storage-arrays/array-A/storage-volumes"</code> to confirm the volume exists before attempting rediscovery.
-<strong><code>Error: Storage volume sv_001 is already claimed</code></strong> — Check if the volume is already in use with <code>vplexcli -q -e "ll /storage-elements/storage-arrays/array-A/storage-volumes/sv_001"</code> before claiming.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to connect to VPLEX management server at localhost:443</code></td>
+<td>Verify the VPLEX cluster is reachable and vplexcli credentials are configured via <code>vplexcli --setup</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Storage volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001 not found</code></td>
+<td>Run <code>vplexcli -q -e "ls /storage-elements/storage-arrays/array-A/storage-volumes"</code> to confirm the volume exists before attempting rediscovery.</td>
+</tr>
+<tr>
+<td><code>Error: Storage volume sv_001 is already claimed</code></td>
+<td>Check if the volume is already in use with <code>vplexcli -q -e "ll /storage-elements/storage-arrays/array-A/storage-volumes/sv_001"</code> before claiming.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="powermax-integration-notes">PowerMax Integration Notes<a class="headerlink" href="#powermax-integration-notes" title="Permanent link">&para;</a></h3>
 <ul>
@@ -9243,9 +9262,28 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Storage volume sv_001 not found or not accessible</code></strong> — Verify the storage array is online and the LUN path is correct using <code>vplexcli -e "storage-volume list"</code>.
-<strong><code>Error: Extent ext_app_001 is in use and cannot be expanded at this time</code></strong> — Ensure all I/O to the virtual volume is quiesced and no snapshots are being created before retrying the expand operation.
-<strong><code>Error: New capacity (1000 GB) is smaller than current capacity (1000 GB)</code></strong> — Confirm the back-end LUN was actually expanded on the PowerMax array before attempting the VPLEX rediscovery and expansion.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Storage volume sv_001 not found or not accessible</code></td>
+<td>Verify the storage array is online and the LUN path is correct using <code>vplexcli -e "storage-volume list"</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Extent ext_app_001 is in use and cannot be expanded at this time</code></td>
+<td>Ensure all I/O to the virtual volume is quiesced and no snapshots are being created before retrying the expand operation.</td>
+</tr>
+<tr>
+<td><code>Error: New capacity (1000 GB) is smaller than current capacity (1000 GB)</code></td>
+<td>Confirm the back-end LUN was actually expanded on the PowerMax array before attempting the VPLEX rediscovery and expansion.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="vmware-vsphere">VMware vSphere<a class="headerlink" href="#vmware-vsphere" title="Permanent link">&para;</a></h2>
 <p>VPLEX is deeply integrated with VMware vSphere environments, particularly for Metro stretched-cluster configurations.</p>
@@ -9277,8 +9315,24 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Could not find device naa.60060e80057d2700028d2700000012a4</code></strong> — Verify the NAA ID is correct by running <code>esxcli storage core device list</code> and copy the exact device identifier.
-<strong><code>Unknown option --adapter vmhba&lt;n&gt;</code></strong> — Replace the literal <code>&lt;n&gt;</code> placeholder with the actual HBA number (e.g., <code>vmhba4</code>), not the angle brackets.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Could not find device naa.60060e80057d2700028d2700000012a4</code></td>
+<td>Verify the NAA ID is correct by running <code>esxcli storage core device list</code> and copy the exact device identifier.</td>
+</tr>
+<tr>
+<td><code>Unknown option --adapter vmhba&lt;n&gt;</code></td>
+<td>Replace the literal <code>&lt;n&gt;</code> placeholder with the actual HBA number (e.g., <code>vmhba4</code>), not the angle brackets.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="vplex-metro-vsphere-ha-vmotion">VPLEX Metro + vSphere HA / vMotion<a class="headerlink" href="#vplex-metro-vsphere-ha-vmotion" title="Permanent link">&para;</a></h3>
 <p>VPLEX Metro is the prerequisite for vSphere Metro Storage Cluster (vMSC) configurations:</p>
@@ -9430,8 +9484,24 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Job for rsyslog.service failed because the control process exited with error code.</code></strong> — Check the rsyslog configuration syntax with <code>rsyslog -N1</code> and verify the SIEM_IP is reachable via <code>telnet &lt;SIEM_IP&gt; 514</code>.
-<strong><code>Failed to restart rsyslog.service: Unit rsyslog.service not found.</code></strong> — Confirm rsyslog is installed with <code>systemctl list-unit-files | grep rsyslog</code> or install it with <code>apt-get install rsyslog</code> (Debian/Ubuntu) or <code>yum install rsyslog</code> (RHEL/CentOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Job for rsyslog.service failed because the control process exited with error code.</code></td>
+<td>Check the rsyslog configuration syntax with <code>rsyslog -N1</code> and verify the SIEM_IP is reachable via <code>telnet &lt;SIEM_IP&gt; 514</code>.</td>
+</tr>
+<tr>
+<td><code>Failed to restart rsyslog.service: Unit rsyslog.service not found.</code></td>
+<td>Confirm rsyslog is installed with <code>systemctl list-unit-files | grep rsyslog</code> or install it with <code>apt-get install rsyslog</code> (Debian/Ubuntu) or <code>yum install rsyslog</code> (RHEL/CentOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Key log sources to forward:</p>
 <table>
@@ -9488,7 +9558,7 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

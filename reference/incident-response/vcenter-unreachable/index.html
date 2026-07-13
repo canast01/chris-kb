@@ -6977,9 +6977,28 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: vcenter.corp.local: Name or service not known</code></strong> — Verify DNS resolution with <code>nslookup vcenter.corp.local</code> or check <code>/etc/resolv.conf</code> for correct nameserver entries.
-<strong><code>From 192.168.1.1 icmp_seq=1 Destination Host Unreachable</code></strong> — Confirm vCenter host is powered on and check network connectivity with <code>traceroute vcenter.corp.local</code> to identify where the path breaks.
-<strong><code>100% packet loss</code></strong> — Verify the vCenter VM is running, check firewall rules allow ICMP, and confirm the host is on the correct network segment.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: vcenter.corp.local: Name or service not known</code></td>
+<td>Verify DNS resolution with <code>nslookup vcenter.corp.local</code> or check <code>/etc/resolv.conf</code> for correct nameserver entries.</td>
+</tr>
+<tr>
+<td><code>From 192.168.1.1 icmp_seq=1 Destination Host Unreachable</code></td>
+<td>Confirm vCenter host is powered on and check network connectivity with <code>traceroute vcenter.corp.local</code> to identify where the path breaks.</td>
+</tr>
+<tr>
+<td><code>100% packet loss</code></td>
+<td>Verify the vCenter VM is running, check firewall rules allow ICMP, and confirm the host is on the correct network segment.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>2. Attempt HTTPS connectivity:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://vcenter.corp.local
@@ -6988,9 +7007,28 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to vcenter.corp.local port 443: Connection refused</code></strong> — Verify vCenter service is running with <code>systemctl status vmware-vpxd</code> on the vCenter server and check network connectivity to port 443.
-<strong><code>curl: (6) Could not resolve host: vcenter.corp.local</code></strong> — Confirm DNS resolution is working by running <code>nslookup vcenter.corp.local</code> and verify the hostname is correct in your environment.
-<strong><code>000</code></strong> — The connection timed out or was blocked by a firewall; check network ACLs and security groups allowing traffic from your client to vCenter on port 443.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to vcenter.corp.local port 443: Connection refused</code></td>
+<td>Verify vCenter service is running with <code>systemctl status vmware-vpxd</code> on the vCenter server and check network connectivity to port 443.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host: vcenter.corp.local</code></td>
+<td>Confirm DNS resolution is working by running <code>nslookup vcenter.corp.local</code> and verify the hostname is correct in your environment.</td>
+</tr>
+<tr>
+<td><code>000</code></td>
+<td>The connection timed out or was blocked by a firewall; check network ACLs and security groups allowing traffic from your client to vCenter on port 443.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected: <code>200</code> or <code>302</code>. Anything else means the web service is down.</p>
 <p><strong>3. Check from a different host (rule out network segmentation):</strong></p>
@@ -7003,8 +7041,24 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nc: connect to 192.168.1.10 port 443 (tcp) failed: Connection refused</code></strong> — Verify vCenter service is running with <code>systemctl status vmware-vpxd</code> on the vCenter appliance, or check if the IP address is correct.
-<strong><code>nc: getaddrinfo for host "192.168.1.10" port 443: Name or service not known</code></strong> — Confirm network connectivity and DNS resolution by pinging the vCenter IP or checking <code>/etc/hosts</code> entries on the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nc: connect to 192.168.1.10 port 443 (tcp) failed: Connection refused</code></td>
+<td>Verify vCenter service is running with <code>systemctl status vmware-vpxd</code> on the vCenter appliance, or check if the IP address is correct.</td>
+</tr>
+<tr>
+<td><code>nc: getaddrinfo for host "192.168.1.10" port 443: Name or service not known</code></td>
+<td>Confirm network connectivity and DNS resolution by pinging the vCenter IP or checking <code>/etc/hosts</code> entries on the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>4. SSH to vCenter appliance and check service status:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>root@vcenter.corp.local
@@ -7036,9 +7090,28 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: Could not resolve hostname vcenter.corp.local: Name or service not known</code></strong> — Verify the vCenter hostname or IP address is correct and resolvable from your network.
-<strong><code>Connection refused</code></strong> — Ensure SSH is enabled on vCenter and the management network is reachable; check firewall rules on port 22.
-<strong><code>service-control: command not found</code></strong> — Confirm you are logged into a vCenter Server Appliance (VCSA); this command does not exist on Windows vCenter installations.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: Could not resolve hostname vcenter.corp.local: Name or service not known</code></td>
+<td>Verify the vCenter hostname or IP address is correct and resolvable from your network.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Ensure SSH is enabled on vCenter and the management network is reachable; check firewall rules on port 22.</td>
+</tr>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Confirm you are logged into a vCenter Server Appliance (VCSA); this command does not exist on Windows vCenter installations.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for services in <code>stopped</code> state, especially <code>vpxd</code>, <code>vmware-vpostgres</code>, <code>vmware-rhttpproxy</code>.</p>
 <hr />
@@ -7076,7 +7149,20 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory</code></strong> — Verify vCenter is installed and running with <code>systemctl status vmware-vpxd</code>, or</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory</code></td>
+<td>Verify vCenter is installed and running with <code>systemctl status vmware-vpxd</code>, or</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Check the reverse proxy log if HTTPS is not responding:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/rhttpproxy/rhttpproxy.log
@@ -7094,8 +7180,24 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tail: cannot open '/var/log/vmware/rhttpproxy/rhttpproxy.log' for reading: No such file or directory</code></strong> — Verify the vSphere host is running and the rhttpproxy service is active with <code>systemctl status rhttpproxy</code>.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as root to access VMware log files.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/rhttpproxy/rhttpproxy.log' for reading: No such file or directory</code></td>
+<td>Verify the vSphere host is running and the rhttpproxy service is active with <code>systemctl status rhttpproxy</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root to access VMware log files.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Check database connectivity:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>/opt/vmware/vpostgres/current/bin/psql<span class="w"> </span>-U<span class="w"> </span>vc<span class="w"> </span>-d<span class="w"> </span>VCDB<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1;&quot;</span>
@@ -7107,9 +7209,28 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not connect to server: No such file or directory</code></strong> — Verify the vPostgres service is running with <code>systemctl status vpostgres</code> and check that the socket directory <code>/var/run/vpostgres</code> exists.
-<strong><code>psql: error: FATAL: role "vc" does not exist</code></strong> — Confirm the vCenter database user exists by running <code>sudo -u postgres psql -c "\du"</code> and recreate it if necessary using vCenter's database initialization scripts.
-<strong><code>psql: error: FATAL: database "VCDB" does not exist</code></strong> — Verify the vCenter database was initialized correctly; check <code>/var/log/vmware/vpostgres/</code> logs and re-run the vCenter installer's database setup if the database is missing.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not connect to server: No such file or directory</code></td>
+<td>Verify the vPostgres service is running with <code>systemctl status vpostgres</code> and check that the socket directory <code>/var/run/vpostgres</code> exists.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: role "vc" does not exist</code></td>
+<td>Confirm the vCenter database user exists by running <code>sudo -u postgres psql -c "\du"</code> and recreate it if necessary using vCenter's database initialization scripts.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: database "VCDB" does not exist</code></td>
+<td>Verify the vCenter database was initialized correctly; check <code>/var/log/vmware/vpostgres/</code> logs and re-run the vCenter installer's database setup if the database is missing.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If the DB query returns <code>ERROR: could not connect to server</code>, the database service is the root cause.</p>
 <hr />
@@ -7139,8 +7260,24 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to stop service vmware-vpxd: Service is not responding</code></strong> — Run <code>service-control --stop --all --force</code> to forcefully terminate unresponsive services.
-<strong><code>Error: Failed to start vmware-vpostgres: Port 5432 already in use</code></strong> — Wait 30–60 seconds after stopping before starting, or check for orphaned processes with <code>lsof -i :5432</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to stop service vmware-vpxd: Service is not responding</code></td>
+<td>Run <code>service-control --stop --all --force</code> to forcefully terminate unresponsive services.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to start vmware-vpostgres: Port 5432 already in use</code></td>
+<td>Wait 30–60 seconds after stopping before starting, or check for orphaned processes with <code>lsof -i :5432</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Monitor startup progress:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>service-control<span class="w"> </span>--status
@@ -7166,8 +7303,24 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>service-control: command not found</code></strong> — Run this command directly on the vCenter Server appliance (SSH as root), not from a remote client.
-<strong><code>watch: command not found</code></strong> — Install the procps-ng package or use <code>while true; do clear; service-control --status | grep -E "stopped|running"; sleep 5; done</code> as an alternative.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Run this command directly on the vCenter Server appliance (SSH as root), not from a remote client.</td>
+</tr>
+<tr>
+<td><code>watch: command not found</code></td>
+<td>Install the procps-ng package or use <code>while true; do clear; service-control --status | grep -E "stopped|running"; sleep 5; done</code> as an alternative.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Services take 3–8 minutes to fully start. <code>vpxd</code> is the last to become healthy.</p>
 <h3 id="procedure-b-restart-vcenter-vm-scenario-a">Procedure B: Restart vCenter VM (scenario A)<a class="headerlink" href="#procedure-b-restart-vcenter-vm-scenario-a" title="Permanent link">&para;</a></h3>
@@ -7200,9 +7353,28 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: Could not resolve hostname vcenter.corp.local: Name or service not known</code></strong> — Verify the hostname is correct and resolvable by running <code>nslookup vcenter.corp.local</code> or update your <code>/etc/hosts</code> file.
-<strong><code>Permission denied (publickey,password).</code></strong> — Ensure you have the correct root password and SSH access is enabled; check vCenter's SSH service status in the DCUI.
-<strong><code>service-control: command not found</code></strong> — This command only works on vCenter Server appliances; if using Windows vCenter, use <code>Get-Service</code> in PowerShell instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: Could not resolve hostname vcenter.corp.local: Name or service not known</code></td>
+<td>Verify the hostname is correct and resolvable by running <code>nslookup vcenter.corp.local</code> or update your <code>/etc/hosts</code> file.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Ensure you have the correct root password and SSH access is enabled; check vCenter's SSH service status in the DCUI.</td>
+</tr>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>This command only works on vCenter Server appliances; if using Windows vCenter, use <code>Get-Service</code> in PowerShell instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="procedure-c-restore-from-backup-catastrophic-failure">Procedure C: Restore from backup (catastrophic failure)<a class="headerlink" href="#procedure-c-restore-from-backup-catastrophic-failure" title="Permanent link">&para;</a></h3>
 <p>If services cannot be recovered:</p>
@@ -7247,9 +7419,28 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.</code></strong> — Add <code>-SkipCertificateCheck</code> parameter or import the vCenter certificate into your PowerCLI trusted store.
-<strong><code>Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Install VMware.PowerCLI module with <code>Install-Module -Name VMware.PowerCLI -Force</code>.
-<strong><code>Connect-VIServer : Cannot find an overload for "Connect" and the argument count: "3".</code></strong> — Ensure you are running PowerShell 5.1+ and have imported the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.</code></td>
+<td>Add <code>-SkipCertificateCheck</code> parameter or import the vCenter certificate into your PowerCLI trusted store.</td>
+</tr>
+<tr>
+<td><code>Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></td>
+<td>Install VMware.PowerCLI module with <code>Install-Module -Name VMware.PowerCLI -Force</code>.</td>
+</tr>
+<tr>
+<td><code>Connect-VIServer : Cannot find an overload for "Connect" and the argument count: "3".</code></td>
+<td>Ensure you are running PowerShell 5.1+ and have imported the VMware.VimAutomation.Core module with <code>Import-Module VMware.VimAutomation.Core</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ul>
 <li>Confirm vSphere Client loads and inventory is visible</li>
@@ -7282,8 +7473,24 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>df: '/storage/log': No such file or directory</code></strong> — Verify the mount points exist and are mounted with <code>mount | grep storage</code>, then remount if necessary.
-<strong><code>df: cannot access '/storage/db': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the mount point.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>df: '/storage/log': No such file or directory</code></td>
+<td>Verify the mount points exist and are mounted with <code>mount | grep storage</code>, then remount if necessary.</td>
+</tr>
+<tr>
+<td><code>df: cannot access '/storage/db': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user has read permissions on the mount point.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Alert threshold: &gt;80% on any vCenter storage partition.</p>
 
@@ -7308,7 +7515,7 @@ P1 incident — vCenter Server is not responding to client connections. Follow t
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

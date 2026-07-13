@@ -7420,9 +7420,28 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: gitlab-ctl: command not found</code></strong> — Verify GitLab is installed with <code>which gitlab-ctl</code> and ensure the script runs on the GitLab server, not a client machine.
-<strong><code>Permission denied: /var/opt/gitlab/git-data</code></strong> — Add the current user to the <code>gitlab-www</code> group with <code>sudo usermod -aG gitlab-www $USER</code> and log out/in, or run the entire script with <code>sudo</code>.
-<strong><code>grpc_health_probe: command not found</code></strong> — Install the health probe tool with <code>sudo /opt/gitlab/embedded/bin/grpc_health_probe</code> or verify the embedded</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: gitlab-ctl: command not found</code></td>
+<td>Verify GitLab is installed with <code>which gitlab-ctl</code> and ensure the script runs on the GitLab server, not a client machine.</td>
+</tr>
+<tr>
+<td><code>Permission denied: /var/opt/gitlab/git-data</code></td>
+<td>Add the current user to the <code>gitlab-www</code> group with <code>sudo usermod -aG gitlab-www $USER</code> and log out/in, or run the entire script with <code>sudo</code>.</td>
+</tr>
+<tr>
+<td><code>grpc_health_probe: command not found</code></td>
+<td>Install the health probe tool with <code>sudo /opt/gitlab/embedded/bin/grpc_health_probe</code> or verify the embedded</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="data-collection-checklist">Data Collection Checklist<a class="headerlink" href="#data-collection-checklist" title="Permanent link">&para;</a></h3>
 <ul>
@@ -7450,8 +7469,24 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: gitlab-rails: command not found</code></strong> — Ensure GitLab is installed via the official package manager and the <code>gitlab-rails</code> executable is in PATH, or use the full path <code>/opt/gitlab/bin/gitlab-rails</code>.
-<strong><code>ActiveRecord::ConnectionNotEstablished: could not connect to server</code></strong> — Verify PostgreSQL is running with <code>sudo systemctl status postgresql</code> and that GitLab's database configuration in <code>/etc/gitlab/gitlab.rb</code> is correct.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: gitlab-rails: command not found</code></td>
+<td>Ensure GitLab is installed via the official package manager and the <code>gitlab-rails</code> executable is in PATH, or use the full path <code>/opt/gitlab/bin/gitlab-rails</code>.</td>
+</tr>
+<tr>
+<td><code>ActiveRecord::ConnectionNotEstablished: could not connect to server</code></td>
+<td>Verify PostgreSQL is running with <code>sudo systemctl status postgresql</code> and that GitLab's database configuration in <code>/etc/gitlab/gitlab.rb</code> is correct.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-2-assess-damage">Step 2 — Assess Damage<a class="headerlink" href="#step-2-assess-damage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Identify which objects are missing/corrupt</span>
@@ -7489,8 +7524,24 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: Not a valid object name</code></strong> — Verify the REPO_PATH points to a valid bare Git repository and check file permissions with <code>ls -la "$REPO_PATH"</code>.
-<strong><code>fatal: your current branch 'master' does not have any commits yet</code></strong> — The repository is corrupted beyond recovery of the current branch; restore from backup or use <code>git reflog</code> to recover lost commits if available.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: Not a valid object name</code></td>
+<td>Verify the REPO_PATH points to a valid bare Git repository and check file permissions with <code>ls -la "$REPO_PATH"</code>.</td>
+</tr>
+<tr>
+<td><code>fatal: your current branch 'master' does not have any commits yet</code></td>
+<td>The repository is corrupted beyond recovery of the current branch; restore from backup or use <code>git reflog</code> to recover lost commits if available.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-3-recover-from-mirrorbackup">Step 3 — Recover from Mirror/Backup<a class="headerlink" href="#step-3-recover-from-mirrorbackup" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Option A: Recover from a mirror backup repo</span>
@@ -7549,9 +7600,28 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: destination path '/var/opt/gitlab/git-data/repositories/group/project-recovered.git' already exists and is not an empty directory</code></strong> — Remove or rename the existing directory before cloning, or use a different destination path.
-<strong><code>rsync: change_dir "/backup/git/project.git/objects" failed: No such file or directory (2)</code></strong> — Verify the mirror backup path exists and is accessible by running <code>ls -la "$MIRROR"</code>.
-<strong><code>error: could not lock config file /var/opt/gitlab/git-data/repositories/group/project.git/config: Permission denied</code></strong> — Ensure the git user owns the repository directory by running <code>sudo chown -R git:git "$DEST"</code> before fsck.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: destination path '/var/opt/gitlab/git-data/repositories/group/project-recovered.git' already exists and is not an empty directory</code></td>
+<td>Remove or rename the existing directory before cloning, or use a different destination path.</td>
+</tr>
+<tr>
+<td><code>rsync: change_dir "/backup/git/project.git/objects" failed: No such file or directory (2)</code></td>
+<td>Verify the mirror backup path exists and is accessible by running <code>ls -la "$MIRROR"</code>.</td>
+</tr>
+<tr>
+<td><code>error: could not lock config file /var/opt/gitlab/git-data/repositories/group/project.git/config: Permission denied</code></td>
+<td>Ensure the git user owns the repository directory by running <code>sudo chown -R git:git "$DEST"</code> before fsck.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-4-recover-a-deleted-branch-no-corruption">Step 4 — Recover a Deleted Branch (No Corruption)<a class="headerlink" href="#step-4-recover-a-deleted-branch-no-corruption" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On the GitLab server — check Gitaly reflog</span>
@@ -7583,9 +7653,28 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: your current branch 'main' does not have any commits yet</code></strong> — Ensure the repository is initialized with at least one commit before attempting reflog operations.
-<strong><code>401 Unauthorized</code></strong> — Verify the <code>PRIVATE-TOKEN</code> is valid and has admin/maintainer access to the project by testing with <code>curl -H "PRIVATE-TOKEN: $ADMIN_TOKEN" https://gitlab.example.com/api/v4/user</code>.
-<strong><code>Couldn't find Project with full_path=group/project</code></strong> — Confirm the project path is correct and the git user has read access by running <code>sudo -u git gitlab-rails runner "puts Project.find_by_full_path('group/project').inspect"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: your current branch 'main' does not have any commits yet</code></td>
+<td>Ensure the repository is initialized with at least one commit before attempting reflog operations.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Verify the <code>PRIVATE-TOKEN</code> is valid and has admin/maintainer access to the project by testing with <code>curl -H "PRIVATE-TOKEN: $ADMIN_TOKEN" https://gitlab.example.com/api/v4/user</code>.</td>
+</tr>
+<tr>
+<td><code>Couldn't find Project with full_path=group/project</code></td>
+<td>Confirm the project path is correct and the git user has read access by running <code>sudo -u git gitlab-rails runner "puts Project.find_by_full_path('group/project').inspect"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-5-restore-from-gitlab-backup">Step 5 — Restore from GitLab Backup<a class="headerlink" href="#step-5-restore-from-gitlab-backup" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Last resort — full restore from gitlab-backup archive</span>
@@ -7624,9 +7713,28 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>BACKUP=&lt;timestamp&gt;_gitlab_backup not found</code></strong> — Verify the backup file exists in <code>/var/opt/gitlab/backups/</code> and use the correct timestamp from <code>sudo gitlab-backup list</code>.
-<strong><code>cp: cannot stat '/secure/gitlab-secrets.json': No such file or directory</code></strong> — Omit the secrets restore step if the file doesn't exist, or restore it from your secure backup location before running this script.
-<strong><code>FATAL: database is locked</code></strong> — Wait 2-3 minutes for any running jobs to complete, then retry the restore; if persistent, run <code>sudo gitlab-ctl restart postgresql</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BACKUP=&lt;timestamp&gt;_gitlab_backup not found</code></td>
+<td>Verify the backup file exists in <code>/var/opt/gitlab/backups/</code> and use the correct timestamp from <code>sudo gitlab-backup list</code>.</td>
+</tr>
+<tr>
+<td><code>cp: cannot stat '/secure/gitlab-secrets.json': No such file or directory</code></td>
+<td>Omit the secrets restore step if the file doesn't exist, or restore it from your secure backup location before running this script.</td>
+</tr>
+<tr>
+<td><code>FATAL: database is locked</code></td>
+<td>Wait 2-3 minutes for any running jobs to complete, then retry the restore; if persistent, run <code>sudo gitlab-ctl restart postgresql</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="step-6-post-recovery-validation">Step 6 — Post-Recovery Validation<a class="headerlink" href="#step-6-post-recovery-validation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify the recovered repository</span>
@@ -7683,9 +7791,28 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: could not read Username for 'https://gitlab.example.com': No such file or directory</code></strong> — Ensure SSH key is configured or use <code>git clone https://...</code> with embedded credentials instead of SSH.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>--insecure</code> flag to curl or configure GitLab's certificate in your CA bundle.
-<strong><code>ActiveRecord::RecordNotFound: Couldn't find Gitlab::Setting</code></strong> — Verify GitLab is fully initialized by running <code>sudo gitlab-rake gitlab:check</code> before attempting to disable maintenance mode.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: could not read Username for 'https://gitlab.example.com': No such file or directory</code></td>
+<td>Ensure SSH key is configured or use <code>git clone https://...</code> with embedded credentials instead of SSH.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>--insecure</code> flag to curl or configure GitLab's certificate in your CA bundle.</td>
+</tr>
+<tr>
+<td><code>ActiveRecord::RecordNotFound: Couldn't find Gitlab::Setting</code></td>
+<td>Verify GitLab is fully initialized by running <code>sudo gitlab-rake gitlab:check</code> before attempting to disable maintenance mode.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="recovery-decision-tree">Recovery Decision Tree<a class="headerlink" href="#recovery-decision-tree" title="Permanent link">&para;</a></h3>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp1U8GOmzAQvecrRntHPfSWQyXKkioVGyJgt6rExZhJcGNsZJusUNV_7xjCarPynmw_j5_nvZlphUHuhFZbMOLcuc2mTPJjuoWHeX2Av7ZjA9IthTF1lvhvU6S7LP9BIUmH_AJn4ej2JPW5VgVyg8whNIYp3sFVMIiP-yBN_v1nmlQl8dx24c_K34eEYgo7KQ66-UNXFk5G99ALY7Txn0ZXNOI0watwHZwsv3ySd1nlhddGKUvWRA3jl3GgEOu0wVrtRilBKEsPOK5wkOoYF9U-zogqdg77wcHAjBNM-iBN2Uy1Si1n0nvhNFxRtdqA6HtsBWFyCtLunjPP6ZdPFCRZfvAKEqkVQhQtHix-LHJqVb4yL2rQVpCAiVJzXZAuy8uKuB6ZY9CzCRqEUd0EsEZiSEOtDtp5r8mlC3ZatmhskP0lzvaPceWzfWFStESznZvFF6hWfjf3TEU-A_d6wlZTkk95UaVPRPTLCEpGKC5aVG4WaRwp5h22o0Qgza4nCPsgV1omcbak9F5Z9nUtkB0Hzxh8nORF8Xz0hiXamHHwUwNfYHYv09ZCotVJGKpw8PkyWBB9g2V-1v6fEd_kd8DSqu-hW8vNPbKEzL3wdvbFvI2mP67uLwN0jyzkH7CZ7Q67_XiHrZs5o7fK3MGryZv_4f9wAQ==?" /></p>
@@ -7724,7 +7851,7 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

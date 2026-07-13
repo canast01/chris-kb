@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Aria Operations for Logs — Common Issues · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Aria Operations for Logs — Common Issues", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/aria-operations-for-logs/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-05"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Aria Operations for Logs — Common Issues", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/aria-operations-for-logs/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-05"}</script>
   
 
   </head>
@@ -9075,9 +9075,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials and that the admin user exists on the target node with <code>ssh-keyscan vrli-prod-01.example.local</code> to confirm connectivity.
-<strong><code>nodetool: command not found</code></strong> — Ensure you are in the Cassandra installation directory or add <code>$CASSANDRA_HOME/bin</code> to your PATH with <code>export PATH=$PATH:/opt/cassandra/bin</code>.
-<strong><code>tail: cannot open '/var/log/loginsight/query.log' for reading: Permission denied</code></strong> — Run the tail command with <code>sudo</code> or ensure the admin user has read permissions on the loginsight log directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify SSH credentials and that the admin user exists on the target node with <code>ssh-keyscan vrli-prod-01.example.local</code> to confirm connectivity.</td>
+</tr>
+<tr>
+<td><code>nodetool: command not found</code></td>
+<td>Ensure you are in the Cassandra installation directory or add <code>$CASSANDRA_HOME/bin</code> to your PATH with <code>export PATH=$PATH:/opt/cassandra/bin</code>.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/loginsight/query.log' for reading: Permission denied</code></td>
+<td>Run the tail command with <code>sudo</code> or ensure the admin user has read permissions on the loginsight log directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check the cluster nodes via API from the master</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9119,9 +9138,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the master's CA certificate into your system trust store.
-<strong><code>Connection refused</code></strong> — Verify the loginsight service is running on the master node with <code>systemctl status loginsight</code> and check firewall rules allow traffic on ports 443 and 16520.
-<strong><code>ssh: Could not resolve hostname vrli-prod-02.example.local: Name or service not known</code></strong> — Ensure DNS resolution is working or add the worker node IP to <code>/etc/hosts</code> on the master node.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the master's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify the loginsight service is running on the master node with <code>systemctl status loginsight</code> and check firewall rules allow traffic on ports 443 and 16520.</td>
+</tr>
+<tr>
+<td><code>ssh: Could not resolve hostname vrli-prod-02.example.local: Name or service not known</code></td>
+<td>Ensure DNS resolution is working or add the worker node IP to <code>/etc/hosts</code> on the master node.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify alert is enabled</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9152,9 +9190,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the vRLI certificate into your system CA bundle.
-<strong><code>jq: parse error: Cannot index number with string "name"</code></strong> — Verify the alert ID exists and is valid by listing alerts with <code>curl -sk -u 'admin:&lt;password&gt;' "https://vrli-prod-01.example.local/api/v2/alerts" | jq '.alerts[] | {id, name}'</code>.
-<strong><code>grep: /var/log/loginsight/runtime.log: No such file or directory</code></strong> — SSH into the vRLI appliance and check the correct log path with <code>find /var/log -name "*runtime*" -o -name "*notification*"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the vRLI certificate into your system CA bundle.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index number with string "name"</code></td>
+<td>Verify the alert ID exists and is valid by listing alerts with <code>curl -sk -u 'admin:&lt;password&gt;' "https://vrli-prod-01.example.local/api/v2/alerts" | jq '.alerts[] | {id, name}'</code>.</td>
+</tr>
+<tr>
+<td><code>grep: /var/log/loginsight/runtime.log: No such file or directory</code></td>
+<td>SSH into the vRLI appliance and check the correct log path with <code>find /var/log -name "*runtime*" -o -name "*notification*"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check NTP on the Aria Ops for Logs appliance</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>chronyc<span class="w"> </span>tracking
@@ -9194,9 +9251,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Temporary failure in name resolution</code></strong> — Verify DNS resolution is working with <code>nslookup vrli-prod-01.example.local</code> and ensure all cluster nodes are reachable via SSH.
-<strong><code>Permission denied (publickey,password)</code></strong> — Ensure the admin SSH key is configured on all cluster nodes or use <code>ssh-copy-id admin@$node.example.local</code> to deploy your public key.
-<strong><code>Stratum : 16</code> or <code>Leap status : Not synchronised</code></strong> — Restart chronyd with <code>systemctl restart chronyd</code> and verify NTP server connectivity with <code>chronyc sources</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Temporary failure in name resolution</code></td>
+<td>Verify DNS resolution is working with <code>nslookup vrli-prod-01.example.local</code> and ensure all cluster nodes are reachable via SSH.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Ensure the admin SSH key is configured on all cluster nodes or use <code>ssh-copy-id admin@$node.example.local</code> to deploy your public key.</td>
+</tr>
+<tr>
+<td><code>Stratum : 16</code> or <code>Leap status : Not synchronised</code></td>
+<td>Restart chronyd with <code>systemctl restart chronyd</code> and verify NTP server connectivity with <code>chronyc sources</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Confirm disk usage</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/log/loginsight
@@ -9259,7 +9335,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 17:06:15 UTC"><span class="timeago" datetime="2026-06-29T17:06:15+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 17:06:15 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

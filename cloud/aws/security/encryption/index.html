@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="AWS Encryption — At Rest &amp; In Transit · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "AWS Encryption — At Rest &amp; In Transit", "url": "https://chrisanastasiadis.com/cloud/aws/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-16"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "AWS Encryption — At Rest &amp; In Transit", "url": "https://chrisanastasiadis.com/cloud/aws/security/encryption/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-16"}</script>
   
 
   </head>
@@ -8498,8 +8498,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (AccessDenied) when calling the CreateKey operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: kms:CreateKey</code></strong> — Attach the <code>AWSKeyManagementServicePowerUser</code> policy or a custom policy with <code>kms:CreateKey</code> permission to the IAM user/role.
-<strong><code>An error occurred (NotFoundException) when calling the GetKeyRotationStatus operation: Key 'arn:aws:kms:us-east-1:123456789012:key/invalid-key-id' does not exist</code></strong> — Verify the KEY_ID variable was populated correctly by running <code>echo $KEY_ID</code> and ensure the key exists in the current region.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the CreateKey operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: kms:CreateKey</code></td>
+<td>Attach the <code>AWSKeyManagementServicePowerUser</code> policy or a custom policy with <code>kms:CreateKey</code> permission to the IAM user/role.</td>
+</tr>
+<tr>
+<td><code>An error occurred (NotFoundException) when calling the GetKeyRotationStatus operation: Key 'arn:aws:kms:us-east-1:123456789012:key/invalid-key-id' does not exist</code></td>
+<td>Verify the KEY_ID variable was populated correctly by running <code>echo $KEY_ID</code> and ensure the key exists in the current region.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Encryption must be enabled at creation (cannot enable on existing instance)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>create-db-instance<span class="w"> </span><span class="se">\</span>
@@ -8568,8 +8584,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the CreateDBInstance operation: The KMS key ARN is invalid or the KMS key is not accessible.</code></strong> — Verify the KMS key ARN exists in the same region and your IAM role has <code>kms:Decrypt</code> and <code>kms:GenerateDataKey</code> permissions.
-<strong><code>An error occurred (DBSnapshotNotFound) when calling the CopyDBSnapshot operation: DBSnapshot prod-mysql-for-encryption not found.</code></strong> — Ensure the source snapshot identifier matches exactly and the snapshot has finished creating (check status with <code>aws rds describe-db-snapshots</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the CreateDBInstance operation: The KMS key ARN is invalid or the KMS key is not accessible.</code></td>
+<td>Verify the KMS key ARN exists in the same region and your IAM role has <code>kms:Decrypt</code> and <code>kms:GenerateDataKey</code> permissions.</td>
+</tr>
+<tr>
+<td><code>An error occurred (DBSnapshotNotFound) when calling the CopyDBSnapshot operation: DBSnapshot prod-mysql-for-encryption not found.</code></td>
+<td>Ensure the source snapshot identifier matches exactly and the snapshot has finished creating (check status with <code>aws rds describe-db-snapshots</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># For MySQL/MariaDB — create parameter group with require_secure_transport=1</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>create-db-parameter-group<span class="w"> </span><span class="se">\</span>
@@ -8622,9 +8654,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (DBParameterGroupAlreadyExists) when calling the CreateDBParameterGroup operation: DB parameter group prod-mysql-tls already exists</code></strong> — Delete the existing parameter group with <code>aws rds delete-db-parameter-group --db-parameter-group-name prod-mysql-tls</code> or use a unique name.
-<strong><code>An error occurred (InvalidDBInstanceState) when calling the ModifyDBInstance operation: DB instance prod-mysql is not in a valid state.</code></strong> — Wait for the instance to reach "available" status with <code>aws rds describe-db-instances --db-instance-identifier prod-mysql</code> before applying changes.
-<strong><code>An error occurred (InvalidParameterValue) when calling the ModifyDBParameterGroup operation: The parameter require_secure_transport cannot be modified for this DB engine version.</code></strong> — Verify the parameter is supported in your MySQL version; use <code>aws rds describe-db-parameters --db-parameter-group-name prod-mysql-tls</code> to confirm availability.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (DBParameterGroupAlreadyExists) when calling the CreateDBParameterGroup operation: DB parameter group prod-mysql-tls already exists</code></td>
+<td>Delete the existing parameter group with <code>aws rds delete-db-parameter-group --db-parameter-group-name prod-mysql-tls</code> or use a unique name.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidDBInstanceState) when calling the ModifyDBInstance operation: DB instance prod-mysql is not in a valid state.</code></td>
+<td>Wait for the instance to reach "available" status with <code>aws rds describe-db-instances --db-instance-identifier prod-mysql</code> before applying changes.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the ModifyDBParameterGroup operation: The parameter require_secure_transport cannot be modified for this DB engine version.</code></td>
+<td>Verify the parameter is supported in your MySQL version; use <code>aws rds describe-db-parameters --db-parameter-group-name prod-mysql-tls</code> to confirm availability.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable envelope encryption of Kubernetes secrets with CMK</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>associate-encryption-config<span class="w"> </span><span class="se">\</span>
@@ -8655,9 +8706,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the AssociateEncryptionConfig operation: Encryption config is invalid</code></strong> — Verify the KMS key ARN exists and your IAM principal has <code>kms:CreateGrant</code> and <code>kms:DescribeKey</code> permissions on that key.
-<strong><code>An error occurred (ResourceInUseException) when calling the AssociateEncryptionConfig operation: Cluster is in use and cannot be modified</code></strong> — Wait for any ongoing cluster updates to complete by checking <code>aws eks describe-cluster --name my-cluster --query 'cluster.status'</code> until it returns <code>ACTIVE</code>.
-<strong><code>An error occurred (AccessDenied) when calling the AssociateEncryptionConfig operation: User is not authorized to perform: eks:AssociateEncryptionConfig</code></strong> — Add the <code>eks:AssociateEncryptionConfig</code> action to your IAM policy for the EKS cluster resource.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the AssociateEncryptionConfig operation: Encryption config is invalid</code></td>
+<td>Verify the KMS key ARN exists and your IAM principal has <code>kms:CreateGrant</code> and <code>kms:DescribeKey</code> permissions on that key.</td>
+</tr>
+<tr>
+<td><code>An error occurred (ResourceInUseException) when calling the AssociateEncryptionConfig operation: Cluster is in use and cannot be modified</code></td>
+<td>Wait for any ongoing cluster updates to complete by checking <code>aws eks describe-cluster --name my-cluster --query 'cluster.status'</code> until it returns <code>ACTIVE</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the AssociateEncryptionConfig operation: User is not authorized to perform: eks:AssociateEncryptionConfig</code></td>
+<td>Add the <code>eks:AssociateEncryptionConfig</code> action to your IAM policy for the EKS cluster resource.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create secret with CMK</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>aws<span class="w"> </span>secretsmanager<span class="w"> </span>create-secret<span class="w"> </span><span class="se">\</span>
@@ -8693,9 +8763,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterException) when calling the CreateSecret operation: The KMS key ARN provided is invalid or you do not have permission to use it.</code></strong> — Verify the CMK ARN exists in the target region and your IAM role has <code>kms:Decrypt</code> and <code>kms:GenerateDataKey</code> permissions.
-<strong><code>An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.</code></strong> — Confirm the secret name matches exactly (case-sensitive) and exists in the current AWS region.
-<strong><code>An error occurred (InvalidParameterException) when calling the RotateSecret operation: The Lambda function does not have permission to access the secret.</code></strong> — Add a resource-based policy to the Lambda function allowing <code>secretsmanager:GetSecretValue</code> and ensure the rotation function has the correct IAM execution role.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the CreateSecret operation: The KMS key ARN provided is invalid or you do not have permission to use it.</code></td>
+<td>Verify the CMK ARN exists in the target region and your IAM role has <code>kms:Decrypt</code> and <code>kms:GenerateDataKey</code> permissions.</td>
+</tr>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.</code></td>
+<td>Confirm the secret name matches exactly (case-sensitive) and exists in the current AWS region.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the RotateSecret operation: The Lambda function does not have permission to access the secret.</code></td>
+<td>Add a resource-based policy to the Lambda function allowing <code>secretsmanager:GetSecretValue</code> and ensure the rotation function has the correct IAM execution role.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Request a public ACM certificate (DNS validation)</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>aws<span class="w"> </span>acm<span class="w"> </span>request-certificate<span class="w"> </span><span class="se">\</span>
@@ -8732,9 +8821,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (ValidationException) when calling the RequestCertificate operation: Domain name is invalid or does not exist</code></strong> — Verify the domain name is correctly spelled and publicly resolvable via DNS.
-<strong><code>An error occurred (CertificateAlreadyExists) when calling the ImportCertificate operation: Certificate with the same domain name already exists</code></strong> — Delete or retire the existing certificate in ACM before importing a replacement.
-<strong><code>An error occurred (InvalidParameterException) when calling the DescribeCertificate operation: Invalid ARN</code></strong> — Replace the placeholder <code>&lt;account&gt;</code> and <code>&lt;id&gt;</code> with actual AWS account ID and certificate ID from the request-certificate output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (ValidationException) when calling the RequestCertificate operation: Domain name is invalid or does not exist</code></td>
+<td>Verify the domain name is correctly spelled and publicly resolvable via DNS.</td>
+</tr>
+<tr>
+<td><code>An error occurred (CertificateAlreadyExists) when calling the ImportCertificate operation: Certificate with the same domain name already exists</code></td>
+<td>Delete or retire the existing certificate in ACM before importing a replacement.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterException) when calling the DescribeCertificate operation: Invalid ARN</code></td>
+<td>Replace the placeholder <code>&lt;account&gt;</code> and <code>&lt;id&gt;</code> with actual AWS account ID and certificate ID from the request-certificate output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># S3 buckets without default encryption</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-buckets<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Buckets[*].Name&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
@@ -8794,7 +8902,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

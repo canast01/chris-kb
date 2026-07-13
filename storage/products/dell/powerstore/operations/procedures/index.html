@@ -9356,9 +9356,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>"error_code": 401, "message": "Invalid or expired token"</code></strong> — Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header.
-<strong><code>"error_code": 400, "message": "Invalid volume_group_id"</code></strong> — Verify the volume group ID from Step 1 output and ensure it is correctly substituted in the Step 2 request body.
-<strong><code>"error_code": 409, "message": "Volume already mapped to host"</code></strong> — Check existing mappings with a GET query and either use a different LUN number or unmap the volume before remapping.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"error_code": 401, "message": "Invalid or expired token"</code></td>
+<td>Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header.</td>
+</tr>
+<tr>
+<td><code>"error_code": 400, "message": "Invalid volume_group_id"</code></td>
+<td>Verify the volume group ID from Step 1 output and ensure it is correctly substituted in the Step 2 request body.</td>
+</tr>
+<tr>
+<td><code>"error_code": 409, "message": "Volume already mapped to host"</code></td>
+<td>Check existing mappings with a GET query and either use a different LUN number or unmap the volume before remapping.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Post-provisioning on the host (Linux):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Rescan storage for new LUN</span>
@@ -9396,9 +9415,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mkfs.xfs: /dev/mapper/mpatha appears to be mounted</code></strong> — Unmount the device first with <code>umount /dev/mapper/mpatha</code> before formatting.
-<strong><code>mount: /mnt/oradb: mount point does not exist</code></strong> — Create the mount point directory with <code>mkdir -p /mnt/oradb</code> before running the mount command.
-<strong><code>iscsiadm: No active sessions.</code></strong> — Ensure iSCSI targets are discovered and logged in with <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;</code> and <code>iscsiadm -m node --login</code> before rescanning.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mkfs.xfs: /dev/mapper/mpatha appears to be mounted</code></td>
+<td>Unmount the device first with <code>umount /dev/mapper/mpatha</code> before formatting.</td>
+</tr>
+<tr>
+<td><code>mount: /mnt/oradb: mount point does not exist</code></td>
+<td>Create the mount point directory with <code>mkdir -p /mnt/oradb</code> before running the mount command.</td>
+</tr>
+<tr>
+<td><code>iscsiadm: No active sessions.</code></td>
+<td>Ensure iSCSI targets are discovered and logged in with <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;</code> and <code>iscsiadm -m node --login</code> before rescanning.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="provisioning-a-nas-file-system-nfs">Provisioning a NAS File System (NFS)<a class="headerlink" href="#provisioning-a-nas-file-system-nfs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1: Create a NAS server (if not already present)</span>
@@ -9444,9 +9482,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code":"400","message":"Invalid DELL-EMC-TOKEN or token expired"}</code></strong> — Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header value.
-<strong><code>{"error_code":"409","message":"NAS server with name 'nas-prod-001' already exists"}</code></strong> — Query existing NAS servers with <code>curl -k -X GET "https://&lt;mgmt-ip&gt;/api/rest/nas_server" -H "DELL-EMC-TOKEN: &lt;token&gt;"</code> and use an existing server ID or choose a unique name.
-<strong><code>{"error_code":"422","message":"Invalid filesystem size: size_total must be greater than 1GB"}</code></strong> — Increase the <code>size_total</code> parameter to at least 1073741824 bytes (1 GB) or verify the value is in bytes, not GB.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code":"400","message":"Invalid DELL-EMC-TOKEN or token expired"}</code></td>
+<td>Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header value.</td>
+</tr>
+<tr>
+<td><code>{"error_code":"409","message":"NAS server with name 'nas-prod-001' already exists"}</code></td>
+<td>Query existing NAS servers with <code>curl -k -X GET "https://&lt;mgmt-ip&gt;/api/rest/nas_server" -H "DELL-EMC-TOKEN: &lt;token&gt;"</code> and use an existing server ID or choose a unique name.</td>
+</tr>
+<tr>
+<td><code>{"error_code":"422","message":"Invalid filesystem size: size_total must be greater than 1GB"}</code></td>
+<td>Increase the <code>size_total</code> parameter to at least 1073741824 bytes (1 GB) or verify the value is in bytes, not GB.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Mount on Linux host:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Mount the NFS export</span>
@@ -9462,9 +9519,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount.nfs: access denied by server while mounting 192.168.20.10:/homedirs-prod-001</code></strong> — Verify the NFS export permissions on the PowerStore array and ensure the client IP is listed in the export ACL.
-<strong><code>mount.nfs: No such file or directory</code></strong> — Create the mount point directory with <code>mkdir -p /mnt/homedirs</code> before attempting to mount.
-<strong><code>mount.nfs: Protocol not supported</code></strong> — Confirm the NFS client supports NFSv4.1 by running <code>cat /proc/fs/nfsd/versions</code> and install <code>nfs-utils</code> if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting 192.168.20.10:/homedirs-prod-001</code></td>
+<td>Verify the NFS export permissions on the PowerStore array and ensure the client IP is listed in the export ACL.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: No such file or directory</code></td>
+<td>Create the mount point directory with <code>mkdir -p /mnt/homedirs</code> before attempting to mount.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: Protocol not supported</code></td>
+<td>Confirm the NFS client supports NFSv4.1 by running <code>cat /proc/fs/nfsd/versions</code> and install <code>nfs-utils</code> if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="snapshot-operations">Snapshot Operations<a class="headerlink" href="#snapshot-operations" title="Permanent link">&para;</a></h2>
 <h3 id="create-a-manual-snapshot">Create a Manual Snapshot<a class="headerlink" href="#create-a-manual-snapshot" title="Permanent link">&para;</a></h3>
@@ -9510,9 +9586,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>"error_code": 401, "message": "Invalid or expired token"</code></strong> — Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header.
-<strong><code>"error_code": 404, "message": "Resource not found"</code></strong> — Verify the volume_id and filesystem_id exist by querying <code>/api/rest/volumes</code> and <code>/api/rest/filesystems</code> endpoints respectively.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to bypass SSL verification or import the PowerStore management certificate into your system's certificate store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"error_code": 401, "message": "Invalid or expired token"</code></td>
+<td>Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header.</td>
+</tr>
+<tr>
+<td><code>"error_code": 404, "message": "Resource not found"</code></td>
+<td>Verify the volume_id and filesystem_id exist by querying <code>/api/rest/volumes</code> and <code>/api/rest/filesystems</code> endpoints respectively.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to bypass SSL verification or import the PowerStore management certificate into your system's certificate store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="restore-a-volume-from-snapshot">Restore a Volume from Snapshot<a class="headerlink" href="#restore-a-volume-from-snapshot" title="Permanent link">&para;</a></h3>
 <p><img alt="Restore a Volume from Snapshot" src="../../../../../../assets/powerstore-proc-restore-a-volume-from-snapshot.svg" /></p>
@@ -9560,9 +9655,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or install the PowerStore management certificate in your system's certificate store.
-<strong><code>{"error": "Unauthorized", "error_code": 401}</code></strong> — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the PowerStore management API.
-<strong><code>{"error": "Not Found", "error_code": 404}</code></strong> — Confirm the snapshot_id and volume_id exist by running the GET list command first and copying the exact IDs from the response.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or install the PowerStore management certificate in your system's certificate store.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "error_code": 401}</code></td>
+<td>Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the PowerStore management API.</td>
+</tr>
+<tr>
+<td><code>{"error": "Not Found", "error_code": 404}</code></td>
+<td>Confirm the snapshot_id and volume_id exist by running the GET list command first and copying the exact IDs from the response.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="clone-a-volume">Clone a Volume<a class="headerlink" href="#clone-a-volume" title="Permanent link">&para;</a></h3>
 <p><img alt="Clone a Volume" src="../../../../../../assets/powerstore-proc-clone-a-volume.svg" /></p>
@@ -9593,9 +9707,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the management array's certificate into your system trust store.
-<strong><code>{"error":"Invalid token or token expired","error_code":"UNAUTHENTICATED"}</code></strong> — Regenerate the authentication token using the PowerStore login API and ensure it has not exceeded its 24-hour expiration window.
-<strong><code>{"error":"Volume not found","error_code":"NOT_FOUND"}</code></strong> — Verify the source volume ID exists by running <code>curl -k -H "DELL-EMC-TOKEN: &lt;token&gt;" https://&lt;mgmt-ip&gt;/api/rest/volume/&lt;source-volume-id&gt;</code> to confirm the UUID is correct.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the management array's certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error":"Invalid token or token expired","error_code":"UNAUTHENTICATED"}</code></td>
+<td>Regenerate the authentication token using the PowerStore login API and ensure it has not exceeded its 24-hour expiration window.</td>
+</tr>
+<tr>
+<td><code>{"error":"Volume not found","error_code":"NOT_FOUND"}</code></td>
+<td>Verify the source volume ID exists by running <code>curl -k -H "DELL-EMC-TOKEN: &lt;token&gt;" https://&lt;mgmt-ip&gt;/api/rest/volume/&lt;source-volume-id&gt;</code> to confirm the UUID is correct.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="host-management">Host Management<a class="headerlink" href="#host-management" title="Permanent link">&para;</a></h2>
 <h3 id="add-a-new-host">Add a New Host<a class="headerlink" href="#add-a-new-host" title="Permanent link">&para;</a></h3>
@@ -9651,9 +9784,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code":"INVALID_TOKEN","message":"The supplied token is invalid or expired"}</code></strong> — Regenerate the authentication token using the PowerStore login API and update the DELL-EMC-TOKEN header.
-<strong><code>{"error_code":"DUPLICATE_NAME","message":"A host with name 'lon01-db-srv-001' already exists"}</code></strong> — Verify the host does not already exist on the array using a GET request, or use a unique hostname.
-<strong><code>{"error_code":"INVALID_HOST_ID","message":"Host ID '&lt;host-id&gt;' does not exist"}</code></strong> — Confirm the host_id from the first POST response was correctly captured and used in subsequent API calls.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code":"INVALID_TOKEN","message":"The supplied token is invalid or expired"}</code></td>
+<td>Regenerate the authentication token using the PowerStore login API and update the DELL-EMC-TOKEN header.</td>
+</tr>
+<tr>
+<td><code>{"error_code":"DUPLICATE_NAME","message":"A host with name 'lon01-db-srv-001' already exists"}</code></td>
+<td>Verify the host does not already exist on the array using a GET request, or use a unique hostname.</td>
+</tr>
+<tr>
+<td><code>{"error_code":"INVALID_HOST_ID","message":"Host ID '&lt;host-id&gt;' does not exist"}</code></td>
+<td>Confirm the host_id from the first POST response was correctly captured and used in subsequent API calls.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="decommission-a-host">Decommission a Host<a class="headerlink" href="#decommission-a-host" title="Permanent link">&para;</a></h3>
 <p><img alt="Decommission a Host" src="../../../../../../assets/powerstore-proc-decommission-a-host.svg" /></p>
@@ -9711,9 +9863,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but verify it's not being stripped by proxies).
-<strong><code>{"error": "Unauthorized", "error_code": 401}</code></strong> — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating and obtaining a fresh token.
-<strong><code>{"error": "Resource in use", "error_code": 409}</code></strong> — Ensure all volume mappings are deleted before attempting to remove the host from the host group or delete the host object.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but verify it's not being stripped by proxies).</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "error_code": 401}</code></td>
+<td>Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating and obtaining a fresh token.</td>
+</tr>
+<tr>
+<td><code>{"error": "Resource in use", "error_code": 409}</code></td>
+<td>Ensure all volume mappings are deleted before attempting to remove the host from the host group or delete the host object.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="replication-management">Replication Management<a class="headerlink" href="#replication-management" title="Permanent link">&para;</a></h2>
 <h3 id="create-an-async-replication-session">Create an Async Replication Session<a class="headerlink" href="#create-an-async-replication-session" title="Permanent link">&para;</a></h3>
@@ -9774,9 +9945,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>"error_code": 401, "message": "Invalid or expired token"</code></strong> — Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it has not exceeded its 24-hour expiration window.
-<strong><code>"error_code": 400, "message": "Invalid rpo value. Allowed values: [Five_Minutes, Fifteen_Minutes, One_Hour, Four_Hours, Daily]"</code></strong> — Correct the rpo field to one of the supported values; "One_Hour" is valid but check for typos or unsupported custom values.
-<strong><code>"error_code": 409, "message": "Remote system with name 'lon02-pstore-001' already exists"</code></strong> — Query the existing remote system by name and reuse its ID instead of attempting to create a duplicate.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"error_code": 401, "message": "Invalid or expired token"</code></td>
+<td>Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it has not exceeded its 24-hour expiration window.</td>
+</tr>
+<tr>
+<td><code>"error_code": 400, "message": "Invalid rpo value. Allowed values: [Five_Minutes, Fifteen_Minutes, One_Hour, Four_Hours, Daily]"</code></td>
+<td>Correct the rpo field to one of the supported values; "One_Hour" is valid but check for typos or unsupported custom values.</td>
+</tr>
+<tr>
+<td><code>"error_code": 409, "message": "Remote system with name 'lon02-pstore-001' already exists"</code></td>
+<td>Query the existing remote system by name and reuse its ID instead of attempting to create a duplicate.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="failover-to-dr-planned-failover">Failover to DR (Planned Failover)<a class="headerlink" href="#failover-to-dr-planned-failover" title="Permanent link">&para;</a></h3>
 <p><img alt="Failover to DR (Planned Failover)" src="../../../../../../assets/powerstore-proc-failover-to-dr-planned-failover.svg" /></p>
@@ -9806,9 +9996,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but ensure it's not removed).
-<strong><code>{"error":"401 Unauthorized","message":"Invalid or expired token"}</code></strong> — Regenerate the DELL-EMC-TOKEN via the PowerStore management UI or API authentication endpoint and update the header.
-<strong><code>{"error":"409 Conflict","message":"Replication session is not in synchronized state"}</code></strong> — Wait for the sync operation to complete and verify <code>state=synchronized</code> before attempting failover.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>{"error":"401 Unauthorized","message":"Invalid or expired token"}</code></td>
+<td>Regenerate the DELL-EMC-TOKEN via the PowerStore management UI or API authentication endpoint and update the header.</td>
+</tr>
+<tr>
+<td><code>{"error":"409 Conflict","message":"Replication session is not in synchronized state"}</code></td>
+<td>Wait for the sync operation to complete and verify <code>state=synchronized</code> before attempting failover.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="metro-volume-operations">Metro Volume Operations<a class="headerlink" href="#metro-volume-operations" title="Permanent link">&para;</a></h2>
 <h3 id="promote-a-metro-volume-site-failure">Promote a Metro Volume (Site Failure)<a class="headerlink" href="#promote-a-metro-volume-site-failure" title="Permanent link">&para;</a></h3>
@@ -9856,9 +10065,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the PowerStore management certificate into your CA bundle.
-<strong><code>{"error_code":401,"message":"Invalid or expired token"}</code></strong> — Regenerate the API token via PowerStore management console and ensure it has not exceeded its 24-hour expiration window.
-<strong><code>{"error_code":404,"message":"Replication session not found"}</code></strong> — Verify the session ID is correct by running the GET query first to list all active replication sessions and their IDs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or import the PowerStore management certificate into your CA bundle.</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"message":"Invalid or expired token"}</code></td>
+<td>Regenerate the API token via PowerStore management console and ensure it has not exceeded its 24-hour expiration window.</td>
+</tr>
+<tr>
+<td><code>{"error_code":404,"message":"Replication session not found"}</code></td>
+<td>Verify the session ID is correct by running the GET query first to list all active replication sessions and their IDs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="resync-after-site-recovery">Resync After Site Recovery<a class="headerlink" href="#resync-after-site-recovery" title="Permanent link">&para;</a></h3>
 <p><img alt="Resync After Site Recovery" src="../../../../../../assets/powerstore-proc-resync-after-site-recovery.svg" /></p>
@@ -9886,9 +10114,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed in production variants).
-<strong><code>{"error": "401 Unauthorized", "message": "Invalid or expired DELL-EMC-TOKEN"}</code></strong> — Regenerate the authentication token via the PowerStore management interface and update the header value.
-<strong><code>{"error": "404 Not Found", "message": "Replication session &lt;session-id&gt; not found"}</code></strong> — Verify the session ID matches an active Metro Volume replication session using <code>GET /api/rest/replication_session</code> to list all sessions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed in production variants).</td>
+</tr>
+<tr>
+<td><code>{"error": "401 Unauthorized", "message": "Invalid or expired DELL-EMC-TOKEN"}</code></td>
+<td>Regenerate the authentication token via the PowerStore management interface and update the header value.</td>
+</tr>
+<tr>
+<td><code>{"error": "404 Not Found", "message": "Replication session &lt;session-id&gt; not found"}</code></td>
+<td>Verify the session ID matches an active Metro Volume replication session using <code>GET /api/rest/replication_session</code> to list all sessions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="nas-server-failover">NAS Server Failover<a class="headerlink" href="#nas-server-failover" title="Permanent link">&para;</a></h2>
 <p>NAS servers run on one node at a time. To manually fail over a NAS server to the peer node (e.g., before node maintenance):</p>
@@ -9931,9 +10178,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to bypass certificate validation, or import the management certificate into your CA bundle.
-<strong><code>{"statusCode":401,"messages":["Authentication failed"]}</code></strong> — Verify the DELL-EMC-TOKEN is valid and not expired; regenerate it from the management UI if necessary.
-<strong><code>{"statusCode":409,"messages":["NAS server is already in failover state"]}</code></strong> — Wait for the previous failover operation to complete before initiating another one; check current state with the GET query.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to bypass certificate validation, or import the management certificate into your CA bundle.</td>
+</tr>
+<tr>
+<td><code>{"statusCode":401,"messages":["Authentication failed"]}</code></td>
+<td>Verify the DELL-EMC-TOKEN is valid and not expired; regenerate it from the management UI if necessary.</td>
+</tr>
+<tr>
+<td><code>{"statusCode":409,"messages":["NAS server is already in failover state"]}</code></td>
+<td>Wait for the previous failover operation to complete before initiating another one; check current state with the GET query.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>NFS clients experience a brief interruption (seconds) during NAS server failover. SMB clients may require re-mounting depending on the session timeout configuration.</p>
 <hr />
@@ -9985,9 +10251,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pstcli: command not found</code></strong> — Install the PowerStore CLI package or add it to your PATH environment variable.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to bypass SSL verification or import the management server's certificate into your trust store.
-<strong><code>{"error": "Invalid token or token expired"}</code></strong> — Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it hasn't exceeded its expiration time.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pstcli: command not found</code></td>
+<td>Install the PowerStore CLI package or add it to your PATH environment variable.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to bypass SSL verification or import the management server's certificate into your trust store.</td>
+</tr>
+<tr>
+<td><code>{"error": "Invalid token or token expired"}</code></td>
+<td>Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it hasn't exceeded its expiration time.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>GUI path: Protection → Protection Policies → Create. Assign snapshot rule (name, interval, retained copies) and optional replication rule. Assign policy to volumes via Volumes → select volume → Protection → Assign Policy. Snapshots begin on the defined schedule immediately after assignment.</p>
 <h3 id="volume-migration-import-mobility">Volume Migration (Import / Mobility)<a class="headerlink" href="#volume-migration-import-mobility" title="Permanent link">&para;</a></h3>
@@ -10033,8 +10318,24 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error": "Unauthorized", "code": 401, "message": "Invalid or expired token"}</code></strong> — Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it hasn't exceeded its TTL.
-<strong><code>{"error": "Not Found", "code": 404, "message": "Volume &lt;volume-id&gt; not found"}</code></strong> — Verify the volume ID exists on the target appliance using <code>curl -k -X GET "https://&lt;mgmt-ip&gt;/api/rest/volume" -H "DELL-EMC-TOKEN: &lt;token&gt;"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401, "message": "Invalid or expired token"}</code></td>
+<td>Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it hasn't exceeded its TTL.</td>
+</tr>
+<tr>
+<td><code>{"error": "Not Found", "code": 404, "message": "Volume &lt;volume-id&gt; not found"}</code></td>
+<td>Verify the volume ID exists on the target appliance using <code>curl -k -X GET "https://&lt;mgmt-ip&gt;/api/rest/volume" -H "DELL-EMC-TOKEN: &lt;token&gt;"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>GUI path for tier change: Storage → Volumes → select volume → Modify → Storage Tier. For import from external array (VPLEX, Unity, VNX): Storage → Import → Create Import Session; select source array and volume; initiate cutover when ready. Monitor progress under Storage → Import → Active Sessions.</p>
 <h3 id="nas-file-system-creation-and-share">NAS File System Creation and Share<a class="headerlink" href="#nas-file-system-creation-and-share" title="Permanent link">&para;</a></h3>
@@ -10087,9 +10388,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>"error_code":"INVALID_FIELD","message":"Invalid value for current_node_id"</code></strong> — Verify the node ID exists by running <code>curl -k -H "DELL-EMC-TOKEN: &lt;token&gt;" https://&lt;mgmt-ip&gt;/api/rest/node</code> and use a valid node ID from the response.
-<strong><code>"error_code":"RESOURCE_NOT_FOUND","message":"nas_server_id does not exist"</code></strong> — Replace <code>&lt;nas-server-id&gt;</code> with the actual ID returned from Step 1 (the "id" field in the NAS server creation response).
-<strong><code>"error_code":"INVALID_FIELD","message":"Token is invalid or expired"</code></strong> — Regenerate the DELL-EMC-TOKEN using your management console authentication endpoint and ensure it hasn't exceeded its TTL.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"error_code":"INVALID_FIELD","message":"Invalid value for current_node_id"</code></td>
+<td>Verify the node ID exists by running <code>curl -k -H "DELL-EMC-TOKEN: &lt;token&gt;" https://&lt;mgmt-ip&gt;/api/rest/node</code> and use a valid node ID from the response.</td>
+</tr>
+<tr>
+<td><code>"error_code":"RESOURCE_NOT_FOUND","message":"nas_server_id does not exist"</code></td>
+<td>Replace <code>&lt;nas-server-id&gt;</code> with the actual ID returned from Step 1 (the "id" field in the NAS server creation response).</td>
+</tr>
+<tr>
+<td><code>"error_code":"INVALID_FIELD","message":"Token is invalid or expired"</code></td>
+<td>Regenerate the DELL-EMC-TOKEN using your management console authentication endpoint and ensure it hasn't exceeded its TTL.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Verify NFS from Linux: <code>mount &lt;ip&gt;:/dept-shares-001 /mnt/test</code>. Verify SMB from Windows: map <code>\\&lt;ip&gt;\dept-shares</code>. GUI path: Storage → NAS Servers → Create; then Storage → File Systems → Create.</p>
 <h3 id="performance-policy-management">Performance Policy Management<a class="headerlink" href="#performance-policy-management" title="Permanent link">&para;</a></h3>
@@ -10141,9 +10461,28 @@ PowerStore operational procedures — block volume and NAS file system provision
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the management node's certificate into your CA bundle.
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the management IP.
-<strong><code>Error: Volume &lt;vol&gt; not found</code></strong> — Confirm the volume name matches exactly (case-sensitive) and exists on the array using <code>pstcli -server &lt;ip&gt; -user admin volume list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or import the management node's certificate into your CA bundle.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the management IP.</td>
+</tr>
+<tr>
+<td><code>Error: Volume &lt;vol&gt; not found</code></td>
+<td>Confirm the volume name matches exactly (case-sensitive) and exists on the array using <code>pstcli -server &lt;ip&gt; -user admin volume list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>GUI path: Storage → Storage Policies → Performance Policies → Create (set IOPS limit and/or bandwidth limit in MB/s). Assign to a volume via Volumes → Modify → Storage Policy → select performance policy. View utilisation against limits under Dashboard → Performance. A value of <code>0</code> for <code>max_iops</code> or <code>max_bandwidth</code> means unlimited.</p>
 <hr />
@@ -10182,7 +10521,7 @@ PowerStore operational procedures — block volume and NAS file system provision
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

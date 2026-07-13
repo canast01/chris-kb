@@ -7615,9 +7615,28 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>snmpconfig: command not found</code></strong> — Verify you are logged into the Brocade switch's management interface (SSH/Telnet) and have administrative privileges.
-<strong><code>Error: Community string 'public' not found</code></strong> — Check the exact community string name using <code>snmpconfig --show snmpv1</code> before attempting deletion.
-<strong><code>Error: SNMPv3 user 'admin' already exists</code></strong> — Use a different username or delete the existing user with <code>snmpconfig --delete snmpv3 -user admin</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>snmpconfig: command not found</code></td>
+<td>Verify you are logged into the Brocade switch's management interface (SSH/Telnet) and have administrative privileges.</td>
+</tr>
+<tr>
+<td><code>Error: Community string 'public' not found</code></td>
+<td>Check the exact community string name using <code>snmpconfig --show snmpv1</code> before attempting deletion.</td>
+</tr>
+<tr>
+<td><code>Error: SNMPv3 user 'admin' already exists</code></td>
+<td>Use a different username or delete the existing user with <code>snmpconfig --delete snmpv3 -user admin</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
@@ -7672,9 +7691,28 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid audit class specified</code></strong> — Verify class numbers are 1–4 and separated by commas with no spaces (e.g., <code>--class 1,2,3,4</code>).
-<strong><code>Error: Audit log is full. Cannot write new entries</code></strong> — Increase log retention or manually clear old entries with <code>auditlog --clear</code> to free space.
-<strong><code>Error: Permission denied</code></strong> — Ensure your user account has admin or security-admin role; use <code>userconfig --show</code> to verify permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid audit class specified</code></td>
+<td>Verify class numbers are 1–4 and separated by commas with no spaces (e.g., <code>--class 1,2,3,4</code>).</td>
+</tr>
+<tr>
+<td><code>Error: Audit log is full. Cannot write new entries</code></td>
+<td>Increase log retention or manually clear old entries with <code>auditlog --clear</code> to free space.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Ensure your user account has admin or security-admin role; use <code>userconfig --show</code> to verify permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="configure-syslog-forwarding">Configure Syslog Forwarding<a class="headerlink" href="#configure-syslog-forwarding" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add SIEM syslog destination</span>
@@ -7705,9 +7743,28 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Syslog server add failed: Invalid IP address format</code></strong> — Verify the SIEM IP address is in valid dotted-decimal notation (e.g., 192.168.45.120) and rerun the command.
-<strong><code>Syslog server add failed: Connection timeout to &lt;siem-ip&gt;:514</code></strong> — Confirm the SIEM host is reachable on port 514 and that firewall rules permit syslog traffic from the switch.
-<strong><code>cfgsave: Permission denied</code></strong> — Ensure your user account has admin or zone-config privileges by checking role assignments with <code>userconfig --show</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Syslog server add failed: Invalid IP address format</code></td>
+<td>Verify the SIEM IP address is in valid dotted-decimal notation (e.g., 192.168.45.120) and rerun the command.</td>
+</tr>
+<tr>
+<td><code>Syslog server add failed: Connection timeout to &lt;siem-ip&gt;:514</code></td>
+<td>Confirm the SIEM host is reachable on port 514 and that firewall rules permit syslog traffic from the switch.</td>
+</tr>
+<tr>
+<td><code>cfgsave: Permission denied</code></td>
+<td>Ensure your user account has admin or zone-config privileges by checking role assignments with <code>userconfig --show</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="syslog-facility-and-severity">Syslog Facility and Severity<a class="headerlink" href="#syslog-facility-and-severity" title="Permanent link">&para;</a></h3>
 <p>Brocade FabricOS sends syslog at facility <code>LOCAL1</code> (by default). Configure the SIEM to accept and parse this facility. Log format includes:</p>
@@ -7738,9 +7795,28 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>defzone: command not found</code></strong> — Ensure you are logged into the Brocade switch via SSH or telnet and have administrative privileges; defzone is a switch-native command, not a Linux utility.
-<strong><code>Error: Active zone configuration not found</code></strong> — Run <code>cfgshow</code> to list available zone configurations and replace <code>&lt;active-zoneset&gt;</code> with a valid configuration name (e.g., <code>cfgenable production-zones</code>).
-<strong><code>Permission denied: cannot modify zone configuration</code></strong> — Verify your user account has admin or zone-admin role by running <code>userconfig --show</code> and request elevated privileges if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>defzone: command not found</code></td>
+<td>Ensure you are logged into the Brocade switch via SSH or telnet and have administrative privileges; defzone is a switch-native command, not a Linux utility.</td>
+</tr>
+<tr>
+<td><code>Error: Active zone configuration not found</code></td>
+<td>Run <code>cfgshow</code> to list available zone configurations and replace <code>&lt;active-zoneset&gt;</code> with a valid configuration name (e.g., <code>cfgenable production-zones</code>).</td>
+</tr>
+<tr>
+<td><code>Permission denied: cannot modify zone configuration</code></td>
+<td>Verify your user account has admin or zone-admin role by running <code>userconfig --show</code> and request elevated privileges if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="security-baselines-summary">Security Baselines Summary<a class="headerlink" href="#security-baselines-summary" title="Permanent link">&para;</a></h2>
@@ -7876,9 +7952,28 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>RADIUS server unreachable: timeout after 30s</code></strong> — Verify RADIUS server 192.168.100.50 is online and accessible on port 1812, then test with <code>aaaconfig --test</code>.
-<strong><code>Syslog connection failed: Connection refused on 10.50.200.15:514</code></strong> — Confirm the SIEM syslog listener is running and firewall rules permit traffic from the switch to that destination.
-<strong><code>NTP: unsynchronized, stratum 16</code></strong> — Check NTP server reachability with <code>ping 10.0.0.1</code> and verify the switch can reach port 123 UDP; resync with <code>tsclockserver --sync</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RADIUS server unreachable: timeout after 30s</code></td>
+<td>Verify RADIUS server 192.168.100.50 is online and accessible on port 1812, then test with <code>aaaconfig --test</code>.</td>
+</tr>
+<tr>
+<td><code>Syslog connection failed: Connection refused on 10.50.200.15:514</code></td>
+<td>Confirm the SIEM syslog listener is running and firewall rules permit traffic from the switch to that destination.</td>
+</tr>
+<tr>
+<td><code>NTP: unsynchronized, stratum 16</code></td>
+<td>Check NTP server reachability with <code>ping 10.0.0.1</code> and verify the switch can reach port 123 UDP; resync with <code>tsclockserver --sync</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Take a configuration backup after completing verification:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cfgsave
@@ -7894,9 +7989,28 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>scp: command not found</code></strong> — Verify the backup server has SSH/SCP enabled and the switch has network connectivity to it; check firewall rules allowing port 22.
-<strong><code>Authentication failed for user &lt;user&gt;</code></strong> — Confirm the username and password are correct, and that the backup user account exists on the SCP server with appropriate permissions.
-<strong><code>Permission denied: /backups/brocade/</code></strong> — Ensure the destination directory exists on the backup server and the SCP user has write permissions to it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scp: command not found</code></td>
+<td>Verify the backup server has SSH/SCP enabled and the switch has network connectivity to it; check firewall rules allowing port 22.</td>
+</tr>
+<tr>
+<td><code>Authentication failed for user &lt;user&gt;</code></td>
+<td>Confirm the username and password are correct, and that the backup user account exists on the SCP server with appropriate permissions.</td>
+</tr>
+<tr>
+<td><code>Permission denied: /backups/brocade/</code></td>
+<td>Ensure the destination directory exists on the backup server and the SCP user has write permissions to it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="periodic-review">Periodic Review<a class="headerlink" href="#periodic-review" title="Permanent link">&para;</a></h2>
@@ -7971,7 +8085,7 @@ FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS ma
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

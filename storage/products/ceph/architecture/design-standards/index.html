@@ -7890,8 +7890,24 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: crush rule 'rack_replicated' does not exist</code></strong> — Ensure the rule was created successfully before assigning it to a pool; check with <code>ceph osd crush rule ls</code>.
-<strong><code>Error EINVAL: invalid crush rule name 'ssd_rule'</code></strong> — Verify the ssd_rule was created with the correct root bucket name using <code>ceph osd crush rule dump ssd_rule</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: crush rule 'rack_replicated' does not exist</code></td>
+<td>Ensure the rule was created successfully before assigning it to a pool; check with <code>ceph osd crush rule ls</code>.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: invalid crush rule name 'ssd_rule'</code></td>
+<td>Verify the ssd_rule was created with the correct root bucket name using <code>ceph osd crush rule dump ssd_rule</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="pg-count-formula">PG Count Formula<a class="headerlink" href="#pg-count-formula" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>PGs per pool = (Total OSDs × 100) / pool_size
@@ -7957,8 +7973,24 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: pool 'rbd-pool' does not exist</code></strong> — Verify the pool name with <code>ceph osd pool ls</code> and use the correct pool identifier.
-<strong><code>Error EINVAL: invalid pg_autoscale_mode 'on'</code></strong> — Use valid values <code>off</code>, <code>warn</code>, or <code>on</code> (ensure no typos in the mode string).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: pool 'rbd-pool' does not exist</code></td>
+<td>Verify the pool name with <code>ceph osd pool ls</code> and use the correct pool identifier.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: invalid pg_autoscale_mode 'on'</code></td>
+<td>Use valid values <code>off</code>, <code>warn</code>, or <code>on</code> (ensure no typos in the mode string).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="network-design">Network Design<a class="headerlink" href="#network-design" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Two networks required:
@@ -8024,8 +8056,24 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EINVAL: invalid value '10.0.1.0/24' for option 'public_network'</code></strong> — Ensure the CIDR notation is valid and the network actually exists in your infrastructure.
-<strong><code>Error: failed to set config option 'cluster_network': Permission denied</code></strong> — Run the command with appropriate ceph admin privileges or use <code>sudo ceph config set</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EINVAL: invalid value '10.0.1.0/24' for option 'public_network'</code></td>
+<td>Ensure the CIDR notation is valid and the network actually exists in your infrastructure.</td>
+</tr>
+<tr>
+<td><code>Error: failed to set config option 'cluster_network': Permission denied</code></td>
+<td>Run the command with appropriate ceph admin privileges or use <code>sudo ceph config set</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="capacity-planning">Capacity Planning<a class="headerlink" href="#capacity-planning" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Replicated pool (size=3):
@@ -8081,8 +8129,24 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EACCES: access denied</code></strong> — Ensure the user running the command has appropriate Ceph admin capabilities or is part of the ceph group.
-<strong><code>Error: unknown command</code></strong> — Verify the Ceph version supports the <code>ceph config set</code> syntax; older versions may require <code>ceph tell mon.\* config set</code> instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EACCES: access denied</code></td>
+<td>Ensure the user running the command has appropriate Ceph admin capabilities or is part of the ceph group.</td>
+</tr>
+<tr>
+<td><code>Error: unknown command</code></td>
+<td>Verify the Ceph version supports the <code>ceph config set</code> syntax; older versions may require <code>ceph tell mon.\* config set</code> instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="crush-hierarchy-design">CRUSH Hierarchy Design<a class="headerlink" href="#crush-hierarchy-design" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Standard CRUSH hierarchy: datacenter → room → rack → host → OSD</span>
@@ -8125,8 +8189,24 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EINVAL: invalid crush rule name 'rack_rule'</code></strong> — Verify the rule was created successfully with <code>ceph osd crush rule ls</code> and check for typos in the pool set command.
-<strong><code>Error ENOENT: pool 'rbd-pool' does not exist</code></strong> — Create the pool first with <code>ceph osd pool create rbd-pool &lt;pg_num&gt; &lt;pgp_num&gt;</code> before assigning a crush rule.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EINVAL: invalid crush rule name 'rack_rule'</code></td>
+<td>Verify the rule was created successfully with <code>ceph osd crush rule ls</code> and check for typos in the pool set command.</td>
+</tr>
+<tr>
+<td><code>Error ENOENT: pool 'rbd-pool' does not exist</code></td>
+<td>Create the pool first with <code>ceph osd pool create rbd-pool &lt;pg_num&gt; &lt;pgp_num&gt;</code> before assigning a crush rule.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="upgrade-and-maintenance-standards">Upgrade and Maintenance Standards<a class="headerlink" href="#upgrade-and-maintenance-standards" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check cluster compatibility before upgrade</span>
@@ -8171,8 +8251,24 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EACCES: access denied</code></strong> — Ensure you have admin-level Ceph credentials or run with appropriate <code>ceph</code> keyring permissions.
-<strong><code>Error EINVAL: invalid value</code></strong> — Verify the release name matches a supported Ceph version (e.g., quincy, reef) and check cluster status with <code>ceph status</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EACCES: access denied</code></td>
+<td>Ensure you have admin-level Ceph credentials or run with appropriate <code>ceph</code> keyring permissions.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: invalid value</code></td>
+<td>Verify the release name matches a supported Ceph version (e.g., quincy, reef) and check cluster status with <code>ceph status</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -8262,9 +8358,28 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: osd.12 is still rebalancing, cannot remove yet</code></strong> — Wait for the cluster to reach a healthy state (ceph health) before attempting removal.
-<strong><code>Error: host1 is not in the orchestrator inventory</code></strong> — Verify the host is added to the cluster with <code>ceph orch host ls</code> and ensure it has a valid IP and SSH connectivity.
-<strong><code>Error: /dev/sdb does not exist or is already in use on host1</code></strong> — Confirm the device path with <code>lsblk</code> on the target host and ensure it is not already part of another OSD.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: osd.12 is still rebalancing, cannot remove yet</code></td>
+<td>Wait for the cluster to reach a healthy state (ceph health) before attempting removal.</td>
+</tr>
+<tr>
+<td><code>Error: host1 is not in the orchestrator inventory</code></td>
+<td>Verify the host is added to the cluster with <code>ceph orch host ls</code> and ensure it has a valid IP and SSH connectivity.</td>
+</tr>
+<tr>
+<td><code>Error: /dev/sdb does not exist or is already in use on host1</code></td>
+<td>Confirm the device path with <code>lsblk</code> on the target host and ensure it is not already part of another OSD.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8293,7 +8408,7 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

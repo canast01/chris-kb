@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Aria Automation — Integrations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Aria Automation — Integrations", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/aria-automation/architecture/integrations/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-05"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Aria Automation — Integrations", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/aria-automation/architecture/integrations/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-05"}</script>
   
 
   </head>
@@ -9040,9 +9040,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Set <code>acceptSelfSignedCertificate</code> to <code>true</code> in the JSON payload or use <code>-k</code> flag (already present; verify vCenter certificate chain is valid).
-<strong><code>{"message":"Unauthorized","statusCode":401}</code></strong> — Ensure <code>$TOKEN</code> is set to a valid bearer token by running <code>TOKEN=$(curl -sk -X POST https://&lt;vra-fqdn&gt;/csp/gateway/api/tokens -d 'username=&lt;user&gt;&amp;password=&lt;pass&gt;')</code> first.
-<strong><code>{"message":"Invalid cloud account type","statusCode":400}</code></strong> — Verify the endpoint URL is correct (<code>/iaas/api/cloud-accounts-vsphere</code> not <code>/cloud-accounts</code>) and the vCenter hostname is reachable from the Aria Automation appliance.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Set <code>acceptSelfSignedCertificate</code> to <code>true</code> in the JSON payload or use <code>-k</code> flag (already present; verify vCenter certificate chain is valid).</td>
+</tr>
+<tr>
+<td><code>{"message":"Unauthorized","statusCode":401}</code></td>
+<td>Ensure <code>$TOKEN</code> is set to a valid bearer token by running <code>TOKEN=$(curl -sk -X POST https://&lt;vra-fqdn&gt;/csp/gateway/api/tokens -d 'username=&lt;user&gt;&amp;password=&lt;pass&gt;')</code> first.</td>
+</tr>
+<tr>
+<td><code>{"message":"Invalid cloud account type","statusCode":400}</code></td>
+<td>Verify the endpoint URL is correct (<code>/iaas/api/cloud-accounts-vsphere</code> not <code>/cloud-accounts</code>) and the vCenter hostname is reachable from the Aria Automation appliance.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add ServiceNow ITSM integration</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -9086,9 +9105,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the vRA certificate into your system's trusted CA store.
-<strong><code>{"error":"Invalid token","statusCode":401}</code></strong> — Verify the Bearer token is valid and not expired by checking <code>echo $TOKEN</code> and regenerating from vRA authentication endpoint if needed.
-<strong><code>{"error":"Invalid typeId","statusCode":400}</code></strong> — Confirm the ServiceNow integration typeId matches your vRA version by checking available source types in the catalog API documentation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the vRA certificate into your system's trusted CA store.</td>
+</tr>
+<tr>
+<td><code>{"error":"Invalid token","statusCode":401}</code></td>
+<td>Verify the Bearer token is valid and not expired by checking <code>echo $TOKEN</code> and regenerating from vRA authentication endpoint if needed.</td>
+</tr>
+<tr>
+<td><code>{"error":"Invalid typeId","statusCode":400}</code></td>
+<td>Confirm the ServiceNow integration typeId matches your vRA version by checking available source types in the catalog API documentation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add Ansible integration</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -9159,7 +9197,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

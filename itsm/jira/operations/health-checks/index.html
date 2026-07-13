@@ -7586,9 +7586,28 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></strong> — Verify JIRA is installed at <code>/opt/atlassian/jira</code> or adjust the log path to match your installation directory.
-<strong><code>grep: /opt/atlassian/jira/logs/catalina.out: Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the Tomcat catalina logs.
-<strong><code>date: invalid date format</code></strong> — Ensure your system's <code>date</code> command supports <code>+%H</code> and <code>+%Y-%m-%d</code> format specifiers (standard on Linux/macOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></td>
+<td>Verify JIRA is installed at <code>/opt/atlassian/jira</code> or adjust the log path to match your installation directory.</td>
+</tr>
+<tr>
+<td><code>grep: /opt/atlassian/jira/logs/catalina.out: Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user has read permissions on the Tomcat catalina logs.</td>
+</tr>
+<tr>
+<td><code>date: invalid date format</code></td>
+<td>Ensure your system's <code>date</code> command supports <code>+%H</code> and <code>+%Y-%m-%d</code> format specifiers (standard on Linux/macOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="key-error-patterns">Key Error Patterns<a class="headerlink" href="#key-error-patterns" title="Permanent link">&para;</a></h3>
 <table>
@@ -7683,9 +7702,28 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>find: '/var/atlassian/application-data/jira/shared': No such file or directory</code></strong> — Verify JIRA installation path with <code>ls -la /var/atlassian/application-data/</code> and adjust the path if using a custom installation directory.
-<strong><code>df: /var/atlassian: No such file or directory</code></strong> — Mount the shared storage volume or check that <code>/var/atlassian</code> exists; confirm with <code>mount | grep atlassian</code>.
-<strong><code>du: cannot access '/opt/atlassian/jira/logs/': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the logs directory with <code>sudo chmod o+rx /opt/atlassian/jira/logs/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find: '/var/atlassian/application-data/jira/shared': No such file or directory</code></td>
+<td>Verify JIRA installation path with <code>ls -la /var/atlassian/application-data/</code> and adjust the path if using a custom installation directory.</td>
+</tr>
+<tr>
+<td><code>df: /var/atlassian: No such file or directory</code></td>
+<td>Mount the shared storage volume or check that <code>/var/atlassian</code> exists; confirm with <code>mount | grep atlassian</code>.</td>
+</tr>
+<tr>
+<td><code>du: cannot access '/opt/atlassian/jira/logs/': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user has read permissions on the logs directory with <code>sudo chmod o+rx /opt/atlassian/jira/logs/</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="disk-usage-thresholds">Disk Usage Thresholds<a class="headerlink" href="#disk-usage-thresholds" title="Permanent link">&para;</a></h3>
 <table>
@@ -7769,9 +7807,28 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "db.example.com" to address: Name or service not known</code></strong> — Verify DNS resolution with <code>nslookup db.example.com</code> or update the hostname in your connection string to match your actual database server.
-<strong><code>psql: error: FATAL: password authentication failed for user "jira"</code></strong> — Confirm the jira user password is correct and check that the <code>.pgpass</code> file has the correct credentials in format <code>hostname:port:database:username:password</code>.
-<strong><code>psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections</code></strong> — Increase PostgreSQL's <code>max_connections</code> parameter or terminate idle connections with <code>SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state='idle' AND query_start &lt; now() - interval '10 minutes'</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "db.example.com" to address: Name or service not known</code></td>
+<td>Verify DNS resolution with <code>nslookup db.example.com</code> or update the hostname in your connection string to match your actual database server.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: password authentication failed for user "jira"</code></td>
+<td>Confirm the jira user password is correct and check that the <code>.pgpass</code> file has the correct credentials in format <code>hostname:port:database:username:password</code>.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections</code></td>
+<td>Increase PostgreSQL's <code>max_connections</code> parameter or terminate idle connections with <code>SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state='idle' AND query_start &lt; now() - interval '10 minutes'</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="connection-pool-health-via-rest">Connection Pool Health (via REST)<a class="headerlink" href="#connection-pool-health-via-rest" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7796,9 +7853,28 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.company.internal port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is correct and the JIRA instance is running and accessible from this host.
-<strong><code>curl: (401) Unauthorized</code></strong> — Ensure JIRA_USER and JIRA_TOKEN environment variables are set correctly and the API token has not expired.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Check that the JIRA REST API endpoint is correct; the response may be HTML error page instead of JSON if the URL path is wrong.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.company.internal port 443: Connection refused</code></td>
+<td>Verify the JIRA_URL environment variable is correct and the JIRA instance is running and accessible from this host.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Ensure JIRA_USER and JIRA_TOKEN environment variables are set correctly and the API token has not expired.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></td>
+<td>Check that the JIRA REST API endpoint is correct; the response may be HTML error page instead of JSON if the URL path is wrong.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Via UI: <code>Admin → System → Database → Connection Pool Monitoring</code></p>
 <table>
@@ -7847,9 +7923,28 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify JIRA_URL is correct and the Jira instance is running and accessible from your network.
-<strong><code>{"errorMessages":["User does not have permission to administer Jira"]}</code></strong> — Ensure JIRA_USER has the Jira Administrators global permission or System Administrators group membership.
-<strong><code>curl: (6) Could not resolve host: ${JIRA_URL}</code></strong> — Check that JIRA_URL environment variable is set and contains a valid hostname (e.g., <code>export JIRA_URL=https://jira.example.com</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></td>
+<td>Verify JIRA_URL is correct and the Jira instance is running and accessible from your network.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["User does not have permission to administer Jira"]}</code></td>
+<td>Ensure JIRA_USER has the Jira Administrators global permission or System Administrators group membership.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host: ${JIRA_URL}</code></td>
+<td>Check that JIRA_URL environment variable is set and contains a valid hostname (e.g., <code>export JIRA_URL=https://jira.example.com</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected response when healthy:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
@@ -7869,8 +7964,24 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>du: cannot access '/var/atlassian/application-data/jira/caches/indexes/': Permission denied</code></strong> — Run the command with <code>sudo</code> or as the <code>jira</code> user to access the directory.
-<strong><code>du: cannot access '/var/atlassian/application-data/jira/caches/indexes/': No such file or directory</code></strong> — Verify the JIRA installation path matches your environment; check <code>$JIRA_HOME</code> or review the JIRA installation documentation for your version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>du: cannot access '/var/atlassian/application-data/jira/caches/indexes/': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as the <code>jira</code> user to access the directory.</td>
+</tr>
+<tr>
+<td><code>du: cannot access '/var/atlassian/application-data/jira/caches/indexes/': No such file or directory</code></td>
+<td>Verify the JIRA installation path matches your environment; check <code>$JIRA_HOME</code> or review the JIRA installation documentation for your version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Signs of index problems:</p>
 <ul>
@@ -7897,9 +8008,28 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: FATAL: Ident authentication failed for user "jira"</code></strong> — Verify the <code>.pgpass</code> file exists at <code>~/.pgpass</code> with correct credentials and permissions (chmod 600), or use password prompt with <code>-W</code> flag.
-<strong><code>psql: error: could not translate host name "db.example.com" to address: Name or service not known</code></strong> — Confirm the database hostname is correct and resolvable by running <code>nslookup db.example.com</code> or checking your <code>/etc/hosts</code> file.
-<strong><code>ERROR: relation "clusternodeinfo" does not exist</code></strong> — Verify you are connected to the correct JIRA database and the table name matches your JIRA version (may be <code>jiraclusternode</code> in older versions).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: FATAL: Ident authentication failed for user "jira"</code></td>
+<td>Verify the <code>.pgpass</code> file exists at <code>~/.pgpass</code> with correct credentials and permissions (chmod 600), or use password prompt with <code>-W</code> flag.</td>
+</tr>
+<tr>
+<td><code>psql: error: could not translate host name "db.example.com" to address: Name or service not known</code></td>
+<td>Confirm the database hostname is correct and resolvable by running <code>nslookup db.example.com</code> or checking your <code>/etc/hosts</code> file.</td>
+</tr>
+<tr>
+<td><code>ERROR: relation "clusternodeinfo" does not exist</code></td>
+<td>Verify you are connected to the correct JIRA database and the table name matches your JIRA version (may be <code>jiraclusternode</code> in older versions).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Via UI: <code>Admin → System → Clustering</code></p>
 <p>All expected nodes should appear with:
@@ -7940,9 +8070,28 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is correct and the Jira instance is running and accessible from your network.
-<strong><code>401 Unauthorized</code></strong> — Ensure JIRA_USER and JIRA_TOKEN environment variables are set correctly and the API token has not expired.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></strong> — Check that the Jira REST API endpoint is correct; the response may be HTML error page instead of JSON if the URL path is wrong.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></td>
+<td>Verify the JIRA_URL environment variable is correct and the Jira instance is running and accessible from your network.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Ensure JIRA_USER and JIRA_TOKEN environment variables are set correctly and the API token has not expired.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></td>
+<td>Check that the Jira REST API endpoint is correct; the response may be HTML error page instead of JSON if the URL path is wrong.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="7-key-metrics-reference">7. Key Metrics Reference<a class="headerlink" href="#7-key-metrics-reference" title="Permanent link">&para;</a></h2>
@@ -8100,9 +8249,28 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "db.example.com" (10.42.8.15), port 5432 failed: Connection refused</code></strong> — Verify PostgreSQL is running on db.example.com and the network route is accessible; check <code>psql -h db.example.com -U jira -d jiradb -c "SELECT 1"</code> manually.
-<strong><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></strong> — Confirm the Jira installation path and log file location match your deployment; adjust the path in the script or verify the Jira service is running.
-<strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection timed out</code></strong> — Check that the JIRA_URL is correct, the Jira service is running, and firewall/network rules allow outbound HTTPS from the monitoring host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "db.example.com" (10.42.8.15), port 5432 failed: Connection refused</code></td>
+<td>Verify PostgreSQL is running on db.example.com and the network route is accessible; check <code>psql -h db.example.com -U jira -d jiradb -c "SELECT 1"</code> manually.</td>
+</tr>
+<tr>
+<td><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></td>
+<td>Confirm the Jira installation path and log file location match your deployment; adjust the path in the script or verify the Jira service is running.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection timed out</code></td>
+<td>Check that the JIRA_URL is correct, the Jira service is running, and firewall/network rules allow outbound HTTPS from the monitoring host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Schedule:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>*/15 * * * * jira /opt/scripts/jira-health-check.sh &gt;&gt; /var/log/jira-health.log 2&gt;&amp;1
@@ -8143,7 +8311,7 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

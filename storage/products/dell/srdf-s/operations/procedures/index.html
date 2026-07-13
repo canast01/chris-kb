@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="SRDF/S — Procedures · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "SRDF/S — Procedures", "url": "https://chrisanastasiadis.com/storage/products/dell/srdf-s/operations/procedures/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "SRDF/S — Procedures", "url": "https://chrisanastasiadis.com/storage/products/dell/srdf-s/operations/procedures/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -9125,9 +9125,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Command not found</code></strong> — Ensure EMC Solutions Enabler (SE) is installed and the <code>$SYMCLI_DIR/bin</code> directory is in your PATH.
-<strong><code>Error: Invalid RDF group number &lt;rdf_group_number&gt;</code></strong> — Replace <code>&lt;rdf_group_number&gt;</code> with an actual RDF group number (e.g., 005) that exists on the R1 Symmetrix array.
-<strong><code>Permission denied writing to /tmp/srdf_s_prechange_*.txt</code></strong> — Verify the user running the script has write permissions to <code>/tmp</code> or redirect output to a writable directory like <code>/var/tmp</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Command not found</code></td>
+<td>Ensure EMC Solutions Enabler (SE) is installed and the <code>$SYMCLI_DIR/bin</code> directory is in your PATH.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid RDF group number &lt;rdf_group_number&gt;</code></td>
+<td>Replace <code>&lt;rdf_group_number&gt;</code> with an actual RDF group number (e.g., 005) that exists on the R1 Symmetrix array.</td>
+</tr>
+<tr>
+<td><code>Permission denied writing to /tmp/srdf_s_prechange_*.txt</code></td>
+<td>Verify the user running the script has write permissions to <code>/tmp</code> or redirect output to a writable directory like <code>/var/tmp</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Planned failover (site still accessible — reverses replication after split)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>failover<span class="w"> </span>-establish<span class="w"> </span>-noprompt
@@ -9158,9 +9177,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMRDF ERROR (0x00000001): RDF link is not online</code></strong> — Verify RDF connectivity between arrays using <code>symrdf -g 10 check</code> before attempting failover.
-<strong><code>SYMRDF ERROR (0x00000004): Group 10 is not in a valid state for failover</code></strong> — Ensure the group is in Synchronized or Consistent state by running <code>symrdf -g 10 query</code> to check current replication status.
-<strong><code>SYMRDF ERROR (0x00000009): Device 0A1 not found in group 10</code></strong> — Confirm the device exists in the group with <code>symrdf -g 10 query</code> and use the correct device address.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMRDF ERROR (0x00000001): RDF link is not online</code></td>
+<td>Verify RDF connectivity between arrays using <code>symrdf -g 10 check</code> before attempting failover.</td>
+</tr>
+<tr>
+<td><code>SYMRDF ERROR (0x00000004): Group 10 is not in a valid state for failover</code></td>
+<td>Ensure the group is in Synchronized or Consistent state by running <code>symrdf -g 10 query</code> to check current replication status.</td>
+</tr>
+<tr>
+<td><code>SYMRDF ERROR (0x00000009): Device 0A1 not found in group 10</code></td>
+<td>Confirm the device exists in the group with <code>symrdf -g 10 query</code> and use the correct device address.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1: Confirm primary site is unreachable and an outage decision has been made</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># -- Management authorisation required before proceeding --</span>
@@ -9211,9 +9249,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMAPI Error: Cannot connect to Symmetrix 000123456789012</code></strong> — Verify the R2 SE host has network connectivity to the R2 array and that the Symmetrix ID is correct.
-<strong><code>Error: RDF group 1 is in Synchronized state - failover requires -force flag or link must be down</code></strong> — Confirm the R1-R2 link is actually down before retrying with <code>-force</code>, or use <code>symrdf -sid &lt;r2_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; failover -force</code> to override.
-<strong><code>Error: Pair vol_001 is not in a valid state for failover (state: Synchronized)</code></strong> — Wait for the pair state to transition to Invalid or Suspended, or force the failover with the <code>-force</code> flag if R1 is confirmed unreachable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMAPI Error: Cannot connect to Symmetrix 000123456789012</code></td>
+<td>Verify the R2 SE host has network connectivity to the R2 array and that the Symmetrix ID is correct.</td>
+</tr>
+<tr>
+<td><code>Error: RDF group 1 is in Synchronized state - failover requires -force flag or link must be down</code></td>
+<td>Confirm the R1-R2 link is actually down before retrying with <code>-force</code>, or use <code>symrdf -sid &lt;r2_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; failover -force</code> to override.</td>
+</tr>
+<tr>
+<td><code>Error: Pair vol_001 is not in a valid state for failover (state: Synchronized)</code></td>
+<td>Wait for the pair state to transition to Invalid or Suspended, or force the failover with the <code>-force</code> flag if R1 is confirmed unreachable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm Failed Over state on all devices</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;R2|Pair State&quot;</span>
@@ -9271,9 +9328,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Command not found</code></strong> — Verify SymCLI is installed and the bin directory is in your PATH: <code>export PATH=$PATH:/opt/emc/SYMCLI/bin</code>
-<strong><code>RDF Group 10 not found</code></strong> — Confirm the group number exists with <code>symcfg list -rdfg all</code> and verify you have read permissions on the RDF configuration.
-<strong><code>Link State: Offline</code></strong> — Check physical connectivity and SAN fabric status with <code>symcfg list -rdfg 10 -detail</code> and contact network operations if the link remains down.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Command not found</code></td>
+<td>Verify SymCLI is installed and the bin directory is in your PATH: <code>export PATH=$PATH:/opt/emc/SYMCLI/bin</code></td>
+</tr>
+<tr>
+<td><code>RDF Group 10 not found</code></td>
+<td>Confirm the group number exists with <code>symcfg list -rdfg all</code> and verify you have read permissions on the RDF configuration.</td>
+</tr>
+<tr>
+<td><code>Link State: Offline</code></td>
+<td>Check physical connectivity and SAN fabric status with <code>symcfg list -rdfg 10 -detail</code> and contact network operations if the link remains down.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Resume from Suspended (incremental resync R1 -&gt; R2)</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>resume<span class="w"> </span>-noprompt
@@ -9311,9 +9387,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SRDF group 10 not found</code></strong> — Verify the group number with <code>symrdf -list</code> and confirm the RDF director is online.
-<strong><code>Pair State: Failed Over - cannot resume</code></strong> — Execute <code>symrdf -g 10 -type S restore -noprompt</code> first to restore R2 data to R1 before resuming.
-<strong><code>Device 0A1 is not a member of group 10</code></strong> — Check device membership with <code>symrdf -sid 0001 -dev 0A1 query</code> and use the correct device address.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SRDF group 10 not found</code></td>
+<td>Verify the group number with <code>symrdf -list</code> and confirm the RDF director is online.</td>
+</tr>
+<tr>
+<td><code>Pair State: Failed Over - cannot resume</code></td>
+<td>Execute <code>symrdf -g 10 -type S restore -noprompt</code> first to restore R2 data to R1 before resuming.</td>
+</tr>
+<tr>
+<td><code>Device 0A1 is not a member of group 10</code></td>
+<td>Check device membership with <code>symrdf -sid 0001 -dev 0A1 query</code> and use the correct device address.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Poll pair state until all pairs show Synchronized</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Synchronized
@@ -9351,9 +9446,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Command not found</code></strong> — Verify Symmetrix CLI is installed and the $PATH includes the bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
-<strong><code>SYMID not found in configuration</code></strong> — Confirm the array ID is correct and the Symmetrix is discovered by running <code>symcfg list</code> first.
-<strong><code>RDF group 10 not found</code></strong> — Check that RDF group 10 exists on this array using <code>symrdf -g all query</code> to list all configured groups.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Command not found</code></td>
+<td>Verify Symmetrix CLI is installed and the $PATH includes the bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).</td>
+</tr>
+<tr>
+<td><code>SYMID not found in configuration</code></td>
+<td>Confirm the array ID is correct and the Symmetrix is discovered by running <code>symcfg list</code> first.</td>
+</tr>
+<tr>
+<td><code>RDF group 10 not found</code></td>
+<td>Check that RDF group 10 exists on this array using <code>symrdf -g all query</code> to list all configured groups.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Step 1: Confirm R1 is the current active side and both arrays are accessible</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>symcfg<span class="w"> </span>list
@@ -9421,9 +9535,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: CLI0001: Could not connect to the Symmetrix array</code></strong> — Verify both R1 and R2 arrays are online and reachable; check network connectivity and Symmetrix credentials.
-<strong><code>symrdf: CLI0018: RDF group is in Split state and cannot establish</code></strong> — Run <code>symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; resume</code> instead of establish.
-<strong><code>symrdf: CLI0042: Verify failed — pairs not in Synchronized state</code></strong> — Wait for SyncInProg to complete (invalid track count must reach 0) before verifying; rerun the verify command after 5–10 minutes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: CLI0001: Could not connect to the Symmetrix array</code></td>
+<td>Verify both R1 and R2 arrays are online and reachable; check network connectivity and Symmetrix credentials.</td>
+</tr>
+<tr>
+<td><code>symrdf: CLI0018: RDF group is in Split state and cannot establish</code></td>
+<td>Run <code>symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -g &lt;dgname&gt; resume</code> instead of establish.</td>
+</tr>
+<tr>
+<td><code>symrdf: CLI0042: Verify failed — pairs not in Synchronized state</code></td>
+<td>Wait for SyncInProg to complete (invalid track count must reach 0) before verifying; rerun the verify command after 5–10 minutes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Step 1: Confirm all pairs are Synchronized before suspending</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
@@ -9493,9 +9626,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Error: RDF group &lt;rdf_group_number&gt; not found on Symmetrix &lt;r1_sid&gt;</code></strong> — Verify the correct Symmetrix ID and RDF group number using <code>symcfg list -rdf</code>.
-<strong><code>symrdf: Error: Device group &lt;dgname&gt; is not in Suspended state</code></strong> — Ensure the suspend command completed successfully before attempting resume; check status with <code>symrdf query -g &lt;dgname&gt;</code>.
-<strong><code>symrdf: Error: Pair state is not Synchronized; cannot verify</code></strong> — Wait for resync to complete by monitoring with <code>watch -n 30 'symrdf query -g &lt;dgname&gt;'</code> until all devices reach Synchronized state.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Error: RDF group &lt;rdf_group_number&gt; not found on Symmetrix &lt;r1_sid&gt;</code></td>
+<td>Verify the correct Symmetrix ID and RDF group number using <code>symcfg list -rdf</code>.</td>
+</tr>
+<tr>
+<td><code>symrdf: Error: Device group &lt;dgname&gt; is not in Suspended state</code></td>
+<td>Ensure the suspend command completed successfully before attempting resume; check status with <code>symrdf query -g &lt;dgname&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>symrdf: Error: Pair state is not Synchronized; cannot verify</code></td>
+<td>Wait for resync to complete by monitoring with <code>watch -n 30 'symrdf query -g &lt;dgname&gt;'</code> until all devices reach Synchronized state.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Step 1: Confirm current mode and capture baseline</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>-rdfgrp<span class="w"> </span>&lt;rdf_group_number&gt;
@@ -9546,9 +9698,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMCLI ERROR: Could not connect to the Symmetrix</code></strong> — Verify the R1 SID is correct and the Symmetrix is reachable via <code>symcfg list</code>.
-<strong><code>SYMCLI ERROR: RDF group &lt;rdf_group_number&gt; is not in a valid state for this operation</code></strong> — Ensure all pairs are in Suspended state before attempting mode change using <code>symrdf query -g &lt;dgname&gt;</code>.
-<strong><code>SYMCLI ERROR: mode change not supported in current environment</code></strong> — Confirm SYMCLI version is 9.x or later and the array firmware supports async mode changes via <code>symcfg -version</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMCLI ERROR: Could not connect to the Symmetrix</code></td>
+<td>Verify the R1 SID is correct and the Symmetrix is reachable via <code>symcfg list</code>.</td>
+</tr>
+<tr>
+<td><code>SYMCLI ERROR: RDF group &lt;rdf_group_number&gt; is not in a valid state for this operation</code></td>
+<td>Ensure all pairs are in Suspended state before attempting mode change using <code>symrdf query -g &lt;dgname&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>SYMCLI ERROR: mode change not supported in current environment</code></td>
+<td>Confirm SYMCLI version is 9.x or later and the array firmware supports async mode changes via <code>symcfg -version</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Step 1: Suspend async replication cleanly</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span><span class="nb">suspend</span>
@@ -9587,9 +9758,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMAPI_C_ARRAY_ERROR: The specified array is not available</code></strong> — Verify the R1 SID with <code>symcfg list</code> and confirm the array is online and accessible.
-<strong><code>SYMRDF_E_RDF_GROUP_NOT_FOUND: RDF group &lt;rdf_group_number&gt; not found</code></strong> — Confirm the RDF group number matches the configured group with <code>symrdf -sid &lt;r1_sid&gt; query</code>.
-<strong><code>SYMRDF_E_INVALID_STATE: Cannot resume from current state</code></strong> — Ensure the RDF group is in Suspended state before resume; check status with <code>symrdf query -g &lt;dgname&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMAPI_C_ARRAY_ERROR: The specified array is not available</code></td>
+<td>Verify the R1 SID with <code>symcfg list</code> and confirm the array is online and accessible.</td>
+</tr>
+<tr>
+<td><code>SYMRDF_E_RDF_GROUP_NOT_FOUND: RDF group &lt;rdf_group_number&gt; not found</code></td>
+<td>Confirm the RDF group number matches the configured group with <code>symrdf -sid &lt;r1_sid&gt; query</code>.</td>
+</tr>
+<tr>
+<td><code>SYMRDF_E_INVALID_STATE: Cannot resume from current state</code></td>
+<td>Ensure the RDF group is in Suspended state before resume; check status with <code>symrdf query -g &lt;dgname&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Step 1: Quiesce DR site applications</span>
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># -- DR application team confirms quiesce --</span>
@@ -9636,9 +9826,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMRDF Error (5) : RDF pair is not in a valid state for failback</code></strong> — Confirm all pairs are in Failed Over state before initiating failback; check with <code>symrdf query</code> first.
-<strong><code>SYMRDF Error (22) : Cannot connect to remote Symmetrix</code></strong> — Verify network connectivity and SRDF links between sites; check <code>symrdf -sid &lt;r2_sid&gt; query -link</code> for link status.
-<strong><code>SYMRDF Error (1) : Invalid device group name</code></strong> — Verify the device group name matches exactly (case-sensitive) with <code>symdevice list -g</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMRDF Error (5) : RDF pair is not in a valid state for failback</code></td>
+<td>Confirm all pairs are in Failed Over state before initiating failback; check with <code>symrdf query</code> first.</td>
+</tr>
+<tr>
+<td><code>SYMRDF Error (22) : Cannot connect to remote Symmetrix</code></td>
+<td>Verify network connectivity and SRDF links between sites; check <code>symrdf -sid &lt;r2_sid&gt; query -link</code> for link status.</td>
+</tr>
+<tr>
+<td><code>SYMRDF Error (1) : Invalid device group name</code></td>
+<td>Verify the device group name matches exactly (case-sensitive) with <code>symdevice list -g</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># After primary site recovery: restore R1 devices (accepts R2 data back)</span>
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>restore<span class="w"> </span>-noprompt
@@ -9672,9 +9881,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SRDF group 10 not in Valid state for Restore</code></strong> — Verify the group is in a recoverable state using <code>symrdf -g 10 query</code> and check for pending I/O or link failures.
-<strong><code>Symmetrix array 000123456789012 not responding</code></strong> — Confirm network connectivity to the primary array and verify SRDF links are online with <code>symrdf -g 10 -type S check</code>.
-<strong><code>Cannot establish failover: R1 and R2 not Synchronized</code></strong> — Wait for full synchronization to complete before failover; check replication lag with <code>symrdf -g 10 -type S query -i</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SRDF group 10 not in Valid state for Restore</code></td>
+<td>Verify the group is in a recoverable state using <code>symrdf -g 10 query</code> and check for pending I/O or link failures.</td>
+</tr>
+<tr>
+<td><code>Symmetrix array 000123456789012 not responding</code></td>
+<td>Confirm network connectivity to the primary array and verify SRDF links are online with <code>symrdf -g 10 -type S check</code>.</td>
+</tr>
+<tr>
+<td><code>Cannot establish failover: R1 and R2 not Synchronized</code></td>
+<td>Wait for full synchronization to complete before failover; check replication lag with <code>symrdf -g 10 -type S query -i</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># 1. Failover SRDF/S group</span>
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>failover
@@ -9714,9 +9942,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMCLI_C_ARRAY_COMMUNICATION_ERROR: Cannot communicate with array &lt;r1_sid&gt;</code></strong> — Verify array connectivity and ensure the Symmetrix management port is reachable from the host running symrdf.
-<strong><code>esxcli error: The object or item could not be found on the object's container</code></strong> — Confirm the snapshot label matches exactly (case-sensitive) and that the VMFS snapshot exists using <code>esxcli storage vmfs snapshot list</code> first.
-<strong><code>Failover failed: RDF pair is not in a valid state for failover</code></strong> — Check pair synchronization status with <code>symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; query</code> and ensure the pair is in Synchronized or Consistent state before attempting failover.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMCLI_C_ARRAY_COMMUNICATION_ERROR: Cannot communicate with array &lt;r1_sid&gt;</code></td>
+<td>Verify array connectivity and ensure the Symmetrix management port is reachable from the host running symrdf.</td>
+</tr>
+<tr>
+<td><code>esxcli error: The object or item could not be found on the object's container</code></td>
+<td>Confirm the snapshot label matches exactly (case-sensitive) and that the VMFS snapshot exists using <code>esxcli storage vmfs snapshot list</code> first.</td>
+</tr>
+<tr>
+<td><code>Failover failed: RDF pair is not in a valid state for failover</code></td>
+<td>Check pair synchronization status with <code>symrdf -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; query</code> and ensure the pair is in Synchronized or Consistent state before attempting failover.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Step 1: Identify current pair states</span>
 <a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
@@ -9762,9 +10009,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Cannot open RDF group &lt;rdf_group_number&gt; on array &lt;r1_sid&gt;</code></strong> — Verify the RDF group number exists on the array using <code>symcfg -sid &lt;r1_sid&gt; list -rdfg</code> without specifying a group number.
-<strong><code>ping: unknown host &lt;dr_site_ip&gt;</code></strong> — Confirm the DR site IP address is correct and reachable from the source array's network interface.
-<strong><code>symrdf query: No RDF pairs found for group &lt;dgname&gt;</code></strong> — Ensure the device group name is spelled correctly and contains active SRDF pairs using <code>symrdf query -g</code> without filters.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Cannot open RDF group &lt;rdf_group_number&gt; on array &lt;r1_sid&gt;</code></td>
+<td>Verify the RDF group number exists on the array using <code>symcfg -sid &lt;r1_sid&gt; list -rdfg</code> without specifying a group number.</td>
+</tr>
+<tr>
+<td><code>ping: unknown host &lt;dr_site_ip&gt;</code></td>
+<td>Confirm the DR site IP address is correct and reachable from the source array's network interface.</td>
+</tr>
+<tr>
+<td><code>symrdf query: No RDF pairs found for group &lt;dgname&gt;</code></td>
+<td>Ensure the device group name is spelled correctly and contains active SRDF pairs using <code>symrdf query -g</code> without filters.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Confirm all pairs are Synchronized</span>
 <a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
@@ -9817,8 +10083,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Cannot find specified RDF group</code></strong> — Verify the RDF group number matches the configured group on the array using <code>symrdf -sid &lt;r1_sid&gt; list</code>.
-<strong><code>PING: sendto: No route to host</code></strong> — Confirm the DR site IP is reachable from the source array and that network routing/firewall rules permit ICMP traffic.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Cannot find specified RDF group</code></td>
+<td>Verify the RDF group number matches the configured group on the array using <code>symrdf -sid &lt;r1_sid&gt; list</code>.</td>
+</tr>
+<tr>
+<td><code>PING: sendto: No route to host</code></td>
+<td>Confirm the DR site IP is reachable from the source array and that network routing/firewall rules permit ICMP traffic.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9845,9 +10127,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMAPI Error: Could not connect to the Symmetrix</code></strong> — Verify the Symmetrix ID is correct and the Symmetrix is online and reachable via the management network.
-<strong><code>RDF Group &lt;group&gt; not found</code></strong> — Confirm the RDF group number exists on this Symmetrix using <code>symrdf -sid &lt;sid&gt; list</code>.
-<strong><code>SYMAPI Error: Insufficient privileges</code></strong> — Run the command with appropriate credentials or ensure your user account has RDF query permissions in the VASA provider.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMAPI Error: Could not connect to the Symmetrix</code></td>
+<td>Verify the Symmetrix ID is correct and the Symmetrix is online and reachable via the management network.</td>
+</tr>
+<tr>
+<td><code>RDF Group &lt;group&gt; not found</code></td>
+<td>Confirm the RDF group number exists on this Symmetrix using <code>symrdf -sid &lt;sid&gt; list</code>.</td>
+</tr>
+<tr>
+<td><code>SYMAPI Error: Insufficient privileges</code></td>
+<td>Run the command with appropriate credentials or ensure your user account has RDF query permissions in the VASA provider.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="verify-wan-latency-acceptability">Verify WAN Latency Acceptability<a class="headerlink" href="#verify-wan-latency-acceptability" title="Permanent link">&para;</a></h2>
 <p>Measure RTT between SRDF director ports; target &lt;10ms. <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; verifylink</code> — all paths healthy.</p>
@@ -9864,9 +10165,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Command not found</code></strong> — Ensure the EMC Solutions Enabler package is installed and the symcli binaries are in your PATH (check <code>which symcli</code>).
-<strong><code>symrdf: Error: Invalid SID &lt;sid&gt;</code></strong> — Replace <code>&lt;sid&gt;</code> with a valid 12-character hex SID from <code>symcfg list</code> output.
-<strong><code>RDF Link Status: FAILED</code></strong> — Check physical network connectivity between directors, verify SRDF licensing is active, and confirm the remote array is reachable with <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Command not found</code></td>
+<td>Ensure the EMC Solutions Enabler package is installed and the symcli binaries are in your PATH (check <code>which symcli</code>).</td>
+</tr>
+<tr>
+<td><code>symrdf: Error: Invalid SID &lt;sid&gt;</code></td>
+<td>Replace <code>&lt;sid&gt;</code> with a valid 12-character hex SID from <code>symcfg list</code> output.</td>
+</tr>
+<tr>
+<td><code>RDF Link Status: FAILED</code></td>
+<td>Check physical network connectivity between directors, verify SRDF licensing is active, and confirm the remote array is reachable with <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="perform-a-planned-failover-failover">Perform a Planned Failover (Failover)<a class="headerlink" href="#perform-a-planned-failover-failover" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; failover</code> — suspends writes to R1, finalizes R2, makes R2 read-write. Used for planned maintenance.</p>
@@ -9882,9 +10202,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Cannot open Symmetrix ID &lt;sid&gt;</code></strong> — Verify the Symmetrix ID is correct and the array is accessible via the management network.
-<strong><code>symrdf: RDF group &lt;group&gt; does not exist</code></strong> — Confirm the RDF group number is valid using <code>symrdf -sid &lt;sid&gt; list</code>.
-<strong><code>symrdf: RDF group is not in a valid state for failover</code></strong> — Check RDF group status with <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code> and ensure it is Synchronized before attempting failover.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Cannot open Symmetrix ID &lt;sid&gt;</code></td>
+<td>Verify the Symmetrix ID is correct and the array is accessible via the management network.</td>
+</tr>
+<tr>
+<td><code>symrdf: RDF group &lt;group&gt; does not exist</code></td>
+<td>Confirm the RDF group number is valid using <code>symrdf -sid &lt;sid&gt; list</code>.</td>
+</tr>
+<tr>
+<td><code>symrdf: RDF group is not in a valid state for failover</code></td>
+<td>Check RDF group status with <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code> and ensure it is Synchronized before attempting failover.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="perform-a-disaster-recovery-failover-failover-force">Perform a Disaster Recovery Failover (Failover Force)<a class="headerlink" href="#perform-a-disaster-recovery-failover-failover-force" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; failover -force</code> — forces R2 to become R/W without R1 acknowledgement. Use when R1 is unavailable.</p>
@@ -9905,9 +10244,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Cannot find Symmetrix array &lt;sid&gt;</code></strong> — Verify the array SID with <code>symcfg list</code> and ensure the Symmetrix is properly discovered.
-<strong><code>symrdf: RDF group &lt;group&gt; does not exist</code></strong> — Confirm the RDF group number exists on the array using <code>symrdf -sid &lt;sid&gt; list</code>.
-<strong><code>symrdf: RDF group &lt;group&gt; is not in a valid state for failover</code></strong> — Check RDF group status with <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code> and wait for synchronization to complete before retrying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Cannot find Symmetrix array &lt;sid&gt;</code></td>
+<td>Verify the array SID with <code>symcfg list</code> and ensure the Symmetrix is properly discovered.</td>
+</tr>
+<tr>
+<td><code>symrdf: RDF group &lt;group&gt; does not exist</code></td>
+<td>Confirm the RDF group number exists on the array using <code>symrdf -sid &lt;sid&gt; list</code>.</td>
+</tr>
+<tr>
+<td><code>symrdf: RDF group &lt;group&gt; is not in a valid state for failover</code></td>
+<td>Check RDF group status with <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code> and wait for synchronization to complete before retrying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="fail-back-after-recovery">Fail Back After Recovery<a class="headerlink" href="#fail-back-after-recovery" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; failback</code> — re-synchronizes from R2 back to R1 and resumes normal synchronous replication.</p>
@@ -9937,9 +10295,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMRDF ERROR: RDF group &lt;group&gt; is not in a valid state for failback</code></strong> — Verify the RDF pair is in a synchronized state using <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code> before attempting failback.
-<strong><code>SYMRDF ERROR: Symmetrix ID &lt;sid&gt; is not accessible</code></strong> — Confirm the Symmetrix is online and the SYMCLI environment variables are correctly configured with <code>symcfg list</code>.
-<strong><code>SYMRDF ERROR: RDF group &lt;group&gt; does not exist</code></strong> — Verify the correct RDF group number using <code>symrdf -sid &lt;sid&gt; list</code> to display all configured groups.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMRDF ERROR: RDF group &lt;group&gt; is not in a valid state for failback</code></td>
+<td>Verify the RDF pair is in a synchronized state using <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code> before attempting failback.</td>
+</tr>
+<tr>
+<td><code>SYMRDF ERROR: Symmetrix ID &lt;sid&gt; is not accessible</code></td>
+<td>Confirm the Symmetrix is online and the SYMCLI environment variables are correctly configured with <code>symcfg list</code>.</td>
+</tr>
+<tr>
+<td><code>SYMRDF ERROR: RDF group &lt;group&gt; does not exist</code></td>
+<td>Verify the correct RDF group number using <code>symrdf -sid &lt;sid&gt; list</code> to display all configured groups.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="suspend-replication-planned-maintenance">Suspend Replication (Planned Maintenance)<a class="headerlink" href="#suspend-replication-planned-maintenance" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; suspend</code> — temporarily halts replication while keeping pairs intact. Resume with <code>symrdf resume</code>.</p>
@@ -9966,8 +10343,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMAPI_C_DEVICE_IN_USE</code></strong> — Ensure no active I/O or snapshots are using the RDF group before suspending.
-<strong><code>SYMAPI_C_INVALID_RDF_GROUP</code></strong> — Verify the RDF group number exists with <code>symrdf -sid &lt;sid&gt; list</code> before running the command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMAPI_C_DEVICE_IN_USE</code></td>
+<td>Ensure no active I/O or snapshots are using the RDF group before suspending.</td>
+</tr>
+<tr>
+<td><code>SYMAPI_C_INVALID_RDF_GROUP</code></td>
+<td>Verify the RDF group number exists with <code>symrdf -sid &lt;sid&gt; list</code> before running the command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="check-bias-setting">Check Bias Setting<a class="headerlink" href="#check-bias-setting" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query | grep -i bias</code> — identifies which site has preferred access during a split-brain scenario.</p>
@@ -9985,9 +10378,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Command not found</code></strong> — Ensure the EMC Solutions Enabler package is installed and the symrdf binary is in your PATH; run <code>which symrdf</code> to verify.
-<strong><code>SYMAPI Error (7) : Could not open the Symmetrix</code></strong> — Verify the SID is correct and the Symmetrix array is accessible; check network connectivity and SYMAPI configuration with <code>symcfg list</code>.
-<strong><code>RDF Group &lt;group&gt; not found</code></strong> — Confirm the RDF group number exists on the array; list valid groups with <code>symrdf -sid &lt;sid&gt; list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Command not found</code></td>
+<td>Ensure the EMC Solutions Enabler package is installed and the symrdf binary is in your PATH; run <code>which symrdf</code> to verify.</td>
+</tr>
+<tr>
+<td><code>SYMAPI Error (7) : Could not open the Symmetrix</code></td>
+<td>Verify the SID is correct and the Symmetrix array is accessible; check network connectivity and SYMAPI configuration with <code>symcfg list</code>.</td>
+</tr>
+<tr>
+<td><code>RDF Group &lt;group&gt; not found</code></td>
+<td>Confirm the RDF group number exists on the array; list valid groups with <code>symrdf -sid &lt;sid&gt; list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="add-devices-to-an-existing-srdfs-group">Add Devices to an Existing SRDF/S Group<a class="headerlink" href="#add-devices-to-an-existing-srdfs-group" title="Permanent link">&para;</a></h2>
 <p><code>symrdf addpair -sid &lt;source-sid&gt; -rdfg &lt;group&gt; -dev &lt;new-R1-devices&gt; -remote_dev &lt;new-R2-devices&gt;</code> then <code>symrdf establish</code> for the new pairs.</p>
@@ -10008,9 +10420,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMAPI_C_DEVICE_IN_USE (7) - Device is already in use</code></strong> — Verify the R1 and R2 devices are not already part of another SRDF pair using <code>symrdf list -sid &lt;source-sid&gt;</code>.
-<strong><code>SYMAPI_C_INVALID_SYMMETRIX (5) - Invalid Symmetrix ID</code></strong> — Confirm the source and remote Symmetrix IDs are correct and the arrays are reachable via <code>symcfg list -remote</code>.
-<strong><code>SYMAPI_C_INVALID_RDF_GROUP (11) - RDF group does not exist</code></strong> — Create the RDF group first using <code>symrdf creategroup -sid &lt;source-sid&gt; -rdfg &lt;group&gt; -type &lt;type&gt;</code> before adding pairs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMAPI_C_DEVICE_IN_USE (7) - Device is already in use</code></td>
+<td>Verify the R1 and R2 devices are not already part of another SRDF pair using <code>symrdf list -sid &lt;source-sid&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>SYMAPI_C_INVALID_SYMMETRIX (5) - Invalid Symmetrix ID</code></td>
+<td>Confirm the source and remote Symmetrix IDs are correct and the arrays are reachable via <code>symcfg list -remote</code>.</td>
+</tr>
+<tr>
+<td><code>SYMAPI_C_INVALID_RDF_GROUP (11) - RDF group does not exist</code></td>
+<td>Create the RDF group first using <code>symrdf creategroup -sid &lt;source-sid&gt; -rdfg &lt;group&gt; -type &lt;type&gt;</code> before adding pairs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="remove-devices-from-srdfs-group">Remove Devices from SRDF/S Group<a class="headerlink" href="#remove-devices-from-srdfs-group" title="Permanent link">&para;</a></h2>
 <p><code>symrdf deletepair -sid &lt;sid&gt; -rdfg &lt;group&gt; -dev &lt;devices&gt;</code> — removes pair relationship. Data on R2 becomes independent.</p>
@@ -10027,9 +10458,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMAPI Error: Device &lt;device&gt; is not in RDF group &lt;group&gt;</code></strong> — Verify the device exists in the specified RDF group using <code>symrdf query -sid &lt;sid&gt; -rdfg &lt;group&gt;</code>.
-<strong><code>SYMAPI Error: RDF group &lt;group&gt; is not in a valid state for this operation</code></strong> — Ensure the RDF group is in a consistent state (not syncing or failing) before attempting deletion.
-<strong><code>SYMAPI Error: Insufficient privileges to execute command</code></strong> — Run the command with appropriate credentials or ensure your user account has RDF management permissions in Solutions Enabler.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMAPI Error: Device &lt;device&gt; is not in RDF group &lt;group&gt;</code></td>
+<td>Verify the device exists in the specified RDF group using <code>symrdf query -sid &lt;sid&gt; -rdfg &lt;group&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>SYMAPI Error: RDF group &lt;group&gt; is not in a valid state for this operation</code></td>
+<td>Ensure the RDF group is in a consistent state (not syncing or failing) before attempting deletion.</td>
+</tr>
+<tr>
+<td><code>SYMAPI Error: Insufficient privileges to execute command</code></td>
+<td>Run the command with appropriate credentials or ensure your user account has RDF management permissions in Solutions Enabler.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="collect-srdf-performance-metrics">Collect SRDF Performance Metrics<a class="headerlink" href="#collect-srdf-performance-metrics" title="Permanent link">&para;</a></h2>
 <p><code>symstat -sid &lt;sid&gt; -rdfg &lt;group&gt; -type rdf</code> — shows throughput, write pending count, and latency metrics for capacity planning.</p>
@@ -10049,9 +10499,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symstat: Error - Invalid SID &lt;sid&gt;</code></strong> — Replace <code>&lt;sid&gt;</code> with the actual Symmetrix ID (e.g., <code>000297123456789</code>).
-<strong><code>symstat: Error - RDF group &lt;group&gt; not found</code></strong> — Verify the RDF group number exists with <code>symrdf list -sid &lt;sid&gt;</code> and use the correct group ID.
-<strong><code>symstat: Error - Symmetrix not responding</code></strong> — Ensure the Symmetrix array is reachable and Solutions Enabler daemon is running with <code>sudo /opt/emc/SYMCLI/bin/stordaemon start</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symstat: Error - Invalid SID &lt;sid&gt;</code></td>
+<td>Replace <code>&lt;sid&gt;</code> with the actual Symmetrix ID (e.g., <code>000297123456789</code>).</td>
+</tr>
+<tr>
+<td><code>symstat: Error - RDF group &lt;group&gt; not found</code></td>
+<td>Verify the RDF group number exists with <code>symrdf list -sid &lt;sid&gt;</code> and use the correct group ID.</td>
+</tr>
+<tr>
+<td><code>symstat: Error - Symmetrix not responding</code></td>
+<td>Ensure the Symmetrix array is reachable and Solutions Enabler daemon is running with <code>sudo /opt/emc/SYMCLI/bin/stordaemon start</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -10082,7 +10551,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -8420,9 +8420,28 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound</code></strong> — Verify the subscription ID, resource group name, and vault name are correct and exist in the target region.
-<strong><code>AuthorizationFailed</code></strong> — Ensure your Azure CLI account has Reader or Contributor permissions on the Recovery Services vault and target resource group.
-<strong><code>The resource 'Microsoft.Network/virtualNetworks/&lt;target-vnet-name&gt;' under resource group '&lt;dr-rg&gt;' was not found</code></strong> — Confirm the target virtual network has been pre-created in the DR region before initiating failover.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound</code></td>
+<td>Verify the subscription ID, resource group name, and vault name are correct and exist in the target region.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed</code></td>
+<td>Ensure your Azure CLI account has Reader or Contributor permissions on the Recovery Services vault and target resource group.</td>
+</tr>
+<tr>
+<td><code>The resource 'Microsoft.Network/virtualNetworks/&lt;target-vnet-name&gt;' under resource group '&lt;dr-rg&gt;' was not found</code></td>
+<td>Confirm the target virtual network has been pre-created in the DR region before initiating failover.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="test-failover">Test Failover<a class="headerlink" href="#test-failover" title="Permanent link">&para;</a></h2>
@@ -8479,9 +8498,28 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The provided URI is invalid or the resource does not exist.</code></strong> — Verify all placeholder values (<sub-id>, <vault-name>, <item-name>) are replaced with actual resource names and IDs from your Azure environment.
-<strong><code>Authorization failed for request. Caller is not authorized to perform action 'Microsoft.RecoveryServices/vaults/replicationJobs/read' on resource.</code></strong> — Ensure your Azure CLI account has the "Site Recovery Operator" or "Contributor" role assigned on the Recovery Services vault.
-<strong><code>The test failover cannot be initiated because the protected item is not in a valid state.</code></strong> — Verify the replication item has completed initial replication and is in "Protected" state using <code>az rest --method GET --uri "...replicationProtectedItems/&lt;item-name&gt;?api-version=2022-10-01"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The provided URI is invalid or the resource does not exist.</code></td>
+<td>Verify all placeholder values (<sub-id>, <vault-name>, <item-name>) are replaced with actual resource names and IDs from your Azure environment.</td>
+</tr>
+<tr>
+<td><code>Authorization failed for request. Caller is not authorized to perform action 'Microsoft.RecoveryServices/vaults/replicationJobs/read' on resource.</code></td>
+<td>Ensure your Azure CLI account has the "Site Recovery Operator" or "Contributor" role assigned on the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>The test failover cannot be initiated because the protected item is not in a valid state.</code></td>
+<td>Verify the replication item has completed initial replication and is in "Protected" state using <code>az rest --method GET --uri "...replicationProtectedItems/&lt;item-name&gt;?api-version=2022-10-01"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="planned-failover">Planned Failover<a class="headerlink" href="#planned-failover" title="Permanent link">&para;</a></h2>
@@ -8515,9 +8553,28 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/plannedFailover/action'</code></strong> — Ensure your Azure user or service principal has the "Site Recovery Operator" or "Contributor" role assigned to the Recovery Services vault.
-<strong><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the subscription ID, resource group name, vault name, fabric name, container name, and protected item name are correct and exist in your subscription.
-<strong><code>BadRequest: The item is not in a state that allows failover. Current state: 'NotStarted'. Replication must be enabled and synchronized before failover.</code></strong> — Enable replication for the item and wait for initial synchronization to complete before attempting failover.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/plannedFailover/action'</code></td>
+<td>Ensure your Azure user or service principal has the "Site Recovery Operator" or "Contributor" role assigned to the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></td>
+<td>Verify the subscription ID, resource group name, vault name, fabric name, container name, and protected item name are correct and exist in your subscription.</td>
+</tr>
+<tr>
+<td><code>BadRequest: The item is not in a state that allows failover. Current state: 'NotStarted'. Replication must be enabled and synchronized before failover.</code></td>
+<td>Enable replication for the item and wait for initial synchronization to complete before attempting failover.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="unplanned-failover">Unplanned Failover<a class="headerlink" href="#unplanned-failover" title="Permanent link">&para;</a></h2>
@@ -8557,9 +8614,28 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>AuthorizationFailed : The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/unplannedFailover/action' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;'</code></strong> — Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.
-<strong><code>ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the subscription ID, resource group, vault name, fabric name, container name, and protected item name are correct using <code>az recovery-services-backup container list</code>.
-<strong><code>BadRequest : Failover cannot be triggered because the replication health is 'Critical' or the item is in 'NotStarted' state.</code></strong> — Check replication status with <code>az rest --method GET --uri "https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;?api-version=2022-10-01"</code> and ensure replication is healthy before retrying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AuthorizationFailed : The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/unplannedFailover/action' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;'</code></td>
+<td>Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></td>
+<td>Verify the subscription ID, resource group, vault name, fabric name, container name, and protected item name are correct using <code>az recovery-services-backup container list</code>.</td>
+</tr>
+<tr>
+<td><code>BadRequest : Failover cannot be triggered because the replication health is 'Critical' or the item is in 'NotStarted' state.</code></td>
+<td>Check replication status with <code>az rest --method GET --uri "https://management.azure.com/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;?api-version=2022-10-01"</code> and ensure replication is healthy before retrying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="recovery-plans">Recovery Plans<a class="headerlink" href="#recovery-plans" title="Permanent link">&para;</a></h2>
@@ -8598,9 +8674,28 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>AuthorizationFailed : The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationRecoveryPlans/plannedFailover/action' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'</code></strong> — Assign the Site Recovery Contributor role to your user or service principal on the Recovery Services vault.
-<strong><code>ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationRecoveryPlans/&lt;plan-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the vault name, resource group, and recovery plan name are correct using <code>az recovery-services vault list</code> and <code>az site-recovery recovery-plan list</code>.
-<strong><code>BadRequest : Invalid failover direction. Allowed values are 'PrimaryToRecovery' or 'RecoveryToPrimary'.</code></strong> — Ensure the failoverDirection property matches the current replication state and use the correct direction for your scenario.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AuthorizationFailed : The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationRecoveryPlans/plannedFailover/action' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'</code></td>
+<td>Assign the Site Recovery Contributor role to your user or service principal on the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationRecoveryPlans/&lt;plan-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></td>
+<td>Verify the vault name, resource group, and recovery plan name are correct using <code>az recovery-services vault list</code> and <code>az site-recovery recovery-plan list</code>.</td>
+</tr>
+<tr>
+<td><code>BadRequest : Invalid failover direction. Allowed values are 'PrimaryToRecovery' or 'RecoveryToPrimary'.</code></td>
+<td>Ensure the failoverDirection property matches the current replication state and use the correct direction for your scenario.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="commit-failover">Commit Failover<a class="headerlink" href="#commit-failover" title="Permanent link">&para;</a></h2>
@@ -8626,9 +8721,28 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: (AuthorizationFailed) The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/failoverCommit/action' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'</code></strong> — Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.
-<strong><code>ERROR: (ResourceNotFound) The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the vault name, fabric name, container name, and protected item name are correct using <code>az recovery-services-backup item list</code>.
-<strong><code>ERROR: (InvalidRequestContent) The request content was invalid and could not be deserialized: 'Missing required property: api-version in query parameters.'</code></strong> — Ensure the <code>api-version=2022-10-01</code> parameter is included in the URI query string without modification.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: (AuthorizationFailed) The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/failoverCommit/action' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;'</code></td>
+<td>Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.</td>
+</tr>
+<tr>
+<td><code>ERROR: (ResourceNotFound) The Resource 'Microsoft.RecoveryServices/vaults/&lt;vault-name&gt;/replicationFabrics/&lt;source-fabric&gt;/replicationProtectionContainers/&lt;source-container&gt;/replicationProtectedItems/&lt;item-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></td>
+<td>Verify the vault name, fabric name, container name, and protected item name are correct using <code>az recovery-services-backup item list</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: (InvalidRequestContent) The request content was invalid and could not be deserialized: 'Missing required property: api-version in query parameters.'</code></td>
+<td>Ensure the <code>api-version=2022-10-01</code> parameter is included in the URI query string without modification.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="post-failover-validation">Post-Failover Validation<a class="headerlink" href="#post-failover-validation" title="Permanent link">&para;</a></h2>
@@ -8658,8 +8772,24 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/&lt;dr-vm-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></strong> — Verify the resource group name and DR VM name are correct and exist in your subscription.
-<strong><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.Compute/virtualMachines/&lt;dr-vm-name&gt;'.</code></strong> — Ensure your Azure CLI account has Reader or Contributor role assigned to the DR resource group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/&lt;dr-vm-name&gt;' under resource group '&lt;dr-rg&gt;' was not found.</code></td>
+<td>Verify the resource group name and DR VM name are correct and exist in your subscription.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;dr-rg&gt;/providers/Microsoft.Compute/virtualMachines/&lt;dr-vm-name&gt;'.</code></td>
+<td>Ensure your Azure CLI account has Reader or Contributor role assigned to the DR resource group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8683,7 +8813,7 @@ Azure Site Recovery supports three types of failover: test failover (non-disrupt
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

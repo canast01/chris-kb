@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="vSAN — Common Issues · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Common Issues", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "vSAN — Common Issues", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/vsan/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -9090,8 +9090,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown command or namespace vsan debug object</code></strong> — Verify vSAN is licensed and enabled on the cluster; run <code>esxcli vsan cluster get</code> to confirm vSAN status.
-<strong><code>Error: Invalid object UUID format</code></strong> — Ensure the UUID is exactly 36 characters in the format <code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code> with no extra spaces.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown command or namespace vsan debug object</code></td>
+<td>Verify vSAN is licensed and enabled on the cluster; run <code>esxcli vsan cluster get</code> to confirm vSAN status.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid object UUID format</code></td>
+<td>Ensure the UUID is exactly 36 characters in the format <code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code> with no extra spaces.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Loss % &gt; 0 indicates network issues — check switch, NIC, or vDS configuration</span>
@@ -9112,9 +9128,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: VSAN is not enabled on this host</code></strong> — Enable VSAN on the host via vSphere Client or run <code>esxcli vsan cluster join</code>.
-<strong><code>Error: Could not resolve hostname esx-node-02.lab.local</code></strong> — Verify DNS resolution is working and all cluster nodes are reachable on the management network.
-<strong><code>Error: Permission denied</code></strong> — Run the command with root privileges or as a user with vSAN administration rights.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: VSAN is not enabled on this host</code></td>
+<td>Enable VSAN on the host via vSphere Client or run <code>esxcli vsan cluster join</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Could not resolve hostname esx-node-02.lab.local</code></td>
+<td>Verify DNS resolution is working and all cluster nodes are reachable on the management network.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Run the command with root privileges or as a user with vSAN administration rights.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check object state</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;inaccessible&quot;</span>
@@ -9141,9 +9176,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>VSAN is not enabled on this host</code></strong> — Run <code>esxcli vsan cluster join --cluster-uuid=&lt;uuid&gt;</code> to enable vSAN on the host.
-<strong><code>Network partition detected: Host isolation</code></strong> — Check physical network connectivity and verify vSAN VMkernel port configuration with <code>esxcli vsan network list</code>.
-<strong><code>Command timed out waiting for cluster response</code></strong> — Verify all cluster hosts are powered on and accessible, then retry the command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VSAN is not enabled on this host</code></td>
+<td>Run <code>esxcli vsan cluster join --cluster-uuid=&lt;uuid&gt;</code> to enable vSAN on the host.</td>
+</tr>
+<tr>
+<td><code>Network partition detected: Host isolation</code></td>
+<td>Check physical network connectivity and verify vSAN VMkernel port configuration with <code>esxcli vsan network list</code>.</td>
+</tr>
+<tr>
+<td><code>Command timed out waiting for cluster response</code></td>
+<td>Verify all cluster hosts are powered on and accessible, then retry the command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check and remove throttle (if set too low)</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>throttle<span class="w"> </span>get
@@ -9176,8 +9230,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The VSAN service is not running on this host</code></strong> — Run <code>esxcli vsan cluster get</code> to verify VSAN is enabled, then restart the service with <code>systemctl restart vsanmgmt</code>.
-<strong><code>Error: Permission denied</code></strong> — Ensure your account has VSAN administrator privileges; use <code>esxcli system permission list</code> to verify role assignments.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The VSAN service is not running on this host</code></td>
+<td>Run <code>esxcli vsan cluster get</code> to verify VSAN is enabled, then restart the service with <code>systemctl restart vsanmgmt</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Ensure your account has VSAN administrator privileges; use <code>esxcli system permission list</code> to verify role assignments.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check disk group and disk status</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
@@ -9225,9 +9295,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vSAN is not enabled on this host</code></strong> — Run <code>esxcli vsan cluster get</code> to verify vSAN is configured, then enable it via vCenter or <code>esxcli vsan cluster new</code>.
-<strong><code>Unable to resolve host address &lt;peer_vmk_ip&gt;</code></strong> — Verify the peer ESXi hostname or IP is correct and that vmk2 is bound to the vSAN network (check with <code>esxcli network ip interface list</code>).
-<strong><code>No route to host</code></strong> — Confirm vSAN VMkernel adapters are on the same subnet and vSAN network connectivity is not blocked by firewall rules or VLAN misconfiguration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vSAN is not enabled on this host</code></td>
+<td>Run <code>esxcli vsan cluster get</code> to verify vSAN is configured, then enable it via vCenter or <code>esxcli vsan cluster new</code>.</td>
+</tr>
+<tr>
+<td><code>Unable to resolve host address &lt;peer_vmk_ip&gt;</code></td>
+<td>Verify the peer ESXi hostname or IP is correct and that vmk2 is bound to the vSAN network (check with <code>esxcli network ip interface list</code>).</td>
+</tr>
+<tr>
+<td><code>No route to host</code></td>
+<td>Confirm vSAN VMkernel adapters are on the same subnet and vSAN network connectivity is not blocked by firewall rules or VLAN misconfiguration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Test network connectivity to all peers</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span>
@@ -9270,9 +9359,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: VSAN cluster not initialized</code></strong> — Run <code>esxcli vsan cluster get</code> to verify VSAN is enabled on all hosts; reinitialize the cluster if needed.
-<strong><code>Error: Unable to reach one or more hosts</code></strong> — Verify network connectivity and firewall rules allow VSAN multicast traffic (224.0.0.1:12345) between all hosts.
-<strong><code>Error: Command not found</code></strong> — Ensure you are running this command on an ESXi host with VSAN enabled; this command is not available on non-VSAN clusters.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: VSAN cluster not initialized</code></td>
+<td>Run <code>esxcli vsan cluster get</code> to verify VSAN is enabled on all hosts; reinitialize the cluster if needed.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to reach one or more hosts</code></td>
+<td>Verify network connectivity and firewall rules allow VSAN multicast traffic (224.0.0.1:12345) between all hosts.</td>
+</tr>
+<tr>
+<td><code>Error: Command not found</code></td>
+<td>Ensure you are running this command on an ESXi host with VSAN enabled; this command is not available on non-VSAN clusters.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Format Version&quot;</span>
 </code></pre></div>
@@ -9282,8 +9390,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unknown command or namespace vsan</code></strong> — Ensure vSAN is licensed and enabled on the ESXi host; run <code>esxcli vsan cluster get</code> to verify vSAN is active.
-<strong><code>grep: command not found</code></strong> — This error is unlikely on ESXi; if it occurs, use <code>esxcli vsan storage list | grep "Format"</code> or verify the ESXi shell is properly initialized.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unknown command or namespace vsan</code></td>
+<td>Ensure vSAN is licensed and enabled on the ESXi host; run <code>esxcli vsan cluster get</code> to verify vSAN is active.</td>
+</tr>
+<tr>
+<td><code>grep: command not found</code></td>
+<td>This error is unlikely on ESXi; if it occurs, use <code>esxcli vsan storage list | grep "Format"</code> or verify the ESXi shell is properly initialized.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check clock on each host</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
@@ -9346,7 +9470,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

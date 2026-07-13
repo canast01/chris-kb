@@ -9148,8 +9148,24 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: connect to host &lt;vcenter-ip&gt; port 22 (Connection refused)</code></strong> — Verify SSH is enabled on VCSA (Administration &gt; System Configuration &gt; Services) and the IP address is correct.
-<strong><code>Permission denied (publickey,password).</code></strong> — Confirm you are using the root account (not a domain user) and the VCSA root password is correct.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: connect to host &lt;vcenter-ip&gt; port 22 (Connection refused)</code></td>
+<td>Verify SSH is enabled on VCSA (Administration &gt; System Configuration &gt; Services) and the IP address is correct.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Confirm you are using the root account (not a domain user) and the VCSA root password is correct.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Key partitions and alert thresholds:</p>
 <table>
@@ -9235,9 +9251,28 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>journalctl: command not found</code></strong> — Use <code>tail -f /var/log/vmware/vpxd/vpxd.log</code> instead on vCenter versions prior to 7.0.
-<strong><code>find: '/storage/log': No such file or directory</code></strong> — Remove the <code>/storage/log</code> find command if vCenter uses only <code>/var/log/vmware</code> for log storage.
-<strong><code>Permission denied</code></strong> — Run the entire troubleshooting script with <code>sudo</code> or as root user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>journalctl: command not found</code></td>
+<td>Use <code>tail -f /var/log/vmware/vpxd/vpxd.log</code> instead on vCenter versions prior to 7.0.</td>
+</tr>
+<tr>
+<td><code>find: '/storage/log': No such file or directory</code></td>
+<td>Remove the <code>/storage/log</code> find command if vCenter uses only <code>/var/log/vmware</code> for log storage.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the entire troubleshooting script with <code>sudo</code> or as root user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-2-review-key-log-files">Step 2 — Review key log files<a class="headerlink" href="#step-2-review-key-log-files" title="Permanent link">&para;</a></h2>
@@ -9271,9 +9306,28 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>[FATAL] vpxd Database connection pool exhausted, max connections: 100</code></strong> — Increase the database connection pool size in /etc/vmware-vpx/vpxd.cfg by setting <code>maxConnections</code> to a higher value (e.g., 150) and restart vpxd service.
-<strong><code>LDAP bind failed for user admin@vsphere.local: Invalid credentials</code></strong> — Verify SSO admin credentials and LDAP connectivity; check that the identity source is properly configured in vCenter Administration &gt; Single Sign-On &gt; Configuration.
-<strong><code>Certificate validation error - cert expired on 2024-01-10</code></strong> — Regenerate and install a new vCenter certificate using <code>/usr/lib/vmware-vpx/bin/certificate-manager</code> or request a new one from your CA and import it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[FATAL] vpxd Database connection pool exhausted, max connections: 100</code></td>
+<td>Increase the database connection pool size in /etc/vmware-vpx/vpxd.cfg by setting <code>maxConnections</code> to a higher value (e.g., 150) and restart vpxd service.</td>
+</tr>
+<tr>
+<td><code>LDAP bind failed for user admin@vsphere.local: Invalid credentials</code></td>
+<td>Verify SSO admin credentials and LDAP connectivity; check that the identity source is properly configured in vCenter Administration &gt; Single Sign-On &gt; Configuration.</td>
+</tr>
+<tr>
+<td><code>Certificate validation error - cert expired on 2024-01-10</code></td>
+<td>Regenerate and install a new vCenter certificate using <code>/usr/lib/vmware-vpx/bin/certificate-manager</code> or request a new one from your CA and import it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>All logs on the VCSA appliance:</p>
 <table>
@@ -9391,9 +9445,28 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nslookup: can't resolve 'vcenter.example.local': No address associated with hostname</code></strong> — Verify DNS server is reachable and vCenter's A record exists; check <code>/etc/resolv.conf</code> points to correct nameserver.
-<strong><code>50.1.168.192.in-addr.arpa    name = esxi-01.example.local.</code></strong> — Reverse DNS PTR record mismatch indicates forward and reverse zones are inconsistent; update PTR record to match the forward FQDN exactly.
-<strong><code>System clock synchronized: no</code></strong> — Restart chronyd service with <code>systemctl restart chronyd</code> and verify NTP pool servers are reachable on port 123.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nslookup: can't resolve 'vcenter.example.local': No address associated with hostname</code></td>
+<td>Verify DNS server is reachable and vCenter's A record exists; check <code>/etc/resolv.conf</code> points to correct nameserver.</td>
+</tr>
+<tr>
+<td><code>50.1.168.192.in-addr.arpa    name = esxi-01.example.local.</code></td>
+<td>Reverse DNS PTR record mismatch indicates forward and reverse zones are inconsistent; update PTR record to match the forward FQDN exactly.</td>
+</tr>
+<tr>
+<td><code>System clock synchronized: no</code></td>
+<td>Restart chronyd service with <code>systemctl restart chronyd</code> and verify NTP pool servers are reachable on port 123.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>NTP drift over 5 minutes breaks Kerberos — SSO login failures for AD-backed accounts will occur. Fix NTP before investigating SSO.</p>
 <hr />
@@ -9450,9 +9523,28 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error in x509 lookup v3 signature verification</code></strong> — Ensure the openssl command successfully connects by checking network connectivity to the vCenter port and that the certificate chain is complete.
-<strong><code>vecs-cli: command not found</code></strong> — SSH directly into the VCSA appliance (not a Windows vCenter) as root or use the full path <code>/usr/lib/vmware-vmafd/bin/vecs-cli</code>.
-<strong><code>VECS store 'vpxd-extension' does not exist</code></strong> — Verify the store name is correct for your vCenter version; use <code>vecs-cli store list</code> first to confirm available stores.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error in x509 lookup v3 signature verification</code></td>
+<td>Ensure the openssl command successfully connects by checking network connectivity to the vCenter port and that the certificate chain is complete.</td>
+</tr>
+<tr>
+<td><code>vecs-cli: command not found</code></td>
+<td>SSH directly into the VCSA appliance (not a Windows vCenter) as root or use the full path <code>/usr/lib/vmware-vmafd/bin/vecs-cli</code>.</td>
+</tr>
+<tr>
+<td><code>VECS store 'vpxd-extension' does not exist</code></td>
+<td>Verify the store name is correct for your vCenter version; use <code>vecs-cli store list</code> first to confirm available stores.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Certificate renewals: <strong>VAMI → <code>https://&lt;vcenter&gt;:5480</code> → Certificate Management</strong> — shows all certs with expiry and a renewal button.</p>
 <hr />
@@ -9510,9 +9602,28 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldapsearch: error code 81 (Server Down) - Errno 113 (No route to host)</code></strong> — Verify DC01 hostname resolves and is reachable via <code>ping dc01.example.local</code> and <code>telnet dc01.example.local 636</code> from the VCSA.
-<strong><code>ldapsearch: error code 49 (Invalid Credentials) - Bind failed</code></strong> — Confirm the svc-vcenter-ldap account password is correct and the account is not locked in Active Directory.
-<strong><code>SERVICE vmware-stsd (pid XXXX) is stopped.</code></strong> — Restart the SSO service with <code>service-control --start vmware-stsd</code> and wait 60 seconds for dependent services to initialize.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldapsearch: error code 81 (Server Down) - Errno 113 (No route to host)</code></td>
+<td>Verify DC01 hostname resolves and is reachable via <code>ping dc01.example.local</code> and <code>telnet dc01.example.local 636</code> from the VCSA.</td>
+</tr>
+<tr>
+<td><code>ldapsearch: error code 49 (Invalid Credentials) - Bind failed</code></td>
+<td>Confirm the svc-vcenter-ldap account password is correct and the account is not locked in Active Directory.</td>
+</tr>
+<tr>
+<td><code>SERVICE vmware-stsd (pid XXXX) is stopped.</code></td>
+<td>Restart the SSO service with <code>service-control --start vmware-stsd</code> and wait 60 seconds for dependent services to initialize.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-6-query-vcenter-rest-api-health">Step 6 — Query vCenter REST API health<a class="headerlink" href="#step-6-query-vcenter-rest-api-health" title="Permanent link">&para;</a></h2>
@@ -9549,9 +9660,28 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl commands to skip SSL verification, or import the vCenter CA certificate into your system trust store.
-<strong><code>{"type.name":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}</code></strong> — Verify the vCenter password is correct and the user account is not locked; re-authenticate to obtain a fresh token.
-<strong><code>jq: command not found</code></strong> — Install <code>jq</code> package (<code>apt-get install jq</code> on Debian/Ubuntu or <code>yum install jq</code> on RHEL) or use the Python JSON parser shown in the example instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl commands to skip SSL verification, or import the vCenter CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"type.name":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}</code></td>
+<td>Verify the vCenter password is correct and the user account is not locked; re-authenticate to obtain a fresh token.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>jq</code> package (<code>apt-get install jq</code> on Debian/Ubuntu or <code>yum install jq</code> on RHEL) or use the Python JSON parser shown in the example instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-7-run-powercli-diagnostics">Step 7 — Run PowerCLI diagnostics<a class="headerlink" href="#step-7-run-powercli-diagnostics" title="Permanent link">&para;</a></h2>
@@ -9610,9 +9740,28 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/usr/bin/vm-support: command not found</code></strong> — Verify you are logged into the VCSA appliance directly (not an ESXi host) and check that vm-support is installed with <code>which vm-support</code>.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user account has root privileges on the VCSA appliance.
-<strong><code>No space left on device</code></strong> — Check available disk space with <code>df -h /var/core/</code> and delete older bundles or increase the partition size before retrying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/usr/bin/vm-support: command not found</code></td>
+<td>Verify you are logged into the VCSA appliance directly (not an ESXi host) and check that vm-support is installed with <code>which vm-support</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user account has root privileges on the VCSA appliance.</td>
+</tr>
+<tr>
+<td><code>No space left on device</code></td>
+<td>Check available disk space with <code>df -h /var/core/</code> and delete older bundles or increase the partition size before retrying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Evidence to collect before escalation:</p>
 <table>
@@ -9737,7 +9886,7 @@ vCenter Server diagnostic commands: check disk partitions and service health wit
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

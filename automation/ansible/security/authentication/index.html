@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Ansible — Authentication · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Ansible — Authentication", "url": "https://chrisanastasiadis.com/automation/ansible/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Ansible — Authentication", "url": "https://chrisanastasiadis.com/automation/ansible/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7365,8 +7365,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey).</code></strong> — Ensure the public key is added to <code>~/.ssh/authorized_keys</code> on target hosts with correct permissions (644 for the file, 700 for ~/.ssh directory).
-<strong><code>Permissions 0644 for '/home/ansible/.ssh/ansible_ed25519' are too open.</code></strong> — Run <code>chmod 600 ~/.ssh/ansible_ed25519</code> to restrict private key permissions to the owner only.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Ensure the public key is added to <code>~/.ssh/authorized_keys</code> on target hosts with correct permissions (644 for the file, 700 for ~/.ssh directory).</td>
+</tr>
+<tr>
+<td><code>Permissions 0644 for '/home/ansible/.ssh/ansible_ed25519' are too open.</code></td>
+<td>Run <code>chmod 600 ~/.ssh/ansible_ed25519</code> to restrict private key permissions to the owner only.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span>pywinrm<span class="o">[</span>kerberos<span class="o">]</span><span class="w">   </span><span class="c1"># domain-joined hosts</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pip<span class="w"> </span>install<span class="w"> </span>pywinrm<span class="w">              </span><span class="c1"># NTLM / basic</span>
@@ -7435,9 +7451,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The provided token is invalid or expired</code></strong> — Regenerate the AWX API token using <code>awx login</code> or create a new token in the AWX web UI under User Settings &gt; Tokens.
-<strong><code>Error: Failed to connect to https://awx.example.com</code></strong> — Verify the AWX host is reachable and correct the <code>--conf.host</code> URL; check network connectivity and DNS resolution.
-<strong><code>Error: username already exists</code></strong> — Choose a different username or delete the existing user with <code>awx users delete --username breakglass-admin</code> before recreating.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The provided token is invalid or expired</code></td>
+<td>Regenerate the AWX API token using <code>awx login</code> or create a new token in the AWX web UI under User Settings &gt; Tokens.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to connect to https://awx.example.com</code></td>
+<td>Verify the AWX host is reachable and correct the <code>--conf.host</code> URL; check network connectivity and DNS resolution.</td>
+</tr>
+<tr>
+<td><code>Error: username already exists</code></td>
+<td>Choose a different username or delete the existing user with <code>awx users delete --username breakglass-admin</code> before recreating.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;vault-password-here&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>~/.ansible_vault_pass
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ansible_vault_pass
@@ -7473,8 +7508,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR! Vault password file /home/admin/.vault_pass_prod is not readable by the current user</code></strong> — Ensure the vault password file exists and has read permissions (chmod 600 ~/.vault_pass_prod).
-<strong><code>ERROR! Decryption failed (no vault secrets were found that could decrypt)</code></strong> — Verify the vault ID label matches the encrypted variable in the playbook and the correct password file is being used.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR! Vault password file /home/admin/.vault_pass_prod is not readable by the current user</code></td>
+<td>Ensure the vault password file exists and has read permissions (chmod 600 ~/.vault_pass_prod).</td>
+</tr>
+<tr>
+<td><code>ERROR! Decryption failed (no vault secrets were found that could decrypt)</code></td>
+<td>Verify the vault ID label matches the encrypted variable in the playbook and the correct password file is being used.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>vault<span class="w"> </span>auth<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>approle
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>vault<span class="w"> </span>write<span class="w"> </span>auth/approle/role/ansible<span class="w"> </span><span class="se">\</span>
@@ -7541,7 +7592,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

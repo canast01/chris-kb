@@ -8015,9 +8015,28 @@ LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Servi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account is not locked; check DC logs with <code>Get-EventLog -LogName Security -InstanceId 4771 -Newest 10</code> on the domain controller.
-<strong><code>Can't contact LDAP server (-1)</code></strong> — Ensure the DC hostname resolves with <code>nslookup dc01.corp.example.com</code> and port 389/636 is reachable via <code>nc -zv dc01.corp.example.com 636</code>.
-<strong><code>TLS/SSL error: certificate verify failed</code></strong> — Add the DC's CA certificate to the system trust store with <code>sudo cp ca.crt /etc/ssl/certs/ &amp;&amp; sudo update-ca-certificates</code> or disable verification temporarily with <code>-o LDAPTLS_REQCERT=never</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldap_bind: Invalid credentials (49)</code></td>
+<td>Verify the service account password is correct and the account is not locked; check DC logs with <code>Get-EventLog -LogName Security -InstanceId 4771 -Newest 10</code> on the domain controller.</td>
+</tr>
+<tr>
+<td><code>Can't contact LDAP server (-1)</code></td>
+<td>Ensure the DC hostname resolves with <code>nslookup dc01.corp.example.com</code> and port 389/636 is reachable via <code>nc -zv dc01.corp.example.com 636</code>.</td>
+</tr>
+<tr>
+<td><code>TLS/SSL error: certificate verify failed</code></td>
+<td>Add the DC's CA certificate to the system trust store with <code>sudo cp ca.crt /etc/ssl/certs/ &amp;&amp; sudo update-ca-certificates</code> or disable verification temporarily with <code>-o LDAPTLS_REQCERT=never</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="sasl-kerberos-bind">SASL / Kerberos Bind<a class="headerlink" href="#sasl-kerberos-bind" title="Permanent link">&para;</a></h2>
 <p>SASL with GSSAPI uses a Kerberos ticket, avoiding password exposure. This is the preferred method for Active Directory.</p>
@@ -8068,9 +8087,28 @@ LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Servi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)</code></strong> — Verify the DC hostname resolves and is reachable on port 389 with <code>nslookup dc01.corp.example.com</code> and <code>nc -zv dc01.corp.example.com 389</code>.
-<strong><code>GSSAPI Error: Unspecified GSS failure. Minor code may provide more information</code></strong> — Ensure a valid Kerberos ticket exists with <code>klist</code> and the service principal <code>ldap/dc01.corp.example.com@CORP.EXAMPLE.COM</code> is registered in Active Directory.
-<strong><code>kinit: Client not found in Kerberos database while getting initial credentials</code></strong> — Confirm the service account <code>svc-ldap@CORP.EXAMPLE.COM</code> exists in the KDC and the realm name matches your domain exactly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)</code></td>
+<td>Verify the DC hostname resolves and is reachable on port 389 with <code>nslookup dc01.corp.example.com</code> and <code>nc -zv dc01.corp.example.com 389</code>.</td>
+</tr>
+<tr>
+<td><code>GSSAPI Error: Unspecified GSS failure. Minor code may provide more information</code></td>
+<td>Ensure a valid Kerberos ticket exists with <code>klist</code> and the service principal <code>ldap/dc01.corp.example.com@CORP.EXAMPLE.COM</code> is registered in Active Directory.</td>
+</tr>
+<tr>
+<td><code>kinit: Client not found in Kerberos database while getting initial credentials</code></td>
+<td>Confirm the service account <code>svc-ldap@CORP.EXAMPLE.COM</code> exists in the KDC and the realm name matches your domain exactly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="service-account-bind-configuration">Service Account Bind Configuration<a class="headerlink" href="#service-account-bind-configuration" title="Permanent link">&para;</a></h2>
 <p>Service accounts used for LDAP bind should be dedicated, low-privilege accounts.</p>
@@ -8113,9 +8151,28 @@ LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Servi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the DC hostname is reachable and anonymous binds are not already restricted; test with <code>-D "CN=admin,CN=Users,DC=corp,DC=example,DC=com" -W</code> to confirm the server is responding.
-<strong><code>Can't contact LDAP server (-1)</code></strong> — Ensure the DC hostname resolves correctly and port 389 is accessible from your client; test with <code>ping dc01.corp.example.com</code> and <code>nc -zv dc01.corp.example.com 389</code>.
-<strong><code>ldapsearch: command not found</code></strong> — Install the ldap-utils package with <code>apt-get install ldap-utils</code> (Debian/Ubuntu) or <code>yum install openldap-clients</code> (RHEL/CentOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldap_bind: Invalid credentials (49)</code></td>
+<td>Verify the DC hostname is reachable and anonymous binds are not already restricted; test with <code>-D "CN=admin,CN=Users,DC=corp,DC=example,DC=com" -W</code> to confirm the server is responding.</td>
+</tr>
+<tr>
+<td><code>Can't contact LDAP server (-1)</code></td>
+<td>Ensure the DC hostname resolves correctly and port 389 is accessible from your client; test with <code>ping dc01.corp.example.com</code> and <code>nc -zv dc01.corp.example.com 389</code>.</td>
+</tr>
+<tr>
+<td><code>ldapsearch: command not found</code></td>
+<td>Install the ldap-utils package with <code>apt-get install ldap-utils</code> (Debian/Ubuntu) or <code>yum install openldap-clients</code> (RHEL/CentOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="bind-test-checklist">Bind Test Checklist<a class="headerlink" href="#bind-test-checklist" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Resolve the DC name</span>
@@ -8168,9 +8225,28 @@ LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Servi
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts.
-<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm DNS resolution works, firewall allows ports 389/636 to the DC, and the DC hostname is reachable via <code>ping dc01.corp.example.com</code>.
-<strong><code>Connection refused</code></strong> — Verify LDAP service is running on the DC with <code>systemctl status slapd</code> (Linux) or check Active Directory is operational on Windows DC.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldap_bind: Invalid credentials (49)</code></td>
+<td>Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts.</td>
+</tr>
+<tr>
+<td><code>Can't contact LDAP server (-1)</code></td>
+<td>Confirm DNS resolution works, firewall allows ports 389/636 to the DC, and the DC hostname is reachable via <code>ping dc01.corp.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify LDAP service is running on the DC with <code>systemctl status slapd</code> (Linux) or check Active Directory is operational on Windows DC.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8194,7 +8270,7 @@ LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Servi
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

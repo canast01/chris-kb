@@ -9151,9 +9151,28 @@ VMware Cloud Foundation diagnostic commands: check SDDC Manager services and hea
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit vmware-vcf-lcm.service not found.</code></strong> — Verify the VCF version is installed correctly and the service name matches your deployment with <code>systemctl list-units 'vmware-vcf-*'</code>.
-<strong><code>Failed to restart vmware-vcf-lcm.service: Access denied</code></strong> — Ensure you are running the command with <code>sudo</code> or as root user.
-<strong><code>Connection refused</code> (when SSH'ing to sddc-manager)</strong> — Verify the SDDC Manager hostname resolves correctly and SSH is enabled; check network connectivity with <code>ping sddc-manager.corp.example.com</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit vmware-vcf-lcm.service not found.</code></td>
+<td>Verify the VCF version is installed correctly and the service name matches your deployment with <code>systemctl list-units 'vmware-vcf-*'</code>.</td>
+</tr>
+<tr>
+<td><code>Failed to restart vmware-vcf-lcm.service: Access denied</code></td>
+<td>Ensure you are running the command with <code>sudo</code> or as root user.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code> (when SSH'ing to sddc-manager)<code>| Verify the SDDC Manager hostname resolves correctly and SSH is enabled; check network connectivity with</code>ping sddc-manager.corp.example.com`.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-2-analyze-lcm-lifecycle-and-upgrade-logs">Step 2 — Analyze LCM lifecycle and upgrade logs<a class="headerlink" href="#step-2-analyze-lcm-lifecycle-and-upgrade-logs" title="Permanent link">&para;</a></h2>
@@ -9208,9 +9227,28 @@ VMware Cloud Foundation diagnostic commands: check SDDC Manager services and hea
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory</code></strong> — Verify the LCM service is running with <code>systemctl status vmware-vcf-lcm</code> and check the correct log path with <code>find /var/log -name "*lcm*" -type f</code>.
-<strong><code>curl: (7) Failed to connect to depot.vmware.com port 443: Connection timed out</code></strong> — Verify network connectivity and proxy settings with <code>curl -v --proxy [proxy:port] https://depot.vmware.com</code> or check firewall rules blocking outbound HTTPS.
-<strong><code>taskId=&lt;task-uuid&gt;: No such file or directory</code></strong> — Replace the literal <code>&lt;task-uuid&gt;</code> placeholder with an actual UUID from a previous grep output, e.g., `grep "taskId=a7f2c</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory</code></td>
+<td>Verify the LCM service is running with <code>systemctl status vmware-vcf-lcm</code> and check the correct log path with <code>find /var/log -name "*lcm*" -type f</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to depot.vmware.com port 443: Connection timed out</code></td>
+<td>Verify network connectivity and proxy settings with <code>curl -v --proxy [proxy:port] https://depot.vmware.com</code> or check firewall rules blocking outbound HTTPS.</td>
+</tr>
+<tr>
+<td><code>taskId=&lt;task-uuid&gt;: No such file or directory</code></td>
+<td>Replace the literal <code>&lt;task-uuid&gt;</code> placeholder with an actual UUID from a previous grep output, e.g., `grep "taskId=a7f2c</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-3-diagnose-nsx-manager-cluster-and-transport-nodes">Step 3 — Diagnose NSX Manager cluster and transport nodes<a class="headerlink" href="#step-3-diagnose-nsx-manager-cluster-and-transport-nodes" title="Permanent link">&para;</a></h2>
@@ -9281,9 +9319,28 @@ VMware Cloud Foundation diagnostic commands: check SDDC Manager services and hea
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; verify NSX certificate is valid if this persists).
-<strong><code>node_deployment_state: FAILED</code></strong> — SSH to the affected transport node and check <code>/var/log/nsx-agent.log</code> for deployment errors, then re-run the NSX controller deployment task.
-<strong><code>PING: sendto: No route to host</code></strong> — Verify the TEP (Tunnel Endpoint) IP is reachable and that vmk10 is bound to the correct VLAN/segment on the ESXi host using <code>esxcli network ip interface list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; verify NSX certificate is valid if this persists).</td>
+</tr>
+<tr>
+<td><code>node_deployment_state: FAILED</code></td>
+<td>SSH to the affected transport node and check <code>/var/log/nsx-agent.log</code> for deployment errors, then re-run the NSX controller deployment task.</td>
+</tr>
+<tr>
+<td><code>PING: sendto: No route to host</code></td>
+<td>Verify the TEP (Tunnel Endpoint) IP is reachable and that vmk10 is bound to the correct VLAN/segment on the ESXi host using <code>esxcli network ip interface list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-4-check-vcenter-appliance">Step 4 — Check vCenter appliance<a class="headerlink" href="#step-4-check-vcenter-appliance" title="Permanent link">&para;</a></h2>
@@ -9337,9 +9394,28 @@ VMware Cloud Foundation diagnostic commands: check SDDC Manager services and hea
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to vcenter.corp.example.com port 443: Connection refused</code></strong> — Verify vCenter API service is running with <code>service-control --status --all | grep -i api</code> and restart if needed with <code>service-control --start --all</code>.
-<strong><code>Authentication failed for user 'administrator@vsphere.local'</code></strong> — Confirm the password is correct and the SSO service is operational; check <code>/var/log/vmware/sso/sso-event.log</code> for lockouts.
-<strong><code>/storage filesystem is 95% full</code></strong> — Immediately increase <code>/storage</code> LVM volume or delete old logs/snapshots; full <code>/storage/db</code> will cause vCenter to become unresponsive.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to vcenter.corp.example.com port 443: Connection refused</code></td>
+<td>Verify vCenter API service is running with <code>service-control --status --all | grep -i api</code> and restart if needed with <code>service-control --start --all</code>.</td>
+</tr>
+<tr>
+<td><code>Authentication failed for user 'administrator@vsphere.local'</code></td>
+<td>Confirm the password is correct and the SSO service is operational; check <code>/var/log/vmware/sso/sso-event.log</code> for lockouts.</td>
+</tr>
+<tr>
+<td><code>/storage filesystem is 95% full</code></td>
+<td>Immediately increase <code>/storage</code> LVM volume or delete old logs/snapshots; full <code>/storage/db</code> will cause vCenter to become unresponsive.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-5-query-sddc-manager-health-api">Step 5 — Query SDDC Manager health API<a class="headerlink" href="#step-5-query-sddc-manager-health-api" title="Permanent link">&para;</a></h2>
@@ -9417,9 +9493,28 @@ VMware Cloud Foundation diagnostic commands: check SDDC Manager services and hea
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command (already present; if still failing, verify SDDC Manager hostname resolves correctly).
-<strong><code>jq: command not found</code> or <code>python3: command not found</code></strong> — Install python3 package on SDDC Manager or use <code>jq</code> instead of python3 for JSON parsing.
-<strong><code>{"error":"Invalid token","status":401}</code></strong> — Verify admin credentials are correct and account is not locked; re-run token generation command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command (already present; if still failing, verify SDDC Manager hostname resolves correctly).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code> or <code>python3: command not found</code></td>
+<td>Install python3 package on SDDC Manager or use <code>jq</code> instead of python3 for JSON parsing.</td>
+</tr>
+<tr>
+<td><code>{"error":"Invalid token","status":401}</code></td>
+<td>Verify admin credentials are correct and account is not locked; re-run token generation command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-6-collect-sos-diagnostic-bundle">Step 6 — Collect SOS diagnostic bundle<a class="headerlink" href="#step-6-collect-sos-diagnostic-bundle" title="Permanent link">&para;</a></h2>
@@ -9479,9 +9574,28 @@ VMware Cloud Foundation diagnostic commands: check SDDC Manager services and hea
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH key is loaded or use password authentication; confirm vcf user exists on SDDC Manager with <code>id vcf</code>.
-<strong><code>/usr/lib/vmware-sddc-support/sos: command not found</code></strong> — Ensure you are running as root with <code>sudo su -</code> and that VMware Cloud Foundation support tools are installed with <code>rpm -qa | grep vmware-sddc-support</code>.
-<strong><code>No space left on device</code></strong> — Free up disk space on SDDC Manager with <code>df -h</code> to identify full partitions, or move existing bundles to external storage before re-running collection.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify SSH key is loaded or use password authentication; confirm vcf user exists on SDDC Manager with <code>id vcf</code>.</td>
+</tr>
+<tr>
+<td><code>/usr/lib/vmware-sddc-support/sos: command not found</code></td>
+<td>Ensure you are running as root with <code>sudo su -</code> and that VMware Cloud Foundation support tools are installed with <code>rpm -qa | grep vmware-sddc-support</code>.</td>
+</tr>
+<tr>
+<td><code>No space left on device</code></td>
+<td>Free up disk space on SDDC Manager with <code>df -h</code> to identify full partitions, or move existing bundles to external storage before re-running collection.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-7-vcf-error-code-reference">Step 7 — VCF error code reference<a class="headerlink" href="#step-7-vcf-error-code-reference" title="Permanent link">&para;</a></h2>
@@ -9642,7 +9756,7 @@ VMware Cloud Foundation diagnostic commands: check SDDC Manager services and hea
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

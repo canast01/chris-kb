@@ -7485,9 +7485,28 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "apiserver" in group "config.openshift.io"</code></strong> — Verify you are connected to an OpenShift 4.x cluster with <code>oc version</code> and confirm the API server CRD exists with <code>oc api-resources | grep apiserver</code>.
-<strong><code>Encrypted = false in conditions after 30+ minutes</code></strong> — Check etcd pod logs with <code>oc logs -n openshift-etcd etcd-&lt;node&gt;</code> for encryption errors and verify sufficient disk space with <code>oc describe node &lt;node&gt;</code>.
-<strong><code>etcd.encryption.kubernetes.io/hash annotation not found on secret</code></strong> — Wait for the encryption migration to complete (monitor with `oc get apiserver cluster -o jsonpath='{.status.conditions[?(@.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "apiserver" in group "config.openshift.io"</code></td>
+<td>Verify you are connected to an OpenShift 4.x cluster with <code>oc version</code> and confirm the API server CRD exists with <code>oc api-resources | grep apiserver</code>.</td>
+</tr>
+<tr>
+<td><code>Encrypted = false in conditions after 30+ minutes</code></td>
+<td>Check etcd pod logs with <code>oc logs -n openshift-etcd etcd-&lt;node&gt;</code> for encryption errors and verify sufficient disk space with <code>oc describe node &lt;node&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>etcd.encryption.kubernetes.io/hash annotation not found on secret</code></td>
+<td>Wait for the encryption migration to complete (monitor with `oc get apiserver cluster -o jsonpath='{.status.conditions[?(@.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="etcd-encryption-key-rotation">etcd Encryption Key Rotation<a class="headerlink" href="#etcd-encryption-key-rotation" title="Permanent link">&para;</a></h3>
 <p>Key rotation is automatic once encryption is enabled. OCP generates new keys periodically and re-encrypts all existing data. There is no manual rotation step required unless you are transitioning between algorithm types.</p>
@@ -7500,8 +7519,24 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "apiserver" in group "config.openshift.io"</code></strong> — Verify you are connected to an OpenShift cluster with <code>oc cluster-info</code> and have sufficient permissions with <code>oc auth can-i patch apiserver</code>.
-<strong><code>Error from server (Forbidden): apiservers.config.openshift.io "cluster" is forbidden: User "system:serviceaccount:default:default" cannot patch resource "apiservers" in API group "config.openshift.io" at the cluster scope</code></strong> — Switch to a user with cluster-admin role using <code>oc login</code> with appropriate credentials or <code>oc adm policy add-cluster-role-to-user cluster-admin &lt;username&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "apiserver" in group "config.openshift.io"</code></td>
+<td>Verify you are connected to an OpenShift cluster with <code>oc cluster-info</code> and have sufficient permissions with <code>oc auth can-i patch apiserver</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (Forbidden): apiservers.config.openshift.io "cluster" is forbidden: User "system:serviceaccount:default:default" cannot patch resource "apiservers" in API group "config.openshift.io" at the cluster scope</code></td>
+<td>Switch to a user with cluster-admin role using <code>oc login</code> with appropriate credentials or <code>oc adm policy add-cluster-role-to-user cluster-admin &lt;username&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="custom-ingress-wildcard-certificate">Custom Ingress (Wildcard) Certificate<a class="headerlink" href="#custom-ingress-wildcard-certificate" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Create TLS secret with wildcard cert for *.apps.ocp.example.com</span>
@@ -7532,9 +7567,28 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: tls.crt: no such file or directory</code></strong> — Ensure wildcard.crt and wildcard.key files exist in the current directory before running the create secret command.
-<strong><code>error: ingresscontroller.operator.openshift.io "default" not found</code></strong> — Verify the IngressController exists with <code>oc get ingresscontroller -n openshift-ingress-operator</code> and use the correct name.
-<strong><code>unable to load certificate</code></strong> — Confirm the certificate file is valid PEM format and the key matches the cert using <code>openssl x509 -in wildcard.crt -text -noout</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: tls.crt: no such file or directory</code></td>
+<td>Ensure wildcard.crt and wildcard.key files exist in the current directory before running the create secret command.</td>
+</tr>
+<tr>
+<td><code>error: ingresscontroller.operator.openshift.io "default" not found</code></td>
+<td>Verify the IngressController exists with <code>oc get ingresscontroller -n openshift-ingress-operator</code> and use the correct name.</td>
+</tr>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Confirm the certificate file is valid PEM format and the key matches the cert using <code>openssl x509 -in wildcard.crt -text -noout</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="custom-api-server-certificate">Custom API Server Certificate<a class="headerlink" href="#custom-api-server-certificate" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Create TLS secret for api.ocp.example.com</span>
@@ -7579,9 +7633,28 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to read certificate file "api-server.crt": no such file or directory</code></strong> — Verify the certificate and key files exist in the current directory with <code>ls -la api-server.crt api-server.key</code>.
-<strong><code>error: the server has asked for the client to provide credentials</code></strong> — Update your kubeconfig to trust the new certificate by downloading it from the cluster or adding the CA bundle to your local trust store.
-<strong><code>error: patch does not apply: spec.servingCerts not found</code></strong> — Ensure the APIServer CR exists and supports the servingCerts field by running <code>oc get apiserver cluster -o yaml</code> to verify the current schema.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to read certificate file "api-server.crt": no such file or directory</code></td>
+<td>Verify the certificate and key files exist in the current directory with <code>ls -la api-server.crt api-server.key</code>.</td>
+</tr>
+<tr>
+<td><code>error: the server has asked for the client to provide credentials</code></td>
+<td>Update your kubeconfig to trust the new certificate by downloading it from the cluster or adding the CA bundle to your local trust store.</td>
+</tr>
+<tr>
+<td><code>error: patch does not apply: spec.servingCerts not found</code></td>
+<td>Ensure the APIServer CR exists and supports the servingCerts field by running <code>oc get apiserver cluster -o yaml</code> to verify the current schema.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="add-custom-ca-trust-bundle">Add Custom CA Trust Bundle<a class="headerlink" href="#add-custom-ca-trust-bundle" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Add enterprise CA certificate for cluster-wide trust</span>
@@ -7606,9 +7679,28 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to read file "enterprise-ca.crt": no such file or directory</code></strong> — Ensure the enterprise CA certificate file exists in the current directory or provide the full path with <code>--from-file=ca-bundle.crt=/path/to/enterprise-ca.crt</code>.
-<strong><code>error: the server doesn't have a resource type "proxy"</code></strong> — Verify the cluster has the config.openshift.io API group available; this requires OpenShift 4.3+, and check that the proxy/cluster resource exists with <code>oc get proxy</code>.
-<strong><code>error: unable to connect to the server: dial tcp: lookup worker-node-02.prod.ocp.local on [IP]: no such host</code></strong> — Replace <code>&lt;node&gt;</code> with the actual node name from <code>oc get nodes</code> and ensure the node is in Ready state.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to read file "enterprise-ca.crt": no such file or directory</code></td>
+<td>Ensure the enterprise CA certificate file exists in the current directory or provide the full path with <code>--from-file=ca-bundle.crt=/path/to/enterprise-ca.crt</code>.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "proxy"</code></td>
+<td>Verify the cluster has the config.openshift.io API group available; this requires OpenShift 4.3+, and check that the proxy/cluster resource exists with <code>oc get proxy</code>.</td>
+</tr>
+<tr>
+<td><code>error: unable to connect to the server: dial tcp: lookup worker-node-02.prod.ocp.local on [IP]: no such host</code></td>
+<td>Replace <code>&lt;node&gt;</code> with the actual node name from <code>oc get nodes</code> and ensure the node is in Ready state.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="secret-management-with-vault">Secret Management with Vault<a class="headerlink" href="#secret-management-with-vault" title="Permanent link">&para;</a></h2>
 <p>Two integration patterns: sidecar injector (annotation-driven, no app changes) and CSI driver (projected volume, works with any workload).</p>
@@ -7651,9 +7743,28 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error reading file: stat /tmp/cluster-ca.crt: no such file or directory</code></strong> — Extract the cluster CA certificate first with <code>oc extract secret/kube-root-ca.crt -n openshift-kube-apiserver --to=/tmp/</code>.
-<strong><code>Error writing data to auth/kubernetes/config: error validating token reviewer JWT: invalid bearer token</code></strong> — Ensure the vault-0 pod is running in the vault namespace and the service account has permission to review tokens with <code>oc adm policy add-cluster-role-to-user system:auth-delegator -z vault</code>.
-<strong><code>Error writing data to auth/kubernetes/role/myapp: permission denied</code></strong> — Verify you are authenticated to Vault with sufficient policy permissions using <code>vault token lookup</code> and check that your token has write access to <code>auth/kubernetes/role/*</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error reading file: stat /tmp/cluster-ca.crt: no such file or directory</code></td>
+<td>Extract the cluster CA certificate first with <code>oc extract secret/kube-root-ca.crt -n openshift-kube-apiserver --to=/tmp/</code>.</td>
+</tr>
+<tr>
+<td><code>Error writing data to auth/kubernetes/config: error validating token reviewer JWT: invalid bearer token</code></td>
+<td>Ensure the vault-0 pod is running in the vault namespace and the service account has permission to review tokens with <code>oc adm policy add-cluster-role-to-user system:auth-delegator -z vault</code>.</td>
+</tr>
+<tr>
+<td><code>Error writing data to auth/kubernetes/role/myapp: permission denied</code></td>
+<td>Verify you are authenticated to Vault with sufficient policy permissions using <code>vault token lookup</code> and check that your token has write access to <code>auth/kubernetes/role/*</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="secrets-store-csi-driver">Secrets Store CSI Driver<a class="headerlink" href="#secrets-store-csi-driver" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># SecretProviderClass pointing to Vault</span>
@@ -7717,9 +7828,28 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: resource mapping not found for name: "require-signed-images" namespace: "" from "": no matches for kind "ClusterImagePolicy" in version "config.openshift.io/v1alpha1"</code></strong> — Verify the ClusterImagePolicy CRD is installed by running <code>oc get crd | grep imagepolicy</code> and ensure your OpenShift version supports image signature verification (4.11+).
-<strong><code>error: unable to decode "": yaml: line 2: mapping values are not allowed in this context</code></strong> — Ensure the base64-encoded key values replace the placeholder strings exactly and contain no newlines; use <code>cat key.pub | base64 -w0</code> to encode without line breaks.
-<strong><code>The ImageContentSourcePolicy "mirror-config" is invalid: spec.repositoryDigestMirrors[0].mirrors: Invalid value: []string{nil}: must specify at least one mirror</code></strong> — Verify that <code>mirror.example.com/redhat</code> and <code>mirror.example.com/quay</code> are valid, accessible registry hostnames and not left as placeholders.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: resource mapping not found for name: "require-signed-images" namespace: "" from "": no matches for kind "ClusterImagePolicy" in version "config.openshift.io/v1alpha1"</code></td>
+<td>Verify the ClusterImagePolicy CRD is installed by running <code>oc get crd | grep imagepolicy</code> and ensure your OpenShift version supports image signature verification (4.11+).</td>
+</tr>
+<tr>
+<td><code>error: unable to decode "": yaml: line 2: mapping values are not allowed in this context</code></td>
+<td>Ensure the base64-encoded key values replace the placeholder strings exactly and contain no newlines; use <code>cat key.pub | base64 -w0</code> to encode without line breaks.</td>
+</tr>
+<tr>
+<td><code>The ImageContentSourcePolicy "mirror-config" is invalid: spec.repositoryDigestMirrors[0].mirrors: Invalid value: []string{nil}: must specify at least one mirror</code></td>
+<td>Verify that <code>mirror.example.com/redhat</code> and <code>mirror.example.com/quay</code> are valid, accessible registry hostnames and not left as placeholders.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cert-manager-operator">cert-manager Operator<a class="headerlink" href="#cert-manager-operator" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Install cert-manager from OperatorHub, then:</span>
@@ -7778,9 +7908,28 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: resource mapping not found for name: "letsencrypt-prod" namespace: "" from "STDIN": no matches for kind "ClusterIssuer" in version "cert-manager.io/v1"</code></strong> — Install cert-manager operator from OperatorHub first using <code>oc get operators | grep cert-manager</code> to verify installation.
-<strong><code>Certificate my-app-cert in namespace my-app is not ready: Waiting for HTTP-01 challenge propagation</code></strong> — Ensure the ingress class name matches your cluster's default ingress controller with <code>oc get ingressclass</code> and update the <code>class</code> field accordingly.
-<strong><code>error validating data: data[tls.crt] not found</code></strong> — Wait for the certificate to reach Ready status before referencing the secret; check progress with <code>oc describe certificaterequest -n my-app</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: resource mapping not found for name: "letsencrypt-prod" namespace: "" from "STDIN": no matches for kind "ClusterIssuer" in version "cert-manager.io/v1"</code></td>
+<td>Install cert-manager operator from OperatorHub first using <code>oc get operators | grep cert-manager</code> to verify installation.</td>
+</tr>
+<tr>
+<td><code>Certificate my-app-cert in namespace my-app is not ready: Waiting for HTTP-01 challenge propagation</code></td>
+<td>Ensure the ingress class name matches your cluster's default ingress controller with <code>oc get ingressclass</code> and update the <code>class</code> field accordingly.</td>
+</tr>
+<tr>
+<td><code>error validating data: data[tls.crt] not found</code></td>
+<td>Wait for the certificate to reach Ready status before referencing the secret; check progress with <code>oc describe certificaterequest -n my-app</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="certificate-lifecycle-reference">Certificate Lifecycle Reference<a class="headerlink" href="#certificate-lifecycle-reference" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># List all cluster-internal TLS secrets managed by operators</span>
@@ -7817,9 +7966,28 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "secret" or "secrets"</code></strong> — Verify you are connected to a valid OpenShift cluster with <code>oc cluster-info</code> and have cluster-admin permissions.
-<strong><code>error: Unexpected key in path: tls.crt</code></strong> — Use <code>tls\.crt</code> with escaped dot or change to <code>'{.data["tls.crt"]}'</code> in the jsonpath expression.
-<strong><code>command not found: openssl</code></strong> — Install openssl on your local machine with <code>apt-get install openssl</code> (Debian/Ubuntu) or <code>brew install openssl</code> (macOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "secret" or "secrets"</code></td>
+<td>Verify you are connected to a valid OpenShift cluster with <code>oc cluster-info</code> and have cluster-admin permissions.</td>
+</tr>
+<tr>
+<td><code>error: Unexpected key in path: tls.crt</code></td>
+<td>Use <code>tls\.crt</code> with escaped dot or change to <code>'{.data["tls.crt"]}'</code> in the jsonpath expression.</td>
+</tr>
+<tr>
+<td><code>command not found: openssl</code></td>
+<td>Install openssl on your local machine with <code>apt-get install openssl</code> (Debian/Ubuntu) or <code>brew install openssl</code> (macOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7848,7 +8016,7 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

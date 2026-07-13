@@ -8706,9 +8706,28 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to port 443: Connection refused</code></strong> — Verify the NSX Manager is running and reachable at the IP/hostname in $NSX_URL, and that port 443 is not blocked by a firewall.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></strong> — Check that $NSX_PASS is set correctly and the admin user has API permissions; an authentication failure returns HTML instead of JSON.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the NSX Manager's CA certificate into your system trust store if <code>-k</code> is removed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to port 443: Connection refused</code></td>
+<td>Verify the NSX Manager is running and reachable at the IP/hostname in $NSX_URL, and that port 443 is not blocked by a firewall.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></td>
+<td>Check that $NSX_PASS is set correctly and the admin user has API permissions; an authentication failure returns HTML instead of JSON.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already present) or import the NSX Manager's CA certificate into your system trust store if <code>-k</code> is removed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected: <code>STABLE</code>. Do not upgrade if NSX-T is in <code>DEGRADED</code> or <code>UNSTABLE</code> state.</p>
 <p><strong>No Active vMotion Operations</strong></p>
@@ -8733,9 +8752,28 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present; if error persists, verify SDDC_URL is correct and accessible).
-<strong><code>jq: command not found</code> or <code>json.decoder.JSONDecodeError</code></strong> — Ensure python3 is installed and the JSON response is valid by testing token endpoint separately with <code>curl -sk -X POST "${SDDC_URL}/v1/tokens" -H "Content-Type: application/json" -d '{"username":"administrator@vsphere.local","password":"P@ssw0rd"}'</code>.
-<strong><code>401 Unauthorized</code></strong> — Verify the token was successfully extracted by echoing <code>echo $TOKEN</code> and confirm credentials are correct; if token is empty, the authentication endpoint may have failed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present; if error persists, verify SDDC_URL is correct and accessible).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code> or <code>json.decoder.JSONDecodeError</code></td>
+<td>Ensure python3 is installed and the JSON response is valid by testing token endpoint separately with <code>curl -sk -X POST "${SDDC_URL}/v1/tokens" -H "Content-Type: application/json" -d '{"username":"administrator@vsphere.local","password":"P@ssw0rd"}'</code>.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Verify the token was successfully extracted by echoing <code>echo $TOKEN</code> and confirm credentials are correct; if token is empty, the authentication endpoint may have failed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>VCF Compatibility Matrix Check</strong></p>
 <p>Before upgrading, verify the target version combination is supported:</p>
@@ -8794,9 +8832,28 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to hcx-onprem.corp.local port 443: Name or service not known</code></strong> — Verify DNS resolution for the HCX hostnames or update <code>/etc/hosts</code> with correct IP mappings.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — The <code>-k</code> flag is already present; if still failing, ensure the HCX appliance certificate is valid and not expired.
-<strong><code>jq: error (at &lt;stdin&gt;:1): Invalid JSON text at line 1</code></strong> — Confirm <code>$HCX_PASS</code> is set correctly and the HCX API endpoint is responding with valid JSON (check credentials and network connectivity).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to hcx-onprem.corp.local port 443: Name or service not known</code></td>
+<td>Verify DNS resolution for the HCX hostnames or update <code>/etc/hosts</code> with correct IP mappings.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>The <code>-k</code> flag is already present; if still failing, ensure the HCX appliance certificate is valid and not expired.</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Invalid JSON text at line 1</code></td>
+<td>Confirm <code>$HCX_PASS</code> is set correctly and the HCX API endpoint is responding with valid JSON (check credentials and network connectivity).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Both sides must run the same major HCX version. If EVS has upgraded HCX Cloud automatically, upgrade on-prem HCX Manager before using HCX for migrations.</p>
 <p><strong>Upgrade on-prem HCX Manager:</strong></p>
@@ -8918,7 +8975,7 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

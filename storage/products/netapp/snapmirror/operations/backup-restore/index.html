@@ -8635,9 +8635,28 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: SnapMirror transfer is in progress. Quiesce the relationship first.</code></strong> — Wait for the snapmirror update to complete fully before attempting to quiesce.
-<strong><code>Error: command failed: Volume "vol_data" is already mounted at junction path "/vol_data".</code></strong> — Remove the mount command if the volume is already mounted, or verify the junction-path is not already in use.
-<strong><code>Error: command failed: Policy "&lt;policy&gt;" does not exist on Vserver "svm_dr".</code></strong> — Replace <code>&lt;policy&gt;</code> with an actual export policy name or create the policy first using <code>export-policy create</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: SnapMirror transfer is in progress. Quiesce the relationship first.</code></td>
+<td>Wait for the snapmirror update to complete fully before attempting to quiesce.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Volume "vol_data" is already mounted at junction path "/vol_data".</code></td>
+<td>Remove the mount command if the volume is already mounted, or verify the junction-path is not already in use.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Policy "&lt;policy&gt;" does not exist on Vserver "svm_dr".</code></td>
+<td>Replace <code>&lt;policy&gt;</code> with an actual export policy name or create the policy first using <code>export-policy create</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="unplanned-failover-source-down">Unplanned Failover (Source Down)<a class="headerlink" href="#unplanned-failover-source-down" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Source is unreachable — break the relationship to activate the destination</span>
@@ -8669,8 +8688,24 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_data"</code></strong> — Verify the destination path is correct and the relationship exists using <code>snapmirror show -all</code>.
-<strong><code>Error: Cannot mount volume vol_data: volume is already mounted</code></strong> — Check if the volume is already mounted on the DR SVM with <code>volume show -vserver svm_dr -volume vol_data -fields junction-path</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_data"</code></td>
+<td>Verify the destination path is correct and the relationship exists using <code>snapmirror show -all</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot mount volume vol_data: volume is already mounted</code></td>
+<td>Check if the volume is already mounted on the DR SVM with <code>volume show -vserver svm_dr -volume vol_data -fields junction-path</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="restore-from-a-snapshot-on-the-destination-volume-point-in-time-recovery">Restore from a Snapshot on the Destination Volume (Point-in-Time Recovery)<a class="headerlink" href="#restore-from-a-snapshot-on-the-destination-volume-point-in-time-recovery" title="Permanent link">&para;</a></h2>
@@ -8701,8 +8736,24 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: no snapshots found for volume vol_data</code></strong> — Verify the volume name and SVM name are correct using <code>volume show -vserver svm_dr</code>.
-<strong><code>Error: invalid vserver name "svm_dr"</code></strong> — Confirm the SVM exists and is accessible with <code>vserver show -vserver svm_dr</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: no snapshots found for volume vol_data</code></td>
+<td>Verify the volume name and SVM name are correct using <code>volume show -vserver svm_dr</code>.</td>
+</tr>
+<tr>
+<td><code>Error: invalid vserver name "svm_dr"</code></td>
+<td>Confirm the SVM exists and is accessible with <code>vserver show -vserver svm_dr</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="mount-a-specific-snapshot-for-file-level-recovery">Mount a Specific Snapshot for File-Level Recovery<a class="headerlink" href="#mount-a-specific-snapshot-for-file-level-recovery" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create a FlexClone from a specific snapshot for read access</span>
@@ -8737,9 +8788,28 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Cannot unmount volume vol_data_recovery: volume is in use</code></strong> — Ensure all NFS/CIFS clients have disconnected from the mount point and no processes hold open file handles before unmounting.
-<strong><code>Error: command failed: Cannot create clone: parent snapshot &lt;snapshot-name&gt; does not exist on volume vol_data</code></strong> — Verify the snapshot name exists by running <code>snapshot show -vserver svm_dr -volume vol_data</code> and use the exact snapshot name in the parent-snapshot parameter.
-<strong><code>Error: command failed: Cannot mount volume: junction path /vol_data_recovery already exists</code></strong> — Remove the conflicting junction path with <code>volume unmount -vserver svm_dr -volume &lt;existing-volume&gt;</code> or choose a different junction path for the clone.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Cannot unmount volume vol_data_recovery: volume is in use</code></td>
+<td>Ensure all NFS/CIFS clients have disconnected from the mount point and no processes hold open file handles before unmounting.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Cannot create clone: parent snapshot &lt;snapshot-name&gt; does not exist on volume vol_data</code></td>
+<td>Verify the snapshot name exists by running <code>snapshot show -vserver svm_dr -volume vol_data</code> and use the exact snapshot name in the parent-snapshot parameter.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Cannot mount volume: junction path /vol_data_recovery already exists</code></td>
+<td>Remove the conflicting junction path with <code>volume unmount -vserver svm_dr -volume &lt;existing-volume&gt;</code> or choose a different junction path for the clone.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="revert-a-destination-volume-to-a-specific-snapshot">Revert a Destination Volume to a Specific Snapshot<a class="headerlink" href="#revert-a-destination-volume-to-a-specific-snapshot" title="Permanent link">&para;</a></h3>
 <p>This is destructive — it discards all data newer than the selected snapshot on the destination. Only use when breaking the mirror and restoring from a specific point-in-time.</p>
@@ -8767,9 +8837,28 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: SnapMirror relationship is not in a state that allows this operation.</code></strong> — Ensure the mirror is fully synchronized and not in a transfer state before attempting to break it.
-<strong><code>Error: snapshot "vol_data.20240115_0200" does not exist.</code></strong> — Verify the exact snapshot name using <code>snapshot show -vserver svm_dr -volume vol_data</code> and correct the spelling or date format.
-<strong><code>Error: cannot restore snapshot while volume has active SnapMirror relationship.</code></strong> — Break the SnapMirror relationship completely before attempting the restore operation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: SnapMirror relationship is not in a state that allows this operation.</code></td>
+<td>Ensure the mirror is fully synchronized and not in a transfer state before attempting to break it.</td>
+</tr>
+<tr>
+<td><code>Error: snapshot "vol_data.20240115_0200" does not exist.</code></td>
+<td>Verify the exact snapshot name using <code>snapshot show -vserver svm_dr -volume vol_data</code> and correct the spelling or date format.</td>
+</tr>
+<tr>
+<td><code>Error: cannot restore snapshot while volume has active SnapMirror relationship.</code></td>
+<td>Break the SnapMirror relationship completely before attempting the restore operation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="restore-from-a-snapvault-xdp-vault-relationship">Restore from a SnapVault (XDP Vault) Relationship<a class="headerlink" href="#restore-from-a-snapvault-xdp-vault-relationship" title="Permanent link">&para;</a></h2>
@@ -8812,9 +8901,28 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Parent snapshot does not exist.</code></strong> — Verify the snapshot name exists by running <code>snapshot show -vserver svm_vault -volume vol_data_vault</code> and use the exact snapshot identifier from the output.
-<strong><code>Error: command failed: Volume vol_data_clone already exists.</code></strong> — Delete the existing clone volume first with <code>volume delete -vserver svm_vault -volume vol_data_clone -force true</code> or use a different clone name.
-<strong><code>Error: command failed: Cannot unmount volume with active CIFS/NFS connections.</code></strong> — Ensure all client connections are closed by running <code>cifs session show</code> or <code>nfs connected-clients</code> to identify and disconnect active sessions before unmounting.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Parent snapshot does not exist.</code></td>
+<td>Verify the snapshot name exists by running <code>snapshot show -vserver svm_vault -volume vol_data_vault</code> and use the exact snapshot identifier from the output.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Volume vol_data_clone already exists.</code></td>
+<td>Delete the existing clone volume first with <code>volume delete -vserver svm_vault -volume vol_data_clone -force true</code> or use a different clone name.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Cannot unmount volume with active CIFS/NFS connections.</code></td>
+<td>Ensure all client connections are closed by running <code>cifs session show</code> or <code>nfs connected-clients</code> to identify and disconnect active sessions before unmounting.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="restore-from-vault-to-source-full-volume-restore">Restore from Vault to Source (Full Volume Restore)<a class="headerlink" href="#restore-from-vault-to-source-full-volume-restore" title="Permanent link">&para;</a></h3>
 <p>This procedure restores a full volume from the XDP vault back to the source — for example, after an accidental deletion or corruption on the source.</p>
@@ -8858,9 +8966,28 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: SnapMirror relationship is not idle</code></strong> — Run <code>snapmirror quiesce -destination-path svm_vault:vol_data_vault</code> and wait 60 seconds before attempting the break operation.
-<strong><code>Error: Cannot resync relationship in broken state without source-path</code></strong> — Verify the source and destination paths are correctly specified and the relationship type matches (use <code>snapmirror show -all</code> to confirm current state).
-<strong><code>Error: Transfer aborted. Insufficient space on destination volume</code></strong> — Expand the destination volume with <code>volume size -vserver svm_prod -volume vol_data -size +10GB</code> before retrying the resync.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: SnapMirror relationship is not idle</code></td>
+<td>Run <code>snapmirror quiesce -destination-path svm_vault:vol_data_vault</code> and wait 60 seconds before attempting the break operation.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot resync relationship in broken state without source-path</code></td>
+<td>Verify the source and destination paths are correctly specified and the relationship type matches (use <code>snapmirror show -all</code> to confirm current state).</td>
+</tr>
+<tr>
+<td><code>Error: Transfer aborted. Insufficient space on destination volume</code></td>
+<td>Expand the destination volume with <code>volume size -vserver svm_prod -volume vol_data -size +10GB</code> before retrying the resync.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="svm-dr-failover-and-failback">SVM-DR Failover and Failback<a class="headerlink" href="#svm-dr-failover-and-failback" title="Permanent link">&para;</a></h2>
@@ -8903,9 +9030,28 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Snapmirror relationship is not in a quiesced state</code></strong> — Run <code>snapmirror quiesce -destination-path svm_dr:</code> before attempting to break the relationship.
-<strong><code>Error: Vserver svm_dr is not in a stopped state and cannot be started</code></strong> — The destination SVM is already running; verify with <code>vserver show -vserver svm_dr</code> before issuing the start command.
-<strong><code>Error: Cannot resolve hostname svm_dr in DNS</code></strong> — Update your DNS server or /etc/hosts file to map the SVM hostname to the new DR LIF IP address (192.168.10.45 in this example).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Snapmirror relationship is not in a quiesced state</code></td>
+<td>Run <code>snapmirror quiesce -destination-path svm_dr:</code> before attempting to break the relationship.</td>
+</tr>
+<tr>
+<td><code>Error: Vserver svm_dr is not in a stopped state and cannot be started</code></td>
+<td>The destination SVM is already running; verify with <code>vserver show -vserver svm_dr</code> before issuing the start command.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot resolve hostname svm_dr in DNS</code></td>
+<td>Update your DNS server or /etc/hosts file to map the SVM hostname to the new DR LIF IP address (192.168.10.45 in this example).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="svm-dr-failback">SVM-DR Failback<a class="headerlink" href="#svm-dr-failback" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># After the primary SVM is recovered, reverse sync from DR back to primary</span>
@@ -8944,9 +9090,28 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Snapmirror relationship is not idle</code></strong> — Wait for the previous transfer to complete using <code>snapmirror show -destination-path svm_prod:</code> before attempting resync.
-<strong><code>Error: command failed: Snapmirror relationship does not exist</code></strong> — Verify the source and destination SVM names match the original SnapMirror configuration using <code>snapmirror show -all</code>.
-<strong><code>Error: command failed: Snapmirror relationship is not in a valid state for break</code></strong> — Ensure the resync operation has completed and the relationship is idle before breaking it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Snapmirror relationship is not idle</code></td>
+<td>Wait for the previous transfer to complete using <code>snapmirror show -destination-path svm_prod:</code> before attempting resync.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Snapmirror relationship does not exist</code></td>
+<td>Verify the source and destination SVM names match the original SnapMirror configuration using <code>snapmirror show -all</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Snapmirror relationship is not in a valid state for break</code></td>
+<td>Ensure the resync operation has completed and the relationship is idle before breaking it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h2>
@@ -8975,8 +9140,24 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: no matching volumes found</code></strong> — Verify the SVM name and volume name are correct using <code>vserver show</code> and <code>volume show</code> commands.
-<strong><code>Relationship is not healthy: false, Lag Time: 00:45:30</code></strong> — Wait for the SnapMirror resynchronization to complete or manually trigger <code>snapmirror resync</code> if the lag exceeds your RPO threshold.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: no matching volumes found</code></td>
+<td>Verify the SVM name and volume name are correct using <code>vserver show</code> and <code>volume show</code> commands.</td>
+</tr>
+<tr>
+<td><code>Relationship is not healthy: false, Lag Time: 00:45:30</code></td>
+<td>Wait for the SnapMirror resynchronization to complete or manually trigger <code>snapmirror resync</code> if the lag exceeds your RPO threshold.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -9014,7 +9195,7 @@ SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `sn
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

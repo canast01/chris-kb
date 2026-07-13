@@ -7726,9 +7726,28 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection refused</code></strong> — Verify SANnav appliance is reachable with <code>ping &lt;sannav-ip&gt;</code> and SSH service is running with <code>systemctl status ssh</code>.
-<strong><code>sannav-admin: command not found</code></strong> — Ensure you are logged in as the admin user and <code>/opt/brocade/sannav/bin</code> is in your PATH, or use the full path <code>/opt/brocade/sannav/bin/sannav-admin</code>.
-<strong><code>Database Status: UNHEALTHY</code></strong> — Check database logs with <code>sannav-admin db-logs</code> and restart the database service using <code>sannav-admin restart db</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify SANnav appliance is reachable with <code>ping &lt;sannav-ip&gt;</code> and SSH service is running with <code>systemctl status ssh</code>.</td>
+</tr>
+<tr>
+<td><code>sannav-admin: command not found</code></td>
+<td>Ensure you are logged in as the admin user and <code>/opt/brocade/sannav/bin</code> is in your PATH, or use the full path <code>/opt/brocade/sannav/bin/sannav-admin</code>.</td>
+</tr>
+<tr>
+<td><code>Database Status: UNHEALTHY</code></td>
+<td>Check database logs with <code>sannav-admin db-logs</code> and restart the database service using <code>sannav-admin restart db</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-generate-the-sannav-support-bundle">2. Generate the SANnav support bundle<a class="headerlink" href="#2-generate-the-sannav-support-bundle" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to the SANnav appliance</span>
@@ -7757,9 +7776,28 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sannav: command not found</code></strong> — Verify you are logged into the SANnav appliance itself (not a switch) and that the sannav CLI is in your PATH; check with <code>which sannav</code>.
-<strong><code>Permission denied (publickey,password)</code></strong> — Ensure the admin account credentials are correct and SSH key-based authentication is configured, or use <code>ssh -v</code> to debug the connection.
-<strong><code>No such file or directory</code></strong> — The support-bundle command may have failed silently; re-run the command and check <code>/tmp/</code> for any partial <code>.tar.gz</code> files or error logs in <code>/var/log/sannav/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sannav: command not found</code></td>
+<td>Verify you are logged into the SANnav appliance itself (not a switch) and that the sannav CLI is in your PATH; check with <code>which sannav</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Ensure the admin account credentials are correct and SSH key-based authentication is configured, or use <code>ssh -v</code> to debug the connection.</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>The support-bundle command may have failed silently; re-run the command and check <code>/tmp/</code> for any partial <code>.tar.gz</code> files or error logs in <code>/var/log/sannav/</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="3-collect-the-sannav-service-log-journalctl">3. Collect the SANnav service log (journalctl)<a class="headerlink" href="#3-collect-the-sannav-service-log-journalctl" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to the SANnav appliance</span>
@@ -7807,9 +7845,28 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: journalctl: command not found</code></strong> — Verify the SANnav appliance is running a systemd-based OS; if using an older version, use <code>tail -f /var/log/sannav.log</code> instead.
-<strong><code>Permission denied (publickey,password)</code></strong> — Confirm the admin account credentials and that SSH key-based or password authentication is enabled on the SANnav appliance.
-<strong><code>No such file or directory: /opt/brocade/sannav</code></strong> — Verify the SANnav installation path matches your deployment; check with <code>df -h</code> to locate the actual mount point.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: journalctl: command not found</code></td>
+<td>Verify the SANnav appliance is running a systemd-based OS; if using an older version, use <code>tail -f /var/log/sannav.log</code> instead.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Confirm the admin account credentials and that SSH key-based or password authentication is enabled on the SANnav appliance.</td>
+</tr>
+<tr>
+<td><code>No such file or directory: /opt/brocade/sannav</code></td>
+<td>Verify the SANnav installation path matches your deployment; check with <code>df -h</code> to locate the actual mount point.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="4-run-supportsave-on-affected-switches">4. Run supportsave on affected switches<a class="headerlink" href="#4-run-supportsave-on-affected-switches" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to each affected Brocade switch as admin</span>
@@ -7864,9 +7921,28 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials and that the admin account is not locked; check <code>/etc/passwd</code> on the switch or contact your Brocade support team.
-<strong><code>supportsave: command not found</code></strong> — Ensure you are logged in as admin user and not in restricted shell mode; use <code>role show</code> to verify admin privileges.
-<strong><code>Fabric is offline or not responding</code></strong> — Check physical cable connections, port status with <code>portshow</code>, and verify switch is not in maintenance mode with <code>switchstatusshow</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify SSH credentials and that the admin account is not locked; check <code>/etc/passwd</code> on the switch or contact your Brocade support team.</td>
+</tr>
+<tr>
+<td><code>supportsave: command not found</code></td>
+<td>Ensure you are logged in as admin user and not in restricted shell mode; use <code>role show</code> to verify admin privileges.</td>
+</tr>
+<tr>
+<td><code>Fabric is offline or not responding</code></td>
+<td>Check physical cable connections, port status with <code>portshow</code>, and verify switch is not in maintenance mode with <code>switchstatusshow</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Repeat <code>supportsave</code> on every switch in the affected fabric. TAC needs the switch-level data alongside the SANnav data.</p>
 <h3 id="5-export-the-sannav-audit-log">5. Export the SANnav audit log<a class="headerlink" href="#5-export-the-sannav-audit-log" title="Permanent link">&para;</a></h3>
@@ -8049,8 +8125,24 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: journalctl: command not found</code></strong> — Use <code>journalctl</code> without <code>sudo</code> prefix or verify the user has passwordless sudo configured in <code>/etc/sudoers</code>.
-<strong><code>df: /opt/brocade/sannav: No such file or directory</code></strong> — Verify SANnav is installed in the correct path with <code>ls -d /opt/brocade/sannav</code> or check mount points with <code>mount | grep brocade</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: journalctl: command not found</code></td>
+<td>Use <code>journalctl</code> without <code>sudo</code> prefix or verify the user has passwordless sudo configured in <code>/etc/sudoers</code>.</td>
+</tr>
+<tr>
+<td><code>df: /opt/brocade/sannav: No such file or directory</code></td>
+<td>Verify SANnav is installed in the correct path with <code>ls -d /opt/brocade/sannav</code> or check mount points with <code>mount | grep brocade</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
@@ -8123,7 +8215,7 @@ How to escalate Brocade SANnav Management Portal issues to Broadcom support: wha
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -9288,8 +9288,24 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Could not connect to the vSAN cluster</code></strong> — Verify the host is part of an active vSAN cluster and network connectivity exists between cluster nodes.
-<strong><code>Error: Permission denied</code></strong> — Ensure you are logged in as root or a user with vSAN administrator privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Could not connect to the vSAN cluster</code></td>
+<td>Verify the host is part of an active vSAN cluster and network connectivity exists between cluster nodes.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied</code></td>
+<td>Ensure you are logged in as root or a user with vSAN administrator privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Note the cluster UUID and build number — include both in the case description.</p>
 <h3 id="2-capture-cmmds-tool-output-component-placement">2. Capture cmmds-tool output (component placement)<a class="headerlink" href="#2-capture-cmmds-tool-output-component-placement" title="Permanent link">&para;</a></h3>
@@ -9327,9 +9343,28 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cmmds-tool: command not found</code></strong> — Ensure you are running this command directly on an ESXi host (SSH as root), not from vCenter or a management workstation.
-<strong><code>Permission denied: /tmp/cmmds-*.txt</code></strong> — Run the command with <code>sudo</code> or as root user; standard user accounts cannot write to /tmp on ESXi hosts.
-<strong><code>scp: command not found on ESXi host</code></strong> — Run the scp command from your management workstation (not the ESXi host) using the syntax <code>scp root@&lt;esxi-ip&gt;:/tmp/cmmds-*.txt /tmp/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cmmds-tool: command not found</code></td>
+<td>Ensure you are running this command directly on an ESXi host (SSH as root), not from vCenter or a management workstation.</td>
+</tr>
+<tr>
+<td><code>Permission denied: /tmp/cmmds-*.txt</code></td>
+<td>Run the command with <code>sudo</code> or as root user; standard user accounts cannot write to /tmp on ESXi hosts.</td>
+</tr>
+<tr>
+<td><code>scp: command not found on ESXi host</code></td>
+<td>Run the scp command from your management workstation (not the ESXi host) using the syntax <code>scp root@&lt;esxi-ip&gt;:/tmp/cmmds-*.txt /tmp/</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>This is the most critical data for GSS. Run it on every host, not just the one where the issue first appeared.</p>
 <h3 id="3-run-vm-support-with-vsan-flag-on-all-hosts">3. Run vm-support with vSAN flag on all hosts<a class="headerlink" href="#3-run-vm-support-with-vsan-flag-on-all-hosts" title="Permanent link">&para;</a></h3>
@@ -9355,9 +9390,28 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vm-support: command not found</code></strong> — Verify the ESXi host is running vSphere 6.5 or later and that the vm-support utility is available in the PATH.
-<strong><code>Permission denied</code></strong> — Run the command as root or with sudo; vm-support requires elevated privileges to collect system logs and VSAN diagnostics.
-<strong><code>No space left on device</code></strong> — Free up disk space on /var/core (bundles are typically 400–600 MB each) by removing older support bundles or increasing the datastore partition.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vm-support: command not found</code></td>
+<td>Verify the ESXi host is running vSphere 6.5 or later and that the vm-support utility is available in the PATH.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command as root or with sudo; vm-support requires elevated privileges to collect system logs and VSAN diagnostics.</td>
+</tr>
+<tr>
+<td><code>No space left on device</code></td>
+<td>Free up disk space on /var/core (bundles are typically 400–600 MB each) by removing older support bundles or increasing the datastore partition.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="4-capture-vsan-health-checks-and-resync-state">4. Capture vSAN health checks and resync state<a class="headerlink" href="#4-capture-vsan-health-checks-and-resync-state" title="Permanent link">&para;</a></h3>
 <p>In vSphere Client: navigate to the vSAN cluster → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Health</strong>.</p>
@@ -9410,9 +9464,28 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Could not connect to the vSAN cluster</code></strong> — Verify vSAN is enabled on the cluster and the ESXi host is a vSAN participant using <code>esxcli vsan cluster get</code>.
-<strong><code>Permission denied</code></strong> — Run the command with root privileges or ensure your user account has vSAN administrator role assigned.
-<strong><code>Unknown command or namespace</code></strong> — Confirm the ESXi host version supports vSAN and the vSAN feature is properly installed using <code>esxcli software vib list | grep vsan</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Could not connect to the vSAN cluster</code></td>
+<td>Verify vSAN is enabled on the cluster and the ESXi host is a vSAN participant using <code>esxcli vsan cluster get</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with root privileges or ensure your user account has vSAN administrator role assigned.</td>
+</tr>
+<tr>
+<td><code>Unknown command or namespace</code></td>
+<td>Confirm the ESXi host version supports vSAN and the vSAN feature is properly installed using <code>esxcli software vib list | grep vsan</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vSAN build: 21427XXXX (vSAN 8.0.x)
@@ -9617,9 +9690,28 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: vSAN cluster is not enabled on this host</code></strong> — Run <code>esxcli vsan cluster new</code> to initialize the cluster or verify the host is part of an existing vSAN cluster.
-<strong><code>Error: CMMDS server is not running</code></strong> — Restart the CMMDS service with <code>systemctl restart cmmds</code> or reboot the host if the service fails to start.
-<strong><code>Error: Network partition detected - Quorum: QUORUM_ABSENT</code></strong> — Check physical network connectivity between hosts and verify vSAN VMkernel ports are on the correct VLAN with no packet loss.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: vSAN cluster is not enabled on this host</code></td>
+<td>Run <code>esxcli vsan cluster new</code> to initialize the cluster or verify the host is part of an existing vSAN cluster.</td>
+</tr>
+<tr>
+<td><code>Error: CMMDS server is not running</code></td>
+<td>Restart the CMMDS service with <code>systemctl restart cmmds</code> or reboot the host if the service fails to start.</td>
+</tr>
+<tr>
+<td><code>Error: Network partition detected - Quorum: QUORUM_ABSENT</code></td>
+<td>Check physical network connectivity between hosts and verify vSAN VMkernel ports are on the correct VLAN with no packet loss.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="support-sla-reference">Support SLA Reference<a class="headerlink" href="#support-sla-reference" title="Permanent link">&para;</a></h2>
@@ -9693,7 +9785,7 @@ How to escalate VMware vSAN issues to Broadcom support: what data to collect, ho
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

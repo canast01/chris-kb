@@ -8344,8 +8344,24 @@ Azure Reserved Instances (RIs) offer significant discounts (up to 72%) over pay-
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The provided reservation order ID '&lt;order-id&gt;' does not exist.</code></strong> — Replace <code>&lt;order-id&gt;</code> with a valid reservation order ID from the <code>az reservation reservation-order list</code> output.
-<strong><code>Authorization failed for template deployment. The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have permission to perform action 'Microsoft.Capacity/reservationOrders/read' over scope '/subscriptions/&lt;subscription-id&gt;'.</code></strong> — Ensure your Azure account has the Reader role or higher on the subscription containing the reservations.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The provided reservation order ID '&lt;order-id&gt;' does not exist.</code></td>
+<td>Replace <code>&lt;order-id&gt;</code> with a valid reservation order ID from the <code>az reservation reservation-order list</code> output.</td>
+</tr>
+<tr>
+<td><code>Authorization failed for template deployment. The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have permission to perform action 'Microsoft.Capacity/reservationOrders/read' over scope '/subscriptions/&lt;subscription-id&gt;'.</code></td>
+<td>Ensure your Azure account has the Reader role or higher on the subscription containing the reservations.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="purchase-workflow">Purchase Workflow<a class="headerlink" href="#purchase-workflow" title="Permanent link">&para;</a></h3>
 <p>Reservations are purchased through the Azure portal or REST API. The CLI is used primarily for post-purchase management (listing, scope changes, exchange/refund).</p>
@@ -8438,9 +8454,28 @@ Azure Reserved Instances (RIs) offer significant discounts (up to 72%) over pay-
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>InvalidParameterValue: The provided reservation order ID is invalid or not found.</code></strong> — Verify the reservation order ID exists in your subscription using <code>az reservation reservation-order list</code>.
-<strong><code>AuthorizationFailed: The client does not have permission to perform action 'Microsoft.Capacity/reservationOrders/reservations/write' on scope.</code></strong> — Ensure your Azure account has Owner or Contributor role on the subscription containing the reservation.
-<strong><code>BadRequest: Cannot change scope type from Single to Shared when reservation has applied scopes defined.</code></strong> — Remove existing applied scopes first using <code>az reservation reservation update --applied-scopes ""</code> before changing scope type.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InvalidParameterValue: The provided reservation order ID is invalid or not found.</code></td>
+<td>Verify the reservation order ID exists in your subscription using <code>az reservation reservation-order list</code>.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client does not have permission to perform action 'Microsoft.Capacity/reservationOrders/reservations/write' on scope.</code></td>
+<td>Ensure your Azure account has Owner or Contributor role on the subscription containing the reservation.</td>
+</tr>
+<tr>
+<td><code>BadRequest: Cannot change scope type from Single to Shared when reservation has applied scopes defined.</code></td>
+<td>Remove existing applied scopes first using <code>az reservation reservation update --applied-scopes ""</code> before changing scope type.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="exchange-and-refund">Exchange and Refund<a class="headerlink" href="#exchange-and-refund" title="Permanent link">&para;</a></h2>
 <p>Reservations can be exchanged for a different SKU or region, or refunded (subject to a 12% early termination fee and $50,000/year refund cap).</p>
@@ -8462,8 +8497,24 @@ Azure Reserved Instances (RIs) offer significant discounts (up to 72%) over pay-
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The provided reservation order ID '&lt;order-id&gt;' is invalid or does not exist.</code></strong> — Verify the reservation order ID by running <code>az reservation reservation-order list</code> and copy the exact ID from the output.
-<strong><code>No subscriptions found in your account. Please call 'az account set' to select a subscription.</code></strong> — Set your active subscription with <code>az account set --subscription &lt;subscription-id&gt;</code> before running the command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The provided reservation order ID '&lt;order-id&gt;' is invalid or does not exist.</code></td>
+<td>Verify the reservation order ID by running <code>az reservation reservation-order list</code> and copy the exact ID from the output.</td>
+</tr>
+<tr>
+<td><code>No subscriptions found in your account. Please call 'az account set' to select a subscription.</code></td>
+<td>Set your active subscription with <code>az account set --subscription &lt;subscription-id&gt;</code> before running the command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="utilisation-monitoring">Utilisation Monitoring<a class="headerlink" href="#utilisation-monitoring" title="Permanent link">&para;</a></h2>
 <p>Low utilisation means the discount is being wasted. Track utilisation and act quickly if it drops below 80%.</p>
@@ -8556,7 +8607,7 @@ Azure Reserved Instances (RIs) offer significant discounts (up to 72%) over pay-
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

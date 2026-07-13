@@ -8593,9 +8593,28 @@ Lambda reference covering Environment Variables, Event Source Mappings (SQS / Ki
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFoundException: Event source mapping not found</code></strong> — Verify the UUID is correct and the mapping exists using <code>aws lambda list-event-source-mappings --function-name &lt;name&gt;</code>.
-<strong><code>InvalidParameterValueException: The role is invalid or does not have permission to access the event source</code></strong> — Ensure the Lambda execution role has <code>sqs:ReceiveMessage</code> or <code>kinesis:GetRecords</code> permissions for the event source ARN.
-**`Resource</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFoundException: Event source mapping not found</code></td>
+<td>Verify the UUID is correct and the mapping exists using <code>aws lambda list-event-source-mappings --function-name &lt;name&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidParameterValueException: The role is invalid or does not have permission to access the event source</code></td>
+<td>Ensure the Lambda execution role has <code>sqs:ReceiveMessage</code> or <code>kinesis:GetRecords</code> permissions for the event source ARN.</td>
+</tr>
+<tr>
+<td>**`Resource</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="layers">Layers<a class="headerlink" href="#layers" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List available layers (latest version of each)</span>
@@ -8743,9 +8762,28 @@ Lambda reference covering Environment Variables, Event Source Mappings (SQS / Ki
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (ResourceNotFoundException) when calling the PublishVersion operation: The resource you requested does not exist.</code></strong> — Verify the function name matches exactly and the function exists in the current AWS region.
-<strong><code>An error occurred (InvalidParameterValueException) when calling the UpdateAlias operation: The function version 8 does not exist.</code></strong> — Publish version 8 first using <code>aws lambda publish-version --function-name &lt;name&gt;</code> before updating the alias to point to it.
-<strong><code>An error occurred (ResourceConflictException) when calling the CreateAlias operation: Cannot create Alias for this function. The Alias prod already exists.</code></strong> — Use <code>update-alias</code> instead of <code>create-alias</code> if the alias already exists, or delete it first with <code>aws lambda delete-alias</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the PublishVersion operation: The resource you requested does not exist.</code></td>
+<td>Verify the function name matches exactly and the function exists in the current AWS region.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValueException) when calling the UpdateAlias operation: The function version 8 does not exist.</code></td>
+<td>Publish version 8 first using <code>aws lambda publish-version --function-name &lt;name&gt;</code> before updating the alias to point to it.</td>
+</tr>
+<tr>
+<td><code>An error occurred (ResourceConflictException) when calling the CreateAlias operation: Cannot create Alias for this function. The Alias prod already exists.</code></td>
+<td>Use <code>update-alias</code> instead of <code>create-alias</code> if the alias already exists, or delete it first with <code>aws lambda delete-alias</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="concurrency">Concurrency<a class="headerlink" href="#concurrency" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Set reserved concurrency (hard cap; 0 throttles all invocations)</span>
@@ -8775,8 +8813,24 @@ Lambda reference covering Environment Variables, Event Source Mappings (SQS / Ki
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (ResourceNotFoundException) when calling the PutReservedConcurrency operation: The resource you requested does not exist.</code></strong> — Verify the function name exists in the current AWS region using <code>aws lambda list-functions</code>.
-<strong><code>An error occurred (InvalidParameterValueException) when calling the PutProvisionedConcurrencyConfig operation: The qualifier does not exist.</code></strong> — Ensure the alias or version (e.g., <code>prod</code>) exists; list versions with <code>aws lambda list-versions-by-function --function-name &lt;name&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the PutReservedConcurrency operation: The resource you requested does not exist.</code></td>
+<td>Verify the function name exists in the current AWS region using <code>aws lambda list-functions</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValueException) when calling the PutProvisionedConcurrencyConfig operation: The qualifier does not exist.</code></td>
+<td>Ensure the alias or version (e.g., <code>prod</code>) exists; list versions with <code>aws lambda list-versions-by-function --function-name &lt;name&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="function-urls">Function URLs<a class="headerlink" href="#function-urls" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create a public function URL (no auth)</span>
@@ -8814,9 +8868,28 @@ Lambda reference covering Environment Variables, Event Source Mappings (SQS / Ki
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (ResourceConflictException) when calling the CreateFunctionUrlConfig operation: The resource already exists.</code></strong> — Delete the existing URL config with <code>aws lambda delete-function-url-config --function-name &lt;name&gt;</code> before creating a new one.
-<strong><code>An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.</code></strong> — Verify the function name is correct and a URL config has been created for this function.
-<strong><code>An error occurred (InvalidParameterValueException) when calling the CreateFunctionUrlConfig operation: Invalid auth type specified.</code></strong> — Use only <code>NONE</code> or <code>AWS_IAM</code> as the <code>--auth-type</code> value.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (ResourceConflictException) when calling the CreateFunctionUrlConfig operation: The resource already exists.</code></td>
+<td>Delete the existing URL config with <code>aws lambda delete-function-url-config --function-name &lt;name&gt;</code> before creating a new one.</td>
+</tr>
+<tr>
+<td><code>An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.</code></td>
+<td>Verify the function name is correct and a URL config has been created for this function.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValueException) when calling the CreateFunctionUrlConfig operation: Invalid auth type specified.</code></td>
+<td>Use only <code>NONE</code> or <code>AWS_IAM</code> as the <code>--auth-type</code> value.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Stream live logs</span>
@@ -8854,8 +8927,24 @@ Lambda reference covering Environment Variables, Event Source Mappings (SQS / Ki
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFoundException: The specified log group does not exist.</code></strong> — Verify the function name is correct and the Lambda function has CloudWatch Logs permissions in its execution role.
-<strong><code>InvalidParameterException: Invalid filter pattern syntax</code></strong> — Ensure filter patterns use valid CloudWatch Logs syntax (e.g., <code>[ERROR]</code> for bracketed terms or quoted strings for exact matches).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFoundException: The specified log group does not exist.</code></td>
+<td>Verify the function name is correct and the Lambda function has CloudWatch Logs permissions in its execution role.</td>
+</tr>
+<tr>
+<td><code>InvalidParameterException: Invalid filter pattern syntax</code></td>
+<td>Ensure filter patterns use valid CloudWatch Logs syntax (e.g., <code>[ERROR]</code> for bracketed terms or quoted strings for exact matches).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8884,7 +8973,7 @@ Lambda reference covering Environment Variables, Event Source Mappings (SQS / Ki
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

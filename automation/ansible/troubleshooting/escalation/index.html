@@ -7459,8 +7459,24 @@ Ansible escalation: when to open a Red Hat support case for AAP, how to file a c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pip show: WARNING: pip is configured with locations that require TLS/SSL, however the ssl module in Python is not available.</code></strong> — Reinstall Python with SSL support or use <code>apt install python3-dev libssl-dev</code> and rebuild Python.
-<strong><code>ansible-galaxy collection list: [WARNING]: Unable to parse /etc/ansible/requirements.yml as an inventory source</code></strong> — Remove or fix the malformed requirements.yml file, or specify the correct inventory path in ansible.cfg.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pip show: WARNING: pip is configured with locations that require TLS/SSL, however the ssl module in Python is not available.</code></td>
+<td>Reinstall Python with SSL support or use <code>apt install python3-dev libssl-dev</code> and rebuild Python.</td>
+</tr>
+<tr>
+<td><code>ansible-galaxy collection list: [WARNING]: Unable to parse /etc/ansible/requirements.yml as an inventory source</code></td>
+<td>Remove or fix the malformed requirements.yml file, or specify the correct inventory path in ansible.cfg.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="2-run-the-failing-playbook-with-full-verbosity">2. Run the failing playbook with full verbosity<a class="headerlink" href="#2-run-the-failing-playbook-with-full-verbosity" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run with maximum verbosity — captures all module args, connection details, and errors</span>
@@ -7506,9 +7522,28 @@ Ansible escalation: when to open a Red Hat support case for AAP, how to file a c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: [hostname]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey,password)."}</code></strong> — Verify the SSH key path in inventory with <code>ansible-inventory --host &lt;hostname&gt;</code> and ensure the user has passwordless sudo or the correct <code>-u</code> flag is set.</p>
-<p><strong><code>fatal: [hostname]: FAILED! =&gt; {"msg": "Timeout (12s) waiting for privilege escalation prompt"}</code></strong> — Add <code>ansible_become_pass</code> to inventory or use <code>--ask-become-pass</code> flag; check that <code>become_user</code> has sudo access without a password prompt.</p>
-<p><strong><code>ERROR! the playbook: &lt;failing-playbook.yml&gt; could not be loaded as a file or dir</code></strong> — Verify the playbook path is correct and relative to the current working directory, or provide an absolute path.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: [hostname]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey,password)."}</code></td>
+<td>Verify the SSH key path in inventory with <code>ansible-inventory --host &lt;hostname&gt;</code> and ensure the user has passwordless sudo or the correct <code>-u</code> flag is set.</td>
+</tr>
+<tr>
+<td><code>fatal: [hostname]: FAILED! =&gt; {"msg": "Timeout (12s) waiting for privilege escalation prompt"}</code></td>
+<td>Add <code>ansible_become_pass</code> to inventory or use <code>--ask-become-pass</code> flag; check that <code>become_user</code> has sudo access without a password prompt.</td>
+</tr>
+<tr>
+<td><code>ERROR! the playbook: &lt;failing-playbook.yml&gt; could not be loaded as a file or dir</code></td>
+<td>Verify the playbook path is correct and relative to the current working directory, or provide an absolute path.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="3-collect-awx-job-details-if-using-awx">3. Collect AWX job details (if using AWX)<a class="headerlink" href="#3-collect-awx-job-details-if-using-awx" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get job output for a specific job ID (via AWX API)</span>
@@ -7540,9 +7575,28 @@ Ansible escalation: when to open a Red Hat support case for AAP, how to file a c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to &lt;awx-hostname&gt; port 443: Connection refused</code></strong> — Verify the AWX_URL is correct and the AWX service is running with <code>systemctl status awx-service</code> or equivalent.
-<strong><code>{"detail":"Invalid token","status_code":401}</code></strong> — Regenerate the OAuth token in AWX UI (Settings &gt; Users &gt; Tokens) and ensure it has not expired.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Remove the <code>-k</code> flag if using a valid certificate, or ensure your CA bundle is current; the <code>-k</code> flag bypasses verification for self-signed certs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;awx-hostname&gt; port 443: Connection refused</code></td>
+<td>Verify the AWX_URL is correct and the AWX service is running with <code>systemctl status awx-service</code> or equivalent.</td>
+</tr>
+<tr>
+<td><code>{"detail":"Invalid token","status_code":401}</code></td>
+<td>Regenerate the OAuth token in AWX UI (Settings &gt; Users &gt; Tokens) and ensure it has not expired.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Remove the <code>-k</code> flag if using a valid certificate, or ensure your CA bundle is current; the <code>-k</code> flag bypasses verification for self-signed certs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="4-collect-awx-pod-logs-for-platform-level-failures">4. Collect AWX pod logs (for platform-level failures)<a class="headerlink" href="#4-collect-awx-pod-logs-for-platform-level-failures" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># All AWX pod names in the awx namespace</span>
@@ -7583,9 +7637,28 @@ Ansible escalation: when to open a Red Hat support case for AAP, how to file a c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "statefulset"</code></strong> — Verify the correct resource name with <code>kubectl get statefulsets -n awx</code> and use the exact name (e.g., <code>awx-postgres-15</code> vs <code>postgres-15</code>).
-<strong><code>error: unable to upgrade connection: container not found ("awx-web")</code></strong> — The pod may not exist or the deployment hasn't rolled out yet; check pod status with <code>kubectl get pods -n awx</code> and wait for Ready status.
-<strong><code>No resources found in awx namespace.</code></strong> — Ensure the AWX namespace exists with <code>kubectl get namespace awx</code> and that AWX is actually deployed in that namespace.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "statefulset"</code></td>
+<td>Verify the correct resource name with <code>kubectl get statefulsets -n awx</code> and use the exact name (e.g., <code>awx-postgres-15</code> vs <code>postgres-15</code>).</td>
+</tr>
+<tr>
+<td><code>error: unable to upgrade connection: container not found ("awx-web")</code></td>
+<td>The pod may not exist or the deployment hasn't rolled out yet; check pod status with <code>kubectl get pods -n awx</code> and wait for Ready status.</td>
+</tr>
+<tr>
+<td><code>No resources found in awx namespace.</code></td>
+<td>Ensure the AWX namespace exists with <code>kubectl get namespace awx</code> and that AWX is actually deployed in that namespace.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="5-write-the-timeline">5. Write the timeline<a class="headerlink" href="#5-write-the-timeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Ansible / AWX version: AWX 23.5.1 / ansible-core 2.16.2
@@ -7722,9 +7795,28 @@ Ansible escalation: when to open a Red Hat support case for AAP, how to file a c
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR! Unexpected Exception: 'NoneType' object is not subscriptable</code></strong> — Verify the playbook YAML syntax with <code>ansible-playbook --syntax-check /tmp/repro.yml</code> and ensure all task keys are properly indented.
-<strong><code>fatal: [localhost]: FAILED! =&gt; {"msg": "The task includes an option with an undefined variable. Undefined variable: &lt;variable_name&gt;"}</code></strong> — Check that all variables referenced in the playbook are defined in group_vars, host_vars, or passed via <code>-e</code> flag.
-<strong><code>[WARNING]: Unable to parse /tmp/repro.yml as an inventory source</code></strong> — Ensure the playbook file exists and is readable; use <code>cat /tmp/repro.yml</code> to verify the file was created correctly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR! Unexpected Exception: 'NoneType' object is not subscriptable</code></td>
+<td>Verify the playbook YAML syntax with <code>ansible-playbook --syntax-check /tmp/repro.yml</code> and ensure all task keys are properly indented.</td>
+</tr>
+<tr>
+<td><code>fatal: [localhost]: FAILED! =&gt; {"msg": "The task includes an option with an undefined variable. Undefined variable: &lt;variable_name&gt;"}</code></td>
+<td>Check that all variables referenced in the playbook are defined in group_vars, host_vars, or passed via <code>-e</code> flag.</td>
+</tr>
+<tr>
+<td><code>[WARNING]: Unable to parse /tmp/repro.yml as an inventory source</code></td>
+<td>Ensure the playbook file exists and is readable; use <code>cat /tmp/repro.yml</code> to verify the file was created correctly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>GitHub issue must include:
 - <code>ansible --version</code> output
@@ -7880,7 +7972,7 @@ Ansible escalation: when to open a Red Hat support case for AAP, how to file a c
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

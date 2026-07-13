@@ -9416,9 +9416,28 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>PING 192.168.10.42 with 8972 bytes of data: Request timed out.</code></strong> — Verify the destination VMkernel IP is reachable and the vMotion VMkernel port is enabled on the destination host.
-<strong><code>Unable to locate interface vmk1</code></strong> — Confirm the vMotion VMkernel adapter exists on the source host by running <code>esxcli network ip interface list</code> and use the correct interface name.
-<strong><code>Fragmentation is required but DF set.</code></strong> — Reduce the payload size to 1472 bytes (<code>vmkping -I vmk1 -d -s 1472 &lt;destination-vmk1-ip&gt;</code>) and increase MTU to 9000 on the vSwitch and physical switch port.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PING 192.168.10.42 with 8972 bytes of data: Request timed out.</code></td>
+<td>Verify the destination VMkernel IP is reachable and the vMotion VMkernel port is enabled on the destination host.</td>
+</tr>
+<tr>
+<td><code>Unable to locate interface vmk1</code></td>
+<td>Confirm the vMotion VMkernel adapter exists on the source host by running <code>esxcli network ip interface list</code> and use the correct interface name.</td>
+</tr>
+<tr>
+<td><code>Fragmentation is required but DF set.</code></td>
+<td>Reduce the payload size to 1472 bytes (<code>vmkping -I vmk1 -d -s 1472 &lt;destination-vmk1-ip&gt;</code>) and increase MTU to 9000 on the vSwitch and physical switch port.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify current MTU on the VMkernel port</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>vmk1
@@ -9445,8 +9464,24 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Name: vmk1 not found</code></strong> — Verify the VMkernel port exists with <code>esxcli network ip interface list</code> and use the correct interface name (e.g., vmk0, vmk1).
-<strong><code>error: Unknown command or namespace</code></strong> — Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter; esxcli is not available on vCenter servers.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Name: vmk1 not found</code></td>
+<td>Verify the VMkernel port exists with <code>esxcli network ip interface list</code> and use the correct interface name (e.g., vmk0, vmk1).</td>
+</tr>
+<tr>
+<td><code>error: Unknown command or namespace</code></td>
+<td>Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter; esxcli is not available on vCenter servers.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: <code>vmkping -d -s 8972</code> succeeds = MTU is correct end-to-end; failure with large frame but success with 1472-byte frame = switch or vDS MTU set to 1500.</p>
 <hr />
@@ -9476,9 +9511,28 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The object has already been added.</code></strong> — Verify the route doesn't already exist with <code>esxcli network ip route ipv4 list</code> before adding it.
-<strong><code>Error: Gateway is not reachable.</code></strong> — Ensure the gateway IP is on a directly connected subnet and reachable from the source VMkernel interface.
-<strong><code>Error: Unknown option or malformed command.</code></strong> — Check that the prefix length is numeric (e.g., <code>/24</code> not <code>/255.255.255.0</code>) and all parameters are in the correct order.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The object has already been added.</code></td>
+<td>Verify the route doesn't already exist with <code>esxcli network ip route ipv4 list</code> before adding it.</td>
+</tr>
+<tr>
+<td><code>Error: Gateway is not reachable.</code></td>
+<td>Ensure the gateway IP is on a directly connected subnet and reachable from the source VMkernel interface.</td>
+</tr>
+<tr>
+<td><code>Error: Unknown option or malformed command.</code></td>
+<td>Check that the prefix length is numeric (e.g., <code>/24</code> not <code>/255.255.255.0</code>) and all parameters are in the correct order.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="5-nic-and-driver-validation">5. NIC and Driver Validation<a class="headerlink" href="#5-nic-and-driver-validation" title="Permanent link">&para;</a></h2>
@@ -9520,9 +9574,28 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Could not find NIC vmnic1</code></strong> — Verify the NIC name with <code>esxcli network nic list</code> and use the correct interface identifier.
-<strong><code>Permission denied</code></strong> — Run the command as root or with appropriate ESXi host credentials via SSH or vSphere Client.
-<strong><code>Rx Errors: 1247 Rx Dropped: 342</code></strong> — Check physical cable connections, SFP+ transceiver compatibility, and switch port configuration for the vMotion uplink.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Could not find NIC vmnic1</code></td>
+<td>Verify the NIC name with <code>esxcli network nic list</code> and use the correct interface identifier.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command as root or with appropriate ESXi host credentials via SSH or vSphere Client.</td>
+</tr>
+<tr>
+<td><code>Rx Errors: 1247 Rx Dropped: 342</code></td>
+<td>Check physical cable connections, SFP+ transceiver compatibility, and switch port configuration for the vMotion uplink.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: any non-zero <code>Drop</code> or <code>Error</code> counter on the vMotion uplink vmnic indicates NIC or cable issues that will cause vMotion timeouts.</p>
 <hr />
@@ -9558,9 +9631,28 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag (already present) or import the NSX Manager CA certificate into your system trust store.
-<strong><code>jq: command not found</code></strong> — Replace <code>python3 -m json.tool</code> with <code>jq '.'</code> or ensure Python 3 is installed and in PATH.
-<strong><code>HTTP/1.1 401 Unauthorized</code></strong> — Verify the admin password is correct and the credentials are properly URL-encoded if they contain special characters.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag (already present) or import the NSX Manager CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Replace <code>python3 -m json.tool</code> with <code>jq '.'</code> or ensure Python 3 is installed and in PATH.</td>
+</tr>
+<tr>
+<td><code>HTTP/1.1 401 Unauthorized</code></td>
+<td>Verify the admin password is correct and the credentials are properly URL-encoded if they contain special characters.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Also verify the destination host's NSX kernel modules are loaded:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># From destination ESXi host</span>
@@ -9593,9 +9685,28 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vmkping: Unknown host &lt;remote-tep-ip&gt;</code></strong> — Replace <code>&lt;remote-tep-ip&gt;</code> with the actual TEP IP address of the remote ESXi host (e.g., 10.100.50.25).
-<strong><code>Cannot find device "vmk10"</code></strong> — Verify the TEP VMkernel interface name with <code>esxcli network ip interface list</code> and use the correct interface name in the vmkping command.
-<strong><code>100% packet loss</code></strong> — Check network connectivity between TEP interfaces, verify MTU is set to 1600 on both sides, and confirm NSX overlay network configuration is complete.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vmkping: Unknown host &lt;remote-tep-ip&gt;</code></td>
+<td>Replace <code>&lt;remote-tep-ip&gt;</code> with the actual TEP IP address of the remote ESXi host (e.g., 10.100.50.25).</td>
+</tr>
+<tr>
+<td><code>Cannot find device "vmk10"</code></td>
+<td>Verify the TEP VMkernel interface name with <code>esxcli network ip interface list</code> and use the correct interface name in the vmkping command.</td>
+</tr>
+<tr>
+<td><code>100% packet loss</code></td>
+<td>Check network connectivity between TEP interfaces, verify MTU is set to 1600 on both sides, and confirm NSX overlay network configuration is complete.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: all NSX VIBs at matching versions; <code>vmkping -I vmk10 -d -s 1572</code> succeeds to all remote TEP IPs.</p>
 <hr />
@@ -9634,9 +9745,28 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iperf: command not found</code></strong> — Install iperf on both hosts using <code>apt-get install iperf</code> (Ubuntu/Debian) or <code>yum install iperf</code> (RHEL/CentOS).
-<strong><code>connect to &lt;destination-vmk1-ip&gt; port 5201: Connection refused</code></strong> — Ensure the iperf server is running on the destination host before starting the client test.
-<strong><code>bind: Cannot assign requested address</code></strong> — Verify that the source and destination VMK IP addresses are correct and reachable using <code>ping</code> before running iperf.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iperf: command not found</code></td>
+<td>Install iperf on both hosts using <code>apt-get install iperf</code> (Ubuntu/Debian) or <code>yum install iperf</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>connect to &lt;destination-vmk1-ip&gt; port 5201: Connection refused</code></td>
+<td>Ensure the iperf server is running on the destination host before starting the client test.</td>
+</tr>
+<tr>
+<td><code>bind: Cannot assign requested address</code></td>
+<td>Verify that the source and destination VMK IP addresses are correct and reachable using <code>ping</code> before running iperf.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: throughput well below expected link speed (e.g., 2 Gbps on a 10 Gbps link) indicates a shared uplink with insufficient bandwidth — dedicate a higher-speed uplink to vMotion or increase streams in <strong>Cluster → Configure → vSphere DRS → Advanced Options</strong>.</p>
 <hr />
@@ -9736,7 +9866,7 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

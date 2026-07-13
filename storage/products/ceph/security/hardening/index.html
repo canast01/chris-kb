@@ -7734,9 +7734,28 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: error calling set_config_option</code></strong> — Ensure the OSD daemon is running with <code>ceph osd stat</code> before applying config changes.
-<strong><code>error connecting to the cluster</code></strong> — Verify cluster connectivity and that your <code>ceph.conf</code> or <code>CEPH_ARGS</code> environment variable points to a valid monitor address.
-<strong><code>grep: (standard input) is empty</code></strong> — The OSD may not have reloaded the config; restart it with <code>sudo systemctl restart ceph-osd@0</code> or wait for the next config reload cycle.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: error calling set_config_option</code></td>
+<td>Ensure the OSD daemon is running with <code>ceph osd stat</code> before applying config changes.</td>
+</tr>
+<tr>
+<td><code>error connecting to the cluster</code></td>
+<td>Verify cluster connectivity and that your <code>ceph.conf</code> or <code>CEPH_ARGS</code> environment variable points to a valid monitor address.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>The OSD may not have reloaded the config; restart it with <code>sudo systemctl restart ceph-osd@0</code> or wait for the next config reload cycle.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="firewall-rules">Firewall Rules<a class="headerlink" href="#firewall-rules" title="Permanent link">&para;</a></h2>
 <table>
@@ -7829,9 +7848,28 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: INVALID_ZONE: public</code></strong> — Verify the zone exists with <code>firewall-cmd --get-zones</code> and create it if needed with <code>firewall-cmd --permanent --new-zone=public</code>.
-<strong><code>Error: INVALID_ADDR: '10.0.1.0/24' not usable</code></strong> — Ensure the CIDR notation is valid and the source network matches your actual cluster network topology.
-<strong><code>Error: COMMAND_FAILED: 'firewall-cmd --reload' failed with exit code 1</code></strong> — Check syntax of all previous rules with <code>firewall-cmd --permanent --list-all</code> and fix any malformed entries before reloading.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: INVALID_ZONE: public</code></td>
+<td>Verify the zone exists with <code>firewall-cmd --get-zones</code> and create it if needed with <code>firewall-cmd --permanent --new-zone=public</code>.</td>
+</tr>
+<tr>
+<td><code>Error: INVALID_ADDR: '10.0.1.0/24' not usable</code></td>
+<td>Ensure the CIDR notation is valid and the source network matches your actual cluster network topology.</td>
+</tr>
+<tr>
+<td><code>Error: COMMAND_FAILED: 'firewall-cmd --reload' failed with exit code 1</code></td>
+<td>Check syntax of all previous rules with <code>firewall-cmd --permanent --list-all</code> and fix any malformed entries before reloading.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="disable-insecure-msgr1">Disable Insecure msgr1<a class="headerlink" href="#disable-insecure-msgr1" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Force all connections to use msgr2 (prevents protocol downgrade attacks)</span>
@@ -7853,8 +7891,24 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EINVAL: ms_bind_msgr1 = false not supported by this Ceph version</code></strong> — Upgrade to Ceph Nautilus or later, as msgr2 enforcement requires a recent cluster version.
-<strong><code>Error: set config failed: unknown option 'ms_cluster_mode'</code></strong> — Verify the config option name matches your Ceph version (some versions use <code>ms_mode</code> instead); check <code>ceph config help</code> for available options.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EINVAL: ms_bind_msgr1 = false not supported by this Ceph version</code></td>
+<td>Upgrade to Ceph Nautilus or later, as msgr2 enforcement requires a recent cluster version.</td>
+</tr>
+<tr>
+<td><code>Error: set config failed: unknown option 'ms_cluster_mode'</code></td>
+<td>Verify the config option name matches your Ceph version (some versions use <code>ms_mode</code> instead); check <code>ceph config help</code> for available options.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="dashboard-security">Dashboard Security<a class="headerlink" href="#dashboard-security" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Change default admin password</span>
@@ -7891,9 +7945,28 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EINVAL: invalid password</code></strong> — Ensure the password meets complexity requirements (minimum 8 characters, uppercase, lowercase, number, and special character).
-<strong><code>Error ENOENT: /etc/ceph/dashboard.crt: No such file or directory</code></strong> — Verify the certificate file path is correct and readable by the ceph-mgr process.
-<strong><code>Error: User [monitoring] already exists</code></strong> — Delete the existing user with <code>ceph dashboard ac-user-delete monitoring</code> before recreating it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EINVAL: invalid password</code></td>
+<td>Ensure the password meets complexity requirements (minimum 8 characters, uppercase, lowercase, number, and special character).</td>
+</tr>
+<tr>
+<td><code>Error ENOENT: /etc/ceph/dashboard.crt: No such file or directory</code></td>
+<td>Verify the certificate file path is correct and readable by the ceph-mgr process.</td>
+</tr>
+<tr>
+<td><code>Error: User [monitoring] already exists</code></td>
+<td>Delete the existing user with <code>ceph dashboard ac-user-delete monitoring</code> before recreating it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="disable-unnecessary-mgr-modules">Disable Unnecessary MGR Modules<a class="headerlink" href="#disable-unnecessary-mgr-modules" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List enabled modules</span>
@@ -7933,8 +8006,24 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: mgr module 'telemetry' is not enabled</code></strong> — Verify the module name with <code>ceph mgr module ls</code> and check if it's already disabled.
-<strong><code>Error EINVAL: cannot disable module 'pg_autoscaler': it is required</code></strong> — This error occurs on older Ceph versions; skip disabling this module or upgrade to Ceph Quincy or later.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: mgr module 'telemetry' is not enabled</code></td>
+<td>Verify the module name with <code>ceph mgr module ls</code> and check if it's already disabled.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: cannot disable module 'pg_autoscaler': it is required</code></td>
+<td>This error occurs on older Ceph versions; skip disabling this module or upgrade to Ceph Quincy or later.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Enable auth debug logging for incident investigation</span>
@@ -7967,9 +8056,28 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: ENOENT: No such file or directory '/var/log/ceph/ceph.log'</code></strong> — Create the log directory with <code>mkdir -p /var/log/ceph &amp;&amp; chown ceph:ceph /var/log/ceph</code> before enabling logging.
-<strong><code>Error: permission denied: unable to set config key 'global/auth_debug'</code></strong> — Run the command with appropriate Ceph admin privileges or use <code>sudo ceph</code> if the user lacks cluster permissions.
-<strong><code>tail: cannot open '/var/log/ceph/ceph.log' for reading: Permission denied</code></strong> — Change log file permissions with <code>sudo chmod 644 /var/log/ceph/ceph.log</code> or run tail with sudo.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: ENOENT: No such file or directory '/var/log/ceph/ceph.log'</code></td>
+<td>Create the log directory with <code>mkdir -p /var/log/ceph &amp;&amp; chown ceph:ceph /var/log/ceph</code> before enabling logging.</td>
+</tr>
+<tr>
+<td><code>Error: permission denied: unable to set config key 'global/auth_debug'</code></td>
+<td>Run the command with appropriate Ceph admin privileges or use <code>sudo ceph</code> if the user lacks cluster permissions.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/ceph/ceph.log' for reading: Permission denied</code></td>
+<td>Change log file permissions with <code>sudo chmod 644 /var/log/ceph/ceph.log</code> or run tail with sudo.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="least-privilege-key-hygiene">Least Privilege: Key Hygiene<a class="headerlink" href="#least-privilege-key-hygiene" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Never use client.admin in application configuration</span>
@@ -8010,9 +8118,28 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EACCES: permission denied</code></strong> — Ensure the user running <code>ceph auth</code> commands has sudo access or is part of the ceph group on the admin host.
-<strong><code>ssh: Could not resolve hostname &lt;hostname&gt;: Name or service not known</code></strong> — Verify all hostnames from <code>ceph orch host ls</code> are resolvable via DNS or add entries to <code>/etc/hosts</code> on the admin workstation.
-<strong><code>entity client.myapp does not exist</code></strong> — Run <code>ceph auth get-or-create</code> before attempting <code>ceph auth del</code>, or use <code>ceph auth rm</code> if the entity was already removed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EACCES: permission denied</code></td>
+<td>Ensure the user running <code>ceph auth</code> commands has sudo access or is part of the ceph group on the admin host.</td>
+</tr>
+<tr>
+<td><code>ssh: Could not resolve hostname &lt;hostname&gt;: Name or service not known</code></td>
+<td>Verify all hostnames from <code>ceph orch host ls</code> are resolvable via DNS or add entries to <code>/etc/hosts</code> on the admin workstation.</td>
+</tr>
+<tr>
+<td><code>entity client.myapp does not exist</code></td>
+<td>Run <code>ceph auth get-or-create</code> before attempting <code>ceph auth del</code>, or use <code>ceph auth rm</code> if the entity was already removed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cis-hardening-controls">CIS Hardening Controls<a class="headerlink" href="#cis-hardening-controls" title="Permanent link">&para;</a></h2>
 <table>
@@ -8097,8 +8224,24 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: INVALID_ZONE: internal</code></strong> — Verify the zone exists with <code>firewall-cmd --get-zones</code> and use an available zone like <code>public</code> or <code>trusted</code>.
-<strong><code>Error: INVALID_ADDR: &lt;prometheus-host-ip&gt;</code></strong> — Replace the placeholder with an actual IP address in CIDR notation (e.g., <code>192.168.1.50/32</code>) or remove angle brackets.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: INVALID_ZONE: internal</code></td>
+<td>Verify the zone exists with <code>firewall-cmd --get-zones</code> and use an available zone like <code>public</code> or <code>trusted</code>.</td>
+</tr>
+<tr>
+<td><code>Error: INVALID_ADDR: &lt;prometheus-host-ip&gt;</code></td>
+<td>Replace the placeholder with an actual IP address in CIDR notation (e.g., <code>192.168.1.50/32</code>) or remove angle brackets.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="admin-socket-permissions">Admin Socket Permissions<a class="headerlink" href="#admin-socket-permissions" title="Permanent link">&para;</a></h2>
 <p>Each Ceph daemon creates a Unix domain socket for runtime queries. Restrict these to prevent local privilege escalation.</p>
@@ -8125,8 +8268,24 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>find: '/var/run/ceph': Permission denied</code></strong> — Run the command with <code>sudo</code> to access the ceph runtime directory.
-<strong><code>Error EINVAL: invalid admin_socket_mode value</code></strong> — Use octal notation without leading zero (e.g., <code>ceph config set global admin_socket_mode 432</code> for 0660 in decimal) or verify the parameter name with <code>ceph config help admin_socket_mode</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find: '/var/run/ceph': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> to access the ceph runtime directory.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: invalid admin_socket_mode value</code></td>
+<td>Use octal notation without leading zero (e.g., <code>ceph config set global admin_socket_mode 432</code> for 0660 in decimal) or verify the parameter name with <code>ceph config help admin_socket_mode</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="hardening-verification-commands">Hardening Verification Commands<a class="headerlink" href="#hardening-verification-commands" title="Permanent link">&para;</a></h2>
 <p>Run these after applying hardening controls to confirm the state matches intent.</p>
@@ -8176,9 +8335,28 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: entity name 'client.admin' does not have caps</code></strong> — Ensure the admin keyring exists by running <code>ceph auth get client.admin</code> or reinitialize with <code>ceph-authtool</code>.
-<strong><code>ssh: Could not resolve hostname ceph-osd-01: Name or service not known</code></strong> — Verify hostname resolution by checking <code>/etc/hosts</code> or DNS, or use IP addresses directly in the <code>ceph orch host ls</code> output.
-<strong><code>ModuleNotFoundError: No module named 'json'</code></strong> — Install Python3 json module or simplify the hostname extraction using <code>ceph orch host ls | awk '{print $1}'</code> instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: entity name 'client.admin' does not have caps</code></td>
+<td>Ensure the admin keyring exists by running <code>ceph auth get client.admin</code> or reinitialize with <code>ceph-authtool</code>.</td>
+</tr>
+<tr>
+<td><code>ssh: Could not resolve hostname ceph-osd-01: Name or service not known</code></td>
+<td>Verify hostname resolution by checking <code>/etc/hosts</code> or DNS, or use IP addresses directly in the <code>ceph orch host ls</code> output.</td>
+</tr>
+<tr>
+<td><code>ModuleNotFoundError: No module named 'json'</code></td>
+<td>Install Python3 json module or simplify the hostname extraction using <code>ceph orch host ls | awk '{print $1}'</code> instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8208,7 +8386,7 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

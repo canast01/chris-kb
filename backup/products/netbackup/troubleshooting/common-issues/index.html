@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="NetBackup — Common Issues · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NetBackup — Common Issues", "url": "https://chrisanastasiadis.com/backup/products/netbackup/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-05"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NetBackup — Common Issues", "url": "https://chrisanastasiadis.com/backup/products/netbackup/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-05"}</script>
   
 
   </head>
@@ -7601,9 +7601,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bpcd: not found in process list</code></strong> — Restart bpcd on the client with <code>/usr/openv/netbackup/bin/bpcd -standalone</code> or verify the NetBackup installation is complete.
-<strong><code>telnet: Unable to connect to remote host: Connection refused</code></strong> — Verify port 13782 is open in the firewall between master and client, and that bpcd is listening on the client.
-<strong><code>tail: cannot open '/usr/openv/netbackup/logs/bpcd/log.20240115' for reading: No such file or directory</code></strong> — Correct the log filename date format (use <code>ls /usr/openv/netbackup/logs/bpcd/</code> to find the correct log file) or check that bpcd has actually run on that date.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bpcd: not found in process list</code></td>
+<td>Restart bpcd on the client with <code>/usr/openv/netbackup/bin/bpcd -standalone</code> or verify the NetBackup installation is complete.</td>
+</tr>
+<tr>
+<td><code>telnet: Unable to connect to remote host: Connection refused</code></td>
+<td>Verify port 13782 is open in the firewall between master and client, and that bpcd is listening on the client.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/usr/openv/netbackup/logs/bpcd/log.20240115' for reading: No such file or directory</code></td>
+<td>Correct the log filename date format (use <code>ls /usr/openv/netbackup/logs/bpcd/</code> to find the correct log file) or check that bpcd has actually run on that date.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check catalog backup job history</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bplist<span class="w"> </span>-S<span class="w"> </span>&lt;master-server&gt;<span class="w"> </span>-policy<span class="w"> </span>NBU_Catalog<span class="w"> </span>-Listdead<span class="w"> </span>-d<span class="w"> </span><span class="m">01</span>/01/1970<span class="w"> </span><span class="m">00</span>:00:00
@@ -7646,9 +7665,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bplist: invalid date format</code></strong> — Use the correct date format <code>MM/DD/YYYY HH:MM:SS</code> or omit the <code>-d</code> flag to list all jobs.
-<strong><code>bpbackup: policy NBU_Catalog_Backup not found</code></strong> — Verify the policy name exists with <code>bppllist</code> and use the exact policy name without extra characters.
-<strong><code>bpdbm: database locked by another process</code></strong> — Wait for any running backup or maintenance jobs to complete, or restart the NetBackup database manager with <code>bpdbm -restart</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bplist: invalid date format</code></td>
+<td>Use the correct date format <code>MM/DD/YYYY HH:MM:SS</code> or omit the <code>-d</code> flag to list all jobs.</td>
+</tr>
+<tr>
+<td><code>bpbackup: policy NBU_Catalog_Backup not found</code></td>
+<td>Verify the policy name exists with <code>bppllist</code> and use the exact policy name without extra characters.</td>
+</tr>
+<tr>
+<td><code>bpdbm: database locked by another process</code></td>
+<td>Wait for any running backup or maintenance jobs to complete, or restart the NetBackup database manager with <code>bpdbm -restart</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check all STU free space</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>bpstulist<span class="w"> </span>-U
@@ -7687,9 +7725,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bpstulist: command not found</code></strong> — Ensure the NetBackup client or media server binaries are in your PATH, or source the NetBackup environment setup script (typically <code>. /usr/openv/netbackup/bin/bp.env</code>).
-<strong><code>nbdevquery: invalid option -- 's'</code></strong> — Use the correct syntax <code>nbdevquery -listdp -stype PureDisk</code> without extra spaces, or check your NetBackup version for the correct flag format.
-<strong><code>bpimage -cleanup: No images to process</code></strong> — Verify that expired images exist by running <code>bpimage -list</code> first; if none exist, ensure <code>bpexpdate</code> completed successfully and images were actually marked for expiration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bpstulist: command not found</code></td>
+<td>Ensure the NetBackup client or media server binaries are in your PATH, or source the NetBackup environment setup script (typically <code>. /usr/openv/netbackup/bin/bp.env</code>).</td>
+</tr>
+<tr>
+<td><code>nbdevquery: invalid option -- 's'</code></td>
+<td>Use the correct syntax <code>nbdevquery -listdp -stype PureDisk</code> without extra spaces, or check your NetBackup version for the correct flag format.</td>
+</tr>
+<tr>
+<td><code>bpimage -cleanup: No images to process</code></td>
+<td>Verify that expired images exist by running <code>bpimage -list</code> first; if none exist, ensure <code>bpexpdate</code> completed successfully and images were actually marked for expiration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check MSDP pool status</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cacontrol<span class="w"> </span>--dsstat<span class="w"> </span>-d<span class="w"> </span>&lt;msdp-path&gt;
@@ -7749,7 +7806,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 17:06:15 UTC"><span class="timeago" datetime="2026-06-29T17:06:15+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 17:06:15 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

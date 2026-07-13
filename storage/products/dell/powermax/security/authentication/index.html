@@ -9247,9 +9247,28 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the Unisphere certificate into your system's CA bundle.
-<strong><code>symuserdb: Command not found</code></strong> — Install Solutions Enabler CLI package or verify the PATH includes the SymCLI bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
-<strong><code>HTTP/1.1 401 Unauthorized</code></strong> — Verify the admin credentials are correct and the user account has REST API access permissions in Unisphere.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already present) or import the Unisphere certificate into your system's CA bundle.</td>
+</tr>
+<tr>
+<td><code>symuserdb: Command not found</code></td>
+<td>Install Solutions Enabler CLI package or verify the PATH includes the SymCLI bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).</td>
+</tr>
+<tr>
+<td><code>HTTP/1.1 401 Unauthorized</code></td>
+<td>Verify the admin credentials are correct and the user account has REST API access permissions in Unisphere.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Break-glass account policy:</strong>
 - Always retain at least one named local admin account in a privileged access vault (CyberArk, Thycotic, etc.) even when LDAP is the primary authentication method.
@@ -9364,9 +9383,28 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldap_bind: Invalid credentials (49)</code></strong> — Verify the service account password is correct and the account is not locked in Active Directory.
-<strong><code>Can't contact LDAP server (-1)</code></strong> — Confirm the LDAP server hostname resolves and port 389/636 is reachable from the Unisphere host (test with <code>nc -zv ldap.corp.example.com 389</code>).
-<strong><code>TLS: peer certificate cannot be authenticated with known CA certificates</code></strong> — Add the LDAP server's CA certificate to the system trust store or disable certificate validation by adding <code>-o LDAPTLS_REQCERT=never</code> to the ldapsearch command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldap_bind: Invalid credentials (49)</code></td>
+<td>Verify the service account password is correct and the account is not locked in Active Directory.</td>
+</tr>
+<tr>
+<td><code>Can't contact LDAP server (-1)</code></td>
+<td>Confirm the LDAP server hostname resolves and port 389/636 is reachable from the Unisphere host (test with <code>nc -zv ldap.corp.example.com 389</code>).</td>
+</tr>
+<tr>
+<td><code>TLS: peer certificate cannot be authenticated with known CA certificates</code></td>
+<td>Add the LDAP server's CA certificate to the system trust store or disable certificate validation by adding <code>-o LDAPTLS_REQCERT=never</code> to the ldapsearch command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>A successful bind returning the test user's attributes confirms LDAP connectivity. If the test fails, resolve the connectivity issue before configuring Unisphere — an incorrect LDAP configuration can lock administrators out.</p>
 <h2 id="role-mapping">Role Mapping<a class="headerlink" href="#role-mapping" title="Permanent link">&para;</a></h2>
@@ -9433,8 +9471,24 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied</code></strong> — Ensure the daemon_users file is readable by the SYMAPI daemon process (typically owned by root with 644 permissions).
-<strong><code>Invalid host specification in daemon_users</code></strong> — Use valid CIDR notation (e.g., 192.168.10.0/24) or specific IPs; wildcards (*) are only valid for the host field when granting access to all hosts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure the daemon_users file is readable by the SYMAPI daemon process (typically owned by root with 644 permissions).</td>
+</tr>
+<tr>
+<td><code>Invalid host specification in daemon_users</code></td>
+<td>Use valid CIDR notation (e.g., 192.168.10.0/24) or specific IPs; wildcards (*) are only valid for the host field when granting access to all hosts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Restrict SYMAPI daemon access:
 - Only named service accounts and operations users should appear in <code>daemon_users</code>.
@@ -9466,9 +9520,28 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit storsrvd.service could not be found.</code></strong> — Verify Solutions Enabler is installed with <code>rpm -qa | grep -i emc</code> and reinstall if missing.
-<strong><code>Active: inactive (dead) since Wed 2024-01-17 09:15:42 UTC</code></strong> — Start the daemon with <code>systemctl start storsrvd</code> and check <code>/var/log/messages</code> for startup errors.
-<strong><code>Permission denied</code> when reading <code>/var/symapi/config/netcnfg</code></strong> — Ensure your user is in the <code>symapi</code> group or run the command with <code>sudo</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit storsrvd.service could not be found.</code></td>
+<td>Verify Solutions Enabler is installed with <code>rpm -qa | grep -i emc</code> and reinstall if missing.</td>
+</tr>
+<tr>
+<td><code>Active: inactive (dead) since Wed 2024-01-17 09:15:42 UTC</code></td>
+<td>Start the daemon with <code>systemctl start storsrvd</code> and check <code>/var/log/messages</code> for startup errors.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code> when reading <code>/var/symapi/config/netcnfg</code></td>
+<td>Ensure your user is in the <code>symapi</code> group or run the command with <code>sudo</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="se-authentication-for-scripts">SE Authentication for Scripts<a class="headerlink" href="#se-authentication-for-scripts" title="Permanent link">&para;</a></h3>
 <p>For automation scripts that run SYMCLI commands, use a dedicated service account:</p>
@@ -9497,8 +9570,24 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: user storadm is not in the sudoers file.  This incident will be reported.</code></strong> — Add the storadm user to sudoers with <code>visudo</code> and grant SYMCLI command permissions.
-<strong><code>SYMCLI_SID environment variable not set or invalid</code></strong> — Verify the SID format is 12 digits and matches an actual array with <code>symcfg list</code> before setting SYMCLI_SID.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: user storadm is not in the sudoers file.  This incident will be reported.</code></td>
+<td>Add the storadm user to sudoers with <code>visudo</code> and grant SYMCLI command permissions.</td>
+</tr>
+<tr>
+<td><code>SYMCLI_SID environment variable not set or invalid</code></td>
+<td>Verify the SID format is 12 digits and matches an actual array with <code>symcfg list</code> before setting SYMCLI_SID.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>All configuration changes on PowerMax are recorded as audit events accessible via SYMCLI and Unisphere. Audit logs capture the user, timestamp, action, affected object, and result.</p>
@@ -9542,9 +9631,28 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid SID format or SID not found</code></strong> — Verify the SID value is correct and the array is reachable by running <code>symcfg list -sid &lt;SID&gt;</code> first.
-<strong><code>Error: symaudit: command not found</code></strong> — Ensure SYMCLI is installed and the <code>$PATH</code> includes the SYMCLI bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
-<strong><code>Error: Permission denied accessing audit database</code></strong> — Confirm your user account has appropriate RBAC permissions for audit log access on the PowerMax array.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid SID format or SID not found</code></td>
+<td>Verify the SID value is correct and the array is reachable by running <code>symcfg list -sid &lt;SID&gt;</code> first.</td>
+</tr>
+<tr>
+<td><code>Error: symaudit: command not found</code></td>
+<td>Ensure SYMCLI is installed and the <code>$PATH</code> includes the SYMCLI bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied accessing audit database</code></td>
+<td>Confirm your user account has appropriate RBAC permissions for audit log access on the PowerMax array.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="audit-log-forwarding-to-siem">Audit Log Forwarding to SIEM<a class="headerlink" href="#audit-log-forwarding-to-siem" title="Permanent link">&para;</a></h3>
 <p>Export audit logs to a SIEM (Splunk, IBM QRadar, Microsoft Sentinel) via syslog from the Unisphere host:</p>
@@ -9671,9 +9779,28 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but verify it's not being overridden by environment variables).
-<strong><code>curl: (7) Failed to connect to &lt;unisphere-host&gt;:8443: Name or service not known</code></strong> — Verify the Unisphere hostname is resolvable and reachable; check DNS or use the IP address directly instead of hostname.
-<strong><code>ModuleNotFoundError: No module named 'PyU4V'</code></strong> — Install PyU4V in the correct Python environment using <code>pip3 install PyU4V</code> or ensure the virtual environment is activated before running the script.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example, but verify it's not being overridden by environment variables).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;unisphere-host&gt;:8443: Name or service not known</code></td>
+<td>Verify the Unisphere hostname is resolvable and reachable; check DNS or use the IP address directly instead of hostname.</td>
+</tr>
+<tr>
+<td><code>ModuleNotFoundError: No module named 'PyU4V'</code></td>
+<td>Install PyU4V in the correct Python environment using <code>pip3 install PyU4V</code> or ensure the virtual environment is activated before running the script.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
 <p>Unisphere uses TLS certificates for HTTPS. Replacing the default self-signed certificate with a CA-signed certificate is required for production environments.</p>
@@ -9705,9 +9832,28 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load Private Key</code></strong> — Verify the private key file exists at <code>/tmp/unisphere.key</code> and has read permissions (chmod 600 /tmp/unisphere.key).
-<strong><code>error on line 1 of /tmp/unisphere.csr</code></strong> — Ensure the CSR file was generated successfully and is not corrupted; regenerate if necessary using the same openssl command.
-<strong><code>[Unisphere UI] Certificate import failed: Key and certificate do not match</code></strong> — Confirm that the unisphere.crt and unisphere.key files were generated as a matched pair from the same CSR.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load Private Key</code></td>
+<td>Verify the private key file exists at <code>/tmp/unisphere.key</code> and has read permissions (chmod 600 /tmp/unisphere.key).</td>
+</tr>
+<tr>
+<td><code>error on line 1 of /tmp/unisphere.csr</code></td>
+<td>Ensure the CSR file was generated successfully and is not corrupted; regenerate if necessary using the same openssl command.</td>
+</tr>
+<tr>
+<td><code>[Unisphere UI] Certificate import failed: Key and certificate do not match</code></td>
+<td>Confirm that the unisphere.crt and unisphere.key files were generated as a matched pair from the same CSR.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -9753,9 +9899,28 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to connect to &lt;unisphere-host&gt;:8443</code></strong> — Verify the Unisphere hostname/IP is correct and port 8443 is reachable (use <code>telnet &lt;unisphere-host&gt; 8443</code> to test connectivity).
-<strong><code>date: invalid date '&lt;expiry&gt;'</code></strong> — Ensure the openssl command successfully extracted the certificate; check that Unisphere is responding on port 8443 and the certificate is valid.
-<strong><code>command not found: openssl</code></strong> — Install openssl on the management host using <code>apt-get install openssl</code> (Debian/Ubuntu) or <code>yum install openssl</code> (RHEL/CentOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to connect to &lt;unisphere-host&gt;:8443</code></td>
+<td>Verify the Unisphere hostname/IP is correct and port 8443 is reachable (use <code>telnet &lt;unisphere-host&gt; 8443</code> to test connectivity).</td>
+</tr>
+<tr>
+<td><code>date: invalid date '&lt;expiry&gt;'</code></td>
+<td>Ensure the openssl command successfully extracted the certificate; check that Unisphere is responding on port 8443 and the certificate is valid.</td>
+</tr>
+<tr>
+<td><code>command not found: openssl</code></td>
+<td>Install openssl on the management host using <code>apt-get install openssl</code> (Debian/Ubuntu) or <code>yum install openssl</code> (RHEL/CentOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
@@ -9792,7 +9957,7 @@ Authentication reference covering Overview, Unisphere Local Accounts, Active Dir
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

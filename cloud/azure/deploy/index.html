@@ -7846,8 +7846,24 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The user 'user@contoso.com' does not have authorization to perform action 'Microsoft.Management/managementGroups/write' over scope '/providers/Microsoft.Management/managementGroups/root-mg'.</code></strong> — Assign the user the "Management Group Contributor" role at the tenant root scope.
-<strong><code>Management group with name 'root-mg' already exists.</code></strong> — Use a different name or delete the existing management group with <code>az account management-group delete --name "root-mg"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The user 'user@contoso.com' does not have authorization to perform action 'Microsoft.Management/managementGroups/write' over scope '/providers/Microsoft.Management/managementGroups/root-mg'.</code></td>
+<td>Assign the user the "Management Group Contributor" role at the tenant root scope.</td>
+</tr>
+<tr>
+<td><code>Management group with name 'root-mg' already exists.</code></td>
+<td>Use a different name or delete the existing management group with <code>az account management-group delete --name "root-mg"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Create the standard hierarchy:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Platform group — subscriptions for shared services</span>
@@ -7915,9 +7931,28 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Management group 'root-mg' not found</code></strong> — Ensure the root management group exists or use your tenant root group ID (typically your tenant name) as the parent.
-<strong><code>Insufficient privileges to create management groups</code></strong> — Verify your account has the Management Group Contributor role assigned at the tenant root scope.
-<strong><code>Management group 'platform' already exists</code></strong> — Use <code>az account management-group show --name platform</code> to verify existing groups, then skip or delete duplicates before recreating.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Management group 'root-mg' not found</code></td>
+<td>Ensure the root management group exists or use your tenant root group ID (typically your tenant name) as the parent.</td>
+</tr>
+<tr>
+<td><code>Insufficient privileges to create management groups</code></td>
+<td>Verify your account has the Management Group Contributor role assigned at the tenant root scope.</td>
+</tr>
+<tr>
+<td><code>Management group 'platform' already exists</code></td>
+<td>Use <code>az account management-group show --name platform</code> to verify existing groups, then skip or delete duplicates before recreating.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Move subscriptions under the correct MG:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>az<span class="w"> </span>account<span class="w"> </span>management-group<span class="w"> </span>subscription<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
@@ -7928,8 +7963,24 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The subscription '&lt;subscription-id&gt;' could not be found.</code></strong> — Verify the subscription ID is correct and exists in your Azure tenant by running <code>az account subscription list</code>.
-<strong><code>You do not have permission to perform action 'Microsoft.Management/managementGroups/subscriptions/write' on scope '/subscriptions/&lt;subscription-id&gt;'.</code></strong> — Ensure your Azure account has Owner or Management Group Contributor role on the "platform" management group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The subscription '&lt;subscription-id&gt;' could not be found.</code></td>
+<td>Verify the subscription ID is correct and exists in your Azure tenant by running <code>az account subscription list</code>.</td>
+</tr>
+<tr>
+<td><code>You do not have permission to perform action 'Microsoft.Management/managementGroups/subscriptions/write' on scope '/subscriptions/&lt;subscription-id&gt;'.</code></td>
+<td>Ensure your Azure account has Owner or Management Group Contributor role on the "platform" management group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configure-azure-policy-at-management-group-level">Configure Azure Policy at Management Group Level<a class="headerlink" href="#configure-azure-policy-at-management-group-level" title="Permanent link">&para;</a></h2>
@@ -7965,8 +8016,24 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The policy set definition '1f3afdf9-d0c9-4c3d-847f-89da613e70a8' could not be found.</code></strong> — Verify the policy definition ID exists in your tenant using <code>az policy set-definition list</code> and copy the correct ID.
-<strong><code>The scope '/providers/Microsoft.Management/managementGroups/root-mg' is invalid or does not exist.</code></strong> — Confirm the management group exists and use the correct scope format from <code>az account management-group list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The policy set definition '1f3afdf9-d0c9-4c3d-847f-89da613e70a8' could not be found.</code></td>
+<td>Verify the policy definition ID exists in your tenant using <code>az policy set-definition list</code> and copy the correct ID.</td>
+</tr>
+<tr>
+<td><code>The scope '/providers/Microsoft.Management/managementGroups/root-mg' is invalid or does not exist.</code></td>
+<td>Confirm the management group exists and use the correct scope format from <code>az account management-group list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Use <code>DoNotEnforce</code> (Audit only) initially. Switch to <code>Default</code> (Deny) after remediating existing findings.</p>
 <p><strong>Assign the CIS Microsoft Azure Foundations initiative:</strong></p>
@@ -7999,9 +8066,28 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The policy set definition '612b5213-9160-4969-8578-1518bd2a000c' could not be found.</code></strong> — Verify the policy definition ID exists in your subscription or use <code>az policy set-definition list</code> to find the correct ID.
-<strong><code>The user does not have permission to perform action 'Microsoft.Authorization/policyAssignments/write' on scope '/providers/Microsoft.Management/managementGroups/root-mg'.</code></strong> — Ensure your account has Owner or Policy Contributor role on the management group.
-<strong><code>Invalid scope '/providers/Microsoft.Management/managementGroups/root-mg': management group 'root-mg' does not exist.</code></strong> — Replace the scope with a valid management group ID from <code>az account management-group list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The policy set definition '612b5213-9160-4969-8578-1518bd2a000c' could not be found.</code></td>
+<td>Verify the policy definition ID exists in your subscription or use <code>az policy set-definition list</code> to find the correct ID.</td>
+</tr>
+<tr>
+<td><code>The user does not have permission to perform action 'Microsoft.Authorization/policyAssignments/write' on scope '/providers/Microsoft.Management/managementGroups/root-mg'.</code></td>
+<td>Ensure your account has Owner or Policy Contributor role on the management group.</td>
+</tr>
+<tr>
+<td><code>Invalid scope '/providers/Microsoft.Management/managementGroups/root-mg': management group 'root-mg' does not exist.</code></td>
+<td>Replace the scope with a valid management group ID from <code>az account management-group list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Review compliance:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
@@ -8033,9 +8119,28 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Authorization/policyStates/queryResults/action'</code></strong> — Assign the "Policy Insights Data Writer" or "Reader" role to your user on the management group.
-<strong><code>ERROR: Management group 'root-mg' not found.</code></strong> — Verify the management group ID with <code>az account management-group list</code> and use the correct name.
-<strong><code>ERROR: No policy state data available for the specified scope.</code></strong> — Ensure policies are assigned to the management group and resources have been evaluated; wait 15–30 minutes after assignment for initial compliance data.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Authorization/policyStates/queryResults/action'</code></td>
+<td>Assign the "Policy Insights Data Writer" or "Reader" role to your user on the management group.</td>
+</tr>
+<tr>
+<td><code>ERROR: Management group 'root-mg' not found.</code></td>
+<td>Verify the management group ID with <code>az account management-group list</code> and use the correct name.</td>
+</tr>
+<tr>
+<td><code>ERROR: No policy state data available for the specified scope.</code></td>
+<td>Ensure policies are assigned to the management group and resources have been evaluated; wait 15–30 minutes after assignment for initial compliance data.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="configure-microsoft-defender-for-cloud">Configure Microsoft Defender for Cloud<a class="headerlink" href="#configure-microsoft-defender-for-cloud" title="Permanent link">&para;</a></h2>
@@ -8086,9 +8191,28 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>(AuthorizationFailed) The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Security/pricings/write' over scope '/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Security/pricings/VirtualMachines'.</code></strong> — Assign the Security Admin or Owner role to the user on the target subscription.
-<strong><code>(InvalidRequest) Pricing tier 'Standard' is not valid for resource type 'VirtualMachines'. Valid values are: 'Free', 'Standard'.</code></strong> — Verify the pricing tier name matches the exact case and valid options for the resource type.
-<strong><code>(ResourceNotFound) The subscription 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' could not be found.</code></strong> — Replace <code>&lt;subscription-id&gt;</code> with a valid subscription ID from <code>az account list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(AuthorizationFailed) The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Security/pricings/write' over scope '/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Security/pricings/VirtualMachines'.</code></td>
+<td>Assign the Security Admin or Owner role to the user on the target subscription.</td>
+</tr>
+<tr>
+<td><code>(InvalidRequest) Pricing tier 'Standard' is not valid for resource type 'VirtualMachines'. Valid values are: 'Free', 'Standard'.</code></td>
+<td>Verify the pricing tier name matches the exact case and valid options for the resource type.</td>
+</tr>
+<tr>
+<td><code>(ResourceNotFound) The subscription 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' could not be found.</code></td>
+<td>Replace <code>&lt;subscription-id&gt;</code> with a valid subscription ID from <code>az account list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Configure security contacts:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>az<span class="w"> </span>security<span class="w"> </span>contact<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
@@ -8112,9 +8236,28 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: (ResourceNotFound) The resource of type 'securityContacts' with name 'default' could not be found.</code></strong> — Ensure you are authenticated with <code>az login</code> and have the correct subscription selected via <code>az account set --subscription &lt;subscription-id&gt;</code>.
-<strong><code>ERROR: Invalid email address format: security@corp.com</code></strong> — Use a valid email format; verify the domain exists and the email parameter is not malformed.
-<strong><code>ERROR: (AuthorizationFailed) The client 'user@corp.com' with object id '...' does not have authorization to perform action 'Microsoft.Security/securityContacts/write' over scope '/subscriptions/...'</code></strong> — Grant the user the Security Admin or Owner role on the subscription using <code>az role assignment create</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: (ResourceNotFound) The resource of type 'securityContacts' with name 'default' could not be found.</code></td>
+<td>Ensure you are authenticated with <code>az login</code> and have the correct subscription selected via <code>az account set --subscription &lt;subscription-id&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: Invalid email address format: security@corp.com</code></td>
+<td>Use a valid email format; verify the domain exists and the email parameter is not malformed.</td>
+</tr>
+<tr>
+<td><code>ERROR: (AuthorizationFailed) The client 'user@corp.com' with object id '...' does not have authorization to perform action 'Microsoft.Security/securityContacts/write' over scope '/subscriptions/...'</code></td>
+<td>Grant the user the Security Admin or Owner role on the subscription using <code>az role assignment create</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="set-up-log-analytics-workspace-and-sentinel">Set Up Log Analytics Workspace and Sentinel<a class="headerlink" href="#set-up-log-analytics-workspace-and-sentinel" title="Permanent link">&para;</a></h2>
@@ -8156,8 +8299,24 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceGroupNotFound: Resource group 'rg-platform-monitoring' could not be found.</code></strong> — Create the resource group first using <code>az group create --name rg-platform-monitoring --location eastus</code>.
-<strong><code>InvalidSkuName: The provided SKU 'PerGB2018' is not valid for this subscription.</code></strong> — Verify available SKUs with <code>az monitor log-analytics workspace list-skus</code> or use a valid SKU like <code>PerGB2018</code> or <code>CapacityReservation</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceGroupNotFound: Resource group 'rg-platform-monitoring' could not be found.</code></td>
+<td>Create the resource group first using <code>az group create --name rg-platform-monitoring --location eastus</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidSkuName: The provided SKU 'PerGB2018' is not valid for this subscription.</code></td>
+<td>Verify available SKUs with <code>az monitor log-analytics workspace list-skus</code> or use a valid SKU like <code>PerGB2018</code> or <code>CapacityReservation</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Enable Microsoft Sentinel on the workspace:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>az<span class="w"> </span>sentinel<span class="w"> </span>workspace<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
@@ -8183,9 +8342,28 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceGroupNotFound : The resource group 'rg-platform-monitoring' could not be found.</code></strong> — Verify the resource group exists in your subscription using <code>az group list</code> and correct the <code>--resource-group</code> parameter.
-<strong><code>InvalidResourceName : The value of the parameter workspaceName is invalid.</code></strong> — Ensure the workspace name contains only alphanumeric characters and hyphens, is 4-63 characters long, and doesn't start with a hyphen.
-<strong><code>AuthorizationFailed : The client 'user@example.com' with object id '...' does not have authorization to perform action 'Microsoft.OperationalInsights/workspaces/write'.</code></strong> — Assign the "Log Analytics Contributor" role to your user account on the resource group using <code>az role assignment create</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceGroupNotFound : The resource group 'rg-platform-monitoring' could not be found.</code></td>
+<td>Verify the resource group exists in your subscription using <code>az group list</code> and correct the <code>--resource-group</code> parameter.</td>
+</tr>
+<tr>
+<td><code>InvalidResourceName : The value of the parameter workspaceName is invalid.</code></td>
+<td>Ensure the workspace name contains only alphanumeric characters and hyphens, is 4-63 characters long, and doesn't start with a hyphen.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed : The client 'user@example.com' with object id '...' does not have authorization to perform action 'Microsoft.OperationalInsights/workspaces/write'.</code></td>
+<td>Assign the "Log Analytics Contributor" role to your user account on the resource group using <code>az role assignment create</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Connect core data connectors via the Sentinel portal:</strong></p>
 <p>Navigate to Sentinel → Data Connectors and enable:</p>
@@ -8235,8 +8413,24 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: unrecognized arguments: --operator</code></strong> — Use <code>--risk-level</code> and <code>--mfa-required</code> only; <code>--operator</code> is not a valid parameter for this command.
-<strong><code>ERROR: argument --risk-level: invalid choice: 'medium' (choose from 'low', 'medium', 'high')</code></strong> — Ensure the risk level value matches one of the accepted enum values exactly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: unrecognized arguments: --operator</code></td>
+<td>Use <code>--risk-level</code> and <code>--mfa-required</code> only; <code>--operator</code> is not a valid parameter for this command.</td>
+</tr>
+<tr>
+<td><code>ERROR: argument --risk-level: invalid choice: 'medium' (choose from 'low', 'medium', 'high')</code></td>
+<td>Ensure the risk level value matches one of the accepted enum values exactly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Configure PIM for privileged roles:</strong></p>
 <ol>
@@ -8388,9 +8582,28 @@ Deploy Azure Bastion for secure VM access:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>(ResourceNotFound) Resource 'Microsoft.Network/virtualNetworks/vnet-hub-prod' under resource group 'rg-platform-network' was not found.</code></strong> — Verify the virtual network name and resource group exist using <code>az network vnet list --resource-group rg-platform-network</code>.
-<strong><code>(InvalidResourceReference) The subnet 'AzureBastionSubnet' does not exist in virtual network 'vnet-hub-prod'.</code></strong> — Create the required AzureBastionSubnet with address prefix /26 or larger using <code>az network vnet subnet create --resource-group rg-platform-network --vnet-name vnet-hub-prod --name AzureBastionSubnet --address-prefix 10.0.1.0/26</code>.
-**`(AuthorizationFailed) The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p' does not have permission to perform action 'Microsoft.Network/bastionHosts/write' over scope '/subscriptions/12345678-1234-1234-1234-123456789</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(ResourceNotFound) Resource 'Microsoft.Network/virtualNetworks/vnet-hub-prod' under resource group 'rg-platform-network' was not found.</code></td>
+<td>Verify the virtual network name and resource group exist using <code>az network vnet list --resource-group rg-platform-network</code>.</td>
+</tr>
+<tr>
+<td><code>(InvalidResourceReference) The subnet 'AzureBastionSubnet' does not exist in virtual network 'vnet-hub-prod'.</code></td>
+<td>Create the required AzureBastionSubnet with address prefix /26 or larger using <code>az network vnet subnet create --resource-group rg-platform-network --vnet-name vnet-hub-prod --name AzureBastionSubnet --address-prefix 10.0.1.0/26</code>.</td>
+</tr>
+<tr>
+<td>**`(AuthorizationFailed) The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p' does not have permission to perform action 'Microsoft.Network/bastionHosts/write' over scope '/subscriptions/12345678-1234-1234-1234-123456789</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="enable-azure-backup-vault">Enable Azure Backup Vault<a class="headerlink" href="#enable-azure-backup-vault" title="Permanent link">&para;</a></h2>
@@ -8455,8 +8668,24 @@ Deploy Azure Bastion for secure VM access:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceGroupNotFound</code></strong> — Verify the resource group exists with <code>az group list</code> and create it if needed using <code>az group create --name rg-platform-backup --location eastus</code>.
-<strong><code>InvalidJsonInput</code></strong> — Escape the JSON policy string properly by using single quotes around the entire JSON block or save the policy to a file and reference it with <code>@policy.json</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceGroupNotFound</code></td>
+<td>Verify the resource group exists with <code>az group list</code> and create it if needed using <code>az group create --name rg-platform-backup --location eastus</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidJsonInput</code></td>
+<td>Escape the JSON policy string properly by using single quotes around the entire JSON block or save the policy to a file and reference it with <code>@policy.json</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Enable backup for a VM:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>az<span class="w"> </span>backup<span class="w"> </span>protection<span class="w"> </span>enable-for-vm<span class="w"> </span><span class="se">\</span>
@@ -8482,9 +8711,28 @@ Deploy Azure Bastion for secure VM access:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The resource 'Microsoft.Compute/virtualMachines/vm-web-prod-01' under resource group 'rg-workload-prod' was not found.</code></strong> — Verify the VM name and resource group name are correct using <code>az vm list --resource-group rg-workload-prod</code>.
-<strong><code>InvalidPolicyId: The policy 'DailyVMPolicy' was not found in vault 'rsv-platform-prod'.</code></strong> — List available policies with <code>az backup policy list --resource-group rg-workload-prod --vault-name rsv-platform-prod</code> and use an existing policy name.
-<strong><code>VaultNotFound: The Recovery Services vault 'rsv-platform-prod' was not found in resource group 'rg-workload-prod'.</code></strong> — Confirm the vault exists and the resource group name is spelled correctly using <code>az backup vault list --resource-group rg-workload-prod</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The resource 'Microsoft.Compute/virtualMachines/vm-web-prod-01' under resource group 'rg-workload-prod' was not found.</code></td>
+<td>Verify the VM name and resource group name are correct using <code>az vm list --resource-group rg-workload-prod</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidPolicyId: The policy 'DailyVMPolicy' was not found in vault 'rsv-platform-prod'.</code></td>
+<td>List available policies with <code>az backup policy list --resource-group rg-workload-prod --vault-name rsv-platform-prod</code> and use an existing policy name.</td>
+</tr>
+<tr>
+<td><code>VaultNotFound: The Recovery Services vault 'rsv-platform-prod' was not found in resource group 'rg-workload-prod'.</code></td>
+<td>Confirm the vault exists and the resource group name is spelled correctly using <code>az backup vault list --resource-group rg-workload-prod</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="validate-the-deployment">Validate the Deployment<a class="headerlink" href="#validate-the-deployment" title="Permanent link">&para;</a></h2>
@@ -8504,8 +8752,24 @@ Deploy Azure Bastion for secure VM access:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: (ResourceNotFound) The resource 'Microsoft.Security/secureScores/ascScore' under resource group '&lt;subscription&gt;' was not found.</code></strong> — Ensure Azure Security Center is enabled on your subscription and the secure score has been calculated at least once.
-<strong><code>ERROR: (AuthorizationFailed) The client '&lt;user&gt;' with object id '&lt;id&gt;' does not have authorization to perform action 'Microsoft.Security/secureScores/read' over scope '/subscriptions/&lt;id&gt;'.</code></strong> — Grant the user or service principal the "Security Reader" or "Owner" role on the subscription using <code>az role assignment create</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: (ResourceNotFound) The resource 'Microsoft.Security/secureScores/ascScore' under resource group '&lt;subscription&gt;' was not found.</code></td>
+<td>Ensure Azure Security Center is enabled on your subscription and the secure score has been calculated at least once.</td>
+</tr>
+<tr>
+<td><code>ERROR: (AuthorizationFailed) The client '&lt;user&gt;' with object id '&lt;id&gt;' does not have authorization to perform action 'Microsoft.Security/secureScores/read' over scope '/subscriptions/&lt;id&gt;'.</code></td>
+<td>Grant the user or service principal the "Security Reader" or "Owner" role on the subscription using <code>az role assignment create</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Target is 70% or higher before onboarding workloads.</p>
 <p><strong>Policy compliance report:</strong></p>
@@ -8539,8 +8803,24 @@ Deploy Azure Bastion for secure VM access:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: The user does not have authorization to perform action 'Microsoft.PolicyInsights/policyStates/summarize/action' over the requested scope.</code></strong> — Ensure your Azure account has Reader or Policy Insights Data Writer role assigned at the management group scope.
-<strong><code>ERROR: Management group 'root-mg' not found.</code></strong> — Verify the management group ID exists and use the correct name with <code>az account management-group list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: The user does not have authorization to perform action 'Microsoft.PolicyInsights/policyStates/summarize/action' over the requested scope.</code></td>
+<td>Ensure your Azure account has Reader or Policy Insights Data Writer role assigned at the management group scope.</td>
+</tr>
+<tr>
+<td><code>ERROR: Management group 'root-mg' not found.</code></td>
+<td>Verify the management group ID exists and use the correct name with <code>az account management-group list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Verify Sentinel is receiving logs:</strong></p>
 <p>Run a KQL query in the Sentinel Logs blade:</p>
@@ -8599,8 +8879,24 @@ Deploy Azure Bastion for secure VM access:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: Management group 'root-mg' not found.</code></strong> — Verify the management group name with <code>az account management-group list</code> and use the correct name.
-<strong><code>ERROR: The user does not have authorization to perform action 'Microsoft.Authorization/policyAssignments/read' over scope '/providers/Microsoft.Management/managementGroups/root-mg'.</code></strong> — Ensure your Azure account has Reader or higher role assigned at the management group scope.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: Management group 'root-mg' not found.</code></td>
+<td>Verify the management group name with <code>az account management-group list</code> and use the correct name.</td>
+</tr>
+<tr>
+<td><code>ERROR: The user does not have authorization to perform action 'Microsoft.Authorization/policyAssignments/read' over scope '/providers/Microsoft.Management/managementGroups/root-mg'.</code></td>
+<td>Ensure your Azure account has Reader or higher role assigned at the management group scope.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8638,7 +8934,7 @@ Deploy Azure Bastion for secure VM access:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

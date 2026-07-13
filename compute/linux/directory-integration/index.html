@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Integration — Directory Integration (LDAP / Active Directory) · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Integration — Directory Integration (LDAP / Active Directory)", "url": "https://chrisanastasiadis.com/compute/linux/directory-integration/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-05"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Integration — Directory Integration (LDAP / Active Directory)", "url": "https://chrisanastasiadis.com/compute/linux/directory-integration/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-05"}</script>
   
 
   </head>
@@ -7324,9 +7324,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>realm: Couldn't resolve host: corp.example.com</code></strong> — Verify DNS resolution with <code>nslookup corp.example.com</code> and check network connectivity to the domain controller.
-<strong><code>realm join: Couldn't authenticate with kerberos: PKINIT client certificate not found</code></strong> — Ensure the domain admin account credentials are correct and the domain controller is reachable on port 88 (Kerberos).
-<strong><code>Error looking up administrator@corp.example.com - No such user</code></strong> — Run <code>systemctl restart sssd</code> to reload the SSSD cache after domain join completes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>realm: Couldn't resolve host: corp.example.com</code></td>
+<td>Verify DNS resolution with <code>nslookup corp.example.com</code> and check network connectivity to the domain controller.</td>
+</tr>
+<tr>
+<td><code>realm join: Couldn't authenticate with kerberos: PKINIT client certificate not found</code></td>
+<td>Ensure the domain admin account credentials are correct and the domain controller is reachable on port 88 (Kerberos).</td>
+</tr>
+<tr>
+<td><code>Error looking up administrator@corp.example.com - No such user</code></td>
+<td>Run <code>systemctl restart sssd</code> to reload the SSSD cache after domain join completes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Allow only members of &#39;linux-admins&#39; AD group to log in</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>realm<span class="w"> </span>permit<span class="w"> </span>-g<span class="w"> </span>linux-admins@corp.example.com
@@ -7338,8 +7357,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: No such realm</code></strong> — Run <code>realm discover corp.example.com</code> first to initialize the realm integration.
-<strong><code>Error: access_provider not found in [domain/corp.example.com]</code></strong> — Ensure the <code>[domain/corp.example.com]</code> section exists in <code>/etc/sssd/sssd.conf</code> before adding access_provider directives, then run <code>systemctl restart sssd</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: No such realm</code></td>
+<td>Run <code>realm discover corp.example.com</code> first to initialize the realm integration.</td>
+</tr>
+<tr>
+<td><code>Error: access_provider not found in [domain/corp.example.com]</code></td>
+<td>Ensure the <code>[domain/corp.example.com]</code> section exists in <code>/etc/sssd/sssd.conf</code> before adding access_provider directives, then run <code>systemctl restart sssd</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># smb.conf excerpt for AD membership</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="o">[</span>global<span class="o">]</span>
@@ -7385,9 +7420,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>failed to bind to server socket -- No such file or directory</code></strong> — Ensure <code>/var/lib/samba</code> directory exists and winbind has write permissions; run <code>mkdir -p /var/lib/samba/private &amp;&amp; chown root:root /var/lib/samba</code>.
-<strong><code>CIFS VFS: Couldn't find suitable server with type=0x20</code></strong> — Verify DNS resolves the domain controller with <code>nslookup corp.example.com</code> and check firewall allows port 389/636 to the DC.
-<strong><code>wbinfo: error looking up domain users -- WBC_ERR_DOMAIN_NOT_FOUND</code></strong> — Confirm the domain join succeeded by checking <code>net ads testjoin</code> and restart winbind with <code>systemctl restart winbind</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>failed to bind to server socket -- No such file or directory</code></td>
+<td>Ensure <code>/var/lib/samba</code> directory exists and winbind has write permissions; run <code>mkdir -p /var/lib/samba/private &amp;&amp; chown root:root /var/lib/samba</code>.</td>
+</tr>
+<tr>
+<td><code>CIFS VFS: Couldn't find suitable server with type=0x20</code></td>
+<td>Verify DNS resolves the domain controller with <code>nslookup corp.example.com</code> and check firewall allows port 389/636 to the DC.</td>
+</tr>
+<tr>
+<td><code>wbinfo: error looking up domain users -- WBC_ERR_DOMAIN_NOT_FOUND</code></td>
+<td>Confirm the domain join succeeded by checking <code>net ads testjoin</code> and restart winbind with <code>systemctl restart winbind</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSSD with LDAP provider</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># /etc/sssd/sssd.conf</span>
@@ -7405,9 +7459,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: SSSD service failed to start - TLS: TLSV1_ALERT_UNKNOWN_CA</code></strong> — Verify the CA certificate path in <code>ldap_tls_cacert</code> exists and contains the LDAP server's signing CA, then restart SSSD with <code>systemctl restart sssd</code>.
-<strong><code>LDAP connection refused on ldaps://ldap.example.com:636</code></strong> — Confirm the LDAP server hostname resolves correctly with <code>nslookup ldap.example.com</code> and that port 636 is open via <code>nc -zv ldap.example.com 636</code>.
-<strong><code>Error: Authentication failure - Invalid credentials for cn=readonly,dc=example,dc=com</code></strong> — Verify the bind DN and password are correct by testing the connection manually with <code>ldapsearch -x -D "cn=readonly,dc=example,dc=com" -W -H ldaps://ldap.example.com:636 -b dc=example,dc=com</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: SSSD service failed to start - TLS: TLSV1_ALERT_UNKNOWN_CA</code></td>
+<td>Verify the CA certificate path in <code>ldap_tls_cacert</code> exists and contains the LDAP server's signing CA, then restart SSSD with <code>systemctl restart sssd</code>.</td>
+</tr>
+<tr>
+<td><code>LDAP connection refused on ldaps://ldap.example.com:636</code></td>
+<td>Confirm the LDAP server hostname resolves correctly with <code>nslookup ldap.example.com</code> and that port 636 is open via <code>nc -zv ldap.example.com 636</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failure - Invalid credentials for cn=readonly,dc=example,dc=com</code></td>
+<td>Verify the bind DN and password are correct by testing the connection manually with <code>ldapsearch -x -D "cn=readonly,dc=example,dc=com" -W -H ldaps://ldap.example.com:636 -b dc=example,dc=com</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Test LDAP query</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.example.com<span class="w"> </span><span class="se">\</span>
@@ -7460,7 +7533,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 07:05:57 UTC"><span class="timeago" datetime="2026-06-29T07:05:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 07:05:57 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

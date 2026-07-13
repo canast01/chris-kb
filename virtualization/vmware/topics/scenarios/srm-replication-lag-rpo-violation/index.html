@@ -9435,8 +9435,24 @@ replication to within RPO before verifying with an SRM test recovery.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit vmware-hbrsrv.service could not be found.</code></strong> — Verify the vSphere Replication Server is installed with <code>rpm -qa | grep vmware-hbr</code> and reinstall if missing.
-<strong><code>tail: cannot open '/var/log/vmware/hbr/hbrServer.log' for reading: No such file or directory</code></strong> — Check that the replication server has started at least once and verify the log directory exists with <code>ls -la /var/log/vmware/hbr/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit vmware-hbrsrv.service could not be found.</code></td>
+<td>Verify the vSphere Replication Server is installed with <code>rpm -qa | grep vmware-hbr</code> and reinstall if missing.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/hbr/hbrServer.log' for reading: No such file or directory</code></td>
+<td>Check that the replication server has started at least once and verify the log directory exists with <code>ls -la /var/log/vmware/hbr/</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: certificate mismatch errors after a vCenter SSL renewal — fix by re-registering: vCenter → Site Recovery → Configure → vSphere Replication Servers → select appliance → <strong>Reconnect</strong>.</p>
 <hr />
@@ -9466,8 +9482,24 @@ replication to within RPO before verifying with an SRM test recovery.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option or malformed command at position 6</code></strong> — Verify the exact vmnic name (e.g., vmnic0, vmnic1) and use the correct syntax: <code>esxcli network nic stats get -n vmnic2</code>.
-<strong><code>Could not find a matching VMkernel adapter</code></strong> — Ensure vSphere Replication is configured and the VMkernel interface exists; check with <code>esxcli network ip interface list</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option or malformed command at position 6</code></td>
+<td>Verify the exact vmnic name (e.g., vmnic0, vmnic1) and use the correct syntax: <code>esxcli network nic stats get -n vmnic2</code>.</td>
+</tr>
+<tr>
+<td><code>Could not find a matching VMkernel adapter</code></td>
+<td>Ensure vSphere Replication is configured and the VMkernel interface exists; check with <code>esxcli network ip interface list</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: replication NIC at or near 100% utilisation = link saturated; options: enable network compression (20–40% reduction), throttle low-priority VMs, or request a bandwidth increase.</p>
 <hr />
@@ -9504,9 +9536,28 @@ replication to within RPO before verifying with an SRM test recovery.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify vSR appliance hostname matches certificate CN).
-<strong><code>curl: (7) Failed to connect to vsr-appliance.domain.local port 443: Connection refused</code></strong> — Verify the vSR appliance is running and accessible on the network; check firewall rules and confirm the hostname/IP in the URL.
-<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Ensure the vSR API is responding with valid JSON; check authentication credentials and confirm the API endpoint is correct for your vSR version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify vSR appliance hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vsr-appliance.domain.local port 443: Connection refused</code></td>
+<td>Verify the vSR appliance is running and accessible on the network; check firewall rules and confirm the hostname/IP in the URL.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON at line 1</code></td>
+<td>Ensure the vSR API is responding with valid JSON; check authentication credentials and confirm the API endpoint is correct for your vSR version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="5-enable-compression-or-adjust-throttle-settings">5. Enable Compression or Adjust Throttle Settings<a class="headerlink" href="#5-enable-compression-or-adjust-throttle-settings" title="Permanent link">&para;</a></h2>
@@ -9544,9 +9595,28 @@ replication to within RPO before verifying with an SRM test recovery.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the vSR appliance certificate into your system CA bundle.
-<strong><code>curl: (7) Failed to connect to vsr-appliance.domain.local port 443: Connection refused</code></strong> — Verify the vSR appliance hostname/IP is correct and the REST API service is running with <code>systemctl status vmware-vsr-api</code> on the appliance.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the API response is valid JSON by testing the curl command without piping to <code>python3 -m json.tool</code> first to see the raw response.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the vSR appliance certificate into your system CA bundle.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vsr-appliance.domain.local port 443: Connection refused</code></td>
+<td>Verify the vSR appliance hostname/IP is correct and the REST API service is running with <code>systemctl status vmware-vsr-api</code> on the appliance.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure the API response is valid JSON by testing the curl command without piping to <code>python3 -m json.tool</code> first to see the raw response.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="7-verify-nsx-inter-site-management-connectivity">7. Verify NSX Inter-Site Management Connectivity<a class="headerlink" href="#7-verify-nsx-inter-site-management-connectivity" title="Permanent link">&para;</a></h2>
@@ -9666,7 +9736,7 @@ replication to within RPO before verifying with an SRM test recovery.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

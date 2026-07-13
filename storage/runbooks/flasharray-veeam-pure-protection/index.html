@@ -7341,9 +7341,28 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Host iqn.1998-01.com.vmware:esxi01 already exists</code></strong> — Verify the IQN is unique or use <code>purehost list</code> to check existing hosts before creation.
-<strong><code>Error: Volume vol_vmdata01 is already connected to hg-esxi-cluster</code></strong> — Check current connections with <code>purevol list --connection</code> before attempting to reconnect.
-<strong><code>Error: Host group hg-esxi-cluster does not exist</code></strong> — Create the host group with <code>purehgroup create</code> before connecting volumes to it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Host iqn.1998-01.com.vmware:esxi01 already exists</code></td>
+<td>Verify the IQN is unique or use <code>purehost list</code> to check existing hosts before creation.</td>
+</tr>
+<tr>
+<td><code>Error: Volume vol_vmdata01 is already connected to hg-esxi-cluster</code></td>
+<td>Check current connections with <code>purevol list --connection</code> before attempting to reconnect.</td>
+</tr>
+<tr>
+<td><code>Error: Host group hg-esxi-cluster does not exist</code></td>
+<td>Create the host group with <code>purehgroup create</code> before connecting volumes to it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="12-create-pure-protection-group">1.2 Create Pure Protection Group<a class="headerlink" href="#12-create-pure-protection-group" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create protection group for production VMs</span>
@@ -7383,9 +7402,28 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Protection group 'pg_prod' already exists</code></strong> — Drop the existing protection group with <code>pureprotection delete pg_prod</code> before recreating it.
-<strong><code>Error: Volume 'vol_vmdata01' not found or offline</code></strong> — Verify the volume exists and is online using <code>pureprotection list --volumes</code> before adding it to the protection group.
-<strong><code>Error: Invalid retention value. Must be greater than frequency</code></strong> — Ensure snapshot retention (86400) is greater than or equal to snapshot frequency (3600) in seconds.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Protection group 'pg_prod' already exists</code></td>
+<td>Drop the existing protection group with <code>pureprotection delete pg_prod</code> before recreating it.</td>
+</tr>
+<tr>
+<td><code>Error: Volume 'vol_vmdata01' not found or offline</code></td>
+<td>Verify the volume exists and is online using <code>pureprotection list --volumes</code> before adding it to the protection group.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid retention value. Must be greater than frequency</code></td>
+<td>Ensure snapshot retention (86400) is greater than or equal to snapshot frequency (3600) in seconds.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="13-enable-safemode-on-protection-group">1.3 Enable SafeMode on Protection Group<a class="headerlink" href="#13-enable-safemode-on-protection-group" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># NOTE: SafeMode must first be activated on the array by Pure Support</span>
@@ -7421,9 +7459,28 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: SafeMode not activated on array. Contact Pure Support to enable.</code></strong> — Request Pure Support to activate SafeMode on the array before running this command.
-<strong><code>Error: eradication-delay must be at least 1440 minutes (24 hours).</code></strong> — Increase the eradication-delay value to a minimum of 1440 minutes.
-<strong><code>Error: Protection group 'pg_prod' not found.</code></strong> — Verify the protection group name matches exactly and exists on the array using <code>pureprotection list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: SafeMode not activated on array. Contact Pure Support to enable.</code></td>
+<td>Request Pure Support to activate SafeMode on the array before running this command.</td>
+</tr>
+<tr>
+<td><code>Error: eradication-delay must be at least 1440 minutes (24 hours).</code></td>
+<td>Increase the eradication-delay value to a minimum of 1440 minutes.</td>
+</tr>
+<tr>
+<td><code>Error: Protection group 'pg_prod' not found.</code></td>
+<td>Verify the protection group name matches exactly and exists on the array using <code>pureprotection list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="14-verify-initial-snapshot">1.4 Verify Initial Snapshot<a class="headerlink" href="#14-verify-initial-snapshot" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List all snapshots in protection group</span>
@@ -7444,9 +7501,28 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Cannot eradicate snapshot 'pg_prod.manual-test' — SafeMode retention lock active until 2024-01-17T10:22:33Z</code></strong> — Wait until the lock expiration timestamp or contact your Pure Storage administrator to disable SafeMode if retention policy allows.
-<strong><code>Error: Protection group 'pg_prod' not found</code></strong> — Verify the protection group name with <code>pureprotection list --group</code> and ensure you have read permissions on the array.
-<strong><code>Error: Authentication failed — Invalid API token</code></strong> — Re-authenticate with <code>pureprotection login</code> or verify your PUREPROTECTION_API_TOKEN environment variable is set correctly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Cannot eradicate snapshot 'pg_prod.manual-test' — SafeMode retention lock active until 2024-01-17T10:22:33Z</code></td>
+<td>Wait until the lock expiration timestamp or contact your Pure Storage administrator to disable SafeMode if retention policy allows.</td>
+</tr>
+<tr>
+<td><code>Error: Protection group 'pg_prod' not found</code></td>
+<td>Verify the protection group name with <code>pureprotection list --group</code> and ensure you have read permissions on the array.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed — Invalid API token</code></td>
+<td>Re-authenticate with <code>pureprotection login</code> or verify your PUREPROTECTION_API_TOKEN environment variable is set correctly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-2-veeam-integration">Phase 2: Veeam Integration<a class="headerlink" href="#phase-2-veeam-integration" title="Permanent link">&para;</a></h2>
@@ -7545,9 +7621,28 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Snapshot pg_prod.3600 cannot be eradicated — SafeMode lock active</code></strong> — Wait until the SafeMode retention period expires or contact your Veeam administrator to reduce the retention policy.
-<strong><code>Connection refused</code></strong> — Verify the FlashArray hostname is correct and SSH access is enabled; check firewall rules between your host and flasharray01.corp.local.
-<strong><code>Permission denied (publickey,password)</code></strong> — Confirm the pureuser credentials are correct and the account has snapshot management permissions on the FlashArray.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Snapshot pg_prod.3600 cannot be eradicated — SafeMode lock active</code></td>
+<td>Wait until the SafeMode retention period expires or contact your Veeam administrator to reduce the retention policy.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify the FlashArray hostname is correct and SSH access is enabled; check firewall rules between your host and flasharray01.corp.local.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Confirm the pureuser credentials are correct and the account has snapshot management permissions on the FlashArray.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="32-verify-safemode-status-in-pure1">3.2 Verify SafeMode Status in Pure1<a class="headerlink" href="#32-verify-safemode-status-in-pure1" title="Permanent link">&para;</a></h3>
 <ol>
@@ -7584,8 +7679,24 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Snapshot 'pg_prod.safemode-test' not found</code></strong> — Verify the protection group name matches exactly and the snapshot was created successfully with <code>pureprotection snap --list pg_prod</code>.
-<strong><code>Error: Eradication denied - insufficient permissions</code></strong> — Ensure your user account has the <code>eradicate</code> role assigned in Pure1 or contact your storage administrator.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Snapshot 'pg_prod.safemode-test' not found</code></td>
+<td>Verify the protection group name matches exactly and the snapshot was created successfully with <code>pureprotection snap --list pg_prod</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Eradication denied - insufficient permissions</code></td>
+<td>Ensure your user account has the <code>eradicate</code> role assigned in Pure1 or contact your storage administrator.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-4-restore-testing">Phase 4: Restore Testing<a class="headerlink" href="#phase-4-restore-testing" title="Permanent link">&para;</a></h2>
@@ -7648,9 +7759,28 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Authentication failed for pureuser@flasharray01.corp.local</code></strong> — Verify SSH credentials and that the FlashArray management IP is reachable with <code>ping flasharray01.corp.local</code>.
-<strong><code>Snapshot pg_prod.86400.vol_vmdata01 not found</code></strong> — Confirm the snapshot exists and the protection group name is correct by running <code>pureprotection list --snap pg_prod</code> without filters.
-<strong><code>Volume vol_vmdata01_restore already exists</code></strong> — Either delete the existing restore volume with <code>purevol destroy vol_vmdata01_restore</code> or use a different target volume name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Authentication failed for pureuser@flasharray01.corp.local</code></td>
+<td>Verify SSH credentials and that the FlashArray management IP is reachable with <code>ping flasharray01.corp.local</code>.</td>
+</tr>
+<tr>
+<td><code>Snapshot pg_prod.86400.vol_vmdata01 not found</code></td>
+<td>Confirm the snapshot exists and the protection group name is correct by running <code>pureprotection list --snap pg_prod</code> without filters.</td>
+</tr>
+<tr>
+<td><code>Volume vol_vmdata01_restore already exists</code></td>
+<td>Either delete the existing restore volume with <code>purevol destroy vol_vmdata01_restore</code> or use a different target volume name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="44-rporto-summary">4.4 RPO/RTO Summary<a class="headerlink" href="#44-rporto-summary" title="Permanent link">&para;</a></h3>
 <table>
@@ -7732,8 +7862,24 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pureprotection: command not found</code></strong> — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management SDK bin directory.
-<strong><code>Error: Protection group 'pg_prod' not found</code></strong> — Verify the protection group name exists on the array using <code>pureprotection list</code> and correct any typos.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pureprotection: command not found</code></td>
+<td>Install the Pure Storage CLI tools or ensure the PATH includes the Pure management SDK bin directory.</td>
+</tr>
+<tr>
+<td><code>Error: Protection group 'pg_prod' not found</code></td>
+<td>Verify the protection group name exists on the array using <code>pureprotection list</code> and correct any typos.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -7766,7 +7912,7 @@ Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Repl
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

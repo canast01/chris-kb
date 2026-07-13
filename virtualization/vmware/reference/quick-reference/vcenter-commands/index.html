@@ -8557,8 +8557,24 @@ vCenter SSH command reference: `service-control --status/--start/--stop`, `vmon-
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>service-control: command not found</code></strong> — Run this command on a vCenter Server or ESXi host where service-control is available in the PATH, or use the full path <code>/usr/lib/vmware-vmon/service-control</code>.
-<strong><code>Error: Unable to connect to the service manager</code></strong> — Ensure the VMware service manager daemon is running with <code>systemctl start vmware-vmon</code> on ESXi or vCenter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Run this command on a vCenter Server or ESXi host where service-control is available in the PATH, or use the full path <code>/usr/lib/vmware-vmon/service-control</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to the service manager</code></td>
+<td>Ensure the VMware service manager daemon is running with <code>systemctl start vmware-vmon</code> on ESXi or vCenter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="start-all-services">Start All Services<a class="headerlink" href="#start-all-services" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
@@ -8576,9 +8592,28 @@ vCenter SSH command reference: `service-control --status/--start/--stop`, `vmon-
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to start service vmon: Address already in use</code></strong> — Verify no conflicting services are running on required ports with <code>netstat -tlnp</code> and stop them before retrying.
-<strong><code>Error: Insufficient disk space to start services</code></strong> — Check available disk space with <code>df -h</code> and ensure at least 10GB free space in <code>/storage</code> before attempting restart.
-<strong><code>Error: Service startup timeout - vmon failed to respond within 60 seconds</code></strong> — Review <code>/var/log/vmware/vpxa/vpxa.log</code> for startup errors and increase timeout with <code>service-control --start --all --timeout=120</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to start service vmon: Address already in use</code></td>
+<td>Verify no conflicting services are running on required ports with <code>netstat -tlnp</code> and stop them before retrying.</td>
+</tr>
+<tr>
+<td><code>Error: Insufficient disk space to start services</code></td>
+<td>Check available disk space with <code>df -h</code> and ensure at least 10GB free space in <code>/storage</code> before attempting restart.</td>
+</tr>
+<tr>
+<td><code>Error: Service startup timeout - vmon failed to respond within 60 seconds</code></td>
+<td>Review <code>/var/log/vmware/vpxa/vpxa.log</code> for startup errors and increase timeout with <code>service-control --start --all --timeout=120</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="stop-all-services">Stop All Services<a class="headerlink" href="#stop-all-services" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
@@ -8592,8 +8627,24 @@ vCenter SSH command reference: `service-control --status/--start/--stop`, `vmon-
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to stop service 'vmware-workstation-server': Permission denied</code></strong> — Run the command with <code>sudo</code> or as root user.
-<strong><code>Error: Service 'vmware-hostd' failed to stop within timeout period</code></strong> — Wait a few seconds and retry, or use <code>service-control --stop --all --force</code> to forcefully terminate services.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to stop service 'vmware-workstation-server': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root user.</td>
+</tr>
+<tr>
+<td><code>Error: Service 'vmware-hostd' failed to stop within timeout period</code></td>
+<td>Wait a few seconds and retry, or use <code>service-control --stop --all --force</code> to forcefully terminate services.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="restart-all-services">Restart All Services<a class="headerlink" href="#restart-all-services" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>service-control<span class="w"> </span>--start<span class="w"> </span>--all
@@ -8615,9 +8666,28 @@ vCenter SSH command reference: `service-control --status/--start/--stop`, `vmon-
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>service-control: command not found</code></strong> — Run this command on the vCenter Server appliance directly, not a remote system; the tool is only available in /usr/lib/vmware-vise/bin/.
-<strong><code>Error: Failed to stop service 'vpxd': Service is locked by another process</code></strong> — Wait 2-3 minutes for any ongoing tasks to complete, then retry the command.
-<strong><code>Error: Some services failed to start. Check /var/log/vmware/vpxd/vpxd.log for details</code></strong> — Verify sufficient disk space with <code>df -h</code> and check that the vCenter database is accessible before retrying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Run this command on the vCenter Server appliance directly, not a remote system; the tool is only available in /usr/lib/vmware-vise/bin/.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to stop service 'vpxd': Service is locked by another process</code></td>
+<td>Wait 2-3 minutes for any ongoing tasks to complete, then retry the command.</td>
+</tr>
+<tr>
+<td><code>Error: Some services failed to start. Check /var/log/vmware/vpxd/vpxd.log for details</code></td>
+<td>Verify sufficient disk space with <code>df -h</code> and check that the vCenter database is accessible before retrying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="restart-a-single-service">Restart a Single Service<a class="headerlink" href="#restart-a-single-service" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-vpxd
@@ -8639,9 +8709,28 @@ vCenter SSH command reference: `service-control --status/--start/--stop`, `vmon-
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Could not connect to service-control daemon</code></strong> — Ensure you are running this command on a vCenter Server host with root/administrator privileges.
-<strong><code>Error: Service vmware-vpxd is not installed</code></strong> — Verify the vCenter Server installation is complete and the service exists using <code>service-control --list</code>.
-<strong><code>Error: Timeout waiting for service to stop</code></strong> — Increase the timeout or check for hung processes using <code>ps aux | grep vmware</code> and manually kill if necessary.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Could not connect to service-control daemon</code></td>
+<td>Ensure you are running this command on a vCenter Server host with root/administrator privileges.</td>
+</tr>
+<tr>
+<td><code>Error: Service vmware-vpxd is not installed</code></td>
+<td>Verify the vCenter Server installation is complete and the service exists using <code>service-control --list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Timeout waiting for service to stop</code></td>
+<td>Increase the timeout or check for hung processes using <code>ps aux | grep vmware</code> and manually kill if necessary.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="check-disk-space">Check Disk Space<a class="headerlink" href="#check-disk-space" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>df<span class="w"> </span>-h
@@ -8655,8 +8744,24 @@ vCenter SSH command reference: `service-control --status/--start/--stop`, `vmon-
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>df: cannot access '/vmfs/volumes/datastore1': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read permissions on the mount point.
-<strong><code>df: /dev/sda1: No such file or directory</code></strong> — Verify the device exists with <code>lsblk</code> or <code>fdisk -l</code>; the device name may differ on your system.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>df: cannot access '/vmfs/volumes/datastore1': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user has read permissions on the mount point.</td>
+</tr>
+<tr>
+<td><code>df: /dev/sda1: No such file or directory</code></td>
+<td>Verify the device exists with <code>lsblk</code> or <code>fdisk -l</code>; the device name may differ on your system.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="check-uptime">Check Uptime<a class="headerlink" href="#check-uptime" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>uptime
@@ -8695,7 +8800,7 @@ vCenter SSH command reference: `service-control --status/--start/--stop`, `vmon-
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

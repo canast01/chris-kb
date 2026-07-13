@@ -8017,9 +8017,28 @@ Linux operational runbooks — routine maintenance, service recovery, backup val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>systemctl status &lt;service&gt;: Unit &lt;service&gt; could not be found.</code></strong> — Replace <code>&lt;service&gt;</code> with the actual service name (e.g., <code>nginx</code>, <code>postgresql</code>, <code>sshd</code>) and verify it exists with <code>systemctl list-units --type=service</code>.
-<strong><code>nginx: [error] open() "/var/run/nginx.pid" failed (2: No such file or directory)</code></strong> — Run <code>systemctl restart nginx</code> to regenerate the PID file, or check that the service user has write permissions to <code>/var/run/</code>.
-<strong><code>ss: No such file or directory</code></strong> — Install <code>iproute2</code> package with <code>apt install iproute2</code> (Debian/Ubuntu) or <code>yum install iproute2</code> (RHEL/CentOS), or use <code>netstat -tlnp</code> as an alternative.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>systemctl status &lt;service&gt;: Unit &lt;service&gt; could not be found.</code></td>
+<td>Replace <code>&lt;service&gt;</code> with the actual service name (e.g., <code>nginx</code>, <code>postgresql</code>, <code>sshd</code>) and verify it exists with <code>systemctl list-units --type=service</code>.</td>
+</tr>
+<tr>
+<td><code>nginx: [error] open() "/var/run/nginx.pid" failed (2: No such file or directory)</code></td>
+<td>Run <code>systemctl restart nginx</code> to regenerate the PID file, or check that the service user has write permissions to <code>/var/run/</code>.</td>
+</tr>
+<tr>
+<td><code>ss: No such file or directory</code></td>
+<td>Install <code>iproute2</code> package with <code>apt install iproute2</code> (Debian/Ubuntu) or <code>yum install iproute2</code> (RHEL/CentOS), or use <code>netstat -tlnp</code> as an alternative.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output (step 2):</strong> <code>Active: active (running)</code> after restart. If <code>Active: failed</code> or <code>Active: activating</code> for &gt; 30 seconds, proceed to step 3.</p>
 <h2 id="disk-space-emergency">Disk Space Emergency<a class="headerlink" href="#disk-space-emergency" title="Permanent link">&para;</a></h2>
@@ -8059,8 +8078,24 @@ Linux operational runbooks — routine maintenance, service recovery, backup val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>find: '/tmp': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure the user has read permissions on /tmp.
-<strong><code>journalctl: error: Failed to vacuum journal: Permission denied</code></strong> — Execute <code>journalctl --vacuum-time=7d</code> with <code>sudo</code> to modify system journal files.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find: '/tmp': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure the user has read permissions on /tmp.</td>
+</tr>
+<tr>
+<td><code>journalctl: error: Failed to vacuum journal: Permission denied</code></td>
+<td>Execute <code>journalctl --vacuum-time=7d</code> with <code>sudo</code> to modify system journal files.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="backup-validation">Backup Validation<a class="headerlink" href="#backup-validation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test backup file integrity</span>
@@ -8083,9 +8118,28 @@ Linux operational runbooks — routine maintenance, service recovery, backup val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tar: /backup/app-2024-01-15.tar.gz: Cannot open: No such file or directory</code></strong> — Verify the backup file exists and the date format matches the actual backup filename.
-<strong><code>mysql: [ERROR] File '/backup/mysql-2024-01-15.sql' not found</code></strong> — Confirm the MySQL backup file exists in /backup and check file permissions.
-<strong><code>ERROR 1064 (42000) at line 1: You have an error in your SQL syntax</code></strong> — Validate the SQL dump file is not corrupted and was created with a compatible MySQL version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tar: /backup/app-2024-01-15.tar.gz: Cannot open: No such file or directory</code></td>
+<td>Verify the backup file exists and the date format matches the actual backup filename.</td>
+</tr>
+<tr>
+<td><code>mysql: [ERROR] File '/backup/mysql-2024-01-15.sql' not found</code></td>
+<td>Confirm the MySQL backup file exists in /backup and check file permissions.</td>
+</tr>
+<tr>
+<td><code>ERROR 1064 (42000) at line 1: You have an error in your SQL syntax</code></td>
+<td>Validate the SQL dump file is not corrupted and was created with a compatible MySQL version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output:</strong> <code>Archive OK</code> for the tar check. MD5 must match the stored hash from the backup job log. DB restore must complete without error output.</p>
 <h2 id="kernel-and-package-update-runbook">Kernel and Package Update Runbook<a class="headerlink" href="#kernel-and-package-update-runbook" title="Permanent link">&para;</a></h2>
@@ -8124,9 +8178,28 @@ Linux operational runbooks — routine maintenance, service recovery, backup val
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Another app is currently holding the dnf lock; waiting for it to finish...</code></strong> — Wait for the running package manager to complete or kill the blocking process with <code>ps aux | grep dnf</code> and <code>kill -9 &lt;PID&gt;</code>.
-<strong><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></strong> — Run the command with <code>sudo</code> or as the root user.
-<strong><code>command not found: needs-restarting</code></strong> — Install the <code>yum-utils</code> package with <code>dnf install yum-utils -y</code> on RHEL/Rocky systems.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Another app is currently holding the dnf lock; waiting for it to finish...</code></td>
+<td>Wait for the running package manager to complete or kill the blocking process with <code>ps aux | grep dnf</code> and <code>kill -9 &lt;PID&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)</code></td>
+<td>Run the command with <code>sudo</code> or as the root user.</td>
+</tr>
+<tr>
+<td><code>command not found: needs-restarting</code></td>
+<td>Install the <code>yum-utils</code> package with <code>dnf install yum-utils -y</code> on RHEL/Rocky systems.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected output:</strong> <code>needs-restarting -r</code> exits 0 (no reboot needed) or exits 1 (reboot required — schedule via server-reboot runbook). <code>/var/run/reboot-required</code> absent = no reboot needed.</p>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8178,7 +8251,7 @@ Linux operational runbooks — routine maintenance, service recovery, backup val
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Jira — Backup and Restore · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Jira — Backup and Restore", "url": "https://chrisanastasiadis.com/itsm/jira/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Jira — Backup and Restore", "url": "https://chrisanastasiadis.com/itsm/jira/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7543,9 +7543,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>rsync: change_dir "/var/atlassian/application-data/jira/shared" failed: Permission denied (13)</code></strong> — Run the script with sudo or ensure the user has read permissions on SHARED_HOME.
-<strong><code>tar: /backup/jira/filesystem/20240315-143022: Cannot open: No such file or directory</code></strong> — Verify that rsync completed successfully and the timestamp directory exists before tar attempts to compress it.
-<strong><code>ln: failed to create symbolic link '/backup/jira/filesystem/latest': File exists</code></strong> — The <code>-n</code> flag in <code>ln -snf</code> should force removal; if this persists, manually remove the existing symlink with <code>rm -f "${BACKUP_DIR}/latest"</code> before running the script.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rsync: change_dir "/var/atlassian/application-data/jira/shared" failed: Permission denied (13)</code></td>
+<td>Run the script with sudo or ensure the user has read permissions on SHARED_HOME.</td>
+</tr>
+<tr>
+<td><code>tar: /backup/jira/filesystem/20240315-143022: Cannot open: No such file or directory</code></td>
+<td>Verify that rsync completed successfully and the timestamp directory exists before tar attempts to compress it.</td>
+</tr>
+<tr>
+<td><code>ln: failed to create symbolic link '/backup/jira/filesystem/latest': File exists</code></td>
+<td>The <code>-n</code> flag in <code>ln -snf</code> should force removal; if this persists, manually remove the existing symlink with <code>rm -f "${BACKUP_DIR}/latest"</code> before running the script.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><img alt="Jira — Backup and Restore — Diagram" src="../../../../assets/itsm-jira-operations-backup-restore-diagram.svg" />
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/bin/bash</span>
@@ -7590,9 +7609,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount: /mnt/jira-snap: mount point does not exist</code></strong> — Create the mount point directory before mounting: <code>mkdir -p /mnt/jira-snap</code>.
-<strong><code>Logical volume "vg_jira/lv_shared_snap" not found</code></strong> — Ensure the variable <code>VG</code> is set to the correct volume group name (e.g., <code>VG="vg_jira"</code>) before running the script.
-<strong><code>pg_dump: error: connection to server at "db.example.com" (10.50.12.8), port 5432 failed</code></strong> — Verify database connectivity and credentials; check that <code>JIRA_DB_PASSWORD</code> is set and the PostgreSQL server is accessible from this host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount: /mnt/jira-snap: mount point does not exist</code></td>
+<td>Create the mount point directory before mounting: <code>mkdir -p /mnt/jira-snap</code>.</td>
+</tr>
+<tr>
+<td><code>Logical volume "vg_jira/lv_shared_snap" not found</code></td>
+<td>Ensure the variable <code>VG</code> is set to the correct volume group name (e.g., <code>VG="vg_jira"</code>) before running the script.</td>
+</tr>
+<tr>
+<td><code>pg_dump: error: connection to server at "db.example.com" (10.50.12.8), port 5432 failed</code></td>
+<td>Verify database connectivity and credentials; check that <code>JIRA_DB_PASSWORD</code> is set and the PostgreSQL server is accessible from this host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># All nodes</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
@@ -7604,8 +7642,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit jira.service not found.</code></strong> — Verify the correct systemd service name with <code>systemctl list-units --type=service | grep jira</code>.
-<strong><code>Failed to stop jira.service: Access denied</code></strong> — Run the command with <code>sudo</code> or as a user with systemctl privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit jira.service not found.</code></td>
+<td>Verify the correct systemd service name with <code>systemctl list-units --type=service | grep jira</code>.</td>
+</tr>
+<tr>
+<td><code>Failed to stop jira.service: Access denied</code></td>
+<td>Run the command with <code>sudo</code> or as a user with systemctl privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Drop and recreate the database</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = &#39;jiradb&#39;;&quot;</span>
@@ -7635,9 +7689,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: role "jira" does not exist</code></strong> — Create the jira role first with <code>psql -h db.example.com -U postgres -c "CREATE ROLE jira WITH LOGIN;"</code>
-<strong><code>pg_restore: error: could not connect to database "jiradb": FATAL: database "jiradb" does not exist</code></strong> — Verify the CREATE DATABASE command succeeded and the database is accessible before running pg_restore.
-<strong><code>pg_restore: error: input file appears to be a text format dump. Use psql.</code></strong> — Use <code>psql</code> instead of <code>pg_restore</code> if the dump file is in plain SQL format (not custom format).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: role "jira" does not exist</code></td>
+<td>Create the jira role first with <code>psql -h db.example.com -U postgres -c "CREATE ROLE jira WITH LOGIN;"</code></td>
+</tr>
+<tr>
+<td><code>pg_restore: error: could not connect to database "jiradb": FATAL: database "jiradb" does not exist</code></td>
+<td>Verify the CREATE DATABASE command succeeded and the database is accessible before running pg_restore.</td>
+</tr>
+<tr>
+<td><code>pg_restore: error: input file appears to be a text format dump. Use psql.</code></td>
+<td>Use <code>psql</code> instead of <code>pg_restore</code> if the dump file is in plain SQL format (not custom format).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Clear existing shared home</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/shared/*
@@ -7655,9 +7728,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tar: /backup/jira/fs/jira_fs_20260101.tar.gz: Cannot open: No such file or directory</code></strong> — Verify the backup file path exists and the filename matches exactly with <code>ls -lh /backup/jira/fs/</code>.
-<strong><code>chown: changing ownership of '/var/atlassian/application-data/jira/shared/': Operation not permitted</code></strong> — Run the script with <code>sudo</code> or as root, since chown requires elevated privileges.
-<strong><code>rm: remove write-protected regular file in '/var/atlassian/application-data/jira/shared/'?</code></strong> — Add the <code>-f</code> flag to <code>rm -rf</code> to force removal without prompts, or stop the JIRA service before clearing the directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tar: /backup/jira/fs/jira_fs_20260101.tar.gz: Cannot open: No such file or directory</code></td>
+<td>Verify the backup file path exists and the filename matches exactly with <code>ls -lh /backup/jira/fs/</code>.</td>
+</tr>
+<tr>
+<td><code>chown: changing ownership of '/var/atlassian/application-data/jira/shared/': Operation not permitted</code></td>
+<td>Run the script with <code>sudo</code> or as root, since chown requires elevated privileges.</td>
+</tr>
+<tr>
+<td><code>rm: remove write-protected regular file in '/var/atlassian/application-data/jira/shared/'?</code></td>
+<td>Add the <code>-f</code> flag to <code>rm -rf</code> to force removal without prompts, or stop the JIRA service before clearing the directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Start first node only</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
@@ -7682,9 +7774,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or configure proper certificates on the Jira server.
-<strong><code>{"errorMessages":["User does not have permission to perform this operation"]}</code></strong> — Ensure the admin user has the JIRA Administrators global permission and the API token is valid and not expired.
-<strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify the Jira server is running and accessible at the specified hostname and port, and check firewall rules.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or configure proper certificates on the Jira server.</td>
+</tr>
+<tr>
+<td><code>{"errorMessages":["User does not have permission to perform this operation"]}</code></td>
+<td>Ensure the admin user has the JIRA Administrators global permission and the API token is valid and not expired.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></td>
+<td>Verify the Jira server is running and accessible at the specified hostname and port, and check firewall rules.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check cluster node registration</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
@@ -7718,9 +7829,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "db.example.com" to address: Name or service not known</code></strong> — Verify DNS resolution with <code>nslookup db.example.com</code> and confirm the hostname matches your actual database server.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl to skip certificate verification, or import the self-signed cert into your system trust store.
-<strong><code>psql: FATAL: password authentication failed for user "jira"</code></strong> — Ensure the PGPASSWORD environment variable is set or use a <code>.pgpass</code> file with correct credentials for the jira database user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "db.example.com" to address: Name or service not known</code></td>
+<td>Verify DNS resolution with <code>nslookup db.example.com</code> and confirm the hostname matches your actual database server.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to curl to skip certificate verification, or import the self-signed cert into your system trust store.</td>
+</tr>
+<tr>
+<td><code>psql: FATAL: password authentication failed for user "jira"</code></td>
+<td>Ensure the PGPASSWORD environment variable is set or use a <code>.pgpass</code> file with correct credentials for the jira database user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Start additional nodes after primary is healthy</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira<span class="w">   </span><span class="c1"># on jira-app-02, jira-app-03</span>
@@ -7770,7 +7900,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

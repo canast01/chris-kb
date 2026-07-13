@@ -9019,9 +9019,28 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symevent: command not found</code></strong> — Ensure the Symmetrix management tools are installed and the PATH includes the bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
-<strong><code>SYMCLI_CONNECT error: Could not connect to the Symmetrix</code></strong> — Verify the R1 SID is correct and the Symmetrix engine is reachable via the management network.
-<strong><code>grep: (standard input) is empty</code></strong> — Run <code>symevent -sid &lt;r1_sid&gt; list -last 100</code> without grep first to confirm events exist in the log.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symevent: command not found</code></td>
+<td>Ensure the Symmetrix management tools are installed and the PATH includes the bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).</td>
+</tr>
+<tr>
+<td><code>SYMCLI_CONNECT error: Could not connect to the Symmetrix</code></td>
+<td>Verify the R1 SID is correct and the Symmetrix engine is reachable via the management network.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>Run <code>symevent -sid &lt;r1_sid&gt; list -last 100</code> without grep first to confirm events exist in the log.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Resolution (R1 is authoritative — no real failover occurred):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resync<span class="w"> </span>-noprompt
@@ -9041,9 +9060,28 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMRDF ERROR: RDF group &lt;dgname&gt; not found</code></strong> — Verify the RDF group name matches the output of <code>symrdf list -g all</code> and check spelling.
-<strong><code>SYMRDF ERROR: Symmetrix &lt;r1_sid&gt; is not available</code></strong> — Confirm the R1 Symmetrix ID is correct and the array is online with <code>symcfg list -v</code>.
-<strong><code>SYMRDF ERROR: RDF link is not in a valid state for resync</code></strong> — Check RDF link status with <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> and resolve any link failures before retrying.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMRDF ERROR: RDF group &lt;dgname&gt; not found</code></td>
+<td>Verify the RDF group name matches the output of <code>symrdf list -g all</code> and check spelling.</td>
+</tr>
+<tr>
+<td><code>SYMRDF ERROR: Symmetrix &lt;r1_sid&gt; is not available</code></td>
+<td>Confirm the R1 Symmetrix ID is correct and the array is online with <code>symcfg list -v</code>.</td>
+</tr>
+<tr>
+<td><code>SYMRDF ERROR: RDF link is not in a valid state for resync</code></td>
+<td>Check RDF link status with <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> and resolve any link failures before retrying.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Resolution (R2 has the latest data — a real failover occurred):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm with application team that R2 has the correct data</span>
@@ -9067,9 +9105,28 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMRDF Error (4) : RDF group is not in a valid state for failback</code></strong> — Verify the RDF group is in Consistent or Synchronized state using <code>symrdf -g &lt;dgname&gt; query</code> before attempting failback.
-<strong><code>SYMRDF Error (2) : Invalid Symmetrix ID &lt;r2_sid&gt;</code></strong> — Confirm the R2 Symmetrix ID is correct and matches the remote array in the RDF pair using <code>symcfg list -v</code>.
-<strong><code>SYMRDF Error (6) : RDF link is not ready</code></strong> — Check RDF link connectivity and ensure both arrays are online using <code>symrdf -g &lt;dgname&gt; query</code> and verify network paths are active.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMRDF Error (4) : RDF group is not in a valid state for failback</code></td>
+<td>Verify the RDF group is in Consistent or Synchronized state using <code>symrdf -g &lt;dgname&gt; query</code> before attempting failback.</td>
+</tr>
+<tr>
+<td><code>SYMRDF Error (2) : Invalid Symmetrix ID &lt;r2_sid&gt;</code></td>
+<td>Confirm the R2 Symmetrix ID is correct and matches the remote array in the RDF pair using <code>symcfg list -v</code>.</td>
+</tr>
+<tr>
+<td><code>SYMRDF Error (6) : RDF link is not ready</code></td>
+<td>Check RDF link connectivity and ensure both arrays are online using <code>symrdf -g &lt;dgname&gt; query</code> and verify network paths are active.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Do not resync or restore without first confirming which side has the authoritative data.</strong> An incorrect resync will permanently overwrite data.</p>
 <hr />
@@ -9096,8 +9153,24 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid SID &lt;r1_sid&gt;</code></strong> — Replace <code>&lt;r1_sid&gt;</code> with the actual R1 array SID (e.g., <code>000123456789</code>).
-<strong><code>Error: Device &lt;dev_id&gt; not found in this array</code></strong> — Verify the device ID exists on the specified array using <code>symdev -sid &lt;r1_sid&gt; list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid SID &lt;r1_sid&gt;</code></td>
+<td>Replace <code>&lt;r1_sid&gt;</code> with the actual R1 array SID (e.g., <code>000123456789</code>).</td>
+</tr>
+<tr>
+<td><code>Error: Device &lt;dev_id&gt; not found in this array</code></td>
+<td>Verify the device ID exists on the specified array using <code>symdev -sid &lt;r1_sid&gt; list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Never re-establish a split pair without application team sign-off.</strong> Restoring R1 overwrites any R2 writes made during the split period and vice versa.</p>
 <hr />
@@ -9141,9 +9214,28 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symcfg: Command not found</code></strong> — Verify Symmetrix CLI is installed and $PATH includes the SymCLI bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).
-<strong><code>FCIP Session Information: No entries found</code></strong> — Confirm FCIP tunnels are configured on the switch and check that remote director IP is reachable via <code>ping</code> from the switch management interface.
-<strong><code>portState=Offline</code></strong> — Verify the physical cable is connected, the remote director port is online, and check for link errors with <code>portcfgshow</code> to identify speed/duplex mismatches.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symcfg: Command not found</code></td>
+<td>Verify Symmetrix CLI is installed and $PATH includes the SymCLI bin directory (typically <code>/opt/emc/SYMCLI/bin</code>).</td>
+</tr>
+<tr>
+<td><code>FCIP Session Information: No entries found</code></td>
+<td>Confirm FCIP tunnels are configured on the switch and check that remote director IP is reachable via <code>ping</code> from the switch management interface.</td>
+</tr>
+<tr>
+<td><code>portState=Offline</code></td>
+<td>Verify the physical cable is connected, the remote director port is online, and check for link errors with <code>portcfgshow</code> to identify speed/duplex mismatches.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Recovery after link restoration:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Pair should auto-resume once link is restored (depending on configuration)</span>
@@ -9169,9 +9261,28 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SRDF pair is not in a valid state for resume operation</code></strong> — Verify the pair is in Suspended state using <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> before attempting resume.
-<strong><code>RDF link is offline or unavailable</code></strong> — Check physical RDF link connectivity and confirm remote array is reachable with <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code>.
-<strong><code>Invalid device group name or SID</code></strong> — Confirm the device group exists and SID is correct by running <code>symcfg list -g</code> to list all configured groups.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SRDF pair is not in a valid state for resume operation</code></td>
+<td>Verify the pair is in Suspended state using <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> before attempting resume.</td>
+</tr>
+<tr>
+<td><code>RDF link is offline or unavailable</code></td>
+<td>Check physical RDF link connectivity and confirm remote array is reachable with <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code>.</td>
+</tr>
+<tr>
+<td><code>Invalid device group name or SID</code></td>
+<td>Confirm the device group exists and SID is correct by running <code>symcfg list -g</code> to list all configured groups.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="unintended-failover-during-maintenance">Unintended Failover During Maintenance<a class="headerlink" href="#unintended-failover-during-maintenance" title="Permanent link">&para;</a></h2>
@@ -9215,8 +9326,24 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SRDF pair is not in a valid state for this operation</code></strong> — Verify the pair is not already in a transitional state by running <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> and wait for any pending operations to complete.
-<strong><code>Cannot connect to remote array &lt;r2_sid&gt;</code></strong> — Confirm network connectivity between the SRDF directors and that the remote array is online using <code>symcfg -sid &lt;r2_sid&gt; list -v</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SRDF pair is not in a valid state for this operation</code></td>
+<td>Verify the pair is not already in a transitional state by running <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> and wait for any pending operations to complete.</td>
+</tr>
+<tr>
+<td><code>Cannot connect to remote array &lt;r2_sid&gt;</code></td>
+<td>Confirm network connectivity between the SRDF directors and that the remote array is online using <code>symcfg -sid &lt;r2_sid&gt; list -v</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify-resolution">Verify resolution<a class="headerlink" href="#verify-resolution" title="Permanent link">&para;</a></h2>
@@ -9254,7 +9381,7 @@ SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, h
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

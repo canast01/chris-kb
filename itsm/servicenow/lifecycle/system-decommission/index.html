@@ -8044,8 +8044,24 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to prometheus:9090: Connection refused</code></strong> — Verify Prometheus is running with <code>docker ps</code> or <code>systemctl status prometheus</code> and check the correct hostname/port in your environment.
-<strong><code>"error":{"code":-32602,"message":"Invalid params.","data":"No permissions to referred object or it does not exist."}</code></strong> — Confirm the <code>&lt;id&gt;</code> (hostid) is correct by querying <code>host.get</code> method first, and verify the auth token has admin privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to prometheus:9090: Connection refused</code></td>
+<td>Verify Prometheus is running with <code>docker ps</code> or <code>systemctl status prometheus</code> and check the correct hostname/port in your environment.</td>
+</tr>
+<tr>
+<td><code>"error":{"code":-32602,"message":"Invalid params.","data":"No permissions to referred object or it does not exist."}</code></td>
+<td>Confirm the <code>&lt;id&gt;</code> (hostid) is correct by querying <code>host.get</code> method first, and verify the auth token has admin privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="5-remove-from-backup">5. Remove from Backup<a class="headerlink" href="#5-remove-from-backup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Veeam — remove from backup job</span>
@@ -8076,8 +8092,24 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-VBRJob : The term 'Get-VBRJob' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Load the Veeam PowerShell snapin with <code>Add-PSSnapin VeeamPSSnapin</code> before running these commands.
-<strong><code>Remove-VBRJobObject : Cannot remove object. Job must contain at least one object.</code></strong> — Verify the VM object exists in the job using <code>Get-VBRJobObject -Job $job | Format-Table Name</code> before attempting removal.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-VBRJob : The term 'Get-VBRJob' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></td>
+<td>Load the Veeam PowerShell snapin with <code>Add-PSSnapin VeeamPSSnapin</code> before running these commands.</td>
+</tr>
+<tr>
+<td><code>Remove-VBRJobObject : Cannot remove object. Job must contain at least one object.</code></td>
+<td>Verify the VM object exists in the job using <code>Get-VBRJobObject -Job $job | Format-Table Name</code> before attempting removal.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="6-revoke-access-and-credentials">6. Revoke Access and Credentials<a class="headerlink" href="#6-revoke-access-and-credentials" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Remove SSH authorized keys</span>
@@ -8120,9 +8152,28 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey).</code></strong> — Verify the root account has SSH key access to the target hostname and the key is loaded in your SSH agent.
-<strong><code>Update failed: NOTAUTH</code></strong> — Ensure your nsupdate command includes proper TSIG authentication (key-file parameter) or that the DNS server allows unsigned updates from your source IP.
-<strong><code>Disable-ADComputer : Cannot find an object with identity "&lt;HOSTNAME&gt;" under: "DC=example,DC=com".</code></strong> — Verify the exact hostname spelling matches the AD computer object name and confirm you are connected to the correct Active Directory domain.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Verify the root account has SSH key access to the target hostname and the key is loaded in your SSH agent.</td>
+</tr>
+<tr>
+<td><code>Update failed: NOTAUTH</code></td>
+<td>Ensure your nsupdate command includes proper TSIG authentication (key-file parameter) or that the DNS server allows unsigned updates from your source IP.</td>
+</tr>
+<tr>
+<td><code>Disable-ADComputer : Cannot find an object with identity "&lt;HOSTNAME&gt;" under: "DC=example,DC=com".</code></td>
+<td>Verify the exact hostname spelling matches the AD computer object name and confirm you are connected to the correct Active Directory domain.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="7-shutdown-and-delete">7. Shutdown and Delete<a class="headerlink" href="#7-shutdown-and-delete" title="Permanent link">&para;</a></h2>
 <h3 id="virtual-machine">Virtual Machine<a class="headerlink" href="#virtual-machine" title="Permanent link">&para;</a></h3>
@@ -8175,9 +8226,28 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidInstanceID.NotFound) when calling the TerminateInstances operation: The instance ID 'i-1234567890abcdef0' does not exist</code></strong> — Verify the instance ID is correct and still running with <code>aws ec2 describe-instances --filters "Name=instance-state-name,Values=running"</code>.
-<strong><code>ERROR: (gcloud.compute.instances.delete) Could not fetch resource: The resource 'projects/my-project/zones/europe-west1-b/instances/&lt;hostname&gt;' was not found</code></strong> — Confirm the hostname and zone match the actual instance with <code>gcloud compute instances list --zones=europe-west1-b</code>.
-<strong><code>ResourceNotFoundError: The Resource 'Microsoft.Compute/disks/&lt;hostname&gt;-osDisk' under resource group 'prod-rg' was not found</code></strong> — Ensure the disk name and resource group are correct by listing disks with <code>az disk list --resource-group prod-rg</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidInstanceID.NotFound) when calling the TerminateInstances operation: The instance ID 'i-1234567890abcdef0' does not exist</code></td>
+<td>Verify the instance ID is correct and still running with <code>aws ec2 describe-instances --filters "Name=instance-state-name,Values=running"</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: (gcloud.compute.instances.delete) Could not fetch resource: The resource 'projects/my-project/zones/europe-west1-b/instances/&lt;hostname&gt;' was not found</code></td>
+<td>Confirm the hostname and zone match the actual instance with <code>gcloud compute instances list --zones=europe-west1-b</code>.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFoundError: The Resource 'Microsoft.Compute/disks/&lt;hostname&gt;-osDisk' under resource group 'prod-rg' was not found</code></td>
+<td>Ensure the disk name and resource group are correct by listing disks with <code>az disk list --resource-group prod-rg</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="8-cmdb-and-ansible-cleanup">8. CMDB and Ansible Cleanup<a class="headerlink" href="#8-cmdb-and-ansible-cleanup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Ansible — remove from inventory</span>
@@ -8204,9 +8274,28 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: pathspec 'inventory/production/host_vars/&lt;hostname&gt;.example.com/' did not match any files</code></strong> — Replace <code>&lt;hostname&gt;</code> with the actual hostname (e.g., <code>db-prod-03</code>) before running the command.
-<strong><code>error: pathspec 'inventory/production/host_vars/db-prod-03.example.com/' did not match any files</code></strong> — Verify the directory exists and the path is correct; check for typos or confirm the host_vars structure matches your inventory layout.
-<strong><code>[main (root-commit) ...] fatal: your current branch 'main' does not have any commits yet</code></strong> — Ensure you are in the correct git repository directory and that the branch has been initialized with at least one commit.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: pathspec 'inventory/production/host_vars/&lt;hostname&gt;.example.com/' did not match any files</code></td>
+<td>Replace <code>&lt;hostname&gt;</code> with the actual hostname (e.g., <code>db-prod-03</code>) before running the command.</td>
+</tr>
+<tr>
+<td><code>error: pathspec 'inventory/production/host_vars/db-prod-03.example.com/' did not match any files</code></td>
+<td>Verify the directory exists and the path is correct; check for typos or confirm the host_vars structure matches your inventory layout.</td>
+</tr>
+<tr>
+<td><code>[main (root-commit) ...] fatal: your current branch 'main' does not have any commits yet</code></td>
+<td>Ensure you are in the correct git repository directory and that the branch has been initialized with at least one commit.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="decommission-checklist">Decommission Checklist<a class="headerlink" href="#decommission-checklist" title="Permanent link">&para;</a></h2>
 <table>
@@ -8309,7 +8398,7 @@ Safely removes a server, VM, or cloud instance from production — preventing or
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

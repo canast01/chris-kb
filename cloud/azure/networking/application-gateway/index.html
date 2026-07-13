@@ -8540,9 +8540,28 @@ Azure Application Gateway is a Layer 7 load balancer that provides SSL terminati
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The subnet 'appgw-subnet' does not exist in virtual network 'myVNet'.</code></strong> — Create the subnet first using <code>az network vnet subnet create --resource-group myRG --vnet-name myVNet --name appgw-subnet --address-prefix 10.0.1.0/24</code> before creating the gateway.
-<strong><code>The public IP address 'appgw-pip' does not exist in resource group 'myRG'.</code></strong> — Ensure the public IP creation command completes successfully and the resource group name matches exactly in both commands.
-<strong><code>Deployment failed with code: InvalidResourceReference. Message: The referenced resource '/subscriptions/.../publicIPAddresses/appgw-pip' could not be found.</code></strong> — Wait 10–15 seconds after public IP creation before creating the Application Gateway to allow replication across Azure regions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The subnet 'appgw-subnet' does not exist in virtual network 'myVNet'.</code></td>
+<td>Create the subnet first using <code>az network vnet subnet create --resource-group myRG --vnet-name myVNet --name appgw-subnet --address-prefix 10.0.1.0/24</code> before creating the gateway.</td>
+</tr>
+<tr>
+<td><code>The public IP address 'appgw-pip' does not exist in resource group 'myRG'.</code></td>
+<td>Ensure the public IP creation command completes successfully and the resource group name matches exactly in both commands.</td>
+</tr>
+<tr>
+<td><code>Deployment failed with code: InvalidResourceReference. Message: The referenced resource '/subscriptions/.../publicIPAddresses/appgw-pip' could not be found.</code></td>
+<td>Wait 10–15 seconds after public IP creation before creating the Application Gateway to allow replication across Azure regions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="waf-mode-configuration">WAF Mode Configuration<a class="headerlink" href="#waf-mode-configuration" title="Permanent link">&para;</a></h2>
 <p>WAF can run in Detection mode (log only) or Prevention mode (block and log). Start with Detection and switch to Prevention after validating no false positives.</p>
@@ -8576,8 +8595,24 @@ Azure Application Gateway is a Layer 7 load balancer that provides SSL terminati
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The resource 'Microsoft.Network/applicationGateways/myAppGW' under resource group 'myRG' was not found.</code></strong> — Verify the application gateway name and resource group exist using <code>az network application-gateway list --resource-group myRG</code>.
-<strong><code>The WAF policy version '3.2' is not supported for rule set type 'OWASP'.</code></strong> — Check available versions with <code>az network application-gateway waf-config list-available-rule-sets</code> and use a supported version like 3.1 or 3.0.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The resource 'Microsoft.Network/applicationGateways/myAppGW' under resource group 'myRG' was not found.</code></td>
+<td>Verify the application gateway name and resource group exist using <code>az network application-gateway list --resource-group myRG</code>.</td>
+</tr>
+<tr>
+<td><code>The WAF policy version '3.2' is not supported for rule set type 'OWASP'.</code></td>
+<td>Check available versions with <code>az network application-gateway waf-config list-available-rule-sets</code> and use a supported version like 3.1 or 3.0.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="listener-configuration">Listener Configuration<a class="headerlink" href="#listener-configuration" title="Permanent link">&para;</a></h2>
 <p>Listeners define the frontend IP, port, and protocol. Multi-site listeners use host headers to route to different backends.</p>
@@ -8629,9 +8664,28 @@ Azure Application Gateway is a Layer 7 load balancer that provides SSL terminati
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>(ResourceNotFound) The Resource 'Microsoft.Network/applicationGateways/myAppGW' under resource group 'myRG' was not found.</code></strong> — Verify the application gateway name and resource group exist using <code>az network application-gateway list --resource-group myRG</code>.
-<strong><code>(InvalidArgument) The certificate file 'cert.pfx' does not exist or is not readable.</code></strong> — Ensure the PFX certificate file is in the current working directory and readable with <code>ls -la cert.pfx</code>.
-**`(BadRequest)</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(ResourceNotFound) The Resource 'Microsoft.Network/applicationGateways/myAppGW' under resource group 'myRG' was not found.</code></td>
+<td>Verify the application gateway name and resource group exist using <code>az network application-gateway list --resource-group myRG</code>.</td>
+</tr>
+<tr>
+<td><code>(InvalidArgument) The certificate file 'cert.pfx' does not exist or is not readable.</code></td>
+<td>Ensure the PFX certificate file is in the current working directory and readable with <code>ls -la cert.pfx</code>.</td>
+</tr>
+<tr>
+<td>**`(BadRequest)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="backend-pools-and-health-probes">Backend Pools and Health Probes<a class="headerlink" href="#backend-pools-and-health-probes" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Add a backend pool</span>
@@ -8747,8 +8801,24 @@ Azure Application Gateway is a Layer 7 load balancer that provides SSL terminati
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Network/applicationGateways/myAppGW' under resource group 'myRG' was not found.</code></strong> — Verify the application gateway name and resource group exist using <code>az network application-gateway list -g myRG</code>.
-<strong><code>InvalidPolicyName: Policy name 'AppGwSslPolicy20220101' is not a valid predefined policy.</code></strong> — Run <code>az network application-gateway ssl-policy list-options</code> to see valid policy names and use an existing one.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.Network/applicationGateways/myAppGW' under resource group 'myRG' was not found.</code></td>
+<td>Verify the application gateway name and resource group exist using <code>az network application-gateway list -g myRG</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidPolicyName: Policy name 'AppGwSslPolicy20220101' is not a valid predefined policy.</code></td>
+<td>Run <code>az network application-gateway ssl-policy list-options</code> to see valid policy names and use an existing one.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="sku-and-capacity-summary">SKU and Capacity Summary<a class="headerlink" href="#sku-and-capacity-summary" title="Permanent link">&para;</a></h2>
 <table>
@@ -8829,8 +8899,24 @@ Azure Application Gateway is a Layer 7 load balancer that provides SSL terminati
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound : The Resource 'Microsoft.Network/applicationGateways/myAppGW' under resource group 'myRG' was not found.</code></strong> — Verify the Application Gateway name and resource group name are correct using <code>az network application-gateway list --resource-group myRG</code>.
-<strong><code>AuthorizationFailed : The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/applicationGateways/read' over scope '/subscriptions/...'.</code></strong> — Ensure your Azure account has the Network Contributor or Reader role assigned to the resource group using <code>az role assignment list --resource-group myRG</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound : The Resource 'Microsoft.Network/applicationGateways/myAppGW' under resource group 'myRG' was not found.</code></td>
+<td>Verify the Application Gateway name and resource group name are correct using <code>az network application-gateway list --resource-group myRG</code>.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed : The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/applicationGateways/read' over scope '/subscriptions/...'.</code></td>
+<td>Ensure your Azure account has the Network Contributor or Reader role assigned to the resource group using <code>az role assignment list --resource-group myRG</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8854,7 +8940,7 @@ Azure Application Gateway is a Layer 7 load balancer that provides SSL terminati
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

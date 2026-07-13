@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Git — Authentication · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Git — Authentication", "url": "https://chrisanastasiadis.com/itsm/git/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Git — Authentication", "url": "https://chrisanastasiadis.com/itsm/git/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7373,8 +7373,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permissions 0644 for '/home/user/.ssh/id_ed25519_git' are too open.</code></strong> — Run <code>chmod 600 ~/.ssh/id_ed25519_git</code> to restrict key file permissions to owner-read/write only.
-<strong><code>ssh-keygen: No such file or directory</code></strong> — Ensure the <code>~/.ssh</code> directory exists by running <code>mkdir -p ~/.ssh</code> before generating keys.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permissions 0644 for '/home/user/.ssh/id_ed25519_git' are too open.</code></td>
+<td>Run <code>chmod 600 ~/.ssh/id_ed25519_git</code> to restrict key file permissions to owner-read/write only.</td>
+</tr>
+<tr>
+<td><code>ssh-keygen: No such file or directory</code></td>
+<td>Ensure the <code>~/.ssh</code> directory exists by running <code>mkdir -p ~/.ssh</code> before generating keys.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Display public key for upload to GitHub/GitLab/Bitbucket</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>~/.ssh/id_ed25519_git.pub
@@ -7393,9 +7409,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey).</code></strong> — Verify the key exists at <code>~/.ssh/id_ed25519_git</code> and the public key is registered in your Git platform's SSH settings.
-<strong><code>Could not resolve hostname git@gitlab.corp.example.com</code></strong> — Check the GitLab hostname is correct and your DNS/network can reach it; use <code>nslookup gitlab.corp.example.com</code> to verify.
-<strong><code>No such file or directory</code></strong> — Generate the SSH key first with <code>ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_git -C "your-email@example.com"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Verify the key exists at <code>~/.ssh/id_ed25519_git</code> and the public key is registered in your Git platform's SSH settings.</td>
+</tr>
+<tr>
+<td><code>Could not resolve hostname git@gitlab.corp.example.com</code></td>
+<td>Check the GitLab hostname is correct and your DNS/network can reach it; use <code>nslookup gitlab.corp.example.com</code> to verify.</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Generate the SSH key first with <code>ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_git -C "your-email@example.com"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate a deploy key (no passphrase — stored securely in CI)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;deploy-key-repo-name&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/deploy_key_reponame<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
@@ -7416,8 +7451,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey).</code></strong> — Ensure the generated public key is added to the repository's deploy keys in your Git hosting platform (GitHub/GitLab/Bitbucket).
-<strong><code>ssh-keygen: No such file or directory</code></strong> — Create the ~/.ssh directory first with <code>mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Ensure the generated public key is added to the repository's deploy keys in your Git hosting platform (GitHub/GitLab/Bitbucket).</td>
+</tr>
+<tr>
+<td><code>ssh-keygen: No such file or directory</code></td>
+<td>Create the ~/.ssh directory first with <code>mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Store a PAT securely using Git credential helper</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>osxkeychain<span class="w">          </span><span class="c1"># macOS</span>
@@ -7543,9 +7594,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: gpg failed to sign the data</code></strong> — Ensure GPG agent is running with <code>gpg-agent --daemon</code> and your GPG key is properly configured.
-<strong><code>error: no signature found</code></strong> — The commit or tag was not signed; use <code>git commit -S</code> or <code>git tag -s</code> to create signed commits/tags going forward.
-<strong><code>gpg: Can't check signature: No public key</code></strong> — Import the signer's public key using <code>gpg --import &lt;keyfile&gt;</code> or retrieve it from your organization's key server.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: gpg failed to sign the data</code></td>
+<td>Ensure GPG agent is running with <code>gpg-agent --daemon</code> and your GPG key is properly configured.</td>
+</tr>
+<tr>
+<td><code>error: no signature found</code></td>
+<td>The commit or tag was not signed; use <code>git commit -S</code> or <code>git tag -s</code> to create signed commits/tags going forward.</td>
+</tr>
+<tr>
+<td><code>gpg: Can't check signature: No public key</code></td>
+<td>Import the signer's public key using <code>gpg --import &lt;keyfile&gt;</code> or retrieve it from your organization's key server.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Sign a user key with an SSH CA (on the CA host)</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh-keygen<span class="w"> </span>-s<span class="w"> </span>/etc/ssh/ca_key<span class="w"> </span><span class="se">\</span>
@@ -7571,9 +7641,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sign_and_send_pubkey: signing failed for "git@gitlab.corp.example.com" from agent: agent refused operation</code></strong> — Ensure the CA private key has correct permissions (600) and the signing user has read access to <code>/etc/ssh/ca_key</code>.
-<strong><code>Could not open a connection to your authentication agent</code></strong> — Start ssh-agent with <code>eval $(ssh-agent -s)</code> before attempting to sign keys or authenticate.
-<strong><code>Permission denied (publickey,gssapi-keyex,gssapi-with-mic)</code></strong> — Verify the certificate validity period hasn't expired by checking <code>ssh-keygen -L -f ~/.ssh/id_ed25519_git-cert.pub</code> and confirm the CA public key is in the GitLab server's <code>/etc/ssh/ssh_known_hosts</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sign_and_send_pubkey: signing failed for "git@gitlab.corp.example.com" from agent: agent refused operation</code></td>
+<td>Ensure the CA private key has correct permissions (600) and the signing user has read access to <code>/etc/ssh/ca_key</code>.</td>
+</tr>
+<tr>
+<td><code>Could not open a connection to your authentication agent</code></td>
+<td>Start ssh-agent with <code>eval $(ssh-agent -s)</code> before attempting to sign keys or authenticate.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,gssapi-keyex,gssapi-with-mic)</code></td>
+<td>Verify the certificate validity period hasn't expired by checking <code>ssh-keygen -L -f ~/.ssh/id_ed25519_git-cert.pub</code> and confirm the CA public key is in the GitLab server's <code>/etc/ssh/ssh_known_hosts</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List all SSH keys registered on GitHub via API</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/user/keys<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.[].title&#39;</span>
@@ -7625,7 +7714,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

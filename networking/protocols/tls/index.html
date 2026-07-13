@@ -8025,9 +8025,28 @@ TLS reference — certificate chain validation, cipher suites, SNI, mTLS, OCSP/C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to get local issuer certificate</code></strong> — Add the <code>-CAfile /etc/ssl/certs/ca-certificates.crt</code> flag or ensure your system's CA bundle is up-to-date with <code>update-ca-certificates</code>.
-<strong><code>error:1404B410:SSL routines:CT_PARSE_SCI_LIST:unexpected eof while parsing</code></strong> — The target host is not responding on port 443 or the hostname is incorrect; verify connectivity with <code>nc -zv &lt;host&gt; 443</code> first.
-<strong><code>Protocol : TLSv1.2</code> when testing with <code>-tls1_3</code></strong> — The server does not support TLS 1.3; check server configuration or use <code>-tls1_2</code> to verify the highest supported version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to get local issuer certificate</code></td>
+<td>Add the <code>-CAfile /etc/ssl/certs/ca-certificates.crt</code> flag or ensure your system's CA bundle is up-to-date with <code>update-ca-certificates</code>.</td>
+</tr>
+<tr>
+<td><code>error:1404B410:SSL routines:CT_PARSE_SCI_LIST:unexpected eof while parsing</code></td>
+<td>The target host is not responding on port 443 or the hostname is incorrect; verify connectivity with <code>nc -zv &lt;host&gt; 443</code> first.</td>
+</tr>
+<tr>
+<td><code>Protocol : TLSv1.2</code> when testing with <code>-tls1_3</code></td>
+<td>The server does not support TLS 1.3; check server configuration or use <code>-tls1_2</code> to verify the highest supported version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">## Install testssl.sh for comprehensive audit</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-O<span class="w"> </span>https://testssl.sh/testssl.sh
@@ -8078,8 +8097,24 @@ TLS reference — certificate chain validation, cipher suites, SNI, mTLS, OCSP/C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>OCSP response: none</code></strong> — The server is not configured to staple OCSP responses; enable OCSP stapling in your web server configuration (e.g., <code>ssl_stapling on;</code> in nginx or <code>SSLUseStapling on</code> in Apache).
-<strong><code>error in s_client</code></strong> — Verify the hostname and port are correct, the server is reachable, and TLS is enabled on that port using <code>nc -zv &lt;host&gt; 443</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OCSP response: none</code></td>
+<td>The server is not configured to staple OCSP responses; enable OCSP stapling in your web server configuration (e.g., <code>ssl_stapling on;</code> in nginx or <code>SSLUseStapling on</code> in Apache).</td>
+</tr>
+<tr>
+<td><code>error in s_client</code></td>
+<td>Verify the hostname and port are correct, the server is reachable, and TLS is enabled on that port using <code>nc -zv &lt;host&gt; 443</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">## Verify a certificate chain (cert.pem + intermediate.pem + root.pem)</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>root.pem<span class="w"> </span>-untrusted<span class="w"> </span>intermediate.pem<span class="w"> </span>cert.pem
@@ -8096,8 +8131,24 @@ TLS reference — certificate chain validation, cipher suites, SNI, mTLS, OCSP/C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error 20 at 0 depth lookup: unable to get local issuer certificate</code></strong> — Ensure the root.pem file contains the correct root CA certificate and is readable; verify the certificate chain is complete.
-<strong><code>Error querying OCSP responder</code></strong> — The OCSP responder may be unavailable or the URL may be incorrect; verify network connectivity and that the certificate's OCSP URI is valid with <code>openssl x509 -in cert.pem -noout -text | grep -A1 "OCSP"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error 20 at 0 depth lookup: unable to get local issuer certificate</code></td>
+<td>Ensure the root.pem file contains the correct root CA certificate and is readable; verify the certificate chain is complete.</td>
+</tr>
+<tr>
+<td><code>Error querying OCSP responder</code></td>
+<td>The OCSP responder may be unavailable or the URL may be incorrect; verify network connectivity and that the certificate's OCSP URI is valid with <code>openssl x509 -in cert.pem -noout -text | grep -A1 "OCSP"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8121,7 +8172,7 @@ TLS reference — certificate chain validation, cipher suites, SNI, mTLS, OCSP/C
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

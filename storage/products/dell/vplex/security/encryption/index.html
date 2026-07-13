@@ -9144,9 +9144,28 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Ensure SSH host keys exist in /etc/ssh/ (ssh-keygen -A) before restarting sshd.
-<strong><code>Invalid user service from 192.168.1.50 port 54321</code></strong> — Replace <code>&lt;MGMT_SUBNET&gt;</code> with actual CIDR notation (e.g., <code>AllowUsers service@192.168.0.0/24</code>) or use specific usernames without IP restrictions.
-<strong><code>Job for sshd.service failed because the control process exited with error code.</code></strong> — Run <code>sshd -t</code> to validate syntax errors in sshd_config before restarting the service.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd: no hostkeys available -- exiting.</code></td>
+<td>Ensure SSH host keys exist in /etc/ssh/ (ssh-keygen -A) before restarting sshd.</td>
+</tr>
+<tr>
+<td><code>Invalid user service from 192.168.1.50 port 54321</code></td>
+<td>Replace <code>&lt;MGMT_SUBNET&gt;</code> with actual CIDR notation (e.g., <code>AllowUsers service@192.168.0.0/24</code>) or use specific usernames without IP restrictions.</td>
+</tr>
+<tr>
+<td><code>Job for sshd.service failed because the control process exited with error code.</code></td>
+<td>Run <code>sshd -t</code> to validate syntax errors in sshd_config before restarting the service.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Verify the active SSH configuration:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;passwordauthentication|permitempty|ciphers|kexalgorithms&#39;</span>
@@ -9158,8 +9177,24 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sshd: command not found</code></strong> — Ensure OpenSSH server is installed with <code>apt-get install openssh-server</code> or equivalent for your distro.
-<strong><code>error: Could not load host key</code></strong> — Run the command with sudo or as root, since sshd configuration requires elevated privileges to read.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd: command not found</code></td>
+<td>Ensure OpenSSH server is installed with <code>apt-get install openssh-server</code> or equivalent for your distro.</td>
+</tr>
+<tr>
+<td><code>error: Could not load host key</code></td>
+<td>Run the command with sudo or as root, since sshd configuration requires elevated privileges to read.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="https-tls-unisphere-for-vplex">HTTPS / TLS (Unisphere for VPLEX)<a class="headerlink" href="#https-tls-unisphere-for-vplex" title="Permanent link">&para;</a></h3>
 <p>Unisphere for VPLEX ships with a self-signed TLS certificate. Replace this with a certificate signed by the corporate CA before production use.</p>
@@ -9200,8 +9235,24 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>openssl: /opt/vplex/certs: No such file or directory</code></strong> — Create the directory with <code>mkdir -p /opt/vplex/certs</code> before running the openssl command.
-<strong><code>Permission denied</code></strong> — Ensure the admin user has write permissions to <code>/opt/vplex/certs</code> or run the command with appropriate sudo privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>openssl: /opt/vplex/certs: No such file or directory</code></td>
+<td>Create the directory with <code>mkdir -p /opt/vplex/certs</code> before running the openssl command.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure the admin user has write permissions to <code>/opt/vplex/certs</code> or run the command with appropriate sudo privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Step 2: Submit the CSR to the corporate CA</strong></p>
 <p>Submit <code>vplex_mgmt.csr</code> to the corporate certificate authority. Request a certificate with:</p>
@@ -9225,8 +9276,24 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the VMS_IP is correct and the admin user has SSH access enabled; check that your SSH key is loaded or use password authentication with the <code>-o PubkeyAuthentication=no</code> flag.
-<strong><code>scp: /opt/vplex/certs/: No such file or directory</code></strong> — Create the target directory on the VMS first with <code>ssh admin@&lt;VMS_IP&gt; 'mkdir -p /opt/vplex/certs/'</code> before copying files.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify the VMS_IP is correct and the admin user has SSH access enabled; check that your SSH key is loaded or use password authentication with the <code>-o PubkeyAuthentication=no</code> flag.</td>
+</tr>
+<tr>
+<td><code>scp: /opt/vplex/certs/: No such file or directory</code></td>
+<td>Create the target directory on the VMS first with <code>ssh admin@&lt;VMS_IP&gt; 'mkdir -p /opt/vplex/certs/'</code> before copying files.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Alternatively, import through Unisphere → Settings → Security → Certificates if a GUI-based import is supported on the installed GeoSynchrony version.</p>
 <p><strong>Step 4: Verify the certificate</strong></p>
@@ -9243,9 +9310,28 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify the VMS_IP is correct and the VPLEX management interface is listening on port 443 with <code>telnet &lt;VMS_IP&gt; 443</code>.
-<strong><code>unable to load certificate</code></strong> — The certificate chain was not properly returned; try removing the pipe to <code>openssl x509</code> and run <code>openssl s_client -connect &lt;VMS_IP&gt;:443 -showcerts &lt;/dev/null 2&gt;&amp;1 | head -50</code> to inspect the raw output.
-<strong><code>grep: (standard input) is empty</code></strong> — The certificate output format differs; run the command without grep first to see the actual certificate structure, then adjust the grep patterns accordingly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the VMS_IP is correct and the VPLEX management interface is listening on port 443 with <code>telnet &lt;VMS_IP&gt; 443</code>.</td>
+</tr>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>The certificate chain was not properly returned; try removing the pipe to <code>openssl x509</code> and run <code>openssl s_client -connect &lt;VMS_IP&gt;:443 -showcerts &lt;/dev/null 2&gt;&amp;1 | head -50</code> to inspect the raw output.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input) is empty</code></td>
+<td>The certificate output format differs; run the command without grep first to see the actual certificate structure, then adjust the grep patterns accordingly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h4 id="certificate-lifecycle-management">Certificate Lifecycle Management<a class="headerlink" href="#certificate-lifecycle-management" title="Permanent link">&para;</a></h4>
 <table>
@@ -9288,8 +9374,24 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify the VPLEX management IP is correct and port 443 is accessible from your monitoring host (check firewall rules and network connectivity).
-<strong><code>unable to load certificate</code></strong> — The server is not responding with a valid SSL certificate; confirm the VPLEX cluster is running and the management interface is online.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the VPLEX management IP is correct and port 443 is accessible from your monitoring host (check firewall rules and network connectivity).</td>
+</tr>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>The server is not responding with a valid SSL certificate; confirm the VPLEX cluster is running and the management interface is online.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Alert when fewer than 30 days remain before expiry.</p>
 <h2 id="fibre-channel-layer-encryption">Fibre Channel Layer Encryption<a class="headerlink" href="#fibre-channel-layer-encryption" title="Permanent link">&para;</a></h2>
@@ -9336,7 +9438,7 @@ VPLEX itself is a virtualisation and federation layer and does not natively encr
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -9109,9 +9109,28 @@ Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Tran
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the appliance's CA certificate into your system trust store.
-<strong><code>curl: (7) Failed to connect to &lt;mgmt-ip&gt; port 443: Connection refused</code></strong> — Verify the management IP address is correct and the REST API service is running with <code>ssh &lt;mgmt-ip&gt; systemctl status rest-api</code>.
-<strong><code>{"error":"Invalid or expired token"}</code></strong> — Regenerate the DELL-EMC-TOKEN by authenticating to the appliance first using <code>curl -k -X POST "https://&lt;mgmt-ip&gt;/api/rest/login" -d '{"username":"admin","password":"&lt;password&gt;"}'</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the appliance's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;mgmt-ip&gt; port 443: Connection refused</code></td>
+<td>Verify the management IP address is correct and the REST API service is running with <code>ssh &lt;mgmt-ip&gt; systemctl status rest-api</code>.</td>
+</tr>
+<tr>
+<td><code>{"error":"Invalid or expired token"}</code></td>
+<td>Regenerate the DELL-EMC-TOKEN by authenticating to the appliance first using <code>curl -k -X POST "https://&lt;mgmt-ip&gt;/api/rest/login" -d '{"username":"admin","password":"&lt;password&gt;"}'</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="internal-key-management-default">Internal Key Management (Default)<a class="headerlink" href="#internal-key-management-default" title="Permanent link">&para;</a></h3>
 <p>By default, PowerStore uses Internal Key Management — the Key Encryption Keys are stored within PowerStoreOS. This provides drive-level encryption (data is unreadable if a drive is physically removed from the appliance) but does not provide appliance-level key separation.</p>
@@ -9205,9 +9224,28 @@ Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Tran
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error_code": 401, "message": "Invalid or expired DELL-EMC-TOKEN"}</code></strong> — Regenerate the authentication token via the PowerStore management UI or re-authenticate using valid credentials.
-<strong><code>{"error_code": 400, "message": "KMIP server connection failed: Connection timeout after 30s"}</code></strong> — Verify network connectivity to the KMIP server at 192.168.10.100:5696 and confirm firewall rules allow outbound traffic from the PowerStore appliance.
-<strong><code>{"error_code": 409, "message": "Cannot switch encryption key manager: existing keys must be migrated first"}</code></strong> — Ensure all existing local encryption keys are backed up and migrated to the KMIP server before attempting the mode switch.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error_code": 401, "message": "Invalid or expired DELL-EMC-TOKEN"}</code></td>
+<td>Regenerate the authentication token via the PowerStore management UI or re-authenticate using valid credentials.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 400, "message": "KMIP server connection failed: Connection timeout after 30s"}</code></td>
+<td>Verify network connectivity to the KMIP server at 192.168.10.100:5696 and confirm firewall rules allow outbound traffic from the PowerStore appliance.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 409, "message": "Cannot switch encryption key manager: existing keys must be migrated first"}</code></td>
+<td>Ensure all existing local encryption keys are backed up and migrated to the KMIP server before attempting the mode switch.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="kmip-key-rotation">KMIP Key Rotation<a class="headerlink" href="#kmip-key-rotation" title="Permanent link">&para;</a></h3>
 <p>Rotate encryption keys annually (or per your security policy):</p>
@@ -9227,9 +9265,28 @@ Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Tran
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error":"Unauthorized","error_code":401,"message":"Invalid or expired DELL-EMC-TOKEN"}</code></strong> — Regenerate the authentication token using the appliance management API or web UI and retry the request.
-<strong><code>{"error":"Not Found","error_code":404,"message":"Appliance &lt;appliance-id&gt; not found"}</code></strong> — Verify the appliance ID is correct by running a GET request to <code>/api/rest/appliance</code> to list all available appliances.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to the curl command to skip SSL verification, or import the appliance's certificate into your system's trusted store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error":"Unauthorized","error_code":401,"message":"Invalid or expired DELL-EMC-TOKEN"}</code></td>
+<td>Regenerate the authentication token using the appliance management API or web UI and retry the request.</td>
+</tr>
+<tr>
+<td><code>{"error":"Not Found","error_code":404,"message":"Appliance &lt;appliance-id&gt; not found"}</code></td>
+<td>Verify the appliance ID is correct by running a GET request to <code>/api/rest/appliance</code> to list all available appliances.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to the curl command to skip SSL verification, or import the appliance's certificate into your system's trusted store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Key rotation does not cause host I/O interruption. The process runs in the background and re-encrypts the DEKs with a new KEK. Duration depends on the number of drives.</p>
 <h3 id="cryptographic-erase-drive-sanitisation">Cryptographic Erase (Drive Sanitisation)<a class="headerlink" href="#cryptographic-erase-drive-sanitisation" title="Permanent link">&para;</a></h3>
@@ -9296,9 +9353,28 @@ Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Tran
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Use the <code>-k</code> flag to skip certificate verification during initial testing, or ensure your CA certificate is in the system trust store.
-<strong><code>error:0900006e:PEM routines:PEM_read_bio:no start line</code></strong> — Verify the base64-encoded certificate and private key are properly formatted without line breaks; use <code>base64 -w 0</code> when encoding.
-<strong><code>{"error": "Invalid certificate chain"}</code></strong> — Ensure the certificate chain includes all intermediate CAs in the correct order (leaf → intermediate → root) and matches the private key.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Use the <code>-k</code> flag to skip certificate verification during initial testing, or ensure your CA certificate is in the system trust store.</td>
+</tr>
+<tr>
+<td><code>error:0900006e:PEM routines:PEM_read_bio:no start line</code></td>
+<td>Verify the base64-encoded certificate and private key are properly formatted without line breaks; use <code>base64 -w 0</code> when encoding.</td>
+</tr>
+<tr>
+<td><code>{"error": "Invalid certificate chain"}</code></td>
+<td>Ensure the certificate chain includes all intermediate CAs in the correct order (leaf → intermediate → root) and matches the private key.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -9362,9 +9438,28 @@ Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Tran
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>connect: Connection refused</code></strong> — Verify the management IP is correct and the array's HTTPS port is accessible from your network location.
-<strong><code>unable to get local issuer certificate</code></strong> — Add the PowerStore certificate to your system's CA bundle or use <code>openssl s_client -connect &lt;mgmt-ip&gt;:443 -CAfile /path/to/cert.pem</code> to bypass validation for testing.
-<strong><code>Nmap done; 0 hosts up scanned</code></strong> — Ensure nmap can reach the target IP and that no firewall rules are blocking port 443 from your scanning host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the management IP is correct and the array's HTTPS port is accessible from your network location.</td>
+</tr>
+<tr>
+<td><code>unable to get local issuer certificate</code></td>
+<td>Add the PowerStore certificate to your system's CA bundle or use <code>openssl s_client -connect &lt;mgmt-ip&gt;:443 -CAfile /path/to/cert.pem</code> to bypass validation for testing.</td>
+</tr>
+<tr>
+<td><code>Nmap done; 0 hosts up scanned</code></td>
+<td>Ensure nmap can reach the target IP and that no firewall rules are blocking port 443 from your scanning host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Configure TLS settings: PowerStore Manager → <strong>Settings → Security → TLS Configuration</strong>.</p>
 <h3 id="replication-encryption">Replication Encryption<a class="headerlink" href="#replication-encryption" title="Permanent link">&para;</a></h3>
@@ -9480,7 +9575,7 @@ Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Tran
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

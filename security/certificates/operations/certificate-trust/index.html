@@ -7580,8 +7580,24 @@ Adding CA certificates to OS and application trust stores so that TLS connection
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cp: cannot create regular file '/usr/local/share/ca-certificates/internal-ca.crt': Permission denied</code></strong> — Run the command with <code>sudo</code> or as root.
-<strong><code>error 18 at 0 depth lookup: self signed certificate</code></strong> — The CA certificate itself is self-signed; use <code>openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt -untrusted internal-ca.crt server.crt</code> if server.crt is signed by the intermediate CA.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cp: cannot create regular file '/usr/local/share/ca-certificates/internal-ca.crt': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root.</td>
+</tr>
+<tr>
+<td><code>error 18 at 0 depth lookup: self signed certificate</code></td>
+<td>The CA certificate itself is self-signed; use <code>openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt -untrusted internal-ca.crt server.crt</code> if server.crt is signed by the intermediate CA.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rhel-rocky-almalinux">RHEL / Rocky / AlmaLinux<a class="headerlink" href="#rhel-rocky-almalinux" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cp<span class="w"> </span>internal-ca.crt<span class="w"> </span>/etc/pki/ca-trust/source/anchors/internal-ca.crt
@@ -7600,9 +7616,28 @@ Adding CA certificates to OS and application trust stores so that TLS connection
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cp: cannot stat 'internal-ca.crt': No such file or directory</code></strong> — Verify the certificate file exists in the current directory or provide the full path to the source certificate.
-<strong><code>update-ca-trust: command not found</code></strong> — Install the ca-certificates package using your distribution's package manager (apt-get install ca-certificates on Debian/Ubuntu, or yum install ca-certificates on RHEL/CentOS).
-<strong><code>trust list | grep "internal-ca"</code> returns no results</strong> — Confirm the certificate was successfully copied to /etc/pki/ca-trust/source/anchors/ and that update-ca-trust extract completed without errors.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cp: cannot stat 'internal-ca.crt': No such file or directory</code></td>
+<td>Verify the certificate file exists in the current directory or provide the full path to the source certificate.</td>
+</tr>
+<tr>
+<td><code>update-ca-trust: command not found</code></td>
+<td>Install the ca-certificates package using your distribution's package manager (apt-get install ca-certificates on Debian/Ubuntu, or yum install ca-certificates on RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>trust list | grep "internal-ca"</code> returns no results`</td>
+<td>Confirm the certificate was successfully copied to /etc/pki/ca-trust/source/anchors/ and that update-ca-trust extract completed without errors.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="windows-local-machine-store">Windows — Local Machine Store<a class="headerlink" href="#windows-local-machine-store" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Import CA cert to Trusted Root CA store on a single machine</span>
@@ -7638,9 +7673,28 @@ Adding CA certificates to OS and application trust stores so that TLS connection
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>keytool error: java.io.FileNotFoundException: /path/to/jdk/lib/security/cacerts (No such file or directory)</code></strong> — Verify <code>$JAVA_HOME</code> is set correctly with <code>echo $JAVA_HOME</code> and points to a valid JDK installation.
-<strong><code>keytool error: java.lang.Exception: Certificate already exists with alias &lt;internal-ca&gt;</code></strong> — Delete the existing certificate first using <code>keytool -delete -alias internal-ca -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit</code>.
-<strong><code>keytool error: java.lang.Exception: Invalid keystore format</code></strong> — Ensure the cacerts file has not been corrupted; restore from backup or verify file permissions with <code>ls -l $JAVA_HOME/lib/security/cacerts</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>keytool error: java.io.FileNotFoundException: /path/to/jdk/lib/security/cacerts (No such file or directory)</code></td>
+<td>Verify <code>$JAVA_HOME</code> is set correctly with <code>echo $JAVA_HOME</code> and points to a valid JDK installation.</td>
+</tr>
+<tr>
+<td><code>keytool error: java.lang.Exception: Certificate already exists with alias &lt;internal-ca&gt;</code></td>
+<td>Delete the existing certificate first using <code>keytool -delete -alias internal-ca -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit</code>.</td>
+</tr>
+<tr>
+<td><code>keytool error: java.lang.Exception: Invalid keystore format</code></td>
+<td>Ensure the cacerts file has not been corrupted; restore from backup or verify file permissions with <code>ls -l $JAVA_HOME/lib/security/cacerts</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verification-commands">Verification Commands<a class="headerlink" href="#verification-commands" title="Permanent link">&para;</a></h2>
@@ -7674,9 +7728,28 @@ Adding CA certificates to OS and application trust stores so that TLS connection
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>verify error:num=20:unable to get local issuer certificate</code></strong> — Add the issuing CA certificate to the trust store or use <code>-untrusted</code> flag with the intermediate certificate path.
-<strong><code>verify error:num=10:certificate has expired</code></strong> — Renew the certificate before its "Not After" date or check system time synchronization with <code>timedatectl</code>.
-<strong><code>error:0A000086:SSL routines::certificate verify failed</code></strong> — Ensure the CA bundle file path is correct and readable, or verify the certificate chain is complete with all intermediate certificates included.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify error:num=20:unable to get local issuer certificate</code></td>
+<td>Add the issuing CA certificate to the trust store or use <code>-untrusted</code> flag with the intermediate certificate path.</td>
+</tr>
+<tr>
+<td><code>verify error:num=10:certificate has expired</code></td>
+<td>Renew the certificate before its "Not After" date or check system time synchronization with <code>timedatectl</code>.</td>
+</tr>
+<tr>
+<td><code>error:0A000086:SSL routines::certificate verify failed</code></td>
+<td>Ensure the CA bundle file path is correct and readable, or verify the certificate chain is complete with all intermediate certificates included.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="tls-debug">TLS Debug<a class="headerlink" href="#tls-debug" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Full TLS handshake trace</span>
@@ -7726,9 +7799,28 @@ Adding CA certificates to OS and application trust stores so that TLS connection
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>verify error:num=20:unable to get local issuer certificate</code></strong> — Add the intermediate and root CA certificates to your system trust store or specify them explicitly with <code>--cacert</code> or <code>REQUESTS_CA_BUNDLE</code>.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate in certificate chain</code></strong> — Provide the full certificate chain (root + intermediate) in a single PEM file, or use <code>curl -k</code> to skip verification for testing only.
-<strong><code>requests.exceptions.SSLError: HTTPSConnectionPool(host='&lt;host&gt;', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationFailed(...)))</code></strong> — Ensure the <code>REQUESTS_CA_BUNDLE</code> path is correct and readable, or set <code>REQUESTS_CA_BUNDLE</code> to the absolute path of your internal CA certificate.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify error:num=20:unable to get local issuer certificate</code></td>
+<td>Add the intermediate and root CA certificates to your system trust store or specify them explicitly with <code>--cacert</code> or <code>REQUESTS_CA_BUNDLE</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate in certificate chain</code></td>
+<td>Provide the full certificate chain (root + intermediate) in a single PEM file, or use <code>curl -k</code> to skip verification for testing only.</td>
+</tr>
+<tr>
+<td><code>requests.exceptions.SSLError: HTTPSConnectionPool(host='&lt;host&gt;', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationFailed(...)))</code></td>
+<td>Ensure the <code>REQUESTS_CA_BUNDLE</code> path is correct and readable, or set <code>REQUESTS_CA_BUNDLE</code> to the absolute path of your internal CA certificate.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="bulk-expiry-check">Bulk Expiry Check<a class="headerlink" href="#bulk-expiry-check" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check expiry of a file</span>
@@ -7755,9 +7847,28 @@ Adding CA certificates to OS and application trust stores so that TLS connection
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load certificate</code></strong> — Verify the certificate file exists and is readable with <code>ls -la</code> and check the file path is correct.
-<strong><code>unable to connect to &lt;host&gt;:443</code></strong> — Ensure the host is reachable, the port is correct, and no firewall is blocking the connection with <code>nc -zv &lt;host&gt; 443</code>.
-<strong><code>Certificate will expire</code></strong> — Renew the certificate immediately using your CA or certificate management tool before the expiry date passes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Verify the certificate file exists and is readable with <code>ls -la</code> and check the file path is correct.</td>
+</tr>
+<tr>
+<td><code>unable to connect to &lt;host&gt;:443</code></td>
+<td>Ensure the host is reachable, the port is correct, and no firewall is blocking the connection with <code>nc -zv &lt;host&gt; 443</code>.</td>
+</tr>
+<tr>
+<td><code>Certificate will expire</code></td>
+<td>Renew the certificate immediately using your CA or certificate management tool before the expiry date passes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -7798,7 +7909,7 @@ Adding CA certificates to OS and application trust stores so that TLS connection
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

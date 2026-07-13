@@ -8009,9 +8009,28 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>506 Cannot talk to daemon</code></strong> — Ensure chronyd is running with <code>systemctl start chronyd</code> and listening on localhost.
-<strong><code>Stratum : 16</code> and <code>Reach : 0</code></strong> — Check network connectivity to NTP servers and verify firewall allows UDP port 123 outbound.
-<strong><code>system time : X seconds fast/slow of NTP time</code> (consistently &gt;1 second)</strong> — Run <code>chronyc makestep</code> to force immediate clock correction, or check for hardware clock drift.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>506 Cannot talk to daemon</code></td>
+<td>Ensure chronyd is running with <code>systemctl start chronyd</code> and listening on localhost.</td>
+</tr>
+<tr>
+<td><code>Stratum : 16</code> and <code>Reach : 0</code></td>
+<td>Check network connectivity to NTP servers and verify firewall allows UDP port 123 outbound.</td>
+</tr>
+<tr>
+<td><code>system time : X seconds fast/slow of NTP time</code> (consistently &gt;1 second)<code>| Run</code>chronyc makestep` to force immediate clock correction, or check for hardware clock drift.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="linux-systemd-timesyncd">Linux — systemd-timesyncd<a class="headerlink" href="#linux-systemd-timesyncd" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>timedatectl<span class="w"> </span>status
@@ -8041,8 +8060,24 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Failed to get properties: Unit systemd-timesyncd.service not found.</code></strong> — Install systemd-timesyncd with <code>apt install systemd-timesyncd</code> or enable an alternative NTP daemon like chrony.
-<strong><code>System clock synchronized: no</code></strong> — Wait 5+ minutes for NTP synchronization to complete, or manually sync with <code>ntpdate -s &lt;ntp-server&gt;</code> if available.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Failed to get properties: Unit systemd-timesyncd.service not found.</code></td>
+<td>Install systemd-timesyncd with <code>apt install systemd-timesyncd</code> or enable an alternative NTP daemon like chrony.</td>
+</tr>
+<tr>
+<td><code>System clock synchronized: no</code></td>
+<td>Wait 5+ minutes for NTP synchronization to complete, or manually sync with <code>ntpdate -s &lt;ntp-server&gt;</code> if available.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="windows">Windows<a class="headerlink" href="#windows" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Sync status</span>
@@ -8095,9 +8130,28 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid input detected at '^' marker.</code></strong> — Verify the exact command syntax for your device OS version; use <code>show ntp ?</code> to list available subcommands.
-<strong><code>NTP is disabled</code></strong> — Enable NTP with <code>ntp enable</code> (Arista) or <code>ntp enable</code> (Cisco) and configure at least one server.
-<strong><code>Clock is unsynchronized, Stratum 16</code></strong> — Verify NTP server reachability with <code>ping &lt;ntp-server&gt;</code> and check that the reach value is non-zero in the associations table.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid input detected at '^' marker.</code></td>
+<td>Verify the exact command syntax for your device OS version; use <code>show ntp ?</code> to list available subcommands.</td>
+</tr>
+<tr>
+<td><code>NTP is disabled</code></td>
+<td>Enable NTP with <code>ntp enable</code> (Arista) or <code>ntp enable</code> (Cisco) and configure at least one server.</td>
+</tr>
+<tr>
+<td><code>Clock is unsynchronized, Stratum 16</code></td>
+<td>Verify NTP server reachability with <code>ping &lt;ntp-server&gt;</code> and check that the reach value is non-zero in the associations table.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="post-config-convergence">Post-Config Convergence<a class="headerlink" href="#post-config-convergence" title="Permanent link">&para;</a></h2>
 <p>After adding NTP sources, allow up to 5 minutes for chrony to:
@@ -8117,8 +8171,24 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>506 Cannot talk to daemon</code></strong> — Ensure chronyd is running with <code>systemctl start chronyd</code> and listening on the local socket.
-<strong><code>System time : [large offset] seconds fast of NTP time</code></strong> — The makestep command failed to correct the offset; check that chronyd has NTP sources available with <code>chronyc sources</code> and verify network connectivity.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>506 Cannot talk to daemon</code></td>
+<td>Ensure chronyd is running with <code>systemctl start chronyd</code> and listening on the local socket.</td>
+</tr>
+<tr>
+<td><code>System time : [large offset] seconds fast of NTP time</code></td>
+<td>The makestep command failed to correct the offset; check that chronyd has NTP sources available with <code>chronyc sources</code> and verify network connectivity.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="validating-ntp-on-multiple-hosts">Validating NTP on Multiple Hosts<a class="headerlink" href="#validating-ntp-on-multiple-hosts" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Quick check across inventory via Ansible</span>
@@ -8167,9 +8237,28 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>500 EEE Command failed</code></strong> — Verify chrony daemon is running on the target host with <code>systemctl status chronyd</code> and restart if necessary.
-<strong><code>ssh: connect to host server04.example.com port 22: Connection timed out</code></strong> — Check network connectivity and SSH access to the host with <code>ping server04.example.com</code> and verify firewall rules allow port 22.
-<strong><code>Permission denied (publickey,password)</code></strong> — Ensure your SSH key is deployed to the target host or add <code>-u &lt;username&gt;</code> to the Ansible command if using a non-default user account.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>500 EEE Command failed</code></td>
+<td>Verify chrony daemon is running on the target host with <code>systemctl status chronyd</code> and restart if necessary.</td>
+</tr>
+<tr>
+<td><code>ssh: connect to host server04.example.com port 22: Connection timed out</code></td>
+<td>Check network connectivity and SSH access to the host with <code>ping server04.example.com</code> and verify firewall rules allow port 22.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Ensure your SSH key is deployed to the target host or add <code>-u &lt;username&gt;</code> to the Ansible command if using a non-default user account.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="common-validation-failures">Common Validation Failures<a class="headerlink" href="#common-validation-failures" title="Permanent link">&para;</a></h2>
 <table>
@@ -8230,7 +8319,7 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -9110,8 +9110,24 @@ VPLEX access control operates at two layers: management plane access (who can ch
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: /management/accounts: No such file or directory</code></strong> — Verify the GeoSynchrony version supports management account queries; older versions may require alternative authentication inspection methods.
-<strong><code>Error: Authentication failed for user vplexcli</code></strong> — Ensure the vplexcli user has sufficient privileges; run the command with appropriate credentials or use <code>sudo vplexcli</code> if permitted.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: /management/accounts: No such file or directory</code></td>
+<td>Verify the GeoSynchrony version supports management account queries; older versions may require alternative authentication inspection methods.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed for user vplexcli</code></td>
+<td>Ensure the vplexcli user has sufficient privileges; run the command with appropriate credentials or use <code>sudo vplexcli</code> if permitted.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="data-plane-access-control-storage-views">Data Plane Access Control — Storage Views<a class="headerlink" href="#data-plane-access-control-storage-views" title="Permanent link">&para;</a></h2>
 <p>Host access to VPLEX virtual volumes is exclusively controlled via storage views. A host can only see volumes that are:</p>
@@ -9181,9 +9197,28 @@ VPLEX access control operates at two layers: management plane access (who can ch
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Initiator port 10:00:00:00:c9:ab:cd:ef not found</code></strong> — Verify the WWN is correctly obtained from the host and registered before adding it to the storage view.
-<strong><code>Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 does not exist</code></strong> — Confirm the virtual volume names exist in VPLEX using <code>vplexcli -q -e "ls /virtual-volumes"</code> before adding them to the view.
-<strong><code>Error: Port /clusters/cluster-1/exports/ports/A0-FC00 is already in use by another storage view</code></strong> — Use different front-end ports or remove the port from the conflicting storage view first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Initiator port 10:00:00:00:c9:ab:cd:ef not found</code></td>
+<td>Verify the WWN is correctly obtained from the host and registered before adding it to the storage view.</td>
+</tr>
+<tr>
+<td><code>Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 does not exist</code></td>
+<td>Confirm the virtual volume names exist in VPLEX using <code>vplexcli -q -e "ls /virtual-volumes"</code> before adding them to the view.</td>
+</tr>
+<tr>
+<td><code>Error: Port /clusters/cluster-1/exports/ports/A0-FC00 is already in use by another storage view</code></td>
+<td>Use different front-end ports or remove the port from the conflicting storage view first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="storage-view-design-principles">Storage View Design Principles<a class="headerlink" href="#storage-view-design-principles" title="Permanent link">&para;</a></h3>
 <table>
@@ -9261,9 +9296,28 @@ VPLEX access control operates at two layers: management plane access (who can ch
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Storage view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 not found</code></strong> — Verify the storage view path exists using <code>vplexcli -q -e "ll /clusters/cluster-1/exports/storage-views/"</code> and correct the name.
-<strong><code>Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 is still mapped to initiators</code></strong> — Remove all initiator mappings from the virtual volume before removal using <code>storage-view remove-virtual-volumes</code> or unregister initiators first.
-<strong><code>Error: Cannot destroy storage view: active I/O detected</code></strong> — Ensure all host I/O is quiesced and the storage view has no active connections before retrying with <code>--force</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Storage view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 not found</code></td>
+<td>Verify the storage view path exists using <code>vplexcli -q -e "ll /clusters/cluster-1/exports/storage-views/"</code> and correct the name.</td>
+</tr>
+<tr>
+<td><code>Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 is still mapped to initiators</code></td>
+<td>Remove all initiator mappings from the virtual volume before removal using <code>storage-view remove-virtual-volumes</code> or unregister initiators first.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot destroy storage view: active I/O detected</code></td>
+<td>Ensure all host I/O is quiesced and the storage view has no active connections before retrying with <code>--force</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Quarterly review task</strong>: list all storage views and cross-reference initiator WWNs against the CMDB. Remove any views for decommissioned hosts and unregister their initiators.</p>
 <h2 id="san-fabric-zoning">SAN Fabric Zoning<a class="headerlink" href="#san-fabric-zoning" title="Permanent link">&para;</a></h2>
@@ -9421,7 +9475,7 @@ VPLEX access control operates at two layers: management plane access (who can ch
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

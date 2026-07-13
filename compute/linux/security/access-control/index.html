@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Linux — Access Control · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Linux — Access Control", "url": "https://chrisanastasiadis.com/compute/linux/security/access-control/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Linux — Access Control", "url": "https://chrisanastasiadis.com/compute/linux/security/access-control/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7602,8 +7602,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>setenforce: SELinux is disabled</code></strong> — Enable SELinux in <code>/etc/selinux/config</code> and reboot, or verify SELinux is not already disabled.
-<strong><code>getenforce: command not found</code></strong> — Install the <code>policycoreutils</code> package using <code>yum install policycoreutils</code> or <code>apt install selinux-utils</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setenforce: SELinux is disabled</code></td>
+<td>Enable SELinux in <code>/etc/selinux/config</code> and reboot, or verify SELinux is not already disabled.</td>
+</tr>
+<tr>
+<td><code>getenforce: command not found</code></td>
+<td>Install the <code>policycoreutils</code> package using <code>yum install policycoreutils</code> or <code>apt install selinux-utils</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View file context</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ls<span class="w"> </span>-Z<span class="w"> </span>/var/www/html/
@@ -7641,8 +7657,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>chcon: can't apply partial context to unlabeled file</code></strong> — Ensure SELinux is enabled with <code>getenforce</code> and the filesystem is mounted with <code>context=</code> option if needed.
-<strong><code>restorecon: No such file or directory</code></strong> — Verify the path exists and check spelling; use <code>ls -d /opt/webapp/public/</code> to confirm the directory is present.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chcon: can't apply partial context to unlabeled file</code></td>
+<td>Ensure SELinux is enabled with <code>getenforce</code> and the filesystem is mounted with <code>context=</code> option if needed.</td>
+</tr>
+<tr>
+<td><code>restorecon: No such file or directory</code></td>
+<td>Verify the path exists and check spelling; use <code>ls -d /opt/webapp/public/</code> to confirm the directory is present.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all booleans</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>getsebool<span class="w"> </span>-a
@@ -7673,9 +7705,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>getsebool: command not found</code></strong> — Install the policycoreutils package with <code>yum install policycoreutils</code> or <code>apt install selinux-utils</code>.
-<strong><code>Cannot set persistent booleans without SELinux policy loaded</code></strong> — Ensure SELinux is enabled and a policy is loaded by checking <code>getenforce</code> and <code>sestatus</code>.
-<strong><code>setsebool: Cannot access policy master file</code></strong> — Run the command with <code>sudo</code> or as root, since SELinux boolean changes require elevated privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getsebool: command not found</code></td>
+<td>Install the policycoreutils package with <code>yum install policycoreutils</code> or <code>apt install selinux-utils</code>.</td>
+</tr>
+<tr>
+<td><code>Cannot set persistent booleans without SELinux policy loaded</code></td>
+<td>Ensure SELinux is enabled and a policy is loaded by checking <code>getenforce</code> and <code>sestatus</code>.</td>
+</tr>
+<tr>
+<td><code>setsebool: Cannot access policy master file</code></td>
+<td>Run the command with <code>sudo</code> or as root, since SELinux boolean changes require elevated privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View recent AVC denials</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>avc<span class="w"> </span>--start<span class="w"> </span>recent<span class="w"> </span><span class="p">|</span><span class="w"> </span>audit2why
@@ -7734,9 +7785,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>apparmor module is not loaded.</code></strong> — Load AppArmor with <code>sudo systemctl start apparmor</code> and verify with <code>sudo systemctl enable apparmor</code>.
-<strong><code>Error: Could not open '/etc/apparmor.d/usr.sbin.nginx' for reading: No such file or directory</code></strong> — Verify the profile path exists with <code>ls -la /etc/apparmor.d/</code> and use the correct filename.
-<strong><code>apparmor_parser: Error while loading application profiles. Skipping /etc/apparmor.d/usr.sbin.nginx</code></strong> — Check for syntax errors in the profile with <code>apparmor_parser -d /etc/apparmor.d/usr.sbin.nginx</code> and fix any rule violations.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>apparmor module is not loaded.</code></td>
+<td>Load AppArmor with <code>sudo systemctl start apparmor</code> and verify with <code>sudo systemctl enable apparmor</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Could not open '/etc/apparmor.d/usr.sbin.nginx' for reading: No such file or directory</code></td>
+<td>Verify the profile path exists with <code>ls -la /etc/apparmor.d/</code> and use the correct filename.</td>
+</tr>
+<tr>
+<td><code>apparmor_parser: Error while loading application profiles. Skipping /etc/apparmor.d/usr.sbin.nginx</code></td>
+<td>Check for syntax errors in the profile with <code>apparmor_parser -d /etc/apparmor.d/usr.sbin.nginx</code> and fix any rule violations.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># /etc/apparmor.d/usr.local.bin.myapp</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>/usr/local/bin/myapp<span class="w"> </span><span class="o">{</span>
@@ -7755,9 +7825,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>apparmor_parser: Error in /etc/apparmor.d/usr.local.bin.myapp at line 5: syntax error, unexpected TOK_COMMA</code></strong> — Remove the trailing comma after <code>r,</code> on the <code>/etc/myapp/** r,</code> line; AppArmor does not use commas between rules.
-<strong><code>AppArmor parser error: Unknown mode 'rw' in /etc/apparmor.d/usr.local.bin.myapp</code></strong> — Use separate rules <code>r,</code> and <code>w,</code> instead of combined <code>rw,</code>; AppArmor requires individual mode declarations.
-<strong><code>ERROR: Could not find profile /usr/local/bin/myapp when loading profile</code></strong> — Ensure the profile filename matches the binary path exactly (e.g., rename file to <code>usr.local.bin.myapp</code> without leading slash) and run <code>sudo apparmor_parser -r /etc/apparmor.d/usr.local.bin.myapp</code> to load it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>apparmor_parser: Error in /etc/apparmor.d/usr.local.bin.myapp at line 5: syntax error, unexpected TOK_COMMA</code></td>
+<td>Remove the trailing comma after <code>r,</code> on the <code>/etc/myapp/** r,</code> line; AppArmor does not use commas between rules.</td>
+</tr>
+<tr>
+<td><code>AppArmor parser error: Unknown mode 'rw' in /etc/apparmor.d/usr.local.bin.myapp</code></td>
+<td>Use separate rules <code>r,</code> and <code>w,</code> instead of combined <code>rw,</code>; AppArmor requires individual mode declarations.</td>
+</tr>
+<tr>
+<td><code>ERROR: Could not find profile /usr/local/bin/myapp when loading profile</code></td>
+<td>Ensure the profile filename matches the binary path exactly (e.g., rename file to <code>usr.local.bin.myapp</code> without leading slash) and run <code>sudo apparmor_parser -r /etc/apparmor.d/usr.local.bin.myapp</code> to load it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>visudo<span class="w">   </span><span class="c1"># Always use visudo — validates syntax on save</span>
 </code></pre></div>
@@ -7765,8 +7854,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>visudo: /etc/sudoers.d/50-cloud-init: syntax error near line 3</code></strong> — Fix the syntax error in the specified file (check for missing colons, invalid usernames, or malformed rules) and save again.
-<strong><code>visudo: no changes made to /etc/sudoers</code></strong> — This is informational when you exit the editor without making changes; no action needed unless you intended to modify sudoers.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>visudo: /etc/sudoers.d/50-cloud-init: syntax error near line 3</code></td>
+<td>Fix the syntax error in the specified file (check for missing colons, invalid usernames, or malformed rules) and save again.</td>
+</tr>
+<tr>
+<td><code>visudo: no changes made to /etc/sudoers</code></td>
+<td>This is informational when you exit the editor without making changes; no action needed unless you intended to modify sudoers.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Separate duty: backup operator — only rsync and tar</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>%backupops<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/bin/rsync,<span class="w"> </span>/usr/bin/tar
@@ -7784,8 +7889,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: command not allowed</code></strong> — Verify the command path matches exactly in sudoers (e.g., <code>/usr/bin/systemctl</code> not <code>systemctl</code>), and check for negation rules that may block it.
-<strong><code>sudoers: syntax error near line X</code></strong> — Run <code>sudo visudo</code> to validate sudoers syntax before applying changes, as invalid entries will lock out sudo access.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: command not allowed</code></td>
+<td>Verify the command path matches exactly in sudoers (e.g., <code>/usr/bin/systemctl</code> not <code>systemctl</code>), and check for negation rules that may block it.</td>
+</tr>
+<tr>
+<td><code>sudoers: syntax error near line X</code></td>
+<td>Run <code>sudo visudo</code> to validate sudoers syntax before applying changes, as invalid entries will lock out sudo access.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Audit who has sudo access</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^[^#]&quot;</span><span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.d/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^Defaults&quot;</span>
@@ -7807,8 +7928,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: /etc/sudoers is world writable</code></strong> — Fix file permissions with <code>chmod 0440 /etc/sudoers</code>.
-<strong><code>sudo: parse error in /etc/sudoers.d/admins near line 3</code></strong> — Validate sudoers syntax with <code>visudo -c -f /etc/sudoers.d/admins</code> before applying changes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: /etc/sudoers is world writable</code></td>
+<td>Fix file permissions with <code>chmod 0440 /etc/sudoers</code>.</td>
+</tr>
+<tr>
+<td><code>sudo: parse error in /etc/sudoers.d/admins near line 3</code></td>
+<td>Validate sudoers syntax with <code>visudo -c -f /etc/sudoers.d/admins</code> before applying changes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># /etc/security/access.conf format:</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># permission : users/groups : origins</span>
@@ -7832,9 +7969,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>access.conf: line 5: unknown user 'root'</code></strong> — Ensure the root user exists in /etc/passwd and PAM is properly configured to read access.conf via pam_access.so.
-<strong><code>access.conf: syntax error at line 8: invalid CIDR notation</code></strong> — Correct malformed network ranges (e.g., change <code>10.0.0.0/8</code> to valid CIDR like <code>10.0.0.0/8</code>) and verify no trailing spaces exist.
-<strong><code>Login denied by access.conf</code></strong> — Verify the rule order is correct (first matching rule wins) and that the user/group name and origin match the connecting source exactly using <code>who</code> or <code>last</code> to confirm the actual origin string.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>access.conf: line 5: unknown user 'root'</code></td>
+<td>Ensure the root user exists in /etc/passwd and PAM is properly configured to read access.conf via pam_access.so.</td>
+</tr>
+<tr>
+<td><code>access.conf: syntax error at line 8: invalid CIDR notation</code></td>
+<td>Correct malformed network ranges (e.g., change <code>10.0.0.0/8</code> to valid CIDR like <code>10.0.0.0/8</code>) and verify no trailing spaces exist.</td>
+</tr>
+<tr>
+<td><code>Login denied by access.conf</code></td>
+<td>Verify the rule order is correct (first matching rule wins) and that the user/group name and origin match the connecting source exactly using <code>who</code> or <code>last</code> to confirm the actual origin string.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># /etc/pam.d/system-auth — enable pam_access</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>account<span class="w">     </span>required<span class="w">      </span>pam_access.so
@@ -7843,8 +7999,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pam_access.so: cannot open shared object file: No such file or directory</code></strong> — Install the libpam-modules package with <code>apt-get install libpam-modules</code> or <code>yum install pam</code>.
-<strong><code>PAM-1.1.8 (Linux-PAM 1.1.8) 29-Apr-2014 (Red Hat 6.5)</code></strong> — This indicates pam_access.so exists but may not be properly compiled; verify with <code>ldd /lib64/security/pam_access.so</code> and reinstall if broken.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pam_access.so: cannot open shared object file: No such file or directory</code></td>
+<td>Install the libpam-modules package with <code>apt-get install libpam-modules</code> or <code>yum install pam</code>.</td>
+</tr>
+<tr>
+<td><code>PAM-1.1.8 (Linux-PAM 1.1.8) 29-Apr-2014 (Red Hat 6.5)</code></td>
+<td>This indicates pam_access.so exists but may not be properly compiled; verify with <code>ldd /lib64/security/pam_access.so</code> and reinstall if broken.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Make a file immutable</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>chattr<span class="w"> </span>+i<span class="w"> </span>/etc/resolv.conf
@@ -7872,8 +8044,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>chattr: Operation not permitted</code></strong> — Ensure you are running as root (use <code>sudo chattr</code>) and the filesystem supports extended attributes (ext4, ext3, btrfs).
-<strong><code>lsattr: No such file or directory</code></strong> — Verify the file or directory path exists and you have read permissions on the parent directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chattr: Operation not permitted</code></td>
+<td>Ensure you are running as root (use <code>sudo chattr</code>) and the filesystem supports extended attributes (ext4, ext3, btrfs).</td>
+</tr>
+<tr>
+<td><code>lsattr: No such file or directory</code></td>
+<td>Verify the file or directory path exists and you have read permissions on the parent directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># View capabilities on a binary</span>
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>getcap<span class="w"> </span>/usr/bin/ping
@@ -7916,9 +8104,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>getcap: /usr/sbin/tcpdump: No such file or directory</code></strong> — Verify the binary exists with <code>which tcpdump</code> or install the package (e.g., <code>apt-get install tcpdump</code>).
-<strong><code>Operation not permitted</code></strong> — Run <code>setcap</code> and <code>getcap</code> commands with <code>sudo</code> or as root, as capability manipulation requires CAP_SETFCAP.
-<strong><code>Invalid argument</code></strong> — Ensure the capability name is valid (e.g., <code>cap_net_raw</code>, not <code>CAP_NET_RAW</code>) and the syntax uses <code>+ep</code> or <code>+i</code> for the flags.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getcap: /usr/sbin/tcpdump: No such file or directory</code></td>
+<td>Verify the binary exists with <code>which tcpdump</code> or install the package (e.g., <code>apt-get install tcpdump</code>).</td>
+</tr>
+<tr>
+<td><code>Operation not permitted</code></td>
+<td>Run <code>setcap</code> and <code>getcap</code> commands with <code>sudo</code> or as root, as capability manipulation requires CAP_SETFCAP.</td>
+</tr>
+<tr>
+<td><code>Invalid argument</code></td>
+<td>Ensure the capability name is valid (e.g., <code>cap_net_raw</code>, not <code>CAP_NET_RAW</code>) and the syntax uses <code>+ep</code> or <code>+i</code> for the flags.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Find world-writable files outside /tmp (should be none)</span>
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-perm<span class="w"> </span>-0002<span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;/tmp/*&quot;</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;/proc/*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
@@ -7962,9 +8169,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>find: '/root': Permission denied</code></strong> — Run the command with <code>sudo</code> to access all directories, or redirect stderr to /dev/null (already done in the example).
-<strong><code>awk: can't open file /etc/shadow: Permission denied</code></strong> — Execute the awk command with <code>sudo</code> since /etc/shadow is readable only by root.
-<strong><code>find: '/proc/[pid]/fd/[num]': No such file or directory</code></strong> — Add <code>-xdev</code> flag (already present) and increase the timeout or run during low system activity to avoid race conditions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find: '/root': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> to access all directories, or redirect stderr to /dev/null (already done in the example).</td>
+</tr>
+<tr>
+<td><code>awk: can't open file /etc/shadow: Permission denied</code></td>
+<td>Execute the awk command with <code>sudo</code> since /etc/shadow is readable only by root.</td>
+</tr>
+<tr>
+<td><code>find: '/proc/[pid]/fd/[num]': No such file or directory</code></td>
+<td>Add <code>-xdev</code> flag (already present) and increase the timeout or run during low system activity to avoid race conditions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8003,7 +8229,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

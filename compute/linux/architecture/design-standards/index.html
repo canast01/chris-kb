@@ -7537,8 +7537,24 @@ Linux architecture standards: kernel version and patch cadence requirements, NTP
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudoers:1 syntax error near line 1</code></strong> — Verify the file was edited with <code>visudo</code> instead of a standard editor, as direct edits bypass syntax validation.
-<strong><code>sudo: parse error in /etc/sudoers.d/infra-admins near line 1</code></strong> — Ensure the file has correct permissions (0440) by running <code>chmod 0440 /etc/sudoers.d/infra-admins</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudoers:1 syntax error near line 1</code></td>
+<td>Verify the file was edited with <code>visudo</code> instead of a standard editor, as direct edits bypass syntax validation.</td>
+</tr>
+<tr>
+<td><code>sudo: parse error in /etc/sudoers.d/infra-admins near line 1</code></td>
+<td>Ensure the file has correct permissions (0440) by running <code>chmod 0440 /etc/sudoers.d/infra-admins</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="ntp-configuration">NTP Configuration<a class="headerlink" href="#ntp-configuration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/chrony.conf (RHEL)</span>
@@ -7551,8 +7567,24 @@ Linux architecture standards: kernel version and patch cadence requirements, NTP
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>command not found: chronyd</code></strong> — Install chrony with <code>sudo yum install chrony</code> and enable it with <code>sudo systemctl enable --now chronyd</code>.
-<strong><code>Permission denied: /etc/chrony.conf</code></strong> — Edit the file with <code>sudo vi /etc/chrony.conf</code> or ensure your user has sudo privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found: chronyd</code></td>
+<td>Install chrony with <code>sudo yum install chrony</code> and enable it with <code>sudo systemctl enable --now chronyd</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied: /etc/chrony.conf</code></td>
+<td>Edit the file with <code>sudo vi /etc/chrony.conf</code> or ensure your user has sudo privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Verify: <code>chronyc tracking</code> — <code>System time</code> offset should be &lt; 1ms.</p>
 <h2 id="syslog-forwarding">Syslog Forwarding<a class="headerlink" href="#syslog-forwarding" title="Permanent link">&para;</a></h2>
@@ -7565,8 +7597,24 @@ Linux architecture standards: kernel version and patch cadence requirements, NTP
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>rsyslogd: action 'action 1' suspended, next retry [timestamp]</code></strong> — Verify SIEM server hostname resolves with <code>nslookup siem.example.local</code> and confirm port 514/6514 is open with <code>nc -zv siem.example.local 514</code>.
-<strong><code>error: certificate validation failed</code></strong> — For TLS forwarding (@@), ensure the SIEM server certificate is trusted by adding the CA certificate to <code>/etc/rsyslog.d/ca-certificates.crt</code> and referencing it in rsyslog.conf with <code>$DefaultNetstreamDriverCAFile</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rsyslogd: action 'action 1' suspended, next retry [timestamp]</code></td>
+<td>Verify SIEM server hostname resolves with <code>nslookup siem.example.local</code> and confirm port 514/6514 is open with <code>nc -zv siem.example.local 514</code>.</td>
+</tr>
+<tr>
+<td><code>error: certificate validation failed</code></td>
+<td>For TLS forwarding (@@), ensure the SIEM server certificate is trusted by adding the CA certificate to <code>/etc/rsyslog.d/ca-certificates.crt</code> and referencing it in rsyslog.conf with <code>$DefaultNetstreamDriverCAFile</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="package-repository-policy">Package Repository Policy<a class="headerlink" href="#package-repository-policy" title="Permanent link">&para;</a></h2>
 <p>Production servers point only to approved internal mirrors:
@@ -7582,8 +7630,24 @@ Linux architecture standards: kernel version and patch cadence requirements, NTP
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>This system is not registered or the user does not have permission to access Red Hat Network.</code></strong> — Register the system first with <code>subscription-manager register --username=&lt;user&gt; --password=&lt;pass&gt; --auto-attach</code>.
-<strong><code>Error updating certificate used for TLS:</code></strong> — Ensure the system's subscription certificate is valid by running <code>subscription-manager refresh</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>This system is not registered or the user does not have permission to access Red Hat Network.</code></td>
+<td>Register the system first with <code>subscription-manager register --username=&lt;user&gt; --password=&lt;pass&gt; --auto-attach</code>.</td>
+</tr>
+<tr>
+<td><code>Error updating certificate used for TLS:</code></td>
+<td>Ensure the system's subscription certificate is valid by running <code>subscription-manager refresh</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>No direct internet access from production servers — all package traffic via mirror.</p>
 <h2 id="os-component-stack">OS Component Stack<a class="headerlink" href="#os-component-stack" title="Permanent link">&para;</a></h2>
@@ -7612,9 +7676,28 @@ Linux architecture standards: kernel version and patch cadence requirements, NTP
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>getent hosts: No such file or directory</code></strong> — Ensure <code>/etc/hosts</code> contains the hostname entry or DNS is properly configured; add the entry manually if needed.
-<strong><code>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; +short dc1-wapp-prd-01.corp.example.com</code></strong> — Verify DNS resolver is configured in <code>/etc/resolv.conf</code> and the nameserver is reachable.
-<strong><code>NXDOMAIN</code></strong> — Confirm the DNS A record for <code>dc1-wapp-prd-01.corp.example.com</code> exists and the reverse DNS PTR record for <code>10.10.4.21</code> is properly configured.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getent hosts: No such file or directory</code></td>
+<td>Ensure <code>/etc/hosts</code> contains the hostname entry or DNS is properly configured; add the entry manually if needed.</td>
+</tr>
+<tr>
+<td><code>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; +short dc1-wapp-prd-01.corp.example.com</code></td>
+<td>Verify DNS resolver is configured in <code>/etc/resolv.conf</code> and the nameserver is reachable.</td>
+</tr>
+<tr>
+<td><code>NXDOMAIN</code></td>
+<td>Confirm the DNS A record for <code>dc1-wapp-prd-01.corp.example.com</code> exists and the reverse DNS PTR record for <code>10.10.4.21</code> is properly configured.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>DNS resolver configuration is managed by Ansible. <code>/etc/resolv.conf</code> must not be edited manually on RHEL/Ubuntu; use <code>nmcli</code> or the Ansible <code>dns_baseline</code> role.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># /etc/resolv.conf (managed — do not edit)</span>
@@ -7660,8 +7743,24 @@ Linux architecture standards: kernel version and patch cadence requirements, NTP
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>chronyc: Could not get tracking data</code></strong> — Verify chronyd daemon is running with <code>systemctl status chronyd</code> and listening on localhost.
-<strong><code>506 Cannot talk to daemon</code></strong> — Ensure chronyd is started with <code>systemctl start chronyd</code> and check socket permissions in <code>/var/run/chrony/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chronyc: Could not get tracking data</code></td>
+<td>Verify chronyd daemon is running with <code>systemctl status chronyd</code> and listening on localhost.</td>
+</tr>
+<tr>
+<td><code>506 Cannot talk to daemon</code></td>
+<td>Ensure chronyd is started with <code>systemctl start chronyd</code> and check socket permissions in <code>/var/run/chrony/</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected: reference time offset under 100 ms, stratum 3 or better. An alert fires if offset exceeds 500 ms for more than 5 minutes.</p>
 <h2 id="ssh-and-sudo-configuration">SSH and sudo Configuration<a class="headerlink" href="#ssh-and-sudo-configuration" title="Permanent link">&para;</a></h2>
@@ -7723,8 +7822,24 @@ Linux architecture standards: kernel version and patch cadence requirements, NTP
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudoers:1 syntax error near line 1</code></strong> — Run <code>visudo -c /etc/sudoers.d/ops-admins</code> to validate syntax before applying, as malformed sudoers files can lock out all sudo access.
-<strong><code>&gt;&gt;&gt; /etc/sudoers.d/ops-admins: bad permissions on sudoers file, should be mode 0440</code></strong> — Change file permissions with <code>chmod 0440 /etc/sudoers.d/ops-admins</code> since sudoers files must be readable only by root.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudoers:1 syntax error near line 1</code></td>
+<td>Run <code>visudo -c /etc/sudoers.d/ops-admins</code> to validate syntax before applying, as malformed sudoers files can lock out all sudo access.</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;&gt; /etc/sudoers.d/ops-admins: bad permissions on sudoers file, should be mode 0440</code></td>
+<td>Change file permissions with <code>chmod 0440 /etc/sudoers.d/ops-admins</code> since sudoers files must be readable only by root.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Run <code>visudo -c</code> after any sudoers change to confirm no syntax errors.</p>
 <h2 id="required-packages-and-kernel-parameters">Required Packages and Kernel Parameters<a class="headerlink" href="#required-packages-and-kernel-parameters" title="Permanent link">&para;</a></h2>
@@ -7757,8 +7872,24 @@ Linux architecture standards: kernel version and patch cadence requirements, NTP
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unexpected character '@' [/etc/rsyslog.d/50-remote.conf:1]</code></strong> — Verify the rsyslog configuration syntax; the double <code>@@</code> is correct for TCP forwarding, but check for typos or encoding issues in the file.
-<strong><code>rsyslogd: action 'omfwd' suspended, next retry [timestamp] [/etc/rsyslog.d/50-remote.conf:1]</code></strong> — Confirm that siem.corp.example.com is resolvable and that port 514/TCP is open and the remote syslog server is listening.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unexpected character '@' [/etc/rsyslog.d/50-remote.conf:1]</code></td>
+<td>Verify the rsyslog configuration syntax; the double <code>@@</code> is correct for TCP forwarding, but check for typos or encoding issues in the file.</td>
+</tr>
+<tr>
+<td><code>rsyslogd: action 'omfwd' suspended, next retry [timestamp] [/etc/rsyslog.d/50-remote.conf:1]</code></td>
+<td>Confirm that siem.corp.example.com is resolvable and that port 514/TCP is open and the remote syslog server is listening.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>The audit daemon must be running and enabled at boot. Baseline audit rules capture:</p>
 <ul>
@@ -7830,7 +7961,7 @@ Linux architecture standards: kernel version and patch cadence requirements, NTP
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

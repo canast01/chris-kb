@@ -7658,9 +7658,28 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>df: '/mnt/confluence-shared': No such file or directory</code></strong> — Verify the shared home mount point exists and is mounted with <code>mount | grep confluence-shared</code>.
-<strong><code>awk: syntax error in regex at or near</code>%'<code>** — Ensure the df output format is standard; run</code>df -h /opt/atlassian/confluence<code>manually to confirm column 5 contains the percentage value.
-**</code>du: cannot access '/mnt/confluence-shared/*': Permission denied`</strong> — Run the script with sudo or ensure the executing user has read permissions on the shared home directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>df: '/mnt/confluence-shared': No such file or directory</code></td>
+<td>Verify the shared home mount point exists and is mounted with <code>mount | grep confluence-shared</code>.</td>
+</tr>
+<tr>
+<td><code>awk: syntax error in regex at or near</code>%'<code>| Ensure the df output format is standard; run</code>df -h /opt/atlassian/confluence` manually to confirm column 5 contains the percentage value.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>du: cannot access '/mnt/confluence-shared/*': Permission denied</code></td>
+<td>Run the script with sudo or ensure the executing user has read permissions on the shared home directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="4-database-connectivity-and-latency">4. Database Connectivity and Latency<a class="headerlink" href="#4-database-connectivity-and-latency" title="Permanent link">&para;</a></h2>
@@ -7690,9 +7709,28 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "db.internal.example.com" to address: Name or service not known</code></strong> — Verify DNS resolution with <code>nslookup db.internal.example.com</code> and confirm the hostname is correct in your network configuration.</p>
-<p><strong><code>psql: error: FATAL: password authentication failed for user "confluence"</code></strong> — Check that the confluence database user password is correct and that the <code>.pgpass</code> file (if used) has the right credentials with permissions set to 0600.</p>
-<p><strong><code>psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections</code></strong> — Increase the <code>max_connections</code> parameter in postgresql.conf and restart PostgreSQL, or reduce active connections by terminating idle sessions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "db.internal.example.com" to address: Name or service not known</code></td>
+<td>Verify DNS resolution with <code>nslookup db.internal.example.com</code> and confirm the hostname is correct in your network configuration.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: password authentication failed for user "confluence"</code></td>
+<td>Check that the confluence database user password is correct and that the <code>.pgpass</code> file (if used) has the right credentials with permissions set to 0600.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections</code></td>
+<td>Increase the <code>max_connections</code> parameter in postgresql.conf and restart PostgreSQL, or reduce active connections by terminating idle sessions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="latency-test">Latency Test<a class="headerlink" href="#latency-test" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Simple query latency measurement</span>
@@ -7718,9 +7756,28 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "db.internal.example.com" to address: Name or service not known</code></strong> — Verify DNS resolution with <code>ndig db.internal.example.com</code> or update the hostname to match your actual database server FQDN.
-<strong><code>psql: error: FATAL: password authentication failed for user "confluence"</code></strong> — Confirm the confluence user password is correct and check that the <code>.pgpass</code> file exists with proper permissions (<code>chmod 600 ~/.pgpass</code>) or use the <code>-W</code> flag to prompt for password.
-<strong><code>psql: error: FATAL: database "confluencedb" does not exist</code></strong> — Connect to the postgres database first with <code>-d postgres</code> and run <code>\l</code> to list available databases, then use the correct database name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "db.internal.example.com" to address: Name or service not known</code></td>
+<td>Verify DNS resolution with <code>ndig db.internal.example.com</code> or update the hostname to match your actual database server FQDN.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: password authentication failed for user "confluence"</code></td>
+<td>Confirm the confluence user password is correct and check that the <code>.pgpass</code> file exists with proper permissions (<code>chmod 600 ~/.pgpass</code>) or use the <code>-W</code> flag to prompt for password.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: database "confluencedb" does not exist</code></td>
+<td>Connect to the postgres database first with <code>-d postgres</code> and run <code>\l</code> to list available databases, then use the correct database name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -7774,9 +7831,28 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence hostname is correct and the instance is running with <code>curl -I https://confluence.example.com</code>.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Check that <code>$CF_TOKEN</code> is valid and has API permissions by testing with <code>curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/user/current" | jq '.'</code>.
-<strong><code>{"statusCode":401,"message":"Unauthorized"}</code></strong> — Regenerate the API token in Confluence (Settings &gt; Personal &gt; API tokens) and re-export it as <code>export CF_TOKEN="your_new_token"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify the Confluence hostname is correct and the instance is running with <code>curl -I https://confluence.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Check that <code>$CF_TOKEN</code> is valid and has API permissions by testing with <code>curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/user/current" | jq '.'</code>.</td>
+</tr>
+<tr>
+<td><code>{"statusCode":401,"message":"Unauthorized"}</code></td>
+<td>Regenerate the API token in Confluence (Settings &gt; Personal &gt; API tokens) and re-export it as <code>export CF_TOKEN="your_new_token"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Via the admin console, check:</p>
 <ul>
@@ -7793,9 +7869,28 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error":"Unauthorized","statusCode":401}</code></strong> — Verify the <code>CF_TOKEN</code> environment variable is set and contains a valid bearer token with admin permissions.
-<strong><code>{"error":"Forbidden","statusCode":403}</code></strong> — Ensure the token's associated user account has the "Confluence Administrator" global permission.
-<strong><code>curl: (6) Could not resolve host: confluence.example.com</code></strong> — Replace <code>confluence.example.com</code> with your actual Confluence instance hostname and verify network connectivity.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error":"Unauthorized","statusCode":401}</code></td>
+<td>Verify the <code>CF_TOKEN</code> environment variable is set and contains a valid bearer token with admin permissions.</td>
+</tr>
+<tr>
+<td><code>{"error":"Forbidden","statusCode":403}</code></td>
+<td>Ensure the token's associated user account has the "Confluence Administrator" global permission.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host: confluence.example.com</code></td>
+<td>Replace <code>confluence.example.com</code> with your actual Confluence instance hostname and verify network connectivity.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="6-cluster-node-status-data-center">6. Cluster Node Status (Data Center)<a class="headerlink" href="#6-cluster-node-status-data-center" title="Permanent link">&para;</a></h2>
@@ -7839,9 +7934,28 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></strong> — Verify the Confluence server is running and accessible at the specified hostname/port.
-<strong><code>{"statusCode":401,"message":"Unauthorized"}</code></strong> — Ensure the CF_TOKEN environment variable is set to a valid API token with cluster admin permissions.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl to skip SSL verification, or configure proper certificates in your Confluence instance.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443: Connection refused</code></td>
+<td>Verify the Confluence server is running and accessible at the specified hostname/port.</td>
+</tr>
+<tr>
+<td><code>{"statusCode":401,"message":"Unauthorized"}</code></td>
+<td>Ensure the CF_TOKEN environment variable is set to a valid API token with cluster admin permissions.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl to skip SSL verification, or configure proper certificates in your Confluence instance.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Cluster checks:</p>
 <table>
@@ -7884,9 +7998,28 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nc: connect to 10.0.1.11 port 5801 (tcp) failed: Connection refused</code></strong> — Verify the service listening on port 5801 is running on node-1 with <code>systemctl status &lt;service-name&gt;</code>.
-<strong><code>nc: getaddrinfo for host "10.0.1.11" port 5801 failed: Name or service not known</code></strong> — Confirm the IP address 10.0.1.11 is correct and reachable by pinging it first: <code>ping -c 1 10.0.1.11</code>.
-<strong><code>nc: connect to 10.0.1.11 port 5801 (tcp) failed: No route to host</code></strong> — Check network connectivity and firewall rules between node-2 and node-1; verify the route exists with <code>ip route show</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nc: connect to 10.0.1.11 port 5801 (tcp) failed: Connection refused</code></td>
+<td>Verify the service listening on port 5801 is running on node-1 with <code>systemctl status &lt;service-name&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>nc: getaddrinfo for host "10.0.1.11" port 5801 failed: Name or service not known</code></td>
+<td>Confirm the IP address 10.0.1.11 is correct and reachable by pinging it first: <code>ping -c 1 10.0.1.11</code>.</td>
+</tr>
+<tr>
+<td><code>nc: connect to 10.0.1.11 port 5801 (tcp) failed: No route to host</code></td>
+<td>Check network connectivity and firewall rules between node-2 and node-1; verify the route exists with <code>ip route show</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="7-scheduled-jobs">7. Scheduled Jobs<a class="headerlink" href="#7-scheduled-jobs" title="Permanent link">&para;</a></h2>
@@ -8054,9 +8187,28 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to confluence.example.com port 443</code></strong> — Verify CF_URL is correct and Confluence is running; check network connectivity with <code>ping confluence.example.com</code>.
-<strong><code>psql: error: connection to server at "db.internal.example.com" (10.42.1.15), port 5432 failed</code></strong> — Ensure the PostgreSQL host is reachable, credentials in the psql command are correct, and the database user has login privileges.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Confirm the <code>/status</code> endpoint returns valid JSON; test manually with <code>curl -sf "${CF_URL}/status" | jq .</code> to see the actual response.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to confluence.example.com port 443</code></td>
+<td>Verify CF_URL is correct and Confluence is running; check network connectivity with <code>ping confluence.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>psql: error: connection to server at "db.internal.example.com" (10.42.1.15), port 5432 failed</code></td>
+<td>Ensure the PostgreSQL host is reachable, credentials in the psql command are correct, and the database user has login privileges.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Confirm the <code>/status</code> endpoint returns valid JSON; test manually with <code>curl -sf "${CF_URL}/status" | jq .</code> to see the actual response.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8094,7 +8246,7 @@ This page defines the daily health check procedure for Confluence Data Center. R
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

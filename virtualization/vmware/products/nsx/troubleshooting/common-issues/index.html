@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="NSX — Common Issues · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Common Issues", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Common Issues", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -9066,9 +9066,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the NSX Manager CA certificate into your system trust store.
-<strong><code>summarize-dvfilter: command not found</code></strong> — Ensure you are SSH'd directly to the ESXi host (not vCenter) and running as root or with appropriate privileges.
-<strong><code>vsipioctl: No such file or directory</code></strong> — Verify the filter name matches exactly (case-sensitive) and that the DFW module is loaded on the ESXi host with <code>esxcli system module list | grep dfwpf</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already present) or import the NSX Manager CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>summarize-dvfilter: command not found</code></td>
+<td>Ensure you are SSH'd directly to the ESXi host (not vCenter) and running as root or with appropriate privileges.</td>
+</tr>
+<tr>
+<td><code>vsipioctl: No such file or directory</code></td>
+<td>Verify the filter name matches exactly (case-sensitive) and that the DFW module is loaded on the ESXi host with <code>esxcli system module list | grep dfwpf</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From NSX Manager CLI</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsxcli
@@ -9133,8 +9152,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Request timed out.</code></strong> — Verify network connectivity between TEP hosts, check firewall rules allow UDP 6081 (VXLAN), and confirm the remote TEP IP is reachable via <code>ping</code> from the ESXi management network first.
-<strong><code>vmkping: Unknown option</code></strong> — Use correct vmkping syntax with interface flag as <code>-I vmk&lt;n&gt;</code> (capital I) and ensure the vmkernel port</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Request timed out.</code></td>
+<td>Verify network connectivity between TEP hosts, check firewall rules allow UDP 6081 (VXLAN), and confirm the remote TEP IP is reachable via <code>ping</code> from the ESXi management network first.</td>
+</tr>
+<tr>
+<td><code>vmkping: Unknown option</code></td>
+<td>Use correct vmkping syntax with interface flag as <code>-I vmk&lt;n&gt;</code> (capital I) and ensure the vmkernel port</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1 — Confirm the policy is published (not in draft)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9202,9 +9237,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the NSX Manager certificate into your trusted store.
-<strong><code>HTTP 404 Not Found</code></strong> — Verify the policy-id, group-id, and filter-name are correct and exist in the NSX Manager inventory.
-<strong><code>summarize-dvfilter: command not found</code></strong> — SSH directly to the ESXi host (not vCenter) where the VM is running, as this command is only available on ESXi.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification, or import the NSX Manager certificate into your trusted store.</td>
+</tr>
+<tr>
+<td><code>HTTP 404 Not Found</code></td>
+<td>Verify the policy-id, group-id, and filter-name are correct and exist in the NSX Manager inventory.</td>
+</tr>
+<tr>
+<td><code>summarize-dvfilter: command not found</code></td>
+<td>SSH directly to the ESXi host (not vCenter) where the VM is running, as this command is only available on ESXi.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From any reachable Manager node</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nsxcli
@@ -9258,9 +9312,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nsxcli: command not found</code></strong> — SSH to an NSX Manager node directly (not a vCenter or ESXi host) and ensure you have manager-level credentials.
-<strong><code>Error: Unable to connect to cluster</code></strong> — Verify network connectivity to the Manager node on port 5480 and confirm the cluster status is STABLE before retrying.
-<strong><code>Error: Service manager is DOWN</code></strong> — Restart the manager service with <code>restart service manager</code> and check system logs via <code>get log-file</code> if the service fails to come back up.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nsxcli: command not found</code></td>
+<td>SSH to an NSX Manager node directly (not a vCenter or ESXi host) and ensure you have manager-level credentials.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to connect to cluster</code></td>
+<td>Verify network connectivity to the Manager node on port 5480 and confirm the cluster status is STABLE before retrying.</td>
+</tr>
+<tr>
+<td><code>Error: Service manager is DOWN</code></td>
+<td>Restart the manager service with <code>restart service manager</code> and check system logs via <code>get log-file</code> if the service fails to come back up.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check transport node state details</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9315,9 +9388,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the NSX Manager certificate into your trusted store.
-<strong><code>HTTP 401 Unauthorized</code></strong> — Verify the admin credentials are correct and the user has API access permissions in NSX Manager.
-<strong><code>"error_message": "NSX VIB installation failed"</code> with <code>"failed_step": "VIB_INSTALL"</code></strong> — SSH to the ESXi host and check <code>/var/log/esxupdate.log</code> for the specific VIB installation error, then re-run host preparation from NSX Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the NSX Manager certificate into your trusted store.</td>
+</tr>
+<tr>
+<td><code>HTTP 401 Unauthorized</code></td>
+<td>Verify the admin credentials are correct and the user has API access permissions in NSX Manager.</td>
+</tr>
+<tr>
+<td><code>"error_message": "NSX VIB installation failed"</code> with <code>"failed_step": "VIB_INSTALL"</code></td>
+<td>SSH to the ESXi host and check <code>/var/log/esxupdate.log</code> for the specific VIB installation error, then re-run host preparation from NSX Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># SSH to Edge node</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>get<span class="w"> </span>node<span class="w"> </span>cpu-usage
@@ -9378,7 +9470,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -7673,9 +7673,28 @@ Ansible operational procedures: deploying playbooks, managing inventory sources,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR! Unable to parse site.yml as an Ansible YAML file.</code></strong> — Validate YAML syntax with <code>ansible-playbook site.yml --syntax-check</code> and fix indentation or quote issues.
-<strong><code>fatal: [web01.prod.local]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}</code></strong> — Verify SSH key permissions are 600, the correct key is in <code>~/.ssh/</code>, and the remote user matches the inventory definition.
-<strong><code>ERROR! the playbook: site.yml could not be found</code></strong> — Ensure <code>site.yml</code> exists in the current working directory or provide the full path with <code>ansible-playbook /path/to/site.yml</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR! Unable to parse site.yml as an Ansible YAML file.</code></td>
+<td>Validate YAML syntax with <code>ansible-playbook site.yml --syntax-check</code> and fix indentation or quote issues.</td>
+</tr>
+<tr>
+<td><code>fatal: [web01.prod.local]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}</code></td>
+<td>Verify SSH key permissions are 600, the correct key is in <code>~/.ssh/</code>, and the remote user matches the inventory definition.</td>
+</tr>
+<tr>
+<td><code>ERROR! the playbook: site.yml could not be found</code></td>
+<td>Ensure <code>site.yml</code> exists in the current working directory or provide the full path with <code>ansible-playbook /path/to/site.yml</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="running-playbooks">Running Playbooks<a class="headerlink" href="#running-playbooks" title="Permanent link">&para;</a></h3>
 <table>
@@ -7753,9 +7772,28 @@ Ansible operational procedures: deploying playbooks, managing inventory sources,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>[WARNING]: Unable to parse /etc/ansible/inventory/ as an inventory source</code></strong> — Verify the inventory directory path exists and contains valid inventory files (hosts, hosts.yml, or hosts.ini).
-<strong><code>fatal: [web01]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}</code></strong> — Ensure SSH keys are properly configured and the ansible_user has passwordless SSH access to all target hosts.
-<strong><code>ERROR! tag(s) not found in /path/to/site.yml: ['deploy']</code></strong> — Verify the tag name matches exactly (case-sensitive) and exists in at least one task within the playbook.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[WARNING]: Unable to parse /etc/ansible/inventory/ as an inventory source</code></td>
+<td>Verify the inventory directory path exists and contains valid inventory files (hosts, hosts.yml, or hosts.ini).</td>
+</tr>
+<tr>
+<td><code>fatal: [web01]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}</code></td>
+<td>Ensure SSH keys are properly configured and the ansible_user has passwordless SSH access to all target hosts.</td>
+</tr>
+<tr>
+<td><code>ERROR! tag(s) not found in /path/to/site.yml: ['deploy']</code></td>
+<td>Verify the tag name matches exactly (case-sensitive) and exists in at least one task within the playbook.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
 <p>Roles provide a standardised way to organise tasks, variables, files, and templates.</p>
@@ -7797,9 +7835,28 @@ Ansible operational procedures: deploying playbooks, managing inventory sources,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: [localhost]: FAILED! =&gt; {"msg": "Unable to retrieve file contents"}</code></strong> — Verify the template or file path exists in the correct subdirectory (templates/ or files/) and is readable by the Ansible user.
-<strong><code>ERROR! the role 'nginx' was not found in /etc/ansible/roles:/usr/share/ansible/roles</code></strong> — Add the roles/ directory to the <code>roles_path</code> setting in ansible.cfg or ensure the playbook references the correct relative path with <code>roles_path: ./roles</code>.
-<strong><code>fatal: [localhost]: FAILED! =&gt; {"msg": "Undefined variable"}</code></strong> — Check that variables referenced in tasks are defined in either vars/main.yml, defaults/main.yml, or passed via -e flags; verify variable names match exactly (case-sensitive).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: [localhost]: FAILED! =&gt; {"msg": "Unable to retrieve file contents"}</code></td>
+<td>Verify the template or file path exists in the correct subdirectory (templates/ or files/) and is readable by the Ansible user.</td>
+</tr>
+<tr>
+<td><code>ERROR! the role 'nginx' was not found in /etc/ansible/roles:/usr/share/ansible/roles</code></td>
+<td>Add the roles/ directory to the <code>roles_path</code> setting in ansible.cfg or ensure the playbook references the correct relative path with <code>roles_path: ./roles</code>.</td>
+</tr>
+<tr>
+<td><code>fatal: [localhost]: FAILED! =&gt; {"msg": "Undefined variable"}</code></td>
+<td>Check that variables referenced in tasks are defined in either vars/main.yml, defaults/main.yml, or passed via -e flags; verify variable names match exactly (case-sensitive).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Create a skeleton with <code>ansible-galaxy</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ansible-galaxy<span class="w"> </span>role<span class="w"> </span>init<span class="w"> </span>roles/nginx
@@ -7808,8 +7865,24 @@ Ansible operational procedures: deploying playbooks, managing inventory sources,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR! The directory roles/nginx already exists. You can use --force to overwrite</code></strong> — Run <code>ansible-galaxy role init roles/nginx --force</code> to recreate the role structure.
-<strong><code>ERROR! 'roles' directory does not exist in /path/to/project</code></strong> — Create the roles directory first with <code>mkdir -p roles</code> before running the command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR! The directory roles/nginx already exists. You can use --force to overwrite</code></td>
+<td>Run <code>ansible-galaxy role init roles/nginx --force</code> to recreate the role structure.</td>
+</tr>
+<tr>
+<td><code>ERROR! 'roles' directory does not exist in /path/to/project</code></td>
+<td>Create the roles directory first with <code>mkdir -p roles</code> before running the command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="defaults-and-vars">defaults and vars<a class="headerlink" href="#defaults-and-vars" title="Permanent link">&para;</a></h3>
 <p><code>defaults/main.yml</code> holds low-priority variables that callers can override. <code>vars/main.yml</code> holds higher-priority values not intended to be overridden.</p>
@@ -7927,8 +8000,24 @@ Ansible operational procedures: deploying playbooks, managing inventory sources,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR! the file requirements.yml does not exist, or it is not readable</code></strong> — Verify the requirements.yml file exists in the current directory and check file permissions with <code>ls -la requirements.yml</code>.
-<strong><code>ERROR! - the specified path does not exist. Please check the path and try again.</code></strong> — Create the target roles directory first with <code>mkdir -p roles/</code> before running the install command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR! the file requirements.yml does not exist, or it is not readable</code></td>
+<td>Verify the requirements.yml file exists in the current directory and check file permissions with <code>ls -la requirements.yml</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR! - the specified path does not exist. Please check the path and try again.</code></td>
+<td>Create the target roles directory first with <code>mkdir -p roles/</code> before running the install command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="inventory">Inventory<a class="headerlink" href="#inventory" title="Permanent link">&para;</a></h2>
 <h3 id="ini-format-inventory">INI Format Inventory<a class="headerlink" href="#ini-format-inventory" title="Permanent link">&para;</a></h3>
@@ -8121,9 +8210,28 @@ Ansible operational procedures: deploying playbooks, managing inventory sources,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>[WARNING]: Unable to parse inventory/hosts as an YAML source</code></strong> — Verify inventory file syntax with <code>ansible-inventory -i inventory/ --list</code> and check for YAML formatting errors.
-<strong><code>fatal: [web01.example.com]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}</code></strong> — Ensure SSH key is loaded with <code>ssh-add</code> and the <code>ansible_user</code> variable matches the remote account.
-<strong><code>[WARNING]: Could not match supplied host pattern, ignoring: webservers</code></strong> — Confirm the group name exists in your inventory with <code>ansible-inventory -i inventory/ --graph</code> and verify spelling.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[WARNING]: Unable to parse inventory/hosts as an YAML source</code></td>
+<td>Verify inventory file syntax with <code>ansible-inventory -i inventory/ --list</code> and check for YAML formatting errors.</td>
+</tr>
+<tr>
+<td><code>fatal: [web01.example.com]: UNREACHABLE! =&gt; {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}</code></td>
+<td>Ensure SSH key is loaded with <code>ssh-add</code> and the <code>ansible_user</code> variable matches the remote account.</td>
+</tr>
+<tr>
+<td><code>[WARNING]: Could not match supplied host pattern, ignoring: webservers</code></td>
+<td>Confirm the group name exists in your inventory with <code>ansible-inventory -i inventory/ --graph</code> and verify spelling.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h2>
 <h3 id="variable-precedence">Variable Precedence<a class="headerlink" href="#variable-precedence" title="Permanent link">&para;</a></h3>
@@ -8229,9 +8337,28 @@ Ansible operational procedures: deploying playbooks, managing inventory sources,
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR! Syntax Error while loading YAML from string: mapping values are not allowed here</code></strong> — Escape special characters in key=value pairs or wrap the entire <code>-e</code> argument in single quotes.
-<strong><code>ERROR! Unable to parse as an inventory source: /path/to/vars/prod.yml</code></strong> — Verify the vars file path is correct and use <code>@vars/prod.yml</code> with the <code>@</code> symbol to load from file.
-<strong><code>fatal: [web-01.prod.internal]: FAILED! =&gt; {"msg": "Unexpected templating type error occurred on '{{ app_version }}': string indices must be integers"}</code></strong> — Ensure variable names in the playbook match exactly those passed via <code>-e</code> (case-sensitive).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR! Syntax Error while loading YAML from string: mapping values are not allowed here</code></td>
+<td>Escape special characters in key=value pairs or wrap the entire <code>-e</code> argument in single quotes.</td>
+</tr>
+<tr>
+<td><code>ERROR! Unable to parse as an inventory source: /path/to/vars/prod.yml</code></td>
+<td>Verify the vars file path is correct and use <code>@vars/prod.yml</code> with the <code>@</code> symbol to load from file.</td>
+</tr>
+<tr>
+<td><code>fatal: [web-01.prod.internal]: FAILED! =&gt; {"msg": "Unexpected templating type error occurred on '{{ app_version }}': string indices must be integers"}</code></td>
+<td>Ensure variable names in the playbook match exactly those passed via <code>-e</code> (case-sensitive).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="register-and-facts">Register and Facts<a class="headerlink" href="#register-and-facts" title="Permanent link">&para;</a></h3>
 <p><code>register</code> captures a task's output as a variable for use in subsequent tasks.</p>
@@ -8325,7 +8452,7 @@ Ansible operational procedures: deploying playbooks, managing inventory sources,
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

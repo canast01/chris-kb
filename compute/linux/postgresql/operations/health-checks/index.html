@@ -8140,9 +8140,28 @@ PostgreSQL health checks: `pg_stat_replication`, `pg_stat_activity`, `pg_stat_bg
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: role "postgres" does not exist</code></strong> — Create the postgres role with <code>sudo -u postgres createuser postgres</code> or verify the role exists with <code>psql -U postgres -l</code>.
-<strong><code>psql: error: FATAL: Ident authentication failed for user "postgres"</code></strong> — Update <code>/etc/postgresql/15/main/pg_hba.conf</code> to allow local connections (change <code>ident</code> to <code>trust</code> or <code>md5</code> for the local line) and reload with <code>systemctl reload postgresql</code>.
-<strong><code>could not translate host name "localhost" to address: Name or service not known</code></strong> — Ensure PostgreSQL is listening on localhost by checking <code>listen_addresses = 'localhost'</code> in <code>postgresql.conf</code> and restart with <code>systemctl restart postgresql</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: role "postgres" does not exist</code></td>
+<td>Create the postgres role with <code>sudo -u postgres createuser postgres</code> or verify the role exists with <code>psql -U postgres -l</code>.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: Ident authentication failed for user "postgres"</code></td>
+<td>Update <code>/etc/postgresql/15/main/pg_hba.conf</code> to allow local connections (change <code>ident</code> to <code>trust</code> or <code>md5</code> for the local line) and reload with <code>systemctl reload postgresql</code>.</td>
+</tr>
+<tr>
+<td><code>could not translate host name "localhost" to address: Name or service not known</code></td>
+<td>Ensure PostgreSQL is listening on localhost by checking <code>listen_addresses = 'localhost'</code> in <code>postgresql.conf</code> and restart with <code>systemctl restart postgresql</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Pass criteria:</strong> service active, connectivity returns <code>1</code>, no sessions blocked &gt;5 min, replication lag &lt;30s, disk &lt;80%, no inactive replication slots with large lag.</p>
 <hr />
@@ -8218,9 +8237,28 @@ PostgreSQL health checks: `pg_stat_replication`, `pg_stat_activity`, `pg_stat_bg
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "&lt;host&gt;" to address: Name or service not known</code></strong> — Replace <code>&lt;host&gt;</code> with the actual database hostname or IP address.
-<strong><code>Access denied for user '&lt;user&gt;'@'&lt;host&gt;' (using password: YES)</code></strong> — Verify the username and password are correct, or check that the user has connection privileges from that host.
-<strong><code>nc: connect to &lt;db-host&gt; port 1433 (tcp) failed: Connection refused</code></strong> — Confirm the database service is running and listening on that port, or check firewall rules blocking the connection.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "&lt;host&gt;" to address: Name or service not known</code></td>
+<td>Replace <code>&lt;host&gt;</code> with the actual database hostname or IP address.</td>
+</tr>
+<tr>
+<td><code>Access denied for user '&lt;user&gt;'@'&lt;host&gt;' (using password: YES)</code></td>
+<td>Verify the username and password are correct, or check that the user has connection privileges from that host.</td>
+</tr>
+<tr>
+<td><code>nc: connect to &lt;db-host&gt; port 1433 (tcp) failed: Connection refused</code></td>
+<td>Confirm the database service is running and listening on that port, or check firewall rules blocking the connection.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="database-capacity-monitoring">Database — Capacity Monitoring<a class="headerlink" href="#database-capacity-monitoring" title="Permanent link">&para;</a></h2>
 <p><img alt="Database — Capacity Monitoring" src="../../../../../assets/compute-linux-postgresql-hc-database-capacity-monitoring.svg" /></p>
@@ -8290,8 +8328,24 @@ PostgreSQL health checks: `pg_stat_replication`, `pg_stat_activity`, `pg_stat_bg
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>du: cannot access '/var/lib/mysql/mysql-bin.*': No such file or directory</code></strong> — Verify MySQL binary logging is enabled with <code>SHOW VARIABLES LIKE 'log_bin';</code> and confirm the log_bin_basename path.
-<strong><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost'</code></strong> — Add <code>-p</code> flag to prompt for password or use a user with SUPER privilege: <code>mysql -u root -p -e "SHOW BINARY LOGS;"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>du: cannot access '/var/lib/mysql/mysql-bin.*': No such file or directory</code></td>
+<td>Verify MySQL binary logging is enabled with <code>SHOW VARIABLES LIKE 'log_bin';</code> and confirm the log_bin_basename path.</td>
+</tr>
+<tr>
+<td><code>ERROR 1045 (28000): Access denied for user 'root'@'localhost'</code></td>
+<td>Add <code>-p</code> flag to prompt for password or use a user with SUPER privilege: <code>mysql -u root -p -e "SHOW BINARY LOGS;"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Weekly snapshots — capture to track growth</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-Atc<span class="w"> </span><span class="s2">&quot;SELECT pg_database_size(&#39;mydb&#39;);&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/db-size-mydb.log
@@ -8391,9 +8445,28 @@ PostgreSQL health checks: `pg_stat_replication`, `pg_stat_activity`, `pg_stat_bg
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pg_basebackup: could not connect to server: FATAL:  no pg_hba.conf entry for replication connection from "10.45.12.8" user "replication"</code></strong> — Add a replication entry to pg_hba.conf on the primary (e.g., <code>host replication replication 10.45.12.0/24 md5</code>) and reload PostgreSQL.
-<strong><code>pg_basebackup: error: directory "/var/lib/postgresql/data-new" exists but is not empty</code></strong> — Remove or rename the target directory before running pg_basebackup, or use a different path.
-<strong><code>pg_basebackup: error: could not get exclusive lock on file "/var/lib/postgresql/data-new/backup_label"</code></strong> — Ensure the target directory is owned by the postgres user with correct permissions (755) and no other PostgreSQL process is accessing it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pg_basebackup: could not connect to server: FATAL:  no pg_hba.conf entry for replication connection from "10.45.12.8" user "replication"</code></td>
+<td>Add a replication entry to pg_hba.conf on the primary (e.g., <code>host replication replication 10.45.12.0/24 md5</code>) and reload PostgreSQL.</td>
+</tr>
+<tr>
+<td><code>pg_basebackup: error: directory "/var/lib/postgresql/data-new" exists but is not empty</code></td>
+<td>Remove or rename the target directory before running pg_basebackup, or use a different path.</td>
+</tr>
+<tr>
+<td><code>pg_basebackup: error: could not get exclusive lock on file "/var/lib/postgresql/data-new/backup_label"</code></td>
+<td>Ensure the target directory is owned by the postgres user with correct permissions (755) and no other PostgreSQL process is accessing it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
@@ -8431,7 +8504,7 @@ PostgreSQL health checks: `pg_stat_replication`, `pg_stat_activity`, `pg_stat_bg
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

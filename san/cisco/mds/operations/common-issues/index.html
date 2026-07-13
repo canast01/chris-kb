@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Cisco MDS 9000 — Common Operational Issues · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco MDS 9000 — Common Operational Issues", "url": "https://chrisanastasiadis.com/san/cisco/mds/operations/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco MDS 9000 — Common Operational Issues", "url": "https://chrisanastasiadis.com/san/cisco/mds/operations/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7676,9 +7676,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Invalid command</code></strong> — Verify the interface exists with <code>show interface brief</code> and use correct syntax like <code>show interface fc1/3</code> (not <code>show interface fc 1/3</code>).
-<strong><code>% Invalid command</code></strong> — Ensure you are in the correct CLI mode; use <code>config terminal</code> if configuration commands are needed, or exit to privileged EXEC mode with <code>exit</code>.
-<strong><code>Interface fc1/3 does not exist</code></strong> — Confirm the port number is valid for your MDS model using <code>show interface brief | grep fc</code> and check if the module is installed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Invalid command</code></td>
+<td>Verify the interface exists with <code>show interface brief</code> and use correct syntax like <code>show interface fc1/3</code> (not <code>show interface fc 1/3</code>).</td>
+</tr>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Ensure you are in the correct CLI mode; use <code>config terminal</code> if configuration commands are needed, or exit to privileged EXEC mode with <code>exit</code>.</td>
+</tr>
+<tr>
+<td><code>Interface fc1/3 does not exist</code></td>
+<td>Confirm the port number is valid for your MDS model using <code>show interface brief | grep fc</code> and check if the module is installed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Find the reason for errDisabled</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>err
@@ -7706,8 +7725,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct mode (enable mode required); use <code>enable</code> command first.
-<strong><code>% Ambiguous command: "show interface fc1/4 | include err"</code></strong> — Use pipe syntax correctly with <code>show interface fc1/4 | include "err-disabled"</code> or remove the pipe and use <code>show interface fc1/4</code> to view full details.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct mode (enable mode required); use <code>enable</code> command first.</td>
+</tr>
+<tr>
+<td><code>% Ambiguous command: "show interface fc1/4 | include err"</code></td>
+<td>Use pipe syntax correctly with <code>show interface fc1/4 | include "err-disabled"</code> or remove the pipe and use <code>show interface fc1/4</code> to view full details.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># After resolving the root cause:</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>interface<span class="w"> </span>fc1/4
@@ -7755,9 +7790,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the exact PWWN format (50:00:xx:xx:xx:xx:xx:xx) and ensure you're using the correct show command syntax for your MDS firmware version.
-<strong><code>% No matching entries found</code></strong> — Check that the host HBA has completed FLOGI login by verifying port status with <code>show interface fc&lt;x/y&gt;</code> and confirming the VSAN is assigned to that port.
-<strong><code>Zone member not found in active zoneset</code></strong> — Activate the zoneset containing both devices using <code>zoneset activate name &lt;zoneset-name&gt; vsan 10</code> and verify with <code>show zoneset active vsan 10</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the exact PWWN format (50:00:xx:xx:xx:xx:xx:xx) and ensure you're using the correct show command syntax for your MDS firmware version.</td>
+</tr>
+<tr>
+<td><code>% No matching entries found</code></td>
+<td>Check that the host HBA has completed FLOGI login by verifying port status with <code>show interface fc&lt;x/y&gt;</code> and confirming the VSAN is assigned to that port.</td>
+</tr>
+<tr>
+<td><code>Zone member not found in active zoneset</code></td>
+<td>Activate the zoneset containing both devices using <code>zoneset activate name &lt;zoneset-name&gt; vsan 10</code> and verify with <code>show zoneset active vsan 10</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check zone status for errors</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7789,9 +7843,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the zoneset name exists with <code>show zoneset name &lt;zoneset-name&gt; vsan 10</code> before activation.
-<strong><code>% Zoning session in progress. Commit required.</code></strong> — Run <code>zone commit vsan 10</code> to commit pending changes before attempting activation.
-<strong><code>% VSAN 10 does not exist</code></strong> — Confirm the VSAN is created and active with <code>show vsan</code> before executing zone commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the zoneset name exists with <code>show zoneset name &lt;zoneset-name&gt; vsan 10</code> before activation.</td>
+</tr>
+<tr>
+<td><code>% Zoning session in progress. Commit required.</code></td>
+<td>Run <code>zone commit vsan 10</code> to commit pending changes before attempting activation.</td>
+</tr>
+<tr>
+<td><code>% VSAN 10 does not exist</code></td>
+<td>Confirm the VSAN is created and active with <code>show vsan</code> before executing zone commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify current alias-to-WWPN mapping</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>show<span class="w"> </span>device-alias<span class="w"> </span>database<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;alias-name&gt;
@@ -7817,8 +7890,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (enter <code>config t</code> first if needed).
-<strong><code>% Zoneset activation failed: database commit in progress</code></strong> — Wait 30 seconds for the previous commit to complete, then retry the zoneset activation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct configuration mode (enter <code>config t</code> first if needed).</td>
+</tr>
+<tr>
+<td><code>% Zoneset activation failed: database commit in progress</code></td>
+<td>Wait 30 seconds for the previous commit to complete, then retry the zoneset activation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List all zones in VSAN</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>show<span class="w"> </span>zone<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -7858,9 +7947,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: Zone &lt;zone-name&gt; does not exist in VSAN 10</code></strong> — Verify the exact zone name with <code>show zone vsan 10</code> and ensure you're in the correct VSAN.
-<strong><code>ERROR: Member device-alias &lt;old-alias&gt; not found in zone &lt;zone-name&gt;</code></strong> — Confirm the device-alias exists in the zone using <code>show zone member</code> before attempting removal.
-<strong><code>ERROR: Zoneset &lt;zoneset-name&gt; is currently active and cannot be modified</code></strong> — Deactivate the zoneset first with <code>no zoneset activate name &lt;zoneset-name&gt; vsan 10</code> before making changes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: Zone &lt;zone-name&gt; does not exist in VSAN 10</code></td>
+<td>Verify the exact zone name with <code>show zone vsan 10</code> and ensure you're in the correct VSAN.</td>
+</tr>
+<tr>
+<td><code>ERROR: Member device-alias &lt;old-alias&gt; not found in zone &lt;zone-name&gt;</code></td>
+<td>Confirm the device-alias exists in the zone using <code>show zone member</code> before attempting removal.</td>
+</tr>
+<tr>
+<td><code>ERROR: Zoneset &lt;zoneset-name&gt; is currently active and cannot be modified</code></td>
+<td>Deactivate the zoneset first with <code>no zoneset activate name &lt;zoneset-name&gt; vsan 10</code> before making changes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check ISL port detail</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc2/1
@@ -7922,8 +8030,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct mode (use <code>config terminal</code> for configuration commands, or ensure you are in exec mode for show commands).
-<strong><code>% Port fc2/1 does not exist</code></strong> — Confirm the port number is valid for your MDS model and that the module is installed and online using <code>show module</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct mode (use <code>config terminal</code> for configuration commands, or ensure you are in exec mode for show commands).</td>
+</tr>
+<tr>
+<td><code>% Port fc2/1 does not exist</code></td>
+<td>Confirm the port number is valid for your MDS model and that the module is installed and online using <code>show module</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Confirm rapid flap events in log</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>fc1/6
@@ -7970,9 +8094,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>show: command not found</code></strong> — Prepend the command with <code>conf t</code> context or use the full <code>show</code> syntax; if in bash, use <code>ssh admin@switch "show logging last 100 | grep fc1/6"</code> to run on the MDS device.
-<strong><code>Interface fc1/6 is administratively down</code></strong> — Enable the interface with <code>no shutdown</code> in interface configuration mode before checking counters.
-<strong><code>Current Rx Power: -24.3 dBm</code></strong> — Replace the SFP transceiver as optical power is below the -20 dBm minimum threshold for reliable operation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>show: command not found</code></td>
+<td>Prepend the command with <code>conf t</code> context or use the full <code>show</code> syntax; if in bash, use <code>ssh admin@switch "show logging last 100 | grep fc1/6"</code> to run on the MDS device.</td>
+</tr>
+<tr>
+<td><code>Interface fc1/6 is administratively down</code></td>
+<td>Enable the interface with <code>no shutdown</code> in interface configuration mode before checking counters.</td>
+</tr>
+<tr>
+<td><code>Current Rx Power: -24.3 dBm</code></td>
+<td>Replace the SFP transceiver as optical power is below the -20 dBm minimum threshold for reliable operation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>interface<span class="w"> </span>fc1/6
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span>shutdown
@@ -7981,8 +8124,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Ensure you are in the correct configuration mode by entering <code>config t</code> before issuing interface commands.
-<strong><code>% Interface does not exist</code></strong> — Verify the interface exists on your MDS switch using <code>show interface brief</code> before attempting to configure it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Ensure you are in the correct configuration mode by entering <code>config t</code> before issuing interface commands.</td>
+</tr>
+<tr>
+<td><code>% Interface does not exist</code></td>
+<td>Verify the interface exists on your MDS switch using <code>show interface brief</code> before attempting to configure it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Check overall CPU</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>show<span class="w"> </span>system<span class="w"> </span>resources
@@ -8021,9 +8180,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the exact command syntax for your MDS firmware version using <code>show ?</code> to list available commands.
-<strong><code>% Incomplete command</code></strong> — Add the full command path; try <code>show system resources</code> instead of partial command names.
-<strong><code>% Permission denied</code></strong> — Ensure your user role has "network-admin" or equivalent privileges; check with <code>show role name &lt;your-role&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the exact command syntax for your MDS firmware version using <code>show ?</code> to list available commands.</td>
+</tr>
+<tr>
+<td><code>% Incomplete command</code></td>
+<td>Add the full command path; try <code>show system resources</code> instead of partial command names.</td>
+</tr>
+<tr>
+<td><code>% Permission denied</code></td>
+<td>Ensure your user role has "network-admin" or equivalent privileges; check with <code>show role name &lt;your-role&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>domain-list<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
@@ -8044,8 +8222,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify the VSAN exists with <code>show vsan</code> and confirm you are in the correct mode (use <code>config t</code> if needed).
-<strong><code>VSAN 10 does not exist</code></strong> — Create the VSAN first using <code>vsan 10</code> in config mode, then enable it with <code>no shutdown</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the VSAN exists with <code>show vsan</code> and confirm you are in the correct mode (use <code>config t</code> if needed).</td>
+</tr>
+<tr>
+<td><code>VSAN 10 does not exist</code></td>
+<td>Create the VSAN first using <code>vsan 10</code> in config mode, then enable it with <code>no shutdown</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>fcdomain<span class="w"> </span>domain<span class="w"> </span><span class="m">3</span><span class="w"> </span>static<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># Then bring up the ISL</span>
@@ -8060,8 +8254,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (use <code>config t</code> first) and that the syntax matches your MDS firmware version.
-<strong><code>% VSAN 10 does not exist</code></strong> — Create the VSAN first using <code>vsan 10</code> command before assigning it to the fcdomain.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct configuration mode (use <code>config t</code> first) and that the syntax matches your MDS firmware version.</td>
+</tr>
+<tr>
+<td><code>% VSAN 10 does not exist</code></td>
+<td>Create the VSAN first using <code>vsan 10</code> command before assigning it to the fcdomain.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Review install status</span>
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>show<span class="w"> </span>install<span class="w"> </span>all<span class="w"> </span>status
@@ -8081,8 +8291,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct mode (use <code>config terminal</code> if needed) and that the MDS switch supports these install commands.
-<strong><code>% Feature not enabled: install</code></strong> — Enable the install feature with <code>feature install</code> in configuration mode before running install status commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct mode (use <code>config terminal</code> if needed) and that the MDS switch supports these install commands.</td>
+</tr>
+<tr>
+<td><code>% Feature not enabled: install</code></td>
+<td>Enable the install feature with <code>feature install</code> in configuration mode before running install status commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>install<span class="w"> </span>all<span class="w"> </span>nxos<span class="w"> </span>bootflash:&lt;image-name&gt;
 </code></pre></div>
@@ -8097,9 +8323,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Image file not found at bootflash:&lt;image-name&gt;</code></strong> — Verify the image filename exists in bootflash using <code>dir bootflash:</code> and correct any typos in the image name.
-<strong><code>Error: Insufficient space in bootflash. Required: 2048 MB, Available: 512 MB</code></strong> — Delete old images with <code>delete bootflash:&lt;old-image&gt;</code> or add additional storage before retrying the install command.
-<strong><code>Error: Image verification failed - corrupted or invalid image</code></strong> — Re-copy the image file to bootflash using SCP or SFTP and verify the checksum matches the release notes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Image file not found at bootflash:&lt;image-name&gt;</code></td>
+<td>Verify the image filename exists in bootflash using <code>dir bootflash:</code> and correct any typos in the image name.</td>
+</tr>
+<tr>
+<td><code>Error: Insufficient space in bootflash. Required: 2048 MB, Available: 512 MB</code></td>
+<td>Delete old images with <code>delete bootflash:&lt;old-image&gt;</code> or add additional storage before retrying the install command.</td>
+</tr>
+<tr>
+<td><code>Error: Image verification failed - corrupted or invalid image</code></td>
+<td>Re-copy the image file to bootflash using SCP or SFTP and verify the checksum matches the release notes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Always save after any change</span>
 <a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
@@ -8117,8 +8362,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct configuration mode (enable mode for <code>copy</code> command); use <code>enable</code> first if needed.
-<strong><code>% Destination filename [startup-config]?</code></strong> — Press Enter to confirm the default destination or specify an alternative filename; the command requires explicit confirmation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct configuration mode (enable mode for <code>copy</code> command); use <code>enable</code> first if needed.</td>
+</tr>
+<tr>
+<td><code>% Destination filename [startup-config]?</code></td>
+<td>Press Enter to confirm the default destination or specify an alternative filename; the command requires explicit confirmation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>show<span class="w"> </span>startup-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 <a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1"># Confirm timestamp matches the last intended save</span>
@@ -8147,8 +8408,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Invalid command</code></strong> — Verify you are in the correct mode (exec or config) and that the <code>show</code> command is supported on this MDS version.
-<strong><code>% Incomplete command</code></strong> — Ensure the pipe character and <code>head</code> command are properly supported; some MDS versions require <code>show startup-config | grep</code> instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify you are in the correct mode (exec or config) and that the <code>show</code> command is supported on this MDS version.</td>
+</tr>
+<tr>
+<td><code>% Incomplete command</code></td>
+<td>Ensure the pipe character and <code>head</code> command are properly supported; some MDS versions require <code>show startup-config | grep</code> instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8198,7 +8475,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

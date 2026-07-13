@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="SRDF/A — Scripts · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "SRDF/A — Scripts", "url": "https://chrisanastasiadis.com/storage/products/dell/srdf-a/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "SRDF/A — Scripts", "url": "https://chrisanastasiadis.com/storage/products/dell/srdf-a/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-06"}</script>
   
 
   </head>
@@ -9092,9 +9092,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: symrdf command failed: symrdf: Command not found</code></strong> — Ensure EMC Solutions Enabler is installed and <code>symrdf</code> is in PATH, or source the appropriate environment setup script (typically <code>/opt/emc/SYMCLI/bin/setenv.sh</code>).
-<strong><code>SID (Symmetrix serial) is required</code></strong> — Export the SID variable before running the script: <code>export SID=000296802151 RDF_GROUP=3 &amp;&amp; ./srdf-cycle-time-monitor.sh</code>.
-<strong><code>bc: command not found</code></strong> — Install <code>bc</code> package (<code>apt-get install bc</code> on Debian/Ubuntu or <code>yum install bc</code> on RHEL/CentOS) for floating-point threshold comparisons.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: symrdf command failed: symrdf: Command not found</code></td>
+<td>Ensure EMC Solutions Enabler is installed and <code>symrdf</code> is in PATH, or source the appropriate environment setup script (typically <code>/opt/emc/SYMCLI/bin/setenv.sh</code>).</td>
+</tr>
+<tr>
+<td><code>SID (Symmetrix serial) is required</code></td>
+<td>Export the SID variable before running the script: <code>export SID=000296802151 RDF_GROUP=3 &amp;&amp; ./srdf-cycle-time-monitor.sh</code>.</td>
+</tr>
+<tr>
+<td><code>bc: command not found</code></td>
+<td>Install <code>bc</code> package (<code>apt-get install bc</code> on Debian/Ubuntu or <code>yum install bc</code> on RHEL/CentOS) for floating-point threshold comparisons.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/usr/bin/env bash</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># srdf-resync-after-dr-test.sh</span>
@@ -9219,9 +9238,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>symrdf: Error: RDF group 3 not found for SID PROD01</code></strong> — Verify the RDF_GROUP value matches the configured group number with <code>symrdf query -sid &lt;SID&gt;</code> and re-run with correct RDF_GROUP parameter.
-<strong><code>WARNING: Sync timed out after 3600s</code></strong> — Increase SYNC_TIMEOUT environment variable (e.g., <code>SYNC_TIMEOUT=7200 ./srdf-resync-after-dr-test.sh</code>) or investigate replication delays on the array with <code>symrdf query -sid &lt;SID&gt; -rdfg &lt;RDF_GROUP&gt; -detail</code>.
-<strong><code>Aborted by operator. Please ensure DR hosts are off R2 volumes before resyncing.</code></strong> — Confirm that all I/O has stopped and R2 volumes are unmounted on DR hosts, then re-run the script and respond with</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symrdf: Error: RDF group 3 not found for SID PROD01</code></td>
+<td>Verify the RDF_GROUP value matches the configured group number with <code>symrdf query -sid &lt;SID&gt;</code> and re-run with correct RDF_GROUP parameter.</td>
+</tr>
+<tr>
+<td><code>WARNING: Sync timed out after 3600s</code></td>
+<td>Increase SYNC_TIMEOUT environment variable (e.g., <code>SYNC_TIMEOUT=7200 ./srdf-resync-after-dr-test.sh</code>) or investigate replication delays on the array with <code>symrdf query -sid &lt;SID&gt; -rdfg &lt;RDF_GROUP&gt; -detail</code>.</td>
+</tr>
+<tr>
+<td><code>Aborted by operator. Please ensure DR hosts are off R2 volumes before resyncing.</code></td>
+<td>Confirm that all I/O has stopped and R2 volumes are unmounted on DR hosts, then re-run the script and respond with</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>srdf-resync-after-dr-test.sh
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">SID</span><span class="o">=</span><span class="m">000123456789</span><span class="w"> </span><span class="nv">RDF_GROUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">CG_NAME</span><span class="o">=</span>MyAppCG<span class="w"> </span>./srdf-resync-after-dr-test.sh
@@ -9420,8 +9458,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>'srdf-a-cycle-check.bat' is not recognized as an internal or external command</code></strong> — Verify the batch file exists in the current directory or add its full path (e.g., <code>C:\Program Files\Dell\SRDF\srdf-a-cycle-check.bat</code>).
-<strong><code>Access Denied</code></strong> — Run the command prompt as Administrator or check that your user account has execute permissions on the batch file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>'srdf-a-cycle-check.bat' is not recognized as an internal or external command</code></td>
+<td>Verify the batch file exists in the current directory or add its full path (e.g., <code>C:\Program Files\Dell\SRDF\srdf-a-cycle-check.bat</code>).</td>
+</tr>
+<tr>
+<td><code>Access Denied</code></td>
+<td>Run the command prompt as Administrator or check that your user account has execute permissions on the batch file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># srdf_daily_check.sh</span>
@@ -9471,9 +9525,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMCLI_HOST is required</code></strong> — Ensure the environment variable is set before running the script: <code>export SYMCLI_HOST=192.168.1.50</code>.
-<strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH key is installed on the SYMCLI host for the specified user and that <code>SSH_USER</code> matches the authorized account.
-<strong><code>symrdf: command not found</code></strong> — Confirm <code>SYMCLI_PATH</code> points to the correct installation directory, or update it: <code>export SYMCLI_PATH=/opt/emc/SYMCLI/bin</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMCLI_HOST is required</code></td>
+<td>Ensure the environment variable is set before running the script: <code>export SYMCLI_HOST=192.168.1.50</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify SSH key is installed on the SYMCLI host for the specified user and that <code>SSH_USER</code> matches the authorized account.</td>
+</tr>
+<tr>
+<td><code>symrdf: command not found</code></td>
+<td>Confirm <code>SYMCLI_PATH</code> points to the correct installation directory, or update it: <code>export SYMCLI_PATH=/opt/emc/SYMCLI/bin</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># srdf_triage.sh</span>
@@ -9546,9 +9619,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bash: /usr/symcli/bin/symrdf: No such file or directory</code></strong> — Verify SYMCLI_PATH is correct and SymCLI is installed on the target host, or override with <code>SYMCLI_PATH=/opt/emc/symcli/bin ./srdf_triage.sh</code>.
-<strong><code>Permission denied (publickey,gssapi-keyauth)</code></strong> — Ensure SSH key-based authentication is configured for the SSH_USER account on SYMCLI_HOST, or add <code>-i /path/to/key</code> to SSH_OPTS.
-<strong><code>symrdf: Invalid RDF Group number</code></strong> — Confirm the RDF_GROUP value exists on the array by running <code>symrdf list -sid $SID</code> manually to list available groups.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bash: /usr/symcli/bin/symrdf: No such file or directory</code></td>
+<td>Verify SYMCLI_PATH is correct and SymCLI is installed on the target host, or override with <code>SYMCLI_PATH=/opt/emc/symcli/bin ./srdf_triage.sh</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,gssapi-keyauth)</code></td>
+<td>Ensure SSH key-based authentication is configured for the SSH_USER account on SYMCLI_HOST, or add <code>-i /path/to/key</code> to SSH_OPTS.</td>
+</tr>
+<tr>
+<td><code>symrdf: Invalid RDF Group number</code></td>
+<td>Confirm the RDF_GROUP value exists on the array by running <code>symrdf list -sid $SID</code> manually to list available groups.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># srdf_precheck.sh</span>
@@ -9605,9 +9697,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMCLI_HOST is required</code></strong> — Set the SYMCLI_HOST environment variable before running the script: <code>export SYMCLI_HOST=192.168.1.50</code>
-<strong><code>Permission denied (publickey,password)</code></strong> — Ensure SSH key-based authentication is configured for the SSH_USER account on the SYMCLI_HOST, or add <code>-o PubkeyAuthentication=yes</code> to SSH_OPTS.
-<strong><code>symrdf: command not found</code></strong> — Verify SYMCLI_PATH points to the correct Symmetrix CLI installation directory; check with <code>ssh $SSH_USER@$SYMCLI_HOST "which symrdf"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMCLI_HOST is required</code></td>
+<td>Set the SYMCLI_HOST environment variable before running the script: <code>export SYMCLI_HOST=192.168.1.50</code></td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Ensure SSH key-based authentication is configured for the SSH_USER account on the SYMCLI_HOST, or add <code>-o PubkeyAuthentication=yes</code> to SSH_OPTS.</td>
+</tr>
+<tr>
+<td><code>symrdf: command not found</code></td>
+<td>Verify SYMCLI_PATH points to the correct Symmetrix CLI installation directory; check with <code>ssh $SSH_USER@$SYMCLI_HOST "which symrdf"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># srdf_postcheck.sh</span>
@@ -9657,9 +9768,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>SYMCLI_HOST is required</code></strong> — Export the SYMCLI_HOST environment variable before running the script: <code>export SYMCLI_HOST=192.168.1.50</code>
-<strong><code>Permission denied (publickey,gssapi-keyexec)</code></strong> — Ensure SSH key-based authentication is configured for the SSH_USER account on the SYMCLI host, or add the public key to <code>~/.ssh/authorized_keys</code>.
-<strong><code>symrdf: command not found</code></strong> — Verify SYMCLI_PATH points to the correct installation directory by running <code>ssh $SSH_USER@$SYMCLI_HOST "which symrdf"</code> to confirm the actual path.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SYMCLI_HOST is required</code></td>
+<td>Export the SYMCLI_HOST environment variable before running the script: <code>export SYMCLI_HOST=192.168.1.50</code></td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,gssapi-keyexec)</code></td>
+<td>Ensure SSH key-based authentication is configured for the SSH_USER account on the SYMCLI host, or add the public key to <code>~/.ssh/authorized_keys</code>.</td>
+</tr>
+<tr>
+<td><code>symrdf: command not found</code></td>
+<td>Verify SYMCLI_PATH points to the correct installation directory by running <code>ssh $SSH_USER@$SYMCLI_HOST "which symrdf"</code> to confirm the actual path.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="c1"># srdf_health_check.sh</span>
@@ -9696,9 +9826,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: Could not resolve hostname &lt;ip&gt;: Name or service not known</code></strong> — Verify SYMCLI_HOST is set to a valid IP or hostname and is reachable from the monitoring host.
-<strong><code>Permission denied (publickey,gssapi-with-mic)</code></strong> — Ensure SSH_USER has passwordless key-based authentication configured on SYMCLI_HOST and the key is in ~/.ssh/authorized_keys.
-<strong><code>symrdf: Command not found</code></strong> — Confirm SYMCLI_PATH points to the correct installation directory (typically /usr/symcli/bin on Symmetrix hosts) and symcli packages are installed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: Could not resolve hostname &lt;ip&gt;: Name or service not known</code></td>
+<td>Verify SYMCLI_HOST is set to a valid IP or hostname and is reachable from the monitoring host.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,gssapi-with-mic)</code></td>
+<td>Ensure SSH_USER has passwordless key-based authentication configured on SYMCLI_HOST and the key is in ~/.ssh/authorized_keys.</td>
+</tr>
+<tr>
+<td><code>symrdf: Command not found</code></td>
+<td>Confirm SYMCLI_PATH points to the correct installation directory (typically /usr/symcli/bin on Symmetrix hosts) and symcli packages are installed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9744,7 +9893,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

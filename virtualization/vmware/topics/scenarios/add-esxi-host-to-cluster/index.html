@@ -9455,8 +9455,24 @@ are difficult to diagnose after the fact.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>** server can't find esxi-new-host.domain.local: NXDOMAIN</code></strong> — Verify the hostname is correctly registered in DNS and check that the jump host can reach the DNS server (ping 10.0.1.53).
-<strong><code>** server can't find 45.100.168.192.in-addr.arpa: NXDOMAIN</code></strong> — Confirm the reverse DNS zone is configured on the DNS server and the PTR record exists for the ESXi management IP address.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>** server can't find esxi-new-host.domain.local: NXDOMAIN</code></td>
+<td>Verify the hostname is correctly registered in DNS and check that the jump host can reach the DNS server (ping 10.0.1.53).</td>
+</tr>
+<tr>
+<td><code>** server can't find 45.100.168.192.in-addr.arpa: NXDOMAIN</code></td>
+<td>Confirm the reverse DNS zone is configured on the DNS server and the PTR record exists for the ESXi management IP address.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected: both lookups return the correct name/IP. Fix DNS if either fails — do not use <code>/etc/hosts</code> workarounds.</p>
 <hr />
@@ -9476,9 +9492,28 @@ are difficult to diagnose after the fact.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unknown option --server</code></strong> — Use <code>esxcli system ntp set --servers=ntp1.domain.local,ntp2.domain.local</code> (comma-separated in a single argument) on some ESXi versions instead of repeated <code>--server</code> flags.
-<strong><code>Error: Unable to resolve ntp1.domain.local</code></strong> — Verify DNS resolution is working on the ESXi host and the NTP server hostnames are resolvable via <code>nslookup ntp1.domain.local</code>.
-<strong><code>reach   delay   offset  jitter</code> (no peer entries)</strong> — Wait 2-3 minutes for NTP to synchronize and re-run <code>ntpq -p</code>, or check firewall rules allow UDP port 123 outbound to the NTP servers.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unknown option --server</code></td>
+<td>Use <code>esxcli system ntp set --servers=ntp1.domain.local,ntp2.domain.local</code> (comma-separated in a single argument) on some ESXi versions instead of repeated <code>--server</code> flags.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to resolve ntp1.domain.local</code></td>
+<td>Verify DNS resolution is working on the ESXi host and the NTP server hostnames are resolvable via <code>nslookup ntp1.domain.local</code>.</td>
+</tr>
+<tr>
+<td><code>reach   delay   offset  jitter</code> (no peer entries)<code>| Wait 2-3 minutes for NTP to synchronize and re-run</code>ntpq -p`, or check firewall rules allow UDP port 123 outbound to the NTP servers.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: <code>*</code> or <code>+</code> next to a server in the <code>ntpq -p</code> output, indicating an active sync source.</p>
 <hr />
@@ -9515,9 +9550,28 @@ are difficult to diagnose after the fact.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: The object already exists.</code></strong> — Verify the VMkernel interface does not already exist with <code>esxcli network ip interface list</code> before adding.
-<strong><code>Error: The portgroup does not exist.</code></strong> — Ensure the port group "vMotion" or "vSAN" is created on the vSwitch before running the interface add command.
-<strong><code>100% packet loss</code></strong> — Confirm the target vSAN host's vmk2 IP is reachable and that jumbo frames (MTU 9000) are enabled on both the physical switch and vSAN port group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: The object already exists.</code></td>
+<td>Verify the VMkernel interface does not already exist with <code>esxcli network ip interface list</code> before adding.</td>
+</tr>
+<tr>
+<td><code>Error: The portgroup does not exist.</code></td>
+<td>Ensure the port group "vMotion" or "vSAN" is created on the vSwitch before running the interface add command.</td>
+</tr>
+<tr>
+<td><code>100% packet loss</code></td>
+<td>Confirm the target vSAN host's vmk2 IP is reachable and that jumbo frames (MTU 9000) are enabled on both the physical switch and vSAN port group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected: vmkping returns 0% packet loss. If it fails, check MTU on the switch port and VDS portgroup — vSAN requires end-to-end MTU 9000.</p>
 <hr />
@@ -9543,8 +9597,24 @@ are difficult to diagnose after the fact.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxcli: command not found</code></strong> — Run this command directly on an ESXi host via SSH or vSphere CLI, not from a local workstation.
-<strong><code>Error: Could not connect to the vSAN cluster</code></strong> — Verify the host is part of a vSAN cluster and vSAN is enabled on the cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxcli: command not found</code></td>
+<td>Run this command directly on an ESXi host via SSH or vSphere CLI, not from a local workstation.</td>
+</tr>
+<tr>
+<td><code>Error: Could not connect to the vSAN cluster</code></td>
+<td>Verify the host is part of a vSAN cluster and vSAN is enabled on the cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected: all disks shown as claimed and healthy in the disk group. If EZ-Claim is not enabled, manually select disks, click <strong>Claim Disks</strong>, and assign cache and capacity roles.</p>
 <hr />
@@ -9568,8 +9638,24 @@ are difficult to diagnose after the fact.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unknown command: disable_ssh</code></strong> — Verify the correct vSphere API command syntax; use <code>vim-cmd hostsvc/enable_ssh</code> or <code>vim-cmd hostsvc/query_config</code> to check SSH status instead.
-<strong><code>vim-cmd: command not found</code></strong> — Ensure you are running this command directly on the ESXi host (not a vCenter server) where vim-cmd is available in the PATH.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unknown command: disable_ssh</code></td>
+<td>Verify the correct vSphere API command syntax; use <code>vim-cmd hostsvc/enable_ssh</code> or <code>vim-cmd hostsvc/query_config</code> to check SSH status instead.</td>
+</tr>
+<tr>
+<td><code>vim-cmd: command not found</code></td>
+<td>Ensure you are running this command directly on the ESXi host (not a vCenter server) where vim-cmd is available in the PATH.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Expected: SSH service stops. Set startup policy to <strong>Start and stop manually</strong> (vCenter → Host → <strong>Configure</strong> → <strong>Services</strong> → <strong>SSH</strong>) to prevent it restarting on reboot.</p>
 <hr />
@@ -9736,7 +9822,7 @@ are difficult to diagnose after the fact.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

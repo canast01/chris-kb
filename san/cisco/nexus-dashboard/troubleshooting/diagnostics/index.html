@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Cisco Nexus Dashboard — Troubleshooting Diagnostics · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco Nexus Dashboard — Troubleshooting Diagnostics", "url": "https://chrisanastasiadis.com/san/cisco/nexus-dashboard/troubleshooting/diagnostics/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco Nexus Dashboard — Troubleshooting Diagnostics", "url": "https://chrisanastasiadis.com/san/cisco/nexus-dashboard/troubleshooting/diagnostics/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7627,9 +7627,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: metrics not available yet</code></strong> — Wait 1–2 minutes after cluster startup for metrics-server to initialize, then retry the kubectl top command.
-<strong><code>error: unable to connect to the server: dial tcp: lookup nexus-dashboard-node-1: no such host</code></strong> — Verify DNS resolution or use the node's IP address directly instead of hostname in SSH commands.
-<strong><code>Filesystem /dev/sdb1 is 76% full</code></strong> — Archive or delete old logs and snapshots from <code>/data/</code> directory, or expand the volume if persistent growth is expected.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: metrics not available yet</code></td>
+<td>Wait 1–2 minutes after cluster startup for metrics-server to initialize, then retry the kubectl top command.</td>
+</tr>
+<tr>
+<td><code>error: unable to connect to the server: dial tcp: lookup nexus-dashboard-node-1: no such host</code></td>
+<td>Verify DNS resolution or use the node's IP address directly instead of hostname in SSH commands.</td>
+</tr>
+<tr>
+<td><code>Filesystem /dev/sdb1 is 76% full</code></td>
+<td>Archive or delete old logs and snapshots from <code>/data/</code> directory, or expand the volume if persistent growth is expected.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Recent cluster events (shows pod failures, scheduling issues, etc.)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
@@ -7657,8 +7676,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "events"</code></strong> — Verify kubectl version is 1.19+ and the API server is responding with <code>kubectl cluster-info</code>.
-<strong><code>error: namespace "ndfc" not found</code></strong> — Confirm the ndfc namespace exists with <code>kubectl get namespaces | grep ndfc</code> and create it if missing with `</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "events"</code></td>
+<td>Verify kubectl version is 1.19+ and the API server is responding with <code>kubectl cluster-info</code>.</td>
+</tr>
+<tr>
+<td><code>error: namespace "ndfc" not found</code></td>
+<td>Confirm the ndfc namespace exists with <code>kubectl get namespaces | grep ndfc</code> and create it if missing with `</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check etcd cluster health</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">ETCDCTL_API</span><span class="o">=</span><span class="m">3</span><span class="w"> </span>etcdctl<span class="w"> </span><span class="se">\</span>
@@ -7688,8 +7723,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: context deadline exceeded</code></strong> — Increase the timeout with <code>--command-timeout=10s</code> or verify etcd service is running with <code>systemctl status etcd</code>.
-<strong><code>Error: x509: certificate signed by unknown authority</code></strong> — Verify certificate paths are correct and CA certificate matches the etcd server's signing CA with <code>openssl verify -CAfile /etc/kubernetes/pki/etcd/ca.crt /etc/kubernetes/pki/etcd/server.crt</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: context deadline exceeded</code></td>
+<td>Increase the timeout with <code>--command-timeout=10s</code> or verify etcd service is running with <code>systemctl status etcd</code>.</td>
+</tr>
+<tr>
+<td><code>Error: x509: certificate signed by unknown authority</code></td>
+<td>Verify certificate paths are correct and CA certificate matches the etcd server's signing CA with <code>openssl verify -CAfile /etc/kubernetes/pki/etcd/ca.crt /etc/kubernetes/pki/etcd/server.crt</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check discovery manager logs for a specific switch</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span>deployment/ndfc-discovery-manager<span class="w"> </span>--tail<span class="o">=</span><span class="m">500</span><span class="w"> </span><span class="se">\</span>
@@ -7735,9 +7786,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl commands to skip certificate verification in lab/test environments, or import the ND certificate into your system trust store.
-<strong><code>jq: command not found</code></strong> — Install jq with <code>apt-get install jq</code> or <code>yum install jq</code>, or use the provided <code>python3 -c</code> JSON parser instead.
-<strong><code>SNMP request timed out</code></strong> — Verify the switch IP is reachable with <code>ping &lt;switch-ip&gt;</code>, confirm SNMP v3 credentials match the switch configuration, and check that the ndfc_poll user exists on the target device.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to curl commands to skip certificate verification in lab/test environments, or import the ND certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install jq with <code>apt-get install jq</code> or <code>yum install jq</code>, or use the provided <code>python3 -c</code> JSON parser instead.</td>
+</tr>
+<tr>
+<td><code>SNMP request timed out</code></td>
+<td>Verify the switch IP is reachable with <code>ping &lt;switch-ip&gt;</code>, confirm SNMP v3 credentials match the switch configuration, and check that the ndfc_poll user exists on the target device.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check NDFC zone manager logs</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span>deployment/ndfc-zone-manager<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span><span class="se">\</span>
@@ -7774,9 +7844,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to decode an event from the watch stream: unexpected EOF</code></strong> — Restart the ndfc-zone-manager pod with <code>kubectl rollout restart deployment/ndfc-zone-manager -n ndfc</code>.
-<strong><code>Connection refused</code> or <code>SSH connection refused</code></strong> — Verify switch IP reachability and SSH credentials with <code>ssh -v admin@&lt;switch-ip&gt;</code> and check firewall rules.
-<strong><code>Zone merge conflict detected</code> or <code>Member count mismatch</code></strong> — Manually trigger a zone merge resync from NDFC UI or run <code>zone merge-failure clear</code> on the affected switch.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to decode an event from the watch stream: unexpected EOF</code></td>
+<td>Restart the ndfc-zone-manager pod with <code>kubectl rollout restart deployment/ndfc-zone-manager -n ndfc</code>.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code> or <code>SSH connection refused</code></td>
+<td>Verify switch IP reachability and SSH credentials with <code>ssh -v admin@&lt;switch-ip&gt;</code> and check firewall rules.</td>
+</tr>
+<tr>
+<td><code>Zone merge conflict detected</code> or <code>Member count mismatch</code></td>
+<td>Manually trigger a zone merge resync from NDFC UI or run <code>zone merge-failure clear</code> on the affected switch.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Connect to NDFC database (PostgreSQL)</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span>deployment/ndfc-server<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
@@ -7826,9 +7915,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "localhost" to address: Name or service not known</code></strong> — Ensure the ndfc-server pod is running with <code>kubectl get pods -n ndfc</code> and verify network connectivity within the cluster.
-<strong><code>FATAL: role "postgres" does not exist</code></strong> — Check that the PostgreSQL user exists by connecting with the correct credentials or use <code>kubectl exec</code> to verify the pod's database initialization logs.
-<strong><code>ERROR: database "ndfc" does not exist</code></strong> — Confirm the ndfc database was created during deployment by running the first command to list all databases, or check pod startup logs for initialization errors.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "localhost" to address: Name or service not known</code></td>
+<td>Ensure the ndfc-server pod is running with <code>kubectl get pods -n ndfc</code> and verify network connectivity within the cluster.</td>
+</tr>
+<tr>
+<td><code>FATAL: role "postgres" does not exist</code></td>
+<td>Check that the PostgreSQL user exists by connecting with the correct credentials or use <code>kubectl exec</code> to verify the pod's database initialization logs.</td>
+</tr>
+<tr>
+<td><code>ERROR: database "ndfc" does not exist</code></td>
+<td>Confirm the ndfc database was created during deployment by running the first command to list all databases, or check pod startup logs for initialization errors.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check NDI flow collector pod</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>collector
@@ -7874,9 +7982,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to upgrade connection: container not found ("ndi-elasticsearch")</code></strong> — Verify the Elasticsearch pod is running with <code>kubectl get pods -n ndi | grep elasticsearch</code> and check pod logs for crash reasons.
-<strong><code>curl: (7) Failed to connect to localhost port 9200: Connection refused</code></strong> — Ensure the Elasticsearch service is listening by checking if the pod is in Running state and not in CrashLoopBackOff.
-<strong><code>{"error":{"type":"cluster_block_exception","reason":"index [.ds-ndi-flow-2024.01.15-000042] blocked for writes"}}</code></strong> — Reduce disk usage below 85% watermark by deleting old indices with <code>curl -X DELETE http://localhost:9200/.ds-ndi-flow-2024.01.01*</code> or expanding storage.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to upgrade connection: container not found ("ndi-elasticsearch")</code></td>
+<td>Verify the Elasticsearch pod is running with <code>kubectl get pods -n ndi | grep elasticsearch</code> and check pod logs for crash reasons.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to localhost port 9200: Connection refused</code></td>
+<td>Ensure the Elasticsearch service is listening by checking if the pod is in Running state and not in CrashLoopBackOff.</td>
+</tr>
+<tr>
+<td><code>{"error":{"type":"cluster_block_exception","reason":"index [.ds-ndi-flow-2024.01.15-000042] blocked for writes"}}</code></td>
+<td>Reduce disk usage below 85% watermark by deleting old indices with <code>curl -X DELETE http://localhost:9200/.ds-ndi-flow-2024.01.01*</code> or expanding storage.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check anomaly engine logs</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-anomaly-engine<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span>
@@ -7907,9 +8034,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to upgrade connection: container not found</code></strong> — Verify the ndi-anomaly-engine pod is running with <code>kubectl get pods -n ndi</code> and check pod logs for crash reasons.
-<strong><code>curl: (7) Failed to connect to nd-license-service port 80: Connection refused</code></strong> — Ensure the nd-license-service is deployed and accessible by running <code>kubectl get svc -n ndi</code> and checking service DNS resolution.
-<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — The license service returned non-JSON output; verify the service endpoint with <code>kubectl port-forward -n ndi svc/nd-license-service 8080:80</code> and test directly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to upgrade connection: container not found</code></td>
+<td>Verify the ndi-anomaly-engine pod is running with <code>kubectl get pods -n ndi</code> and check pod logs for crash reasons.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to nd-license-service port 80: Connection refused</code></td>
+<td>Ensure the nd-license-service is deployed and accessible by running <code>kubectl get svc -n ndi</code> and checking service DNS resolution.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON at line 1</code></td>
+<td>The license service returned non-JSON output; verify the service endpoint with <code>kubectl port-forward -n ndi svc/nd-license-service 8080:80</code> and test directly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
@@ -7957,9 +8103,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to connect to the server: dial tcp: lookup nd-dc1-1.corp.example.com: no such host</code></strong> — Verify the Nexus Dashboard hostname is resolvable by running <code>nslookup nd-dc1-1.corp.example.com</code> and check DNS or /etc/hosts.
-<strong><code>Host &lt;switch-ip&gt;:&lt;port&gt; — Connection timeout (no response after 5s)</code></strong> — Confirm the switch IP is reachable with <code>ping &lt;switch-ip&gt;</code> and verify firewall rules allow traffic from the ND management interface to that port.
-**`error: no</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to connect to the server: dial tcp: lookup nd-dc1-1.corp.example.com: no such host</code></td>
+<td>Verify the Nexus Dashboard hostname is resolvable by running <code>nslookup nd-dc1-1.corp.example.com</code> and check DNS or /etc/hosts.</td>
+</tr>
+<tr>
+<td><code>Host &lt;switch-ip&gt;:&lt;port&gt; — Connection timeout (no response after 5s)</code></td>
+<td>Confirm the switch IP is reachable with <code>ping &lt;switch-ip&gt;</code> and verify firewall rules allow traffic from the ND management interface to that port.</td>
+</tr>
+<tr>
+<td>**`error: no</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># ND cluster resource snapshot</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>acs<span class="w"> </span>system<span class="w"> </span>resources
@@ -8004,9 +8169,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the ND CA certificate into your system trust store.
-<strong><code>curl: (7) Failed to connect to nd-dc1.corp.example.com port 443: Connection refused</code></strong> — Verify ND cluster is running with <code>acs system status</code> and confirm DNS resolution with <code>nslookup nd-dc1.corp.example.com</code>.
-<strong><code>{"error":"Invalid credentials","code":401}</code></strong> — Confirm the service account password is correct and the account has API access permissions in ND RBAC settings.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the ND CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to nd-dc1.corp.example.com port 443: Connection refused</code></td>
+<td>Verify ND cluster is running with <code>acs system status</code> and confirm DNS resolution with <code>nslookup nd-dc1.corp.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>{"error":"Invalid credentials","code":401}</code></td>
+<td>Confirm the service account password is correct and the account has API access permissions in ND RBAC settings.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Patch NDFC server log level to DEBUG</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>env<span class="w"> </span>deployment/ndfc-server<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span><span class="nv">LOG_LEVEL</span><span class="o">=</span>DEBUG
@@ -8065,7 +8249,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

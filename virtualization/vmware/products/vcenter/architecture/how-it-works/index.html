@@ -9355,9 +9355,28 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: vpxd failed to start. Dependency vmware-stsd is not running.</code></strong> — Verify vmware-stsd started successfully with <code>service-control --status vmware-stsd</code> before starting vpxd.
-<strong><code>Error: Cannot connect to service-control daemon. Is vmon running?</code></strong> — Restart the service control daemon with <code>systemctl restart vmon</code> or reboot the vCenter appliance.
-<strong><code>Error: vmware-vpostgres failed to start: database directory not accessible</code></strong> — Check disk space and permissions on <code>/storage/db</code> with <code>df -h</code> and <code>ls -la /storage/db</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: vpxd failed to start. Dependency vmware-stsd is not running.</code></td>
+<td>Verify vmware-stsd started successfully with <code>service-control --status vmware-stsd</code> before starting vpxd.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot connect to service-control daemon. Is vmon running?</code></td>
+<td>Restart the service control daemon with <code>systemctl restart vmon</code> or reboot the vCenter appliance.</td>
+</tr>
+<tr>
+<td><code>Error: vmware-vpostgres failed to start: database directory not accessible</code></td>
+<td>Check disk space and permissions on <code>/storage/db</code> with <code>df -h</code> and <code>ls -la /storage/db</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="sizing">Sizing<a class="headerlink" href="#sizing" title="Permanent link">&para;</a></h2>
@@ -9667,9 +9686,28 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not connect to server: No such file or directory</code></strong> — Ensure the vPostgres service is running with <code>systemctl status vpostgres</code> and verify <code>/opt/vmware/vpostgres/current/bin/psql</code> exists.
-<strong><code>FATAL: role "postgres" does not exist</code></strong> — The embedded PostgreSQL instance may be corrupted; restart vCenter services with <code>service-control --stop --all</code> followed by <code>service-control --start --all</code>.
-<strong><code>ERROR: relation "vc_event" does not exist</code></strong> — The VCDB schema is incomplete; restore from backup or reinitialize the vCenter database using the vCenter installer.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not connect to server: No such file or directory</code></td>
+<td>Ensure the vPostgres service is running with <code>systemctl status vpostgres</code> and verify <code>/opt/vmware/vpostgres/current/bin/psql</code> exists.</td>
+</tr>
+<tr>
+<td><code>FATAL: role "postgres" does not exist</code></td>
+<td>The embedded PostgreSQL instance may be corrupted; restart vCenter services with <code>service-control --stop --all</code> followed by <code>service-control --start --all</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: relation "vc_event" does not exist</code></td>
+<td>The VCDB schema is incomplete; restore from backup or reinitialize the vCenter database using the vCenter installer.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Do not modify the vCenter database directly unless directed by VMware Support.</p>
 <hr />
@@ -9740,9 +9778,28 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; if error persists, verify vCenter hostname matches certificate CN).
-<strong><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}</code></strong> — Verify credentials are correct and TOKEN variable is populated; re-run authentication command and check for shell quoting issues with special characters in password.
-<strong><code>curl: (7) Failed to connect to vcenter.example.local port 443: Name or service not known</code></strong> — Confirm vCenter FQDN is resolvable and accessible from your network; check DNS or use IP address instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present; if error persists, verify vCenter hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}</code></td>
+<td>Verify credentials are correct and TOKEN variable is populated; re-run authentication command and check for shell quoting issues with special characters in password.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vcenter.example.local port 443: Name or service not known</code></td>
+<td>Confirm vCenter FQDN is resolvable and accessible from your network; check DNS or use IP address instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Swagger UI: <code>https://&lt;vcenter&gt;/apiexplorer</code></p>
 <hr />
@@ -9789,7 +9846,7 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="GitHub Actions — Environment Setup · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GitHub Actions — Environment Setup", "url": "https://chrisanastasiadis.com/automation/github-actions/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-06-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GitHub Actions — Environment Setup", "url": "https://chrisanastasiadis.com/automation/github-actions/deploy/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-06-06"}</script>
   
 
   </head>
@@ -7096,8 +7096,24 @@ the repository. Create the directory and an initial workflow file:</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mkdir: cannot create directory '.github/workflows': Permission denied</code></strong> — Run the command from a directory where you have write permissions, or use <code>sudo mkdir -p</code> if modifying a system directory.
-<strong><code>touch: cannot touch '.github/workflows/ci.yml': No such file or directory</code></strong> — Ensure the <code>.github/workflows</code> directory exists first by running <code>mkdir -p .github/workflows</code> before creating the file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mkdir: cannot create directory '.github/workflows': Permission denied</code></td>
+<td>Run the command from a directory where you have write permissions, or use <code>sudo mkdir -p</code> if modifying a system directory.</td>
+</tr>
+<tr>
+<td><code>touch: cannot touch '.github/workflows/ci.yml': No such file or directory</code></td>
+<td>Ensure the <code>.github/workflows</code> directory exists first by running <code>mkdir -p .github/workflows</code> before creating the file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Commit and push the directory. GitHub will begin scanning it for valid YAML files on
 every push once at least one workflow file is present.</p>
@@ -7215,9 +7231,28 @@ specific hardware, or a locked-down OS image.</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to github.com port 443: Connection refused</code></strong> — Verify network connectivity and that the GitHub API endpoint is reachable from this host.
-<strong><code>./config.sh: line 42: ./bin/Runner.Listener: cannot execute binary file: Exec format error</code></strong> — Ensure you downloaded the correct runner architecture (x64, arm64, etc.) matching your system with <code>uname -m</code>.
-<strong><code>Error: Authentication failed. Invalid token or insufficient permissions.</code></strong> — Regenerate a new PAT or runner registration token in GitHub with appropriate scopes and pass it to the <code>--token</code> parameter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to github.com port 443: Connection refused</code></td>
+<td>Verify network connectivity and that the GitHub API endpoint is reachable from this host.</td>
+</tr>
+<tr>
+<td><code>./config.sh: line 42: ./bin/Runner.Listener: cannot execute binary file: Exec format error</code></td>
+<td>Ensure you downloaded the correct runner architecture (x64, arm64, etc.) matching your system with <code>uname -m</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed. Invalid token or insufficient permissions.</code></td>
+<td>Regenerate a new PAT or runner registration token in GitHub with appropriate scopes and pass it to the <code>--token</code> parameter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ol>
 <li>Return to the <strong>Runners</strong> page and confirm the runner shows status <strong>Idle</strong>.</li>
@@ -7237,9 +7272,28 @@ specific hardware, or a locked-down OS image.</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: ./svc.sh: command not found</code></strong> — Ensure you are in the correct directory where svc.sh is located and run <code>ls -la svc.sh</code> to verify the file exists.
-<strong><code>Permission denied</code></strong> — Make the script executable by running <code>chmod +x svc.sh</code> before executing it with sudo.
-<strong><code>Failed to start service: Unit github-actions-deploy.service failed to load</code></strong> — Check that the systemd unit file was created correctly with <code>sudo systemctl cat github-actions-deploy.service</code> and verify all paths in the unit file are absolute.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: ./svc.sh: command not found</code></td>
+<td>Ensure you are in the correct directory where svc.sh is located and run <code>ls -la svc.sh</code> to verify the file exists.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Make the script executable by running <code>chmod +x svc.sh</code> before executing it with sudo.</td>
+</tr>
+<tr>
+<td><code>Failed to start service: Unit github-actions-deploy.service failed to load</code></td>
+<td>Check that the systemd unit file was created correctly with <code>sudo systemctl cat github-actions-deploy.service</code> and verify all paths in the unit file are absolute.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Label runners (e.g. <code>self-hosted</code>, <code>linux</code>, <code>gpu</code>) and reference them in workflows
 with <code>runs-on: [self-hosted, linux]</code>.</p>
@@ -7332,7 +7386,7 @@ registers the job names before you can add them as required checks.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

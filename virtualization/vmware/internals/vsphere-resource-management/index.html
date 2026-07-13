@@ -8183,8 +8183,24 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet</code></strong> — Load the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running cmdlets.
-<strong><code>Set-VMResourceConfiguration : CPU reservation of 2000 MHz exceeds available capacity on host</code></strong> — Reduce the reservation value or verify the host has sufficient CPU resources available.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet</code></td>
+<td>Load the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running cmdlets.</td>
+</tr>
+<tr>
+<td><code>Set-VMResourceConfiguration : CPU reservation of 2000 MHz exceeds available capacity on host</code></td>
+<td>Reduce the reservation value or verify the host has sufficient CPU resources available.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Operational concern:</strong> Excessive reservations fragment capacity. If you reserve 8 GHz across 20 VMs on a 48 GHz host, you have committed 33 % of capacity even when all those VMs are idle. DRS cannot migrate a VM away from a host unless the destination has enough unreserved capacity to satisfy the reservation.</p>
 <h3 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h3>
@@ -8249,8 +8265,24 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect to localhost:443 failed: Connection refused</code></strong> — Ensure the ESXi host SSH service is enabled and you are connecting to the correct host IP or hostname.
-<strong><code>The term 'Get-Stat' is not recognized as the name of a cmdlet</code></strong> — Load the VMware PowerCLI module first with <code>Import-Module VMware.PowerCLI</code> before running Get-Stat commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect to localhost:443 failed: Connection refused</code></td>
+<td>Ensure the ESXi host SSH service is enabled and you are connecting to the correct host IP or hostname.</td>
+</tr>
+<tr>
+<td><code>The term 'Get-Stat' is not recognized as the name of a cmdlet</code></td>
+<td>Load the VMware PowerCLI module first with <code>Import-Module VMware.PowerCLI</code> before running Get-Stat commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Co-Stop (%CSTP):</strong> For multi-vCPU VMs, the scheduler must find N free physical cores simultaneously. If it cannot, all vCPUs wait (co-stop). VMs with unnecessary vCPU counts suffer more co-stop. Right-size vCPU counts — a 2-vCPU VM almost always outperforms a 16-vCPU VM for single-threaded workloads.</p>
 <hr />
@@ -8337,8 +8369,24 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connect-VIServer : The specified item was not found on the 'Inventory' object.</code></strong> — Verify the vCenter server hostname/IP is correct and you have network connectivity to it before running Get-Stat.
-<strong><code>Get-Stat : A parameter cannot be found that matches parameter name 'IntervalMins'.</code></strong> — Use <code>-IntervalSecs</code> instead of <code>-IntervalMins</code> in PowerCLI versions 12.0+.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connect-VIServer : The specified item was not found on the 'Inventory' object.</code></td>
+<td>Verify the vCenter server hostname/IP is correct and you have network connectivity to it before running Get-Stat.</td>
+</tr>
+<tr>
+<td><code>Get-Stat : A parameter cannot be found that matches parameter name 'IntervalMins'.</code></td>
+<td>Use <code>-IntervalSecs</code> instead of <code>-IntervalMins</code> in PowerCLI versions 12.0+.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="transparent-page-sharing-tps">Transparent Page Sharing (TPS)<a class="headerlink" href="#transparent-page-sharing-tps" title="Permanent link">&para;</a></h3>
 <p>TPS scans VM memory pages and deduplicates identical content. Identical pages are merged into a single copy-on-write page, freeing the duplicates. Historically TPS was aggressive; since vSphere 6.0 inter-VM TPS is disabled by default for security reasons (side-channel attacks).</p>
@@ -8449,8 +8497,24 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /vmfs/volumes/&lt;datastore&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx: No such file or directory</code></strong> — Verify the datastore name and VM folder path are correct by running <code>find /vmfs/volumes -name "*.vmx" -type f</code> to locate the actual VMX file.
-<strong><code>esxcli: command not found</code></strong> — Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter or a remote system.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /vmfs/volumes/&lt;datastore&gt;/&lt;vm&gt;/&lt;vm&gt;.vmx: No such file or directory</code></td>
+<td>Verify the datastore name and VM folder path are correct by running <code>find /vmfs/volumes -name "*.vmx" -type f</code> to locate the actual VMX file.</td>
+</tr>
+<tr>
+<td><code>esxcli: command not found</code></td>
+<td>Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter or a remote system.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="numa-aware-vm-sizing-guidelines">NUMA-Aware VM Sizing Guidelines<a class="headerlink" href="#numa-aware-vm-sizing-guidelines" title="Permanent link">&para;</a></h3>
 <table>
@@ -8617,8 +8681,24 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-ResourcePool : The term 'Get-ResourcePool' is not recognized</code></strong> — Load the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running cmdlets.
-<strong><code>You do not have permission to read property CpuReservationMhz</code></strong> — Ensure your vSphere user account has at least "Read-only" role on the resource pools and VMs being queried.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-ResourcePool : The term 'Get-ResourcePool' is not recognized</code></td>
+<td>Load the VMware PowerCLI module with <code>Import-Module VMware.PowerCLI</code> before running cmdlets.</td>
+</tr>
+<tr>
+<td><code>You do not have permission to read property CpuReservationMhz</code></td>
+<td>Ensure your vSphere user account has at least "Read-only" role on the resource pools and VMs being queried.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="quick-reference-key-values">Quick Reference — Key Values<a class="headerlink" href="#quick-reference-key-values" title="Permanent link">&para;</a></h2>
@@ -8702,7 +8782,7 @@ vSphere resource management controls how CPU and memory are allocated to VMs com
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

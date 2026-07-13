@@ -6644,9 +6644,28 @@ Network services reference for load balancer VIP management, pool health monitor
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to &lt;vip_fqdn&gt; port 443: Connection refused</code></strong> — Verify the load balancer service is running with <code>systemctl status</code> and check firewall rules allow inbound traffic on port 443.
-<strong><code>Ncat: Connection refused.</code></strong> — Confirm the backend pool members are healthy and the VIP listener is configured for the specified port using your load balancer admin interface.
-<strong><code>dig: couldn't get address for '&lt;vip_fqdn&gt;': not known</code></strong> — Ensure DNS records are created for the VIP FQDN and verify your resolver is configured to query the correct nameserver with <code>cat /etc/resolv.conf</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;vip_fqdn&gt; port 443: Connection refused</code></td>
+<td>Verify the load balancer service is running with <code>systemctl status</code> and check firewall rules allow inbound traffic on port 443.</td>
+</tr>
+<tr>
+<td><code>Ncat: Connection refused.</code></td>
+<td>Confirm the backend pool members are healthy and the VIP listener is configured for the specified port using your load balancer admin interface.</td>
+</tr>
+<tr>
+<td><code>dig: couldn't get address for '&lt;vip_fqdn&gt;': not known</code></td>
+<td>Ensure DNS records are created for the VIP FQDN and verify your resolver is configured to query the correct nameserver with <code>cat /etc/resolv.conf</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="f5-big-ip-pool-status">F5 BIG-IP Pool Status<a class="headerlink" href="#f5-big-ip-pool-status" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>tmsh<span class="w"> </span>show<span class="w"> </span>ltm<span class="w"> </span>node
@@ -6675,8 +6694,24 @@ Network services reference for load balancer VIP management, pool health monitor
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tmsh: command not found</code></strong> — Ensure you are logged into the BIG-IP system directly or use the F5 iControl REST API instead.
-<strong><code>Pool &lt;pool_name&gt; not found</code></strong> — Verify the pool name exists by running <code>tmsh show ltm pool</code> first and use the exact pool name from the output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tmsh: command not found</code></td>
+<td>Ensure you are logged into the BIG-IP system directly or use the F5 iControl REST API instead.</td>
+</tr>
+<tr>
+<td><code>Pool &lt;pool_name&gt; not found</code></td>
+<td>Verify the pool name exists by running <code>tmsh show ltm pool</code> first and use the exact pool name from the output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="haproxy-pool-status">HAProxy Pool Status<a class="headerlink" href="#haproxy-pool-status" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;show stat&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>socat<span class="w"> </span>stdio<span class="w"> </span>/var/run/haproxy.sock<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="w"> </span>-f1,2,18<span class="w"> </span><span class="p">|</span><span class="w"> </span>column<span class="w"> </span>-t<span class="w"> </span>-s<span class="w"> </span><span class="s1">&#39;,&#39;</span>
@@ -6694,8 +6729,24 @@ Network services reference for load balancer VIP management, pool health monitor
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>socat: E_NOACCES error in function openfile() with address "/var/run/haproxy.sock"</code></strong> — Run the command with sudo or ensure your user is in the haproxy group.
-<strong><code>socat: E_NOENT error in function openfile() with address "/var/run/haproxy.sock"</code></strong> — Verify HAProxy is running with <code>systemctl status haproxy</code> and check the socket path in your HAProxy configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>socat: E_NOACCES error in function openfile() with address "/var/run/haproxy.sock"</code></td>
+<td>Run the command with sudo or ensure your user is in the haproxy group.</td>
+</tr>
+<tr>
+<td><code>socat: E_NOENT error in function openfile() with address "/var/run/haproxy.sock"</code></td>
+<td>Verify HAProxy is running with <code>systemctl status haproxy</code> and check the socket path in your HAProxy configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="tls-certificate-on-vip">TLS Certificate on VIP<a class="headerlink" href="#tls-certificate-on-vip" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vip_fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;subject|Verify|expire&quot;</span>
@@ -6708,9 +6759,28 @@ Network services reference for load balancer VIP management, pool health monitor
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>verify error:num=20:unable to get local issuer certificate</code></strong> — Add the intermediate CA certificate to your system's trusted store or use <code>openssl s_client -connect &lt;vip_fqdn&gt;:443 -CAfile /path/to/ca-bundle.crt</code>.
-<strong><code>connect: Connection refused</code></strong> — Verify the VIP is reachable and the service is listening on port 443 with <code>nc -zv &lt;vip_fqdn&gt; 443</code>.
-<strong><code>Verify return code: 1 (unable to get local issuer certificate)</code></strong> — Install the missing CA certificate chain or use <code>-showcerts</code> flag to inspect the full certificate chain being presented.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verify error:num=20:unable to get local issuer certificate</code></td>
+<td>Add the intermediate CA certificate to your system's trusted store or use <code>openssl s_client -connect &lt;vip_fqdn&gt;:443 -CAfile /path/to/ca-bundle.crt</code>.</td>
+</tr>
+<tr>
+<td><code>connect: Connection refused</code></td>
+<td>Verify the VIP is reachable and the service is listening on port 443 with <code>nc -zv &lt;vip_fqdn&gt; 443</code>.</td>
+</tr>
+<tr>
+<td><code>Verify return code: 1 (unable to get local issuer certificate)</code></td>
+<td>Install the missing CA certificate chain or use <code>-showcerts</code> flag to inspect the full certificate chain being presented.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="test-pool-member-health-check">Test Pool Member Health Check<a class="headerlink" href="#test-pool-member-health-check" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Test the health check manually from the LB server or another host</span>
@@ -6720,9 +6790,28 @@ Network services reference for load balancer VIP management, pool health monitor
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to 10.45.23.18 port 8080: Connection refused</code></strong> — Verify the service is running on the target member with <code>systemctl status &lt;service&gt;</code> and check that the port is correct.
-<strong><code>curl: (28) Operation timeout. The timeout was reached</code></strong> — Increase the curl timeout with <code>-m 10</code> flag or verify network connectivity and firewall rules allow traffic between the LB and member servers.
-<strong><code>000</code></strong> — The service returned an invalid HTTP response; check service logs with <code>journalctl -u &lt;service&gt; -n 50</code> to identify application errors.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to 10.45.23.18 port 8080: Connection refused</code></td>
+<td>Verify the service is running on the target member with <code>systemctl status &lt;service&gt;</code> and check that the port is correct.</td>
+</tr>
+<tr>
+<td><code>curl: (28) Operation timeout. The timeout was reached</code></td>
+<td>Increase the curl timeout with <code>-m 10</code> flag or verify network connectivity and firewall rules allow traffic between the LB and member servers.</td>
+</tr>
+<tr>
+<td><code>000</code></td>
+<td>The service returned an invalid HTTP response; check service logs with <code>journalctl -u &lt;service&gt; -n 50</code> to identify application errors.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="lb-status-at-a-glance">LB Status at a Glance<a class="headerlink" href="#lb-status-at-a-glance" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-I<span class="w"> </span>http://load-balancer
@@ -6753,9 +6842,28 @@ Network services reference for load balancer VIP management, pool health monitor
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to load-balancer port 80: Connection refused</code></strong> — Verify the load balancer service is running with <code>systemctl status nginx</code> and check firewall rules with <code>sudo ufw status</code>.
-<strong><code>curl: (6) Could not resolve host: backend-server</code></strong> — Ensure DNS resolution is working by checking <code>/etc/hosts</code> or running <code>nslookup backend-server</code>, and verify the hostname is correct.
-<strong><code>netstat: command not found</code></strong> — Install net-tools with <code>sudo apt install net-tools</code> or use the modern alternative <code>ss -tulnp</code> instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to load-balancer port 80: Connection refused</code></td>
+<td>Verify the load balancer service is running with <code>systemctl status nginx</code> and check firewall rules with <code>sudo ufw status</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host: backend-server</code></td>
+<td>Ensure DNS resolution is working by checking <code>/etc/hosts</code> or running <code>nslookup backend-server</code>, and verify the hostname is correct.</td>
+</tr>
+<tr>
+<td><code>netstat: command not found</code></td>
+<td>Install net-tools with <code>sudo apt install net-tools</code> or use the modern alternative <code>ss -tulnp</code> instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -6779,7 +6887,7 @@ Network services reference for load balancer VIP management, pool health monitor
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

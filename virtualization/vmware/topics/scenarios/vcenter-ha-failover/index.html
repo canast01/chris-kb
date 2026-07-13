@@ -9440,9 +9440,28 @@ edge cases where VCHA gets stuck in Isolated state.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the vCenter CA certificate into your system trust store.
-<strong><code>401 Unauthorized</code></strong> — Verify the administrator@vsphere.local password is correct and the account has API access permissions enabled.
-<strong><code>curl: (7) Failed to connect to &lt;vcenter-fqdn&gt; port 443: Name or service not known</code></strong> — Ensure the vCenter FQDN is resolvable and reachable from your network; check DNS and firewall rules.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification, or import the vCenter CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Verify the administrator@vsphere.local password is correct and the account has API access permissions enabled.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;vcenter-fqdn&gt; port 443: Name or service not known</code></td>
+<td>Ensure the vCenter FQDN is resolvable and reachable from your network; check DNS and firewall rules.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Response field <code>state</code> must be <code>HEALTHY</code>; <code>active_node.ha_ip.ipv4.address</code> must show the promoted node IP.</p>
 <hr />
@@ -9469,8 +9488,24 @@ edge cases where VCHA gets stuck in Isolated state.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/vcha/vcha.log: No such file or directory</code></strong> — Verify VCHA is initialized by running <code>vcha-cli status</code> and ensure you are connected to the promoted node.
-<strong><code>Permission denied</code></strong> — SSH as root or use <code>sudo</code> to access VCHA logs, which require elevated privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/vcha/vcha.log: No such file or directory</code></td>
+<td>Verify VCHA is initialized by running <code>vcha-cli status</code> and ensure you are connected to the promoted node.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>SSH as root or use <code>sudo</code> to access VCHA logs, which require elevated privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Confirm the <code>Promotion complete</code> entry is present. The sync lag lines before failover must show lag was
 below 60 seconds — if lag exceeded 60 s, inspect whether any DB transactions were lost.</p>
@@ -9495,8 +9530,24 @@ below 60 seconds — if lag exceeded 60 s, inspect whether any DB transactions w
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/vcha/vcha.log: No such file or directory</code></strong> — Verify VCHA is installed and running with <code>systemctl status vcha</code> or check the correct log path for your vSphere version.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as root to access VCHA log files.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/vcha/vcha.log: No such file or directory</code></td>
+<td>Verify VCHA is installed and running with <code>systemctl status vcha</code> or check the correct log path for your vSphere version.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as root to access VCHA log files.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Lag values below 30 s indicate a clean failover. Values between 30–60 s are acceptable but warrant
 investigation. Values above 60 s indicate the passive may have missed recent transactions; check whether
@@ -9520,9 +9571,28 @@ any tasks or events appear missing from the vCenter inventory after reconnect.</
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: -I: unknown host</code></strong> — Replace <code>-I vmk1</code> with <code>-I 192.168.100.10</code> (the actual IP bound to vmk1) or verify vmk1 exists with <code>esxcli network ip interface list</code>.
-<strong><code>PING 192.168.100.50 (192.168.100.50) from 192.168.100.10 vmk1 ... 100% packet loss</code></strong> — Verify the witness appliance is running and reachable; check firewall rules and vMotion network connectivity with <code>esxcli network ip neighbor list</code>.
-<strong><code>ping: sendto: No route to host</code></strong> — Confirm vmk1 is on the same subnet as the witness IP or add a static route with <code>esxcli network ip route ipv4 add</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: -I: unknown host</code></td>
+<td>Replace <code>-I vmk1</code> with <code>-I 192.168.100.10</code> (the actual IP bound to vmk1) or verify vmk1 exists with <code>esxcli network ip interface list</code>.</td>
+</tr>
+<tr>
+<td><code>PING 192.168.100.50 (192.168.100.50) from 192.168.100.10 vmk1 ... 100% packet loss</code></td>
+<td>Verify the witness appliance is running and reachable; check firewall rules and vMotion network connectivity with <code>esxcli network ip neighbor list</code>.</td>
+</tr>
+<tr>
+<td><code>ping: sendto: No route to host</code></td>
+<td>Confirm vmk1 is on the same subnet as the witness IP or add a static route with <code>esxcli network ip route ipv4 add</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Confirm packet loss = 0%. If the witness is unreachable, VCHA cannot perform automatic failover for
 future failures — restore witness connectivity immediately.</p>
@@ -9549,9 +9619,28 @@ future failures — restore witness connectivity immediately.</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the vCenter certificate into your system's trusted store.
-<strong><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"The user is not authenticated.","id":"com.vmware.vapi.std.errors.unauthenticated"}]}}</code></strong> — Verify the vCenter FQDN is correct and the administrator@vsphere.local password is URL-encoded if it contains special characters.
-<strong><code>{"type":"com.vmware.vapi.std.errors.error","value":{"messages":[{"default_message":"VCHA cluster is not in a valid state for failover.","id":"com.vmware.vapi.std.errors.error"}]}}</code></strong> — Ensure VCHA is configured and healthy by checking cluster status before attempting failover.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification, or import the vCenter certificate into your system's trusted store.</td>
+</tr>
+<tr>
+<td><code>{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"The user is not authenticated.","id":"com.vmware.vapi.std.errors.unauthenticated"}]}}</code></td>
+<td>Verify the vCenter FQDN is correct and the administrator@vsphere.local password is URL-encoded if it contains special characters.</td>
+</tr>
+<tr>
+<td><code>{"type":"com.vmware.vapi.std.errors.error","value":{"messages":[{"default_message":"VCHA cluster is not in a valid state for failover.","id":"com.vmware.vapi.std.errors.error"}]}}</code></td>
+<td>Ensure VCHA is configured and healthy by checking cluster status before attempting failover.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If <code>force</code> failover is required (witness unreachable, split-brain):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>-d<span class="w"> </span><span class="s1">&#39;{&quot;planned&quot;: false, &quot;force&quot;: true}&#39;</span>
@@ -9560,8 +9649,24 @@ future failures — restore witness connectivity immediately.</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (6) Could not resolve host</code></strong> — Verify the target API endpoint hostname is correct and resolvable in your network DNS.
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Ensure your API authentication token or credentials are valid and included in the request headers.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (6) Could not resolve host</code></td>
+<td>Verify the target API endpoint hostname is correct and resolvable in your network DNS.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Ensure your API authentication token or credentials are valid and included in the request headers.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>The <code>force: true</code> flag bypasses witness quorum — use only when both nodes are healthy and witness
 connectivity cannot be restored within the maintenance window.</p>
@@ -9581,8 +9686,24 @@ connectivity cannot be restored within the maintenance window.</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>df: '/storage/db': No such file or directory</code></strong> — Verify the mount point exists and is mounted with <code>mount | grep /storage/db</code>.
-<strong><code>du: cannot access '/storage/db/vpostgres/*': Permission denied</code></strong> — Run the commands with <code>sudo</code> or ensure your user has read permissions on the directory with <code>chmod +rx</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>df: '/storage/db': No such file or directory</code></td>
+<td>Verify the mount point exists and is mounted with <code>mount | grep /storage/db</code>.</td>
+</tr>
+<tr>
+<td><code>du: cannot access '/storage/db/vpostgres/*': Permission denied</code></td>
+<td>Run the commands with <code>sudo</code> or ensure your user has read permissions on the directory with <code>chmod +rx</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If near capacity, clear rotated logs:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.gz&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
@@ -9591,9 +9712,28 @@ connectivity cannot be restored within the maintenance window.</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>find: '/storage/log': No such file or directory</code></strong> — Verify the log directory path exists with <code>ls -ld /storage/log</code> and correct the path if needed.
-<strong><code>find: '/storage/log': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user has read and execute permissions on the directory with <code>chmod u+rx /storage/log</code>.
-<strong><code>find: warning: -delete: cannot delete '/storage/log/archive-2024-01-15.gz': Permission denied</code></strong> — Change ownership or permissions of the log files with <code>sudo chown $USER:$USER /storage/log/*.gz</code> or run the entire command with <code>sudo</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find: '/storage/log': No such file or directory</code></td>
+<td>Verify the log directory path exists with <code>ls -ld /storage/log</code> and correct the path if needed.</td>
+</tr>
+<tr>
+<td><code>find: '/storage/log': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user has read and execute permissions on the directory with <code>chmod u+rx /storage/log</code>.</td>
+</tr>
+<tr>
+<td><code>find: warning: -delete: cannot delete '/storage/log/archive-2024-01-15.gz': Permission denied</code></td>
+<td>Change ownership or permissions of the log files with <code>sudo chown $USER:$USER /storage/log/*.gz</code> or run the entire command with <code>sudo</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="6-verification">6. Verification<a class="headerlink" href="#6-verification" title="Permanent link">&para;</a></h2>
@@ -9672,7 +9812,7 @@ vSphere Client → <strong>Alarms → vCenter High Availability state changed �
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

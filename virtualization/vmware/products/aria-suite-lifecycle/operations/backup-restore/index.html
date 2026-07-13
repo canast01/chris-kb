@@ -9217,8 +9217,24 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount.nfs: access denied by server while mounting 192.168.10.45:/export/lcm-data</code></strong> — Verify the NFS server firewall allows port 2049 from the LCM appliance IP and check /etc/exports permissions on the NFS server.
-<strong><code>showmount: clnt_create: RPC: Port mapper failure - Unable to receive</code></strong> — Ensure the NFS server's portmapper (rpcbind) is running with <code>systemctl status rpcbind</code> and that port 111 is accessible.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting 192.168.10.45:/export/lcm-data</code></td>
+<td>Verify the NFS server firewall allows port 2049 from the LCM appliance IP and check /etc/exports permissions on the NFS server.</td>
+</tr>
+<tr>
+<td><code>showmount: clnt_create: RPC: Port mapper failure - Unable to receive</code></td>
+<td>Ensure the NFS server's portmapper (rpcbind) is running with <code>systemctl status rpcbind</code> and that port 111 is accessible.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Backup options:
 - <strong>NFS server snapshot</strong>: if the NFS server supports snapshots (NetApp, Pure, vSAN File Services), schedule daily snapshots of the export volume
@@ -9245,9 +9261,28 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>rsync: change_dir "/exports/lcm-repo" failed: No such file or directory (2)</code></strong> — Verify the source path exists and is mounted on the current host with <code>ls -la /exports/lcm-repo</code>.
-<strong><code>Permission denied (13)</code></strong> — Ensure the user running rsync has read permissions on the source directory and write permissions on the destination with <code>chmod 755 /exports/lcm-repo</code> and <code>chmod 755 /backup/</code>.
-<strong><code>No space left on device (28)</code></strong> — Check available disk space on the destination with <code>df -h /backup/</code> and ensure sufficient free space exists for the full backup.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rsync: change_dir "/exports/lcm-repo" failed: No such file or directory (2)</code></td>
+<td>Verify the source path exists and is mounted on the current host with <code>ls -la /exports/lcm-repo</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied (13)</code></td>
+<td>Ensure the user running rsync has read permissions on the source directory and write permissions on the destination with <code>chmod 755 /exports/lcm-repo</code> and <code>chmod 755 /backup/</code>.</td>
+</tr>
+<tr>
+<td><code>No space left on device (28)</code></td>
+<td>Check available disk space on the destination with <code>df -h /backup/</code> and ensure sufficient free space exists for the full backup.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="exporting-lcm-environment-configuration-via-api">Exporting LCM Environment Configuration via API<a class="headerlink" href="#exporting-lcm-environment-configuration-via-api" title="Permanent link">&para;</a></h2>
@@ -9320,8 +9355,24 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl commands to skip SSL verification, or import the LCM server's CA certificate into your system trust store.
-<strong><code>jq: parse error: (null) is not defined at line 1, column 0</code></strong> — Verify the authentication token is valid by checking the login response; the API likely returned an error</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl commands to skip SSL verification, or import the LCM server's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: (null) is not defined at line 1, column 0</code></td>
+<td>Verify the authentication token is valid by checking the login response; the API likely returned an error</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Store these JSON exports alongside the backup job output in a version-controlled location.</p>
 <hr />
@@ -9362,9 +9413,28 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: no tty present and no -S option was specified</code></strong> — Add <code>-t</code> flag to ssh command: <code>ssh -t admin@lcm-prod-01.example.local</code>
-<strong><code>Connection refused</code></strong> — Verify LCM appliance is reachable and SSH service is running; check firewall rules and DNS resolution for lcm-prod-01.example.local
-<strong><code>vracli: command not found</code></strong> — Source the vracli environment or use full path <code>/opt/vmware/vracli/bin/vracli status</code></p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: no tty present and no -S option was specified</code></td>
+<td>Add <code>-t</code> flag to ssh command: <code>ssh -t admin@lcm-prod-01.example.local</code></td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify LCM appliance is reachable and SSH service is running; check firewall rules and DNS resolution for lcm-prod-01.example.local</td>
+</tr>
+<tr>
+<td><code>vracli: command not found</code></td>
+<td>Source the vracli environment or use full path <code>/opt/vmware/vracli/bin/vracli status</code></td>
+</tr>
+</tbody>
+</table>
 </div>
 <ol>
 <li>Open the LCM UI and verify:</li>
@@ -9394,9 +9464,28 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount.nfs: mount point /data does not exist</code></strong> — Create the mount point directory with <code>mkdir -p /data</code> before running <code>mount -a</code>.
-<strong><code>mount.nfs: access denied by server while mounting nfs-server.corp.local:/lcm-repo</code></strong> — Verify NFS server exports the path and firewall allows NFS traffic (ports 111, 2049); check <code>/etc/exports</code> on the NFS server.
-<strong><code>mount: /etc/fstab: parse error at line X</code></strong> — Ensure the fstab entry has exactly 6 whitespace-separated fields with no trailing characters.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount.nfs: mount point /data does not exist</code></td>
+<td>Create the mount point directory with <code>mkdir -p /data</code> before running <code>mount -a</code>.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting nfs-server.corp.local:/lcm-repo</code></td>
+<td>Verify NFS server exports the path and firewall allows NFS traffic (ports 111, 2049); check <code>/etc/exports</code> on the NFS server.</td>
+</tr>
+<tr>
+<td><code>mount: /etc/fstab: parse error at line X</code></td>
+<td>Ensure the fstab entry has exactly 6 whitespace-separated fields with no trailing characters.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <ol>
 <li>Re-download required product bundles from Broadcom Support Portal</li>
@@ -9448,7 +9537,7 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

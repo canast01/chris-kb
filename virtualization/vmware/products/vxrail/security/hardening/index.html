@@ -10115,9 +10115,28 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification, or import the VxRail Manager's CA certificate into your system trust store.
-<strong><code>{"error": "401 Unauthorized", "message": "Invalid credentials"}</code></strong> — Verify the current mystic password is correct and base64-encoded properly by testing <code>echo -n 'mystic:CurrentPassword1!' | base64</code>.
-<strong><code>{"error": "400 Bad Request", "message": "Password does not meet complexity requirements"}</code></strong> — Ensure the new password meets VxRail's policy (minimum 8 characters, uppercase, lowercase, number, and special character).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification, or import the VxRail Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error": "401 Unauthorized", "message": "Invalid credentials"}</code></td>
+<td>Verify the current mystic password is correct and base64-encoded properly by testing <code>echo -n 'mystic:CurrentPassword1!' | base64</code>.</td>
+</tr>
+<tr>
+<td><code>{"error": "400 Bad Request", "message": "Password does not meet complexity requirements"}</code></td>
+<td>Ensure the new password meets VxRail's policy (minimum 8 characters, uppercase, lowercase, number, and special character).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Store the new password in the vault immediately. Document the vault path in the VxRail runbook.</p>
 <p><strong>2 — Configure LDAP</strong></p>
@@ -10170,8 +10189,24 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>RACADM.1.1.5254.0 : IPMI command failed with error: Unable to establish IPMI v1.5 / IPMI v2.0 session</code></strong> — Verify iDRAC is reachable via network and IPMI is enabled; check firewall rules on port 623.
-<strong><code>RACADM.1.1.5254.0 : Access Denied</code></strong> — Confirm you are running racadm with root/administrator privileges or use <code>sudo racadm</code> if executing remotely.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RACADM.1.1.5254.0 : IPMI command failed with error: Unable to establish IPMI v1.5 / IPMI v2.0 session</code></td>
+<td>Verify iDRAC is reachable via network and IPMI is enabled; check firewall rules on port 623.</td>
+</tr>
+<tr>
+<td><code>RACADM.1.1.5254.0 : Access Denied</code></td>
+<td>Confirm you are running racadm with root/administrator privileges or use <code>sudo racadm</code> if executing remotely.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Use a unique password for each node — do not reuse the same password across all iDRAC interfaces. Store each per-node credential in the vault under a path that includes the node hostname or iDRAC IP.</p>
 <p><strong>2 — Verify OOB VLAN restriction</strong></p>
@@ -10185,8 +10220,24 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>DRAC_ERROR: DRAC/iLO is currently unavailable</code></strong> — Ensure the iDRAC service is running with <code>systemctl status idrac</code> and verify network connectivity to the iDRAC IP address.
-<strong><code>racadm: connect DRAC failed</code></strong> — Confirm racadm is installed (<code>which racadm</code>), the iDRAC hostname/IP is reachable, and you have valid credentials configured in <code>~/.racadm</code> or via <code>-u</code>/<code>-p</code> flags.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DRAC_ERROR: DRAC/iLO is currently unavailable</code></td>
+<td>Ensure the iDRAC service is running with <code>systemctl status idrac</code> and verify network connectivity to the iDRAC IP address.</td>
+</tr>
+<tr>
+<td><code>racadm: connect DRAC failed</code></td>
+<td>Confirm racadm is installed (<code>which racadm</code>), the iDRAC hostname/IP is reachable, and you have valid credentials configured in <code>~/.racadm</code> or via <code>-u</code>/<code>-p</code> flags.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>3 — Configure iDRAC LDAP</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable LDAP on iDRAC and map AD group to Administrator role</span>
@@ -10208,9 +10259,28 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>RACADM] Error: Unable to connect to LDAP server</code></strong> — Verify the LDAP server hostname/IP is reachable and the LDAP service is running on port 389 (or 636 for LDAPS).
-<strong><code>[RACADM] Error: Invalid credentials for bind DN</code></strong> — Confirm the BindDN account exists in Active Directory and the BindPassword is correct and not expired.
-<strong><code>[RACADM] Error: Group DN not found in directory</code></strong> — Verify the group DN path exists in Active Directory and matches the exact case and distinguished name format.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RACADM] Error: Unable to connect to LDAP server</code></td>
+<td>Verify the LDAP server hostname/IP is reachable and the LDAP service is running on port 389 (or 636 for LDAPS).</td>
+</tr>
+<tr>
+<td><code>[RACADM] Error: Invalid credentials for bind DN</code></td>
+<td>Confirm the BindDN account exists in Active Directory and the BindPassword is correct and not expired.</td>
+</tr>
+<tr>
+<td><code>[RACADM] Error: Group DN not found in directory</code></td>
+<td>Verify the group DN path exists in Active Directory and matches the exact case and distinguished name format.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>4 — Verify iDRAC firmware currency</strong></p>
 <p>iDRAC firmware is included in VxRail LCM bundles. Keeping the cluster on a current LCM version automatically keeps iDRAC firmware patched. Verify the current iDRAC firmware version:</p>
@@ -10226,8 +10296,24 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>RACADM0001: Unable to connect to iDRAC</code></strong> — Verify iDRAC IP address is reachable and credentials are configured via <code>racadm config -g cfgIpmiLan -o cfgIpmiLanIpAddress &lt;IP&gt;</code>.
-<strong><code>RACADM0213: IPMI is not initialized</code></strong> — Restart the iDRAC service with <code>racadm racreset soft</code> or power-cycle the host to reinitialize IPMI.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RACADM0001: Unable to connect to iDRAC</code></td>
+<td>Verify iDRAC IP address is reachable and credentials are configured via <code>racadm config -g cfgIpmiLan -o cfgIpmiLanIpAddress &lt;IP&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>RACADM0213: IPMI is not initialized</code></td>
+<td>Restart the iDRAC service with <code>racadm racreset soft</code> or power-cycle the host to reinitialize IPMI.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>5 — Verify Secure Boot</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check Secure Boot status</span>
@@ -10245,8 +10331,24 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>BIOS.SysProfileSettings.SecureBoot=Disabled</code></strong> — Run <code>racadm set BIOS.SysProfileSettings.SecureBoot Enabled</code> to enable Secure Boot before scheduling the reboot job.
-<strong><code>ERROR: RACADM0387: The object specified does not exist or is not supported on this system</code></strong> — Verify the iDRAC firmware is current and the system supports Secure Boot by checking <code>racadm get BIOS.SysProfileSettings</code> for available BIOS attributes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BIOS.SysProfileSettings.SecureBoot=Disabled</code></td>
+<td>Run <code>racadm set BIOS.SysProfileSettings.SecureBoot Enabled</code> to enable Secure Boot before scheduling the reboot job.</td>
+</tr>
+<tr>
+<td><code>ERROR: RACADM0387: The object specified does not exist or is not supported on this system</code></td>
+<td>Verify the iDRAC firmware is current and the system supports Secure Boot by checking <code>racadm get BIOS.SysProfileSettings</code> for available BIOS attributes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>6 — Enforce HTTPS, disable HTTP and Telnet</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Disable HTTP, leave HTTPS on port 443</span>
@@ -10260,8 +10362,24 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>RACADM0211: Unable to set property. Property value is not valid.</code></strong> — Verify the iDRAC firmware version supports HttpPort 0; some versions require explicit disabling via a separate flag instead of setting port to 0.
-<strong><code>RACADM0212: IPMI Session limit exceeded</code></strong> — Close existing iDRAC sessions or wait 5 minutes for session timeout before retrying the racadm commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RACADM0211: Unable to set property. Property value is not valid.</code></td>
+<td>Verify the iDRAC firmware version supports HttpPort 0; some versions require explicit disabling via a separate flag instead of setting port to 0.</td>
+</tr>
+<tr>
+<td><code>RACADM0212: IPMI Session limit exceeded</code></td>
+<td>Close existing iDRAC sessions or wait 5 minutes for session timeout before retrying the racadm commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="vsphereesxi-hardening">vSphere/ESXi Hardening<a class="headerlink" href="#vsphereesxi-hardening" title="Permanent link">&para;</a></h2>
@@ -10489,9 +10607,28 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the VxRail Manager's CA certificate into your system trust store.
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Verify the base64-encoded credentials are correct by running <code>echo -n 'username:password' | base64</code> and comparing the output to your Authorization header.
-<strong><code>curl: (7) Failed to connect to &lt;vxrail-manager-ip&gt; port 443: Connection refused</code></strong> — Confirm the VxRail Manager IP address is correct and the HTTPS service is running with <code>curl -v https://&lt;vxrail-manager-ip&gt;:443</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the VxRail Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Verify the base64-encoded credentials are correct by running <code>echo -n 'username:password' | base64</code> and comparing the output to your Authorization header.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;vxrail-manager-ip&gt; port 443: Connection refused</code></td>
+<td>Confirm the VxRail Manager IP address is correct and the HTTPS service is running with <code>curl -v https://&lt;vxrail-manager-ip&gt;:443</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="hardening-actions">Hardening Actions<a class="headerlink" href="#hardening-actions" title="Permanent link">&para;</a></h3>
 <ul>
@@ -10537,7 +10674,7 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

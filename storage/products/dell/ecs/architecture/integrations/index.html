@@ -9026,9 +9026,28 @@ Integrations reference covering S3 Client Integration, Veeam Object Repository, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unable to locate credentials</code></strong> — Run <code>aws configure --profile ecs</code> first and ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are set or credentials file exists at ~/.aws/credentials.
-<strong><code>SSL: CERTIFICATE_VERIFY_FAILED</code></strong> — The <code>--no-verify-ssl</code> flag is already included in the PROFILE variable; if still failing, verify the ECS endpoint certificate is valid or use <code>export AWS_CA_BUNDLE=/path/to/ca-cert.pem</code> before running commands.
-<strong><code>NoSuchBucket</code></strong> — Verify the bucket name in the s3:// path matches exactly (case-sensitive) and that the configured user has s3:GetObject and s3:PutObject permissions on that bucket.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unable to locate credentials</code></td>
+<td>Run <code>aws configure --profile ecs</code> first and ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are set or credentials file exists at ~/.aws/credentials.</td>
+</tr>
+<tr>
+<td><code>SSL: CERTIFICATE_VERIFY_FAILED</code></td>
+<td>The <code>--no-verify-ssl</code> flag is already included in the PROFILE variable; if still failing, verify the ECS endpoint certificate is valid or use <code>export AWS_CA_BUNDLE=/path/to/ca-cert.pem</code> before running commands.</td>
+</tr>
+<tr>
+<td><code>NoSuchBucket</code></td>
+<td>Verify the bucket name in the s3:// path matches exactly (case-sensitive) and that the configured user has s3:GetObject and s3:PutObject permissions on that bucket.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>ECS supports S3 multipart upload, S3 Object Lock (WORM), presigned URLs, bucket versioning, and lifecycle policies. Virtual-hosted-style (<code>&lt;bucket&gt;.&lt;ecs-endpoint&gt;</code>) requires DNS configuration pointing <code>*.ecs.example.com</code> to the ECS load balancer VIP; path-style (<code>&lt;ecs-endpoint&gt;/&lt;bucket&gt;</code>) works without DNS changes and is easier to configure in most clients.</p>
 <p><strong>s3cmd configuration:</strong></p>
@@ -9066,9 +9085,28 @@ Integrations reference covering S3 Client Integration, Veeam Object Repository, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: S3 error: 403 Forbidden</code></strong> — Verify AWS credentials are configured correctly in <code>~/.s3cfg</code> and the IAM user has s3:GetObject and s3:ListBucket permissions.
-<strong><code>ERROR: Unable to open file 'localfile.tar.gz'</code></strong> — Confirm the file exists and the current user has read permissions with <code>ls -l localfile.tar.gz</code>.
-<strong><code>ERROR: S3 error: 404 Not Found</code></strong> — Verify the bucket name is correct and exists in the ECS cluster with <code>s3cmd ls</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: S3 error: 403 Forbidden</code></td>
+<td>Verify AWS credentials are configured correctly in <code>~/.s3cfg</code> and the IAM user has s3:GetObject and s3:ListBucket permissions.</td>
+</tr>
+<tr>
+<td><code>ERROR: Unable to open file 'localfile.tar.gz'</code></td>
+<td>Confirm the file exists and the current user has read permissions with <code>ls -l localfile.tar.gz</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: S3 error: 404 Not Found</code></td>
+<td>Verify the bucket name is correct and exists in the ECS cluster with <code>s3cmd ls</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="veeam-object-repository">Veeam Object Repository<a class="headerlink" href="#veeam-object-repository" title="Permanent link">&para;</a></h2>
 <p>ECS is a certified S3-compatible target for Veeam Backup &amp; Replication object repositories (Scale-out Backup Repository offload and Capacity Tier).</p>
@@ -9144,9 +9182,28 @@ Integrations reference covering S3 Client Integration, Veeam Object Repository, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unable to locate credentials</code></strong> — Ensure the <code>ecs</code> profile exists in <code>~/.aws/credentials</code> with valid access key and secret key for the ECS S3 endpoint.
-<strong><code>SSL: CERTIFICATE_VERIFY_FAILED</code></strong> — The <code>--no-verify-ssl</code> flag is already present; if the error persists, verify the ECS endpoint hostname matches the certificate or update the CA bundle with <code>export AWS_CA_BUNDLE=/path/to/ca-cert.pem</code>.
-<strong><code>NoSuchBucket</code></strong> — Confirm the bucket name <code>veeam-prod-offload</code> exists on the ECS cluster by running <code>aws s3 ls --endpoint-url https://&lt;ecs-endpoint&gt;:9021 --profile ecs</code> without the bucket path.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unable to locate credentials</code></td>
+<td>Ensure the <code>ecs</code> profile exists in <code>~/.aws/credentials</code> with valid access key and secret key for the ECS S3 endpoint.</td>
+</tr>
+<tr>
+<td><code>SSL: CERTIFICATE_VERIFY_FAILED</code></td>
+<td>The <code>--no-verify-ssl</code> flag is already present; if the error persists, verify the ECS endpoint hostname matches the certificate or update the CA bundle with <code>export AWS_CA_BUNDLE=/path/to/ca-cert.pem</code>.</td>
+</tr>
+<tr>
+<td><code>NoSuchBucket</code></td>
+<td>Confirm the bucket name <code>veeam-prod-offload</code> exists on the ECS cluster by running <code>aws s3 ls --endpoint-url https://&lt;ecs-endpoint&gt;:9021 --profile ecs</code> without the bucket path.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="commvault-integration">Commvault Integration<a class="headerlink" href="#commvault-integration" title="Permanent link">&para;</a></h2>
 <p>Commvault supports ECS as an S3-compatible cloud library target for secondary copy and archival. Configuration is performed in the Commvault Command Center.</p>
@@ -9256,9 +9313,28 @@ Integrations reference covering S3 Client Integration, Veeam Object Repository, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidAccessKeyId) when calling the PutObject operation: The Access Key Id you provided does not exist in our records.</code></strong> — Verify the AWS credentials in your <code>ecs</code> profile match the ECS S3 user account with <code>aws configure --profile ecs</code>.
-<strong><code>An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist.</code></strong> — Confirm the bucket <code>analytics-prod-raw</code> exists on the ECS endpoint with <code>aws s3 ls --endpoint-url https://&lt;ecs-endpoint&gt;:9021 --profile ecs</code>.
-<strong><code>SSL: CERTIFICATE_VERIFY_FAILED</code></strong> — The <code>--no-verify-ssl</code> flag is present but still failing; verify the ECS endpoint URL is correct and reachable with <code>curl -k https://&lt;ecs-endpoint&gt;:9021</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidAccessKeyId) when calling the PutObject operation: The Access Key Id you provided does not exist in our records.</code></td>
+<td>Verify the AWS credentials in your <code>ecs</code> profile match the ECS S3 user account with <code>aws configure --profile ecs</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist.</code></td>
+<td>Confirm the bucket <code>analytics-prod-raw</code> exists on the ECS endpoint with <code>aws s3 ls --endpoint-url https://&lt;ecs-endpoint&gt;:9021 --profile ecs</code>.</td>
+</tr>
+<tr>
+<td><code>SSL: CERTIFICATE_VERIFY_FAILED</code></td>
+<td>The <code>--no-verify-ssl</code> flag is present but still failing; verify the ECS endpoint URL is correct and reachable with <code>curl -k https://&lt;ecs-endpoint&gt;:9021</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Query objects by metadata tag (ECS Query API):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Search for objects with a custom metadata tag (requires metadata search enabled on namespace)</span>
@@ -9305,9 +9381,28 @@ Integrations reference covering S3 Client Integration, Veeam Object Repository, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; if error persists, verify ECS node certificate or use <code>--cacert</code> with proper CA bundle).
-<strong><code>{"error":"Invalid query syntax","code":400}</code></strong> — Ensure metadata search is enabled on the namespace with <code>ecs object namespace metadata-search enable</code> and verify query parameters are properly URL-encoded (spaces as <code>%20</code>, equals as <code>%3D</code>).
-<strong><code>{"error":"Unauthorized","code":401}</code></strong> — Verify <code>$TOKEN</code> variable is set with a valid authentication token from <code>curl -k -u &lt;user&gt;:&lt;pass&gt; https://&lt;ecs-node&gt;:4443/login</code> and has not expired.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; if error persists, verify ECS node certificate or use <code>--cacert</code> with proper CA bundle).</td>
+</tr>
+<tr>
+<td><code>{"error":"Invalid query syntax","code":400}</code></td>
+<td>Ensure metadata search is enabled on the namespace with <code>ecs object namespace metadata-search enable</code> and verify query parameters are properly URL-encoded (spaces as <code>%20</code>, equals as <code>%3D</code>).</td>
+</tr>
+<tr>
+<td><code>{"error":"Unauthorized","code":401}</code></td>
+<td>Verify <code>$TOKEN</code> variable is set with a valid authentication token from <code>curl -k -u &lt;user&gt;:&lt;pass&gt; https://&lt;ecs-node&gt;:4443/login</code> and has not expired.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="external-authentication-ldapad">External Authentication (LDAP/AD)<a class="headerlink" href="#external-authentication-ldapad" title="Permanent link">&para;</a></h2>
 <p>ECS can delegate IAM user authentication to an external LDAP or Active Directory service for namespace-level management access. Configure under ECS Portal → Namespace → Edit → Authentication Domain.</p>
@@ -9369,7 +9464,7 @@ Integrations reference covering S3 Client Integration, Veeam Object Repository, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

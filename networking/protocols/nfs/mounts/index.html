@@ -7945,9 +7945,28 @@ NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount.nfs: mount to NFS server '192.168.10.10' failed: Connection refused</code></strong> — Verify the NFS server is running (<code>systemctl status nfs-server</code> on the server) and the firewall allows port 2049/tcp and 111/udp.
-<strong><code>mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared</code></strong> — Check the NFS server's <code>/etc/exports</code> file to ensure the client IP is listed with appropriate permissions (e.g., <code>192.168.1.0/24(rw,sync,no_subtree_check)</code>).
-<strong><code>umount: /mnt/shared: target is busy</code></strong> — Close all open files on the mount point with <code>lsof /mnt/shared</code> and kill the processes, or use <code>umount -f -l</code> to force lazy unmount.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount.nfs: mount to NFS server '192.168.10.10' failed: Connection refused</code></td>
+<td>Verify the NFS server is running (<code>systemctl status nfs-server</code> on the server) and the firewall allows port 2049/tcp and 111/udp.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared</code></td>
+<td>Check the NFS server's <code>/etc/exports</code> file to ensure the client IP is listed with appropriate permissions (e.g., <code>192.168.1.0/24(rw,sync,no_subtree_check)</code>).</td>
+</tr>
+<tr>
+<td><code>umount: /mnt/shared: target is busy</code></td>
+<td>Close all open files on the mount point with <code>lsof /mnt/shared</code> and kill the processes, or use <code>umount -f -l</code> to force lazy unmount.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="etcfstab-options">/etc/fstab Options<a class="headerlink" href="#etcfstab-options" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># NFSv4 persistent mount</span>
@@ -7964,9 +7983,28 @@ NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mount.nfs: mount to NFS server '192.168.10.10' failed: server is down</code></strong> — Verify NFS server is running with <code>systemctl status nfs-server</code> on the server and check network connectivity with <code>ping 192.168.10.10</code>.
-<strong><code>mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared</code></strong> — Ensure the client IP is listed in the NFS server's <code>/etc/exports</code> file and reload exports with <code>exportfs -ra</code>.
-<strong><code>mount.nfs: No such file or directory</code></strong> — Create the mount point directories with <code>mkdir -p /mnt/shared /mnt/logs</code> before running <code>mount -a</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount.nfs: mount to NFS server '192.168.10.10' failed: server is down</code></td>
+<td>Verify NFS server is running with <code>systemctl status nfs-server</code> on the server and check network connectivity with <code>ping 192.168.10.10</code>.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared</code></td>
+<td>Ensure the client IP is listed in the NFS server's <code>/etc/exports</code> file and reload exports with <code>exportfs -ra</code>.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: No such file or directory</code></td>
+<td>Create the mount point directories with <code>mkdir -p /mnt/shared /mnt/logs</code> before running <code>mount -a</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="mount-option-reference">Mount Option Reference<a class="headerlink" href="#mount-option-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -8061,9 +8099,28 @@ NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>automount[1234]: lookup(file): lookup for shared failed</code></strong> — Verify the NFS server IP and export paths are correct in <code>/etc/auto.nfs</code>, and confirm the NFS server is reachable with <code>ping 192.168.10.10</code>.
-<strong><code>mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared</code></strong> — Check NFS server export permissions in <code>/etc/exports</code> and ensure the client IP is listed with appropriate read/write flags, then run <code>exportfs -ra</code> on the server.
-<strong><code>systemctl: Unit autofs.service not found</code></strong> — Install autofs first with <code>dnf install autofs</code> or <code>apt install autofs</code> before attempting to enable the service.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>automount[1234]: lookup(file): lookup for shared failed</code></td>
+<td>Verify the NFS server IP and export paths are correct in <code>/etc/auto.nfs</code>, and confirm the NFS server is reachable with <code>ping 192.168.10.10</code>.</td>
+</tr>
+<tr>
+<td><code>mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared</code></td>
+<td>Check NFS server export permissions in <code>/etc/exports</code> and ensure the client IP is listed with appropriate read/write flags, then run <code>exportfs -ra</code> on the server.</td>
+</tr>
+<tr>
+<td><code>systemctl: Unit autofs.service not found</code></td>
+<td>Install autofs first with <code>dnf install autofs</code> or <code>apt install autofs</code> before attempting to enable the service.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8093,7 +8150,7 @@ NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Cisco DCNM — CLI Reference · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco DCNM — CLI Reference", "url": "https://chrisanastasiadis.com/san/cisco/cisco-dcnm/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco DCNM — CLI Reference", "url": "https://chrisanastasiadis.com/san/cisco/cisco-dcnm/operations/cli-reference/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7683,9 +7683,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>dcnm-server: command not found</code></strong> — Verify the DCNM installation path is correct and add <code>/usr/local/cisco/dcm/dcnm/sbin</code> to your PATH or use the full path.
-<strong><code>Failed to start dcnm-pm: Unit dcnm-pm.service not found</code></strong> — Ensure systemd service files are installed in <code>/etc/systemd/system/</code> by running <code>systemctl daemon-reload</code> after DCNM installation.
-<strong><code>Permission denied</code></strong> — Run the commands with <code>sudo</code> or ensure your user account is in the <code>dcnm</code> group with <code>sudo usermod -aG dcnm $USER</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dcnm-server: command not found</code></td>
+<td>Verify the DCNM installation path is correct and add <code>/usr/local/cisco/dcm/dcnm/sbin</code> to your PATH or use the full path.</td>
+</tr>
+<tr>
+<td><code>Failed to start dcnm-pm: Unit dcnm-pm.service not found</code></td>
+<td>Ensure systemd service files are installed in <code>/etc/systemd/system/</code> by running <code>systemctl daemon-reload</code> after DCNM installation.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the commands with <code>sudo</code> or ensure your user account is in the <code>dcnm</code> group with <code>sudo usermod -aG dcnm $USER</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test SSH connectivity to a managed switch</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">ConnectTimeout</span><span class="o">=</span><span class="m">5</span><span class="w"> </span>-o<span class="w"> </span><span class="nv">BatchMode</span><span class="o">=</span>yes<span class="w"> </span>dcnm_mgmt@&lt;switch-ip&gt;<span class="w"> </span><span class="s1">&#39;show version&#39;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
@@ -7718,9 +7737,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the dcnm_mgmt user exists on the switch and SSH key or password is configured correctly in DCNM credentials.
-<strong><code>Timeout: No Response from &lt;switch-ip&gt;</code></strong> — Check network connectivity to the switch IP, verify SNMP v3 user credentials match the switch configuration, and confirm firewall allows UDP 161 outbound.
-<strong><code>tcpdump: eth0: No such device</code></strong> — Replace eth0 with the correct management interface name (use <code>ip link show</code> to list available interfaces).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify the dcnm_mgmt user exists on the switch and SSH key or password is configured correctly in DCNM credentials.</td>
+</tr>
+<tr>
+<td><code>Timeout: No Response from &lt;switch-ip&gt;</code></td>
+<td>Check network connectivity to the switch IP, verify SNMP v3 user credentials match the switch configuration, and confirm firewall allows UDP 161 outbound.</td>
+</tr>
+<tr>
+<td><code>tcpdump: eth0: No such device</code></td>
+<td>Replace eth0 with the correct management interface name (use <code>ip link show</code> to list available interfaces).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check HA status</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
@@ -7750,9 +7788,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HA Status: UNHEALTHY — Replication lag exceeds threshold</code></strong> — Check network connectivity between nodes and verify DCNM services are running on both nodes with <code>systemctl status dcnm</code>.
-<strong><code>ERROR: Cannot connect to standby node — Connection refused</code></strong> — Ensure the standby node is reachable and DCNM HA daemon is running; verify firewall rules allow port 7777 between cluster nodes.
-<strong><code>inet 192.168.100.50 not found</code></strong> — Confirm the VIP address is correct and the active node has successfully claimed the virtual IP after failover.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HA Status: UNHEALTHY — Replication lag exceeds threshold</code></td>
+<td>Check network connectivity between nodes and verify DCNM services are running on both nodes with <code>systemctl status dcnm</code>.</td>
+</tr>
+<tr>
+<td><code>ERROR: Cannot connect to standby node — Connection refused</code></td>
+<td>Ensure the standby node is reachable and DCNM HA daemon is running; verify firewall rules allow port 7777 between cluster nodes.</td>
+</tr>
+<tr>
+<td><code>inet 192.168.100.50 not found</code></td>
+<td>Confirm the VIP address is correct and the active node has successfully claimed the virtual IP after failover.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Login with Basic Auth — returns session cookie</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-c<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -7773,9 +7830,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).
-<strong><code>{"StatusCode":401,"StatusMessage":"Unauthorized"}</code></strong> — Verify the service account credentials and that the password is correctly URL-encoded if it contains special characters; use <code>curl -u "svc-automation:$(printf '%s' "$PASSWORD" | jq -sRr @uri)"</code> if needed.
-<strong><code>curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 443: Connection refused</code></strong> — Confirm the DCNM hostname/IP is reachable and the REST API service is running with <code>curl -sk https://dcnm-dc1.corp.example.com/rest/logon --connect-timeout 5</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>{"StatusCode":401,"StatusMessage":"Unauthorized"}</code></td>
+<td>Verify the service account credentials and that the password is correctly URL-encoded if it contains special characters; use <code>curl -u "svc-automation:$(printf '%s' "$PASSWORD" | jq -sRr @uri)"</code> if needed.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 443: Connection refused</code></td>
+<td>Confirm the DCNM hostname/IP is reachable and the REST API service is running with <code>curl -sk https://dcnm-dc1.corp.example.com/rest/logon --connect-timeout 5</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all switches</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/inventory/switches&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7864,9 +7940,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification or import the DCNM certificate into your system trust store.
-<strong><code>curl: (7) Failed to connect to &lt;host&gt;: Connection refused</code></strong> — Verify the DCNM server is running and the <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.
-<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Ensure the authentication cookie in <code>dcnm-cookie.txt</code> is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification or import the DCNM certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;host&gt;: Connection refused</code></td>
+<td>Verify the DCNM server is running and the <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON at line 1</code></td>
+<td>Ensure the authentication cookie in <code>dcnm-cookie.txt</code> is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Get zone database for a fabric</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
@@ -7925,9 +8020,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag (already present) or import the DCNM certificate into your system CA bundle; verify <code>${DCNM}</code> variable is set correctly.
-<strong><code>curl: (7) Failed to connect to &lt;IP&gt;: Connection refused</code></strong> — Verify DCNM server is running and accessible at the <code>${DCNM}</code> endpoint, and check firewall rules allow port 443 access.
-<strong><code>jq: parse error: Invalid JSON</code></strong> — Ensure the authentication cookie in <code>dcnm-cookie.txt</code> is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag (already present) or import the DCNM certificate into your system CA bundle; verify <code>${DCNM}</code> variable is set correctly.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;IP&gt;: Connection refused</code></td>
+<td>Verify DCNM server is running and accessible at the <code>${DCNM}</code> endpoint, and check firewall rules allow port 443 access.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON</code></td>
+<td>Ensure the authentication cookie in <code>dcnm-cookie.txt</code> is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Get all active alarms</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
@@ -7994,9 +8108,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the DCNM CA certificate into your system trust store.
-<strong><code>curl: (7) Failed to connect to &lt;DCNM_IP&gt;: Connection refused</code></strong> — Verify the DCNM server is running and the <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.
-<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Ensure you are authenticated by running the login curl command first and that <code>dcnm-cookie.txt</code> contains a valid session cookie.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the DCNM CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;DCNM_IP&gt;: Connection refused</code></td>
+<td>Verify the DCNM server is running and the <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON at line 1</code></td>
+<td>Ensure you are authenticated by running the login curl command first and that <code>dcnm-cookie.txt</code> contains a valid session cookie.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List firmware images in DCNM repository</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/fm/image&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -8048,9 +8181,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification, or import the DCNM certificate into your system trust store.
-<strong><code>{"error": "Invalid image name", "code": 400}</code></strong> — Verify the exact image filename exists in the repository by running the first curl command to list available images.
-<strong><code>curl: (7) Failed to connect to &lt;DCNM_IP&gt; port 443: Connection refused</code></strong> — Confirm the DCNM server is running and accessible; check that <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification, or import the DCNM certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error": "Invalid image name", "code": 400}</code></td>
+<td>Verify the exact image filename exists in the repository by running the first curl command to list available images.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;DCNM_IP&gt; port 443: Connection refused</code></td>
+<td>Confirm the DCNM server is running and accessible; check that <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Count switches by management state</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM</span><span class="si">}</span><span class="s2">/rest/inventory/switches&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -8098,9 +8250,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl or import the DCNM certificate into your system CA bundle.
-<strong><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></strong> — Verify the DCNM cookie is valid by checking <code>dcnm-cookie.txt</code> exists and re-authenticate if expired.
-<strong><code>curl: (7) Failed to connect to &lt;DCNM_IP&gt; port 443: Connection refused</code></strong> — Confirm the DCNM server is running and the <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl or import the DCNM certificate into your system CA bundle.</td>
+</tr>
+<tr>
+<td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1</code></td>
+<td>Verify the DCNM cookie is valid by checking <code>dcnm-cookie.txt</code> exists and re-authenticate if expired.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;DCNM_IP&gt; port 443: Connection refused</code></td>
+<td>Confirm the DCNM server is running and the <code>${DCNM}</code> variable is set correctly with <code>echo $DCNM</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8146,7 +8317,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

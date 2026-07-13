@@ -9178,9 +9178,28 @@ Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>powermt: Command not found</code></strong> — Verify EMC PowerPath is installed with <code>rpm -qa | grep PowerPath</code> and install from Dell support portal if missing.
-<strong><code>systool: command not found</code></strong> — Install sysfsutils package with <code>yum install sysfsutils</code> or <code>apt-get install sysfsutils</code> depending on your distribution.
-<strong><code>switchshow: command not found</code></strong> — Run this command directly on the Brocade switch via SSH or console, not from the host; alternatively verify Brocade CLI tools are installed locally with <code>rpm -qa | grep brocade</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>powermt: Command not found</code></td>
+<td>Verify EMC PowerPath is installed with <code>rpm -qa | grep PowerPath</code> and install from Dell support portal if missing.</td>
+</tr>
+<tr>
+<td><code>systool: command not found</code></td>
+<td>Install sysfsutils package with <code>yum install sysfsutils</code> or <code>apt-get install sysfsutils</code> depending on your distribution.</td>
+</tr>
+<tr>
+<td><code>switchshow: command not found</code></td>
+<td>Run this command directly on the Brocade switch via SSH or console, not from the host; alternatively verify Brocade CLI tools are installed locally with <code>rpm -qa | grep brocade</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Prevention:</strong> Add a post-boot <code>powermt restore</code> to the startup sequence via a systemd oneshot service or rc.local equivalent, executed after the PowerPath service is confirmed running.</p>
 <hr />
@@ -9237,9 +9256,28 @@ Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>powermt: command not found</code></strong> — Install EMC PowerPath package (e.g., <code>apt-get install emc-powerpath</code> or equivalent for your distribution) and ensure the PowerPath daemon is running with <code>systemctl start powerpath</code>.
-<strong><code>No such file or directory: /sys/class/fc_host/host0/issue_lip</code></strong> — Verify HBA is present and loaded with <code>lspci | grep -i fibre</code> and check actual host numbers with <code>ls /sys/class/fc_host/</code> before issuing LIP commands.
-**<code>dead</code> still appears after restore and LIP<code>** — Check SAN fabric connectivity and zoning with</code>fcstat` or vendor tools, and verify HBA firmware is current before attempting further recovery steps.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Install EMC PowerPath package (e.g., <code>apt-get install emc-powerpath</code> or equivalent for your distribution) and ensure the PowerPath daemon is running with <code>systemctl start powerpath</code>.</td>
+</tr>
+<tr>
+<td><code>No such file or directory: /sys/class/fc_host/host0/issue_lip</code></td>
+<td>Verify HBA is present and loaded with <code>lspci | grep -i fibre</code> and check actual host numbers with <code>ls /sys/class/fc_host/</code> before issuing LIP commands.</td>
+</tr>
+<tr>
+<td><code>dead</code> still appears after restore and LIP<code>| Check SAN fabric connectivity and zoning with</code>fcstat` or vendor tools, and verify HBA firmware is current before attempting further recovery steps.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If paths still do not recover after the above steps, escalate to the SAN team to confirm the switch port and array FA port are fully online and zoned correctly.</p>
 <hr />
@@ -9293,9 +9331,28 @@ Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bash: /usr/bin/rescan-scsi-bus.sh: No such file or directory</code></strong> — Install sg3-utils package with <code>yum install sg3-utils</code> or remove the line if using newer kernel auto-discovery.
-<strong><code>powermt: command not found</code></strong> — Verify EMC PowerPath is installed with <code>rpm -qa | grep PowerPath</code> and source the environment with <code>source /etc/profile.d/emc_powerpaths.sh</code>.
-<strong><code>Permission denied</code></strong> — Run the entire script with <code>sudo</code> or as root user since <code>/sys/class/scsi_host</code> writes require elevated privileges.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bash: /usr/bin/rescan-scsi-bus.sh: No such file or directory</code></td>
+<td>Install sg3-utils package with <code>yum install sg3-utils</code> or remove the line if using newer kernel auto-discovery.</td>
+</tr>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Verify EMC PowerPath is installed with <code>rpm -qa | grep PowerPath</code> and source the environment with <code>source /etc/profile.d/emc_powerpaths.sh</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the entire script with <code>sudo</code> or as root user since <code>/sys/class/scsi_host</code> writes require elevated privileges.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>If the device still does not appear after the above, verify at the array that:
 - The LUN is fully created and not in a provisioning or error state
@@ -9344,9 +9401,28 @@ Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>powermt: command not found</code></strong> — Ensure PowerPath is installed and <code>/opt/powerpath/bin</code> is in your PATH, or use the full path <code>/opt/powerpath/bin/powermt</code>.
-<strong><code>Registration key invalid or expired</code></strong> — Verify the registration key format matches Dell's requirements and obtain a fresh key from the Dell support portal if it has expired.
-<strong><code>powermt: insufficient privileges</code></strong> — Run the command with <code>sudo</code> or as root, as PowerPath operations require administrative access.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Ensure PowerPath is installed and <code>/opt/powerpath/bin</code> is in your PATH, or use the full path <code>/opt/powerpath/bin/powermt</code>.</td>
+</tr>
+<tr>
+<td><code>Registration key invalid or expired</code></td>
+<td>Verify the registration key format matches Dell's requirements and obtain a fresh key from the Dell support portal if it has expired.</td>
+</tr>
+<tr>
+<td><code>powermt: insufficient privileges</code></td>
+<td>Run the command with <code>sudo</code> or as root, as PowerPath operations require administrative access.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Note:</strong> Paths in <code>unlic</code> state are not managed by PowerPath — I/O may still flow over them via native OS multipath if DM-Multipath is active, but PowerPath provides no failover or load balancing for these paths.</p>
 <hr />
@@ -9402,9 +9478,28 @@ Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>powermt: command not found</code></strong> — Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and add <code>/opt/emc/powerpath/bin</code> to PATH if needed.
-<strong><code>Error: Cannot set policy — devices in use</code></strong> — Stop I/O to affected devices or use <code>powermt set policy=CLAROpt class=all -force</code> to override (use with caution in production).
-<strong><code>Error: Configuration not saved — permission denied</code></strong> — Run <code>powermt save</code> with root privileges using <code>sudo</code> or switch to root user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Verify PowerPath is installed with <code>rpm -qa | grep EMCpower</code> and add <code>/opt/emc/powerpath/bin</code> to PATH if needed.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot set policy — devices in use</code></td>
+<td>Stop I/O to affected devices or use <code>powermt set policy=CLAROpt class=all -force</code> to override (use with caution in production).</td>
+</tr>
+<tr>
+<td><code>Error: Configuration not saved — permission denied</code></td>
+<td>Run <code>powermt save</code> with root privileges using <code>sudo</code> or switch to root user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Impact of wrong policy:</strong> <code>RoundRobin</code> sends I/O over all paths regardless of ALUA state. On active/passive arrays, this causes I/O to be sent over non-optimised paths (the standby storage processor), which the array then re-routes internally — causing latency and additional array-side CPU overhead.</p>
 <hr />
@@ -9465,9 +9560,28 @@ Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/messages: No such file or directory</code></strong> — Check the correct syslog location with <code>ls /var/log/syslog /var/log/messages /var/log/audit/audit.log</code> and adjust the path accordingly.
-<strong><code>powermt: command not found</code></strong> — Verify PowerPath is installed with <code>rpm -qa | grep powerpath</code> and ensure <code>/opt/emc/powerpath/bin</code> is in your PATH.
-<strong><code>portshow: command not found</code></strong> — SSH to the Brocade switch directly or use the switch's web interface; this command runs on the switch, not the host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/messages: No such file or directory</code></td>
+<td>Check the correct syslog location with <code>ls /var/log/syslog /var/log/messages /var/log/audit/audit.log</code> and adjust the path accordingly.</td>
+</tr>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Verify PowerPath is installed with <code>rpm -qa | grep powerpath</code> and ensure <code>/opt/emc/powerpath/bin</code> is in your PATH.</td>
+</tr>
+<tr>
+<td><code>portshow: command not found</code></td>
+<td>SSH to the Brocade switch directly or use the switch's web interface; this command runs on the switch, not the host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Resolution:</strong> Replace the suspect SFP or cable. Clean dirty connectors. If the switch port is oversubscribed or showing persistent CRC errors, relocate the connection to a clean port. After physical repair, run <code>powermt restore</code> and monitor for 30 minutes to confirm the path has stabilised.</p>
 <hr />
@@ -9536,9 +9650,28 @@ Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>multipathd.service is not running.</code></strong> — Run <code>systemctl start multipathd</code> to start the service before attempting to reload configuration.
-<strong><code>Cannot open /etc/multipath.conf: Permission denied</code></strong> — Edit the multipath.conf file with elevated privileges using <code>sudo nano /etc/multipath.conf</code> or ensure your user has write permissions.
-<strong><code>powermt: command not found</code></strong> — Install the PowerPath package using <code>apt-get install powerpath</code> or <code>yum install powerpath</code> depending on your distribution.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>multipathd.service is not running.</code></td>
+<td>Run <code>systemctl start multipathd</code> to start the service before attempting to reload configuration.</td>
+</tr>
+<tr>
+<td><code>Cannot open /etc/multipath.conf: Permission denied</code></td>
+<td>Edit the multipath.conf file with elevated privileges using <code>sudo nano /etc/multipath.conf</code> or ensure your user has write permissions.</td>
+</tr>
+<tr>
+<td><code>powermt: command not found</code></td>
+<td>Install the PowerPath package using <code>apt-get install powerpath</code> or <code>yum install powerpath</code> depending on your distribution.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="powerpath-service-not-starting-after-reboot">PowerPath Service Not Starting After Reboot<a class="headerlink" href="#powerpath-service-not-starting-after-reboot" title="Permanent link">&para;</a></h2>
@@ -9581,8 +9714,24 @@ Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>modprobe: FATAL: Module emcp not found in directory /lib/modules/5.15.0-91-generic/kernel</code></strong> — Reinstall PowerPath with <code>powermt install</code> or run the PowerPath installer with the <code>--repair</code> flag to rebuild the kernel module for the current kernel version.
-<strong><code>Job for PowerPath.service failed because the control process exited with error code.</code></strong> — Check <code>journalctl -u PowerPath -n 20</code> for the specific startup error; common causes are missing dependencies or incompatible kernel module versions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>modprobe: FATAL: Module emcp not found in directory /lib/modules/5.15.0-91-generic/kernel</code></td>
+<td>Reinstall PowerPath with <code>powermt install</code> or run the PowerPath installer with the <code>--repair</code> flag to rebuild the kernel module for the current kernel version.</td>
+</tr>
+<tr>
+<td><code>Job for PowerPath.service failed because the control process exited with error code.</code></td>
+<td>Check <code>journalctl -u PowerPath -n 20</code> for the specific startup error; common causes are missing dependencies or incompatible kernel module versions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Common cause after OS/kernel update:</strong> A kernel update replaces the running kernel but does not rebuild the PowerPath kernel module for the new kernel. The PowerPath DKMS package should rebuild automatically, but if DKMS is not configured or fails, the module will be missing after reboot. Check <code>dmesg</code> for module load errors.</p>
 <hr />
@@ -9687,7 +9836,7 @@ Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

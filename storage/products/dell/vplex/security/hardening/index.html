@@ -9136,9 +9136,28 @@ Security baseline for VPLEX deployments. Apply all items before production go-li
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sshd[12847]: Invalid user service from 192.168.1.50 port 54321</code></strong> — Ensure the service account exists on the VPLEX system with <code>useradd service</code> before applying these settings.
-<strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Verify SSH host keys exist in <code>/etc/ssh/</code> (ssh_host_rsa_key, ssh_host_ed25519_key) and regenerate with <code>ssh-keygen -A</code> if missing.
-<strong><code>sshd[12847]: fatal: kex_exchange_identification: Connection closed by remote host</code></strong> — Replace <code>&lt;MGMT_JUMP_HOST_IP&gt;</code> with the actual management host IP address (e.g., <code>AllowUsers service@10.20.30.40</code>) before restarting sshd.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd[12847]: Invalid user service from 192.168.1.50 port 54321</code></td>
+<td>Ensure the service account exists on the VPLEX system with <code>useradd service</code> before applying these settings.</td>
+</tr>
+<tr>
+<td><code>sshd: no hostkeys available -- exiting.</code></td>
+<td>Verify SSH host keys exist in <code>/etc/ssh/</code> (ssh_host_rsa_key, ssh_host_ed25519_key) and regenerate with <code>ssh-keygen -A</code> if missing.</td>
+</tr>
+<tr>
+<td><code>sshd[12847]: fatal: kex_exchange_identification: Connection closed by remote host</code></td>
+<td>Replace <code>&lt;MGMT_JUMP_HOST_IP&gt;</code> with the actual management host IP address (e.g., <code>AllowUsers service@10.20.30.40</code>) before restarting sshd.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After editing, test the configuration and restart:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test sshd config for syntax errors</span>
@@ -9163,9 +9182,28 @@ Security baseline for VPLEX deployments. Apply all items before production go-li
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sshd: no hostkeys available -- exiting.</code></strong> — Regenerate SSH host keys with <code>ssh-keygen -A</code> or restore from backup before restarting sshd.
-<strong><code>Permission denied (publickey).</code></strong> — Verify the vplex_ed25519 private key has 600 permissions and the public key is in service@<VMS_IP>'s ~/.ssh/authorized_keys file.
-<strong><code>Connection refused</code></strong> — Confirm sshd restarted successfully with <code>systemctl status sshd</code> and that <VMS_IP> is reachable before attempting the key authentication test.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sshd: no hostkeys available -- exiting.</code></td>
+<td>Regenerate SSH host keys with <code>ssh-keygen -A</code> or restore from backup before restarting sshd.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Verify the vplex_ed25519 private key has 600 permissions and the public key is in service@<VMS_IP>'s ~/.ssh/authorized_keys file.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Confirm sshd restarted successfully with <code>systemctl status sshd</code> and that <VMS_IP> is reachable before attempting the key authentication test.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="network-segmentation">Network Segmentation<a class="headerlink" href="#network-segmentation" title="Permanent link">&para;</a></h2>
@@ -9297,9 +9335,28 @@ Security baseline for VPLEX deployments. Apply all items before production go-li
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey).</code></strong> — Verify the SSH key path is correct and the service account public key is installed on the VMS with <code>ssh-copy-id -i ~/.ssh/vplex_ed25519.pub service@&lt;VMS_IP&gt;</code>.
-<strong><code>unable to load certificate</code></strong> — Ensure the corporate CA certificate is properly installed in the VMS trust store by running <code>vplexcli -q -e "certificate-import --ca-cert /path/to/ca.pem"</code>.
-<strong><code>Witness connectivity-status: DISCONNECTED</code></strong> — Confirm network connectivity to the witness server at 10.48.10.88 and verify firewall rules allow port 7225 bidirectionally.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey).</code></td>
+<td>Verify the SSH key path is correct and the service account public key is installed on the VMS with <code>ssh-copy-id -i ~/.ssh/vplex_ed25519.pub service@&lt;VMS_IP&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Ensure the corporate CA certificate is properly installed in the VMS trust store by running <code>vplexcli -q -e "certificate-import --ca-cert /path/to/ca.pem"</code>.</td>
+</tr>
+<tr>
+<td><code>Witness connectivity-status: DISCONNECTED</code></td>
+<td>Confirm network connectivity to the witness server at 10.48.10.88 and verify firewall rules allow port 7225 bidirectionally.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9330,7 +9387,7 @@ Security baseline for VPLEX deployments. Apply all items before production go-li
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

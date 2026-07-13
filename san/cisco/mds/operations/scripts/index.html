@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Cisco MDS 9000 — Operations Scripts · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco MDS 9000 — Operations Scripts", "url": "https://chrisanastasiadis.com/san/cisco/mds/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Cisco MDS 9000 — Operations Scripts", "url": "https://chrisanastasiadis.com/san/cisco/mds/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-06"}</script>
   
 
   </head>
@@ -7730,9 +7730,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: connect to host 192.168.1.20 port 22: Connection timed out</code></strong> — Verify the MDS_HOST IP is correct and reachable, and that SSH port 22 is open on the switch.
-<strong><code>Permission denied (publickey,password).</code></strong> — Ensure MDS_USER credentials are correct and the user has SSH access privileges on the MDS switch.
-<strong><code>show: command not found</code></strong> — Confirm you are connecting to a Cisco MDS switch (not a Linux host) and that the SSH session properly enters the switch CLI.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: connect to host 192.168.1.20 port 22: Connection timed out</code></td>
+<td>Verify the MDS_HOST IP is correct and reachable, and that SSH port 22 is open on the switch.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Ensure MDS_USER credentials are correct and the user has SSH access privileges on the MDS switch.</td>
+</tr>
+<tr>
+<td><code>show: command not found</code></td>
+<td>Confirm you are connecting to a Cisco MDS switch (not a Linux host) and that the SSH session properly enters the switch CLI.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># mds_interface_errors.sh</span>
@@ -7821,9 +7840,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>[2024-01-15T14:32:18Z] ERROR: Could not connect to 192.168.1.20</code></strong> — Verify SSH connectivity with <code>ssh -o ConnectTimeout=10 admin@192.168.1.20</code> and confirm the MDS host is reachable and SSH is enabled.
-<strong><code>Permission denied (publickey,password).</code></strong> — Add the script's SSH key to the MDS device's authorized_keys or configure password-based SSH authentication with <code>sshpass</code> if BatchMode=yes is causing auth failure.
-<strong><code>/var/tmp/mds_err_baseline_192.168.1.20.dat: Permission denied</code></strong> — Ensure the script runs with write permissions to <code>/var/tmp/</code> or change <code>BASELINE_FILE</code> to a writable directory like <code>/tmp/</code> or a dedicated monitoring directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[2024-01-15T14:32:18Z] ERROR: Could not connect to 192.168.1.20</code></td>
+<td>Verify SSH connectivity with <code>ssh -o ConnectTimeout=10 admin@192.168.1.20</code> and confirm the MDS host is reachable and SSH is enabled.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Add the script's SSH key to the MDS device's authorized_keys or configure password-based SSH authentication with <code>sshpass</code> if BatchMode=yes is causing auth failure.</td>
+</tr>
+<tr>
+<td><code>/var/tmp/mds_err_baseline_192.168.1.20.dat: Permission denied</code></td>
+<td>Ensure the script runs with write permissions to <code>/var/tmp/</code> or change <code>BASELINE_FILE</code> to a writable directory like <code>/tmp/</code> or a dedicated monitoring directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>mds_interface_errors.sh
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">MDS_HOST</span><span class="o">=</span><span class="m">192</span>.168.1.20<span class="w"> </span><span class="nv">MDS_USER</span><span class="o">=</span>admin<span class="w"> </span>./mds_interface_errors.sh
@@ -8080,9 +8118,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>plink.exe: unable to open connection to '192.168.1.20' port 22: Network error: Connection refused</code></strong> — Verify the MDS switch is reachable and SSH is enabled on port 22 using <code>ping 192.168.1.20</code> and check the switch's SSH configuration.
-<strong><code>Permission denied (publickey,password)</code></strong> — Confirm the SSH credentials are correct and the admin user has SSH access enabled on the MDS switch.
-<strong><code>The file 'C:\Program Files\PuTTY\plink.exe' cannot be found</code></strong> — Install PuTTY or correct the <code>-PlinkPath</code> parameter to point to the actual plink.exe location.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plink.exe: unable to open connection to '192.168.1.20' port 22: Network error: Connection refused</code></td>
+<td>Verify the MDS switch is reachable and SSH is enabled on port 22 using <code>ping 192.168.1.20</code> and check the switch's SSH configuration.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Confirm the SSH credentials are correct and the admin user has SSH access enabled on the MDS switch.</td>
+</tr>
+<tr>
+<td><code>The file 'C:\Program Files\PuTTY\plink.exe' cannot be found</code></td>
+<td>Install PuTTY or correct the <code>-PlinkPath</code> parameter to point to the actual plink.exe location.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># mds_daily_check.sh</span>
@@ -8143,9 +8200,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: connect to host 192.168.1.20 port 22 (tcp) timed out</code></strong> — Verify the MDS_HOST IP is correct and the switch is reachable with <code>ping 192.168.1.20</code>.
-<strong><code>Permission denied (publickey,password)</code></strong> — Ensure SSH_USER is set to a valid admin account and key-based authentication is configured, or add <code>-o PubkeyAuthentication=no</code> to SSH_OPTS to allow password auth.
-<strong><code>show version: command not found</code></strong> — Confirm you are connected to a Cisco MDS switch (not a different device) and that the SSH session is entering the correct CLI mode.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: connect to host 192.168.1.20 port 22 (tcp) timed out</code></td>
+<td>Verify the MDS_HOST IP is correct and the switch is reachable with <code>ping 192.168.1.20</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password)</code></td>
+<td>Ensure SSH_USER is set to a valid admin account and key-based authentication is configured, or add <code>-o PubkeyAuthentication=no</code> to SSH_OPTS to allow password auth.</td>
+</tr>
+<tr>
+<td><code>show version: command not found</code></td>
+<td>Confirm you are connected to a Cisco MDS switch (not a different device) and that the SSH session is entering the correct CLI mode.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># mds_triage.sh</span>
@@ -8235,9 +8311,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: connect to host 192.168.1.20 port 22 (tcp): Connection timed out</code></strong> — Verify the MDS_HOST IP is correct and reachable; check network connectivity and firewall rules allowing SSH to port 22.
-<strong><code>Permission denied (publickey,password).</code></strong> — Ensure SSH_USER is correct and has valid credentials configured; verify the admin account exists and SSH key authentication is properly set up.
-<strong><code>show: command not found</code></strong> — The SSH session is not entering the MDS CLI properly; remove <code>-o BatchMode=yes</code> or add <code>terminal length 0</code> to the ssh_</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: connect to host 192.168.1.20 port 22 (tcp): Connection timed out</code></td>
+<td>Verify the MDS_HOST IP is correct and reachable; check network connectivity and firewall rules allowing SSH to port 22.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Ensure SSH_USER is correct and has valid credentials configured; verify the admin account exists and SSH key authentication is properly set up.</td>
+</tr>
+<tr>
+<td><code>show: command not found</code></td>
+<td>The SSH session is not entering the MDS CLI properly; remove <code>-o BatchMode=yes</code> or add <code>terminal length 0</code> to the ssh_</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># mds_precheck.sh</span>
@@ -8313,9 +8408,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH_USER and MDS_HOST are correct, and that the admin account exists with proper SSH key or password authentication enabled on the MDS switch.
-<strong><code>Connection timed out</code></strong> — Check network connectivity to the MDS_HOST IP address and confirm the SSH service is running on the switch (verify with <code>show ssh server status</code>).
-<strong><code>[FAIL] Active zoneset 'prod_zoneset' does not match expected 'prod_zoneset_v2'</code></strong> — Confirm the EXPECTED_ZONESET environment variable matches the actual active zoneset name on the MDS, or activate the correct zoneset with <code>zoneset activate name &lt;zoneset_name&gt; vsan &lt;vsan_id&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify SSH_USER and MDS_HOST are correct, and that the admin account exists with proper SSH key or password authentication enabled on the MDS switch.</td>
+</tr>
+<tr>
+<td><code>Connection timed out</code></td>
+<td>Check network connectivity to the MDS_HOST IP address and confirm the SSH service is running on the switch (verify with <code>show ssh server status</code>).</td>
+</tr>
+<tr>
+<td><code>[FAIL] Active zoneset 'prod_zoneset' does not match expected 'prod_zoneset_v2'</code></td>
+<td>Confirm the EXPECTED_ZONESET environment variable matches the actual active zoneset name on the MDS, or activate the correct zoneset with <code>zoneset activate name &lt;zoneset_name&gt; vsan &lt;vsan_id&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># mds_postcheck.sh</span>
@@ -8376,9 +8490,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: connect to host 192.168.1.20 port 22 (tcp) timed out</code></strong> — Verify the MDS_HOST IP is correct and reachable, and that SSH is enabled on the switch with <code>ssh server enable</code>.
-<strong><code>Permission denied (publickey,password).</code></strong> — Confirm SSH_USER has valid credentials and key-based auth is configured, or add <code>-o PubkeyAuthentication=no</code> to SSH_OPTS to force password auth.
-<strong><code>[FAIL] 3 FC interface(s) still down</code></strong> — Check the interface status on the MDS with <code>show interface fc1/1-3</code> and verify the post-change configuration was applied correctly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: connect to host 192.168.1.20 port 22 (tcp) timed out</code></td>
+<td>Verify the MDS_HOST IP is correct and reachable, and that SSH is enabled on the switch with <code>ssh server enable</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Confirm SSH_USER has valid credentials and key-based auth is configured, or add <code>-o PubkeyAuthentication=no</code> to SSH_OPTS to force password auth.</td>
+</tr>
+<tr>
+<td><code>[FAIL] 3 FC interface(s) still down</code></td>
+<td>Check the interface status on the MDS with <code>show interface fc1/1-3</code> and verify the post-change configuration was applied correctly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># mds_health_check.sh</span>
@@ -8411,9 +8544,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Ensure SSH key is installed in <code>~/.ssh/authorized_keys</code> on the MDS or add password authentication; verify <code>SSH_USER</code> matches a valid admin account.
-<strong><code>ssh: connect to host 192.168.1.20 port 22: Connection timed out</code></strong> — Verify the MDS_HOST IP is reachable and SSH is enabled on the switch; check firewall rules and network connectivity with <code>ping $MDS_HOST</code>.
-<strong><code>show: command not found</code></strong> — Confirm you are connecting to a Cisco MDS switch (not a Linux host); verify the SSH session is entering the MDS CLI correctly by testing <code>ssh_cmd "show version"</code> manually.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Ensure SSH key is installed in <code>~/.ssh/authorized_keys</code> on the MDS or add password authentication; verify <code>SSH_USER</code> matches a valid admin account.</td>
+</tr>
+<tr>
+<td><code>ssh: connect to host 192.168.1.20 port 22: Connection timed out</code></td>
+<td>Verify the MDS_HOST IP is reachable and SSH is enabled on the switch; check firewall rules and network connectivity with <code>ping $MDS_HOST</code>.</td>
+</tr>
+<tr>
+<td><code>show: command not found</code></td>
+<td>Confirm you are connecting to a Cisco MDS switch (not a Linux host); verify the SSH session is entering the MDS CLI correctly by testing <code>ssh_cmd "show version"</code> manually.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -8459,7 +8611,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 16:47:54 UTC"><span class="timeago" datetime="2026-06-29T16:47:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 16:47:54 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

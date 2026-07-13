@@ -8537,9 +8537,28 @@ Azure ExpressRoute provides dedicated private connectivity between on-premises n
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.</code></strong> — Verify the resource group name and circuit name match exactly, and ensure the circuit was successfully created in the previous step.
-<strong><code>InvalidSkuFamily: The SKU family 'MeteredData' is not valid for the specified tier 'Standard'.</code></strong> — Use <code>--sku-family MeteredData</code> with <code>--sku-tier Standard</code>, or switch to <code>--sku-family UnlimitedData</code> if required.
-<strong><code>ServiceProviderNotFound: The service provider 'Equinix' is not available at peering location 'Washington DC'.</code></strong> — Run <code>az network express-route list-service-providers</code> to verify available providers and peering locations in your region.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.</code></td>
+<td>Verify the resource group name and circuit name match exactly, and ensure the circuit was successfully created in the previous step.</td>
+</tr>
+<tr>
+<td><code>InvalidSkuFamily: The SKU family 'MeteredData' is not valid for the specified tier 'Standard'.</code></td>
+<td>Use <code>--sku-family MeteredData</code> with <code>--sku-tier Standard</code>, or switch to <code>--sku-family UnlimitedData</code> if required.</td>
+</tr>
+<tr>
+<td><code>ServiceProviderNotFound: The service provider 'Equinix' is not available at peering location 'Washington DC'.</code></td>
+<td>Run <code>az network express-route list-service-providers</code> to verify available providers and peering locations in your region.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After creation, share the <code>ServiceKey</code> with your connectivity provider so they can configure the physical circuit. The <code>CircuitProvisioningState</code> moves from <code>NotProvisioned</code> to <code>Provisioned</code> when the provider completes their side.</p>
 <h2 id="peering-types">Peering Types<a class="headerlink" href="#peering-types" title="Permanent link">&para;</a></h2>
@@ -8622,9 +8641,28 @@ Azure ExpressRoute provides dedicated private connectivity between on-premises n
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>InvalidArgumentsUsage: unrecognized arguments: --advertised-public-prefixes</code></strong> — Use <code>--advertised-public-prefixes 203.0.113.0/24</code> only with MicrosoftPeering; remove it from AzurePrivatePeering commands.
-<strong><code>ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.</code></strong> — Verify the circuit name and resource group exist by running <code>az network express-route circuit list --resource-group myRG</code>.
-<strong><code>BadRequest: Peering AzurePrivatePeering already exists on circuit myERCircuit.</code></strong> — Delete the existing peering with <code>az network express-route peering delete --circuit-name myERCircuit --resource-group myRG --name AzurePrivatePeering</code> before recreating it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InvalidArgumentsUsage: unrecognized arguments: --advertised-public-prefixes</code></td>
+<td>Use <code>--advertised-public-prefixes 203.0.113.0/24</code> only with MicrosoftPeering; remove it from AzurePrivatePeering commands.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.</code></td>
+<td>Verify the circuit name and resource group exist by running <code>az network express-route circuit list --resource-group myRG</code>.</td>
+</tr>
+<tr>
+<td><code>BadRequest: Peering AzurePrivatePeering already exists on circuit myERCircuit.</code></td>
+<td>Delete the existing peering with <code>az network express-route peering delete --circuit-name myERCircuit --resource-group myRG --name AzurePrivatePeering</code> before recreating it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="connecting-to-a-virtual-network-gateway">Connecting to a Virtual Network Gateway<a class="headerlink" href="#connecting-to-a-virtual-network-gateway" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create an ExpressRoute Virtual Network Gateway</span>
@@ -8721,8 +8759,24 @@ Azure ExpressRoute provides dedicated private connectivity between on-premises n
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.</code></strong> — Verify the circuit name and resource group name are correct using <code>az network express-route list --resource-group myRG</code>.
-<strong><code>AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/expressRouteCircuits/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Network/expressRouteCircuits/myERCircuit'.</code></strong> — Ensure your Azure account has at least Reader role on the resource group or subscription.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.</code></td>
+<td>Verify the circuit name and resource group name are correct using <code>az network express-route list --resource-group myRG</code>.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/expressRouteCircuits/read' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Network/expressRouteCircuits/myERCircuit'.</code></td>
+<td>Ensure your Azure account has at least Reader role on the resource group or subscription.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="sku-and-bandwidth-options">SKU and Bandwidth Options<a class="headerlink" href="#sku-and-bandwidth-options" title="Permanent link">&para;</a></h2>
 <table>
@@ -8810,8 +8864,24 @@ Azure ExpressRoute provides dedicated private connectivity between on-premises n
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The resource '/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Network/expressRouteCircuits/myERCircuit' could not be found.</code></strong> — Verify the subscription ID, resource group name, and ExpressRoute circuit name are correct and exist in your subscription.
-<strong><code>InvalidResourceId: The provided resource ID is invalid or the resource does not have permission to send diagnostics to the workspace.</code></strong> — Ensure the Log Analytics workspace exists and the ExpressRoute circuit's managed identity has the "Log Analytics Contributor" role on the workspace resource group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The resource '/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Network/expressRouteCircuits/myERCircuit' could not be found.</code></td>
+<td>Verify the subscription ID, resource group name, and ExpressRoute circuit name are correct and exist in your subscription.</td>
+</tr>
+<tr>
+<td><code>InvalidResourceId: The provided resource ID is invalid or the resource does not have permission to send diagnostics to the workspace.</code></td>
+<td>Ensure the Log Analytics workspace exists and the ExpressRoute circuit's managed identity has the "Log Analytics Contributor" role on the workspace resource group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8835,7 +8905,7 @@ Azure ExpressRoute provides dedicated private connectivity between on-premises n
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

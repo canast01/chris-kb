@@ -8568,9 +8568,28 @@ Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenan
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (ParameterNotFound) when calling the GetParameter operation: Parameter /my/param not found.</code></strong> — Verify the parameter name exists in Parameter Store using <code>aws ssm describe-parameters --filters "Key=Name,Values=/my/param"</code>.
-<strong><code>An error occurred (AccessDeniedException) when calling the GetParameter operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ssm:GetParameter on resource: arn:aws:ssm:us-east-1:123456789012:parameter/my/param</code></strong> — Add <code>ssm:GetParameter</code> and <code>kms:Decrypt</code> permissions to the IAM user/role policy.
-<strong><code>An error occurred (InvalidParameterType) when calling the PutParameter operation: Invalid parameter type specified.</code></strong> — Use a valid type: <code>String</code>, <code>StringList</code>, or <code>SecureString</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (ParameterNotFound) when calling the GetParameter operation: Parameter /my/param not found.</code></td>
+<td>Verify the parameter name exists in Parameter Store using <code>aws ssm describe-parameters --filters "Key=Name,Values=/my/param"</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDeniedException) when calling the GetParameter operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ssm:GetParameter on resource: arn:aws:ssm:us-east-1:123456789012:parameter/my/param</code></td>
+<td>Add <code>ssm:GetParameter</code> and <code>kms:Decrypt</code> permissions to the IAM user/role policy.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterType) when calling the PutParameter operation: Invalid parameter type specified.</code></td>
+<td>Use a valid type: <code>String</code>, <code>StringList</code>, or <code>SecureString</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="maintenance-windows">Maintenance Windows<a class="headerlink" href="#maintenance-windows" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List maintenance windows</span>
@@ -8645,9 +8664,28 @@ Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenan
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidWindowId) when calling the DescribeMaintenanceWindowTasks operation: The maintenance window ID 'mw-invalid' does not exist.</code></strong> — Verify the window ID exists by running <code>aws ssm describe-maintenance-windows</code> and copy the correct WindowId value.
-<strong><code>An error occurred (InvalidParameterValue) when calling the RegisterTaskWithMaintenanceWindow operation: The service role ARN is invalid.</code></strong> — Ensure the IAM role exists and the ARN format is correct: <code>arn:aws:iam::&lt;account_id&gt;:role/&lt;RoleName&gt;</code>, and the role has SSM maintenance window trust permissions.
-<strong><code>An error occurred (InvalidParameterValue) when calling the CreateMaintenanceWindow operation: The schedule expression is invalid.</code></strong> — Verify the cron expression syntax; use <code>cron(minute hour day month day-of-week year)</code> format, e.g., <code>cron(0 3 ? * SUN *)</code> for 3 AM Sundays.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidWindowId) when calling the DescribeMaintenanceWindowTasks operation: The maintenance window ID 'mw-invalid' does not exist.</code></td>
+<td>Verify the window ID exists by running <code>aws ssm describe-maintenance-windows</code> and copy the correct WindowId value.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the RegisterTaskWithMaintenanceWindow operation: The service role ARN is invalid.</code></td>
+<td>Ensure the IAM role exists and the ARN format is correct: <code>arn:aws:iam::&lt;account_id&gt;:role/&lt;RoleName&gt;</code>, and the role has SSM maintenance window trust permissions.</td>
+</tr>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the CreateMaintenanceWindow operation: The schedule expression is invalid.</code></td>
+<td>Verify the cron expression syntax; use <code>cron(minute hour day month day-of-week year)</code> format, e.g., <code>cron(0 3 ? * SUN *)</code> for 3 AM Sundays.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="patch-management">Patch Management<a class="headerlink" href="#patch-management" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List available patch baselines</span>
@@ -8927,8 +8965,24 @@ Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenan
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidParameterValue) when calling the CreateOpsItem operation: Invalid severity value. Valid values are: 1, 2, 3, 4</code></strong> — Ensure severity is a string between "1" and "4", not an integer.
-<strong><code>An error occurred (AccessDenied) when calling the CreateOpsItem operation: User: arn:aws:iam::123456789012:user/ops-user is not authorized to perform: ssm:CreateOpsItem</code></strong> — Add the <code>ssm:CreateOpsItem</code> permission to the IAM user or role's policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidParameterValue) when calling the CreateOpsItem operation: Invalid severity value. Valid values are: 1, 2, 3, 4</code></td>
+<td>Ensure severity is a string between "1" and "4", not an integer.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the CreateOpsItem operation: User: arn:aws:iam::123456789012:user/ops-user is not authorized to perform: ssm:CreateOpsItem</code></td>
+<td>Add the <code>ssm:CreateOpsItem</code> permission to the IAM user or role's policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="automation-documents">Automation Documents<a class="headerlink" href="#automation-documents" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List available Automation runbooks</span>
@@ -9012,9 +9066,28 @@ Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenan
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (InvalidDocument) when calling the ListDocuments operation: Document name cannot be blank.</code></strong> — Ensure the <code>--document-filter-list</code> parameter is correctly formatted with both <code>key=</code> and <code>value=</code> specified.
-<strong><code>An error occurred (ValidationException) when calling the StartAutomationExecution operation: 1 validation error detected: Value null at 'parameters.InstanceId' failed to satisfy constraint: Member must not be null</code></strong> — Replace <code>&lt;instance_id&gt;</code> with an actual EC2 instance ID (e.g., <code>i-0abcd1234efgh5678</code>).
-<strong><code>An error occurred (AutomationExecutionNotFoundException) when calling the GetAutomationExecution operation: Execution does not exist.</code></strong> — Verify the <code>&lt;execution_id&gt;</code> is correct and the execution has not been purged (SSM retains execution history for 30 days).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (InvalidDocument) when calling the ListDocuments operation: Document name cannot be blank.</code></td>
+<td>Ensure the <code>--document-filter-list</code> parameter is correctly formatted with both <code>key=</code> and <code>value=</code> specified.</td>
+</tr>
+<tr>
+<td><code>An error occurred (ValidationException) when calling the StartAutomationExecution operation: 1 validation error detected: Value null at 'parameters.InstanceId' failed to satisfy constraint: Member must not be null</code></td>
+<td>Replace <code>&lt;instance_id&gt;</code> with an actual EC2 instance ID (e.g., <code>i-0abcd1234efgh5678</code>).</td>
+</tr>
+<tr>
+<td><code>An error occurred (AutomationExecutionNotFoundException) when calling the GetAutomationExecution operation: Execution does not exist.</code></td>
+<td>Verify the <code>&lt;execution_id&gt;</code> is correct and the execution has not been purged (SSM retains execution history for 30 days).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9044,7 +9117,7 @@ Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenan
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

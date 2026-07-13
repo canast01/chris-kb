@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="NSX — Authentication · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Authentication", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-02", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "NSX — Authentication", "url": "https://chrisanastasiadis.com/virtualization/vmware/products/nsx/security/authentication/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -9050,9 +9050,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-<strong><code>{"httpStatus":"UNAUTHORIZED","error_code":401,"module_name":"api-service","error_message":"Invalid credentials"}</code></strong> — Verify the NSX Manager admin credentials and ensure the user has API access permissions.
-<strong><code>{"httpStatus":"NOT_FOUND","error_code":404,"module_name":"api-service","error_message":"The requested resource could not be found"}</code></strong> — Confirm the NSX Manager hostname/IP is correct and the <code>/api/v1/node/aaa/auth-policy</code> endpoint is available on this NSX version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":"UNAUTHORIZED","error_code":401,"module_name":"api-service","error_message":"Invalid credentials"}</code></td>
+<td>Verify the NSX Manager admin credentials and ensure the user has API access permissions.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":"NOT_FOUND","error_code":404,"module_name":"api-service","error_message":"The requested resource could not be found"}</code></td>
+<td>Confirm the NSX Manager hostname/IP is correct and the <code>/api/v1/node/aaa/auth-policy</code> endpoint is available on this NSX version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -9080,9 +9099,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or use <code>--cacert /path/to/ca.pem</code> with a valid CA bundle.
-<strong><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></strong> — Verify the NSX Manager admin credentials in the <code>-u</code> parameter match the actual configured user and password.
-<strong><code>{"error_code": 400, "error_message": "LDAP search not configured"}</code></strong> — Configure LDAP integration on the NSX Manager via the UI (System &gt; Users and Roles &gt; LDAP) before attempting LDAP searches.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or use <code>--cacert /path/to/ca.pem</code> with a valid CA bundle.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 401, "error_message": "Invalid credentials"}</code></td>
+<td>Verify the NSX Manager admin credentials in the <code>-u</code> parameter match the actual configured user and password.</td>
+</tr>
+<tr>
+<td><code>{"error_code": 400, "error_message": "LDAP search not configured"}</code></td>
+<td>Configure LDAP integration on the NSX Manager via the UI (System &gt; Users and Roles &gt; LDAP) before attempting LDAP searches.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Assign Enterprise Admin role to an AD group</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9121,9 +9159,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"httpStatus":401,"error_code":10000,"module_name":"common","error_message":"Authentication failed"}</code></strong> — Verify NSX Manager credentials and ensure the admin account has API access enabled.
-<strong><code>{"httpStatus":400,"error_code":10001,"error_message":"Invalid identity_source_id"}</code></strong> — Confirm the LDAP source ID exists by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/api/v1/aaa/identity-sources</code> and use the correct ID.
-<strong><code>{"httpStatus":404,"error_code":10002,"error_message":"Role 'enterprise_admin' not found"}</code></strong> — Use a valid role name such as <code>enterprise_admin</code>, <code>security_admin</code>, or <code>auditor</code> instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"httpStatus":401,"error_code":10000,"module_name":"common","error_message":"Authentication failed"}</code></td>
+<td>Verify NSX Manager credentials and ensure the admin account has API access enabled.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":400,"error_code":10001,"error_message":"Invalid identity_source_id"}</code></td>
+<td>Confirm the LDAP source ID exists by running <code>curl -sk -u 'admin:password' https://&lt;nsx-manager&gt;/api/v1/aaa/identity-sources</code> and use the correct ID.</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":404,"error_code":10002,"error_message":"Role 'enterprise_admin' not found"}</code></td>
+<td>Use a valid role name such as <code>enterprise_admin</code>, <code>security_admin</code>, or <code>auditor</code> instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:Password123!&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="s2">&quot;https://nsx-manager.example.local/api/v1/cluster/status&quot;</span>
@@ -9165,9 +9222,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag (already present) or import the NSX Manager's CA certificate into your system trust store.
-<strong><code>curl: (7) Failed to connect to nsx-manager.example.local port 443: Connection refused</code></strong> — Verify NSX Manager is running and accessible at the hostname/IP, and check firewall rules allow HTTPS access to port 443.
-<strong><code>{"error_code":401,"error_message":"Unauthorized"}</code></strong> — Confirm the admin credentials are correct and the user account has API access permissions in NSX Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag (already present) or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to nsx-manager.example.local port 443: Connection refused</code></td>
+<td>Verify NSX Manager is running and accessible at the hostname/IP, and check firewall rules allow HTTPS access to port 443.</td>
+</tr>
+<tr>
+<td><code>{"error_code":401,"error_message":"Unauthorized"}</code></td>
+<td>Confirm the admin credentials are correct and the user account has API access permissions in NSX Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create session (returns Set-Cookie header)</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:Password123!&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9220,8 +9296,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present; verify NSX manager certificate is accessible or use <code>--cacert</code> with proper CA bundle).
-<strong><code>{"httpStatus":"UNAUTHORIZED","error_code":401,"module_error_details":"The credentials supplied to the API were invalid","error_message":"The credentials supplied to the API were invalid"}</code></strong> — Verify admin username and password are correct and the user has API access permissions in NSX.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present; verify NSX manager certificate is accessible or use <code>--cacert</code> with proper CA bundle).</td>
+</tr>
+<tr>
+<td><code>{"httpStatus":"UNAUTHORIZED","error_code":401,"module_error_details":"The credentials supplied to the API were invalid","error_message":"The credentials supplied to the API were invalid"}</code></td>
+<td>Verify admin username and password are correct and the user has API access permissions in NSX.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Generate client key and CSR</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-newkey<span class="w"> </span>rsa:2048<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
@@ -9293,9 +9385,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.
-<strong><code>{"error_code":400,"error_message":"Invalid PEM format in pem_encoded field"}</code></strong> — Ensure the certificate file contains valid PEM-formatted text and the awk command properly escapes newlines; test with <code>cat nsx-automation.crt | head -2</code>.
-<strong><code>{"error_code":403,"error_message":"User admin does not have permission to perform this operation"}</code></strong> — Verify the admin account has the NSX Administrator role and that certificate management permissions are not restricted by role-based access control policies.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>{"error_code":400,"error_message":"Invalid PEM format in pem_encoded field"}</code></td>
+<td>Ensure the certificate file contains valid PEM-formatted text and the awk command properly escapes newlines; test with <code>cat nsx-automation.crt | head -2</code>.</td>
+</tr>
+<tr>
+<td><code>{"error_code":403,"error_message":"User admin does not have permission to perform this operation"}</code></td>
+<td>Verify the admin account has the NSX Administrator role and that certificate management permissions are not restricted by role-based access control policies.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Enable audit log export (NSX Manager CLI)</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>nsxcli
@@ -9310,9 +9421,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Syslog exporter 'siem-01' already exists</code></strong> — Use a different exporter name or delete the existing one with <code>delete service syslog exporter siem-01</code> first.
-<strong><code>Error: Unable to resolve hostname or IP address 10.0.0.100</code></strong> — Verify network connectivity from NSX Manager to the SIEM server and confirm the IP address is reachable.
-<strong><code>Error: TLS certificate validation failed for server 10.0.0.100:6514</code></strong> — Import the SIEM server's CA certificate into NSX Manager's trust store using <code>set service syslog exporter siem-01 ca-cert &lt;cert-path&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Syslog exporter 'siem-01' already exists</code></td>
+<td>Use a different exporter name or delete the existing one with <code>delete service syslog exporter siem-01</code> first.</td>
+</tr>
+<tr>
+<td><code>Error: Unable to resolve hostname or IP address 10.0.0.100</code></td>
+<td>Verify network connectivity from NSX Manager to the SIEM server and confirm the IP address is reachable.</td>
+</tr>
+<tr>
+<td><code>Error: TLS certificate validation failed for server 10.0.0.100:6514</code></td>
+<td>Import the SIEM server's CA certificate into NSX Manager's trust store using <code>set service syslog exporter siem-01 ca-cert &lt;cert-path&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># View recent auth events on NSX Manager node</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/nsx-manager/audit.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|auth\|role&quot;</span>
@@ -9328,8 +9458,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tail: cannot open '/var/log/vmware/nsx-manager/audit.log' for reading: No such file or directory</code></strong> — Verify the NSX Manager service is running with <code>systemctl status nsx-manager</code> and check the correct log path with <code>find /var/log -name "*audit*"</code>.
-<strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure your user account has read permissions on the audit log file.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/nsx-manager/audit.log' for reading: No such file or directory</code></td>
+<td>Verify the NSX Manager service is running with <code>systemctl status nsx-manager</code> and check the correct log path with <code>find /var/log -name "*audit*"</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure your user account has read permissions on the audit log file.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9366,7 +9512,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 2, 2026 02:56:08 UTC"><span class="timeago" datetime="2026-07-02T02:56:08+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 2, 2026 02:56:08 UTC">2026-07-02</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

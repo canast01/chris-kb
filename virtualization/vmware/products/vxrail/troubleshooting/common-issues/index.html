@@ -10537,9 +10537,28 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>sudo: command not found</code></strong> — Verify the user has sudo privileges or contact your VxRail administrator to add the account to the sudoers file.
-<strong><code>Unit mystic.service not found.</code></strong> — Confirm the Mystic service is installed by running <code>systemctl list-unit-files | grep mystic</code> and reinstall if necessary.
-<strong><code>Active: failed (Result: exit-code) since...</code></strong> — Check service logs with <code>sudo journalctl -u mystic -n 50</code> to identify the root cause of the failure.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo: command not found</code></td>
+<td>Verify the user has sudo privileges or contact your VxRail administrator to add the account to the sudoers file.</td>
+</tr>
+<tr>
+<td><code>Unit mystic.service not found.</code></td>
+<td>Confirm the Mystic service is installed by running <code>systemctl list-unit-files | grep mystic</code> and reinstall if necessary.</td>
+</tr>
+<tr>
+<td><code>Active: failed (Result: exit-code) since...</code></td>
+<td>Check service logs with <code>sudo journalctl -u mystic -n 50</code> to identify the root cause of the failure.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Allow 2–3 minutes for the service to fully initialise before rechecking the plugin in vCenter.</p>
 <p><strong>Step 3 — Check plugin registration in vCenter</strong></p>
@@ -10560,9 +10579,28 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's not removed).
-<strong><code>curl: (7) Failed to connect to localhost port 443: Connection refused</code></strong> — Verify VxRail Manager service is running with <code>systemctl status vxrail-manager</code> and accessible on the management network.
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Ensure credentials are correct and base64-encoded properly; test with <code>echo -n 'mystic:password' | base64</code> to verify encoding.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to localhost port 443: Connection refused</code></td>
+<td>Verify VxRail Manager service is running with <code>systemctl status vxrail-manager</code> and accessible on the management network.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Ensure credentials are correct and base64-encoded properly; test with <code>echo -n 'mystic:password' | base64</code> to verify encoding.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Then log out of vCenter and log back in — browser-cached plugin state is refreshed on session start.</p>
 <p><strong>Step 4 — Verify vCenter extension is registered</strong></p>
@@ -10697,9 +10735,28 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify VxRail Manager hostname matches certificate CN).
-<strong><code>curl: (7) Failed to connect to localhost port 443: Connection refused</code></strong> — Ensure VxRail Manager API service is running with <code>systemctl status vxrail-api</code> and verify you are connecting from the correct host or use the VxRail Manager IP address instead of localhost.
-<strong><code>jq: parse error: Invalid JSON at line 1</code></strong> — Verify the API endpoint is correct and the VxRail Manager version supports <code>/rest/vxm/v1/lcm/upgrade/plan</code>; older versions may use a different endpoint path.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify VxRail Manager hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to localhost port 443: Connection refused</code></td>
+<td>Ensure VxRail Manager API service is running with <code>systemctl status vxrail-api</code> and verify you are connecting from the correct host or use the VxRail Manager IP address instead of localhost.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON at line 1</code></td>
+<td>Verify the API endpoint is correct and the VxRail Manager version supports <code>/rest/vxm/v1/lcm/upgrade/plan</code>; older versions may use a different endpoint path.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="verifying-vsan-resync-completion">Verifying vSAN Resync Completion<a class="headerlink" href="#verifying-vsan-resync-completion" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to any ESXi node in the cluster</span>
@@ -10722,8 +10779,24 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unknown command or namespace vsan debug resync</code></strong> — Verify VSAN is enabled on the cluster and you are running the command on an ESXi host with VSAN participation; run <code>esxcli vsan cluster get</code> to confirm VSAN status.</p>
-<p><strong><code>Permission denied</code></strong> — Ensure you are logged in as root or a user with administrative privileges on the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unknown command or namespace vsan debug resync</code></td>
+<td>Verify VSAN is enabled on the cluster and you are running the command on an ESXi host with VSAN participation; run <code>esxcli vsan cluster get</code> to confirm VSAN status.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure you are logged in as root or a user with administrative privileges on the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Wait until resync bytes reach zero before retrying the LCM pre-check.</p>
 <hr />
@@ -10769,9 +10842,28 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-<strong><code>sudo: no tty present and no -S option specified</code></strong> — Run <code>ssh -t mystic@&lt;vxrail-manager-ip&gt;</code> to allocate a pseudo-terminal for sudo commands.
-<strong><code>jq: command not found</code></strong> — Replace <code>python3 -m json.tool</code> with <code>jq '.'</code> or ensure Python 3 is installed on the VxRail Manager.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>sudo: no tty present and no -S option specified</code></td>
+<td>Run <code>ssh -t mystic@&lt;vxrail-manager-ip&gt;</code> to allocate a pseudo-terminal for sudo commands.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Replace <code>python3 -m json.tool</code> with <code>jq '.'</code> or ensure Python 3 is installed on the VxRail Manager.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="lcm-failure-points-table">LCM Failure Points Table<a class="headerlink" href="#lcm-failure-points-table" title="Permanent link">&para;</a></h3>
 <table>
@@ -10932,8 +11024,24 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Message too long; Possible MTU mismatch</code></strong> — Verify the switch port connected to the vSAN vmkernel interface is configured with MTU 9000 and confirm the ESXi vmk2 interface MTU matches with <code>esxcli network ip interface get -i vmk2</code>.
-<strong><code>Destination host unreachable</code></strong> — Check VLAN routing between the source and destination vSAN subnets, verify the VLAN ID is consistent on both ESXi nodes, and confirm the switch port is tagged for the vSAN VLAN.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Message too long; Possible MTU mismatch</code></td>
+<td>Verify the switch port connected to the vSAN vmkernel interface is configured with MTU 9000 and confirm the ESXi vmk2 interface MTU matches with <code>esxcli network ip interface get -i vmk2</code>.</td>
+</tr>
+<tr>
+<td><code>Destination host unreachable</code></td>
+<td>Check VLAN routing between the source and destination vSAN subnets, verify the VLAN ID is consistent on both ESXi nodes, and confirm the switch port is tagged for the vSAN VLAN.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Switch port verification:</strong> On the physical ToR switch, confirm that the ports connected to the vSAN uplinks have <code>mtu 9000</code> (or equivalent for the switch vendor). Both the switch port and the ESXi vmkernel MTU must be set to 9000.</p>
 <h3 id="vsan-network-connectivity-test">vSAN Network Connectivity Test<a class="headerlink" href="#vsan-network-connectivity-test" title="Permanent link">&para;</a></h3>
@@ -10965,8 +11073,24 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vSAN network test failed: No active vSAN cluster detected</code></strong> — Verify the cluster is initialized with <code>esxcli vsan cluster get</code> and all nodes are joined.
-<strong><code>vmk2 does not have vSAN traffic type enabled</code></strong> — Add vSAN traffic type to vmk2 using <code>esxcli vsan network ip add -i vmk2</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vSAN network test failed: No active vSAN cluster detected</code></td>
+<td>Verify the cluster is initialized with <code>esxcli vsan cluster get</code> and all nodes are joined.</td>
+</tr>
+<tr>
+<td><code>vmk2 does not have vSAN traffic type enabled</code></td>
+<td>Add vSAN traffic type to vmk2 using <code>esxcli vsan network ip add -i vmk2</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="vsan-degraded-and-absent-objects">vSAN Degraded and Absent Objects<a class="headerlink" href="#vsan-degraded-and-absent-objects" title="Permanent link">&para;</a></h2>
@@ -11022,9 +11146,28 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vsan.VsanClusterGetConfig: A general system error occurred: Connection refused</code></strong> — Ensure vSAN is enabled on the cluster and the ESXi host has network connectivity to the vSAN network.
-<strong><code>Unknown command or namespace</code></strong> — Verify you are running the command on an ESXi 6.5+ host; older versions do not support <code>esxcli vsan debug</code> subcommands.
-<strong><code>Permission denied</code></strong> — Run the commands as root or a user with vSAN administrator privileges on the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vsan.VsanClusterGetConfig: A general system error occurred: Connection refused</code></td>
+<td>Ensure vSAN is enabled on the cluster and the ESXi host has network connectivity to the vSAN network.</td>
+</tr>
+<tr>
+<td><code>Unknown command or namespace</code></td>
+<td>Verify you are running the command on an ESXi 6.5+ host; older versions do not support <code>esxcli vsan debug</code> subcommands.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the commands as root or a user with vSAN administrator privileges on the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="degraded-object-recovery">Degraded Object Recovery<a class="headerlink" href="#degraded-object-recovery" title="Permanent link">&para;</a></h3>
 <ol>
@@ -11073,8 +11216,24 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxcli: command not found</code></strong> — Run the command directly on the ESXi host via SSH or use the vSphere CLI from a management station with proper vSphere SDK installation.
-<strong><code>Permission denied</code></strong> — Execute the command as root or with appropriate sudo privileges on the ESXi host.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxcli: command not found</code></td>
+<td>Run the command directly on the ESXi host via SSH or use the vSphere CLI from a management station with proper vSphere SDK installation.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Execute the command as root or with appropriate sudo privileges on the ESXi host.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="vsan-capacity-issues">vSAN Capacity Issues<a class="headerlink" href="#vsan-capacity-issues" title="Permanent link">&para;</a></h2>
@@ -11178,9 +11337,28 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; if error persists, verify localhost resolves to 127.0.0.1).
-<strong><code>bash: python3: command not found</code></strong> — Install Python 3 on the VxRail Manager node with <code>apt-get install python3</code> or equivalent for your OS.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the API endpoint is correct and the VxRail Manager service is running; check logs with <code>journalctl -u vxrail-manager -n 50</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; if error persists, verify localhost resolves to 127.0.0.1).</td>
+</tr>
+<tr>
+<td><code>bash: python3: command not found</code></td>
+<td>Install Python 3 on the VxRail Manager node with <code>apt-get install python3</code> or equivalent for your OS.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Verify the API endpoint is correct and the VxRail Manager service is running; check logs with <code>journalctl -u vxrail-manager -n 50</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="node-status-interpretation">Node Status Interpretation<a class="headerlink" href="#node-status-interpretation" title="Permanent link">&para;</a></h3>
 <table>
@@ -11287,8 +11465,24 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection refused</code></strong> — Verify the iDRAC IP address is correct and iDRAC service is running; check firewall rules allow SSH on port 22 to the iDRAC.
-<strong><code>racadm: command not found</code></strong> — SSH directly to the iDRAC management interface (not the hypervisor); racadm is only available on the iDRAC, not</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify the iDRAC IP address is correct and iDRAC service is running; check firewall rules allow SSH on port 22 to the iDRAC.</td>
+</tr>
+<tr>
+<td><code>racadm: command not found</code></td>
+<td>SSH directly to the iDRAC management interface (not the hypervisor); racadm is only available on the iDRAC, not</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="interpreting-common-idrac-alarms">Interpreting Common iDRAC Alarms<a class="headerlink" href="#interpreting-common-idrac-alarms" title="Permanent link">&para;</a></h3>
 <table>
@@ -11371,9 +11565,28 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to connect to &lt;idrac-ip&gt;. Connection refused.</code></strong> — Verify the iDRAC IP address is reachable and the iDRAC service is running with <code>ping &lt;idrac-ip&gt;</code>.
-<strong><code>Error: DRAC_E_INVALID_PARAMETER: Invalid username or password</code></strong> — Confirm the root credentials are correct and the iDRAC account has not been locked after failed login attempts.
-<strong><code>Error: racadm: command not found</code></strong> — Install the Dell DRAC tools package (e.g., <code>yum install srvadmin-drac5</code> on RHEL or equivalent for your OS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to connect to &lt;idrac-ip&gt;. Connection refused.</code></td>
+<td>Verify the iDRAC IP address is reachable and the iDRAC service is running with <code>ping &lt;idrac-ip&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: DRAC_E_INVALID_PARAMETER: Invalid username or password</code></td>
+<td>Confirm the root credentials are correct and the iDRAC account has not been locked after failed login attempts.</td>
+</tr>
+<tr>
+<td><code>Error: racadm: command not found</code></td>
+<td>Install the Dell DRAC tools package (e.g., <code>yum install srvadmin-drac5</code> on RHEL or equivalent for your OS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -11411,7 +11624,7 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

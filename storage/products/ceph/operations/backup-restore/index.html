@@ -7898,9 +7898,28 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>rbd: error: image rbd/vm-disk@backup-2025-01-15 is not protected</code></strong> — Add <code>rbd snap protect &lt;pool&gt;/&lt;image&gt;@&lt;snap&gt;</code> before export-diff to prevent snapshot deletion during incremental operations.
-<strong><code>rbd: error: failed to open /mnt/backup/image.img: No such file or directory</code></strong> — Verify the backup file path exists and the mount point is accessible with <code>ls -lh /mnt/backup/</code>.
-<strong><code>rbd: error: image rbd/new-image already exists</code></strong> — Use a unique image name or delete the existing image with <code>rbd rm &lt;pool&gt;/&lt;new-image&gt;</code> before importing.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rbd: error: image rbd/vm-disk@backup-2025-01-15 is not protected</code></td>
+<td>Add <code>rbd snap protect &lt;pool&gt;/&lt;image&gt;@&lt;snap&gt;</code> before export-diff to prevent snapshot deletion during incremental operations.</td>
+</tr>
+<tr>
+<td><code>rbd: error: failed to open /mnt/backup/image.img: No such file or directory</code></td>
+<td>Verify the backup file path exists and the mount point is accessible with <code>ls -lh /mnt/backup/</code>.</td>
+</tr>
+<tr>
+<td><code>rbd: error: image rbd/new-image already exists</code></td>
+<td>Use a unique image name or delete the existing image with <code>rbd rm &lt;pool&gt;/&lt;new-image&gt;</code> before importing.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cephfs-snapshots">CephFS Snapshots<a class="headerlink" href="#cephfs-snapshots" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create snapshot — snapshots live in the .snap/ virtual directory of each CephFS directory</span>
@@ -7934,9 +7953,28 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>mkdir: cannot create directory '/mnt/cephfs/.snap/daily-2026-06-01': File exists</code></strong> — Use a unique snapshot name or delete the existing snapshot with <code>rmdir /mnt/cephfs/.snap/daily-2026-06-01</code> first.
-<strong><code>Error EPERM: permission denied</code></strong> — Ensure the user running the command has write permissions on the CephFS mount and that snapshots are enabled with <code>ceph fs set &lt;fs_name&gt; allow_new_snaps true</code>.
-<strong><code>Error: snap_schedule module is not available</code></strong> — Enable the snap_schedule manager module with <code>ceph mgr module enable snap_schedule</code> before scheduling snapshots.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mkdir: cannot create directory '/mnt/cephfs/.snap/daily-2026-06-01': File exists</code></td>
+<td>Use a unique snapshot name or delete the existing snapshot with <code>rmdir /mnt/cephfs/.snap/daily-2026-06-01</code> first.</td>
+</tr>
+<tr>
+<td><code>Error EPERM: permission denied</code></td>
+<td>Ensure the user running the command has write permissions on the CephFS mount and that snapshots are enabled with <code>ceph fs set &lt;fs_name&gt; allow_new_snaps true</code>.</td>
+</tr>
+<tr>
+<td><code>Error: snap_schedule module is not available</code></td>
+<td>Enable the snap_schedule manager module with <code>ceph mgr module enable snap_schedule</code> before scheduling snapshots.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rgw-bucket-replication-cross-cluster-dr">RGW Bucket Replication (Cross-Cluster DR)<a class="headerlink" href="#rgw-bucket-replication-cross-cluster-dr" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check multi-site sync status on source</span>
@@ -8005,9 +8043,28 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: bucket 'prod-data' not found</code></strong> — Verify the bucket exists on the source zone with <code>radosgw-admin bucket list</code> and use the correct bucket name.
-<strong><code>error: invalid replication configuration: missing Role ARN</code></strong> — Ensure the replicate.json file contains a valid IAM role ARN in the Role field.
-<strong><code>error: period update failed: another update in progress</code></strong> — Wait for the previous period update to complete or check <code>radosgw-admin period get</code> to see the current state.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: bucket 'prod-data' not found</code></td>
+<td>Verify the bucket exists on the source zone with <code>radosgw-admin bucket list</code> and use the correct bucket name.</td>
+</tr>
+<tr>
+<td><code>error: invalid replication configuration: missing Role ARN</code></td>
+<td>Ensure the replicate.json file contains a valid IAM role ARN in the Role field.</td>
+</tr>
+<tr>
+<td><code>error: period update failed: another update in progress</code></td>
+<td>Wait for the previous period update to complete or check <code>radosgw-admin period get</code> to see the current state.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rbd-mirroring-dr-async-replication">RBD Mirroring (DR / Async Replication)<a class="headerlink" href="#rbd-mirroring-dr-async-replication" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable mirroring on pool (image mode = per-image opt-in)</span>
@@ -8053,9 +8110,28 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>rbd: error: image rbd/my-volume does not have journaling feature enabled</code></strong> — Enable journaling on the image with <code>rbd feature enable rbd/my-volume journaling</code> before enabling mirroring.
-<strong><code>rbd: error: peer rbd-cluster-dr does not exist</code></strong> — Bootstrap import the peer first using <code>rbd mirror pool peer bootstrap import rbd &lt;bootstrap-token&gt;</code> on the secondary cluster.
-<strong><code>rbd: error: image rbd/my-volume is not mirrored</code></strong> — Enable mirroring on the image or pool with <code>rbd mirror pool enable rbd image</code> or <code>rbd mirror image enable rbd/my-volume journaling</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rbd: error: image rbd/my-volume does not have journaling feature enabled</code></td>
+<td>Enable journaling on the image with <code>rbd feature enable rbd/my-volume journaling</code> before enabling mirroring.</td>
+</tr>
+<tr>
+<td><code>rbd: error: peer rbd-cluster-dr does not exist</code></td>
+<td>Bootstrap import the peer first using <code>rbd mirror pool peer bootstrap import rbd &lt;bootstrap-token&gt;</code> on the secondary cluster.</td>
+</tr>
+<tr>
+<td><code>rbd: error: image rbd/my-volume is not mirrored</code></td>
+<td>Enable mirroring on the image or pool with <code>rbd mirror pool enable rbd image</code> or <code>rbd mirror image enable rbd/my-volume journaling</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="cluster-configuration-backup">Cluster Configuration Backup<a class="headerlink" href="#cluster-configuration-backup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Export all monitor key-value store entries (includes config flags and settings)</span>
@@ -8088,9 +8164,28 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error EACCES: access denied</code></strong> — Ensure the user running these commands has sudo privileges or is part the ceph group (<code>sudo usermod -a -G ceph $USER</code>).
-<strong><code>No such file or directory</code></strong> — Create the <code>/backup</code> directory with write permissions before running the export commands (<code>sudo mkdir -p /backup &amp;&amp; sudo chmod 755 /backup</code>).
-<strong><code>ceph: command not found</code></strong> — Install the ceph-common package on the admin node (<code>sudo apt install ceph-common</code> or <code>sudo yum install ceph-common</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error EACCES: access denied</code></td>
+<td>Ensure the user running these commands has sudo privileges or is part the ceph group (<code>sudo usermod -a -G ceph $USER</code>).</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Create the <code>/backup</code> directory with write permissions before running the export commands (<code>sudo mkdir -p /backup &amp;&amp; sudo chmod 755 /backup</code>).</td>
+</tr>
+<tr>
+<td><code>ceph: command not found</code></td>
+<td>Install the ceph-common package on the admin node (<code>sudo apt install ceph-common</code> or <code>sudo yum install ceph-common</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="restore-from-configuration-backup">Restore from Configuration Backup<a class="headerlink" href="#restore-from-configuration-backup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Restore CRUSH map</span>
@@ -8137,9 +8232,28 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error ENOENT: unable to open /backup/crush-2026-06-07.bin</code></strong> — Verify the backup file path exists and the ceph-mon container/service has read permissions to the backup directory.
-<strong><code>Error EINVAL: imported 0 keys</code></strong> — Ensure the keyring file is valid and not corrupted; try <code>ceph auth list</code> to confirm current keys before import.
-<strong><code>Error: image already exists</code></strong> — Use <code>rbd rm rbd/my-volume-restored</code> to remove the existing image first, or change the restored image name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error ENOENT: unable to open /backup/crush-2026-06-07.bin</code></td>
+<td>Verify the backup file path exists and the ceph-mon container/service has read permissions to the backup directory.</td>
+</tr>
+<tr>
+<td><code>Error EINVAL: imported 0 keys</code></td>
+<td>Ensure the keyring file is valid and not corrupted; try <code>ceph auth list</code> to confirm current keys before import.</td>
+</tr>
+<tr>
+<td><code>Error: image already exists</code></td>
+<td>Use <code>rbd rm rbd/my-volume-restored</code> to remove the existing image first, or change the restored image name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="mon-data-recovery-loss-of-quorum">MON Data Recovery (Loss of Quorum)<a class="headerlink" href="#mon-data-recovery-loss-of-quorum" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># If monitors lose quorum and cannot be recovered normally:</span>
@@ -8184,9 +8298,28 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: unable to open monitor store at /var/lib/ceph/mon/ceph-&lt;id&gt;/store.db</code></strong> — Verify the monitor ID is correct and the store directory exists before running rebuild.
-<strong><code>Error: failed to inject monmap: no such file or directory</code></strong> — Export the monmap first using <code>ceph mon getmap -o /tmp/monmap</code> before attempting injection.
-<strong><code>Error: failed to stop ceph-mon@&lt;id&gt;: Unit not loaded</code></strong> — Ensure the monitor service name matches your cluster configuration; check with <code>systemctl list-units | grep ceph-mon</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: unable to open monitor store at /var/lib/ceph/mon/ceph-&lt;id&gt;/store.db</code></td>
+<td>Verify the monitor ID is correct and the store directory exists before running rebuild.</td>
+</tr>
+<tr>
+<td><code>Error: failed to inject monmap: no such file or directory</code></td>
+<td>Export the monmap first using <code>ceph mon getmap -o /tmp/monmap</code> before attempting injection.</td>
+</tr>
+<tr>
+<td><code>Error: failed to stop ceph-mon@&lt;id&gt;: Unit not loaded</code></td>
+<td>Ensure the monitor service name matches your cluster configuration; check with <code>systemctl list-units | grep ceph-mon</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="backup-schedule-recommendations">Backup Schedule Recommendations<a class="headerlink" href="#backup-schedule-recommendations" title="Permanent link">&para;</a></h2>
 <table>
@@ -8270,9 +8403,28 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>qemu-img: Could not open '/mnt/backup/image-2026-06-07.img': No such file or directory</code></strong> — Verify the backup path is mounted and the image filename matches exactly with <code>ls -lh /mnt/backup/</code>.
-<strong><code>error: pool does not exist</code></strong> — Create the test pool first with <code>ceph osd pool create restore-test 128 128</code> or use an existing pool name.
-<strong><code>Error reading crushmap from /backup/crushmap.bin</code></strong> — Ensure the crushmap binary file exists and is readable with <code>file /backup/crushmap.bin</code> to confirm it's a valid compiled CRUSH map.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>qemu-img: Could not open '/mnt/backup/image-2026-06-07.img': No such file or directory</code></td>
+<td>Verify the backup path is mounted and the image filename matches exactly with <code>ls -lh /mnt/backup/</code>.</td>
+</tr>
+<tr>
+<td><code>error: pool does not exist</code></td>
+<td>Create the test pool first with <code>ceph osd pool create restore-test 128 128</code> or use an existing pool name.</td>
+</tr>
+<tr>
+<td><code>Error reading crushmap from /backup/crushmap.bin</code></td>
+<td>Ensure the crushmap binary file exists and is readable with <code>file /backup/crushmap.bin</code> to confirm it's a valid compiled CRUSH map.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8296,7 +8448,7 @@ Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, R
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

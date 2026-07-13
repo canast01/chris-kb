@@ -9185,9 +9185,28 @@ Encryption reference covering Secrets and Encrypted Properties, TLS Certificate 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: certificate file not found: /tmp/vra-prod-01.pem</code></strong> — Verify the certificate file exists and the path is correct with <code>ls -la /tmp/vra-prod-01.pem</code>.
-<strong><code>error: certificate and key do not match</code></strong> — Ensure the certificate and private key pair are from the same CSR by comparing their modulus with <code>openssl x509 -noout -modulus -in /tmp/vra-prod-01.pem | openssl md5</code> and <code>openssl rsa -noout -modulus -in /tmp/vra-prod-01.key | openssl md5</code>.
-<strong><code>error: CA certificate chain is invalid or incomplete</code></strong> — Verify the chain file contains all intermediate certificates in the correct order (leaf to root) and is in PEM format with <code>openssl crl2pkcs7 -nocrl -certfile /tmp/chain.pem | openssl pkcs7 -print_certs -text -noout</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: certificate file not found: /tmp/vra-prod-01.pem</code></td>
+<td>Verify the certificate file exists and the path is correct with <code>ls -la /tmp/vra-prod-01.pem</code>.</td>
+</tr>
+<tr>
+<td><code>error: certificate and key do not match</code></td>
+<td>Ensure the certificate and private key pair are from the same CSR by comparing their modulus with <code>openssl x509 -noout -modulus -in /tmp/vra-prod-01.pem | openssl md5</code> and <code>openssl rsa -noout -modulus -in /tmp/vra-prod-01.key | openssl md5</code>.</td>
+</tr>
+<tr>
+<td><code>error: CA certificate chain is invalid or incomplete</code></td>
+<td>Verify the chain file contains all intermediate certificates in the correct order (leaf to root) and is in PEM format with <code>openssl crl2pkcs7 -nocrl -certfile /tmp/chain.pem | openssl pkcs7 -print_certs -text -noout</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="certificate-requirements">Certificate Requirements<a class="headerlink" href="#certificate-requirements" title="Permanent link">&para;</a></h3>
 <table>
@@ -9238,8 +9257,24 @@ Encryption reference covering Secrets and Encrypted Properties, TLS Certificate 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to get local issuer certificate</code></strong> — Add <code>-showcerts</code> to capture the full chain, or disable verification with <code>-servername</code> and check against your internal CA bundle.
-<strong><code>Connection refused</code></strong> — Verify the node hostname resolves correctly with <code>nslookup node.example.local</code> and confirm port 443 is listening with <code>netstat -tlnp | grep 443</code> on the target node.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to get local issuer certificate</code></td>
+<td>Add <code>-showcerts</code> to capture the full chain, or disable verification with <code>-servername</code> and check against your internal CA bundle.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify the node hostname resolves correctly with <code>nslookup node.example.local</code> and confirm port 443 is listening with <code>netstat -tlnp | grep 443</code> on the target node.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Set a calendar reminder or monitoring alert 60 days before expiry.</p>
 <hr />
@@ -9272,8 +9307,24 @@ Encryption reference covering Secrets and Encrypted Properties, TLS Certificate 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: You must be logged in to the server (Unauthorized)</code></strong> — Verify your kubeconfig is valid and your user has cluster-admin or namespace-level permissions with <code>kubectl auth can-i get secrets -n prelude</code>.
-<strong><code>Error from server (Forbidden): secrets is forbidden: User "system:serviceaccount:default:viewer" cannot list resource "secrets" in API group "" in the namespace "prelude"</code></strong> — Request cluster-admin to grant your service account the <code>list</code> and <code>get</code> verbs on secrets via a ClusterRole or Role binding.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: You must be logged in to the server (Unauthorized)</code></td>
+<td>Verify your kubeconfig is valid and your user has cluster-admin or namespace-level permissions with <code>kubectl auth can-i get secrets -n prelude</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (Forbidden): secrets is forbidden: User "system:serviceaccount:default:viewer" cannot list resource "secrets" in API group "" in the namespace "prelude"</code></td>
+<td>Request cluster-admin to grant your service account the <code>list</code> and <code>get</code> verbs on secrets via a ClusterRole or Role binding.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>The embedded Kubernetes cluster on Aria Automation appliances does not expose etcd encryption configuration to administrators. Protect the appliance disk using storage-layer encryption as the primary control.</p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9303,7 +9354,7 @@ Encryption reference covering Secrets and Encrypted Properties, TLS Certificate 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

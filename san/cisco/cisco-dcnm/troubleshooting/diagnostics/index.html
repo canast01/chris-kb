@@ -7679,9 +7679,28 @@ Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>appmgr: command not found</code></strong> — SSH as root and source the DCNM environment with <code>source /opt/dcnm/bin/env.sh</code> or verify DCNM is installed in <code>/opt/dcnm</code>.
-<strong><code>curl: (7) Failed to connect to localhost port 443: Connection refused</code></strong> — Restart the DCNM web service with <code>appmgr restart dcnm-web</code> and wait 30 seconds for the API to become available.
-<strong><code>Filesystem /data is 95% full</code></strong> — Delete old DCNM logs and snapshots with <code>appmgr cleanup-logs --older-than 30d</code> or expand the <code>/data</code> partition immediately to prevent database corruption.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>appmgr: command not found</code></td>
+<td>SSH as root and source the DCNM environment with <code>source /opt/dcnm/bin/env.sh</code> or verify DCNM is installed in <code>/opt/dcnm</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to localhost port 443: Connection refused</code></td>
+<td>Restart the DCNM web service with <code>appmgr restart dcnm-web</code> and wait 30 seconds for the API to become available.</td>
+</tr>
+<tr>
+<td><code>Filesystem /data is 95% full</code></td>
+<td>Delete old DCNM logs and snapshots with <code>appmgr cleanup-logs --older-than 30d</code> or expand the <code>/data</code> partition immediately to prevent database corruption.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-2-authenticate-and-check-rest-api">Step 2 — Authenticate and check REST API<a class="headerlink" href="#step-2-authenticate-and-check-rest-api" title="Permanent link">&para;</a></h2>
@@ -7734,9 +7753,28 @@ Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; verify DCNM_HOST URL is correct).
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Ensure the logon endpoint returns valid JSON; check DCNM credentials and that the API service is responding with <code>curl -sk -v</code> to inspect headers.
-<strong><code>error: 401 Unauthorized</code></strong> — Verify dcnm-cookie.txt exists and contains valid session cookie by checking <code>cat dcnm-cookie.txt</code> immediately after logon step.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present in example; verify DCNM_HOST URL is correct).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Ensure the logon endpoint returns valid JSON; check DCNM credentials and that the API service is responding with <code>curl -sk -v</code> to inspect headers.</td>
+</tr>
+<tr>
+<td><code>error: 401 Unauthorized</code></td>
+<td>Verify dcnm-cookie.txt exists and contains valid session cookie by checking <code>cat dcnm-cookie.txt</code> immediately after logon step.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-3-check-postgresql-database-health">Step 3 — Check PostgreSQL database health<a class="headerlink" href="#step-3-check-postgresql-database-health" title="Permanent link">&para;</a></h2>
@@ -7837,9 +7875,28 @@ Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "localhost" to address: Name or service not known</code></strong> — Verify PostgreSQL service is running with <code>systemctl status postgresql</code> and check <code>/etc/postgresql/*/main/postgresql.conf</code> for listen_addresses setting.
-<strong><code>ERROR: permission denied for schema public</code></strong> — Ensure the postgres user has proper schema permissions by running <code>psql -U postgres -c "GRANT ALL ON SCHEMA public TO postgres;"</code>.
-**`</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "localhost" to address: Name or service not known</code></td>
+<td>Verify PostgreSQL service is running with <code>systemctl status postgresql</code> and check <code>/etc/postgresql/*/main/postgresql.conf</code> for listen_addresses setting.</td>
+</tr>
+<tr>
+<td><code>ERROR: permission denied for schema public</code></td>
+<td>Ensure the postgres user has proper schema permissions by running <code>psql -U postgres -c "GRANT ALL ON SCHEMA public TO postgres;"</code>.</td>
+</tr>
+<tr>
+<td>**`</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-4-test-switch-connectivity">Step 4 — Test switch connectivity<a class="headerlink" href="#step-4-test-switch-connectivity" title="Permanent link">&para;</a></h2>
@@ -7885,9 +7942,28 @@ Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify the dcnm_mgmt SSH key is installed on the switch and the user exists in the switch's local or TACACS database.
-<strong><code>Timeout: No Response from &lt;switch-ip&gt;</code></strong> — Check network connectivity to the switch, confirm the management IP is reachable with <code>ping</code>, and verify firewall rules allow DCNM's IP to the switch.
-<strong><code>snmpget: Unknown user name "dcnm_poll"</code></strong> — Confirm the SNMP v3 user exists on the switch by running <code>show snmp user</code> and verify the auth/priv passwords match the DCNM credential store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify the dcnm_mgmt SSH key is installed on the switch and the user exists in the switch's local or TACACS database.</td>
+</tr>
+<tr>
+<td><code>Timeout: No Response from &lt;switch-ip&gt;</code></td>
+<td>Check network connectivity to the switch, confirm the management IP is reachable with <code>ping</code>, and verify firewall rules allow DCNM's IP to the switch.</td>
+</tr>
+<tr>
+<td><code>snmpget: Unknown user name "dcnm_poll"</code></td>
+<td>Confirm the SNMP v3 user exists on the switch by running <code>show snmp user</code> and verify the auth/priv passwords match the DCNM credential store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-5-debug-discovery-and-fabric-issues">Step 5 — Debug discovery and fabric issues<a class="headerlink" href="#step-5-debug-discovery-and-fabric-issues" title="Permanent link">&para;</a></h2>
@@ -7933,9 +8009,28 @@ Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: /var/log/dcnm/discovery.log: No such file or directory</code></strong> — Verify DCNM is installed and running with <code>systemctl status dcnm</code>, or check the correct log path with <code>find /var/log -name "*discovery*"</code>.
-<strong><code>free: command not found</code></strong> — Install <code>sysstat</code> package with <code>apt-get install sysstat</code> or <code>yum install sysstat</code> depending on your OS.
-<strong><code>journalctl: command not found</code></strong> — This system uses syslog instead; check logs with <code>tail -f /var/log/syslog</code> or <code>tail -f /var/log/messages</code> depending on your distribution.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: /var/log/dcnm/discovery.log: No such file or directory</code></td>
+<td>Verify DCNM is installed and running with <code>systemctl status dcnm</code>, or check the correct log path with <code>find /var/log -name "*discovery*"</code>.</td>
+</tr>
+<tr>
+<td><code>free: command not found</code></td>
+<td>Install <code>sysstat</code> package with <code>apt-get install sysstat</code> or <code>yum install sysstat</code> depending on your OS.</td>
+</tr>
+<tr>
+<td><code>journalctl: command not found</code></td>
+<td>This system uses syslog instead; check logs with <code>tail -f /var/log/syslog</code> or <code>tail -f /var/log/messages</code> depending on your distribution.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-6-check-ha-replication-status">Step 6 — Check HA replication status<a class="headerlink" href="#step-6-check-ha-replication-status" title="Permanent link">&para;</a></h2>
@@ -7989,9 +8084,28 @@ Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></strong> — Verify PostgreSQL is running with <code>systemctl status dcnm-postgres</code> and check network connectivity to the standby node.
-<strong><code>curl: (7) Failed to connect to localhost port 9200: Connection refused</code></strong> — Restart Elasticsearch with <code>systemctl restart dcnm-elasticsearch</code> and wait 30 seconds for cluster initialization.
-<strong><code>replication_lag</code> shows <code>&gt; 00:01:00</code></strong> — Check HA network link status with <code>ethtool -S &lt;HA_interface&gt;</code> and verify no packet loss on the replication network.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></td>
+<td>Verify PostgreSQL is running with <code>systemctl status dcnm-postgres</code> and check network connectivity to the standby node.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to localhost port 9200: Connection refused</code></td>
+<td>Restart Elasticsearch with <code>systemctl restart dcnm-elasticsearch</code> and wait 30 seconds for cluster initialization.</td>
+</tr>
+<tr>
+<td><code>replication_lag</code> shows <code>&gt; 00:01:00</code></td>
+<td>Check HA network link status with <code>ethtool -S &lt;HA_interface&gt;</code> and verify no packet loss on the replication network.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-7-collect-support-bundle-for-cisco-tac">Step 7 — Collect support bundle for Cisco TAC<a class="headerlink" href="#step-7-collect-support-bundle-for-cisco-tac" title="Permanent link">&para;</a></h2>
@@ -8035,9 +8149,28 @@ Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh: command not found</code></strong> — Verify DCNM is installed at <code>/usr/local/cisco/dcm/dcnm/</code> or check the correct installation path with <code>find / -name collect-support-bundle.sh 2&gt;/dev/null</code>.
-<strong><code>Permission denied (publickey,password).</code></strong> — Ensure SSH key is configured for root@dcnm-dc1.corp.example.com or use <code>ssh-copy-id root@dcnm-dc1.corp.example.com</code> to add your public key.
-<strong><code>show tech-support: command not found</code></strong> — Confirm you are in NX-OS or MDS CLI mode; if in Linux shell, type <code>exit</code> to return to device CLI or use <code>system bash</code> to access the shell context.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh: command not found</code></td>
+<td>Verify DCNM is installed at <code>/usr/local/cisco/dcm/dcnm/</code> or check the correct installation path with <code>find / -name collect-support-bundle.sh 2&gt;/dev/null</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Ensure SSH key is configured for root@dcnm-dc1.corp.example.com or use <code>ssh-copy-id root@dcnm-dc1.corp.example.com</code> to add your public key.</td>
+</tr>
+<tr>
+<td><code>show tech-support: command not found</code></td>
+<td>Confirm you are in NX-OS or MDS CLI mode; if in Linux shell, type <code>exit</code> to return to device CLI or use <code>system bash</code> to access the shell context.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
@@ -8118,7 +8251,7 @@ Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

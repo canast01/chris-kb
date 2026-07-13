@@ -7236,9 +7236,28 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxcli: Unknown option or subcommand 'health cluster list'</code></strong> — Verify vSAN is licensed and enabled on the cluster; use <code>esxcli vsan cluster list</code> if health subcommand is unavailable.
-<strong><code>ssh: connect to host 192.168.100.50 port 22: Connection timed out</code></strong> — Confirm the ONTAP management IP is correct and reachable from the jump host's network segment.
-<strong><code>Get-PowerCLIVersion : The term 'Get-PowerCLIVersion' is not recognized</code></strong> — Install PowerCLI module with <code>Install-Module -Name VMware.PowerCLI -Force</code> or ensure the module is imported.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxcli: Unknown option or subcommand 'health cluster list'</code></td>
+<td>Verify vSAN is licensed and enabled on the cluster; use <code>esxcli vsan cluster list</code> if health subcommand is unavailable.</td>
+</tr>
+<tr>
+<td><code>ssh: connect to host 192.168.100.50 port 22: Connection timed out</code></td>
+<td>Confirm the ONTAP management IP is correct and reachable from the jump host's network segment.</td>
+</tr>
+<tr>
+<td><code>Get-PowerCLIVersion : The term 'Get-PowerCLIVersion' is not recognized</code></td>
+<td>Install PowerCLI module with <code>Install-Module -Name VMware.PowerCLI -Force</code> or ensure the module is imported.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-1-ontap-preparation">Phase 1: ONTAP Preparation<a class="headerlink" href="#phase-1-ontap-preparation" title="Permanent link">&para;</a></h2>
@@ -7289,9 +7308,28 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: vserver "svm_vmware" already exists.</code></strong> — Use <code>vserver delete -vserver svm_vmware</code> to remove the existing SVM first, or choose a different SVM name.
-<strong><code>Error: command failed: Aggregate "aggr1_node01" does not exist.</code></strong> — Run <code>storage aggregate show</code> to list available aggregates and correct the aggregate names in the vserver modify command.
-<strong><code>Error: command failed: Port "e0c" does not exist on node "node01".</code></strong> — Run <code>network port show -node &lt;node01&gt;</code> to verify the correct port names (typically e0a, e0b, e0c, or e0d).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: vserver "svm_vmware" already exists.</code></td>
+<td>Use <code>vserver delete -vserver svm_vmware</code> to remove the existing SVM first, or choose a different SVM name.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Aggregate "aggr1_node01" does not exist.</code></td>
+<td>Run <code>storage aggregate show</code> to list available aggregates and correct the aggregate names in the vserver modify command.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Port "e0c" does not exist on node "node01".</code></td>
+<td>Run <code>network port show -node &lt;node01&gt;</code> to verify the correct port names (typically e0a, e0b, e0c, or e0d).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="12-create-nfs-export-policy">1.2 Create NFS Export Policy<a class="headerlink" href="#12-create-nfs-export-policy" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create export policy for ESXi hosts</span>
@@ -7321,8 +7359,24 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "esxi_nfs_policy" does not exist</code></strong> — Ensure the export policy was created successfully in the first command before adding rules.
-<strong><code>Error: Invalid client match specification "&lt;esxi-subnet/mask&gt;"</code></strong> — Replace the placeholder with an actual subnet in CIDR notation (e.g., <code>192.168.10.0/24</code>) or a specific host IP.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "esxi_nfs_policy" does not exist</code></td>
+<td>Ensure the export policy was created successfully in the first command before adding rules.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid client match specification "&lt;esxi-subnet/mask&gt;"</code></td>
+<td>Replace the placeholder with an actual subnet in CIDR notation (e.g., <code>192.168.10.0/24</code>) or a specific host IP.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="13-create-the-nfs-datastore-volume">1.3 Create the NFS Datastore Volume<a class="headerlink" href="#13-create-the-nfs-datastore-volume" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create volume sized for migration target</span>
@@ -7353,9 +7407,28 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: aggregate "aggr1_node01" does not exist</code></strong> — Verify the aggregate name with <code>storage aggregate show</code> and use the correct aggregate name in the volume create command.
-<strong><code>Error: export policy "esxi_nfs_policy" does not exist</code></strong> — Create the export policy first with <code>vserver export-policy create -vserver svm_vmware -policyname esxi_nfs_policy</code> or use an existing policy name.
-<strong><code>Error: Cannot enable efficiency on a volume that is not online</code></strong> — Wait for the volume to transition to online state and retry the efficiency commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: aggregate "aggr1_node01" does not exist</code></td>
+<td>Verify the aggregate name with <code>storage aggregate show</code> and use the correct aggregate name in the volume create command.</td>
+</tr>
+<tr>
+<td><code>Error: export policy "esxi_nfs_policy" does not exist</code></td>
+<td>Create the export policy first with <code>vserver export-policy create -vserver svm_vmware -policyname esxi_nfs_policy</code> or use an existing policy name.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot enable efficiency on a volume that is not online</code></td>
+<td>Wait for the volume to transition to online state and retry the efficiency commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="14-mount-nfs-datastore-on-esxi-hosts-via-vcenter">1.4 Mount NFS Datastore on ESXi Hosts via vCenter<a class="headerlink" href="#14-mount-nfs-datastore-on-esxi-hosts-via-vcenter" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI — add NFS datastore to all hosts in cluster</span>
@@ -7408,9 +7481,28 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Cannot find virtual machine configuration file</code></strong> — Verify the vSAN UUID and VM folder path match exactly, and ensure the VM is registered in vCenter.
-<strong><code>Error: Destination datastore does not have sufficient free space</code></strong> — Check available capacity on the ONTAP NFS datastore with <code>df -h /vmfs/volumes/&lt;ontap-ds-uuid&gt;</code> and ensure at least 120% of the VM's disk size is free.
-<strong><code>Error: Permission denied on destination path</code></strong> — Confirm the ESXi host has read-write permissions on the ONTAP NFS mount and that the export policy allows the ESXi IP address.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Cannot find virtual machine configuration file</code></td>
+<td>Verify the vSAN UUID and VM folder path match exactly, and ensure the VM is registered in vCenter.</td>
+</tr>
+<tr>
+<td><code>Error: Destination datastore does not have sufficient free space</code></td>
+<td>Check available capacity on the ONTAP NFS datastore with <code>df -h /vmfs/volumes/&lt;ontap-ds-uuid&gt;</code> and ensure at least 120% of the VM's disk size is free.</td>
+</tr>
+<tr>
+<td><code>Error: Permission denied on destination path</code></td>
+<td>Confirm the ESXi host has read-write permissions on the ONTAP NFS mount and that the export policy allows the ESXi IP address.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="22-bulk-storage-vmotion-entire-datastore">2.2 Bulk Storage vMotion — Entire Datastore<a class="headerlink" href="#22-bulk-storage-vmotion-entire-datastore" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Migrate all VMs from a vSAN datastore to ONTAP</span>
@@ -7469,9 +7561,28 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "svm_vmware" is not a valid Vserver name</code></strong> — Verify the SVM name with <code>vserver show</code> and use the correct name in the command.
-<strong><code>Error: volume "vol_nfs_ds01" does not exist</code></strong> — Confirm the volume name with <code>volume show -vserver svm_vmware</code> before querying.
-<strong><code>Error: Statistics object "nfsv3" is not valid</code></strong> — Use <code>statistics show -object nfsv3 -counter ?</code> to list available counters for your ONTAP version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "svm_vmware" is not a valid Vserver name</code></td>
+<td>Verify the SVM name with <code>vserver show</code> and use the correct name in the command.</td>
+</tr>
+<tr>
+<td><code>Error: volume "vol_nfs_ds01" does not exist</code></td>
+<td>Confirm the volume name with <code>volume show -vserver svm_vmware</code> before querying.</td>
+</tr>
+<tr>
+<td><code>Error: Statistics object "nfsv3" is not valid</code></td>
+<td>Use <code>statistics show -object nfsv3 -counter ?</code> to list available counters for your ONTAP version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="32-verify-datastore-usage-in-vcenter">3.2 Verify Datastore Usage in vCenter<a class="headerlink" href="#32-verify-datastore-usage-in-vcenter" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># PowerCLI — check datastore capacity and provisioned space</span>
@@ -7514,9 +7625,28 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fio: openat: Permission denied</code></strong> — Run fio with sudo or ensure the VM user has write permissions to /var/tmp.
-<strong><code>iostat: command not found</code></strong> — Install sysstat package with <code>apt-get install sysstat</code> (Ubuntu/Debian) or <code>yum install sysstat</code> (RHEL/CentOS).
-<strong><code>fio: io_uring not available, falling back to libaio</code></strong> — This is a warning, not an error; libaio will work fine for post-migration validation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fio: openat: Permission denied</code></td>
+<td>Run fio with sudo or ensure the VM user has write permissions to /var/tmp.</td>
+</tr>
+<tr>
+<td><code>iostat: command not found</code></td>
+<td>Install sysstat package with <code>apt-get install sysstat</code> (Ubuntu/Debian) or <code>yum install sysstat</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>fio: io_uring not available, falling back to libaio</code></td>
+<td>This is a warning, not an error; libaio will work fine for post-migration validation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-4-cutover">Phase 4: Cutover<a class="headerlink" href="#phase-4-cutover" title="Permanent link">&para;</a></h2>
@@ -7546,8 +7676,24 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxcli: Unknown command or namespace vsan</code></strong> — Ensure the vSAN license is installed and the vSAN module is loaded on the ESXi host.
-<strong><code>Cluster UUID: Unknown</code></strong> — Run the command from an ESXi host that is part of an active vSAN cluster; standalone hosts will not return cluster information.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxcli: Unknown command or namespace vsan</code></td>
+<td>Ensure the vSAN license is installed and the vSAN module is loaded on the ESXi host.</td>
+</tr>
+<tr>
+<td><code>Cluster UUID: Unknown</code></td>
+<td>Run the command from an ESXi host that is part of an active vSAN cluster; standalone hosts will not return cluster information.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="42-remove-vsan-datastore-from-cluster">4.2 Remove vSAN Datastore from Cluster<a class="headerlink" href="#42-remove-vsan-datastore-from-cluster" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># Confirm no VMs are still on vSAN</span>
@@ -7602,8 +7748,24 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Cluster is not healthy</code></strong> — Run <code>esxcli vsan health cluster get</code> to identify specific issues and remediate them before migration.
-<strong><code>Unable to connect to VSAN cluster</code></strong> — Verify vSAN is enabled on the cluster and you have network connectivity to the ESXi hosts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cluster is not healthy</code></td>
+<td>Run <code>esxcli vsan health cluster get</code> to identify specific issues and remediate them before migration.</td>
+</tr>
+<tr>
+<td><code>Unable to connect to VSAN cluster</code></td>
+<td>Verify vSAN is enabled on the cluster and you have network connectivity to the ESXi hosts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>4. If ONTAP volume is corrupt, restore from snapshot:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># List available snapshots</span>
@@ -7625,8 +7787,24 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Volume is currently mounted. Unmount volume before restoring from snapshot.</code></strong> — Unmount the NFS datastore from all ESXi hosts and the SVM before attempting the restore.
-<strong><code>Snapshot "snapshot-name" does not exist.</code></strong> — Replace <code>&lt;snapshot-name&gt;</code> with an actual snapshot name from the list output above.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Volume is currently mounted. Unmount volume before restoring from snapshot.</code></td>
+<td>Unmount the NFS datastore from all ESXi hosts and the SVM before attempting the restore.</td>
+</tr>
+<tr>
+<td><code>Snapshot "snapshot-name" does not exist.</code></td>
+<td>Replace <code>&lt;snapshot-name&gt;</code> with an actual snapshot name from the list output above.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -7660,7 +7838,7 @@ Cross-product runbook for migrating virtual machine workloads from VMware vSAN t
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

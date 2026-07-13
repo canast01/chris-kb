@@ -9540,8 +9540,24 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nc: getaddrinfo for host "target-vrs.example.local" port 31031: Name or service not known</code></strong> — Verify the target VRS hostname is correct and resolvable in DNS, or use the IP address directly.
-<strong><code>Connection refused</code></strong> — Confirm the VRS replication service is running on the target appliance by checking service status via VAMI or SSH into the target VRS.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nc: getaddrinfo for host "target-vrs.example.local" port 31031: Name or service not known</code></td>
+<td>Verify the target VRS hostname is correct and resolvable in DNS, or use the IP address directly.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Confirm the VRS replication service is running on the target appliance by checking service status via VAMI or SSH into the target VRS.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="move-a-replication-to-a-different-target-datastore">Move a Replication to a Different Target Datastore<a class="headerlink" href="#move-a-replication-to-a-different-target-datastore" title="Permanent link">&para;</a></h2>
@@ -9655,9 +9671,28 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection refused on srm-source.example.local:443</code></strong> — Verify SRM service is running with <code>systemctl status srm</code> on the SRM server and confirm firewall rules allow port 443 from VRA.
-<strong><code>Authentication failed for administrator@vsphere.local</code></strong> — Confirm the vCenter SSO password is current and the account has SRM Administrator role assigned in the SRM UI.
-<strong><code>Certificate validation failed: self-signed certificate</code></strong> — Accept the self-signed certificate warning in your browser or import the SRM server's CA certificate into the VRA VAMI trusted store.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused on srm-source.example.local:443</code></td>
+<td>Verify SRM service is running with <code>systemctl status srm</code> on the SRM server and confirm firewall rules allow port 443 from VRA.</td>
+</tr>
+<tr>
+<td><code>Authentication failed for administrator@vsphere.local</code></td>
+<td>Confirm the vCenter SSO password is current and the account has SRM Administrator role assigned in the SRM UI.</td>
+</tr>
+<tr>
+<td><code>Certificate validation failed: self-signed certificate</code></td>
+<td>Accept the self-signed certificate warning in your browser or import the SRM server's CA certificate into the VRA VAMI trusted store.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="verify-vr-appliance-registration">Verify VR Appliance Registration<a class="headerlink" href="#verify-vr-appliance-registration" title="Permanent link">&para;</a></h2>
@@ -9717,9 +9752,28 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The term 'Get-SRMProtectionGroup' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></strong> — Install the SRM PowerCLI module via <code>Install-Module -Name VMware.VimAutomation.Srm</code> and import it with <code>Import-Module VMware.VimAutomation.Srm</code>.
-<strong><code>Connect-VIServer : Cannot find a vCenter Server system at 'vcenter-source.example.local'. The server may not be reachable or credentials may be invalid.</code></strong> — Verify the vCenter hostname/IP is correct and reachable, then retry with explicit credentials: <code>Connect-VIServer -Server vcenter-source.example.local -Credential (Get-Credential)</code>.
-<strong><code>Get-SRMProtectionGroup : The SRM server is not registered or not responding.</code></strong> — Confirm SRM is installed and running on the recovery site, and that the SRM PowerCLI module is connected to the correct SRM instance via <code>Connect-SrmServer</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The term 'Get-SRMProtectionGroup' is not recognized as the name of a cmdlet, function, script file, or operable program.</code></td>
+<td>Install the SRM PowerCLI module via <code>Install-Module -Name VMware.VimAutomation.Srm</code> and import it with <code>Import-Module VMware.VimAutomation.Srm</code>.</td>
+</tr>
+<tr>
+<td><code>Connect-VIServer : Cannot find a vCenter Server system at 'vcenter-source.example.local'. The server may not be reachable or credentials may be invalid.</code></td>
+<td>Verify the vCenter hostname/IP is correct and reachable, then retry with explicit credentials: <code>Connect-VIServer -Server vcenter-source.example.local -Credential (Get-Credential)</code>.</td>
+</tr>
+<tr>
+<td><code>Get-SRMProtectionGroup : The SRM server is not registered or not responding.</code></td>
+<td>Confirm SRM is installed and running on the recovery site, and that the SRM PowerCLI module is connected to the correct SRM instance via <code>Connect-SrmServer</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="check-individual-vm-replication-status">Check Individual VM Replication Status<a class="headerlink" href="#check-individual-vm-replication-status" title="Permanent link">&para;</a></h2>
@@ -9797,8 +9851,24 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>command not found: bc</code></strong> — Install bc with <code>apt-get install bc</code> (Debian/Ubuntu) or <code>yum install bc</code> (RHEL/CentOS).
-<strong><code>(standard_in) 1: syntax error</code></strong> — Ensure the echo string is properly quoted and the division syntax is correct; use <code>bc -l</code> for floating-point math if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command not found: bc</code></td>
+<td>Install bc with <code>apt-get install bc</code> (Debian/Ubuntu) or <code>yum install bc</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>(standard_in) 1: syntax error</code></td>
+<td>Ensure the echo string is properly quoted and the division syntax is correct; use <code>bc -l</code> for floating-point math if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="failback-a-replicated-vm-after-srm-recovery">Failback a Replicated VM (after SRM recovery)<a class="headerlink" href="#failback-a-replicated-vm-after-srm-recovery" title="Permanent link">&para;</a></h2>
@@ -9951,7 +10021,7 @@ Use array-level snapshot and transport (SRDF, SnapMirror, or similar) to copy th
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="AWS Operations — Scripts &amp; Automation · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "AWS Operations — Scripts &amp; Automation", "url": "https://chrisanastasiadis.com/cloud/aws/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-06"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "AWS Operations — Scripts &amp; Automation", "url": "https://chrisanastasiadis.com/cloud/aws/operations/scripts/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-06"}</script>
   
 
   </head>
@@ -8356,9 +8356,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unable to locate credentials</code></strong> — Ensure AWS credentials are configured via <code>aws configure</code> or <code>AWS_PROFILE</code> environment variable points to a valid profile in <code>~/.aws/credentials</code>.
-<strong><code>An error occurred (UnauthorizedOperation) when calling the DescribeInstances operation: You are not authorized to perform: ec2:DescribeInstances</code></strong> — Add the required IAM permissions (ec2:DescribeInstances, rds:DescribeDBInstances, elasticloadbalancing:DescribeLoadBalancers) to the IAM user or role being used.
-<strong><code>Invalid value 'us-west-2' for region. Reason: INVALID_REGION.</code></strong> — Set <code>AWS_REGION</code> to a valid AWS region such as <code>us-east-1</code>, <code>eu-west-1</code>, or <code>ap-southeast-1</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unable to locate credentials</code></td>
+<td>Ensure AWS credentials are configured via <code>aws configure</code> or <code>AWS_PROFILE</code> environment variable points to a valid profile in <code>~/.aws/credentials</code>.</td>
+</tr>
+<tr>
+<td><code>An error occurred (UnauthorizedOperation) when calling the DescribeInstances operation: You are not authorized to perform: ec2:DescribeInstances</code></td>
+<td>Add the required IAM permissions (ec2:DescribeInstances, rds:DescribeDBInstances, elasticloadbalancing:DescribeLoadBalancers) to the IAM user or role being used.</td>
+</tr>
+<tr>
+<td><code>Invalid value 'us-west-2' for region. Reason: INVALID_REGION.</code></td>
+<td>Set <code>AWS_REGION</code> to a valid AWS region such as <code>us-east-1</code>, <code>eu-west-1</code>, or <code>ap-southeast-1</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
@@ -8447,9 +8466,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unable to locate credentials in any of the locations</code></strong> — Set AWS credentials via <code>aws configure</code> or export <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.
-<strong><code>An error occurred (AccessDenied) when calling the GetCostAndUsage operation</code></strong> — Ensure the IAM user/role has the <code>ce:GetCostAndUsage</code> permission attached.
-<strong><code>command not found: python3</code></strong> — Install Python 3 on the system using your package manager (e.g., <code>apt install python3</code> or <code>brew install python3</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unable to locate credentials in any of the locations</code></td>
+<td>Set AWS credentials via <code>aws configure</code> or export <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</td>
+</tr>
+<tr>
+<td><code>An error occurred (AccessDenied) when calling the GetCostAndUsage operation</code></td>
+<td>Ensure the IAM user/role has the <code>ce:GetCostAndUsage</code> permission attached.</td>
+</tr>
+<tr>
+<td><code>command not found: python3</code></td>
+<td>Install Python 3 on the system using your package manager (e.g., <code>apt install python3</code> or <code>brew install python3</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>~/Desktop
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>bash<span class="w"> </span>aws-cost-report.sh
@@ -8699,9 +8737,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cd: command not found</code></strong> — Use <code>cd /Users/YourName/Desktop</code> (forward slashes) or run from PowerShell instead of bash on Windows.
-<strong><code>ModuleNotFoundError: No module named 'boto3'</code></strong> — Ensure pip is using the correct Python interpreter with <code>python -m pip install boto3</code> or verify the virtual environment is activated.
-<strong><code>botocore.exceptions.NoCredentialsError: Unable to locate credentials</code></strong> — Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cd: command not found</code></td>
+<td>Use <code>cd /Users/YourName/Desktop</code> (forward slashes) or run from PowerShell instead of bash on Windows.</td>
+</tr>
+<tr>
+<td><code>ModuleNotFoundError: No module named 'boto3'</code></td>
+<td>Ensure pip is using the correct Python interpreter with <code>python -m pip install boto3</code> or verify the virtual environment is activated.</td>
+</tr>
+<tr>
+<td><code>botocore.exceptions.NoCredentialsError: Unable to locate credentials</code></td>
+<td>Configure AWS credentials using <code>aws configure</code> or set <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python<span class="w"> </span>iam_key_audit.py<span class="w"> </span>--deactivate
 </code></pre></div>
@@ -8725,8 +8782,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>botocore.exceptions.NoCredentialsError: Unable to locate credentials</code></strong> — Configure AWS credentials via <code>aws configure</code> or set <code>AWS_PROFILE</code> environment variable.
-<strong><code>AccessDenied: User: arn:aws:iam::123456789012:user/audit-bot is not authorized to perform: iam:UpdateAccessKey</code></strong> — Ensure the IAM user running the script has <code>iam:UpdateAccessKey</code> and <code>iam:ListAccessKeys</code> permissions in their policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>botocore.exceptions.NoCredentialsError: Unable to locate credentials</code></td>
+<td>Configure AWS credentials via <code>aws configure</code> or set <code>AWS_PROFILE</code> environment variable.</td>
+</tr>
+<tr>
+<td><code>AccessDenied: User: arn:aws:iam::123456789012:user/audit-bot is not authorized to perform: iam:UpdateAccessKey</code></td>
+<td>Ensure the IAM user running the script has <code>iam:UpdateAccessKey</code> and <code>iam:ListAccessKeys</code> permissions in their policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="ch">#!/bin/bash</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
@@ -8801,9 +8874,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>An error occurred (UnauthorizedOperation) when calling the DescribeAlarms operation: User: arn:aws:iam::123456789012:user/ops-user is not authorized to perform: cloudwatch:DescribeAlarms</code></strong> — Add <code>cloudwatch:DescribeAlarms</code> permission to the IAM user/role policy.
-<strong><code>Unable to locate credentials. You can configure credentials by running "aws configure".</code></strong> — Set AWS credentials via <code>aws configure</code> or export <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.
-<strong><code>ModuleNotFoundError: No module named 'json'</code></strong> — Ensure Python 3 is installed and the json module is available (it is built-in; verify Python installation with <code>python3 --version</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>An error occurred (UnauthorizedOperation) when calling the DescribeAlarms operation: User: arn:aws:iam::123456789012:user/ops-user is not authorized to perform: cloudwatch:DescribeAlarms</code></td>
+<td>Add <code>cloudwatch:DescribeAlarms</code> permission to the IAM user/role policy.</td>
+</tr>
+<tr>
+<td><code>Unable to locate credentials. You can configure credentials by running "aws configure".</code></td>
+<td>Set AWS credentials via <code>aws configure</code> or export <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables.</td>
+</tr>
+<tr>
+<td><code>ModuleNotFoundError: No module named 'json'</code></td>
+<td>Ensure Python 3 is installed and the json module is available (it is built-in; verify Python installation with <code>python3 --version</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>~/Desktop
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>bash<span class="w"> </span>cloudwatch-check.sh
@@ -9071,7 +9163,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 06:48:03 UTC"><span class="timeago" datetime="2026-06-29T06:48:03+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 06:48:03 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

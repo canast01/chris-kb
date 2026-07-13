@@ -8433,9 +8433,28 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: No such relationship</code></strong> — Verify the destination path format is correct (svm-name:volume-name) and the relationship exists with <code>snapmirror show</code>.
-<strong><code>Transfer aborted: insufficient space on destination volume</code></strong> — Increase the destination volume size with <code>volume modify -vserver &lt;dest-svm&gt; -volume &lt;dest-vol&gt; -size +&lt;amount&gt;</code> or enable autogrow.
-<strong><code>Transfer failed: source volume is offline</code></strong> — Bring the source volume online with <code>volume online -vserver &lt;src-svm&gt; -volume &lt;src-vol&gt;</code> and resume the relationship with <code>snapmirror resume -destination-path &lt;dest-svm&gt;:&lt;dest-vol&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: No such relationship</code></td>
+<td>Verify the destination path format is correct (svm-name:volume-name) and the relationship exists with <code>snapmirror show</code>.</td>
+</tr>
+<tr>
+<td><code>Transfer aborted: insufficient space on destination volume</code></td>
+<td>Increase the destination volume size with <code>volume modify -vserver &lt;dest-svm&gt; -volume &lt;dest-vol&gt; -size +&lt;amount&gt;</code> or enable autogrow.</td>
+</tr>
+<tr>
+<td><code>Transfer failed: source volume is offline</code></td>
+<td>Bring the source volume online with <code>volume online -vserver &lt;src-svm&gt; -volume &lt;src-vol&gt;</code> and resume the relationship with <code>snapmirror resume -destination-path &lt;dest-svm&gt;:&lt;dest-vol&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-2-check-transfer-history">Step 2 — Check transfer history<a class="headerlink" href="#step-2-check-transfer-history" title="Permanent link">&para;</a></h2>
@@ -8476,9 +8495,28 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: No SnapMirror relationship found for destination path cluster2://dr_svm:prod_vol</code></strong> — Verify the destination SVM and volume names are correct using <code>snapmirror show</code> without filters.
-<strong><code>Error: SnapMirror transfer cannot be aborted: transfer is not in progress</code></strong> — Check if the transfer has already completed or failed using <code>snapmirror show-history</code>; only active transfers can be aborted.
-<strong><code>Error: This operation is not permitted: SnapMirror relationship is broken</code></strong> — Resynchronize the relationship with <code>snapmirror resync -destination-path &lt;dest-svm&gt;:&lt;dest-vol&gt;</code> before attempting manual updates.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: No SnapMirror relationship found for destination path cluster2://dr_svm:prod_vol</code></td>
+<td>Verify the destination SVM and volume names are correct using <code>snapmirror show</code> without filters.</td>
+</tr>
+<tr>
+<td><code>Error: SnapMirror transfer cannot be aborted: transfer is not in progress</code></td>
+<td>Check if the transfer has already completed or failed using <code>snapmirror show-history</code>; only active transfers can be aborted.</td>
+</tr>
+<tr>
+<td><code>Error: This operation is not permitted: SnapMirror relationship is broken</code></td>
+<td>Resynchronize the relationship with <code>snapmirror resync -destination-path &lt;dest-svm&gt;:&lt;dest-vol&gt;</code> before attempting manual updates.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-3-check-intercluster-lifs">Step 3 — Check intercluster LIFs<a class="headerlink" href="#step-3-check-intercluster-lifs" title="Permanent link">&para;</a></h2>
@@ -8526,9 +8564,28 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: No entry found for intercluster LIFs</code></strong> — Verify intercluster LIFs exist by running <code>network interface show -role intercluster</code> and create them if missing using <code>network interface create -vserver &lt;cluster&gt; -lif &lt;name&gt; -role intercluster -home-node &lt;node&gt; -home-port &lt;port&gt; -address &lt;ip&gt; -netmask &lt;mask&gt;</code>.
-<strong><code>100% packet loss</code></strong> — Check firewall rules allow UDP 11104-11105 between clusters, verify network routing with <code>network route show</code>, and confirm intercluster LIF is in "up" status.
-<strong><code>Cluster peer show: Availability = Unavailable</code></strong> — Verify both clusters can reach each other's intercluster LIFs using <code>network ping</code>, check DNS resolution, and re-establish the peer relationship with <code>cluster peer create -peer-addrs &lt;remote-ip&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: No entry found for intercluster LIFs</code></td>
+<td>Verify intercluster LIFs exist by running <code>network interface show -role intercluster</code> and create them if missing using <code>network interface create -vserver &lt;cluster&gt; -lif &lt;name&gt; -role intercluster -home-node &lt;node&gt; -home-port &lt;port&gt; -address &lt;ip&gt; -netmask &lt;mask&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>100% packet loss</code></td>
+<td>Check firewall rules allow UDP 11104-11105 between clusters, verify network routing with <code>network route show</code>, and confirm intercluster LIF is in "up" status.</td>
+</tr>
+<tr>
+<td><code>Cluster peer show: Availability = Unavailable</code></td>
+<td>Verify both clusters can reach each other's intercluster LIFs using <code>network ping</code>, check DNS resolution, and re-establish the peer relationship with <code>cluster peer create -peer-addrs &lt;remote-ip&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-4-check-ontap-ems-for-snapmirror-events">Step 4 — Check ONTAP EMS for SnapMirror events<a class="headerlink" href="#step-4-check-ontap-ems-for-snapmirror-events" title="Permanent link">&para;</a></h2>
@@ -8573,8 +8630,24 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: invalid value for "-time-range" option</code></strong> — Ensure the date format matches "YYYY-MM-DD HH:MM:SS" and use two dots (..) to separate start and end times.
-<strong><code>Error: unknown event message name "snapmirror.*"</code></strong> — Use the exact message name without wildcards in the -message-name parameter, or omit the filter to search all events and pipe to grep instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: invalid value for "-time-range" option</code></td>
+<td>Ensure the date format matches "YYYY-MM-DD HH:MM:SS" and use two dots (..) to separate start and end times.</td>
+</tr>
+<tr>
+<td><code>Error: unknown event message name "snapmirror.*"</code></td>
+<td>Use the exact message name without wildcards in the -message-name parameter, or omit the filter to search all events and pipe to grep instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-5-sm-bc-specific-diagnostics">Step 5 — SM-BC specific diagnostics<a class="headerlink" href="#step-5-sm-bc-specific-diagnostics" title="Permanent link">&para;</a></h2>
@@ -8627,9 +8700,28 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Mediator is unreachable. Failover capability is disabled.</code></strong> — Verify mediator VM is running and network connectivity exists from both clusters to the mediator IP on port 443.
-<strong><code>Error: curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to curl (<code>curl -k https://&lt;mediator-ip&gt;/api/v1/heartbeat</code>) or import the mediator's CA certificate into the cluster's certificate store.
-<strong><code>Error: Mediator add failed: Authentication failed for peer cluster</code></strong> — Confirm the mediator username and password are correct and the mediator has been initialized with <code>mediator setup</code> on the mediator VM.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Mediator is unreachable. Failover capability is disabled.</code></td>
+<td>Verify mediator VM is running and network connectivity exists from both clusters to the mediator IP on port 443.</td>
+</tr>
+<tr>
+<td><code>Error: curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to curl (<code>curl -k https://&lt;mediator-ip&gt;/api/v1/heartbeat</code>) or import the mediator's CA certificate into the cluster's certificate store.</td>
+</tr>
+<tr>
+<td><code>Error: Mediator add failed: Authentication failed for peer cluster</code></td>
+<td>Confirm the mediator username and password are correct and the mediator has been initialized with <code>mediator setup</code> on the mediator VM.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-6-collect-autosupport-and-ems-for-netapp-sr">Step 6 — Collect AutoSupport and EMS for NetApp SR<a class="headerlink" href="#step-6-collect-autosupport-and-ems-for-netapp-sr" title="Permanent link">&para;</a></h2>
@@ -8685,9 +8777,28 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: snapmirror</code></strong> — Verify you are running commands on a NetApp ONTAP cluster (not a Linux host) and have appropriate cluster admin privileges.
-<strong><code>Error: No cluster peer relationship found</code></strong> — Establish cluster peering first using <code>cluster peer create</code> before attempting SnapMirror operations.
-<strong><code>Error: event log show: invalid time-range format</code></strong> — Use valid time-range syntax like <code>"-2h".."now"</code> or absolute timestamps in <code>YYYY-MM-DD HH:MM:SS</code> format.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: snapmirror</code></td>
+<td>Verify you are running commands on a NetApp ONTAP cluster (not a Linux host) and have appropriate cluster admin privileges.</td>
+</tr>
+<tr>
+<td><code>Error: No cluster peer relationship found</code></td>
+<td>Establish cluster peering first using <code>cluster peer create</code> before attempting SnapMirror operations.</td>
+</tr>
+<tr>
+<td><code>Error: event log show: invalid time-range format</code></td>
+<td>Use valid time-range syntax like <code>"-2h".."now"</code> or absolute timestamps in <code>YYYY-MM-DD HH:MM:SS</code> format.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="log-locations">Log locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
@@ -8759,7 +8870,7 @@ SnapMirror diagnostic commands: check relationship health and lag with snapmirro
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

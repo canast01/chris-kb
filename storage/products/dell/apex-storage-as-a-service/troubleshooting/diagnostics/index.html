@@ -9055,8 +9055,24 @@ APEX Storage as a Service diagnostic commands: check host-side iSCSI and multipa
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>cat: /sys/class/fc_host/host*/port_state: No such file or directory</code></strong> — Verify FC HBA drivers are loaded with <code>lsmod | grep qla2xxx</code> and reseat the HBA if needed.
-<strong><code>failed faulty offline</code></strong> — Check FC cable connections and zoning on the SAN switch, then run <code>multipathd reconfigure</code> to refresh paths.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cat: /sys/class/fc_host/host*/port_state: No such file or directory</code></td>
+<td>Verify FC HBA drivers are loaded with <code>lsmod | grep qla2xxx</code> and reseat the HBA if needed.</td>
+</tr>
+<tr>
+<td><code>failed faulty offline</code></td>
+<td>Check FC cable connections and zoning on the SAN switch, then run <code>multipathd reconfigure</code> to refresh paths.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="windows-hosts">Windows hosts<a class="headerlink" href="#windows-hosts" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check MPIO disk paths (requires MPIO feature installed)</span>
@@ -9157,9 +9173,28 @@ APEX Storage as a Service diagnostic commands: check host-side iSCSI and multipa
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>scg: command not found</code></strong> — Verify SSH session is connected to the SCG appliance (not a standard Linux host) and the scg CLI is in the PATH.
-<strong><code>Authentication failed for device dev-4a7f2c</code></strong> — Confirm the APEX array credentials stored in SCG are current and the array's management IP is reachable from the SCG network.
-<strong><code>Connected to CloudIQ = No</code></strong> — Check SCG outbound firewall rules allow HTTPS to cloudiq.dell.com and verify the SCG proxy settings if applicable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scg: command not found</code></td>
+<td>Verify SSH session is connected to the SCG appliance (not a standard Linux host) and the scg CLI is in the PATH.</td>
+</tr>
+<tr>
+<td><code>Authentication failed for device dev-4a7f2c</code></td>
+<td>Confirm the APEX array credentials stored in SCG are current and the array's management IP is reachable from the SCG network.</td>
+</tr>
+<tr>
+<td><code>Connected to CloudIQ = No</code></td>
+<td>Check SCG outbound firewall rules allow HTTPS to cloudiq.dell.com and verify the SCG proxy settings if applicable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-4-check-the-underlying-array-unisphere">Step 4 — Check the underlying array (Unisphere)<a class="headerlink" href="#step-4-check-the-underlying-array-unisphere" title="Permanent link">&para;</a></h2>
@@ -9218,9 +9253,28 @@ APEX Storage as a Service diagnostic commands: check host-side iSCSI and multipa
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present; verify the flag is not being stripped by shell escaping).
-<strong><code>jq: parse error: Invalid numeric literal at line 1 column 7</code></strong> — Ensure the API response is valid JSON by checking credentials and endpoint URL are correct; test with <code>curl -sk ... | head -c 200</code> to inspect raw response.
-<strong><code>curl: (7) Failed to connect to &lt;powerstore-ip&gt; port 443: Connection refused</code></strong> — Verify the PowerStore/PowerFlex management IP is reachable and the REST API service is running with <code>ping &lt;powerstore-ip&gt;</code> and check firewall rules.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present; verify the flag is not being stripped by shell escaping).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid numeric literal at line 1 column 7</code></td>
+<td>Ensure the API response is valid JSON by checking credentials and endpoint URL are correct; test with <code>curl -sk ... | head -c 200</code> to inspect raw response.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to &lt;powerstore-ip&gt; port 443: Connection refused</code></td>
+<td>Verify the PowerStore/PowerFlex management IP is reachable and the REST API service is running with <code>ping &lt;powerstore-ip&gt;</code> and check firewall rules.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="collect-diagnostic-snapshot-for-dell-sr">Collect diagnostic snapshot for Dell SR<a class="headerlink" href="#collect-diagnostic-snapshot-for-dell-sr" title="Permanent link">&para;</a></h2>
@@ -9263,9 +9317,28 @@ APEX Storage as a Service diagnostic commands: check host-side iSCSI and multipa
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>iscsiadm: No records found</code></strong> — Verify iSCSI target is configured and running with <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;</code>.
-<strong><code>multipath: command not found</code></strong> — Install device-mapper-multipath package with <code>apt-get install device-mapper-multipath</code> or <code>yum install device-mapper-multipath</code>.
-<strong><code>multipathd: socket connect failed, No such file or directory</code></strong> — Start the multipathd service with <code>systemctl start multipathd &amp;&amp; systemctl enable multipathd</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iscsiadm: No records found</code></td>
+<td>Verify iSCSI target is configured and running with <code>iscsiadm -m discovery -t st -p &lt;target_ip&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>multipath: command not found</code></td>
+<td>Install device-mapper-multipath package with <code>apt-get install device-mapper-multipath</code> or <code>yum install device-mapper-multipath</code>.</td>
+</tr>
+<tr>
+<td><code>multipathd: socket connect failed, No such file or directory</code></td>
+<td>Start the multipathd service with <code>systemctl start multipathd &amp;&amp; systemctl enable multipathd</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9304,7 +9377,7 @@ APEX Storage as a Service diagnostic commands: check host-side iSCSI and multipa
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

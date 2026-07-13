@@ -7375,8 +7375,24 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to localhost port 8090: Connection refused</code></strong> — Verify Confluence service is running with <code>systemctl status confluence</code> and check if the port binding changed in <code>confluence.cfg.xml</code>.
-**`grep: /var/atlassian/application-</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to localhost port 8090: Connection refused</code></td>
+<td>Verify Confluence service is running with <code>systemctl status confluence</code> and check if the port binding changed in <code>confluence.cfg.xml</code>.</td>
+</tr>
+<tr>
+<td>**`grep: /var/atlassian/application-</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="step-2-jvm-heap-analysis">Step 2 — JVM heap analysis<a class="headerlink" href="#step-2-jvm-heap-analysis" title="Permanent link">&para;</a></h2>
@@ -7406,9 +7422,28 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>12345: No such process</code></strong> — Verify Confluence is running with <code>systemctl status confluence</code> and check the correct process name with <code>ps aux | grep confluence</code>.
-<strong><code>jstat: command not found</code></strong> — Install the JDK (not just JRE) on the system, as jstat is part of the JDK tools package.
-<strong><code>Permission denied</code></strong> — Run the command with <code>sudo</code> or as the confluence system user to access the JVM process statistics.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>12345: No such process</code></td>
+<td>Verify Confluence is running with <code>systemctl status confluence</code> and check the correct process name with <code>ps aux | grep confluence</code>.</td>
+</tr>
+<tr>
+<td><code>jstat: command not found</code></td>
+<td>Install the JDK (not just JRE) on the system, as jstat is part of the JDK tools package.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or as the confluence system user to access the JVM process statistics.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="capture-an-on-demand-heap-dump">Capture an on-demand heap dump<a class="headerlink" href="#capture-an-on-demand-heap-dump" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;atlassian-confluence\|confluence\.home&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
@@ -7421,9 +7456,28 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>jmap: command not found</code></strong> — Install the JDK (not just JRE) on the system, as jmap is part of the JDK tools.
-<strong><code>Error attaching to process: sun.jvm.hotspot.debugger.DebuggerException: Cannot open socket file</code></strong> — Ensure Confluence is running as the same user executing jmap, or run jmap with sudo.
-<strong><code>No such file or directory</code></strong> — Verify the Confluence PID exists with <code>pgrep -f "atlassian-confluence"</code> before running jmap, as the process may have stopped.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jmap: command not found</code></td>
+<td>Install the JDK (not just JRE) on the system, as jmap is part of the JDK tools.</td>
+</tr>
+<tr>
+<td><code>Error attaching to process: sun.jvm.hotspot.debugger.DebuggerException: Cannot open socket file</code></td>
+<td>Ensure Confluence is running as the same user executing jmap, or run jmap with sudo.</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Verify the Confluence PID exists with <code>pgrep -f "atlassian-confluence"</code> before running jmap, as the process may have stopped.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="analyse-heap-dump-with-eclipse-mat">Analyse heap dump with Eclipse MAT<a class="headerlink" href="#analyse-heap-dump-with-eclipse-mat" title="Permanent link">&para;</a></h3>
 <ol>
@@ -7484,9 +7538,28 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>jstack: command not found</code></strong> — Install the JDK (not just JRE) on the system, as jstack is only included in JDK distributions.
-<strong><code>Could not attach to &lt;PID&gt;: Permission denied</code></strong> — Run the script with sudo or as the same user that started the Confluence process (typically the confluence system user).
-<strong><code>pgrep: command not found</code></strong> — Install the procps package (<code>apt-get install procps</code> on Debian/Ubuntu or <code>yum install procps-ng</code> on RHEL/CentOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jstack: command not found</code></td>
+<td>Install the JDK (not just JRE) on the system, as jstack is only included in JDK distributions.</td>
+</tr>
+<tr>
+<td><code>Could not attach to &lt;PID&gt;: Permission denied</code></td>
+<td>Run the script with sudo or as the same user that started the Confluence process (typically the confluence system user).</td>
+</tr>
+<tr>
+<td><code>pgrep: command not found</code></td>
+<td>Install the procps package (<code>apt-get install procps</code> on Debian/Ubuntu or <code>yum install procps-ng</code> on RHEL/CentOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="thread-dump-quick-analysis">Thread dump quick analysis<a class="headerlink" href="#thread-dump-quick-analysis" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Count threads by state</span>
@@ -7612,9 +7685,28 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "$DB_HOST" to address: Name or service not known</code></strong> — Replace <code>$DB_HOST</code> with the actual PostgreSQL server hostname or IP address, or ensure the environment variable is exported before running the script.
-<strong><code>psql: error: FATAL:  Ident authentication failed for user "postgres"</code></strong> — Configure PostgreSQL to accept password authentication in <code>pg_hba.conf</code> or use a <code>.pgpass</code> file with credentials for the postgres user.
-<strong><code>tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory</code></strong> — Verify the PostgreSQL log directory path matches your installation (check <code>log_directory</code> in <code>postgresql.conf</code>) and ensure the user running the command has read permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "$DB_HOST" to address: Name or service not known</code></td>
+<td>Replace <code>$DB_HOST</code> with the actual PostgreSQL server hostname or IP address, or ensure the environment variable is exported before running the script.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL:  Ident authentication failed for user "postgres"</code></td>
+<td>Configure PostgreSQL to accept password authentication in <code>pg_hba.conf</code> or use a <code>.pgpass</code> file with credentials for the postgres user.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory</code></td>
+<td>Verify the PostgreSQL log directory path matches your installation (check <code>log_directory</code> in <code>postgresql.conf</code>) and ensure the user running the command has read permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="table-bloat-check">Table bloat check<a class="headerlink" href="#table-bloat-check" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7651,9 +7743,28 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: could not translate host name "$DB_HOST" to address: Name or service not known</code></strong> — Verify the <code>$DB_HOST</code> environment variable is set correctly with <code>echo $DB_HOST</code> and confirm the hostname resolves via <code>nslookup</code> or <code>ping</code>.
-<strong><code>psql: error: FATAL: Ident authentication failed for user "$DB_USER"</code></strong> — Ensure the PostgreSQL <code>pg_hba.conf</code> file permits the connection method for your user and host, or use a <code>.pgpass</code> file with proper permissions (600).
-<strong><code>ERROR: relation "pg_stat_user_tables" does not exist</code></strong> — Confirm you are connecting to the correct database with <code>-d "$DB_NAME"</code> and that the PostgreSQL server version supports this system catalog view (available in PostgreSQL 8.4+).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: could not translate host name "$DB_HOST" to address: Name or service not known</code></td>
+<td>Verify the <code>$DB_HOST</code> environment variable is set correctly with <code>echo $DB_HOST</code> and confirm the hostname resolves via <code>nslookup</code> or <code>ping</code>.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: Ident authentication failed for user "$DB_USER"</code></td>
+<td>Ensure the PostgreSQL <code>pg_hba.conf</code> file permits the connection method for your user and host, or use a <code>.pgpass</code> file with proper permissions (600).</td>
+</tr>
+<tr>
+<td><code>ERROR: relation "pg_stat_user_tables" does not exist</code></td>
+<td>Confirm you are connecting to the correct database with <code>-d "$DB_NAME"</code> and that the PostgreSQL server version supports this system catalog view (available in PostgreSQL 8.4+).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>High <code>dead_tuples</code> → run <code>VACUUM ANALYZE &lt;tablename&gt;;</code></p>
 <h3 id="explain-analyze-a-suspicious-query">EXPLAIN ANALYZE a suspicious query<a class="headerlink" href="#explain-analyze-a-suspicious-query" title="Permanent link">&para;</a></h3>
@@ -7715,9 +7826,28 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pgrep: no process found</code></strong> — Ensure Confluence is running with <code>systemctl status confluence</code> before collecting diagnostics.
-<strong><code>jstack: command not found</code></strong> — Install the JDK (not just JRE) with <code>apt-get install openjdk-11-jdk</code> or equivalent for your OS.
-<strong><code>Permission denied</code></strong> — Run the script with <code>sudo</code> or as the confluence system user to access logs and process memory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pgrep: no process found</code></td>
+<td>Ensure Confluence is running with <code>systemctl status confluence</code> before collecting diagnostics.</td>
+</tr>
+<tr>
+<td><code>jstack: command not found</code></td>
+<td>Install the JDK (not just JRE) with <code>apt-get install openjdk-11-jdk</code> or equivalent for your OS.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the script with <code>sudo</code> or as the confluence system user to access logs and process memory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="what-support-will-ask-for">What support will ask for<a class="headerlink" href="#what-support-will-ask-for" title="Permanent link">&para;</a></h3>
 <table>
@@ -7843,7 +7973,7 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

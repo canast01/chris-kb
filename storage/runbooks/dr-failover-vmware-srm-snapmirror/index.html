@@ -7298,9 +7298,28 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: snapmirror</code></strong> — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell.
-<strong><code>Error: No matching snapmirror relationships found</code></strong> — Verify the destination SVM name is correct and SnapMirror relationships exist with <code>snapmirror list-destinations</code>.
-<strong><code>Error: RPC: Authentication failed</code></strong> — Confirm your ONTAP user account has the "snapmirror" capability assigned in the role.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: snapmirror</code></td>
+<td>Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell.</td>
+</tr>
+<tr>
+<td><code>Error: No matching snapmirror relationships found</code></td>
+<td>Verify the destination SVM name is correct and SnapMirror relationships exist with <code>snapmirror list-destinations</code>.</td>
+</tr>
+<tr>
+<td><code>Error: RPC: Authentication failed</code></td>
+<td>Confirm your ONTAP user account has the "snapmirror" capability assigned in the role.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="verify-srm-test-run-history">Verify SRM Test Run History<a class="headerlink" href="#verify-srm-test-run-history" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># In SRM UI: Site Recovery &gt; Recovery Plans &gt; &lt;PlanName&gt; &gt; History</span>
@@ -7328,9 +7347,28 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in the command, but if still occurring, verify SRM server certificate is trusted or use <code>--cacert</code> with the proper CA bundle).
-<strong><code>jq: command not found</code></strong> — Install <code>python3-json-tool</code> or use <code>python3 -m json.tool</code> instead (the command already uses the latter, so ensure Python 3 is installed with <code>python3 --version</code>).
-<strong><code>HTTP 401 Unauthorized</code></strong> — Verify the SRM admin credentials are correct and the user has API access permissions in SRM's role-based access control settings.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in the command, but if still occurring, verify SRM server certificate is trusted or use <code>--cacert</code> with the proper CA bundle).</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>python3-json-tool</code> or use <code>python3 -m json.tool</code> instead (the command already uses the latter, so ensure Python 3 is installed with <code>python3 --version</code>).</td>
+</tr>
+<tr>
+<td><code>HTTP 401 Unauthorized</code></td>
+<td>Verify the SRM admin credentials are correct and the user has API access permissions in SRM's role-based access control settings.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="verify-rpo-for-each-protection-group">Verify RPO for Each Protection Group<a class="headerlink" href="#verify-rpo-for-each-protection-group" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Per-volume SnapMirror lag on PRIMARY cluster</span>
@@ -7350,8 +7388,24 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command not found: snapmirror</code></strong> — Verify you are logged into the ONTAP cluster CLI (not the hypervisor) and have appropriate admin credentials.
-<strong><code>Error: No SnapMirror relationships found</code></strong> — Confirm SnapMirror relationships exist on the primary cluster using <code>snapmirror list-destinations</code> and verify replication is initialized.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command not found: snapmirror</code></td>
+<td>Verify you are logged into the ONTAP cluster CLI (not the hypervisor) and have appropriate admin credentials.</td>
+</tr>
+<tr>
+<td><code>Error: No SnapMirror relationships found</code></td>
+<td>Confirm SnapMirror relationships exist on the primary cluster using <code>snapmirror list-destinations</code> and verify replication is initialized.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="final-gono-go-checklist">Final Go/No-Go Checklist<a class="headerlink" href="#final-gono-go-checklist" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Pre-failover gate — all must be YES before proceeding:
@@ -7409,9 +7463,28 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: Could not resolve hostname app-server-01.prod: Name or service not known</code></strong> — Verify DNS resolution and hostname spelling, or use the FQDN with the correct domain suffix.
-<strong><code>Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_dr_app01"</code></strong> — Confirm the SnapMirror relationship is initialized and the destination path matches the actual SVM and volume names exactly.
-<strong><code>Error: command failed: This operation is not permitted: SnapMirror transfer already in progress</code></strong> — Wait for the current transfer to complete (check with <code>snapmirror show</code>) before issuing another update command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: Could not resolve hostname app-server-01.prod: Name or service not known</code></td>
+<td>Verify DNS resolution and hostname spelling, or use the FQDN with the correct domain suffix.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_dr_app01"</code></td>
+<td>Confirm the SnapMirror relationship is initialized and the destination path matches the actual SVM and volume names exactly.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: This operation is not permitted: SnapMirror transfer already in progress</code></td>
+<td>Wait for the current transfer to complete (check with <code>snapmirror show</code>) before issuing another update command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-2-srm-failover">Phase 2: SRM Failover<a class="headerlink" href="#phase-2-srm-failover" title="Permanent link">&para;</a></h2>
@@ -7447,9 +7520,28 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification, or import the SRM certificate into your system's CA bundle.
-<strong><code>{"error": "Unauthorized", "code": 401}</code></strong> — Verify the admin password is correct and URL-encoded if it contains special characters; test credentials separately with a simple GET request first.
-<strong><code>jq: command not found</code></strong> — Install <code>jq</code> package (<code>apt-get install jq</code> on Debian/Ubuntu or <code>yum install jq</code> on RHEL) or use the provided <code>python3</code> JSON parser instead.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification, or import the SRM certificate into your system's CA bundle.</td>
+</tr>
+<tr>
+<td><code>{"error": "Unauthorized", "code": 401}</code></td>
+<td>Verify the admin password is correct and URL-encoded if it contains special characters; test credentials separately with a simple GET request first.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>jq</code> package (<code>apt-get install jq</code> on Debian/Ubuntu or <code>yum install jq</code> on RHEL) or use the provided <code>python3</code> JSON parser instead.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="22-break-snapmirror-on-dr-cluster">2.2 Break SnapMirror on DR Cluster<a class="headerlink" href="#22-break-snapmirror-on-dr-cluster" title="Permanent link">&para;</a></h3>
 <p>SRM with NetApp ONTAP SRA breaks SnapMirror automatically during recovery plan execution. If manual intervention is required:</p>
@@ -7483,8 +7575,24 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_dr_app01"</code></strong> — Verify the destination path is correct and the relationship exists with <code>snapmirror show -destination-path svm_dr:vol_dr_app01</code>.
-<strong><code>Error: command failed: Cannot break SnapMirror relationship in "snapmirrored" state</code></strong> — Wait for the current SnapMirror transfer to complete with <code>snapmirror show -destination-path svm_dr:vol_dr_app01</code> before attempting the break operation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_dr_app01"</code></td>
+<td>Verify the destination path is correct and the relationship exists with <code>snapmirror show -destination-path svm_dr:vol_dr_app01</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Cannot break SnapMirror relationship in "snapmirrored" state</code></td>
+<td>Wait for the current SnapMirror transfer to complete with <code>snapmirror show -destination-path svm_dr:vol_dr_app01</code> before attempting the break operation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="23-re-register-datastores-in-dr-vcenter">2.3 Re-register Datastores in DR vCenter<a class="headerlink" href="#23-re-register-datastores-in-dr-vcenter" title="Permanent link">&para;</a></h3>
 <p>SRM re-registers datastores and VMs automatically as part of the recovery plan. If manual re-registration is needed:</p>
@@ -7562,9 +7670,28 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused</code></strong> — Verify the PostgreSQL service is running on db-server-01.dr with <code>systemctl status postgresql</code> and check that replication has completed before testing connectivity.
-<strong><code>ssh: Could not resolve hostname app-server-01.dr: Name or service not known</code></strong> — Ensure DNS resolution is working for DR hostnames or use IP addresses directly; verify network connectivity to the DR site is active.
-<strong><code>Error: command failed: permission denied. Reason: User "app_user" does not have SELECT privilege on table "orders".</code></strong> — Grant SELECT permissions to app_user on the orders table using <code>GRANT SELECT ON orders TO app_user;</code> on the DR database.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused</code></td>
+<td>Verify the PostgreSQL service is running on db-server-01.dr with <code>systemctl status postgresql</code> and check that replication has completed before testing connectivity.</td>
+</tr>
+<tr>
+<td><code>ssh: Could not resolve hostname app-server-01.dr: Name or service not known</code></td>
+<td>Ensure DNS resolution is working for DR hostnames or use IP addresses directly; verify network connectivity to the DR site is active.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: permission denied. Reason: User "app_user" does not have SELECT privilege on table "orders".</code></td>
+<td>Grant SELECT permissions to app_user on the orders table using <code>GRANT SELECT ON orders TO app_user;</code> on the DR database.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="33-dns-and-load-balancer-updates">3.3 DNS and Load Balancer Updates<a class="headerlink" href="#33-dns-and-load-balancer-updates" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Update DNS to point application FQDNs to DR IPs</span>
@@ -7598,9 +7725,28 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nsupdate: couldn't get address for 'dns-mgmt.corp.local': not found</code></strong> — Verify DNS management server hostname is resolvable and reachable on port 53, or use its IP address directly in the <code>server</code> statement.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip SSL verification (already present) or import the NSX ALB CA certificate into your system trust store.
-<strong><code>TSIG error with server: tsig verify failure</code></strong> — Confirm the TSIG key file <code>/etc/dns/Kapp.key</code> is readable, matches the server's key, and uses the correct algorithm (typically HMAC-SHA256).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nsupdate: couldn't get address for 'dns-mgmt.corp.local': not found</code></td>
+<td>Verify DNS management server hostname is resolvable and reachable on port 53, or use its IP address directly in the <code>server</code> statement.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip SSL verification (already present) or import the NSX ALB CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>TSIG error with server: tsig verify failure</code></td>
+<td>Confirm the TSIG key file <code>/etc/dns/Kapp.key</code> is readable, matches the server's key, and uses the correct algorithm (typically HMAC-SHA256).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-4-failback">Phase 4: Failback<a class="headerlink" href="#phase-4-failback" title="Permanent link">&para;</a></h2>
@@ -7638,8 +7784,24 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Snapmirror relationship does not exist.</code></strong> — Verify the source and destination paths match the existing relationship direction using <code>snapmirror show</code> before attempting resync.
-<strong><code>Error: Operation failed: Transfer already in progress for destination svm_prod:vol_prod_app01</code></strong> — Wait for the current transfer to complete or abort it with <code>snapmirror abort -destination-path svm_prod:vol_prod_app01</code> before retrying resync.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Snapmirror relationship does not exist.</code></td>
+<td>Verify the source and destination paths match the existing relationship direction using <code>snapmirror show</code> before attempting resync.</td>
+</tr>
+<tr>
+<td><code>Error: Operation failed: Transfer already in progress for destination svm_prod:vol_prod_app01</code></td>
+<td>Wait for the current transfer to complete or abort it with <code>snapmirror abort -destination-path svm_prod:vol_prod_app01</code> before retrying resync.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="42-planned-failback-via-srm">4.2 Planned Failback via SRM<a class="headerlink" href="#42-planned-failback-via-srm" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># In SRM UI at primary site (now fully restored):</span>
@@ -7691,9 +7853,28 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Snapmirror relationship does not exist.</code></strong> — Verify the relationship was actually reversed during failover by running <code>snapmirror show</code> before attempting to break it.
-<strong><code>Error: command failed: Destination volume is not in a SnapMirror relationship.</code></strong> — Ensure the resync command uses the correct destination path format (svm_name:volume_name) and that the volume exists on the DR cluster.
-<strong><code>Error: command failed: A SnapMirror relationship with the same source and destination already exists.</code></strong> — Delete the conflicting relationship first with <code>snapmirror delete -destination-path svm_dr:vol_dr_app01</code> before recreating it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Snapmirror relationship does not exist.</code></td>
+<td>Verify the relationship was actually reversed during failover by running <code>snapmirror show</code> before attempting to break it.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Destination volume is not in a SnapMirror relationship.</code></td>
+<td>Ensure the resync command uses the correct destination path format (svm_name:volume_name) and that the volume exists on the DR cluster.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: A SnapMirror relationship with the same source and destination already exists.</code></td>
+<td>Delete the conflicting relationship first with <code>snapmirror delete -destination-path svm_dr:vol_dr_app01</code> before recreating it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
@@ -7725,8 +7906,24 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_dr_app01"</code></strong> — Verify the destination SVM and volume names match your topology; use <code>snapmirror show</code> without filters to list all relationships.
-<strong><code>Error: SnapMirror relationship is in "Transferring" state and cannot be broken</code></strong> — Wait for the transfer to complete or run <code>snapmirror abort -destination-path svm_dr:vol_dr_app01</code> before attempting the break operation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_dr_app01"</code></td>
+<td>Verify the destination SVM and volume names match your topology; use <code>snapmirror show</code> without filters to list all relationships.</td>
+</tr>
+<tr>
+<td><code>Error: SnapMirror relationship is in "Transferring" state and cannot be broken</code></td>
+<td>Wait for the transfer to complete or run <code>snapmirror abort -destination-path svm_dr:vol_dr_app01</code> before attempting the break operation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>If application validation fails on DR site:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Option A: restore from most recent SnapMirror-consistent snapshot on DR volume</span>
@@ -7758,8 +7955,24 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: There is no snapshot with name "hourly.2024-01-15_2400"</code></strong> — Verify the exact snapshot name from the <code>snapshot show</code> output and use the correct timestamp.
-<strong><code>Error: SnapMirror relationship is not in a valid state for resync</code></strong> — Confirm the primary volume is online and the SnapMirror relationship status is "snapmirrored" using <code>snapmirror show -destination-path svm_dr:vol_dr_app01</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: There is no snapshot with name "hourly.2024-01-15_2400"</code></td>
+<td>Verify the exact snapshot name from the <code>snapshot show</code> output and use the correct timestamp.</td>
+</tr>
+<tr>
+<td><code>Error: SnapMirror relationship is not in a valid state for resync</code></td>
+<td>Confirm the primary volume is online and the SnapMirror relationship status is "snapmirrored" using <code>snapmirror show -destination-path svm_dr:vol_dr_app01</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="escalation-contacts-template">Escalation Contacts Template<a class="headerlink" href="#escalation-contacts-template" title="Permanent link">&para;</a></h2>
@@ -7821,7 +8034,7 @@ Cross-product runbook for executing a DR failover and failback using VMware Site
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

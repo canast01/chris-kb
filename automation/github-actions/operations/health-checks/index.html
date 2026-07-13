@@ -7552,9 +7552,28 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: repository not found</code></strong> — Replace <code>&lt;owner&gt;/&lt;repo&gt;</code> with actual repository path (e.g., <code>myorg/myrepo</code>).
-<strong><code>Error: Not Authorized to access this endpoint</code></strong> — Ensure your GitHub token has <code>repo</code> and <code>admin:repo_hook</code> scopes via <code>gh auth refresh -s repo,admin:repo_hook</code>.
-<strong><code>No space left on device</code></strong> — Runner disk is critically full at 92%; SSH to the runner and delete old workflow artifacts or increase disk allocation immediately.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: repository not found</code></td>
+<td>Replace <code>&lt;owner&gt;/&lt;repo&gt;</code> with actual repository path (e.g., <code>myorg/myrepo</code>).</td>
+</tr>
+<tr>
+<td><code>Error: Not Authorized to access this endpoint</code></td>
+<td>Ensure your GitHub token has <code>repo</code> and <code>admin:repo_hook</code> scopes via <code>gh auth refresh -s repo,admin:repo_hook</code>.</td>
+</tr>
+<tr>
+<td><code>No space left on device</code></td>
+<td>Runner disk is critically full at 92%; SSH to the runner and delete old workflow artifacts or increase disk allocation immediately.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>List runners at the organisation level</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/&lt;org&gt;/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | {name,status,busy}&#39;</span>
@@ -7587,8 +7606,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HTTP 404: Not Found (https://api.github.com/orgs/&lt;org&gt;/actions/runners)</code></strong> — Replace <code>&lt;org&gt;</code> with your actual organization name.
-<strong><code>Must have admin or "manage runners" permissions to access this endpoint</code></strong> — Ensure your GitHub token has <code>admin:org_hook</code> and <code>admin:org</code> scopes, or request elevated permissions from an org owner.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HTTP 404: Not Found (https://api.github.com/orgs/&lt;org&gt;/actions/runners)</code></td>
+<td>Replace <code>&lt;org&gt;</code> with your actual organization name.</td>
+</tr>
+<tr>
+<td><code>Must have admin or "manage runners" permissions to access this endpoint</code></td>
+<td>Ensure your GitHub token has <code>admin:org_hook</code> and <code>admin:org</code> scopes, or request elevated permissions from an org owner.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Check runner version (outdated runners may stop receiving jobs)</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | {name,runner_version}&#39;</span>
@@ -7612,8 +7647,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: Unauthorized</code></strong> — Verify your GitHub token has <code>admin:org_hook</code> and <code>repo</code> scopes by running <code>gh auth status</code>.
-<strong><code>HTTP 404: Not Found</code></strong> — Confirm the owner and repo placeholders are replaced with actual values and the repository exists.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: Unauthorized</code></td>
+<td>Verify your GitHub token has <code>admin:org_hook</code> and <code>repo</code> scopes by running <code>gh auth status</code>.</td>
+</tr>
+<tr>
+<td><code>HTTP 404: Not Found</code></td>
+<td>Confirm the owner and repo placeholders are replaced with actual values and the repository exists.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Remove a stale offline runner</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>/repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners/&lt;runner-id&gt;
@@ -7622,8 +7673,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HTTP 404: Not Found</code></strong> — Verify the runner ID exists with <code>gh api /repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners</code> and confirm the owner and repo names are correct.
-<strong><code>HTTP 403: Forbidden</code></strong> — Ensure your GitHub token has <code>admin:org_hook</code> and <code>repo</code> permissions by checking <code>gh auth status</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HTTP 404: Not Found</code></td>
+<td>Verify the runner ID exists with <code>gh api /repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners</code> and confirm the owner and repo names are correct.</td>
+</tr>
+<tr>
+<td><code>HTTP 403: Forbidden</code></td>
+<td>Ensure your GitHub token has <code>admin:org_hook</code> and <code>repo</code> permissions by checking <code>gh auth status</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Verify runner labels match workflow <code>runs-on</code> values</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Compare runner labels from API output against runs-on values in workflow files</span>
@@ -7650,9 +7717,28 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: command not found</code></strong> — Install the GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.</p>
-<p><strong><code>fatal: not a git repository</code></strong> — Run the commands from the root directory of your cloned repository, or use <code>cd /path/to/repo</code> first.</p>
-<p><strong><code>HTTP 401: Bad credentials</code></strong> — Re-authenticate with <code>gh auth logout &amp;&amp; gh auth login</code> and ensure your token has <code>repo:read</code> and <code>admin:org_hook</code> scopes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: command not found</code></td>
+<td>Install the GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.</td>
+</tr>
+<tr>
+<td><code>fatal: not a git repository</code></td>
+<td>Run the commands from the root directory of your cloned repository, or use <code>cd /path/to/repo</code> first.</td>
+</tr>
+<tr>
+<td><code>HTTP 401: Bad credentials</code></td>
+<td>Re-authenticate with <code>gh auth logout &amp;&amp; gh auth login</code> and ensure your token has <code>repo:read</code> and <code>admin:org_hook</code> scopes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -7708,9 +7794,28 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: command not found</code></strong> — Install the GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.
-<strong><code>HTTP 401: Bad credentials</code></strong> — Re-authenticate with <code>gh auth login</code> and ensure your token has <code>actions:read</code> permissions.
-<strong><code>HTTP 403: Resource not accessible by integration</code></strong> — Verify the repository is accessible and your GitHub token has sufficient permissions for the target repository.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: command not found</code></td>
+<td>Install the GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.</td>
+</tr>
+<tr>
+<td><code>HTTP 401: Bad credentials</code></td>
+<td>Re-authenticate with <code>gh auth login</code> and ensure your token has <code>actions:read</code> permissions.</td>
+</tr>
+<tr>
+<td><code>HTTP 403: Resource not accessible by integration</code></td>
+<td>Verify the repository is accessible and your GitHub token has sufficient permissions for the target repository.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>View details of a specific failed run</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span>&lt;run-id&gt;
@@ -7732,8 +7837,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HTTP 404: Not Found</code></strong> — Verify the run ID is correct and exists in your repository with <code>gh run list</code>.
-<strong><code>Error: no GitHub token found</code></strong> — Authenticate with <code>gh auth login</code> or ensure the <code>GITHUB_TOKEN</code> environment variable is set.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HTTP 404: Not Found</code></td>
+<td>Verify the run ID is correct and exists in your repository with <code>gh run list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: no GitHub token found</code></td>
+<td>Authenticate with <code>gh auth login</code> or ensure the <code>GITHUB_TOKEN</code> environment variable is set.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>View logs for a failed run</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span>&lt;run-id&gt;<span class="w"> </span>--log-failed
@@ -7760,8 +7881,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: the specified run was not found</code></strong> — Verify the run ID is correct by listing recent runs with <code>gh run list</code>.
-<strong><code>Error: authentication required</code></strong> — Authenticate with GitHub CLI using <code>gh auth login</code> and ensure you have access to the repository.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: the specified run was not found</code></td>
+<td>Verify the run ID is correct by listing recent runs with <code>gh run list</code>.</td>
+</tr>
+<tr>
+<td><code>Error: authentication required</code></td>
+<td>Authenticate with GitHub CLI using <code>gh auth login</code> and ensure you have access to the repository.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>List failed runs for a specific workflow</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--workflow<span class="w"> </span>&lt;workflow-filename.yml&gt;<span class="w"> </span>--status<span class="w"> </span>failure<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
@@ -7778,9 +7915,28 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: command not found</code></strong> — Install the GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.
-<strong><code>HTTP 401: Bad credentials</code></strong> — Re-authenticate with <code>gh auth logout &amp;&amp; gh auth login</code> and ensure your token has <code>actions:read</code> permissions.
-<strong><code>no workflows found</code></strong> — Verify the workflow filename matches exactly (case-sensitive) and exists in <code>.github/workflows/</code> directory with <code>gh workflow list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: command not found</code></td>
+<td>Install the GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.</td>
+</tr>
+<tr>
+<td><code>HTTP 401: Bad credentials</code></td>
+<td>Re-authenticate with <code>gh auth logout &amp;&amp; gh auth login</code> and ensure your token has <code>actions:read</code> permissions.</td>
+</tr>
+<tr>
+<td><code>no workflows found</code></td>
+<td>Verify the workflow filename matches exactly (case-sensitive) and exists in <code>.github/workflows/</code> directory with <code>gh workflow list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Check if a workflow is disabled</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gh<span class="w"> </span>workflow<span class="w"> </span>list
@@ -7794,8 +7950,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: command not found</code></strong> — Install GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.
-<strong><code>HTTP 401: Unauthorized</code></strong> — Re-authenticate with <code>gh auth login</code> or verify your token has <code>workflow</code> scope permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: command not found</code></td>
+<td>Install GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.</td>
+</tr>
+<tr>
+<td><code>HTTP 401: Unauthorized</code></td>
+<td>Re-authenticate with <code>gh auth login</code> or verify your token has <code>workflow</code> scope permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>A workflow marked <code>disabled</code> will not trigger. Re-enable with <code>gh workflow enable &lt;workflow-name&gt;</code>.</p>
 <p><strong>Key health indicators</strong></p>
@@ -7848,8 +8020,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: command not found</code></strong> — Install the GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.
-<strong><code>Error: SilentCommandError</code></strong> — Ensure you are authenticated by running <code>gh auth status</code> and re-authenticate with <code>gh auth login</code> if needed.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: command not found</code></td>
+<td>Install the GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.</td>
+</tr>
+<tr>
+<td><code>Error: SilentCommandError</code></td>
+<td>Ensure you are authenticated by running <code>gh auth status</code> and re-authenticate with <code>gh auth login</code> if needed.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>This shows secret names only — values are never returned by the API.</p>
 <p><strong>List organisation-level secrets</strong></p>
@@ -7866,8 +8054,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: HTTP 404: Not Found (https://api.github.com/orgs/&lt;org&gt;/actions/secrets)</code></strong> — Verify the organization name is correct and you have access to it with <code>gh auth status</code>.
-<strong><code>Error: authentication required</code></strong> — Authenticate with GitHub CLI using <code>gh auth login</code> and ensure your token has <code>admin:org_hook</code> scope.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: HTTP 404: Not Found (https://api.github.com/orgs/&lt;org&gt;/actions/secrets)</code></td>
+<td>Verify the organization name is correct and you have access to it with <code>gh auth status</code>.</td>
+</tr>
+<tr>
+<td><code>Error: authentication required</code></td>
+<td>Authenticate with GitHub CLI using <code>gh auth login</code> and ensure your token has <code>admin:org_hook</code> scope.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Check environment secrets</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>gh<span class="w"> </span>secret<span class="w"> </span>list<span class="w"> </span>--env<span class="w"> </span>&lt;environment-name&gt;
@@ -7881,8 +8085,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: environment not found</code></strong> — Verify the environment name exists in the repository by running <code>gh repo view --json environments</code>.
-<strong><code>Error: authentication required</code></strong> — Ensure you are authenticated with <code>gh auth login</code> and have appropriate permissions for the repository.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: environment not found</code></td>
+<td>Verify the environment name exists in the repository by running <code>gh repo view --json environments</code>.</td>
+</tr>
+<tr>
+<td><code>Error: authentication required</code></td>
+<td>Ensure you are authenticated with <code>gh auth login</code> and have appropriate permissions for the repository.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Identify expiring credentials (manual check)</strong></p>
 <p>Navigate to <strong>Settings → Secrets and variables → Actions</strong> and review each secret's purpose and expected expiry date against your credential rotation schedule.</p>
@@ -7893,9 +8113,28 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>gh: command not found</code></strong> — Install GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.
-<strong><code>HTTP 404: Not Found</code></strong> — Verify the repository exists and you have push access by running <code>gh repo view</code> to confirm your current repository context.
-<strong><code>parsing failed: invalid value for '--body' flag</code></strong> — Ensure the secret value is properly quoted and doesn't contain unescaped special characters; use single quotes or escape double quotes with backslashes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gh: command not found</code></td>
+<td>Install GitHub CLI with <code>brew install gh</code> (macOS) or <code>apt-get install gh</code> (Linux), then authenticate with <code>gh auth login</code>.</td>
+</tr>
+<tr>
+<td><code>HTTP 404: Not Found</code></td>
+<td>Verify the repository exists and you have push access by running <code>gh repo view</code> to confirm your current repository context.</td>
+</tr>
+<tr>
+<td><code>parsing failed: invalid value for '--body' flag</code></td>
+<td>Ensure the secret value is properly quoted and doesn't contain unescaped special characters; use single quotes or escape double quotes with backslashes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -7940,8 +8179,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>df: '/': No such file or directory</code></strong> — Verify the mount point exists and the filesystem is mounted with <code>mount | grep " / "</code>.
-<strong><code>Permission denied</code></strong> — Run the command with appropriate privileges using <code>sudo df -h /</code> if access is restricted.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>df: '/': No such file or directory</code></td>
+<td>Verify the mount point exists and the filesystem is mounted with <code>mount | grep " / "</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the command with appropriate privileges using <code>sudo df -h /</code> if access is restricted.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Alert if usage exceeds 80%. Runner workspace directories at <code>_work/</code> accumulate artefacts from past runs.</p>
 <p><strong>Clean up stale runner workspaces</strong></p>
@@ -7960,8 +8215,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>find: '/home/runner/_work/repo-service/repo-service': Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure the runner user has read permissions on all workspace directories.
-<strong><code>rm: cannot remove '/home/runner/_work/api-gateway/api-gateway': Directory not empty</code></strong> — Verify no active GitHub Actions jobs are using these directories before running the removal command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find: '/home/runner/_work/repo-service/repo-service': Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure the runner user has read permissions on all workspace directories.</td>
+</tr>
+<tr>
+<td><code>rm: cannot remove '/home/runner/_work/api-gateway/api-gateway': Directory not empty</code></td>
+<td>Verify no active GitHub Actions jobs are using these directories before running the removal command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Check runner service status</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># systemd-based runner</span>
@@ -7984,8 +8255,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit actions.runner.acme-corp.deployment-api.runner-01.service could not be found.</code></strong> — Verify the service name matches the runner configuration and check <code>/etc/systemd/system/</code> for the correct <code>.service</code> file.
-<strong><code>Failed to get unit file state for actions.runner.acme-corp.deployment-api.runner-01.service: No such file or directory</code></strong> — Run <code>systemctl daemon-reload</code> after creating or modifying the service file, then retry the status command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit actions.runner.acme-corp.deployment-api.runner-01.service could not be found.</code></td>
+<td>Verify the service name matches the runner configuration and check <code>/etc/systemd/system/</code> for the correct <code>.service</code> file.</td>
+</tr>
+<tr>
+<td><code>Failed to get unit file state for actions.runner.acme-corp.deployment-api.runner-01.service: No such file or directory</code></td>
+<td>Run <code>systemctl daemon-reload</code> after creating or modifying the service file, then retry the status command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Check runner process is active</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Runner.Listener
@@ -7996,8 +8283,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: (standard input): No such device or address</code></strong> — Ensure the pipe is correctly formed and the <code>ps</code> command completes successfully before piping to <code>grep</code>.
-<strong><code>No such file or directory</code></strong> — Verify the GitHub Actions runner is installed at <code>/opt/actions-runner/</code> and the Runner.Listener binary exists at the expected version path.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: (standard input): No such device or address</code></td>
+<td>Ensure the pipe is correctly formed and the <code>ps</code> command completes successfully before piping to <code>grep</code>.</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Verify the GitHub Actions runner is installed at <code>/opt/actions-runner/</code> and the Runner.Listener binary exists at the expected version path.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -8052,8 +8355,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ajv: command not found</code></strong> — Run <code>npm install -g ajv-cli</code> before attempting validation, or use <code>npx ajv</code> instead.
-<strong><code>.github/workflows/ci.yml invalid</code></strong> — Review the workflow file for schema violations (missing required fields, incorrect indentation, or unsupported keys) and consult the GitHub Actions workflow syntax documentation.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ajv: command not found</code></td>
+<td>Run <code>npm install -g ajv-cli</code> before attempting validation, or use <code>npx ajv</code> instead.</td>
+</tr>
+<tr>
+<td><code>.github/workflows/ci.yml invalid</code></td>
+<td>Review the workflow file for schema violations (missing required fields, incorrect indentation, or unsupported keys) and consult the GitHub Actions workflow syntax documentation.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="required-status-checks">Required Status Checks<a class="headerlink" href="#required-status-checks" title="Permanent link">&para;</a></h3>
 <p>Configure branch protection to require workflow jobs to pass before merging.</p>
@@ -8094,9 +8413,28 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>HTTP 404: Not Found</code></strong> — Verify the OWNER and REPO values match your repository path exactly, and that the branch exists.
-<strong><code>HTTP 403: Forbidden</code></strong> — Ensure your GitHub token has <code>admin:repo_hook</code> and <code>repo</code> scopes, or use <code>gh auth login</code> to re-authenticate with proper permissions.
-<strong><code>HTTP 422: Unprocessable Entity</code></strong> — Confirm that all status check contexts in the "contexts" array match the exact names of checks configured in your CI/CD workflows.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HTTP 404: Not Found</code></td>
+<td>Verify the OWNER and REPO values match your repository path exactly, and that the branch exists.</td>
+</tr>
+<tr>
+<td><code>HTTP 403: Forbidden</code></td>
+<td>Ensure your GitHub token has <code>admin:repo_hook</code> and <code>repo</code> scopes, or use <code>gh auth login</code> to re-authenticate with proper permissions.</td>
+</tr>
+<tr>
+<td><code>HTTP 422: Unprocessable Entity</code></td>
+<td>Confirm that all status check contexts in the "contexts" array match the exact names of checks configured in your CI/CD workflows.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="validating-workflows-in-ci">Validating Workflows in CI<a class="headerlink" href="#validating-workflows-in-ci" title="Permanent link">&para;</a></h3>
 <p>Run actionlint automatically as part of the CI pipeline.</p>
@@ -8217,7 +8555,7 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

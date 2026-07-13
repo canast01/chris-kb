@@ -8915,9 +8915,28 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>PING 10.20.30.1 (10.20.30.1): 8972 data bytes — Packet size 9000 is too large for interface</code></strong> — Verify the ESXi vmk0 interface MTU is set to 9000 with <code>esxcli network ip interface list</code>.
-<strong><code>100% packet loss</code></strong> — Confirm the ToR switch port connected to this ESXi host has MTU 9000 enabled and is not in an error-disabled state.
-<strong><code>Unknown host 10.20.30.1</code></strong> — Replace <code>&lt;tor-switch-ip&gt;</code> with the actual IP address of your ToR switch management interface.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PING 10.20.30.1 (10.20.30.1): 8972 data bytes — Packet size 9000 is too large for interface</code></td>
+<td>Verify the ESXi vmk0 interface MTU is set to 9000 with <code>esxcli network ip interface list</code>.</td>
+</tr>
+<tr>
+<td><code>100% packet loss</code></td>
+<td>Confirm the ToR switch port connected to this ESXi host has MTU 9000 enabled and is not in an error-disabled state.</td>
+</tr>
+<tr>
+<td><code>Unknown host 10.20.30.1</code></td>
+<td>Replace <code>&lt;tor-switch-ip&gt;</code> with the actual IP address of your ToR switch management interface.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-2-nsx-manager-cluster">Phase 2 — NSX Manager Cluster<a class="headerlink" href="#phase-2-nsx-manager-cluster" title="Permanent link">&para;</a></h2>
@@ -8985,9 +9004,28 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>join management-plane: Certificate thumbprint mismatch</code></strong> — Verify the thumbprint was copied correctly from node 1 and matches exactly, including colons and case.
-<strong><code>join management-plane: Connection refused to 10.10.0.11:443</code></strong> — Ensure node 1 is reachable and the NSX management service is running with <code>get service nsxd status</code>.
-<strong><code>get cluster status: Cluster not yet formed</code></strong> — Wait 30-60 seconds for cluster consensus to establish after the final node joins, then retry the command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>join management-plane: Certificate thumbprint mismatch</code></td>
+<td>Verify the thumbprint was copied correctly from node 1 and matches exactly, including colons and case.</td>
+</tr>
+<tr>
+<td><code>join management-plane: Connection refused to 10.10.0.11:443</code></td>
+<td>Ensure node 1 is reachable and the NSX management service is running with <code>get service nsxd status</code>.</td>
+</tr>
+<tr>
+<td><code>get cluster status: Cluster not yet formed</code></td>
+<td>Wait 30-60 seconds for cluster consensus to establish after the final node joins, then retry the command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="configure-the-cluster-vip">Configure the Cluster VIP<a class="headerlink" href="#configure-the-cluster-vip" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From NSX Manager UI: System → Appliances → Set Virtual IP</span>
@@ -9014,9 +9052,28 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's included if removed).
-<strong><code>{"error_code":400,"error_message":"Invalid IP address format or IP already in use"}</code></strong> — Verify the IP address is valid, not already assigned to another node, and within the correct subnet for your NSX cluster.
-<strong><code>No route to host</code></strong> — Ensure the VIP subnet is routable from your management network and that network connectivity exists between the NSX Manager nodes and the VIP address.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>{"error_code":400,"error_message":"Invalid IP address format or IP already in use"}</code></td>
+<td>Verify the IP address is valid, not already assigned to another node, and within the correct subnet for your NSX cluster.</td>
+</tr>
+<tr>
+<td><code>No route to host</code></td>
+<td>Ensure the VIP subnet is routable from your management network and that network connectivity exists between the NSX Manager nodes and the VIP address.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="register-vcenter-as-compute-manager">Register vCenter as Compute Manager<a class="headerlink" href="#register-vcenter-as-compute-manager" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Compute Managers → Add</strong></p>
@@ -9139,9 +9196,28 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to connect to NSX Manager</code></strong> — Verify NSX Manager IP/hostname is reachable and nsxcli is configured with correct credentials via <code>set api-server</code> command.
-<strong><code>Transport Node State: DOWN</code></strong> — Check host connectivity to NSX Manager, verify vxlan kernel module is loaded with <code>vmkload_mod -l | grep vxlan</code>, and confirm TEP network is routable.
-<strong><code>No logical-switch port entries returned</code></strong> — Ensure logical switches have been created in NSX Manager UI and at least one VM is connected to the logical switch.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to connect to NSX Manager</code></td>
+<td>Verify NSX Manager IP/hostname is reachable and nsxcli is configured with correct credentials via <code>set api-server</code> command.</td>
+</tr>
+<tr>
+<td><code>Transport Node State: DOWN</code></td>
+<td>Check host connectivity to NSX Manager, verify vxlan kernel module is loaded with <code>vmkload_mod -l | grep vxlan</code>, and confirm TEP network is routable.</td>
+</tr>
+<tr>
+<td><code>No logical-switch port entries returned</code></td>
+<td>Ensure logical switches have been created in NSX Manager UI and at least one VM is connected to the logical switch.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="tep-to-tep-connectivity-test">TEP-to-TEP Connectivity Test<a class="headerlink" href="#tep-to-tep-connectivity-test" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># SSH to each ESXi host — ping all other TEP IPs</span>
@@ -9184,8 +9260,24 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>PING 192.168.100.11 (192.168.100.11): 56 data bytes — No response from host</code></strong> — Verify the TEP VLAN is tagged on the physical switch uplink port and that the vmk10 interface is assigned to the correct VLAN ID in the NSX uplink profile.
-<strong><code>Unable to locate vmkernel interface vmk10</code></strong> — Confirm NSX Host Preparation has completed successfully on the ESXi host by</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PING 192.168.100.11 (192.168.100.11): 56 data bytes — No response from host</code></td>
+<td>Verify the TEP VLAN is tagged on the physical switch uplink port and that the vmk10 interface is assigned to the correct VLAN ID in the NSX uplink profile.</td>
+</tr>
+<tr>
+<td><code>Unable to locate vmkernel interface vmk10</code></td>
+<td>Confirm NSX Host Preparation has completed successfully on the ESXi host by</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-5-edge-cluster-and-t0-gateway">Phase 5 — Edge Cluster and T0 Gateway<a class="headerlink" href="#phase-5-edge-cluster-and-t0-gateway" title="Permanent link">&para;</a></h2>
@@ -9230,9 +9322,28 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nsxcli: command not found</code></strong> — Ensure NSX CLI is installed and the PATH includes the NSX installation directory, or run with the full path <code>/opt/vmware/nsx-cli/bin/nsxcli</code>.
-<strong><code>Connection refused: Unable to connect to nsx-manager-01.lab.local:443</code></strong> — Verify the NSX Manager is reachable and running, and check network connectivity with <code>ping</code> and <code>curl -k https://&lt;nsx-manager-ip&gt;</code>.
-<strong><code>transport-node-0: state = DOWN</code></strong> — Check the Edge VM's vNIC connectivity, verify host-switch configuration, and review NSX Manager logs for transport node registration failures.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nsxcli: command not found</code></td>
+<td>Ensure NSX CLI is installed and the PATH includes the NSX installation directory, or run with the full path <code>/opt/vmware/nsx-cli/bin/nsxcli</code>.</td>
+</tr>
+<tr>
+<td><code>Connection refused: Unable to connect to nsx-manager-01.lab.local:443</code></td>
+<td>Verify the NSX Manager is reachable and running, and check network connectivity with <code>ping</code> and <code>curl -k https://&lt;nsx-manager-ip&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>transport-node-0: state = DOWN</code></td>
+<td>Check the Edge VM's vNIC connectivity, verify host-switch configuration, and review NSX Manager logs for transport node registration failures.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="create-edge-cluster">Create Edge Cluster<a class="headerlink" href="#create-edge-cluster" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Edge Clusters → Add</strong></p>
@@ -9301,8 +9412,24 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>% Unknown command</code></strong> — Verify the exact command syntax for your NSX version; use <code>?</code> to list available commands.
-<strong><code>BGP neighbor 10.100.1.1 not established (State = Idle)</code></strong> — Check physical network connectivity between Edge and BGP peer, verify AS numbers match, and confirm firewall allows BGP port 179.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>% Unknown command</code></td>
+<td>Verify the exact command syntax for your NSX version; use <code>?</code> to list available commands.</td>
+</tr>
+<tr>
+<td><code>BGP neighbor 10.100.1.1 not established (State = Idle)</code></td>
+<td>Check physical network connectivity between Edge and BGP peer, verify AS numbers match, and confirm firewall allows BGP port 179.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-6-logical-networking-and-validation">Phase 6 — Logical Networking and Validation<a class="headerlink" href="#phase-6-logical-networking-and-validation" title="Permanent link">&para;</a></h2>
@@ -9346,9 +9473,28 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>PING: sendto: No route to host</code></strong> — Verify the NSX edge node has a route to the gateway IP and that the logical router is properly configured on the segment.
-<strong><code>nsxcli: command not found</code></strong> — SSH directly to the NSX Manager appliance (not a managed host) and ensure you have admin credentials to access the CLI.
-<strong><code>No logical switch named 'seg-web-tier' found</code></strong> — Confirm the segment name matches exactly in NSX Manager; use <code>get logical-switches</code> to list all available segments.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PING: sendto: No route to host</code></td>
+<td>Verify the NSX edge node has a route to the gateway IP and that the logical router is properly configured on the segment.</td>
+</tr>
+<tr>
+<td><code>nsxcli: command not found</code></td>
+<td>SSH directly to the NSX Manager appliance (not a managed host) and ensure you have admin credentials to access the CLI.</td>
+</tr>
+<tr>
+<td><code>No logical switch named 'seg-web-tier' found</code></td>
+<td>Confirm the segment name matches exactly in NSX Manager; use <code>get logical-switches</code> to list all available segments.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="dfw-baseline-policy">DFW Baseline Policy<a class="headerlink" href="#dfw-baseline-policy" title="Permanent link">&para;</a></h3>
 <p><strong>Security → Distributed Firewall → Add Policy</strong></p>
@@ -9391,9 +9537,28 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>summarize-dvfilter: command not found</code></strong> — Run the command from the ESXi host shell (SSH directly to the host, not vCenter), or verify the NSX agent is installed with <code>esxcli software vib list | grep nsx</code>.
-<strong><code>vsipioctl: command not found</code></strong> — Ensure you are running this command on an ESXi host where NSX is installed; this tool is not available on vCenter or management workstations.
-<strong><code>Error: Filter '&lt;filter-name&gt;' not found in kernel</code></strong> — Verify the filter name is correct by running <code>summarize-dvfilter</code> first to list active filters, then use the exact filter name from the output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>summarize-dvfilter: command not found</code></td>
+<td>Run the command from the ESXi host shell (SSH directly to the host, not vCenter), or verify the NSX agent is installed with <code>esxcli software vib list | grep nsx</code>.</td>
+</tr>
+<tr>
+<td><code>vsipioctl: command not found</code></td>
+<td>Ensure you are running this command on an ESXi host where NSX is installed; this tool is not available on vCenter or management workstations.</td>
+</tr>
+<tr>
+<td><code>Error: Filter '&lt;filter-name&gt;' not found in kernel</code></td>
+<td>Verify the filter name is correct by running <code>summarize-dvfilter</code> first to list active filters, then use the exact filter name from the output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="end-to-end-validation">End-to-End Validation<a class="headerlink" href="#end-to-end-validation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># East-West: VM on seg-web-tier pings VM on a second segment via T1</span>
@@ -9445,9 +9610,28 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: sendmsg: Operation not permitted</code></strong> — Verify the VM has network connectivity to the segment and check NSX firewall rules are not blocking ICMP traffic.
-<strong><code>get bgp neighbor summary: command not found</code></strong> — Ensure you are in the NSX Edge CLI context (not NSX Manager); SSH directly to the Edge node IP and retry.
-**`0.0.0.0/0 route missing</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: sendmsg: Operation not permitted</code></td>
+<td>Verify the VM has network connectivity to the segment and check NSX firewall rules are not blocking ICMP traffic.</td>
+</tr>
+<tr>
+<td><code>get bgp neighbor summary: command not found</code></td>
+<td>Ensure you are in the NSX Edge CLI context (not NSX Manager); SSH directly to the Edge node IP and retry.</td>
+</tr>
+<tr>
+<td>**`0.0.0.0/0 route missing</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="post-deployment-checklist">Post-Deployment Checklist<a class="headerlink" href="#post-deployment-checklist" title="Permanent link">&para;</a></h3>
 <table>
@@ -9552,7 +9736,7 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

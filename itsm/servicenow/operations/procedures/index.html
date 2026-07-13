@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="ServiceNow — Operations Procedures · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ServiceNow — Operations Procedures", "url": "https://chrisanastasiadis.com/itsm/servicenow/operations/procedures/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "ServiceNow — Operations Procedures", "url": "https://chrisanastasiadis.com/itsm/servicenow/operations/procedures/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7997,9 +7997,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>{"error":{"message":"Invalid table API (incident)","status":"failure"}}</code></strong> — Verify the ServiceNow instance URL and that the REST API is enabled for the incident table.
-<strong><code>{"error":{"message":"Invalid field name (assigned_to)","status":"failure"}}</code></strong> — Use the correct field name <code>assignment_group</code> or check your instance's field naming convention; some instances use <code>assigned_to_user</code> instead.
-<strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{"error":{"message":"Invalid table API (incident)","status":"failure"}}</code></td>
+<td>Verify the ServiceNow instance URL and that the REST API is enabled for the incident table.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid field name (assigned_to)","status":"failure"}}</code></td>
+<td>Use the correct field name <code>assignment_group</code> or check your instance's field naming convention; some instances use <code>assigned_to_user</code> instead.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></td>
+<td>Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Flag an incident for escalation</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
@@ -8028,9 +8047,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>401 Unauthorized</code></strong> — Verify your ServiceNow instance URL, username, and API token are correct and the token has not expired.
-<strong><code>404 Not Found</code></strong> — Replace <code>SYS_ID</code> with the actual incident system ID (e.g., <code>a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6</code>).
-<strong><code>403 Forbidden</code></strong> — Confirm your user account has the <code>incident_write</code> or <code>admin</code> role in ServiceNow to modify incidents.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Verify your ServiceNow instance URL, username, and API token are correct and the token has not expired.</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>Replace <code>SYS_ID</code> with the actual incident system ID (e.g., <code>a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6</code>).</td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code></td>
+<td>Confirm your user account has the <code>incident_write</code> or <code>admin</code> role in ServiceNow to modify incidents.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Resolve an incident</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
@@ -8104,9 +8142,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Name or service not known</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance name (e.g., <code>dev123456</code>).
-<strong><code>{"error":{"message":"Invalid field value","detail":"Invalid state value: -1"},"status":"failure"}</code></strong> — Verify the state value is valid for your change type; some change models may not support the Authorize state.
-<strong><code>{"error":{"message":"Invalid table API (change_request)"},"status":"failure"}</code></strong> — Confirm the table name is correct; use <code>change_request</code> for standard changes or check your instance's custom change table name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Name or service not known</code></td>
+<td>Replace <code>your-instance</code> with your actual ServiceNow instance name (e.g., <code>dev123456</code>).</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid field value","detail":"Invalid state value: -1"},"status":"failure"}</code></td>
+<td>Verify the state value is valid for your change type; some change models may not support the Authorize state.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API (change_request)"},"status":"failure"}</code></td>
+<td>Confirm the table name is correct; use <code>change_request</code> for standard changes or check your instance's custom change table name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Create an emergency change</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -8136,9 +8193,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (6) Could not resolve host: your-instance.service-now.com</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).
-<strong><code>{"error":{"message":"Invalid table API (change_request)","status":"failure"},"status":"failure"}</code></strong> — Verify the correct table name is <code>change_request</code> and your API version supports it; check ServiceNow instance REST API documentation.
-<strong><code>{"error":{"message":"Invalid field value [type=emergency]","status":"invalid_field_value"}}</code></strong> — Use valid change type values from your instance (typically <code>standard</code>, <code>normal</code>, or <code>emergency</code>); check your change_request table field definitions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (6) Could not resolve host: your-instance.service-now.com</code></td>
+<td>Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API (change_request)","status":"failure"},"status":"failure"}</code></td>
+<td>Verify the correct table name is <code>change_request</code> and your API version supports it; check ServiceNow instance REST API documentation.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid field value [type=emergency]","status":"invalid_field_value"}}</code></td>
+<td>Use valid change type values from your instance (typically <code>standard</code>, <code>normal</code>, or <code>emergency</code>); check your change_request table field definitions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Query upcoming normal changes pending CAB review</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
@@ -8184,9 +8260,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>acme-dev.service-now.com</code>).
-<strong><code>{"error":{"message":"Invalid table API (change_request)","status":"failure"},"status":"failure"}</code></strong> — Verify the table name is correct; use <code>change_request</code> or check your instance's table naming convention via the ServiceNow API explorer.
-<strong><code>jq: parse error: Invalid numeric literal at line 1 column 7</code></strong> — Ensure the API response is valid JSON by checking authentication credentials and that the <code>-s</code> flag is present to suppress curl progress output.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></td>
+<td>Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>acme-dev.service-now.com</code>).</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API (change_request)","status":"failure"},"status":"failure"}</code></td>
+<td>Verify the table name is correct; use <code>change_request</code> or check your instance's table naming convention via the ServiceNow API explorer.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid numeric literal at line 1 column 7</code></td>
+<td>Ensure the API response is valid JSON by checking authentication credentials and that the <code>-s</code> flag is present to suppress curl progress output.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Query open requests for a user</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
@@ -8241,9 +8336,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (6) Could not resolve host: your-instance.service-now.com</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance name (e.g., <code>dev123456</code>).
-<strong><code>{"error":{"message":"Invalid table API (sc_request)","status":"failure"},"status":"failure"}</code></strong> — Verify the table name is correct and your API user has read access to the sc_request table in ServiceNow.
-<strong><code>{"error":{"message":"Invalid query: requested_for=jsmith^active=true","status":"failure"}}</code></strong> — Ensure field names and query syntax match your ServiceNow instance schema; use the ServiceNow API explorer to validate field names.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (6) Could not resolve host: your-instance.service-now.com</code></td>
+<td>Replace <code>your-instance</code> with your actual ServiceNow instance name (e.g., <code>dev123456</code>).</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API (sc_request)","status":"failure"},"status":"failure"}</code></td>
+<td>Verify the table name is correct and your API user has read access to the sc_request table in ServiceNow.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid query: requested_for=jsmith^active=true","status":"failure"}}</code></td>
+<td>Ensure field names and query syntax match your ServiceNow instance schema; use the ServiceNow API explorer to validate field names.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Get variables for a request item</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
@@ -8298,9 +8412,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (6) Could not resolve host name</code></strong> — Verify the ServiceNow instance URL is correct and replace <code>your-instance</code> with your actual instance name.
-<strong><code>{"error":{"message":"Invalid table API (Invalid Offset)","status":"failure"}}</code></strong> — Ensure the RITM_SYS_ID and CATALOG_ITEM_SYS_ID are valid sys_id values from your ServiceNow instance.
-<strong><code>{"error":{"message":"Invalid request. User does not have permission to access this API","status":"failure"}}</code></strong> — Confirm the API user account has the <code>catalog_admin</code> or <code>itil</code> role and appropriate table ACLs in ServiceNow.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (6) Could not resolve host name</code></td>
+<td>Verify the ServiceNow instance URL is correct and replace <code>your-instance</code> with your actual instance name.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API (Invalid Offset)","status":"failure"}}</code></td>
+<td>Ensure the RITM_SYS_ID and CATALOG_ITEM_SYS_ID are valid sys_id values from your ServiceNow instance.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid request. User does not have permission to access this API","status":"failure"}}</code></td>
+<td>Confirm the API user account has the <code>catalog_admin</code> or <code>itil</code> role and appropriate table ACLs in ServiceNow.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Query pending approvals for a request</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
@@ -8357,9 +8490,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).
-<strong><code>{"error":{"message":"Invalid table API (Invalid Referral Record)","status":"failure"},"status":"failure"}</code></strong> — Verify the <code>APPROVAL_SYS_ID</code> is a valid sys_id from the query results; use the exact value from the first API call's response.
-<strong><code>{"error":{"message":"Invalid field name: state","status":"failure"}}</code></strong> — Confirm the field name is <code>state</code> (not <code>status</code>); check your ServiceNow instance's sysapproval_approver table schema for correct field names.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></td>
+<td>Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API (Invalid Referral Record)","status":"failure"},"status":"failure"}</code></td>
+<td>Verify the <code>APPROVAL_SYS_ID</code> is a valid sys_id from the query results; use the exact value from the first API call's response.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid field name: state","status":"failure"}}</code></td>
+<td>Confirm the field name is <code>state</code> (not <code>status</code>); check your ServiceNow instance's sysapproval_approver table schema for correct field names.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># List fulfillment tasks for a request item</span>
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
@@ -8423,9 +8575,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Invalid table API (Invalid table: sc_task)</code></strong> — Verify the ServiceNow instance URL and API version; use <code>/api/now/v2/table/sc_task</code> if on a newer instance.
-<strong><code>401 Unauthorized</code></strong> — Confirm the API user credentials and token are correct, and that the user has the <code>itil</code> or <code>sn_request_read</code> role.
-<strong><code>Invalid field name: SYS_ID</code></strong> — Replace <code>SYS_ID</code> with the actual task system ID (e.g., <code>a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6</code>) from the GET response.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Invalid table API (Invalid table: sc_task)</code></td>
+<td>Verify the ServiceNow instance URL and API version; use <code>/api/now/v2/table/sc_task</code> if on a newer instance.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Confirm the API user credentials and token are correct, and that the user has the <code>itil</code> or <code>sn_request_read</code> role.</td>
+</tr>
+<tr>
+<td><code>Invalid field name: SYS_ID</code></td>
+<td>Replace <code>SYS_ID</code> with the actual task system ID (e.g., <code>a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6</code>) from the GET response.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Find overdue request items</span>
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
@@ -8461,9 +8632,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).
-<strong><code>{"error":{"message":"Invalid table API GET request","status":"failure"},"status":"failure"}</code></strong> — Verify the table name is correct; use <code>sc_request</code> for requests or <code>sc_req_item</code> for request items, and confirm your user has table API read access.
-<strong><code>{"error":{"message":"Invalid query: due_date&lt;javascript:gs.now()","status":"failure"}}</code></strong> — Replace the JavaScript function with a valid ISO date string like <code>due_date&lt;2024-01-20</code> or use the REST API's native query syntax without <code>javascript:</code> prefix.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></td>
+<td>Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API GET request","status":"failure"},"status":"failure"}</code></td>
+<td>Verify the table name is correct; use <code>sc_request</code> for requests or <code>sc_req_item</code> for request items, and confirm your user has table API read access.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid query: due_date&lt;javascript:gs.now()","status":"failure"}}</code></td>
+<td>Replace the JavaScript function with a valid ISO date string like <code>due_date&lt;2024-01-20</code> or use the REST API's native query syntax without <code>javascript:</code> prefix.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Add a work note to an incident</span>
 <a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
@@ -8535,9 +8725,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Invalid table API (Invalid table name [incident])</code></strong> — Verify the table name is correct (use <code>incident</code> for incidents, <code>change_request</code> for changes) and check your ServiceNow instance API version supports the endpoint.
-<strong><code>401 Unauthorized</code></strong> — Confirm your API user credentials and token are valid, and that the user has the <code>itil</code> or <code>admin</code> role with API access permissions.
-<strong><code>Invalid field name [work_notes]</code></strong> — Check that the field name matches your ServiceNow instance configuration; some instances use <code>work_notes_list</code> or custom field names instead of <code>work_notes</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Invalid table API (Invalid table name [incident])</code></td>
+<td>Verify the table name is correct (use <code>incident</code> for incidents, <code>change_request</code> for changes) and check your ServiceNow instance API version supports the endpoint.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Confirm your API user credentials and token are valid, and that the user has the <code>itil</code> or <code>admin</code> role with API access permissions.</td>
+</tr>
+<tr>
+<td><code>Invalid field name [work_notes]</code></td>
+<td>Check that the field name matches your ServiceNow instance configuration; some instances use <code>work_notes_list</code> or custom field names instead of <code>work_notes</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Good work note format</span>
 <a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="o">[</span><span class="m">14</span>:35<span class="w"> </span>UTC<span class="o">]</span><span class="w"> </span>Checked<span class="w"> </span>nginx<span class="w"> </span>access<span class="w"> </span>logs<span class="w"> </span>—<span class="w"> </span>confirmed<span class="w"> </span>503s<span class="w"> </span>starting<span class="w"> </span><span class="m">14</span>:28<span class="w"> </span>UTC
@@ -8575,9 +8784,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev123456.service-now.com</code>).
-<strong><code>{"error":{"message":"Invalid table API (incident)","status":"failure"},"status":"failure"}</code></strong> — Verify the incident table name is correct and your API user has read/write permissions on the incident table.
-<strong><code>{"error":{"message":"Invalid field value [6]","status":"failure"}}</code></strong> — Confirm that state value <code>6</code> (Closed) is valid in your ServiceNow instance; some configurations use different state codes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused</code></td>
+<td>Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev123456.service-now.com</code>).</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API (incident)","status":"failure"},"status":"failure"}</code></td>
+<td>Verify the incident table name is correct and your API user has read/write permissions on the incident table.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid field value [6]","status":"failure"}}</code></td>
+<td>Confirm that state value <code>6</code> (Closed) is valid in your ServiceNow instance; some configurations use different state codes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Get audit history for a record</span>
 <a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
@@ -8635,9 +8863,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Name or service not known</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).
-<strong><code>{"error":{"message":"Invalid table API GET request","status":"failure"},"status":"failure"}</code></strong> — Verify the API user has read access to <code>sys_audit</code> and <code>sys_journal_field</code> tables; check role assignments in ServiceNow.
-<strong><code>jq: parse error: Cannot index string with string "fieldname"</code></strong> — Ensure the API response contains valid JSON by checking authentication credentials and confirming the table name is correct.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to your-instance.service-now.com port 443: Name or service not known</code></td>
+<td>Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid table API GET request","status":"failure"},"status":"failure"}</code></td>
+<td>Verify the API user has read access to <code>sys_audit</code> and <code>sys_journal_field</code> tables; check role assignments in ServiceNow.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index string with string "fieldname"</code></td>
+<td>Ensure the API response contains valid JSON by checking authentication credentials and confirming the table name is correct.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Add the same work note to multiple incidents (e.g., all P1s during a major outage)</span>
 <a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="nv">INCIDENTS</span><span class="o">=</span><span class="s2">&quot;INC0001 INC0002 INC0003&quot;</span>
@@ -8660,9 +8907,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (6) Could not resolve host: your-instance.service-now.com</code></strong> — Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).
-<strong><code>jq: parse error: Cannot index null with string "result"</code></strong> — Verify the incident number exists and your API user has read permissions on the incident table; check credentials with a test query first.
-<strong><code>{"error":{"message":"Invalid field name: work_notes","status":"failure"}}</code></strong> — Use the correct field name <code>work_notes_list</code> or append to existing notes using <code>work_notes</code> as a JSON array instead of a string.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (6) Could not resolve host: your-instance.service-now.com</code></td>
+<td>Replace <code>your-instance</code> with your actual ServiceNow instance hostname (e.g., <code>dev12345.service-now.com</code>).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index null with string "result"</code></td>
+<td>Verify the incident number exists and your API user has read permissions on the incident table; check credentials with a test query first.</td>
+</tr>
+<tr>
+<td><code>{"error":{"message":"Invalid field name: work_notes","status":"failure"}}</code></td>
+<td>Use the correct field name <code>work_notes_list</code> or append to existing notes using <code>work_notes</code> as a JSON array instead of a string.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNqNkbEOwjAMRPd-hcXODzAgAWJgQyyMUZq6bSAkxWlhQPw7TlsqECmw-u6eT3amCVWtnZ0B6aKsk0QRyhqFtEJbpTO09Qwmq3YI0sKmH07g5ktZIecYIG1h8J6gV9J8ptf9-Gf-uVuokicoCM8N-tcCsGoV2HVKlCKritwFhSMGHHg-ABm06ERwxIwgDszvjTiVGjwxUTnKXhttO4VxQYlTnM110VAApY3XFr0X1Ji249XRMTcuIJ82pi57G-zYFtruO9s1uiDyNZjOIfaP6JOCeeT4Y08JkfFLf3nC2673s46du438ccPkAeO1C9Q=?" /></p>
@@ -8793,7 +9059,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -7677,9 +7677,28 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load private key</code></strong> — Verify the private key file path is correct and the file has read permissions (<code>chmod 600 server.key</code>).
-<strong><code>Error outputting keys and certificates</code></strong> — Ensure the certificate file (server.crt) and CA chain file (ca-chain.pem) are in PEM format and not corrupted; validate with <code>openssl x509 -in server.crt -text -noout</code>.
-<strong><code>MAC verification failure</code></strong> — The PFX file was created but cannot be read back; regenerate the PFX with a simpler passphrase or use <code>-passin pass:</code> to match the original key encryption password if the key is encrypted.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load private key</code></td>
+<td>Verify the private key file path is correct and the file has read permissions (<code>chmod 600 server.key</code>).</td>
+</tr>
+<tr>
+<td><code>Error outputting keys and certificates</code></td>
+<td>Ensure the certificate file (server.crt) and CA chain file (ca-chain.pem) are in PEM format and not corrupted; validate with <code>openssl x509 -in server.crt -text -noout</code>.</td>
+</tr>
+<tr>
+<td><code>MAC verification failure</code></td>
+<td>The PFX file was created but cannot be read back; regenerate the PFX with a simpler passphrase or use <code>-passin pass:</code> to match the original key encryption password if the key is encrypted.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="openssl-import-a-pkcs12-bundle">OpenSSL — Import a PKCS#12 Bundle<a class="headerlink" href="#openssl-import-a-pkcs12-bundle" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Extract certificate from PFX</span>
@@ -7697,9 +7716,28 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error opening input file server.pfx</code></strong> — Verify the PFX file exists in the current directory with <code>ls -la server.pfx</code> and correct the path if needed.
-<strong><code>Mac verify failure</code></strong> — Ensure the password is correct; if the PFX was created with a different passphrase, try <code>openssl pkcs12 -in server.pfx -passin pass:CorrectPassword</code> or use <code>-passin file:</code> to read from a file.
-<strong><code>unable to load private key</code></strong> — If extracting the key fails silently, the PFX may be corrupted or the <code>-nodes</code> flag was omitted; re-export the PFX from the certificate authority or use <code>-nodes</code> to skip encryption on the output key.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error opening input file server.pfx</code></td>
+<td>Verify the PFX file exists in the current directory with <code>ls -la server.pfx</code> and correct the path if needed.</td>
+</tr>
+<tr>
+<td><code>Mac verify failure</code></td>
+<td>Ensure the password is correct; if the PFX was created with a different passphrase, try <code>openssl pkcs12 -in server.pfx -passin pass:CorrectPassword</code> or use <code>-passin file:</code> to read from a file.</td>
+</tr>
+<tr>
+<td><code>unable to load private key</code></td>
+<td>If extracting the key fails silently, the PFX may be corrupted or the <code>-nodes</code> flag was omitted; re-export the PFX from the certificate authority or use <code>-nodes</code> to skip encryption on the output key.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="openssl-private-ca-backup">OpenSSL Private CA — Backup<a class="headerlink" href="#openssl-private-ca-backup" title="Permanent link">&para;</a></h2>
@@ -7734,8 +7772,24 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>bad decrypt</code></strong> — Verify the passphrase matches exactly and that the encrypted file was not corrupted during transfer.
-<strong><code>tar: /etc/ssl/CA/: Cannot open: Permission denied</code></strong> — Run the tar command with <code>sudo</code> to ensure read access to private key files in the CA directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bad decrypt</code></td>
+<td>Verify the passphrase matches exactly and that the encrypted file was not corrupted during transfer.</td>
+</tr>
+<tr>
+<td><code>tar: /etc/ssl/CA/: Cannot open: Permission denied</code></td>
+<td>Run the tar command with <code>sudo</code> to ensure read access to private key files in the CA directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="verify-ca-key-integrity">Verify CA Key Integrity<a class="headerlink" href="#verify-ca-key-integrity" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check that the key and certificate match (modulus comparison)</span>
@@ -7748,8 +7802,24 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>unable to load Private Key</code></strong> — Verify the key file exists at <code>/etc/ssl/CA/ca.key</code> and you have read permissions with <code>ls -l /etc/ssl/CA/ca.key</code>.
-<strong><code>unable to load certificate</code></strong> — Confirm the certificate file exists at <code>/etc/ssl/CA/ca.crt</code> and is in valid PEM format with <code>file /etc/ssl/CA/ca.crt</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>unable to load Private Key</code></td>
+<td>Verify the key file exists at <code>/etc/ssl/CA/ca.key</code> and you have read permissions with <code>ls -l /etc/ssl/CA/ca.key</code>.</td>
+</tr>
+<tr>
+<td><code>unable to load certificate</code></td>
+<td>Confirm the certificate file exists at <code>/etc/ssl/CA/ca.crt</code> and is in valid PEM format with <code>file /etc/ssl/CA/ca.crt</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="windows-adcs-restore-procedure">Windows ADCS — Restore Procedure<a class="headerlink" href="#windows-adcs-restore-procedure" title="Permanent link">&para;</a></h2>
@@ -7838,9 +7908,28 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tar: /etc/ssl/CA: Cannot open: Permission denied</code></strong> — Run the restore command with <code>sudo</code> or as root user.
-<strong><code>openssl: error in enc</code></strong> — Verify the backup file exists at the specified path and the encryption passphrase is correct.
-<strong><code>chown: invalid user 'ssl-cert'</code></strong> — Replace <code>ssl-cert</code> with an existing group name (e.g., <code>root</code> or check available groups with <code>getent group</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tar: /etc/ssl/CA: Cannot open: Permission denied</code></td>
+<td>Run the restore command with <code>sudo</code> or as root user.</td>
+</tr>
+<tr>
+<td><code>openssl: error in enc</code></td>
+<td>Verify the backup file exists at the specified path and the encryption passphrase is correct.</td>
+</tr>
+<tr>
+<td><code>chown: invalid user 'ssl-cert'</code></td>
+<td>Replace <code>ssl-cert</code> with an existing group name (e.g., <code>root</code> or check available groups with <code>getent group</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="key-ceremony-documentation">Key Ceremony Documentation<a class="headerlink" href="#key-ceremony-documentation" title="Permanent link">&para;</a></h2>
@@ -7996,7 +8085,7 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

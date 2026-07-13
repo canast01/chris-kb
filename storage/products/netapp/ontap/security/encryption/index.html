@@ -8700,8 +8700,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Encryption is not licensed on this cluster</code></strong> — Verify NetApp Volume Encryption (NVE) license is installed with <code>system license show -package VE</code>.
-<strong><code>Error: command failed: Cannot create volume on aggregate aggr1: aggregate does not support encryption</code></strong> — Use an aggregate with Self-Encrypting Drives (SEDs) or enable software encryption; check aggregate encryption capability with <code>storage aggregate show -fields encrypt</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Encryption is not licensed on this cluster</code></td>
+<td>Verify NetApp Volume Encryption (NVE) license is installed with <code>system license show -package VE</code>.</td>
+</tr>
+<tr>
+<td><code>Error: command failed: Cannot create volume on aggregate aggr1: aggregate does not support encryption</code></td>
+<td>Use an aggregate with Self-Encrypting Drives (SEDs) or enable software encryption; check aggregate encryption capability with <code>storage aggregate show -fields encrypt</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="enabling-nve-on-an-existing-volume">Enabling NVE on an Existing Volume<a class="headerlink" href="#enabling-nve-on-an-existing-volume" title="Permanent link">&para;</a></h3>
 <p>Encrypting an existing volume requires re-keying — ONTAP rewrites the volume data with the new DEK. This is an online, non-disruptive operation for most workloads but runs in the background and affects I/O performance temporarily.</p>
@@ -8728,9 +8744,28 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: volume encryption conversion is not supported on this volume</code></strong> — Verify the volume is not a SnapMirror destination, MetroCluster volume, or using an unsupported aggregate encryption type with <code>storage aggregate show -fields encrypt</code>.
-<strong><code>Error: Vserver "svm1" does not exist</code></strong> — Confirm the SVM name is correct and exists by running <code>vserver show</code>.
-<strong><code>Error: Volume "data_vol01" does not exist</code></strong> — Check the volume name spelling and verify it exists in the target SVM with <code>volume show -vserver svm1</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: volume encryption conversion is not supported on this volume</code></td>
+<td>Verify the volume is not a SnapMirror destination, MetroCluster volume, or using an unsupported aggregate encryption type with <code>storage aggregate show -fields encrypt</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Vserver "svm1" does not exist</code></td>
+<td>Confirm the SVM name is correct and exists by running <code>vserver show</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Volume "data_vol01" does not exist</code></td>
+<td>Check the volume name spelling and verify it exists in the target SVM with <code>volume show -vserver svm1</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="nve-key-operations">NVE Key Operations<a class="headerlink" href="#nve-key-operations" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show encryption status for all volumes</span>
@@ -8764,9 +8799,28 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: Invalid volume name &lt;vol_name&gt;</code></strong> — Replace <code>&lt;vol_name&gt;</code> with an actual volume name and verify it exists with <code>volume show</code>.
-<strong><code>Error: This operation is not supported on unencrypted volumes</code></strong> — Ensure the volume has encryption enabled; enable it first with <code>volume encryption enable -vserver &lt;svm&gt; -volume &lt;vol_name&gt;</code>.
-<strong><code>Error: Rekey operation already in progress for this volume</code></strong> — Wait for the current rekey to complete by checking status with <code>volume encryption rekey show</code>, or contact NetApp support if stuck.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: Invalid volume name &lt;vol_name&gt;</code></td>
+<td>Replace <code>&lt;vol_name&gt;</code> with an actual volume name and verify it exists with <code>volume show</code>.</td>
+</tr>
+<tr>
+<td><code>Error: This operation is not supported on unencrypted volumes</code></td>
+<td>Ensure the volume has encryption enabled; enable it first with <code>volume encryption enable -vserver &lt;svm&gt; -volume &lt;vol_name&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Rekey operation already in progress for this volume</code></td>
+<td>Wait for the current rekey to complete by checking status with <code>volume encryption rekey show</code>, or contact NetApp support if stuck.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="netapp-aggregate-encryption-nae">NetApp Aggregate Encryption (NAE)<a class="headerlink" href="#netapp-aggregate-encryption-nae" title="Permanent link">&para;</a></h2>
@@ -8791,8 +8845,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: command failed: 24 disks are not available on node cluster1-01</code></strong> — Verify available spare disks with <code>storage aggregate show-space</code> and reduce the <code>-diskcount</code> value or add more disks to the node.</p>
-<p><strong><code>Error: NAE (NetApp Aggregate Encryption) is not licensed on this cluster</code></strong> — Ensure the NVE/NAE license is installed with <code>system license show</code> and add the license if missing.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: command failed: 24 disks are not available on node cluster1-01</code></td>
+<td>Verify available spare disks with <code>storage aggregate show-space</code> and reduce the <code>-diskcount</code> value or add more disks to the node.</td>
+</tr>
+<tr>
+<td><code>Error: NAE (NetApp Aggregate Encryption) is not licensed on this cluster</code></td>
+<td>Ensure the NVE/NAE license is installed with <code>system license show</code> and add the license if missing.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="converting-an-existing-aggregate-to-nae">Converting an Existing Aggregate to NAE<a class="headerlink" href="#converting-an-existing-aggregate-to-nae" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Start NAE conversion (background, non-disruptive)</span>
@@ -8808,8 +8878,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: aggregate &lt;aggr_name&gt; not found</code></strong> — Verify the aggregate name with <code>storage aggregate show</code> and use the correct name.
-<strong><code>Error: Rekey operation already in progress on aggregate &lt;aggr_name&gt;</code></strong> — Wait for the current rekey to complete or cancel it with <code>storage aggregate encryption rekey abort</code> before starting a new one.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: aggregate &lt;aggr_name&gt; not found</code></td>
+<td>Verify the aggregate name with <code>storage aggregate show</code> and use the correct name.</td>
+</tr>
+<tr>
+<td><code>Error: Rekey operation already in progress on aggregate &lt;aggr_name&gt;</code></td>
+<td>Wait for the current rekey to complete or cancel it with <code>storage aggregate encryption rekey abort</code> before starting a new one.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="nae-vs-nve-decision">NAE vs NVE Decision<a class="headerlink" href="#nae-vs-nve-decision" title="Permanent link">&para;</a></h3>
 <table>
@@ -8881,8 +8967,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: disk 1.0.5 not found</code></strong> — Verify the disk ID exists with <code>storage disk show</code> and correct any typos in the disk identifier.
-<strong><code>Error: key ID 550e8400-e29b-41d4-a716-446655440999 is not available</code></strong> — Confirm the key ID is valid and provisioned in the key management system using <code>storage encryption disk show</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: disk 1.0.5 not found</code></td>
+<td>Verify the disk ID exists with <code>storage disk show</code> and correct any typos in the disk identifier.</td>
+</tr>
+<tr>
+<td><code>Error: key ID 550e8400-e29b-41d4-a716-446655440999 is not available</code></td>
+<td>Confirm the key ID is valid and provisioned in the key management system using <code>storage encryption disk show</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="key-management">Key Management<a class="headerlink" href="#key-management" title="Permanent link">&para;</a></h2>
@@ -8926,8 +9028,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Onboard Key Management is already enabled on this cluster</code></strong> — Run <code>security key-manager onboard show</code> first to verify current status before attempting re-enablement.
-<strong><code>Error: Failed to synchronize keys to node2: Authentication failed</code></strong> — Ensure the node is fully joined to the cluster with <code>cluster show</code> and that network connectivity exists between nodes.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Onboard Key Management is already enabled on this cluster</code></td>
+<td>Run <code>security key-manager onboard show</code> first to verify current status before attempting re-enablement.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to synchronize keys to node2: Authentication failed</code></td>
+<td>Ensure the node is fully joined to the cluster with <code>cluster show</code> and that network connectivity exists between nodes.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="external-kmip-key-manager">External KMIP Key Manager<a class="headerlink" href="#external-kmip-key-manager" title="Permanent link">&para;</a></h3>
 <p>KMIP (Key Management Interoperability Protocol) integrates ONTAP with an enterprise KMS such as Thales CipherTrust, IBM SKLM, Entrust KeyControl, or HashiCorp Vault (via KMIP adapter). External key management is required for:</p>
@@ -8998,9 +9116,28 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Certificate not found: &lt;client-cert-name&gt;</code></strong> — Verify the certificate exists using <code>security certificate show</code> and use the exact certificate name from the output.
-<strong><code>Error: Key server &lt;kmip-server-ip&gt;:5696 is not reachable</code></strong> — Confirm network connectivity to the KMIP server with <code>ping &lt;kmip-server-ip&gt;</code> and verify the firewall allows port 5696.
-<strong><code>Error: KMIP server certificate validation failed</code></strong> — Ensure the server CA certificate was installed correctly and matches the KMIP server's actual CA using <code>security certificate show -type server-ca</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Certificate not found: &lt;client-cert-name&gt;</code></td>
+<td>Verify the certificate exists using <code>security certificate show</code> and use the exact certificate name from the output.</td>
+</tr>
+<tr>
+<td><code>Error: Key server &lt;kmip-server-ip&gt;:5696 is not reachable</code></td>
+<td>Confirm network connectivity to the KMIP server with <code>ping &lt;kmip-server-ip&gt;</code> and verify the firewall allows port 5696.</td>
+</tr>
+<tr>
+<td><code>Error: KMIP server certificate validation failed</code></td>
+<td>Ensure the server CA certificate was installed correctly and matches the KMIP server's actual CA using <code>security certificate show -type server-ca</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="key-manager-decision">Key Manager Decision<a class="headerlink" href="#key-manager-decision" title="Permanent link">&para;</a></h3>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNptUM2KwkAMvvcpgndZ1JsHpYqypQwW3WMv0YZ22GlmOjOKiyzsQ-wT-iRG0IPYS_6_L_lSaU-HqC1Pweu6iUnSjaYw6EYDuIQGHUldBpBrQ79JN5be0rbOaOQDQYtcYaSSi2UGH_CZFWkqfk3VNlXFvJ9jIhyrcyTPaCBXu5LxhNrg3lA_gs4xb7V7hWVFyV8NGgqyMFsosSuO_hhiL4f9bgW_4b1FX0FOP6CQsSZf8iZXcP37hxCtJ3AYgms8BlGlGU54NP2M8igYzqAbP4OJvOcePM4Voe-ZnJHcALSte3Y=?" /></p>
@@ -9051,9 +9188,28 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Key manager is not configured</code></strong> — Run <code>security key-manager onboard create</code> to initialize onboard key management or configure KMIP servers with <code>security key-manager external add-servers</code>.
-<strong><code>Error: Connection failed to KMIP server &lt;ip&gt;:5696</code></strong> — Verify network connectivity to the KMIP server, confirm firewall rules allow port 5696, and check that the KMIP server certificate is valid with <code>security key-manager external check</code>.
-<strong><code>Error: Backup status is failed</code></strong> — Manually trigger an onboard key manager backup with <code>security key-manager onboard create-backup</code> and verify sufficient disk space is available.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Key manager is not configured</code></td>
+<td>Run <code>security key-manager onboard create</code> to initialize onboard key management or configure KMIP servers with <code>security key-manager external add-servers</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Connection failed to KMIP server &lt;ip&gt;:5696</code></td>
+<td>Verify network connectivity to the KMIP server, confirm firewall rules allow port 5696, and check that the KMIP server certificate is valid with <code>security key-manager external check</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Backup status is failed</code></td>
+<td>Manually trigger an onboard key manager backup with <code>security key-manager onboard create-backup</code> and verify sufficient disk space is available.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="tls-and-ssh-hardening">TLS and SSH Hardening<a class="headerlink" href="#tls-and-ssh-hardening" title="Permanent link">&para;</a></h2>
@@ -9105,9 +9261,28 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid value for min-protocol-version</code></strong> — Verify the cluster supports the specified TLS version; use <code>security config show</code> to see available options.
-<strong><code>unable to get local issuer certificate</code></strong> — This is expected when testing with openssl against a self-signed cluster certificate; add <code>-CAfile &lt;cert-path&gt;</code> or use <code>-showcerts</code> to view the full chain.
-<strong><code>Connection refused</code> or <code>Connection reset by peer</code></strong> — Confirm the cluster management IP is correct and HTTPS port 443 is reachable with <code>ping &lt;cluster-mgmt-ip&gt;</code> and <code>nc -zv &lt;cluster-mgmt-ip&gt; 443</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid value for min-protocol-version</code></td>
+<td>Verify the cluster supports the specified TLS version; use <code>security config show</code> to see available options.</td>
+</tr>
+<tr>
+<td><code>unable to get local issuer certificate</code></td>
+<td>This is expected when testing with openssl against a self-signed cluster certificate; add <code>-CAfile &lt;cert-path&gt;</code> or use <code>-showcerts</code> to view the full chain.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code> or <code>Connection reset by peer</code></td>
+<td>Confirm the cluster management IP is correct and HTTPS port 443 is reachable with <code>ping &lt;cluster-mgmt-ip&gt;</code> and <code>nc -zv &lt;cluster-mgmt-ip&gt; 443</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="restrict-ssh-ciphers-and-macs">Restrict SSH Ciphers and MACs<a class="headerlink" href="#restrict-ssh-ciphers-and-macs" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Restrict SSH to strong ciphers and MAC algorithms</span>
@@ -9138,8 +9313,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "cluster-name" is not a valid vserver name</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster or SVM name (e.g., <code>cluster1</code> or <code>svm-prod</code>).
-<strong><code>Error: This command is not supported on this release of Data ONTAP</code></strong> — Verify ONTAP version is 9.10 or later for key-exchange-algorithms parameter; use <code>system node image show</code> to check.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "cluster-name" is not a valid vserver name</code></td>
+<td>Replace <code>&lt;cluster-name&gt;</code> with the actual cluster or SVM name (e.g., <code>cluster1</code> or <code>svm-prod</code>).</td>
+</tr>
+<tr>
+<td><code>Error: This command is not supported on this release of Data ONTAP</code></td>
+<td>Verify ONTAP version is 9.10 or later for key-exchange-algorithms parameter; use <code>system node image show</code> to check.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="disable-telnet-and-rsh">Disable Telnet and RSH<a class="headerlink" href="#disable-telnet-and-rsh" title="Permanent link">&para;</a></h3>
 <p>These protocols must not be enabled on production clusters:</p>
@@ -9168,8 +9359,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "telnet" is not a valid application name</code></strong> — Use the exact application identifier from <code>security protocol show</code> output (e.g., <code>telnet</code> vs <code>Telnet</code>); verify case sensitivity.
-<strong><code>Error: This operation is not permitted: insufficient privileges</code></strong> — Ensure you are logged in with admin-level credentials or a role with security protocol modification permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "telnet" is not a valid application name</code></td>
+<td>Use the exact application identifier from <code>security protocol show</code> output (e.g., <code>telnet</code> vs <code>Telnet</code>); verify case sensitivity.</td>
+</tr>
+<tr>
+<td><code>Error: This operation is not permitted: insufficient privileges</code></td>
+<td>Ensure you are logged in with admin-level credentials or a role with security protocol modification permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="fips-140-2-mode">FIPS 140-2 Mode<a class="headerlink" href="#fips-140-2-mode" title="Permanent link">&para;</a></h3>
 <p>ONTAP supports a FIPS 140-2 compliance mode that restricts cryptographic algorithms to FIPS-approved ciphers and disallows non-compliant algorithms for all management interfaces.</p>
@@ -9194,9 +9401,28 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Command failed: FIPS mode cannot be enabled while non-compliant ciphers are active in SSH configuration</code></strong> — Run <code>security ssh modify -vserver &lt;vserver&gt; -ciphers fips</code> to restrict SSH to FIPS-approved ciphers before enabling FIPS mode.
-<strong><code>Error: This operation requires cluster administrator privileges</code></strong> — Verify your user account has the "admin" role by running <code>security login show -user-or-group-name &lt;username&gt;</code>.
-<strong><code>Warning: Some management clients may lose connectivity after FIPS enablement</code></strong> — Test FIPS compatibility with your management tools (e.g., SSH clients, API clients) on a non-production cluster first, or ensure they support only FIPS-approved algorithms (AES, SHA-2, ECDSA).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Command failed: FIPS mode cannot be enabled while non-compliant ciphers are active in SSH configuration</code></td>
+<td>Run <code>security ssh modify -vserver &lt;vserver&gt; -ciphers fips</code> to restrict SSH to FIPS-approved ciphers before enabling FIPS mode.</td>
+</tr>
+<tr>
+<td><code>Error: This operation requires cluster administrator privileges</code></td>
+<td>Verify your user account has the "admin" role by running <code>security login show -user-or-group-name &lt;username&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Warning: Some management clients may lose connectivity after FIPS enablement</code></td>
+<td>Test FIPS compatibility with your management tools (e.g., SSH clients, API clients) on a non-production cluster first, or ensure they support only FIPS-approved algorithms (AES, SHA-2, ECDSA).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>FIPS mode implications:
 - SSLv3, TLSv1.0, TLSv1.1 are disabled
@@ -9238,9 +9464,28 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: This command requires cluster administrative privileges.</code></strong> — Run the command with cluster admin credentials or use <code>set -privilege advanced</code> if already authenticated.
-<strong><code>Error: Vserver "&lt;svm&gt;" does not exist.</code></strong> — Verify the SVM name with <code>vserver show</code> and use the correct vserver name in the <code>-vserver</code> parameter.
-<strong><code>Error: Invalid field name "common-name".</code></strong> — Use the correct field name <code>common_name</code> (underscore instead of hyphen) in the <code>-fields</code> parameter.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: This command requires cluster administrative privileges.</code></td>
+<td>Run the command with cluster admin credentials or use <code>set -privilege advanced</code> if already authenticated.</td>
+</tr>
+<tr>
+<td><code>Error: Vserver "&lt;svm&gt;" does not exist.</code></td>
+<td>Verify the SVM name with <code>vserver show</code> and use the correct vserver name in the <code>-vserver</code> parameter.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid field name "common-name".</code></td>
+<td>Use the correct field name <code>common_name</code> (underscore instead of hyphen) in the <code>-fields</code> parameter.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="generating-a-csr-and-installing-a-signed-certificate">Generating a CSR and Installing a Signed Certificate<a class="headerlink" href="#generating-a-csr-and-installing-a-signed-certificate" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Generate a CSR (Certificate Signing Request)</span>
@@ -9282,8 +9527,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid FQDN format for common-name</code></strong> — Ensure the cluster FQDN is a valid fully-qualified domain name (e.g., cluster.example.com, not just "cluster").
-<strong><code>Error: Certificate installation failed - certificate does not match private key</code></strong> — Verify that the PEM certificate pasted matches the CSR that was generated; if not, request a new signed certificate from the CA.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid FQDN format for common-name</code></td>
+<td>Ensure the cluster FQDN is a valid fully-qualified domain name (e.g., cluster.example.com, not just "cluster").</td>
+</tr>
+<tr>
+<td><code>Error: Certificate installation failed - certificate does not match private key</code></td>
+<td>Verify that the PEM certificate pasted matches the CSR that was generated; if not, request a new signed certificate from the CA.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="certificate-rotation-for-system-manager-https">Certificate Rotation for System Manager (HTTPS)<a class="headerlink" href="#certificate-rotation-for-system-manager-https" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Delete the existing self-signed or expired certificate</span>
@@ -9315,8 +9576,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: certificate "ontap.example.com" does not exist</code></strong> — Verify the exact common name of the certificate to delete using <code>security certificate show -vserver &lt;svm&gt;</code> before attempting deletion.
-<strong><code>Error: Cannot modify SSL certificate: certificate not found</code></strong> — Ensure the new certificate has been installed first using <code>security certificate install</code> and use the exact certificate common name in the modify command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: certificate "ontap.example.com" does not exist</code></td>
+<td>Verify the exact common name of the certificate to delete using <code>security certificate show -vserver &lt;svm&gt;</code> before attempting deletion.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot modify SSL certificate: certificate not found</code></td>
+<td>Ensure the new certificate has been installed first using <code>security certificate install</code> and use the exact certificate common name in the modify command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="certificate-monitoring">Certificate Monitoring<a class="headerlink" href="#certificate-monitoring" title="Permanent link">&para;</a></h3>
 <p>Set up EMS alerting for certificate expiry:</p>
@@ -9341,8 +9618,24 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "cert-alerts" already exists.</code></strong> — Use <code>event notification destination show</code> to list existing destinations and choose a unique name or delete the existing one with <code>event notification destination delete -name cert-alerts</code>.</p>
-<p><strong><code>Error: "cert-filter" already exists.</code></strong> — Verify the filter name is unique with <code>event filter show</code> or use <code>event filter delete -filter-name cert-filter</code> before recreating it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "cert-alerts" already exists.</code></td>
+<td>Use <code>event notification destination show</code> to list existing destinations and choose a unique name or delete the existing one with <code>event notification destination delete -name cert-alerts</code>.</td>
+</tr>
+<tr>
+<td><code>Error: "cert-filter" already exists.</code></td>
+<td>Verify the filter name is unique with <code>event filter show</code> or use <code>event filter delete -filter-name cert-filter</code> before recreating it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9373,7 +9666,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

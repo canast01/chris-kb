@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Git — Backup and Restore · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Git — Backup and Restore", "url": "https://chrisanastasiadis.com/itsm/git/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Git — Backup and Restore", "url": "https://chrisanastasiadis.com/itsm/git/operations/backup-restore/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7523,9 +7523,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: unable to access 'https://github.com/org/repo.git/': Could not resolve host: github.com</code></strong> — Verify network connectivity and DNS resolution; check firewall rules if behind a proxy.
-<strong><code>fatal: destination path '/backup/repo.git' already exists and is not an empty directory</code></strong> — Remove the existing directory with <code>rm -rf /backup/repo.git</code> before re-cloning, or use <code>git remote update</code> if updating an existing mirror.
-<strong><code>error: Could not read object database</code></strong> — Run <code>git fsck --full --strict</code> to identify corrupted objects and restore from a known-good backup if necessary.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: unable to access 'https://github.com/org/repo.git/': Could not resolve host: github.com</code></td>
+<td>Verify network connectivity and DNS resolution; check firewall rules if behind a proxy.</td>
+</tr>
+<tr>
+<td><code>fatal: destination path '/backup/repo.git' already exists and is not an empty directory</code></td>
+<td>Remove the existing directory with <code>rm -rf /backup/repo.git</code> before re-cloning, or use <code>git remote update</code> if updating an existing mirror.</td>
+</tr>
+<tr>
+<td><code>error: Could not read object database</code></td>
+<td>Run <code>git fsck --full --strict</code> to identify corrupted objects and restore from a known-good backup if necessary.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a full backup (stops writes briefly for consistency)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>gitlab-backup<span class="w"> </span>create
@@ -7555,9 +7574,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Backup failed: permission denied writing to /var/opt/gitlab/backups/</code></strong> — Ensure the <code>git</code> user owns the backups directory with <code>sudo chown -R git:git /var/opt/gitlab/backups/</code>.
-<strong><code>Error: database is locked</code></strong> — Stop any running GitLab processes or wait for active transactions to complete, then retry the backup.
-<strong><code>tar: error is not recoverable: exiting now</code></strong> — Verify sufficient disk space exists with <code>df -h</code> and ensure the backup directory is writable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Backup failed: permission denied writing to /var/opt/gitlab/backups/</code></td>
+<td>Ensure the <code>git</code> user owns the backups directory with <code>sudo chown -R git:git /var/opt/gitlab/backups/</code>.</td>
+</tr>
+<tr>
+<td><code>Error: database is locked</code></td>
+<td>Stop any running GitLab processes or wait for active transactions to complete, then retry the backup.</td>
+</tr>
+<tr>
+<td><code>tar: error is not recoverable: exiting now</code></td>
+<td>Verify sufficient disk space exists with <code>df -h</code> and ensure the backup directory is writable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Always backup configuration separately — it contains secrets</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>tar<span class="w"> </span>-czf<span class="w"> </span>/secure/gitlab-config-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span><span class="se">\</span>
@@ -7568,9 +7606,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>tar: /secure: Cannot open: No such file or directory</code></strong> — Create the backup directory first with <code>sudo mkdir -p /secure</code> and ensure it has appropriate permissions.
-<strong><code>sudo: tar: command not found</code></strong> — Install tar with <code>sudo apt-get install tar</code> (Debian/Ubuntu) or <code>sudo yum install tar</code> (RHEL/CentOS).
-<strong><code>tar: /etc/gitlab/gitlab-secrets.json: Cannot stat: No such file or directory</code></strong> — Verify GitLab is installed and the secrets file exists; if using a different GitLab installation path, adjust the paths accordingly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tar: /secure: Cannot open: No such file or directory</code></td>
+<td>Create the backup directory first with <code>sudo mkdir -p /secure</code> and ensure it has appropriate permissions.</td>
+</tr>
+<tr>
+<td><code>sudo: tar: command not found</code></td>
+<td>Install tar with <code>sudo apt-get install tar</code> (Debian/Ubuntu) or <code>sudo yum install tar</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>tar: /etc/gitlab/gitlab-secrets.json: Cannot stat: No such file or directory</code></td>
+<td>Verify GitLab is installed and the secrets file exists; if using a different GitLab installation path, adjust the paths accordingly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># /etc/cron.d/gitlab-backup</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="m">0</span><span class="w"> </span><span class="m">2</span><span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>root<span class="w"> </span>/opt/gitlab/bin/gitlab-backup<span class="w"> </span>create<span class="w"> </span><span class="nv">CRON</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/var/log/gitlab-backup.log
@@ -7611,8 +7668,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (22) The requested URL returned error: 401 Unauthorized</code></strong> — Verify <code>$GITHUB_TOKEN</code> is set and has <code>repo</code> scope permissions with <code>echo $GITHUB_TOKEN | wc -c</code>.
-<strong><code>fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists.</code></strong> — Confirm SSH key is loaded with <code>ssh-add -l</code> and GitHub SSH access works via <code>ssh -T git@github.com</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (22) The requested URL returned error: 401 Unauthorized</code></td>
+<td>Verify <code>$GITHUB_TOKEN</code> is set and has <code>repo</code> scope permissions with <code>echo $GITHUB_TOKEN | wc -c</code>.</td>
+</tr>
+<tr>
+<td><code>fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists.</code></td>
+<td>Confirm SSH key is loaded with <code>ssh-add -l</code> and GitHub SSH access works via <code>ssh -T git@github.com</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Install</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/github/backup-utils.git<span class="w"> </span>/opt/github-backup-utils
@@ -7651,9 +7724,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: destination path '/opt/github-backup-utils' already exists and is not an empty directory</code></strong> — Remove the existing directory with <code>rm -rf /opt/github-backup-utils</code> before cloning.
-<strong><code>Error: GHE_HOSTNAME not set or unreachable</code></strong> — Verify the hostname is correct in <code>/etc/github-backup/backup.config</code> and that the GitHub Enterprise instance is accessible from this host.
-<strong><code>Error: Insufficient disk space. Required: 500GB, Available: 250GB</code></strong> — Increase available disk space on <code>/backup/ghes</code> or adjust <code>GHE_EXTRA_USER_DISK_REQUIRED_PERCENTAGE</code> to a lower value.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: destination path '/opt/github-backup-utils' already exists and is not an empty directory</code></td>
+<td>Remove the existing directory with <code>rm -rf /opt/github-backup-utils</code> before cloning.</td>
+</tr>
+<tr>
+<td><code>Error: GHE_HOSTNAME not set or unreachable</code></td>
+<td>Verify the hostname is correct in <code>/etc/github-backup/backup.config</code> and that the GitHub Enterprise instance is accessible from this host.</td>
+</tr>
+<tr>
+<td><code>Error: Insufficient disk space. Required: 500GB, Available: 250GB</code></td>
+<td>Increase available disk space on <code>/backup/ghes</code> or adjust <code>GHE_EXTRA_USER_DISK_REQUIRED_PERCENTAGE</code> to a lower value.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># /etc/cron.d/ghes-backup</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="m">0</span><span class="w"> </span>*/4<span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>root<span class="w"> </span>/opt/github-backup-utils/bin/ghe-backup<span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/ghes-backup.log<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
@@ -7662,9 +7754,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>/opt/github-backup-utils/bin/ghe-backup: No such file or directory</code></strong> — Verify the GitHub Enterprise Server backup utilities are installed at the correct path with <code>ls -la /opt/github-backup-utils/bin/ghe-backup</code>.
-<strong><code>Permission denied</code></strong> — Ensure the ghe-backup script has execute permissions by running <code>chmod +x /opt/github-backup-utils/bin/ghe-backup</code>.
-<strong><code>/var/log/ghes-backup.log: Permission denied</code></strong> — Verify the /var/log directory is writable by the root user and the log file exists with <code>touch /var/log/ghes-backup.log &amp;&amp; chmod 644 /var/log/ghes-backup.log</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/opt/github-backup-utils/bin/ghe-backup: No such file or directory</code></td>
+<td>Verify the GitHub Enterprise Server backup utilities are installed at the correct path with <code>ls -la /opt/github-backup-utils/bin/ghe-backup</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Ensure the ghe-backup script has execute permissions by running <code>chmod +x /opt/github-backup-utils/bin/ghe-backup</code>.</td>
+</tr>
+<tr>
+<td><code>/var/log/ghes-backup.log: Permission denied</code></td>
+<td>Verify the /var/log directory is writable by the root user and the log file exists with <code>touch /var/log/ghes-backup.log &amp;&amp; chmod 644 /var/log/ghes-backup.log</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Option 1: Push mirror to a new remote</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">cd</span><span class="w"> </span>/backup/repo.git
@@ -7695,8 +7806,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: 'https://github.com/org/new-repo.git' does not appear to be a 'git' repository</code></strong> — Verify the target repository URL is correct and the repository exists on GitHub with proper access permissions.
-<strong><code>fatal: destination path '/root/restored-repo' already exists and is not an empty directory</code></strong> — Remove or rename the existing directory before cloning, or use <code>git clone /backup/repo.git ~/restored-repo-v2</code> with a different target path.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: 'https://github.com/org/new-repo.git' does not appear to be a 'git' repository</code></td>
+<td>Verify the target repository URL is correct and the repository exists on GitHub with proper access permissions.</td>
+</tr>
+<tr>
+<td><code>fatal: destination path '/root/restored-repo' already exists and is not an empty directory</code></td>
+<td>Remove or rename the existing directory before cloning, or use <code>git clone /backup/repo.git ~/restored-repo-v2</code> with a different target path.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Ensure GitLab version matches the backup version</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:env:info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;GitLab information&quot;</span>
@@ -7758,9 +7885,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>BACKUP=1715000000_2024_05_06_16.11.0 does not exist</code></strong> — Verify the backup filename exists in <code>/var/opt/gitlab/backups/</code> and use the correct timestamp prefix without the <code>.tar</code> extension.
-<strong><code>FATAL: database "gitlabhq_production" does not exist</code></strong> — Ensure the database was not manually dropped; restore the database backup before restoring repositories or run <code>sudo gitlab-rake db:create</code> first.
-<strong><code>tar: /etc/gitlab/gitlab-secrets.json: Cannot open: Permission denied</code></strong> — Run the tar extraction with <code>sudo</code> or ensure the backup archive was created with proper permissions for the gitlab user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BACKUP=1715000000_2024_05_06_16.11.0 does not exist</code></td>
+<td>Verify the backup filename exists in <code>/var/opt/gitlab/backups/</code> and use the correct timestamp prefix without the <code>.tar</code> extension.</td>
+</tr>
+<tr>
+<td><code>FATAL: database "gitlabhq_production" does not exist</code></td>
+<td>Ensure the database was not manually dropped; restore the database backup before restoring repositories or run <code>sudo gitlab-rake db:create</code> first.</td>
+</tr>
+<tr>
+<td><code>tar: /etc/gitlab/gitlab-secrets.json: Cannot open: Permission denied</code></td>
+<td>Run the tar extraction with <code>sudo</code> or ensure the backup archive was created with proper permissions for the gitlab user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Restore to a fresh GHES appliance (same version)</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>/opt/github-backup-utils/bin/ghe-restore<span class="w"> </span>github-new.example.com
@@ -7784,9 +7930,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: Backup version 3.10.5 does not match appliance version 3.11.0</code></strong> — Ensure the target GHES appliance is running the exact same version as the backup source, or use a backup from a matching version.
-<strong><code>ssh: connect to host github-new.example.com port 22: Connection refused</code></strong> — Verify the target appliance is powered on, reachable on the network, and has completed its initial boot sequence.
-<strong><code>ghe-restore: snapshot not found at /backup/ghes/20240506T020000</code></strong> — Confirm the snapshot path exists and is readable by running <code>ls -la /backup/ghes/</code> to list available backups.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: Backup version 3.10.5 does not match appliance version 3.11.0</code></td>
+<td>Ensure the target GHES appliance is running the exact same version as the backup source, or use a backup from a matching version.</td>
+</tr>
+<tr>
+<td><code>ssh: connect to host github-new.example.com port 22: Connection refused</code></td>
+<td>Verify the target appliance is powered on, reachable on the network, and has completed its initial boot sequence.</td>
+</tr>
+<tr>
+<td><code>ghe-restore: snapshot not found at /backup/ghes/20240506T020000</code></td>
+<td>Confirm the snapshot path exists and is readable by running <code>ls -la /backup/ghes/</code> to list available backups.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Create bare backup</span>
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>git<span class="w"> </span>clone<span class="w"> </span>--bare<span class="w"> </span>https://github.com/org/repo.git<span class="w"> </span>/backup/repo.git
@@ -7827,9 +7992,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: repository '/backup/repo.git' does not exist</code></strong> — Ensure the parent directory <code>/backup/</code> exists and you have write permissions; create it with <code>mkdir -p /backup</code> if needed.
-<strong><code>fatal: Could not read from remote repository. Please make sure you have the correct access rights</code></strong> — Verify your SSH key or GitHub token is configured; test with <code>git ls-remote https://github.com/org/repo.git</code>.
-<strong><code>error: pathspec 'origin' did not match any files</code></strong> — The bundle clone creates a detached state; add <code>git -C ~/restored-repo checkout main</code> after cloning to switch to a tracking branch.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: repository '/backup/repo.git' does not exist</code></td>
+<td>Ensure the parent directory <code>/backup/</code> exists and you have write permissions; create it with <code>mkdir -p /backup</code> if needed.</td>
+</tr>
+<tr>
+<td><code>fatal: Could not read from remote repository. Please make sure you have the correct access rights</code></td>
+<td>Verify your SSH key or GitHub token is configured; test with <code>git ls-remote https://github.com/org/repo.git</code>.</td>
+</tr>
+<tr>
+<td><code>error: pathspec 'origin' did not match any files</code></td>
+<td>The bundle clone creates a detached state; add <code>git -C ~/restored-repo checkout main</code> after cloning to switch to a tracking branch.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="ch">#!/usr/bin/env bash</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># verify-backup.sh</span>
@@ -7898,7 +8082,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

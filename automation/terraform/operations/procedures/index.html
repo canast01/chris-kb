@@ -7538,9 +7538,28 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unsupported argument on line 12, in resource "aws_instance" "web": on instance_type = var.instance_type</code></strong> — Verify the variable name matches your Terraform configuration and check for typos in the resource block.
-<strong><code>Error: variables not allowed</code></strong> — Remove the <code>export</code> statement; use <code>-var-file</code> or inline <code>-var</code> flags instead, or ensure <code>TF_VAR_</code> environment variables are set before running <code>terraform apply</code>.
-<strong><code>Error: Failed to read variables file "envs/production.tfvars": no such file or directory</code></strong> — Verify the file path is correct relative to your working directory and that the file exists with <code>ls -la envs/production.tfvars</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unsupported argument on line 12, in resource "aws_instance" "web": on instance_type = var.instance_type</code></td>
+<td>Verify the variable name matches your Terraform configuration and check for typos in the resource block.</td>
+</tr>
+<tr>
+<td><code>Error: variables not allowed</code></td>
+<td>Remove the <code>export</code> statement; use <code>-var-file</code> or inline <code>-var</code> flags instead, or ensure <code>TF_VAR_</code> environment variables are set before running <code>terraform apply</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to read variables file "envs/production.tfvars": no such file or directory</code></td>
+<td>Verify the file path is correct relative to your working directory and that the file exists with <code>ls -la envs/production.tfvars</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="apply-in-cicd-pipelines">Apply in CI/CD Pipelines<a class="headerlink" href="#apply-in-cicd-pipelines" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># GitHub Actions example</span>
@@ -7650,8 +7669,24 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Variables not allowed</code></strong> — Remove <code>-var</code> flags from <code>terraform plan</code> if using a <code>.tfvars</code> file, or ensure the variable is declared in your Terraform configuration.
-<strong><code>Error: Failed to read variables file "envs/prod.tfvars": no such file or directory</code></strong> — Verify the path to your <code>.tfvars</code> file is correct relative to your working directory and the file exists.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Variables not allowed</code></td>
+<td>Remove <code>-var</code> flags from <code>terraform plan</code> if using a <code>.tfvars</code> file, or ensure the variable is declared in your Terraform configuration.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to read variables file "envs/prod.tfvars": no such file or directory</code></td>
+<td>Verify the path to your <code>.tfvars</code> file is correct relative to your working directory and the file exists.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="saving-plan-files">Saving Plan Files<a class="headerlink" href="#saving-plan-files" title="Permanent link">&para;</a></h3>
 <p>Saving a plan guarantees the apply step executes exactly what was reviewed.</p>
@@ -7711,9 +7746,28 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: No saved plan file found</code></strong> — Verify the tfplan file exists in the current directory with <code>ls -la tfplan</code>.
-<strong><code>Error: jq: command not found</code></strong> — Install jq using <code>apt-get install jq</code> (Ubuntu/Debian) or <code>brew install jq</code> (macOS).
-<strong><code>Error: Error reading plan file: invalid plan format</code></strong> — Regenerate the plan file by running <code>terraform plan -out=tfplan</code> again, as the binary format may be corrupted or from an incompatible Terraform version.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: No saved plan file found</code></td>
+<td>Verify the tfplan file exists in the current directory with <code>ls -la tfplan</code>.</td>
+</tr>
+<tr>
+<td><code>Error: jq: command not found</code></td>
+<td>Install jq using <code>apt-get install jq</code> (Ubuntu/Debian) or <code>brew install jq</code> (macOS).</td>
+</tr>
+<tr>
+<td><code>Error: Error reading plan file: invalid plan format</code></td>
+<td>Regenerate the plan file by running <code>terraform plan -out=tfplan</code> again, as the binary format may be corrupted or from an incompatible Terraform version.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="reading-plan-output">Reading Plan Output<a class="headerlink" href="#reading-plan-output" title="Permanent link">&para;</a></h3>
 <p>Understanding the plan output symbols:</p>
@@ -7768,8 +7822,24 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: resource does not support in-place update for "instance_type"</code></strong> — Stop the instance, apply the change, or use <code>create_before_destroy</code> lifecycle rule to avoid downtime.
-<strong><code>Error: Invalid or unknown key: instance_type</code></strong> — Verify the resource type supports the <code>instance_type</code> argument and check for typos in the Terraform configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: resource does not support in-place update for "instance_type"</code></td>
+<td>Stop the instance, apply the change, or use <code>create_before_destroy</code> lifecycle rule to avoid downtime.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid or unknown key: instance_type</code></td>
+<td>Verify the resource type supports the <code>instance_type</code> argument and check for typos in the Terraform configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="plan-review-checklist">Plan Review Checklist<a class="headerlink" href="#plan-review-checklist" title="Permanent link">&para;</a></h3>
 <p>Before approving and applying a plan, verify:</p>
@@ -7793,9 +7863,28 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>jq: parse error: Invalid numeric literal at line 1 column 10</code></strong> — Ensure the tfplan file exists and is a valid Terraform plan file; regenerate it with <code>terraform plan -out=tfplan</code> if corrupted.
-<strong><code>No such file or directory</code></strong> — Verify the tfplan file path is correct and the file exists in the current working directory with <code>ls -la tfplan</code>.
-<strong><code>error: 2 positional arguments expected, got 1</code></strong> — Update to <code>terraform show -json tfplan</code> (add the explicit filename argument after the <code>-json</code> flag).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jq: parse error: Invalid numeric literal at line 1 column 10</code></td>
+<td>Ensure the tfplan file exists and is a valid Terraform plan file; regenerate it with <code>terraform plan -out=tfplan</code> if corrupted.</td>
+</tr>
+<tr>
+<td><code>No such file or directory</code></td>
+<td>Verify the tfplan file path is correct and the file exists in the current working directory with <code>ls -la tfplan</code>.</td>
+</tr>
+<tr>
+<td><code>error: 2 positional arguments expected, got 1</code></td>
+<td>Update to <code>terraform show -json tfplan</code> (add the explicit filename argument after the <code>-json</code> flag).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="plan-in-cicd">Plan in CI/CD<a class="headerlink" href="#plan-in-cicd" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># GitHub Actions — post plan output to PR comment</span>
@@ -7860,8 +7949,24 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: resource targeting is not supported for outputs</code></strong> — Remove <code>-target</code> flags that reference output values; use <code>-target</code> only for resources and modules.
-<strong><code>Error: Failed to load plugin</code></strong> — Install Graphviz (<code>apt-get install graphviz</code> on Ubuntu or <code>brew install graphviz</code> on macOS) before piping to the <code>dot</code> command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: resource targeting is not supported for outputs</code></td>
+<td>Remove <code>-target</code> flags that reference output values; use <code>-target</code> only for resources and modules.</td>
+</tr>
+<tr>
+<td><code>Error: Failed to load plugin</code></td>
+<td>Install Graphviz (<code>apt-get install graphviz</code> on Ubuntu or <code>brew install graphviz</code> on macOS) before piping to the <code>dot</code> command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
@@ -8012,8 +8117,24 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: resource aws_instance.example does not exist in configuration</code></strong> — Add the empty resource block to your .tf file before running terraform import.
-<strong><code>Error: InvalidInstanceID.NotFound</code></strong> — Verify the instance ID is correct and exists in the target AWS region and account.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: resource aws_instance.example does not exist in configuration</code></td>
+<td>Add the empty resource block to your .tf file before running terraform import.</td>
+</tr>
+<tr>
+<td><code>Error: InvalidInstanceID.NotFound</code></td>
+<td>Verify the instance ID is correct and exists in the target AWS region and account.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Common import address formats</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>terraform<span class="w"> </span>import<span class="w"> </span>aws_s3_bucket.logs<span class="w"> </span>my-bucket-name
@@ -8033,9 +8154,28 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: resource address "aws_s3_bucket.logs" does not exist in the configuration</code></strong> — Add the resource block <code>resource "aws_s3_bucket" "logs" {}</code> to your Terraform configuration before importing.
-<strong><code>Error: error reading S3 Bucket (my-bucket-name): AccessDenied: Access Denied</code></strong> — Verify your AWS credentials have <code>s3:GetBucketVersioning</code> and <code>s3:ListBucket</code> permissions for the target bucket.
-<strong><code>Error: retrieving subscription ID: subscription ID can not be empty</code></strong> — Replace <code>&lt;sub&gt;</code> with your actual Azure subscription ID in the resource ID path.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: resource address "aws_s3_bucket.logs" does not exist in the configuration</code></td>
+<td>Add the resource block <code>resource "aws_s3_bucket" "logs" {}</code> to your Terraform configuration before importing.</td>
+</tr>
+<tr>
+<td><code>Error: error reading S3 Bucket (my-bucket-name): AccessDenied: Access Denied</code></td>
+<td>Verify your AWS credentials have <code>s3:GetBucketVersioning</code> and <code>s3:ListBucket</code> permissions for the target bucket.</td>
+</tr>
+<tr>
+<td><code>Error: retrieving subscription ID: subscription ID can not be empty</code></td>
+<td>Replace <code>&lt;sub&gt;</code> with your actual Azure subscription ID in the resource ID path.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -8127,9 +8267,28 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: resource address "aws_instance.old_name" does not exist in the current state</code></strong> — Verify the exact resource address with <code>terraform state list</code> before attempting the move.
-<strong><code>Error: failed to read state from remote backend: AccessDenied</code></strong> — Ensure your AWS credentials are valid and you have <code>s3:GetObject</code> and <code>s3:PutObject</code> permissions on the state bucket.
-<strong><code>Error: state push rejected: serial number mismatch</code></strong> — Do not manually edit the <code>serial</code> field in the state file; use <code>terraform state pull</code> and <code>terraform state push</code> without modifications to avoid conflicts.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: resource address "aws_instance.old_name" does not exist in the current state</code></td>
+<td>Verify the exact resource address with <code>terraform state list</code> before attempting the move.</td>
+</tr>
+<tr>
+<td><code>Error: failed to read state from remote backend: AccessDenied</code></td>
+<td>Ensure your AWS credentials are valid and you have <code>s3:GetObject</code> and <code>s3:PutObject</code> permissions on the state bucket.</td>
+</tr>
+<tr>
+<td><code>Error: state push rejected: serial number mismatch</code></td>
+<td>Do not manually edit the <code>serial</code> field in the state file; use <code>terraform state pull</code> and <code>terraform state push</code> without modifications to avoid conflicts.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -8217,9 +8376,28 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: output not found</code></strong> — Verify the output name exists in your Terraform configuration with <code>terraform output</code> (no arguments) to list all available outputs.
-<strong><code>psql: error: FATAL: password authentication failed for user "admin"</code></strong> — Ensure the password variable is correctly populated and the database user credentials match; test with <code>echo "$DB_PASS" | wc -c</code> to confirm the value was captured.
-<strong><code>Error: output "db_password" is sensitive</code></strong> — Use the <code>-raw</code> flag to access sensitive outputs directly: <code>terraform output -raw db_password</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: output not found</code></td>
+<td>Verify the output name exists in your Terraform configuration with <code>terraform output</code> (no arguments) to list all available outputs.</td>
+</tr>
+<tr>
+<td><code>psql: error: FATAL: password authentication failed for user "admin"</code></td>
+<td>Ensure the password variable is correctly populated and the database user credentials match; test with <code>echo "$DB_PASS" | wc -c</code> to confirm the value was captured.</td>
+</tr>
+<tr>
+<td><code>Error: output "db_password" is sensitive</code></td>
+<td>Use the <code>-raw</code> flag to access sensitive outputs directly: <code>terraform output -raw db_password</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -8287,7 +8465,7 @@ Terraform operational procedures — standard apply workflow, plan and apply str
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

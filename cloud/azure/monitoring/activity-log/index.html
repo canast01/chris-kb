@@ -8406,9 +8406,28 @@ The Azure Activity Log is a platform log that records subscription-level events 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceGroupNotFound</code></strong> — Verify the resource group name with <code>az group list</code> and ensure you have access to the subscription.
-<strong><code>InvalidDateFormat</code></strong> — Use ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ) for <code>--start-time</code> and <code>--end-time</code> parameters.
-<strong><code>AuthorizationFailed</code></strong> — Ensure your Azure account has at least Reader role on the resource group using <code>az role assignment list --resource-group myRG</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceGroupNotFound</code></td>
+<td>Verify the resource group name with <code>az group list</code> and ensure you have access to the subscription.</td>
+</tr>
+<tr>
+<td><code>InvalidDateFormat</code></td>
+<td>Use ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ) for <code>--start-time</code> and <code>--end-time</code> parameters.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed</code></td>
+<td>Ensure your Azure account has at least Reader role on the resource group using <code>az role assignment list --resource-group myRG</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="exporting-to-a-log-analytics-workspace">Exporting to a Log Analytics Workspace<a class="headerlink" href="#exporting-to-a-log-analytics-workspace" title="Permanent link">&para;</a></h2>
 <p>Export the activity log to a Log Analytics workspace for long-term KQL querying and integration with alert rules.</p>
@@ -8479,9 +8498,28 @@ The Azure Activity Log is a platform log that records subscription-level events 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>BadRequest: The resource /subscriptions/&lt;sub-id&gt; is not a valid resource for diagnostic settings.</code></strong> — Use the full resource ID of a specific resource (e.g., <code>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM</code>) or omit <code>--resource</code> to target the subscription-level Activity Log.
-<strong><code>ResourceNotFound: The Log Analytics workspace with id /subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace could not be found.</code></strong> — Verify the workspace name, resource group, and subscription ID are correct using <code>az monitor log-analytics workspace list</code>.
-<strong><code>InvalidJsonFormat: Invalid JSON in logs parameter.</code></strong> — Ensure the JSON string is properly escaped and uses valid category names; test with <code>echo '&lt;json&gt;' | jq</code> before passing to the command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BadRequest: The resource /subscriptions/&lt;sub-id&gt; is not a valid resource for diagnostic settings.</code></td>
+<td>Use the full resource ID of a specific resource (e.g., <code>/subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM</code>) or omit <code>--resource</code> to target the subscription-level Activity Log.</td>
+</tr>
+<tr>
+<td><code>ResourceNotFound: The Log Analytics workspace with id /subscriptions/&lt;sub-id&gt;/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace could not be found.</code></td>
+<td>Verify the workspace name, resource group, and subscription ID are correct using <code>az monitor log-analytics workspace list</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidJsonFormat: Invalid JSON in logs parameter.</code></td>
+<td>Ensure the JSON string is properly escaped and uses valid category names; test with <code>echo '&lt;json&gt;' | jq</code> before passing to the command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Once exported, query with KQL using the <code>AzureActivity</code> table:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">AzureActivity</span>
@@ -8559,9 +8597,28 @@ The Azure Activity Log is a platform log that records subscription-level events 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound: The resource '/subscriptions/&lt;sub-id&gt;' does not exist.</code></strong> — Replace <code>&lt;sub-id&gt;</code> with your actual subscription ID from <code>az account show --query id -o tsv</code>.
-<strong><code>InvalidResourceId: The provided resource ID for storage account is invalid or the account does not exist.</code></strong> — Verify the storage account exists in the specified resource group with <code>az storage account show --name myStorageAccount --resource-group myRG</code>.
-<strong><code>AuthorizationFailed: The client does not have permission to perform action 'microsoft.insights/diagnosticSettings/write'.</code></strong> — Ensure your Azure account has the Monitoring Contributor or Owner role on the subscription with <code>az role assignment list --assignee &lt;your-email&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound: The resource '/subscriptions/&lt;sub-id&gt;' does not exist.</code></td>
+<td>Replace <code>&lt;sub-id&gt;</code> with your actual subscription ID from <code>az account show --query id -o tsv</code>.</td>
+</tr>
+<tr>
+<td><code>InvalidResourceId: The provided resource ID for storage account is invalid or the account does not exist.</code></td>
+<td>Verify the storage account exists in the specified resource group with <code>az storage account show --name myStorageAccount --resource-group myRG</code>.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client does not have permission to perform action 'microsoft.insights/diagnosticSettings/write'.</code></td>
+<td>Ensure your Azure account has the Monitoring Contributor or Owner role on the subscription with <code>az role assignment list --assignee &lt;your-email&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="alerts-on-activity-log-events">Alerts on Activity Log Events<a class="headerlink" href="#alerts-on-activity-log-events" title="Permanent link">&para;</a></h2>
 <p>Activity log alerts fire when a specific event matches defined conditions. Common uses include detecting VM deletions, role assignment changes, or policy state changes.</p>
@@ -8632,9 +8689,28 @@ The Azure Activity Log is a platform log that records subscription-level events 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceGroupNotFound : The resource group 'myRG' could not be found.</code></strong> — Verify the resource group exists in your subscription with <code>az group list</code> and use the correct name.
-<strong><code>InvalidTemplate : The provided action group resource ID is invalid or does not exist.</code></strong> — Replace <code>&lt;sub-id&gt;</code> with your actual subscription ID from <code>az account show --query id -o tsv</code> and ensure the action group was created successfully.
-<strong><code>BadRequest : The condition format is invalid.</code></strong> — Ensure condition parameters are space-separated key=value pairs without quotes, e.g., <code>category=Administrative operationName=Microsoft.Compute/virtualMachines/delete</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceGroupNotFound : The resource group 'myRG' could not be found.</code></td>
+<td>Verify the resource group exists in your subscription with <code>az group list</code> and use the correct name.</td>
+</tr>
+<tr>
+<td><code>InvalidTemplate : The provided action group resource ID is invalid or does not exist.</code></td>
+<td>Replace <code>&lt;sub-id&gt;</code> with your actual subscription ID from <code>az account show --query id -o tsv</code> and ensure the action group was created successfully.</td>
+</tr>
+<tr>
+<td><code>BadRequest : The condition format is invalid.</code></td>
+<td>Ensure condition parameters are space-separated key=value pairs without quotes, e.g., <code>category=Administrative operationName=Microsoft.Compute/virtualMachines/delete</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="activity-log-categories">Activity Log Categories<a class="headerlink" href="#activity-log-categories" title="Permanent link">&para;</a></h2>
 <table>
@@ -8715,9 +8791,28 @@ The Azure Activity Log is a platform log that records subscription-level events 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The start-time value '2026-04-01T00:00:00Z' is invalid. Specify a valid ISO 8601 datetime.</code></strong> — Use a past date or ensure the datetime format is exactly <code>YYYY-MM-DDTHH:MM:SSZ</code> in UTC.
-<strong><code>The caller '&lt;service-principal-object-id&gt;' does not exist or is invalid.</code></strong> — Verify the service principal object ID with <code>az ad sp list --query "[].objectId"</code> and use the correct UUID.
-<strong><code>date: illegal time format</code></strong> — On macOS, replace <code>date -u -v-7d</code> with <code>date -u -d '7 days ago'</code> or use <code>gdate</code> from GNU coreutils.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The start-time value '2026-04-01T00:00:00Z' is invalid. Specify a valid ISO 8601 datetime.</code></td>
+<td>Use a past date or ensure the datetime format is exactly <code>YYYY-MM-DDTHH:MM:SSZ</code> in UTC.</td>
+</tr>
+<tr>
+<td><code>The caller '&lt;service-principal-object-id&gt;' does not exist or is invalid.</code></td>
+<td>Verify the service principal object ID with <code>az ad sp list --query "[].objectId"</code> and use the correct UUID.</td>
+</tr>
+<tr>
+<td><code>date: illegal time format</code></td>
+<td>On macOS, replace <code>date -u -v-7d</code> with <code>date -u -d '7 days ago'</code> or use <code>gdate</code> from GNU coreutils.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -8741,7 +8836,7 @@ The Azure Activity Log is a platform log that records subscription-level events 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

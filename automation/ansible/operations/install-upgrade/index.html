@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Ansible — Install &amp; Upgrade · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Ansible — Install &amp; Upgrade", "url": "https://chrisanastasiadis.com/automation/ansible/operations/install-upgrade/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Ansible — Install &amp; Upgrade", "url": "https://chrisanastasiadis.com/automation/ansible/operations/install-upgrade/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7518,8 +7518,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to find a match: ansible-core</code></strong> — Run <code>dnf install -y epel-release</code> first to enable the EPEL repository.
-<strong><code>Error: Package dnf-plugins-core-4.0.21-1.el9.noarch requires python3-dnf(x86-64) = 4.0.21-1.el9, but none of the providers can be installed</code></strong> — Run <code>dnf update -y</code> to resolve dependency conflicts before installing packages.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to find a match: ansible-core</code></td>
+<td>Run <code>dnf install -y epel-release</code> first to enable the EPEL repository.</td>
+</tr>
+<tr>
+<td><code>Error: Package dnf-plugins-core-4.0.21-1.el9.noarch requires python3-dnf(x86-64) = 4.0.21-1.el9, but none of the providers can be installed</code></td>
+<td>Run <code>dnf update -y</code> to resolve dependency conflicts before installing packages.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ansible-galaxy<span class="w"> </span>role<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
@@ -7579,9 +7595,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR! Unexpected failure during module execution.</code></strong> — Ensure WinRM is enabled on the target Windows host with <code>Enable-PSRemoting -Force</code> and verify the firewall allows port 5985 (HTTP) or 5986 (HTTPS).
-<strong><code>fatal: [winhost]: UNREACHABLE! =&gt; {"msg": "ntlm: HTTPSConnectionPool(host='winhost', port=5986): Max retries exceeded"}</code></strong> — Verify DNS resolution for the hostname, check network connectivity to the Windows host, and confirm the correct <code>ansible_host</code> IP address in your inventory file.
-<strong><code>ERROR! the playbook: inventory/ does not exist</code></strong> — Ensure the inventory directory path is correct and contains valid inventory files (e.g., <code>hosts.ini</code> or <code>hosts.yml</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR! Unexpected failure during module execution.</code></td>
+<td>Ensure WinRM is enabled on the target Windows host with <code>Enable-PSRemoting -Force</code> and verify the firewall allows port 5985 (HTTP) or 5986 (HTTPS).</td>
+</tr>
+<tr>
+<td><code>fatal: [winhost]: UNREACHABLE! =&gt; {"msg": "ntlm: HTTPSConnectionPool(host='winhost', port=5986): Max retries exceeded"}</code></td>
+<td>Verify DNS resolution for the hostname, check network connectivity to the Windows host, and confirm the correct <code>ansible_host</code> IP address in your inventory file.</td>
+</tr>
+<tr>
+<td><code>ERROR! the playbook: inventory/ does not exist</code></td>
+<td>Ensure the inventory directory path is correct and contains valid inventory files (e.g., <code>hosts.ini</code> or <code>hosts.yml</code>).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Review release notes first</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># https://github.com/ansible/ansible/blob/devel/changelogs/</span>
@@ -7658,9 +7693,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR! Unexpected Exception: No module named 'jinja2'</code></strong> — Run <code>pip install jinja2</code> in the venv before upgrading ansible-core.
-<strong><code>[WARNING]: Skipping unknown variable 'ansible_python_interpreter'</code></strong> — Update deprecated variable names in inventory or group_vars to use <code>ansible_python_executable</code> instead.
-<strong><code>fatal: [web-staging-01]: FAILED! =&gt; {"msg": "Timeout waiting for privilege escalation prompt."}</code></strong> — Ensure staging inventory has correct <code>ansible_become_pass</code> or SSH key permissions for the staging user.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR! Unexpected Exception: No module named 'jinja2'</code></td>
+<td>Run <code>pip install jinja2</code> in the venv before upgrading ansible-core.</td>
+</tr>
+<tr>
+<td><code>[WARNING]: Skipping unknown variable 'ansible_python_interpreter'</code></td>
+<td>Update deprecated variable names in inventory or group_vars to use <code>ansible_python_executable</code> instead.</td>
+</tr>
+<tr>
+<td><code>fatal: [web-staging-01]: FAILED! =&gt; {"msg": "Timeout waiting for privilege escalation prompt."}</code></td>
+<td>Ensure staging inventory has correct <code>ansible_become_pass</code> or SSH key permissions for the staging user.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;include:&quot;</span><span class="w">          </span>playbooks/<span class="w"> </span>roles/<span class="w">   </span><span class="c1"># → include_tasks</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;always_run:&quot;</span><span class="w">       </span>playbooks/<span class="w"> </span>roles/<span class="w">   </span><span class="c1"># → check_mode: false</span>
@@ -7683,8 +7737,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>grep: roles/: No such file or directory</code></strong> — Ensure you run this command from the Ansible project root directory where both <code>playbooks/</code> and <code>roles/</code> directories exist.
-<strong><code>No matches found</code></strong> — If the grep returns no output, your playbooks may already be using Ansible 2.3+ syntax (include_tasks, check_mode, become); verify by checking a sample playbook manually.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grep: roles/: No such file or directory</code></td>
+<td>Ensure you run this command from the Ansible project root directory where both <code>playbooks/</code> and <code>roles/</code> directories exist.</td>
+</tr>
+<tr>
+<td><code>No matches found</code></td>
+<td>If the grep returns no output, your playbooks may already be using Ansible 2.3+ syntax (include_tasks, check_mode, become); verify by checking a sample playbook manually.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Install AWX Operator</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>github.com/ansible/awx-operator/config/default?ref<span class="o">=</span><span class="m">2</span>.19.1
@@ -7719,9 +7789,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "awx" in group "awx.ansible.com"</code></strong> — Ensure the AWX Operator CRD is fully deployed by waiting for the operator pod to be ready with <code>kubectl wait --for=condition=ready pod -l control-plane=controller-manager -n awx-operator-system --timeout=300s</code>.
-<strong><code>Error from server (NotFound): secrets "awx-prod-admin-password" not found</code></strong> — Wait for the AWX instance to finish initializing (typically 2-3 minutes) before retrieving the secret; check status with <code>kubectl get awx -n awx</code>.
-<strong><code>error: unable to recognize "STDIN": no matches for kind "AWX" in version "awx.ansible.com/v1beta1"</code></strong> — Verify the operator deployment completed successfully and the CRD is registered with <code>kubectl get crd | grep awx</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "awx" in group "awx.ansible.com"</code></td>
+<td>Ensure the AWX Operator CRD is fully deployed by waiting for the operator pod to be ready with <code>kubectl wait --for=condition=ready pod -l control-plane=controller-manager -n awx-operator-system --timeout=300s</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): secrets "awx-prod-admin-password" not found</code></td>
+<td>Wait for the AWX instance to finish initializing (typically 2-3 minutes) before retrieving the secret; check status with <code>kubectl get awx -n awx</code>.</td>
+</tr>
+<tr>
+<td><code>error: unable to recognize "STDIN": no matches for kind "AWX" in version "awx.ansible.com/v1beta1"</code></td>
+<td>Verify the operator deployment completed successfully and the CRD is registered with <code>kubectl get crd | grep awx</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Update operator version — instance CR stays unchanged</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>github.com/ansible/awx-operator/config/default?ref<span class="o">=</span>&lt;new_version&gt;
@@ -7741,8 +7830,24 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to recognize "github.com/awx-operator/config/default?ref=&lt;new_version&gt;": no matches for kind "Kustomization" in version "kustomize.config.k8s.io/v1beta1"</code></strong> — Ensure the kustomization.yaml file exists in the remote repository and the ref parameter points to a valid git tag or branch.
-<strong><code>error: timed out waiting for the condition</code></strong> — Check pod events with <code>kubectl describe pod -n awx</code> and verify sufficient cluster resources; the rollout may be blocked by image pull errors or resource constraints.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to recognize "github.com/awx-operator/config/default?ref=&lt;new_version&gt;": no matches for kind "Kustomization" in version "kustomize.config.k8s.io/v1beta1"</code></td>
+<td>Ensure the kustomization.yaml file exists in the remote repository and the ref parameter points to a valid git tag or branch.</td>
+</tr>
+<tr>
+<td><code>error: timed out waiting for the condition</code></td>
+<td>Check pod events with <code>kubectl describe pod -n awx</code> and verify sufficient cluster resources; the rollout may be blocked by image pull errors or resource constraints.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Create service account</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>-m<span class="w"> </span>-d<span class="w"> </span>/home/ansible<span class="w"> </span>ansible
@@ -7800,7 +7905,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

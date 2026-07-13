@@ -9242,9 +9242,28 @@ Authentication reference covering Authentication Sources, Configuring Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip certificate verification (already present in example, but ensure it's not removed).
-<strong><code>jq: parse error: Cannot index string with string "token"</code></strong> — Verify the authentication response is valid JSON and credentials are correct; check that the API endpoint and password are accurate.
-<strong><code>curl: (401) Unauthorized</code></strong> — Ensure the token variable is properly set by running <code>echo $TOKEN</code> to verify it's not empty, and confirm the token hasn't expired (tokens are valid for 30 minutes).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip certificate verification (already present in example, but ensure it's not removed).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index string with string "token"</code></td>
+<td>Verify the authentication response is valid JSON and credentials are correct; check that the API endpoint and password are accurate.</td>
+</tr>
+<tr>
+<td><code>curl: (401) Unauthorized</code></td>
+<td>Ensure the token variable is properly set by running <code>echo $TOKEN</code> to verify it's not empty, and confirm the token hasn't expired (tokens are valid for 30 minutes).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Basic authentication (scripts and monitoring):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
@@ -9287,9 +9306,28 @@ Authentication reference covering Authentication Sources, Configuring Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification, or import the vROps certificate into your CA bundle.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify the API endpoint is correct and the vROps service is running; check with <code>curl -sk -u 'admin:&lt;password&gt;' "https://vrops-prod-01.example.local/suite-api/api/about"</code> first.
-<strong><code>401 Unauthorized</code></strong> — Confirm the admin password is correct and the user account has API access permissions in vROps.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification, or import the vROps certificate into your CA bundle.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Verify the API endpoint is correct and the vROps service is running; check with <code>curl -sk -u 'admin:&lt;password&gt;' "https://vrops-prod-01.example.local/suite-api/api/about"</code> first.</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Confirm the admin password is correct and the user account has API access permissions in vROps.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>For AD-authenticated API calls, include <code>authSource</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -9302,9 +9340,28 @@ Authentication reference covering Authentication Sources, Configuring Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl command to skip SSL verification (already present; if error persists, verify the FQDN matches the certificate CN).
-<strong><code>jq: parse error: Cannot index null with string "token"</code></strong> — Verify credentials are correct and the authentication endpoint is accessible; check the actual response with <code>curl -sk ... | jq '.'</code> to see the error message.
-<strong><code>command not found: jq</code></strong> — Install jq with <code>apt-get install jq</code> (Debian/Ubuntu) or <code>yum install jq</code> (RHEL/CentOS).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl command to skip SSL verification (already present; if error persists, verify the FQDN matches the certificate CN).</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index null with string "token"</code></td>
+<td>Verify credentials are correct and the authentication endpoint is accessible; check the actual response with <code>curl -sk ... | jq '.'</code> to see the error message.</td>
+</tr>
+<tr>
+<td><code>command not found: jq</code></td>
+<td>Install jq with <code>apt-get install jq</code> (Debian/Ubuntu) or <code>yum install jq</code> (RHEL/CentOS).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="token-expiry-and-rotation">Token Expiry and Rotation<a class="headerlink" href="#token-expiry-and-rotation" title="Permanent link">&para;</a></h2>
@@ -9337,8 +9394,24 @@ Authentication reference covering Authentication Sources, Configuring Active Dir
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl (already present) or import the vROps certificate into your system CA bundle with <code>update-ca-certificates</code>.
-<strong><code>jq: parse error: Cannot index string with string "token"</code></strong> — Verify the API endpoint is correct and the credentials in <code>$VROPS_USER</code> and <code>$VROPS_PASS</code> are set; test with <code>curl -sk https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire -d '{"username":"admin","password":"test","authSource":"Local"}' | jq .</code></p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl (already present) or import the vROps certificate into your system CA bundle with <code>update-ca-certificates</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index string with string "token"</code></td>
+<td>Verify the API endpoint is correct and the credentials in <code>$VROPS_USER</code> and <code>$VROPS_PASS</code> are set; test with <code>curl -sk https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire -d '{"username":"admin","password":"test","authSource":"Local"}' | jq .</code></td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
@@ -9410,7 +9483,7 @@ Authentication reference covering Authentication Sources, Configuring Active Dir
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

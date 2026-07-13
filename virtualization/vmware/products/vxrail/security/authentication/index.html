@@ -10093,9 +10093,28 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip SSL verification (already present in the example, but ensure it's not removed in production use with proper CA certificates).
-<strong><code>{"error": "401 Unauthorized", "message": "Invalid credentials"}</code></strong> — Verify the base64-encoded credentials are correct by decoding them with <code>echo 'OldPassword1!' | base64</code> and confirm the old password matches the current mystic account password.
-<strong><code>{"error": "400 Bad Request", "message": "Password does not meet complexity requirements"}</code></strong> — Ensure the new password meets VxRail's policy (minimum 8 characters, uppercase, lowercase, number, and special character).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip SSL verification (already present in the example, but ensure it's not removed in production use with proper CA certificates).</td>
+</tr>
+<tr>
+<td><code>{"error": "401 Unauthorized", "message": "Invalid credentials"}</code></td>
+<td>Verify the base64-encoded credentials are correct by decoding them with <code>echo 'OldPassword1!' | base64</code> and confirm the old password matches the current mystic account password.</td>
+</tr>
+<tr>
+<td><code>{"error": "400 Bad Request", "message": "Password does not meet complexity requirements"}</code></td>
+<td>Ensure the new password meets VxRail's policy (minimum 8 characters, uppercase, lowercase, number, and special character).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>The <code>mystic</code> account has full administrative access including LCM trigger, cluster configuration changes, and support uploads. Treat it as a privileged account with corresponding vault and audit controls.</p>
 <hr />
@@ -10176,9 +10195,28 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>RACADM.1.1.5461 - IPMI command failed</code></strong> — Ensure the iDRAC service is running with <code>systemctl status idrac</code> and that you have local root or iDRAC administrative privileges.
-<strong><code>ERROR: Unable to parse the object value</code></strong> — Use a properly quoted password string without unescaped special characters, or wrap the password in single quotes if it contains shell metacharacters.
-<strong><code>Access Denied</code></strong> — Verify you are running racadm as root or with sudo, as password changes require administrative credentials on the iDRAC.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RACADM.1.1.5461 - IPMI command failed</code></td>
+<td>Ensure the iDRAC service is running with <code>systemctl status idrac</code> and that you have local root or iDRAC administrative privileges.</td>
+</tr>
+<tr>
+<td><code>ERROR: Unable to parse the object value</code></td>
+<td>Use a properly quoted password string without unescaped special characters, or wrap the password in single quotes if it contains shell metacharacters.</td>
+</tr>
+<tr>
+<td><code>Access Denied</code></td>
+<td>Verify you are running racadm as root or with sudo, as password changes require administrative credentials on the iDRAC.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Change via iDRAC web UI:</strong> iDRAC UI → iDRAC Settings → Users → root → Edit</p>
 <h3 id="idrac-ldap-for-centralised-authentication">iDRAC LDAP for Centralised Authentication<a class="headerlink" href="#idrac-ldap-for-centralised-authentication" title="Permanent link">&para;</a></h3>
@@ -10207,9 +10245,28 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>RACADM: Error: LDAP Server is not reachable</code></strong> — Verify network connectivity to the LDAP server and confirm the hostname/IP resolves correctly from the iDRAC management network.
-<strong><code>RACADM: Error: Invalid BindDN or BindPassword</code></strong> — Test the service account credentials directly against the LDAP server using ldapsearch or an LDAP client to confirm they are correct.
-<strong><code>RACADM: Error: LDAPRoleGroup.1.DN does not exist in LDAP directory</code></strong> — Verify the AD group DN exists and is accessible by the bind account using an LDAP query tool.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RACADM: Error: LDAP Server is not reachable</code></td>
+<td>Verify network connectivity to the LDAP server and confirm the hostname/IP resolves correctly from the iDRAC management network.</td>
+</tr>
+<tr>
+<td><code>RACADM: Error: Invalid BindDN or BindPassword</code></td>
+<td>Test the service account credentials directly against the LDAP server using ldapsearch or an LDAP client to confirm they are correct.</td>
+</tr>
+<tr>
+<td><code>RACADM: Error: LDAPRoleGroup.1.DN does not exist in LDAP directory</code></td>
+<td>Verify the AD group DN exists and is accessible by the bind account using an LDAP query tool.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>iDRAC privilege values:</strong></p>
 <table>
@@ -10438,7 +10495,7 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

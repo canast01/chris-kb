@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Jira — Common Issues · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Jira — Common Issues", "url": "https://chrisanastasiadis.com/itsm/jira/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Jira — Common Issues", "url": "https://chrisanastasiadis.com/itsm/jira/troubleshooting/common-issues/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7335,9 +7335,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pgrep: command not found</code></strong> — Install procps-ng package with <code>apt-get install procps-ng</code> or <code>yum install procps-ng</code>.
-<strong><code>jcmd: command not found</code></strong> — Ensure JAVA_HOME is set correctly and jcmd is in PATH; typically found in <code>$JAVA_HOME/bin/jcmd</code>.
-<strong><code>Permission denied</code></strong> — Run the commands as the jira user or with sudo: <code>sudo -u jira jcmd &lt;PID&gt; GC.heap_info</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pgrep: command not found</code></td>
+<td>Install procps-ng package with <code>apt-get install procps-ng</code> or <code>yum install procps-ng</code>.</td>
+</tr>
+<tr>
+<td><code>jcmd: command not found</code></td>
+<td>Ensure JAVA_HOME is set correctly and jcmd is in PATH; typically found in <code>$JAVA_HOME/bin/jcmd</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the commands as the jira user or with sudo: <code>sudo -u jira jcmd &lt;PID&gt; GC.heap_info</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add to setenv.sh JVM_SUPPORT_RECOMMENDED_ARGS</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>-XX:+UseG1GC
@@ -7350,9 +7369,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>setenv.sh: No such file or directory</code></strong> — Verify the JIRA installation path and ensure you're editing the correct setenv.sh file in <code>$JIRA_HOME/bin/</code> or <code>$CATALINA_HOME/bin/</code>.
-<strong><code>Permission denied</code></strong> — Run the editor with appropriate permissions (sudo or as the jira service user) to modify setenv.sh.
-<strong><code>JVM_SUPPORT_RECOMMENDED_ARGS: command not found</code></strong> — Ensure you're appending these values to the existing variable using <code>JVM_SUPPORT_RECOMMENDED_ARGS="$JVM_SUPPORT_RECOMMENDED_ARGS -XX:+UseG1GC ..."</code> rather than treating it as a shell command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setenv.sh: No such file or directory</code></td>
+<td>Verify the JIRA installation path and ensure you're editing the correct setenv.sh file in <code>$JIRA_HOME/bin/</code> or <code>$CATALINA_HOME/bin/</code>.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>Run the editor with appropriate permissions (sudo or as the jira service user) to modify setenv.sh.</td>
+</tr>
+<tr>
+<td><code>JVM_SUPPORT_RECOMMENDED_ARGS: command not found</code></td>
+<td>Ensure you're appending these values to the existing variable using <code>JVM_SUPPORT_RECOMMENDED_ARGS="$JVM_SUPPORT_RECOMMENDED_ARGS -XX:+UseG1GC ..."</code> rather than treating it as a shell command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check DB slow queries during board load (enable slow query log first)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_HOST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
@@ -7401,9 +7439,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ldapsearch: No such file or directory</code></strong> — Install ldap-utils package with <code>apt-get install ldap-utils</code> (Debian/Ubuntu) or <code>yum install openldap-clients</code> (RHEL/CentOS).
-<strong><code>ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839 ref</code></strong> — Verify the service account password in <code>${LDAP_PASSWORD}</code> is correct and the account is not locked in Active Directory.
-<strong><code>javax.naming.CommunicationException: ad.example.com:636</code></strong> — Check network connectivity to the LDAP server with <code>telnet ad.example.com 636</code> and verify firewall rules allow port 636 from the Jira app server.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ldapsearch: No such file or directory</code></td>
+<td>Install ldap-utils package with <code>apt-get install ldap-utils</code> (Debian/Ubuntu) or <code>yum install openldap-clients</code> (RHEL/CentOS).</td>
+</tr>
+<tr>
+<td><code>ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839 ref</code></td>
+<td>Verify the service account password in <code>${LDAP_PASSWORD}</code> is correct and the account is not locked in Active Directory.</td>
+</tr>
+<tr>
+<td><code>javax.naming.CommunicationException: ad.example.com:636</code></td>
+<td>Check network connectivity to the LDAP server with <code>telnet ad.example.com 636</code> and verify firewall rules allow port 636 from the Jira app server.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>keytool<span class="w"> </span>-importcert<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-alias<span class="w"> </span>ldap-server<span class="w"> </span><span class="se">\</span>
@@ -7415,9 +7472,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>keytool error: java.lang.Exception: Input not an X.509 certificate</code></strong> — Verify the certificate file is in PEM or DER format and not corrupted by running <code>openssl x509 -in /tmp/ldap-server.crt -text -noout</code>.
-<strong><code>keytool error: java.io.FileNotFoundException: /usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts (No such file or directory)</code></strong> — Confirm <code>$JAVA_HOME</code> is set correctly with <code>echo $JAVA_HOME</code> and points to a valid JDK installation.
-<strong><code>Certificate already exists with alias &lt;ldap-server&gt;</code></strong> — Remove the existing certificate first with <code>keytool -delete -alias ldap-server -keystore "${JAVA_HOME}/lib/security/cacerts" -storepass changeit</code>, or use a different alias name.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>keytool error: java.lang.Exception: Input not an X.509 certificate</code></td>
+<td>Verify the certificate file is in PEM or DER format and not corrupted by running <code>openssl x509 -in /tmp/ldap-server.crt -text -noout</code>.</td>
+</tr>
+<tr>
+<td><code>keytool error: java.io.FileNotFoundException: /usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts (No such file or directory)</code></td>
+<td>Confirm <code>$JAVA_HOME</code> is set correctly with <code>echo $JAVA_HOME</code> and points to a valid JDK installation.</td>
+</tr>
+<tr>
+<td><code>Certificate already exists with alias &lt;ldap-server&gt;</code></td>
+<td>Remove the existing certificate first with <code>keytool -delete -alias ldap-server -keystore "${JAVA_HOME}/lib/security/cacerts" -storepass changeit</code>, or use a different alias name.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check workflow for issue type</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7460,9 +7536,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify the JIRA_URL environment variable is correct and the Jira server is running and accessible from this host.
-<strong><code>jq: command not found</code></strong> — Install jq (<code>apt-get install jq</code> or <code>yum install jq</code>) or use <code>python3 -m json.tool</code> as shown in the example.
-<strong><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></strong> — Confirm the Jira installation path and check the actual log location with <code>find /opt/atlassian -name "atlassian-jira.log"</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></td>
+<td>Verify the JIRA_URL environment variable is correct and the Jira server is running and accessible from this host.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install jq (<code>apt-get install jq</code> or <code>yum install jq</code>) or use <code>python3 -m json.tool</code> as shown in the example.</td>
+</tr>
+<tr>
+<td><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></td>
+<td>Confirm the Jira installation path and check the actual log location with <code>find /opt/atlassian -name "atlassian-jira.log"</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check outgoing mail configuration</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7503,9 +7598,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></strong> — Verify <code>${JIRA_URL}</code> is correct and Jira service is running with <code>systemctl status jira</code>.
-<strong><code>telnet: Unable to connect to remote host: Connection timed out</code></strong> — Check firewall rules allow outbound traffic on port 587 and SMTP server hostname is resolvable with <code>nslookup smtp.example.com</code>.
-<strong><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></strong> — Confirm Jira installation path and check actual log location with <code>find /opt/atlassian -name "atlassian-jira.log" 2&gt;/dev/null</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.example.com port 443: Connection refused</code></td>
+<td>Verify <code>${JIRA_URL}</code> is correct and Jira service is running with <code>systemctl status jira</code>.</td>
+</tr>
+<tr>
+<td><code>telnet: Unable to connect to remote host: Connection timed out</code></td>
+<td>Check firewall rules allow outbound traffic on port 587 and SMTP server hostname is resolvable with <code>nslookup smtp.example.com</code>.</td>
+</tr>
+<tr>
+<td><code>grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory</code></td>
+<td>Confirm Jira installation path and check actual log location with <code>find /opt/atlassian -name "atlassian-jira.log" 2&gt;/dev/null</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check index errors in log</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;IndexException\|CorruptIndexException\|LockObtainFailedException&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7533,9 +7647,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>LockObtainFailedException: Lock held by another process</code></strong> — Stop the JIRA service, remove <code>/var/atlassian/application-data/jira/caches/indexes/write.lock</code>, then restart the service.
-<strong><code>CorruptIndexException: _0.cfs (No such file or directory)</code></strong> — Delete the corrupted index directory and trigger a full re-index via JIRA Administration &gt; System &gt; Indexing &gt; Re-Index All Issues.
-<strong><code>Permission denied</code> when listing indexes directory</strong> — Ensure the jira user owns the indexes directory with <code>sudo chown -R jira:jira /var/atlassian/application-data/jira/caches/indexes/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LockObtainFailedException: Lock held by another process</code></td>
+<td>Stop the JIRA service, remove <code>/var/atlassian/application-data/jira/caches/indexes/write.lock</code>, then restart the service.</td>
+</tr>
+<tr>
+<td><code>CorruptIndexException: _0.cfs (No such file or directory)</code></td>
+<td>Delete the corrupted index directory and trigger a full re-index via JIRA Administration &gt; System &gt; Indexing &gt; Re-Index All Issues.</td>
+</tr>
+<tr>
+<td><code>Permission denied</code> when listing indexes directory<code>| Ensure the jira user owns the indexes directory with</code>sudo chown -R jira:jira /var/atlassian/application-data/jira/caches/indexes/`.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Stop Jira</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
@@ -7579,9 +7712,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to jira.internal port 8080: Connection refused</code></strong> — Wait 30–60 seconds for Jira to fully start before triggering reindex; check <code>systemctl status jira</code> to confirm the service is running.
-<strong><code>error: JIRA_USER or JIRA_TOKEN not set</code></strong> — Export the environment variables before running the curl commands: <code>export JIRA_USER="admin" JIRA_TOKEN="your-api-token"</code>.
-<strong><code>"errorMessages": ["You do not have permission to administer Jira"]</code></strong> — Ensure the JIRA_USER account has Jira System Administrator permissions in the user directory.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to jira.internal port 8080: Connection refused</code></td>
+<td>Wait 30–60 seconds for Jira to fully start before triggering reindex; check <code>systemctl status jira</code> to confirm the service is running.</td>
+</tr>
+<tr>
+<td><code>error: JIRA_USER or JIRA_TOKEN not set</code></td>
+<td>Export the environment variables before running the curl commands: <code>export JIRA_USER="admin" JIRA_TOKEN="your-api-token"</code>.</td>
+</tr>
+<tr>
+<td><code>"errorMessages": ["You do not have permission to administer Jira"]</code></td>
+<td>Ensure the JIRA_USER account has Jira System Administrator permissions in the user directory.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check plugin-related errors</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;plugin\|app\|addon\|atlassian&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7647,7 +7799,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

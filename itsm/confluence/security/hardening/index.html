@@ -81,7 +81,7 @@
   <meta name="twitter:title" content="Confluence — Hardening · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Confluence — Hardening", "url": "https://chrisanastasiadis.com/itsm/confluence/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-06-29", "datePublished": "2026-05-08"}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Confluence — Hardening", "url": "https://chrisanastasiadis.com/itsm/confluence/security/hardening/", "isPartOf": {"@type": "WebSite", "name": "Chris KB", "url": "https://chrisanastasiadis.com/"}, "description": "Christos Anastasiadis — Infrastructure Engineering Knowledge Base", "dateModified": "2026-07-13", "datePublished": "2026-05-08"}</script>
   
 
   </head>
@@ -7400,9 +7400,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl to skip certificate verification, or import the self-signed cert into your system's CA bundle.
-<strong><code>jq: command not found</code></strong> — Install <code>jq</code> package (<code>apt-get install jq</code> or <code>yum install jq</code>) as an alternative to <code>python3 -m json.tool</code> for better JSON parsing.
-<strong><code>HTTP 401 Unauthorized</code></strong> — Verify the admin credentials are correct and the user has API access permissions in Confluence administration settings.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl to skip certificate verification, or import the self-signed cert into your system's CA bundle.</td>
+</tr>
+<tr>
+<td><code>jq: command not found</code></td>
+<td>Install <code>jq</code> package (<code>apt-get install jq</code> or <code>yum install jq</code>) as an alternative to <code>python3 -m json.tool</code> for better JSON parsing.</td>
+</tr>
+<tr>
+<td><code>HTTP 401 Unauthorized</code></td>
+<td>Verify the admin credentials are correct and the user has API access permissions in Confluence administration settings.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable automatic plugin updates in production (require manual review)</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Administration &gt; Manage Apps &gt; Settings &gt; Disable automatic updates</span>
@@ -7471,9 +7490,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to curl or import the self-signed certificate into the system CA bundle.
-<strong><code>jq: parse error: Invalid numeric literal at line 1 column 10</code></strong> — Verify the API response is valid JSON by testing <code>curl -u admin:password "https://confluence.example.local/rest/api/audit?limit=10"</code> directly first.
-<strong><code>rsyslog: imfile: cannot open file '/var/log/confluence-audit-export.json'</code></strong> — Ensure the file exists and rsyslog process has read permissions; create it with <code>touch /var/log/confluence-audit-export.json &amp;&amp; chmod 644 /var/log/confluence-audit-export.json</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to curl or import the self-signed certificate into the system CA bundle.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid numeric literal at line 1 column 10</code></td>
+<td>Verify the API response is valid JSON by testing <code>curl -u admin:password "https://confluence.example.local/rest/api/audit?limit=10"</code> directly first.</td>
+</tr>
+<tr>
+<td><code>rsyslog: imfile: cannot open file '/var/log/confluence-audit-export.json'</code></td>
+<td>Ensure the file exists and rsyslog process has read permissions; create it with <code>touch /var/log/confluence-audit-export.json &amp;&amp; chmod 644 /var/log/confluence-audit-export.json</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># /opt/atlassian/confluence/confluence/WEB-INF/urlrewrite.xml</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Restrict access to admin URLs from management IPs only</span>
@@ -7515,9 +7553,28 @@
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>setenv.sh: Permission denied</code></strong> — Run <code>chmod +x /opt/atlassian/confluence/bin/setenv.sh</code> to make the script executable before sourcing it.
-<strong><code>server.xml: No such file or directory</code></strong> — Verify Confluence installation path with <code>ls -la /opt/atlassian/confluence/conf/</code> and confirm the correct CONFLUENCE_HOME directory.
-<strong><code>Tomcat fails to start after server.xml edit</code></strong> — Validate XML syntax with <code>xmllint /opt/atlassian/confluence/conf/server.xml</code> before restarting the service.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setenv.sh: Permission denied</code></td>
+<td>Run <code>chmod +x /opt/atlassian/confluence/bin/setenv.sh</code> to make the script executable before sourcing it.</td>
+</tr>
+<tr>
+<td><code>server.xml: No such file or directory</code></td>
+<td>Verify Confluence installation path with <code>ls -la /opt/atlassian/confluence/conf/</code> and confirm the correct CONFLUENCE_HOME directory.</td>
+</tr>
+<tr>
+<td><code>Tomcat fails to start after server.xml edit</code></td>
+<td>Validate XML syntax with <code>xmllint /opt/atlassian/confluence/conf/server.xml</code> before restarting the service.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Run Confluence as a dedicated non-root service account</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Create service account</span>
@@ -7575,7 +7632,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 14:19:48 UTC"><span class="timeago" datetime="2026-06-29T14:19:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 14:19:48 UTC">2026-06-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -8705,8 +8705,24 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: entry doesn't exist</code></strong> — Ensure the public key has been added to the admin account using <code>security login publickey create</code> before attempting deletion.
-<strong><code>Error: Cannot delete the only authentication method</code></strong> — Verify the public key is working via SSH before deleting the password method, or add an additional authentication method first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: entry doesn't exist</code></td>
+<td>Ensure the public key has been added to the admin account using <code>security login publickey create</code> before attempting deletion.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot delete the only authentication method</code></td>
+<td>Verify the public key is working via SSH before deleting the password method, or add an additional authentication method first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="lock-diagnostic-accounts">Lock Diagnostic Accounts<a class="headerlink" href="#lock-diagnostic-accounts" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Lock the built-in diag account</span>
@@ -8724,8 +8740,24 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "diag" is not a valid username for Vserver "prod-cluster"</code></strong> — Verify the cluster name with <code>cluster show</code> and ensure the diag account exists on that specific Vserver.
-<strong><code>Error: This operation is not permitted: User "admin" does not have permission to execute the command "security login lock"</code></strong> — Confirm your user account has the "admin" or equivalent security role by running <code>security login show -username &lt;your-user&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "diag" is not a valid username for Vserver "prod-cluster"</code></td>
+<td>Verify the cluster name with <code>cluster show</code> and ensure the diag account exists on that specific Vserver.</td>
+</tr>
+<tr>
+<td><code>Error: This operation is not permitted: User "admin" does not have permission to execute the command "security login lock"</code></td>
+<td>Confirm your user account has the "admin" or equivalent security role by running <code>security login show -username &lt;your-user&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="session-timeout">Session Timeout<a class="headerlink" href="#session-timeout" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Set CLI SSH idle timeout to 10 minutes (600 seconds)</span>
@@ -8742,8 +8774,24 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "security session timeout modify" is not a valid command.</code></strong> — Verify you are running ONTAP 9.1 or later, as this command was introduced in that version.
-<strong><code>Error: Invalid value "600" for parameter "timeout".</code></strong> — Use a value between 0 and 86400 seconds; 600 seconds is valid, so check for typos or ensure the parameter name matches your ONTAP version exactly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "security session timeout modify" is not a valid command.</code></td>
+<td>Verify you are running ONTAP 9.1 or later, as this command was introduced in that version.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid value "600" for parameter "timeout".</code></td>
+<td>Use a value between 0 and 86400 seconds; 600 seconds is valid, so check for typos or ensure the parameter name matches your ONTAP version exactly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="account-lockout-policy">Account Lockout Policy<a class="headerlink" href="#account-lockout-policy" title="Permanent link">&para;</a></h3>
 <p>ONTAP does not have a configurable account lockout after N failed attempts in the same way as Active Directory. Enforce this compensating control:</p>
@@ -8782,9 +8830,28 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid value for "-min-protocol-version": "TLSv1.2"</code></strong> — Verify the exact protocol version string supported by your ONTAP version (may be <code>TLSv1.2</code> or <code>TLSV1_2</code> depending on release); check the admin guide for valid enum values.
-<strong><code>Error: command not found: openssl</code></strong> — Install openssl on your management workstation or use a dedicated SSL testing tool; the ONTAP cluster itself does not require openssl for this configuration.
-<strong><code>Error: Connection refused</code></strong> — Ensure the cluster management IP is correct and reachable from your test host, and verify the HTTPS management interface is enabled with <code>network interface show -vserver &lt;cluster&gt; -role mgmt</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid value for "-min-protocol-version": "TLSv1.2"</code></td>
+<td>Verify the exact protocol version string supported by your ONTAP version (may be <code>TLSv1.2</code> or <code>TLSV1_2</code> depending on release); check the admin guide for valid enum values.</td>
+</tr>
+<tr>
+<td><code>Error: command not found: openssl</code></td>
+<td>Install openssl on your management workstation or use a dedicated SSL testing tool; the ONTAP cluster itself does not require openssl for this configuration.</td>
+</tr>
+<tr>
+<td><code>Error: Connection refused</code></td>
+<td>Ensure the cluster management IP is correct and reachable from your test host, and verify the HTTPS management interface is enabled with <code>network interface show -vserver &lt;cluster&gt; -role mgmt</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ssh-cipher-hardening">SSH Cipher Hardening<a class="headerlink" href="#ssh-cipher-hardening" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Restrict SSH to strong ciphers (remove CBC mode ciphers)</span>
@@ -8804,8 +8871,24 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Vserver "&lt;cluster-name&gt;" does not exist</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster name from <code>cluster identity show</code>.
-<strong><code>Error: Invalid cipher name "aes256-ctr"</code></strong> — Verify cipher names match your ONTAP version's supported list using <code>security ssh show -fields ciphers</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Vserver "&lt;cluster-name&gt;" does not exist</code></td>
+<td>Replace <code>&lt;cluster-name&gt;</code> with the actual cluster name from <code>cluster identity show</code>.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid cipher name "aes256-ctr"</code></td>
+<td>Verify cipher names match your ONTAP version's supported list using <code>security ssh show -fields ciphers</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="disable-legacy-protocols">Disable Legacy Protocols<a class="headerlink" href="#disable-legacy-protocols" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Disable Telnet</span>
@@ -8838,8 +8921,24 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "telnet" is not a valid application name</code></strong> — Use the exact application name from <code>security protocol show</code> output; verify spelling matches ONTAP's protocol list.
-<strong><code>Error: This operation is not permitted: admin role lacks "security" API access</code></strong> — Ensure your user account has the "admin" or equivalent security management role assigned.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "telnet" is not a valid application name</code></td>
+<td>Use the exact application name from <code>security protocol show</code> output; verify spelling matches ONTAP's protocol list.</td>
+</tr>
+<tr>
+<td><code>Error: This operation is not permitted: admin role lacks "security" API access</code></td>
+<td>Ensure your user account has the "admin" or equivalent security management role assigned.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="disable-smb1">Disable SMB1<a class="headerlink" href="#disable-smb1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Disable SMB1 (vulnerable to EternalBlue and similar exploits)</span>
@@ -8865,9 +8964,28 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "prod-svm-01" is not a valid vserver name</code></strong> — Verify the SVM name with <code>vserver show</code> and replace <code>&lt;svm&gt;</code> with the correct vserver name.
-<strong><code>Error: CIFS is not configured on vserver "prod-svm-01"</code></strong> — Enable CIFS on the SVM first with <code>vserver cifs create -vserver &lt;svm&gt; -cifs-server &lt;netbios-name&gt; -domain &lt;domain&gt;</code>.
-<strong><code>Error: This operation is not permitted: SMB1 is required for legacy clients</code></strong> — If legacy clients require SMB1, document the exception and use <code>-smb1-enabled true</code> instead, or plan a client upgrade.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "prod-svm-01" is not a valid vserver name</code></td>
+<td>Verify the SVM name with <code>vserver show</code> and replace <code>&lt;svm&gt;</code> with the correct vserver name.</td>
+</tr>
+<tr>
+<td><code>Error: CIFS is not configured on vserver "prod-svm-01"</code></td>
+<td>Enable CIFS on the SVM first with <code>vserver cifs create -vserver &lt;svm&gt; -cifs-server &lt;netbios-name&gt; -domain &lt;domain&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: This operation is not permitted: SMB1 is required for legacy clients</code></td>
+<td>If legacy clients require SMB1, document the exception and use <code>-smb1-enabled true</code> instead, or plan a client upgrade.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="snmp-hardening">SNMP Hardening<a class="headerlink" href="#snmp-hardening" title="Permanent link">&para;</a></h2>
@@ -8934,9 +9052,28 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: entry already exists.</code></strong> — Verify the community string or user does not already exist before creation; use <code>system snmp community show</code> or <code>system snmp user show</code> to check.
-<strong><code>Error: Invalid IP address &lt;monitoring-server-ip&gt;</code></strong> — Replace the placeholder with a valid IPv4 or IPv6 address in dotted-decimal or colon-hexadecimal notation.
-<strong><code>Error: Authentication failed: invalid password complexity</code></strong> — Ensure both <code>&lt;strong-auth-passphrase&gt;</code> and <code>&lt;strong-priv-passphrase&gt;</code> meet minimum length (8 characters) and complexity requirements.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: entry already exists.</code></td>
+<td>Verify the community string or user does not already exist before creation; use <code>system snmp community show</code> or <code>system snmp user show</code> to check.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid IP address &lt;monitoring-server-ip&gt;</code></td>
+<td>Replace the placeholder with a valid IPv4 or IPv6 address in dotted-decimal or colon-hexadecimal notation.</td>
+</tr>
+<tr>
+<td><code>Error: Authentication failed: invalid password complexity</code></td>
+<td>Ensure both <code>&lt;strong-auth-passphrase&gt;</code> and <code>&lt;strong-priv-passphrase&gt;</code> meet minimum length (8 characters) and complexity requirements.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="autosupport-security">AutoSupport Security<a class="headerlink" href="#autosupport-security" title="Permanent link">&para;</a></h2>
@@ -9015,9 +9152,28 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Proxy URL is invalid or unreachable</code></strong> — Verify the proxy hostname resolves and is reachable from the cluster management LIF using <code>network ping -vserver Cluster -destination proxy.example.local</code>.
-<strong><code>Error: AutoSupport check show reports FAILED for HTTPS Connectivity</code></strong> — Confirm port 443 is not blocked to NetApp AutoSupport endpoints by checking firewall rules and running <code>network traceroute -destination support.netapp.com</code>.
-<strong><code>Error: autosupport history show displays status: sent-failed</code></strong> — Check the AutoSupport destination email address is correct and review logs with <code>autosupport history show -node &lt;node&gt; -fields subject,status,error-detail</code> to identify the delivery failure reason.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Proxy URL is invalid or unreachable</code></td>
+<td>Verify the proxy hostname resolves and is reachable from the cluster management LIF using <code>network ping -vserver Cluster -destination proxy.example.local</code>.</td>
+</tr>
+<tr>
+<td><code>Error: AutoSupport check show reports FAILED for HTTPS Connectivity</code></td>
+<td>Confirm port 443 is not blocked to NetApp AutoSupport endpoints by checking firewall rules and running <code>network traceroute -destination support.netapp.com</code>.</td>
+</tr>
+<tr>
+<td><code>Error: autosupport history show displays status: sent-failed</code></td>
+<td>Check the AutoSupport destination email address is correct and review logs with <code>autosupport history show -node &lt;node&gt; -fields subject,status,error-detail</code> to identify the delivery failure reason.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="audit-and-siem-forwarding">Audit and SIEM Forwarding<a class="headerlink" href="#audit-and-siem-forwarding" title="Permanent link">&para;</a></h2>
@@ -9070,8 +9226,24 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Invalid time range format "24h"</code></strong> — Use valid ONTAP time format such as "2024-01-14T00:00:00" or specify "-time-range -24h" with a leading dash for relative time.
-<strong><code>Error: Access denied for user 'readonly' to command 'security audit log show'</code></strong> — Ensure the user account has the "admin" or "security" role assigned via <code>security login modify</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Invalid time range format "24h"</code></td>
+<td>Use valid ONTAP time format such as "2024-01-14T00:00:00" or specify "-time-range -24h" with a leading dash for relative time.</td>
+</tr>
+<tr>
+<td><code>Error: Access denied for user 'readonly' to command 'security audit log show'</code></td>
+<td>Ensure the user account has the "admin" or "security" role assigned via <code>security login modify</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ems-syslog-forwarding-to-siem">EMS Syslog Forwarding to SIEM<a class="headerlink" href="#ems-syslog-forwarding-to-siem" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Create a syslog destination for your SIEM</span>
@@ -9124,9 +9296,28 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Syslog server address is not reachable</code></strong> — Verify network connectivity to the SIEM server IP and ensure the firewall permits syslog traffic (UDP 514 by default).
-<strong><code>Error: "critical-errors" does not exist</code></strong> — Create the filter before linking it to a notification destination using the event filter create command.
-<strong><code>Error: Destination "siem-dest" does not exist</code></strong> — Create the syslog destination first with event notification destination create before referencing it in the notification.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Syslog server address is not reachable</code></td>
+<td>Verify network connectivity to the SIEM server IP and ensure the firewall permits syslog traffic (UDP 514 by default).</td>
+</tr>
+<tr>
+<td><code>Error: "critical-errors" does not exist</code></td>
+<td>Create the filter before linking it to a notification destination using the event filter create command.</td>
+</tr>
+<tr>
+<td><code>Error: Destination "siem-dest" does not exist</code></td>
+<td>Create the syslog destination first with event notification destination create before referencing it in the notification.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="file-access-audit-ontap-audit-framework">File Access Audit (ONTAP Audit Framework)<a class="headerlink" href="#file-access-audit-ontap-audit-framework" title="Permanent link">&para;</a></h3>
 <p>For NAS environments requiring file access audit logging (SOX, HIPAA, PCI-DSS):</p>
@@ -9177,9 +9368,28 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: destination path "/audit_logs" does not exist</code></strong> — Create the volume and mount it at the junction path before configuring the audit destination.
-<strong><code>Error: vserver audit create: command failed: Audit is already enabled on vserver "prod-svm-01"</code></strong> — Run <code>vserver audit delete -vserver &lt;svm&gt;</code> first to remove the existing audit configuration, then recreate it.
-<strong><code>Error: Invalid event type "file-ops"</code></strong> — Use valid event types such as <code>file-ops</code>, <code>cifs-logon-logoff</code>, <code>cap-staging</code>, or <code>file-share-access</code> separated by commas without spaces.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: destination path "/audit_logs" does not exist</code></td>
+<td>Create the volume and mount it at the junction path before configuring the audit destination.</td>
+</tr>
+<tr>
+<td><code>Error: vserver audit create: command failed: Audit is already enabled on vserver "prod-svm-01"</code></td>
+<td>Run <code>vserver audit delete -vserver &lt;svm&gt;</code> first to remove the existing audit configuration, then recreate it.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid event type "file-ops"</code></td>
+<td>Use valid event types such as <code>file-ops</code>, <code>cifs-logon-logoff</code>, <code>cap-staging</code>, or <code>file-share-access</code> separated by commas without spaces.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="rbac-hardening-for-service-accounts">RBAC Hardening for Service Accounts<a class="headerlink" href="#rbac-hardening-for-service-accounts" title="Permanent link">&para;</a></h2>
@@ -9264,9 +9474,28 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: "monitoring-ro" already exists.</code></strong> — Drop the existing role with <code>security login role delete -role monitoring-ro -cmddirname DEFAULT</code> before recreating it, or use a different role name.
-<strong><code>Error: Invalid vserver name "&lt;cluster-name&gt;"</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster name (e.g., <code>cluster1</code>) or omit the <code>-vserver</code> parameter to use the admin vserver.
-<strong><code>Error: User "svc-monitoring" already exists.</code></strong> — Delete the existing user with <code>security login delete -username svc-monitoring -application ssh</code> before recreating it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: "monitoring-ro" already exists.</code></td>
+<td>Drop the existing role with <code>security login role delete -role monitoring-ro -cmddirname DEFAULT</code> before recreating it, or use a different role name.</td>
+</tr>
+<tr>
+<td><code>Error: Invalid vserver name "&lt;cluster-name&gt;"</code></td>
+<td>Replace <code>&lt;cluster-name&gt;</code> with the actual cluster name (e.g., <code>cluster1</code>) or omit the <code>-vserver</code> parameter to use the admin vserver.</td>
+</tr>
+<tr>
+<td><code>Error: User "svc-monitoring" already exists.</code></td>
+<td>Delete the existing user with <code>security login delete -username svc-monitoring -application ssh</code> before recreating it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="snapcenter-backup-role">SnapCenter / Backup Role<a class="headerlink" href="#snapcenter-backup-role" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Create a backup role for SnapCenter or Veeam with snapshot and SnapMirror access</span>
@@ -9306,9 +9535,28 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Role "backup-role" already exists.</code></strong> — Delete the existing role with <code>security login role delete -role backup-role</code> before recreating it.
-<strong><code>"&lt;cluster-name&gt;" is not a valid vserver name.</code></strong> — Replace <code>&lt;cluster-name&gt;</code> with the actual cluster name (e.g., <code>cluster1</code>) or use <code>-vserver *</code> for cluster-scoped access.
-<strong><code>User "svc-snapcenter" already exists.</code></strong> — Use <code>security login delete -username svc-snapcenter -application http</code> to remove the existing user first, or choose a different username.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Role "backup-role" already exists.</code></td>
+<td>Delete the existing role with <code>security login role delete -role backup-role</code> before recreating it.</td>
+</tr>
+<tr>
+<td><code>"&lt;cluster-name&gt;" is not a valid vserver name.</code></td>
+<td>Replace <code>&lt;cluster-name&gt;</code> with the actual cluster name (e.g., <code>cluster1</code>) or use <code>-vserver *</code> for cluster-scoped access.</td>
+</tr>
+<tr>
+<td><code>User "svc-snapcenter" already exists.</code></td>
+<td>Use <code>security login delete -username svc-snapcenter -application http</code> to remove the existing user first, or choose a different username.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="compliance-mode-and-audit-readiness">Compliance Mode and Audit Readiness<a class="headerlink" href="#compliance-mode-and-audit-readiness" title="Permanent link">&para;</a></h2>
@@ -9403,7 +9651,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

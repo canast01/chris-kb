@@ -7228,9 +7228,28 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to localhost port 11434: Connection refused</code></strong> — Ensure Ollama service is running with <code>systemctl start ollama</code> and listening on port 11434.
-<strong><code>jq: parse error: Cannot index object with string "details"</code></strong> — The API response structure differs; use <code>curl http://localhost:11434/api/show -d '{"name":"llama3.1:8b"}' | jq '.'</code> to inspect the full response first.
-<strong><code>Unit ollama.service could not be found</code></strong> — Install and enable the Ollama systemd service, or check logs directly with <code>ollama serve</code> in foreground mode instead of journalctl.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to localhost port 11434: Connection refused</code></td>
+<td>Ensure Ollama service is running with <code>systemctl start ollama</code> and listening on port 11434.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index object with string "details"</code></td>
+<td>The API response structure differs; use <code>curl http://localhost:11434/api/show -d '{"name":"llama3.1:8b"}' | jq '.'</code> to inspect the full response first.</td>
+</tr>
+<tr>
+<td><code>Unit ollama.service could not be found</code></td>
+<td>Install and enable the Ollama systemd service, or check logs directly with <code>ollama serve</code> in foreground mode instead of journalctl.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Ollama outputs the number of GPU layers loaded at model start. If <code>num_gpu: 0</code> appears, Ollama is running on CPU only.</p>
 <h2 id="cuda-setup">CUDA Setup<a class="headerlink" href="#cuda-setup" title="Permanent link">&para;</a></h2>
@@ -7263,8 +7282,24 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.</code></strong> — Reinstall the NVIDIA driver with <code>sudo apt install nvidia-driver-535</code> (or appropriate version) and reboot.
-<strong><code>time=2025-01-10T14:32:47.123Z level=ERROR msg="no CUDA-capable device is detected"</code></strong> — Verify GPU visibility with <code>nvidia-smi</code> and ensure <code>CUDA_VISIBLE_DEVICES</code> is not restricting access to all devices.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.</code></td>
+<td>Reinstall the NVIDIA driver with <code>sudo apt install nvidia-driver-535</code> (or appropriate version) and reboot.</td>
+</tr>
+<tr>
+<td><code>time=2025-01-10T14:32:47.123Z level=ERROR msg="no CUDA-capable device is detected"</code></td>
+<td>Verify GPU visibility with <code>nvidia-smi</code> and ensure <code>CUDA_VISIBLE_DEVICES</code> is not restricting access to all devices.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rocm-amd-gpu-setup">ROCm (AMD GPU) Setup<a class="headerlink" href="#rocm-amd-gpu-setup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Install ROCm 6.x (Ubuntu 22.04)</span>
@@ -7308,9 +7343,28 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>dpkg: error processing archive (--unpack): cannot open file '/root/amdgpu-install_6.1.60102-1_all.deb': No such file or directory</code></strong> — Run <code>wget</code> first to download the .deb file, or verify the file exists with <code>ls -la amdgpu-install*.deb</code>.
-<strong><code>usermod: user 'root' is already a member of 'render' group</code></strong> — This is informational when running as root; the command succeeds and the user is already in the required groups.
-<strong><code>rocm-smi: command not found</code></strong> — Ensure ROCm installation completed successfully by running <code>apt-get install rocm-smi</code> explicitly, or verify <code>/opt/rocm/bin</code> is in your PATH with <code>echo $PATH</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dpkg: error processing archive (--unpack): cannot open file '/root/amdgpu-install_6.1.60102-1_all.deb': No such file or directory</code></td>
+<td>Run <code>wget</code> first to download the .deb file, or verify the file exists with <code>ls -la amdgpu-install*.deb</code>.</td>
+</tr>
+<tr>
+<td><code>usermod: user 'root' is already a member of 'render' group</code></td>
+<td>This is informational when running as root; the command succeeds and the user is already in the required groups.</td>
+</tr>
+<tr>
+<td><code>rocm-smi: command not found</code></td>
+<td>Ensure ROCm installation completed successfully by running <code>apt-get install rocm-smi</code> explicitly, or verify <code>/opt/rocm/bin</code> is in your PATH with <code>echo $PATH</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="vram-requirements-by-model-size">VRAM Requirements by Model Size<a class="headerlink" href="#vram-requirements-by-model-size" title="Permanent link">&para;</a></h2>
 <table>
@@ -7393,8 +7447,24 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: model not found</code></strong> — Run <code>ollama pull llama3.1:8b</code> first to download the model.
-<strong><code>Error: CUDA out of memory</code></strong> — Reduce <code>OLLAMA_NUM_GPU</code> value (e.g., set to 16 or 24) to offload fewer layers to GPU.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: model not found</code></td>
+<td>Run <code>ollama pull llama3.1:8b</code> first to download the model.</td>
+</tr>
+<tr>
+<td><code>Error: CUDA out of memory</code></td>
+<td>Reduce <code>OLLAMA_NUM_GPU</code> value (e.g., set to 16 or 24) to offload fewer layers to GPU.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="multi-gpu-configuration">Multi-GPU Configuration<a class="headerlink" href="#multi-gpu-configuration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Ollama distributes layers across multiple GPUs automatically</span>
@@ -7422,9 +7492,28 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>CUDA_VISIBLE_DEVICES: command not found</code></strong> — Set the environment variable before the command: <code>CUDA_VISIBLE_DEVICES=0,1,2,3 ollama serve</code> (not as a separate line).
-<strong><code>nvidia-smi: command not found</code></strong> — Install NVIDIA GPU drivers and CUDA toolkit; verify with <code>nvidia-smi</code> alone first.
-<strong><code>Error: could not connect to ollama server</code></strong> — Ensure <code>ollama serve</code> is running in another terminal before executing inference commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CUDA_VISIBLE_DEVICES: command not found</code></td>
+<td>Set the environment variable before the command: <code>CUDA_VISIBLE_DEVICES=0,1,2,3 ollama serve</code> (not as a separate line).</td>
+</tr>
+<tr>
+<td><code>nvidia-smi: command not found</code></td>
+<td>Install NVIDIA GPU drivers and CUDA toolkit; verify with <code>nvidia-smi</code> alone first.</td>
+</tr>
+<tr>
+<td><code>Error: could not connect to ollama server</code></td>
+<td>Ensure <code>ollama serve</code> is running in another terminal before executing inference commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="flash-attention">Flash Attention<a class="headerlink" href="#flash-attention" title="Permanent link">&para;</a></h2>
 <p>Enable flash attention for lower VRAM usage and faster inference on supported models:</p>
@@ -7440,9 +7529,28 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error loading CUDA library: libnvml.so.1: cannot open shared object file</code></strong> — Install NVIDIA GPU drivers with <code>sudo apt install nvidia-driver-550</code> or equivalent for your distribution.
-<strong><code>OLLAMA_FLASH_ATTENTION=1: command not found</code></strong> — Use <code>export OLLAMA_FLASH_ATTENTION=1</code> before running ollama serve, or run as <code>OLLAMA_FLASH_ATTENTION=1 ollama serve</code> with proper shell quoting.
-<strong><code>listen tcp 127.0.0.1:11434: bind: address already in use</code></strong> — Kill the existing ollama process with <code>pkill ollama</code> or change the port with <code>OLLAMA_HOST=127.0.0.1:11435 ollama serve</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error loading CUDA library: libnvml.so.1: cannot open shared object file</code></td>
+<td>Install NVIDIA GPU drivers with <code>sudo apt install nvidia-driver-550</code> or equivalent for your distribution.</td>
+</tr>
+<tr>
+<td><code>OLLAMA_FLASH_ATTENTION=1: command not found</code></td>
+<td>Use <code>export OLLAMA_FLASH_ATTENTION=1</code> before running ollama serve, or run as <code>OLLAMA_FLASH_ATTENTION=1 ollama serve</code> with proper shell quoting.</td>
+</tr>
+<tr>
+<td><code>listen tcp 127.0.0.1:11434: bind: address already in use</code></td>
+<td>Kill the existing ollama process with <code>pkill ollama</code> or change the port with <code>OLLAMA_HOST=127.0.0.1:11435 ollama serve</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Flash attention reduces the KV cache memory footprint significantly, allowing longer context windows with less VRAM.</p>
 
@@ -7467,7 +7575,7 @@ Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

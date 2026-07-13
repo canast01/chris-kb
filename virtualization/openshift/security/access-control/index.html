@@ -7434,9 +7434,28 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error from server (NotFound): users.user.openshift.io "alice" not found</code></strong> — Create the user first with <code>oc create user alice</code> or ensure the user exists in your identity provider.
-<strong><code>Error from server (Forbidden): clusterroles.rbac.authorization.k8s.io is forbidden: User "system:anonymous" cannot create resource</code></strong> — Ensure you are logged in with sufficient permissions using <code>oc login</code> with a cluster-admin account.
-<strong><code>Error from server (NotFound): rolebindings.rbac.authorization.k8s.io "admin" not found</code></strong> — Verify the role exists in the namespace with <code>oc get roles -n my-project</code> before attempting to remove it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error from server (NotFound): users.user.openshift.io "alice" not found</code></td>
+<td>Create the user first with <code>oc create user alice</code> or ensure the user exists in your identity provider.</td>
+</tr>
+<tr>
+<td><code>Error from server (Forbidden): clusterroles.rbac.authorization.k8s.io is forbidden: User "system:anonymous" cannot create resource</code></td>
+<td>Ensure you are logged in with sufficient permissions using <code>oc login</code> with a cluster-admin account.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): rolebindings.rbac.authorization.k8s.io "admin" not found</code></td>
+<td>Verify the role exists in the namespace with <code>oc get roles -n my-project</code> before attempting to remove it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="custom-role-creation">Custom Role Creation<a class="headerlink" href="#custom-role-creation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Imperative: create role with specific verbs and resources</span>
@@ -7463,9 +7482,28 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to connect to the server: dial tcp: lookup api.openshift.local on 127.0.0.11:53: no such host</code></strong> — Verify the cluster is running and your kubeconfig points to the correct API endpoint with <code>oc cluster-info</code>.
-<strong><code>Error from server (AlreadyExists): roles.rbac.authorization.k8s.io "pod-reader" already exists</code></strong> — Delete the existing role with <code>oc delete role pod-reader -n my-project</code> before recreating it, or use <code>oc apply</code> with a YAML manifest instead.
-<strong><code>Error from server (NotFound): namespaces "my-project" not found</code></strong> — Create the namespace first with <code>oc create namespace my-project</code> or change <code>-n my-project</code> to an existing namespace.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to connect to the server: dial tcp: lookup api.openshift.local on 127.0.0.11:53: no such host</code></td>
+<td>Verify the cluster is running and your kubeconfig points to the correct API endpoint with <code>oc cluster-info</code>.</td>
+</tr>
+<tr>
+<td><code>Error from server (AlreadyExists): roles.rbac.authorization.k8s.io "pod-reader" already exists</code></td>
+<td>Delete the existing role with <code>oc delete role pod-reader -n my-project</code> before recreating it, or use <code>oc apply</code> with a YAML manifest instead.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): namespaces "my-project" not found</code></td>
+<td>Create the namespace first with <code>oc create namespace my-project</code> or change <code>-n my-project</code> to an existing namespace.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="security-context-constraints-scc">Security Context Constraints (SCC)<a class="headerlink" href="#security-context-constraints-scc" title="Permanent link">&para;</a></h2>
 <p>SCCs are an OpenShift-specific admission controller that enforces pod security configuration before a pod is created. Every pod must match at least one SCC granted to its service account.</p>
@@ -7584,9 +7622,28 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error from server (NotFound): serviceaccounts "myapp-sa" not found</code></strong> — Verify the service account exists in the target namespace with <code>oc get sa -n my-project</code> before granting SCC permissions.
-<strong><code>error: the server doesn't have a resource type "scc"</code></strong> — Use the full resource path <code>scc/anyuid</code> or run <code>oc adm policy who-can use scc/anyuid</code> instead of <code>oc get scc/anyuid</code>.
-<strong><code>Error: pod.yaml: error validating the pod: spec.serviceAccountName: Invalid value: "": serviceAccountName is required</code></strong> — Ensure the pod YAML includes a valid <code>serviceAccountName</code> field under <code>spec</code> before running the scc-subject-review command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error from server (NotFound): serviceaccounts "myapp-sa" not found</code></td>
+<td>Verify the service account exists in the target namespace with <code>oc get sa -n my-project</code> before granting SCC permissions.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "scc"</code></td>
+<td>Use the full resource path <code>scc/anyuid</code> or run <code>oc adm policy who-can use scc/anyuid</code> instead of <code>oc get scc/anyuid</code>.</td>
+</tr>
+<tr>
+<td><code>Error: pod.yaml: error validating the pod: spec.serviceAccountName: Invalid value: "": serviceAccountName is required</code></td>
+<td>Ensure the pod YAML includes a valid <code>serviceAccountName</code> field under <code>spec</code> before running the scc-subject-review command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="service-accounts">Service Accounts<a class="headerlink" href="#service-accounts" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create service account</span>
@@ -7621,9 +7678,28 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error from server (NotFound): serviceaccounts "myapp-sa" not found</code></strong> — Verify the namespace exists with <code>oc get ns my-project</code> and ensure you're connected to the correct cluster.
-<strong><code>error: the server doesn't have a resource type "token"</code></strong> — Update to OpenShift 4.11+ or use legacy token secrets with <code>oc create secret generic myapp-sa-token --from-literal=token=&lt;value&gt;</code>.
-<strong><code>Error: user "myapp-sa" cannot create tokens in namespace "my-project"</code></strong> — Ensure your user has <code>create</code> permissions on <code>serviceaccounts/token</code> resource with <code>oc auth can-i create serviceaccounts/token -n my-project</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error from server (NotFound): serviceaccounts "myapp-sa" not found</code></td>
+<td>Verify the namespace exists with <code>oc get ns my-project</code> and ensure you're connected to the correct cluster.</td>
+</tr>
+<tr>
+<td><code>error: the server doesn't have a resource type "token"</code></td>
+<td>Update to OpenShift 4.11+ or use legacy token secrets with <code>oc create secret generic myapp-sa-token --from-literal=token=&lt;value&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>Error: user "myapp-sa" cannot create tokens in namespace "my-project"</code></td>
+<td>Ensure your user has <code>create</code> permissions on <code>serviceaccounts/token</code> resource with <code>oc auth can-i create serviceaccounts/token -n my-project</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="namespace-isolation-with-networkpolicy">Namespace Isolation with NetworkPolicy<a class="headerlink" href="#namespace-isolation-with-networkpolicy" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Label namespaces for network policy targeting</span>
@@ -7674,9 +7750,28 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error from server (NotFound): namespaces "my-project" not found</code></strong> — Create the namespace first with <code>oc create namespace my-project</code> or ensure you are logged into the correct cluster.
-<strong><code>error: unable to recognize "STDIN": no matches for kind "NetworkPolicy" in version "networking.k8s.io/v1"</code></strong> — Verify the cluster supports NetworkPolicy resources by running <code>oc api-resources | grep networkpolicies</code> and confirm your OpenShift version is 3.11+.
-<strong><code>The NetworkPolicy "deny-all" is invalid: spec.egress: Invalid value: []</code></strong> — Remove the <code>Egress</code> policyType or add explicit egress rules, as deny-all egress without allow rules will block all outbound traffic including DNS.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error from server (NotFound): namespaces "my-project" not found</code></td>
+<td>Create the namespace first with <code>oc create namespace my-project</code> or ensure you are logged into the correct cluster.</td>
+</tr>
+<tr>
+<td><code>error: unable to recognize "STDIN": no matches for kind "NetworkPolicy" in version "networking.k8s.io/v1"</code></td>
+<td>Verify the cluster supports NetworkPolicy resources by running <code>oc api-resources | grep networkpolicies</code> and confirm your OpenShift version is 3.11+.</td>
+</tr>
+<tr>
+<td><code>The NetworkPolicy "deny-all" is invalid: spec.egress: Invalid value: []</code></td>
+<td>Remove the <code>Egress</code> policyType or add explicit egress rules, as deny-all egress without allow rules will block all outbound traffic including DNS.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="project-request-template">Project Request Template<a class="headerlink" href="#project-request-template" title="Permanent link">&para;</a></h2>
 <p>A project request template auto-applies NetworkPolicies, LimitRanges, and ResourceQuotas to every new project created in the cluster.</p>
@@ -7747,8 +7842,24 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: unable to recognize "project-request.yaml": no matches for kind "Template" in version "template.openshift.io/v1"</code></strong> — Ensure the YAML file contains <code>kind: Template</code> and <code>apiVersion: template.openshift.io/v1</code> at the top.
-<strong><code>Error from server (NotFound): project.config.openshift.io "cluster" not found</code></strong> — Verify the cluster configuration object exists by running <code>oc get project.config.openshift.io</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: unable to recognize "project-request.yaml": no matches for kind "Template" in version "template.openshift.io/v1"</code></td>
+<td>Ensure the YAML file contains <code>kind: Template</code> and <code>apiVersion: template.openshift.io/v1</code> at the top.</td>
+</tr>
+<tr>
+<td><code>Error from server (NotFound): project.config.openshift.io "cluster" not found</code></td>
+<td>Verify the cluster configuration object exists by running <code>oc get project.config.openshift.io</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>API server audit logs record every request with user identity, verb, resource, and response code.</p>
@@ -7808,9 +7919,28 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "apiserver"</code></strong> — Ensure you are connected to an OpenShift 4.x cluster with <code>oc login</code> and the APIServer CRD is available.
-<strong><code>chroot: cannot change root directory to /host: No such file or directory</code></strong> — Run <code>oc debug node/&lt;master-node&gt;</code> first and wait for the debug pod to fully initialize before executing chroot.
-<strong><code>jq: parse error: Invalid numeric literal at line 1, column 10</code></strong> — Pipe only valid JSON lines to jq by using <code>grep</code> to filter complete audit entries before processing.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "apiserver"</code></td>
+<td>Ensure you are connected to an OpenShift 4.x cluster with <code>oc login</code> and the APIServer CRD is available.</td>
+</tr>
+<tr>
+<td><code>chroot: cannot change root directory to /host: No such file or directory</code></td>
+<td>Run <code>oc debug node/&lt;master-node&gt;</code> first and wait for the debug pod to fully initialize before executing chroot.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid numeric literal at line 1, column 10</code></td>
+<td>Pipe only valid JSON lines to jq by using <code>grep</code> to filter complete audit entries before processing.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <table>
 <thead>
@@ -7906,9 +8036,28 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: the server doesn't have a resource type "rolebindings"</code></strong> — Use the correct plural form <code>oc get rolebindings</code> or check that your OpenShift API server is running and accessible.
-<strong><code>error: User "alice" cannot get rolebindings in namespace "my-project"</code></strong> — Ensure your current user has sufficient permissions; try running as a cluster-admin or grant the necessary role to your user.
-<strong><code>command not found: jq</code></strong> — Install jq on your system using your package manager (e.g., <code>apt-get install jq</code> or <code>brew install jq</code>) before running JSON filtering commands.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: the server doesn't have a resource type "rolebindings"</code></td>
+<td>Use the correct plural form <code>oc get rolebindings</code> or check that your OpenShift API server is running and accessible.</td>
+</tr>
+<tr>
+<td><code>error: User "alice" cannot get rolebindings in namespace "my-project"</code></td>
+<td>Ensure your current user has sufficient permissions; try running as a cluster-admin or grant the necessary role to your user.</td>
+</tr>
+<tr>
+<td><code>command not found: jq</code></td>
+<td>Install jq on your system using your package manager (e.g., <code>apt-get install jq</code> or <code>brew install jq</code>) before running JSON filtering commands.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -7937,7 +8086,7 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

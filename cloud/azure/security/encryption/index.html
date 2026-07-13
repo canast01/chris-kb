@@ -8687,8 +8687,24 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The operation failed because the Key Vault name 'kv-name' is not globally unique.</code></strong> — Replace <code>&lt;kv-name&gt;</code> with a globally unique name (e.g., <code>kv-prod-sec-001-$(date +%s)</code>).
-**`Principal object ID not</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The operation failed because the Key Vault name 'kv-name' is not globally unique.</code></td>
+<td>Replace <code>&lt;kv-name&gt;</code> with a globally unique name (e.g., <code>kv-prod-sec-001-$(date +%s)</code>).</td>
+</tr>
+<tr>
+<td>**`Principal object ID not</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="key-vault-operations">Key Vault Operations<a class="headerlink" href="#key-vault-operations" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a key</span>
@@ -8738,9 +8754,28 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The user, group or application 'appid=&lt;id&gt;;oid=&lt;oid&gt;' does not have secrets get permission on key vault '&lt;kv-name&gt;'.</code></strong> — Add the required permissions using <code>az keyvault set-policy --vault-name &lt;kv-name&gt; --object-id &lt;oid&gt; --secret-permissions get list</code>.
-<strong><code>Vault '&lt;kv-name&gt;' not found.</code></strong> — Verify the vault name is correct and exists in your subscription with <code>az keyvault list --output table</code>.
-<strong><code>The operation 'wrapKey' is not allowed by the key policy.</code></strong> — Update the key operations when creating it or use <code>az keyvault key update</code> to add the missing operations to the key's policy.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The user, group or application 'appid=&lt;id&gt;;oid=&lt;oid&gt;' does not have secrets get permission on key vault '&lt;kv-name&gt;'.</code></td>
+<td>Add the required permissions using <code>az keyvault set-policy --vault-name &lt;kv-name&gt; --object-id &lt;oid&gt; --secret-permissions get list</code>.</td>
+</tr>
+<tr>
+<td><code>Vault '&lt;kv-name&gt;' not found.</code></td>
+<td>Verify the vault name is correct and exists in your subscription with <code>az keyvault list --output table</code>.</td>
+</tr>
+<tr>
+<td><code>The operation 'wrapKey' is not allowed by the key policy.</code></td>
+<td>Update the key operations when creating it or use <code>az keyvault key update</code> to add the missing operations to the key's policy.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="customer-managed-keys-for-storage">Customer-Managed Keys for Storage<a class="headerlink" href="#customer-managed-keys-for-storage" title="Permanent link">&para;</a></h2>
@@ -8795,9 +8830,28 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The client does not have permission to perform action 'Microsoft.KeyVault/vaults/keys/write' over scope</code></strong> — Ensure your Azure user or service principal has Key Vault Crypto Officer or equivalent role assigned on the key vault.
-<strong><code>The Key Vault URI provided is invalid or the key does not exist</code></strong> — Verify the key vault name is correct, the key exists with <code>az keyvault key list --vault-name &lt;kv-name&gt;</code>, and the storage account has network access to the key vault.
-<strong><code>Storage account does not support customer-managed keys in this region</code></strong> — Confirm the storage account region supports CMK (most standard regions do) and use a supported account kind like StorageV2 or BlobStorage.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The client does not have permission to perform action 'Microsoft.KeyVault/vaults/keys/write' over scope</code></td>
+<td>Ensure your Azure user or service principal has Key Vault Crypto Officer or equivalent role assigned on the key vault.</td>
+</tr>
+<tr>
+<td><code>The Key Vault URI provided is invalid or the key does not exist</code></td>
+<td>Verify the key vault name is correct, the key exists with <code>az keyvault key list --vault-name &lt;kv-name&gt;</code>, and the storage account has network access to the key vault.</td>
+</tr>
+<tr>
+<td><code>Storage account does not support customer-managed keys in this region</code></td>
+<td>Confirm the storage account region supports CMK (most standard regions do) and use a supported account kind like StorageV2 or BlobStorage.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="customer-managed-keys-for-managed-disks">Customer-Managed Keys for Managed Disks<a class="headerlink" href="#customer-managed-keys-for-managed-disks" title="Permanent link">&para;</a></h2>
@@ -8928,9 +8982,28 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The Key Vault 'kv-name' is not enabled for disk encryption.</code></strong> — Enable the Key Vault for Azure Disk Encryption by running <code>az keyvault update --name &lt;kv-name&gt; --enabled-for-disk-encryption true</code>.
-<strong><code>The user does not have permission to perform action 'Microsoft.KeyVault/vaults/keys/read' on resource.</code></strong> — Ensure the VM's managed identity or service principal has Key Vault Crypto Officer or equivalent RBAC role assigned.
-<strong><code>VM must be deallocated before encryption can be enabled.</code></strong> — Stop the VM first with <code>az vm deallocate --name &lt;vm-name&gt; --resource-group &lt;rg-name&gt;</code>, then retry the encryption command.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The Key Vault 'kv-name' is not enabled for disk encryption.</code></td>
+<td>Enable the Key Vault for Azure Disk Encryption by running <code>az keyvault update --name &lt;kv-name&gt; --enabled-for-disk-encryption true</code>.</td>
+</tr>
+<tr>
+<td><code>The user does not have permission to perform action 'Microsoft.KeyVault/vaults/keys/read' on resource.</code></td>
+<td>Ensure the VM's managed identity or service principal has Key Vault Crypto Officer or equivalent RBAC role assigned.</td>
+</tr>
+<tr>
+<td><code>VM must be deallocated before encryption can be enabled.</code></td>
+<td>Stop the VM first with <code>az vm deallocate --name &lt;vm-name&gt; --resource-group &lt;rg-name&gt;</code>, then retry the encryption command.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <blockquote>
 <p><strong>ADE vs Server-Side Encryption (SSE):</strong> SSE with CMK (Disk Encryption Set) encrypts at the storage layer — simpler to manage and works for all disk types. ADE encrypts at the OS layer — required for some compliance standards (FIPS 140-2). Do not apply both; pick one per workload.</p>
@@ -8973,8 +9046,24 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The resource 'Microsoft.Storage/storageAccounts/&lt;storage-account&gt;' under resource group '&lt;rg-name&gt;' was not found.</code></strong> — Verify the storage account name and resource group name are correct and exist in your subscription.
-<strong><code>The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg-name&gt;/providers/Microsoft.Storage/storageAccounts/&lt;storage-account&gt;'.</code></strong> — Ensure your Azure account has Storage Account Contributor or Owner role on the target resource group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The resource 'Microsoft.Storage/storageAccounts/&lt;storage-account&gt;' under resource group '&lt;rg-name&gt;' was not found.</code></td>
+<td>Verify the storage account name and resource group name are correct and exist in your subscription.</td>
+</tr>
+<tr>
+<td><code>The client '&lt;client-id&gt;' with object id '&lt;object-id&gt;' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg-name&gt;/providers/Microsoft.Storage/storageAccounts/&lt;storage-account&gt;'.</code></td>
+<td>Ensure your Azure account has Storage Account Contributor or Owner role on the target resource group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="app-service-api-management">App Service / API Management<a class="headerlink" href="#app-service-api-management" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Set minimum TLS on App Service</span>
@@ -9006,9 +9095,28 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>The specified resource group '&lt;rg-name&gt;' could not be found.</code></strong> — Verify the resource group name with <code>az group list</code> and ensure you are in the correct subscription.
-<strong><code>The specified App Service '&lt;app-name&gt;' does not exist in the specified resource group.</code></strong> — Confirm the app name matches exactly with <code>az webapp list --resource-group &lt;rg-name&gt;</code> and check for typos.
-<strong><code>AuthorizationFailed: The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Web/sites/write' over scope '/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Web/sites/xxx'.</code></strong> — Ensure your Azure account has Contributor or Web Plan Contributor role on the resource group.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>The specified resource group '&lt;rg-name&gt;' could not be found.</code></td>
+<td>Verify the resource group name with <code>az group list</code> and ensure you are in the correct subscription.</td>
+</tr>
+<tr>
+<td><code>The specified App Service '&lt;app-name&gt;' does not exist in the specified resource group.</code></td>
+<td>Confirm the app name matches exactly with <code>az webapp list --resource-group &lt;rg-name&gt;</code> and check for typos.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed: The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Web/sites/write' over scope '/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Web/sites/xxx'.</code></td>
+<td>Ensure your Azure account has Contributor or Web Plan Contributor role on the resource group.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="private-endpoints-for-key-vault">Private Endpoints for Key Vault<a class="headerlink" href="#private-endpoints-for-key-vault" title="Permanent link">&para;</a></h2>
@@ -9090,8 +9198,24 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/&lt;kv-name&gt;' under resource group '&lt;rg-name&gt;' was not found.</code></strong> — Verify the Key Vault name and resource group name are correct and exist in your subscription.
-<strong><code>(InvalidResourceId) The provided resource ID is invalid or does not exist.</code></strong> — Ensure the `&lt;kv-</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/&lt;kv-name&gt;' under resource group '&lt;rg-name&gt;' was not found.</code></td>
+<td>Verify the Key Vault name and resource group name are correct and exist in your subscription.</td>
+</tr>
+<tr>
+<td><code>(InvalidResourceId) The provided resource ID is invalid or does not exist.</code></td>
+<td>Ensure the `&lt;kv-</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="key-vault-diagnostics">Key Vault Diagnostics<a class="headerlink" href="#key-vault-diagnostics" title="Permanent link">&para;</a></h2>
@@ -9145,8 +9269,24 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ResourceNotFound : The resource '/subscriptions/.../providers/Microsoft.KeyVault/vaults/kv-prod' could not be found.</code></strong> — Verify the Key Vault resource ID is correct and exists in the specified subscription using <code>az keyvault show --name &lt;vault-name&gt; --query id</code>.
-<strong><code>AuthorizationFailed : The client 'user@contoso.com' with object id '...' does not have authorization to perform action 'microsoft.insights/diagnosticsettings/write' on resource '...'.</code></strong> — Grant the user or service principal the "Monitoring Contributor" role on the Key Vault resource using <code>az role assignment create --role "Monitoring Contributor" --assignee &lt;principal-id&gt; --scope &lt;kv-resource-id&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResourceNotFound : The resource '/subscriptions/.../providers/Microsoft.KeyVault/vaults/kv-prod' could not be found.</code></td>
+<td>Verify the Key Vault resource ID is correct and exists in the specified subscription using <code>az keyvault show --name &lt;vault-name&gt; --query id</code>.</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed : The client 'user@contoso.com' with object id '...' does not have authorization to perform action 'microsoft.insights/diagnosticsettings/write' on resource '...'.</code></td>
+<td>Grant the user or service principal the "Monitoring Contributor" role on the Key Vault resource using <code>az role assignment create --role "Monitoring Contributor" --assignee &lt;principal-id&gt; --scope &lt;kv-resource-id&gt;</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
@@ -9177,7 +9317,7 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

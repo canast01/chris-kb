@@ -8886,9 +8886,28 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>nc: connect to 192.168.100.45 port 31031 (tcp) failed: Connection refused</code></strong> — Verify the VRA is fully deployed and the vSphere Replication service is running on the target host.
-<strong><code>nc: connect to 192.168.100.45 port 31031 (tcp) failed: Connection timed out</code></strong> — Check that firewall rules allow port 31031 between source and target ESXi hosts, and that the target IP is reachable.
-<strong><code>command not found: nc</code></strong> — Install netcat using <code>esxcli software vib install -v /tmp/netcat.vib</code> or use <code>telnet &lt;IP&gt; &lt;port&gt;</code> as an alternative connectivity test.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nc: connect to 192.168.100.45 port 31031 (tcp) failed: Connection refused</code></td>
+<td>Verify the VRA is fully deployed and the vSphere Replication service is running on the target host.</td>
+</tr>
+<tr>
+<td><code>nc: connect to 192.168.100.45 port 31031 (tcp) failed: Connection timed out</code></td>
+<td>Check that firewall rules allow port 31031 between source and target ESXi hosts, and that the target IP is reachable.</td>
+</tr>
+<tr>
+<td><code>command not found: nc</code></td>
+<td>Install netcat using <code>esxcli software vib install -v /tmp/netcat.vib</code> or use <code>telnet &lt;IP&gt; &lt;port&gt;</code> as an alternative connectivity test.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="dns-validation">DNS Validation<a class="headerlink" href="#dns-validation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># VRA FQDNs must resolve from both sites before deployment</span>
@@ -8925,9 +8944,28 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>** server can't find vra-siteA.example.local: NXDOMAIN</code></strong> — Add the VRA FQDNs to your DNS zone file or create A records in your DNS server before proceeding.
-<strong><code>** server can't find 192.168.10.45.in-addr.arpa: NXDOMAIN</code></strong> — Configure reverse DNS (PTR) records for both VRA IP addresses in your DNS reverse zone.
-<strong><code>connection timed out; try again</code></strong> — Verify DNS server 10.0.1.10 is reachable and responding; check firewall rules blocking UDP port 53.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>** server can't find vra-siteA.example.local: NXDOMAIN</code></td>
+<td>Add the VRA FQDNs to your DNS zone file or create A records in your DNS server before proceeding.</td>
+</tr>
+<tr>
+<td><code>** server can't find 192.168.10.45.in-addr.arpa: NXDOMAIN</code></td>
+<td>Configure reverse DNS (PTR) records for both VRA IP addresses in your DNS reverse zone.</td>
+</tr>
+<tr>
+<td><code>connection timed out; try again</code></td>
+<td>Verify DNS server 10.0.1.10 is reachable and responding; check firewall rules blocking UDP port 53.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="inter-site-latency-check">Inter-Site Latency Check<a class="headerlink" href="#inter-site-latency-check" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Measure round-trip latency between sites (must be ≤ 200 ms for stable replication)</span>
@@ -8953,9 +8991,28 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ping: unknown host &lt;target-site-gateway-or-host-IP&gt;</code></strong> — Replace the placeholder with an actual IP address or resolvable hostname (e.g., <code>10.50.12.1</code> or <code>dr-gateway.corp.local</code>).
-<strong><code>100% packet loss</code></strong> — Verify network connectivity between sites, check firewall rules allow ICMP, and confirm the target IP is reachable from the source ESXi host.
-<strong><code>rtt min/avg/max/stddev = .../250.5/...</code></strong> — Average RTT exceeds 200 ms threshold; investigate WAN link congestion, increase bandwidth, or optimize routing before deploying replication.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping: unknown host &lt;target-site-gateway-or-host-IP&gt;</code></td>
+<td>Replace the placeholder with an actual IP address or resolvable hostname (e.g., <code>10.50.12.1</code> or <code>dr-gateway.corp.local</code>).</td>
+</tr>
+<tr>
+<td><code>100% packet loss</code></td>
+<td>Verify network connectivity between sites, check firewall rules allow ICMP, and confirm the target IP is reachable from the source ESXi host.</td>
+</tr>
+<tr>
+<td><code>rtt min/avg/max/stddev = .../250.5/...</code></td>
+<td>Average RTT exceeds 200 ms threshold; investigate WAN link congestion, increase bandwidth, or optimize routing before deploying replication.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="target-datastore-capacity-estimate">Target Datastore Capacity Estimate<a class="headerlink" href="#target-datastore-capacity-estimate" title="Permanent link">&para;</a></h3>
 <p>Estimate target storage required:</p>
@@ -9049,9 +9106,28 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit hms.service could not be found.</code></strong> — Verify VRA was deployed correctly by checking <code>/opt/vmware/hms/</code> exists; if missing, redeploy the VRA OVA.
-<strong><code>Connection refused</code></strong> — Ensure SSH is enabled on the VRA and the hostname/IP is reachable; verify network connectivity with <code>ping vra-siteA.example.local</code> first.
-<strong><code>Active: inactive (dead)</code></strong> — Restart the service with <code>systemctl restart hms</code> and check logs via <code>journalctl -u hms -n 50</code> to identify the root cause.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit hms.service could not be found.</code></td>
+<td>Verify VRA was deployed correctly by checking <code>/opt/vmware/hms/</code> exists; if missing, redeploy the VRA OVA.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Ensure SSH is enabled on the VRA and the hostname/IP is reachable; verify network connectivity with <code>ping vra-siteA.example.local</code> first.</td>
+</tr>
+<tr>
+<td><code>Active: inactive (dead)</code></td>
+<td>Restart the service with <code>systemctl restart hms</code> and check logs via <code>journalctl -u hms -n 50</code> to identify the root cause.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-3-vra-deployment-target-site-and-site-pairing">Phase 3 — VRA Deployment: Target Site and Site Pairing<a class="headerlink" href="#phase-3-vra-deployment-target-site-and-site-pairing" title="Permanent link">&para;</a></h2>
@@ -9094,9 +9170,28 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unit hms.service could not be found.</code></strong> — Verify VRA is installed on this host by checking <code>/opt/vmware/hms/</code> exists, or confirm you are connecting to the correct VRA appliance.
-<strong><code>Connection refused</code></strong> — Ensure SSH is enabled on the VRA appliance and the admin account credentials are correct; check network connectivity to vra-siteB.example.local.
-<strong><code>● hms.service - vSphere Replication Management Service ... Active: inactive (dead)</code></strong> — Restart the service with <code>sudo systemctl restart hms</code> and check logs via <code>sudo journalctl -u hms -n 50</code> for startup errors.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unit hms.service could not be found.</code></td>
+<td>Verify VRA is installed on this host by checking <code>/opt/vmware/hms/</code> exists, or confirm you are connecting to the correct VRA appliance.</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Ensure SSH is enabled on the VRA appliance and the admin account credentials are correct; check network connectivity to vra-siteB.example.local.</td>
+</tr>
+<tr>
+<td><code>● hms.service - vSphere Replication Management Service ... Active: inactive (dead)</code></td>
+<td>Restart the service with <code>sudo systemctl restart hms</code> and check logs via <code>sudo journalctl -u hms -n 50</code> for startup errors.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="pair-the-sites">Pair the Sites<a class="headerlink" href="#pair-the-sites" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vCenter (source site) → Menu → Site Recovery → New Site Pair
@@ -9136,8 +9231,24 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the VRA's CA certificate into your system trust store.
-<strong><code>curl: (7) Failed to connect to vra-siteA.example.local port 8043: Connection refused</code></strong> — Verify the VRA appliance is running, the hostname resolves correctly, and port 8043 is accessible from your client (check firewall rules and VRA service status).</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the VRA's CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vra-siteA.example.local port 8043: Connection refused</code></td>
+<td>Verify the VRA appliance is running, the hostname resolves correctly, and port 8043 is accessible from your client (check firewall rules and VRA service status).</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-4-configure-vm-replication">Phase 4 — Configure VM Replication<a class="headerlink" href="#phase-4-configure-vm-replication" title="Permanent link">&para;</a></h2>
@@ -9201,8 +9312,24 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: Unable to connect to hbrsvc</code></strong> — Verify the vSphere Replication appliance is running and network connectivity exists between source and target sites.
-<strong><code>Error: No replication found for VM</code></strong> — Confirm the replication was successfully configured in vSphere Client under Site Recovery and the VM is powered on.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: Unable to connect to hbrsvc</code></td>
+<td>Verify the vSphere Replication appliance is running and network connectivity exists between source and target sites.</td>
+</tr>
+<tr>
+<td><code>Error: No replication found for VM</code></td>
+<td>Confirm the replication was successfully configured in vSphere Client under Site Recovery and the VM is powered on.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="configure-multiple-vms-batch">Configure Multiple VMs (Batch)<a class="headerlink" href="#configure-multiple-vms-batch" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># PowerCLI: configure replication for all VMs in a folder</span>
@@ -9246,9 +9373,28 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Permission denied (publickey,password).</code></strong> — Verify SSH credentials and ensure the vRA appliance user account is enabled; check <code>/etc/ssh/sshd_config</code> for PasswordAuthentication setting.
-<strong><code>tail: cannot open '/var/log/vmware/vrms/vrms.log' for reading: No such file or directory</code></strong> — Confirm the vSphere Replication Management Server is running with <code>systemctl status vmware-vrms</code> and check actual log path with <code>find /var/log -name '*vrms*'</code>.
-<strong><code>grep: (standard input): Permission denied</code></strong> — Run the command with <code>sudo</code> or ensure the admin user has read permissions on <code>/var/log/vmware/*/</code> directories via <code>sudo usermod -aG adm admin</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Permission denied (publickey,password).</code></td>
+<td>Verify SSH credentials and ensure the vRA appliance user account is enabled; check <code>/etc/ssh/sshd_config</code> for PasswordAuthentication setting.</td>
+</tr>
+<tr>
+<td><code>tail: cannot open '/var/log/vmware/vrms/vrms.log' for reading: No such file or directory</code></td>
+<td>Confirm the vSphere Replication Management Server is running with <code>systemctl status vmware-vrms</code> and check actual log path with <code>find /var/log -name '*vrms*'</code>.</td>
+</tr>
+<tr>
+<td><code>grep: (standard input): Permission denied</code></td>
+<td>Run the command with <code>sudo</code> or ensure the admin user has read permissions on <code>/var/log/vmware/*/</code> directories via <code>sudo usermod -aG adm admin</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="verify-hbrsvc-on-source-esxi-hosts">Verify hbrsvc on Source ESXi Hosts<a class="headerlink" href="#verify-hbrsvc-on-source-esxi-hosts" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># SSH to a source ESXi host</span>
@@ -9292,9 +9438,28 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxcli hbr replication list: Unknown command or namespace hbr</code></strong> — Verify vSphere Replication is installed on the ESXi host by checking <code>/etc/vmware/vpx/vpxa.cfg</code> or reinstall the VR agent.
-<strong><code>vmkload_mod: Command not found</code></strong> — Use the correct command <code>vmkload_mod -l</code> or check the ESXi version; on some versions use <code>esxcli system module list | grep hbr</code> instead.
-<strong><code>tail: /var/log/hbr.log: No such file or directory</code></strong> — Confirm vSphere Replication services are running with <code>service hbrsrv status</code> and check <code>/var/log/vmkernel.log</code> for initialization errors.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxcli hbr replication list: Unknown command or namespace hbr</code></td>
+<td>Verify vSphere Replication is installed on the ESXi host by checking <code>/etc/vmware/vpx/vpxa.cfg</code> or reinstall the VR agent.</td>
+</tr>
+<tr>
+<td><code>vmkload_mod: Command not found</code></td>
+<td>Use the correct command <code>vmkload_mod -l</code> or check the ESXi version; on some versions use <code>esxcli system module list | grep hbr</code> instead.</td>
+</tr>
+<tr>
+<td><code>tail: /var/log/hbr.log: No such file or directory</code></td>
+<td>Confirm vSphere Replication services are running with <code>service hbrsrv status</code> and check <code>/var/log/vmkernel.log</code> for initialization errors.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="configure-replication-alerts">Configure Replication Alerts<a class="headerlink" href="#configure-replication-alerts" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>vSphere Client → [VM] → Monitor → vSphere Replication → Manage Notifications
@@ -9336,9 +9501,28 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify VRA hostname matches certificate CN).
-<strong><code>curl: (7) Failed to connect to vra-siteA.example.local port 8043: Name or service not known</code></strong> — Confirm VRA hostname is resolvable and port 8043 is accessible from your network location using <code>nslookup vra-siteA.example.local</code> and <code>telnet vra-siteA.example.local 8043</code>.
-<strong><code>jq: parse error: Invalid JSON text at line 1</code></strong> — Verify API authentication credentials are correct and the VRA service is running; test with <code>curl -sk -u admin:&lt;password&gt; https://vra-siteA.example.local:8043/api/health</code> first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add <code>-k</code> flag to skip certificate verification (already present in example; if error persists, verify VRA hostname matches certificate CN).</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to vra-siteA.example.local port 8043: Name or service not known</code></td>
+<td>Confirm VRA hostname is resolvable and port 8043 is accessible from your network location using <code>nslookup vra-siteA.example.local</code> and <code>telnet vra-siteA.example.local 8043</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid JSON text at line 1</code></td>
+<td>Verify API authentication credentials are correct and the VRA service is running; test with <code>curl -sk -u admin:&lt;password&gt; https://vra-siteA.example.local:8043/api/health</code> first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="verify-mpit-recovery-points">Verify MPIT Recovery Points<a class="headerlink" href="#verify-mpit-recovery-points" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Verify MPIT snapshots captured at target site</span>
@@ -9414,9 +9598,28 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-<strong><code>Connection refused</code></strong> — Verify the VRA API service is listening on port 443 by running <code>netstat -tlnp | grep 443</code> and restart vrms if needed with <code>systemctl restart vrms</code>.
-<strong><code>Active: inactive (dead)</code></strong> — Start the service with <code>systemctl start hms vrms</code> and check logs with <code>journalctl -u hms -n 50</code> to diagnose startup failures.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification (already present in the example, but ensure it's included if removed).</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Verify the VRA API service is listening on port 443 by running <code>netstat -tlnp | grep 443</code> and restart vrms if needed with <code>systemctl restart vrms</code>.</td>
+</tr>
+<tr>
+<td><code>Active: inactive (dead)</code></td>
+<td>Start the service with <code>systemctl start hms vrms</code> and check logs with <code>journalctl -u hms -n 50</code> to diagnose startup failures.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="post-deployment-checklist">Post-Deployment Checklist<a class="headerlink" href="#post-deployment-checklist" title="Permanent link">&para;</a></h3>
 <table>
@@ -9516,7 +9719,7 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

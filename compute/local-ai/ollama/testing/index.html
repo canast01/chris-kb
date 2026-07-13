@@ -7229,9 +7229,28 @@ This page covers testing Ollama with the CLI and REST API, benchmarking inferenc
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: model "llama3.1:8b" not found, try pulling it first</code></strong> — Run <code>ollama pull llama3.1:8b</code> to download the model before executing commands.
-<strong><code>Error: connection refused</code></strong> — Start the Ollama service with <code>ollama serve</code> in another terminal or ensure the Ollama daemon is running.
-<strong><code>Error: read "prompt.txt": no such file or directory</code></strong> — Verify the prompt file exists in the current directory with <code>ls -la prompt.txt</code> before piping it.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: model "llama3.1:8b" not found, try pulling it first</code></td>
+<td>Run <code>ollama pull llama3.1:8b</code> to download the model before executing commands.</td>
+</tr>
+<tr>
+<td><code>Error: connection refused</code></td>
+<td>Start the Ollama service with <code>ollama serve</code> in another terminal or ensure the Ollama daemon is running.</td>
+</tr>
+<tr>
+<td><code>Error: read "prompt.txt": no such file or directory</code></td>
+<td>Verify the prompt file exists in the current directory with <code>ls -la prompt.txt</code> before piping it.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rest-api-testing-with-curl">REST API Testing with curl<a class="headerlink" href="#rest-api-testing-with-curl" title="Permanent link">&para;</a></h2>
 <p>The Ollama REST API is compatible with the OpenAI API format.</p>
@@ -7290,9 +7309,28 @@ This page covers testing Ollama with the CLI and REST API, benchmarking inferenc
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to localhost port 11434: Connection refused</code></strong> — Ensure Ollama is running with <code>ollama serve</code> or verify it's listening on port 11434 with <code>netstat -tuln | grep 11434</code>.
-<strong><code>jq: parse error: Cannot index number with string "response"</code></strong> — The model may still be loading; wait a few seconds and retry, or check that the model is fully downloaded with <code>ollama list</code>.
-<strong><code>error: "model 'llama3.1:8b' not found"</code></strong> — Pull the required model first using <code>ollama pull llama3.1:8b</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to localhost port 11434: Connection refused</code></td>
+<td>Ensure Ollama is running with <code>ollama serve</code> or verify it's listening on port 11434 with <code>netstat -tuln | grep 11434</code>.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index number with string "response"</code></td>
+<td>The model may still be loading; wait a few seconds and retry, or check that the model is fully downloaded with <code>ollama list</code>.</td>
+</tr>
+<tr>
+<td><code>error: "model 'llama3.1:8b' not found"</code></td>
+<td>Pull the required model first using <code>ollama pull llama3.1:8b</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="streaming-responses">Streaming Responses<a class="headerlink" href="#streaming-responses" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span>
@@ -7338,9 +7376,28 @@ This page covers testing Ollama with the CLI and REST API, benchmarking inferenc
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>error: model 'llama3.1:8b' not found, try pulling it first</code></strong> — Run <code>ollama pull llama3.1:8b</code> before executing the test.
-<strong><code>curl: (7) Failed to connect to localhost port 11434: Connection refused</code></strong> — Ensure the Ollama service is running with <code>ollama serve</code> in another terminal or as a background service.
-<strong><code>jq: parse error: Invalid numeric literal at line 1 column 7</code></strong> — Verify the API response is valid JSON by testing <code>curl -s http://localhost:11434/api/generate -d '{"model":"llama3.1:8b","prompt":"test","stream":false}'</code> without piping to jq first.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error: model 'llama3.1:8b' not found, try pulling it first</code></td>
+<td>Run <code>ollama pull llama3.1:8b</code> before executing the test.</td>
+</tr>
+<tr>
+<td><code>curl: (7) Failed to connect to localhost port 11434: Connection refused</code></td>
+<td>Ensure the Ollama service is running with <code>ollama serve</code> in another terminal or as a background service.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Invalid numeric literal at line 1 column 7</code></td>
+<td>Verify the API response is valid JSON by testing <code>curl -s http://localhost:11434/api/generate -d '{"model":"llama3.1:8b","prompt":"test","stream":false}'</code> without piping to jq first.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="model-comparison-script">Model Comparison Script<a class="headerlink" href="#model-comparison-script" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span>
@@ -7426,9 +7483,28 @@ This page covers testing Ollama with the CLI and REST API, benchmarking inferenc
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to localhost port 11434: Connection refused</code></strong> — Ensure the Ollama service is running with <code>ollama serve</code> or check that it's listening on port 11434.
-<strong><code>jq: parse error: Cannot index number with string "embeddings"</code></strong> — The model may not support embeddings or returned an error; verify the model exists with <code>ollama list</code> and that <code>nomic-embed-text</code> is pulled.
-<strong><code>jq: error (at &lt;stdin&gt;:1): Cannot iterate over null (null)</code></strong> — The API response doesn't contain the expected <code>embeddings</code> field; check the Ollama API response with <code>curl http://localhost:11434/api/embed -d '{"model":"nomic-embed-text","input":"test"}'</code> to inspect the actual structure.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to localhost port 11434: Connection refused</code></td>
+<td>Ensure the Ollama service is running with <code>ollama serve</code> or check that it's listening on port 11434.</td>
+</tr>
+<tr>
+<td><code>jq: parse error: Cannot index number with string "embeddings"</code></td>
+<td>The model may not support embeddings or returned an error; verify the model exists with <code>ollama list</code> and that <code>nomic-embed-text</code> is pulled.</td>
+</tr>
+<tr>
+<td><code>jq: error (at &lt;stdin&gt;:1): Cannot iterate over null (null)</code></td>
+<td>The API response doesn't contain the expected <code>embeddings</code> field; check the Ollama API response with <code>curl http://localhost:11434/api/embed -d '{"model":"nomic-embed-text","input":"test"}'</code> to inspect the actual structure.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -7452,7 +7528,7 @@ This page covers testing Ollama with the CLI and REST API, benchmarking inferenc
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

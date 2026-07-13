@@ -9400,9 +9400,28 @@ is restored.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Unable to find vmkernel interface vmk2</code></strong> — Verify the correct vmkernel interface name with <code>esxcli network ip interface list</code> and substitute the correct interface (e.g., vmk1, vmk3).
-<strong><code>No route to host</code></strong> — Confirm the witness vSAN VMkernel IP is reachable from the source site's network and that firewall rules permit ICMP traffic on port 8084 (vSAN traffic).
-<strong><code>Network is unreachable</code></strong> — Check that the witness vSAN VMkernel interface is configured on the correct VLAN and that inter-site network connectivity is established.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Unable to find vmkernel interface vmk2</code></td>
+<td>Verify the correct vmkernel interface name with <code>esxcli network ip interface list</code> and substitute the correct interface (e.g., vmk1, vmk3).</td>
+</tr>
+<tr>
+<td><code>No route to host</code></td>
+<td>Confirm the witness vSAN VMkernel IP is reachable from the source site's network and that firewall rules permit ICMP traffic on port 8084 (vSAN traffic).</td>
+</tr>
+<tr>
+<td><code>Network is unreachable</code></td>
+<td>Check that the witness vSAN VMkernel interface is configured on the correct VLAN and that inter-site network connectivity is established.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="3-confirm-the-preferred-site-configuration">3. Confirm the Preferred Site Configuration<a class="headerlink" href="#3-confirm-the-preferred-site-configuration" title="Permanent link">&para;</a></h2>
@@ -9481,8 +9500,24 @@ is restored.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>PING &lt;site-b-vsan-vmk-ip&gt; (&lt;site-b-vsan-vmk-ip&gt;): sendto: No route to host</code></strong> — Verify the vSAN network routing between sites is configured and the target IP is reachable; check firewall rules and VLAN configuration.
-<strong><code>Error: Could not find interface vmk2</code></strong> — Confirm vmk2 exists and is bound to the vSAN port group using <code>esxcli network ip interface list</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PING &lt;site-b-vsan-vmk-ip&gt; (&lt;site-b-vsan-vmk-ip&gt;): sendto: No route to host</code></td>
+<td>Verify the vSAN network routing between sites is configured and the target IP is reachable; check firewall rules and VLAN configuration.</td>
+</tr>
+<tr>
+<td><code>Error: Could not find interface vmk2</code></td>
+<td>Confirm vmk2 exists and is bound to the vSAN port group using <code>esxcli network ip interface list</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>Look for: failed 8972-byte ping with successful small-packet ping = MTU mismatch on the inter-site link (vSAN requires MTU 9000).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check vSAN cluster membership — which hosts are in the cluster from this host&#39;s view</span>
@@ -9507,8 +9542,24 @@ is restored.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vSAN cluster is not enabled on this host</code></strong> — Enable vSAN on the host via vCenter or run <code>esxcli vsan cluster new</code> to initialize the cluster.
-<strong><code>Unable to contact vSAN cluster — no quorum</code></strong> — Verify network connectivity between hosts and check that at least half of the cluster members are online and reachable.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vSAN cluster is not enabled on this host</code></td>
+<td>Enable vSAN on the host via vCenter or run <code>esxcli vsan cluster new</code> to initialize the cluster.</td>
+</tr>
+<tr>
+<td><code>Unable to contact vSAN cluster — no quorum</code></td>
+<td>Verify network connectivity between hosts and check that at least half of the cluster members are online and reachable.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="6-forced-recovery-full-isolation-last-resort">6. Forced Recovery — Full Isolation (Last Resort)<a class="headerlink" href="#6-forced-recovery-full-isolation-last-resort" title="Permanent link">&para;</a></h2>
@@ -9528,9 +9579,28 @@ is restored.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: VSAN cluster is not in a valid state for master election</code></strong> — Verify all nodes in the cluster are in healthy state using <code>esxcli vsan cluster get</code> before forcing election.
-<strong><code>Error: Cannot perform master election while both sites are active</code></strong> — Confirm the remote site is completely powered down and unreachable before running this command to prevent split-brain scenarios.
-<strong><code>Error: This command requires VSAN license and cluster mode enabled</code></strong> — Ensure VSAN is properly licensed on all hosts and cluster mode is activated via vSphere Client before attempting forced election.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: VSAN cluster is not in a valid state for master election</code></td>
+<td>Verify all nodes in the cluster are in healthy state using <code>esxcli vsan cluster get</code> before forcing election.</td>
+</tr>
+<tr>
+<td><code>Error: Cannot perform master election while both sites are active</code></td>
+<td>Confirm the remote site is completely powered down and unreachable before running this command to prevent split-brain scenarios.</td>
+</tr>
+<tr>
+<td><code>Error: This command requires VSAN license and cluster mode enabled</code></td>
+<td>Ensure VSAN is properly licensed on all hosts and cluster mode is activated via vSphere Client before attempting forced election.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p>After forced election, start VMs on the surviving site only; treat the secondary site as potentially diverged and do not start it until vSAN resync completes after connectivity is restored.</p>
 <hr />
@@ -9557,8 +9627,24 @@ is restored.
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>esxcli: command not found</code></strong> — Ensure you are logged into an ESXi host directly via SSH; this command is not available on vCenter.
-<strong><code>No matching processes were found</code></strong> — The VSAN service may not be running; restart it with <code>systemctl restart vsanmgmt</code> or verify VSAN is enabled on the cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esxcli: command not found</code></td>
+<td>Ensure you are logged into an ESXi host directly via SSH; this command is not available on vCenter.</td>
+</tr>
+<tr>
+<td><code>No matching processes were found</code></td>
+<td>The VSAN service may not be running; restart it with <code>systemctl restart vsanmgmt</code> or verify VSAN is enabled on the cluster.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Do not perform host maintenance, storage policy changes, or vSAN upgrades until resync completes</strong> — resync adds I/O overhead, and any disruption risks further object degradation.</p>
 <hr />
@@ -9693,7 +9779,7 @@ is restored.
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

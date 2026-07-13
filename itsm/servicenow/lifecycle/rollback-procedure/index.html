@@ -7978,8 +7978,24 @@ Restores a system to its last known-good state when a change produces failures, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Error: 0x80240017 - CBS_E_NOT_APPLICABLE</code></strong> — Verify the KB number matches an installed update using <code>wmic qfe list brief</code> and confirm the update is not a prerequisite for other installed patches.
-<strong><code>Error: 0x80070005 - Access Denied</code></strong> — Run the command prompt as Administrator; right-click cmd.exe and select "Run as administrator" before executing wusa.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Error: 0x80240017 - CBS_E_NOT_APPLICABLE</code></td>
+<td>Verify the KB number matches an installed update using <code>wmic qfe list brief</code> and confirm the update is not a prerequisite for other installed patches.</td>
+</tr>
+<tr>
+<td><code>Error: 0x80070005 - Access Denied</code></td>
+<td>Run the command prompt as Administrator; right-click cmd.exe and select "Run as administrator" before executing wusa.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="method-3-configuration-revert">Method 3 — Configuration Revert<a class="headerlink" href="#method-3-configuration-revert" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ansible — revert to previous playbook version</span>
@@ -8015,9 +8031,28 @@ Restores a system to its last known-good state when a change produces failures, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>fatal: your current branch 'main' is ahead of &lt;previous-commit&gt;</code></strong> — Ensure the commit hash exists in your repository history using <code>git log</code> and verify the correct commit SHA.
-<strong><code>nginx: [error] open() "/etc/nginx/nginx.conf.bak.2025-01-15" failed (2: No such file or directory)</code></strong> — Confirm the backup file exists with the correct date format using <code>ls -la /etc/nginx/nginx.conf.bak.*</code> before attempting restore.
-<strong><code>% Invalid command</code></strong> — Verify the device is in enable mode with <code>enable</code> and that the startup-config exists using <code>show startup-config | include Running</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fatal: your current branch 'main' is ahead of &lt;previous-commit&gt;</code></td>
+<td>Ensure the commit hash exists in your repository history using <code>git log</code> and verify the correct commit SHA.</td>
+</tr>
+<tr>
+<td><code>nginx: [error] open() "/etc/nginx/nginx.conf.bak.2025-01-15" failed (2: No such file or directory)</code></td>
+<td>Confirm the backup file exists with the correct date format using <code>ls -la /etc/nginx/nginx.conf.bak.*</code> before attempting restore.</td>
+</tr>
+<tr>
+<td><code>% Invalid command</code></td>
+<td>Verify the device is in enable mode with <code>enable</code> and that the startup-config exists using <code>show startup-config | include Running</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="method-4-database-rollback">Method 4 — Database Rollback<a class="headerlink" href="#method-4-database-rollback" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PostgreSQL — restore from pre-change dump</span>
@@ -8046,9 +8081,28 @@ Restores a system to its last known-good state when a change produces failures, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pg_restore: [archiver] could not open input file "/backups/servicenow_prod-pre-change-2026-05-10.dump": No such file or directory</code></strong> — Verify the backup file exists at the specified path and the date variable expands correctly by running <code>ls -la /backups/</code> first.
-<strong><code>FATAL: role "postgres" does not exist</code></strong> — Create the postgres user with <code>createuser -s postgres</code> or use an existing superuser role with the <code>-U</code> flag.
-<strong><code>ERROR: database "servicenow_prod" is being accessed by other users</code></strong> — Terminate active connections with <code>SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='servicenow_prod';</code> before restore.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pg_restore: [archiver] could not open input file "/backups/servicenow_prod-pre-change-2026-05-10.dump": No such file or directory</code></td>
+<td>Verify the backup file exists at the specified path and the date variable expands correctly by running <code>ls -la /backups/</code> first.</td>
+</tr>
+<tr>
+<td><code>FATAL: role "postgres" does not exist</code></td>
+<td>Create the postgres user with <code>createuser -s postgres</code> or use an existing superuser role with the <code>-U</code> flag.</td>
+</tr>
+<tr>
+<td><code>ERROR: database "servicenow_prod" is being accessed by other users</code></td>
+<td>Terminate active connections with <code>SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='servicenow_prod';</code> before restore.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="method-5-full-backup-restore">Method 5 — Full Backup Restore<a class="headerlink" href="#method-5-full-backup-restore" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Veeam — restore entire VM from backup</span>
@@ -8074,9 +8128,28 @@ Restores a system to its last known-good state when a change produces failures, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Get-VBRBackup : Cannot find backup with name "Production VMs"</code></strong> — Verify the exact backup name with <code>Get-VBRBackup | Select-Object Name</code> and update the script accordingly.
-<strong><code>Start-VBRRestoreVM : Restore point is corrupted or inaccessible</code></strong> — Check backup integrity with <code>Get-VBRBackup -Name "Production VMs" | Get-VBRRestorePoint | Where-Object {$_.IsCorrupted -eq $true}</code> and select an earlier restore point.
-<strong><code>Access denied: Insufficient permissions to restore VM</code></strong> — Ensure your Veeam service account has Restore operator role or higher in Veeam Backup &amp; Replication console.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Get-VBRBackup : Cannot find backup with name "Production VMs"</code></td>
+<td>Verify the exact backup name with <code>Get-VBRBackup | Select-Object Name</code> and update the script accordingly.</td>
+</tr>
+<tr>
+<td><code>Start-VBRRestoreVM : Restore point is corrupted or inaccessible</code></td>
+<td>Check backup integrity with <code>Get-VBRBackup -Name "Production VMs" | Get-VBRRestorePoint | Where-Object {$_.IsCorrupted -eq $true}</code> and select an earlier restore point.</td>
+</tr>
+<tr>
+<td><code>Access denied: Insufficient permissions to restore VM</code></td>
+<td>Ensure your Veeam service account has Restore operator role or higher in Veeam Backup &amp; Replication console.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><strong>Expected time:</strong> 30–120 minutes depending on backup size.</p>
 <h2 id="post-rollback-validation">Post-Rollback Validation<a class="headerlink" href="#post-rollback-validation" title="Permanent link">&para;</a></h2>
@@ -8110,9 +8183,28 @@ Restores a system to its last known-good state when a change produces failures, 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Add the <code>-k</code> flag to skip certificate verification, or import the CA certificate into your system trust store.
-<strong><code>journalctl: command not found</code></strong> — Install systemd-devel package or use <code>tail -f /var/log/messages</code> on systems without journalctl support.
-<strong><code>systemctl: command not found</code></strong> — Verify you are running as root or with sudo, and that systemd is installed on this system.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Add the <code>-k</code> flag to skip certificate verification, or import the CA certificate into your system trust store.</td>
+</tr>
+<tr>
+<td><code>journalctl: command not found</code></td>
+<td>Install systemd-devel package or use <code>tail -f /var/log/messages</code> on systems without journalctl support.</td>
+</tr>
+<tr>
+<td><code>systemctl: command not found</code></td>
+<td>Verify you are running as root or with sudo, and that systemd is installed on this system.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h2 id="rollback-checklist">Rollback Checklist<a class="headerlink" href="#rollback-checklist" title="Permanent link">&para;</a></h2>
 <table>
@@ -8199,7 +8291,7 @@ Restores a system to its last known-good state when a change produces failures, 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

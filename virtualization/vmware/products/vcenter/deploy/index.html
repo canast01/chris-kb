@@ -8875,9 +8875,28 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>** server can't find vcenter.example.local: NXDOMAIN</code></strong> — Add the FQDN and IP to your DNS server or /etc/hosts on the ESXi host before deployment.
-<strong><code>** server can't find 50.100.168.192.in-addr.arpa: NXDOMAIN</code></strong> — Create a PTR record in your DNS reverse zone matching the planned VCSA IP address.
-<strong><code>ssh: connect to host esxi-01.example.local port 22 rejected</code></strong> — Verify ESXi host is powered on, SSH is enabled in the ESXi firewall, and the hostname resolves correctly.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>** server can't find vcenter.example.local: NXDOMAIN</code></td>
+<td>Add the FQDN and IP to your DNS server or /etc/hosts on the ESXi host before deployment.</td>
+</tr>
+<tr>
+<td><code>** server can't find 50.100.168.192.in-addr.arpa: NXDOMAIN</code></td>
+<td>Create a PTR record in your DNS reverse zone matching the planned VCSA IP address.</td>
+</tr>
+<tr>
+<td><code>ssh: connect to host esxi-01.example.local port 22 rejected</code></td>
+<td>Verify ESXi host is powered on, SSH is enabled in the ESXi firewall, and the hostname resolves correctly.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="ntp-validation">NTP Validation<a class="headerlink" href="#ntp-validation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify NTP on the target ESXi host</span>
@@ -8897,9 +8916,28 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>Connection refused connecting to Management Agent on 10.20.50.100:443</code></strong> — Verify the ESXi host is reachable and the vSphere Client has network connectivity to the target host.
-<strong><code>NTP Enabled: false</code></strong> — Enable NTP on the ESXi host using <code>esxcli system ntp set --enabled=true</code> and start the service with <code>esxcli system service start ntpd</code>.
-<strong><code>reach   delay   offset  jitter</code> (no data rows below header)</strong> — Wait 2-3 minutes for NTP to synchronize, or restart ntpd with <code>esxcli system service restart ntpd</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused connecting to Management Agent on 10.20.50.100:443</code></td>
+<td>Verify the ESXi host is reachable and the vSphere Client has network connectivity to the target host.</td>
+</tr>
+<tr>
+<td><code>NTP Enabled: false</code></td>
+<td>Enable NTP on the ESXi host using <code>esxcli system ntp set --enabled=true</code> and start the service with <code>esxcli system service start ntpd</code>.</td>
+</tr>
+<tr>
+<td><code>reach   delay   offset  jitter</code> (no data rows below header)<code>| Wait 2-3 minutes for NTP to synchronize, or restart ntpd with</code>esxcli system service restart ntpd`.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="datastore-space-check">Datastore Space Check<a class="headerlink" href="#datastore-space-check" title="Permanent link">&para;</a></h3>
 <table>
@@ -9017,9 +9055,28 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>curl: (7) Failed to connect to 192.168.1.50 port 5480: Connection refused</code></strong> — Verify the VCSA VM is powered on and has completed its initial boot sequence (may take 5–10 minutes).
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — The <code>-k</code> flag is already present in the command; if still failing, ensure you're using <code>https://</code> and not <code>http://</code>.
-<strong><code>curl: (6) Could not resolve host name</code></strong> — Confirm the VCSA IP address is correct and the appliance has obtained network connectivity via DHCP or static configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curl: (7) Failed to connect to 192.168.1.50 port 5480: Connection refused</code></td>
+<td>Verify the VCSA VM is powered on and has completed its initial boot sequence (may take 5–10 minutes).</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>The <code>-k</code> flag is already present in the command; if still failing, ensure you're using <code>https://</code> and not <code>http://</code>.</td>
+</tr>
+<tr>
+<td><code>curl: (6) Could not resolve host name</code></td>
+<td>Confirm the VCSA IP address is correct and the appliance has obtained network connectivity via DHCP or static configuration.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-3-vcsa-configuration-stage-2">Phase 3 — VCSA Configuration: Stage 2<a class="headerlink" href="#phase-3-vcsa-configuration-stage-2" title="Permanent link">&para;</a></h2>
@@ -9079,9 +9136,28 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ssh: connect to host vcenter.example.local port 22: Connection refused</code></strong> — Verify VCSA is powered on and SSH is enabled via DCUI, or use the IP address directly if DNS is unresolved.
-<strong><code>service-control: command not found</code></strong> — Ensure you are logged in as root and the VCSA shell environment is properly initialized; try <code>source /etc/profile</code> first.
-<strong><code>curl: (60) SSL certificate problem: self signed certificate</code></strong> — Remove the <code>-k</code> flag if you have a valid certificate, or ensure the hostname matches the certificate CN; the <code>-k</code> flag bypasses verification for self-signed certs.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: connect to host vcenter.example.local port 22: Connection refused</code></td>
+<td>Verify VCSA is powered on and SSH is enabled via DCUI, or use the IP address directly if DNS is unresolved.</td>
+</tr>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Ensure you are logged in as root and the VCSA shell environment is properly initialized; try <code>source /etc/profile</code> first.</td>
+</tr>
+<tr>
+<td><code>curl: (60) SSL certificate problem: self signed certificate</code></td>
+<td>Remove the <code>-k</code> flag if you have a valid certificate, or ensure the hostname matches the certificate CN; the <code>-k</code> flag bypasses verification for self-signed certs.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <hr />
 <h2 id="phase-4-active-directory-integration">Phase 4 — Active Directory Integration<a class="headerlink" href="#phase-4-active-directory-integration" title="Permanent link">&para;</a></h2>
@@ -9213,8 +9289,24 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>vecs-cli: command not found</code></strong> — Ensure you are running the command as root and the vmafd service is running with <code>systemctl status vmware-vmafd</code>.
-<strong><code>certificate-manager: command not found</code></strong> — Verify the vmcad package is installed with <code>rpm -qa | grep vmcad</code> and reinstall if missing.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vecs-cli: command not found</code></td>
+<td>Ensure you are running the command as root and the vmafd service is running with <code>systemctl status vmware-vmafd</code>.</td>
+</tr>
+<tr>
+<td><code>certificate-manager: command not found</code></td>
+<td>Verify the vmcad package is installed with <code>rpm -qa | grep vmcad</code> and reinstall if missing.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="configure-alarm-definitions">Configure Alarm Definitions<a class="headerlink" href="#configure-alarm-definitions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>vSphere Client → [cluster] → Configure → Alarm Definitions
@@ -9241,8 +9333,24 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>service-control: command not found</code></strong> — Use the full path <code>/usr/lib/vmware-vmafd/bin/service-control</code> or source the VCSA environment setup script.
-<strong><code>"CN=localhost,CN=Services,CN=Configuration,DC=vsphere,DC=local" not found</code></strong> — Verify VCSA is fully initialized and the Lightweight Directory Access Service (LSASS) is running with <code>service-control --status --all | grep vmafdd</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service-control: command not found</code></td>
+<td>Use the full path <code>/usr/lib/vmware-vmafd/bin/service-control</code> or source the VCSA environment setup script.</td>
+</tr>
+<tr>
+<td><code>"CN=localhost,CN=Services,CN=Configuration,DC=vsphere,DC=local" not found</code></td>
+<td>Verify VCSA is fully initialized and the Lightweight Directory Access Service (LSASS) is running with <code>service-control --status --all | grep vmafdd</code>.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <h3 id="configure-syslog-forwarding">Configure Syslog Forwarding<a class="headerlink" href="#configure-syslog-forwarding" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>vSphere Client → [vCenter] → Configure → Advanced Settings
@@ -9348,7 +9456,7 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     

@@ -8082,8 +8082,24 @@ MySQL/MariaDB backup: `mysqldump --single-transaction`, `mysqlpump`, xtrabackup 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>ERROR: stanza 'main-db-prod' not found</code></strong> — Verify the stanza name matches your pgBackRest configuration in <code>/etc/pgbackrest.conf</code>.
-<strong><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></strong> — Ensure PostgreSQL is running with <code>systemctl status postgresql</code> and the postgres user has correct permissions.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ERROR: stanza 'main-db-prod' not found</code></td>
+<td>Verify the stanza name matches your pgBackRest configuration in <code>/etc/pgbackrest.conf</code>.</td>
+</tr>
+<tr>
+<td><code>psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed</code></td>
+<td>Ensure PostgreSQL is running with <code>systemctl status postgresql</code> and the postgres user has correct permissions.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PostgreSQL — verify backup with pgBackRest</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>check
@@ -8112,9 +8128,28 @@ MySQL/MariaDB backup: `mysqldump --single-transaction`, `mysqlpump`, xtrabackup 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>pgbackrest: ERROR: backup path does not exist</code></strong> — Verify the stanza name matches your pgBackRest configuration and the backup directory exists at the configured path.
-<strong><code>xtrabackup: error: cannot access '/backup/mysql/latest/': No such file or directory</code></strong> — Ensure the backup target directory path is correct and the xtrabackup process has read permissions on the backup files.
-<strong><code>Msg 3201, Level 16, State 2: Cannot open backup device '/backup/mssql/mydb_full.bak'. Operating system error 2(The system cannot find the file specified.)</code></strong> — Verify the backup file path is correct and the SQL Server service account has read permissions on the backup file location.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pgbackrest: ERROR: backup path does not exist</code></td>
+<td>Verify the stanza name matches your pgBackRest configuration and the backup directory exists at the configured path.</td>
+</tr>
+<tr>
+<td><code>xtrabackup: error: cannot access '/backup/mysql/latest/': No such file or directory</code></td>
+<td>Ensure the backup target directory path is correct and the xtrabackup process has read permissions on the backup files.</td>
+</tr>
+<tr>
+<td><code>Msg 3201, Level 16, State 2: Cannot open backup device '/backup/mssql/mydb_full.bak'. Operating system error 2(The system cannot find the file specified.)</code></td>
+<td>Verify the backup file path is correct and the SQL Server service account has read permissions on the backup file location.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restore to test instance</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>--pg1-path<span class="o">=</span>/var/lib/pgsql/test-restore<span class="w"> </span>restore
@@ -8138,9 +8173,28 @@ MySQL/MariaDB backup: `mysqldump --single-transaction`, `mysqlpump`, xtrabackup 
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Common errors</p>
-<p><strong><code>FATAL: could not create shared memory segment: No space left on device</code></strong> — Increase shared_buffers in postgresql.conf or reduce the value to fit available system memory.
-<strong><code>ERROR: could not connect to server: Connection refused</code></strong> — Verify pg_ctl started successfully and the port 5433 is not already in use by another PostgreSQL instance.
-<strong><code>FATAL: directory "/var/lib/pgsql/test-restore" does not exist</code></strong> — Create the restore directory with <code>mkdir -p /var/lib/pgsql/test-restore</code> and ensure proper ownership before running pgbackrest restore.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FATAL: could not create shared memory segment: No space left on device</code></td>
+<td>Increase shared_buffers in postgresql.conf or reduce the value to fit available system memory.</td>
+</tr>
+<tr>
+<td><code>ERROR: could not connect to server: Connection refused</code></td>
+<td>Verify pg_ctl started successfully and the port 5433 is not already in use by another PostgreSQL instance.</td>
+</tr>
+<tr>
+<td><code>FATAL: directory "/var/lib/pgsql/test-restore" does not exist</code></td>
+<td>Create the restore directory with <code>mkdir -p /var/lib/pgsql/test-restore</code> and ensure proper ownership before running pgbackrest restore.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Copy backup to test directory</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>xtrabackup<span class="w"> </span>--prepare<span class="w"> </span>--target-dir<span class="o">=</span>/restore/mysql-test/
@@ -8193,7 +8247,7 @@ MySQL/MariaDB backup: `mysqldump --single-transaction`, `mysqlpump`, xtrabackup 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 01:28:37 UTC"><span class="timeago" datetime="2026-07-13T01:28:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 01:28:37 UTC">2026-07-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 13, 2026 07:08:12 UTC"><span class="timeago" datetime="2026-07-13T07:08:12+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 13, 2026 07:08:12 UTC">2026-07-13</span>
   </span>
 
     
